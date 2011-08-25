@@ -1,0 +1,72 @@
+<shortcuts>
+
+  <!--
+     Shortcut file for Unix/Linux type systems
+  -->
+  <programGroup defaultName="calibre2opds" location="applications"/>
+
+  <shortcut
+     name="Calibre2opds"
+     description="Calibre2opds Graphical User Interface"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/rungui.sh"
+     workingDirectory="$INSTALL_PATH"
+     iconFile="$INSTALL_PATH/calibre2opds-icon_64.png"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Documentation"
+     description="Calibre2Opds Online Documentation"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="konqueror"
+     workingDirectory="$INSTALL_PATH"
+     description="Calibre2opds online documentation"
+     iconFile="$INSTALL_PATH/calibre2opds-icon_64.png"
+     iconIndex="0"
+     type="link"
+     url="http://wiki.mobileread.com/wiki/Calibre2opds"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Calibre2opds catalog generation"
+     description="Generate calibre2opds catalogs from parameters set up earlier via GUI"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/run.sh"
+     commandLine=""
+     workingDirectory="$INSTALL_PATH"
+     description="Generate calibre2opds catalogs"
+     iconFile="$INSTALL_PATH/calibre2opds-text-icon_64.png"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+</shortcuts>

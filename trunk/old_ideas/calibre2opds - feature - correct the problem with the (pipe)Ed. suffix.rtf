@@ -1,0 +1,15 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf250
+{\fonttbl\f0\fnil\fcharset0 Caecilia-Roman;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs28 \cf0 \CocoaLigature0 It's really something of a mess, because English grammar doesn't properly disambiguate many of these things. Suffixes like Jr., II, III, etc. have to do with lineage, and are part of the person's name.  Suffixes like Ed. or Eds. have to do with roles, showing that one (or all, respectively) of the named people are the editors of the document. So you might see\uc0\u8232     Keith Laumer & Eric Flint, Ed.\u8232 to show that the volume was written by Keith Laumer and edited by Eric Flint.  This would be typical of a collection of works by Laumer that were selected and packaged by Flint (possibly with minor textual changes to individual parts). In such cases, the selection is considered worthy of authorial/editorial claim.  Or you might see\u8232     Eric Flint & Mike Resnick, Eds.\u8232 or\u8232     Eric Flint & Mike Resnick, (Eds.)\u8232 either of which indicates that both Flint and Resnick are the editors.  Note the lack of proper grouping for the suffix! Natural language is a PITA, ain't it!\
+\
+Yep it is... Thanks for the explanation !\
+\uc0\u8232 \
+I suggest that you ask Kovid about the odd characters in Calibre. I'd guess that what we've spotted here is either a bug or a work-around for some odd file-system issue. Perhaps he's trying to avoid pathnames with embedded commas (or embedded colons, or...). In any case, there's clearly some way to retrieve the correct value, because it shows up as entered in Calibre itself.\
+\
+I think that I get it : Kovid did program an algorithm in Calibre, that detects these language oddities and isolates them behind a pipe character ; this way, we know that we should consider whatever is after the pipe as an oddity.\
+Now the question is : shall I simply replace the pipe with a comma and go on with it (e.g. "Paula Goodlett, Ed.") or remove the oddity (e.g. "Paula Goodlett") ?\
+I can do both...\
+}

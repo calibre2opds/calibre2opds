@@ -1,0 +1,71 @@
+##############
+## CHANGE THE LOGGING LEVELS OF THE LOGGING SYSTEM ITSELF (ONLY WHEN NECESSARY, WHICH MEANS NEVER)
+##############
+log4j.debug = false
+#log4j.debug = true
+
+##############
+# Don't touch anything below unless you know what you're doing
+##############
+
+
+# CONSOLE APPENDER
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.Target         = System.out
+log4j.appender.CONSOLE.Threshold      = INFO
+log4j.appender.CONSOLE.layout         = org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern = %d{ddMMHH:mm:ss,SSS} [%x] %-3p %c - %m%n
+
+# LOGFILE is set to be a File appender using a PatternLayout.
+log4j.appender.LOGFILE=org.apache.log4j.RollingFileAppender
+log4j.appender.LOGFILE.File           = ${calibre2opds.home}/log/calibre2opds.log
+log4j.appender.LOGFILE.MaxFileSize    = 2MB
+log4j.appender.LOGFILE.MaxBackupIndex = 10
+log4j.appender.LOGFILE.Append         = true
+log4j.appender.LOGFILE.Threshold      = TRACE
+log4j.appender.LOGFILE.layout         = org.apache.log4j.PatternLayout
+log4j.appender.LOGFILE.layout.ConversionPattern = %d{dd-MM-yyyy HH:mm:ss,SSS} [%x] %-3p %c - %m%n
+
+log4j.rootLogger=INFO, LOGFILE, CONSOLE
+log4j.additivity.rootLogger = false
+
+# Limit the org.apache category to INFO as its DEBUG is verbose
+log4j.logger.org.apache=INFO
+
+##############
+## CHANGE THE LOGGING LEVELS OF THE APPLICATION BY UNCOMMENTING ONE OR MORE OF THE FOLLOWING LINES
+## DEBUG is a high level-of-detail logging level, TRACE is even more verbose
+##############
+
+# 1. Set the logging or trace messages for the calibre2opds classes (uncomment only one of these two lines)
+log4j.logger.com.gmail.dpierron.calibre=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre=TRACE
+
+##############
+# The following can be combined with number 1. to refine the desired logging level
+##############
+
+# 2. Set the logging level for the Trook generator (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.trook=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.trook=TRACE
+
+# 3. Set the logging level for the Tags catalog generation process (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.opds.TagSubCatalog=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.opds.TagSubCatalog=TRACE
+
+# 4. Set the logging level for the Books catalog generation process (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.opds.BooksSubCatalog=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.opds.BooksSubCatalog=TRACE # (this includes the logging of all the books processed) 
+
+# 5. Set the logging level for the XML transformation and parsing, and the book comments conversion system (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.opds.JDOM=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.opds.JDOM=TRACE
+
+# 6. Set the logging level for the file caching system (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.cache.CachedFile=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.cache.CachedFile=TRACE
+
+# 7. Set the logging level for the file caching management system (uncomment only one of these two lines)
+#log4j.logger.com.gmail.dpierron.calibre.cache.CachedFileManager=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.cache.CachedFileManager=TRACE
+

@@ -1,0 +1,57 @@
+                      DevNote - Adding GUI Fields
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a note on the process involved in adding new fields to the calibre2opds GUI.
+The process is s bit tricky, so this is intended to act both as a guide to someone not familiar
+with the source and also as a checklist/reminder of the steps involved.
+
+You will need the NetBeans IDE installed (from www.netbeans.org) as the Form editor from that tool is used.
+
+Editing the Form
+~~~~~~~~~~~~~~~~
+
+-  Load the IDE and select the Open File option
+
+-  Navigate to the form to be edited.  The one you are most likely to want to edit is the main GUI
+    which is found at OpdsOutput\src\main\java\com\gmail\dpierron\calibre\gui\Mainframe.form
+    There is an associated Mainframe.java file but the loading of this is handled automatically.
+
+- The main body of the form is uses a gridbox layout 4 columns wide (used as 2 pairs of 2).
+  The first column is used to hold the label which is right (East) aligned.
+  The second column holds the input field which is left (West) aligned.
+
+-  Add a field of the requisite type from the toolbox
+   Set the following properties:
+   Text:  whatever you like - recommended you use the field variable name as it will then be obvious
+          if you have applied the localization text
+   X-Position
+   y-position
+
+Localization
+~~~~~~~~~~~~
+- All fields to be used in the GUI should have a localization entry in the localization.xls spreadsheet
+- Export button on the spreadsheet should be used to ensure that the language specific .properties files
+  are updated with the latest text strings.
+
+Java changes to support GUI
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- The following changes need to be made in the .java file corresponding to the .form file
+  This will typically be Mainframe.java
+  - translateTexts()        Entries need to be added to apply localization
+  - popupExplanation()      Entries need to be added to display any tooltip on clicking on the label.
+  - loadValues()            Entries need to be added to load any fields
+  - storeValues()           Entries need to be added to save any fields
+
+Note that it may often be easier to do the work to get a new option added to the
+configuration options before doing the GUI related Java work
+
+Java changes to support new configuration option
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It is likely that the reason the GUI is being edited is to support a new configuration option.
+The following specifies the steps needed to get the option added
+- StanzaConstants.java        Add entry for field and give its default value
+- ConfigurationHolder.java:   Add an entry for the constant name in the configuration properties file
+                              Add appropriate get/set routines
+- ReadOnlyStanzaConfigurationInterface.java
+                              If field to be logged, add get routine to those defined for this interface
+- StanzaDefaultConfiguration.java
+                              Add get method to return default value for property

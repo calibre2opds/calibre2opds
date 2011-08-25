@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>calibre2opds</artifactId>
+        <groupId>com.gmail.dpierron.calibre</groupId>
+        <version>2.5-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.gmail.dpierron</groupId>
+    <artifactId>Tools</artifactId>
+    <name>Tools</name>
+    <version>2.5-SNAPSHOT</version>
+    <description>Helper tools</description>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.12</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
