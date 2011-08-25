@@ -1,0 +1,53 @@
+                      DevNote - Compatibility Modes
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a note on the different compatibility modes that are supported by calibre2opds and
+any deviations from the OPDS standard that are used in these modes:
+
+OPDS
+~~~~
+This should conform to the latest OPDS standard.
+The current release of this standard is 1.0, and 1.1 is available in draft
+
+Calibre2opds tries to support the full standard when in OPDS compatibility mode.
+
+Stanza
+~~~~~~
+Stanza was implemented against an early draft of the original OPDS standard.
+It embodies most of the basic concepts, but cannot handle many of the more
+detailed features that became part of the final OPDS standard.
+
+As Stanza was the first widely available reader to support this standard,
+many web sites conform to this implementation.  As a result there are
+other ereader packages around that also support this subset of OPDS.
+This makes this compatibility mode important in terms of reaching the
+widest available audience.   Also most software that conforms to the
+full OPDS standard also seems to work with the Stanza sub-set.
+
+* External Links:
+
+	Stanza specific attributes
+	    rel="x-stanza-cover-image"                  // Appears to work OK, but so does OPDS equivalent
+	    rel="x-stanza-cover-image-thumbnail"        // Appears to work OK, but so does OPDS equivalent
+
+	Supported OPDS attributes:
+		href
+		type
+		rel="related"                               // Required in Book Details even though documentations
+		                                            // says it is ignored.
+		                                            // Should be omitted in feed for external links
+
+	Other OPDS attributes
+		rel="http://opds-spec.org/acquisition"      // This is not officially supported but appears to work
+		rel="http://opds-spec.org/cover"            // This is not officially supported but appears to work
+		rel="http://opds-spec.org/thumbnail"        // This is not officially supported but appears to work
+
+    Not sure about the following:
+		rel="search"                                // Not used within calibre2opds
+
+Nook
+~~~~
+TBD
+
+Aldiko
+~~~~~~
+TBD

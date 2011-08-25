@@ -1,0 +1,92 @@
+<shortcuts>
+
+  <!--
+    Default shortcut file (used on windows)
+  -->
+  
+  <programGroup defaultName="Calibre2opds" location="applications"/>
+
+  <shortcut
+     name="Calibre2opds"
+     description="Calibre2opds Graphical User Interface"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/rungui.cmd"
+     commandLine=""
+     workingDirectory="$INSTALL_PATH"
+     iconFile="$INSTALL_PATH/calibre2opds-icon-small_32.ico"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Calibre2opds documentation"
+     description="Calibre2Opds Online Documentation"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="iexplorer"
+     commandLine="http://wiki.mobileread.com/wiki/Calibre2opds"
+     workingDirectory=""
+     iconFile="$INSTALL_PATH/calibre2opds-icon-small_32.ico"
+     iconIndex="0"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Calibre2opds catalog generation"
+     description="Generate calibre2opds catalogs from parameters set up earlier via GUI"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/run.cmd"
+     commandLine=""
+     workingDirectory="$INSTALL_PATH"
+     iconFile="$INSTALL_PATH/calibre2opds-text-icon.ico"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Uninstall calibre2opds"
+     description="Uninstall calibre2opds from the system"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="javaw"
+     commandLine="-jar &quot;$INSTALL_PATH/uninstaller/uninstaller.jar&quot;"
+     workingDirectory="$INSTALL_PATH"
+     iconFile="$INSTALL_PATH/uninstall-icon_32.ico"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+</shortcuts>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<installation version="1.0">
+    <info>
+        <appname>Calibre2Opds</appname>
+        <appversion>2.5 beta</appversion>
+        <authors>
+            <author name="David Pierron" email="dpierron@gmail.com"/>
+            <author name="Dave Walker" email="itimpi@ntlworld.com"/>
+        </authors>
+        <url>http://wiki.mobileread.com/wiki/Calibre2opds</url>
+    </info>
+
+    <!-- 
+        The gui preferences indication.
+        Sets the installer window to 640x480. It will not be able to change the size.
+    -->
+    <guiprefs width="800" height="600" resizable="yes"/>
+
+    <!-- 
+        The locale section.
+        Asks here to include the English and French langpacks.
+    -->
+    <locale>
+        <langpack iso3="eng"/>
+        <langpack iso3="fra"/>
+    </locale>
+
+    <!-- 
+        The resources section.
+        The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
+    -->
+    <resources>
+    	<res id="logo" src="brand/calibre2opds-icon.png"/>
+        <res id="LicencePanel.licence" src="licence.txt"/>
+        <res id="HTMLHelloPanel.info" src="hello.html"/>
+        <res id="InfoPanel.info" src="readme.txt"/>
+        <res id="XInfoPanel.info" src="release.txt"/>
+    	<res id="Win_shortcutSpec.xml" src="shortcutSpec.xml"/>
+    	<res id="Unix_shortcutSpec.xml" src="Unix_shortcutSpec.xml"/>
+    </resources>
+
+	<native type="izpack" name="ShellLink.dll"/>
+	
+    <!-- 
+        The panels section.
+        We indicate here which panels we want to use. The order will be respected.
+    -->
+    <panels>
+        <panel classname="HTMLHelloPanel"/>
+        <panel classname="InfoPanel"/>
+        <panel classname="XInfoPanel" id="release"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+
+    <!-- 
+        The packs section.
+        We specify here our packs.
+    -->
+    <packs>
+        <pack name="Base" required="yes">
+            <description>The base files</description>
+            <file src="readme.txt" targetdir="$INSTALL_PATH"/>
+            <file src="licence.txt" targetdir="$INSTALL_PATH"/>
+            <file src="release.txt" targetdir="$INSTALL_PATH"/>
+            <file src="script/run.sh" targetdir="$INSTALL_PATH"/>
+            <file src="script/run.cmd" targetdir="$INSTALL_PATH"/>
+            <file src="script/rungui.sh" targetdir="$INSTALL_PATH"/>
+            <file src="script/rungui.cmd" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/OpdsOutput-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/DataModel-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/Tools-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/jdom-1.1.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/jtidy-4aug2000r7-dev.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/junit-4.7.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/log4j-1.2.12.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/sqlite-jdbc-3.6.17.1.jar" targetdir="$INSTALL_PATH"/>
+
+            <file src="brand/calibre2opds-icon-small_32.ico" targetdir="$INSTALL_PATH"/>
+            <file src="brand/calibre2opds-text-icon.ico" targetdir="$INSTALL_PATH"/>
+            <file src="brand/uninstall-icon_32.ico" targetdir="$INSTALL_PATH"/>
+
+            <file src="brand/calibre2opds-icon.png" targetdir="$INSTALL_PATH"/>
+            <file src="brand/calibre2opds-icon_192.png" targetdir="$INSTALL_PATH"/>
+            <file src="brand/calibre2opds-icon_64.png" targetdir="$INSTALL_PATH"/>
+            <file src="brand/calibre2opds-text-icon_64.png" targetdir="$INSTALL_PATH"/>
+            <file src="brand/uninstall-icon_64.png" targetdir="$INSTALL_PATH"/>
+        </pack>
+    </packs>
+
+</installation>

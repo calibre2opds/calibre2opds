@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>calibre2opds</artifactId>
+        <groupId>com.gmail.dpierron.calibre</groupId>
+        <version>2.5-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.gmail.dpierron.calibre</groupId>
+    <artifactId>DataModel</artifactId>
+    <name>Datamodel</name>
+    <version>2.5-SNAPSHOT</version>
+    <description>The datamodel of the Calibre SQLite database</description>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.6.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gmail.dpierron</groupId>
+            <artifactId>Tools</artifactId>
+            <version>2.5-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

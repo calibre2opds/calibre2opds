@@ -1,0 +1,1 @@
+java -jar install.jar
