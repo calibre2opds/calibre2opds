@@ -11,7 +11,6 @@ package com.gmail.dpierron.calibre.cache;
  * runs if it can be avoided.
  */
 import com.gmail.dpierron.tools.Helper;
-import com.sun.corba.se.spi.activation._ActivatorImplBase;
 import org.apache.log4j.Logger;
 
 import java.awt.image.ImageFilter;

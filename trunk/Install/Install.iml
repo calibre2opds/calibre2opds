@@ -17,7 +17,6 @@
     <orderEntry type="module" module-name="Tools" />
     <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
     <orderEntry type="module" module-name="OpdsOutput" />
-    <orderEntry type="library" name="Maven: jtidy:jtidy:4aug2000r7-dev" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom:1.1" level="project" />
   </component>
 </module>

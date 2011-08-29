@@ -1,21 +1,15 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import com.gmail.dpierron.calibre.configuration.Configuration;
+import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
-
-import com.gmail.dpierron.calibre.configuration.Configuration;
-import com.gmail.dpierron.calibre.database.Database;
-import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import java.util.*;
 
 public class Book implements SplitableByLetter {
     private final static DateFormat TIMESTAMP_INTITLE_FORMAT = new SimpleDateFormat("dd/MM");
@@ -52,6 +46,7 @@ public class Book implements SplitableByLetter {
     private long latestFileModifiedDate = -1;
     private BookRating rating;
     private String bookLanguage;
+    private boolean flag;
 
     public Book(String id,
                 String uuid,
@@ -494,5 +489,16 @@ public class Book implements SplitableByLetter {
         return result;
     }
 
+    public boolean isFlagged() {
+      return flag;
+    }
+
+    public void setFlag() {
+      flag = true;
+    }
+
+    public void clearFlag() {
+      flag = false;
+    }
 
 }

@@ -87,7 +87,7 @@ public class HtmlManager {
         }
     }
 
-    private String getHtmlFilenameFromXmlFilename(String xmlFilename) {
+    public String getHtmlFilenameFromXmlFilename(String xmlFilename) {
     String htmlFilename = xmlFilename.substring(0, xmlFilename.length() - 4) + ".html";
     return htmlFilename;
   }

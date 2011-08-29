@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.calibre.opds.indexer.Index;
 
 import java.io.File;
 import java.util.Locale;
@@ -270,4 +271,17 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public String getLibrarythingTitleUrl() {
     return StanzaConstants.LIBRARYTHING_TITLE_URL;
   }
+
+  public boolean getIndexComments() {
+    return StanzaConstants.IndexComments;
+  }
+
+  public int getMaxKeywords() {
+    return StanzaConstants.MaxKeywords;
+  }
+
+  public Index.FilterHintType getIndexFilterAlgorithm() {
+    return StanzaConstants.IndexFilterAlgorithm;
+  }
+
 }

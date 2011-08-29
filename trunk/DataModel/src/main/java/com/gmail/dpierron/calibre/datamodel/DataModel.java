@@ -9,13 +9,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.gmail.dpierron.calibre.database.Database;
-import org.apache.log4j.Logger;
 
 public enum DataModel {
   INSTANCE;
-
-  private static final Logger logger = Logger.getLogger(DataModel.class);
-
+  
   Map<String, List<EBookFile>> mapOfFilesByBookId;
   Map<String, List<Publisher>> mapOfPublishersByBookId;
   Map<String, List<Author>> mapOfAuthorsByBookId;

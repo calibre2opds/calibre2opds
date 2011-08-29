@@ -171,6 +171,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
     Document document = new Document();
+    String url = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     try {
       fos = new FileOutputStream(outputFile);
 
@@ -180,7 +181,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       List<Element> result;
       if (willSplit) {
         logger.debug("splitting by letter");
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, url);
         result = getListOfAuthorsSplitByLetter(breadcrumbs, mapOfAuthorsByLetter, title, urn, pFilename);
       } else {
         logger.debug("NOT splitting by letter");
@@ -192,7 +193,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
             break;
           } else {
             Author author = authors.get(i);
-            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, url);
             logger.debug("getAuthor:" + author);
             Element entry = getAuthor(breadcrumbs, author, urn);
             if (entry != null) {
@@ -234,13 +235,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       else
         titleNext = Localization.Main.getText("title.lastpage");
 
-      entry = FeedHelper.INSTANCE.getNext(getCatalogManager().getCatalogFileUrlInItsSubfolder(filename), titleNext);
-    }
-    else
-    {
-      if (logger.isTraceEnabled())
-        logger.trace("getListOfAuthors:  Breadcrumbs=" + pBreadcrumbs.toString());
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+      entry = FeedHelper.INSTANCE.getNext(url, titleNext);
+    } else {
+      boolean weAreAlsoInSubFolder = pBreadcrumbs.size()>1;
       entry = FeedHelper.INSTANCE.getEntry(title,
                                            urn,
                                            getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder),

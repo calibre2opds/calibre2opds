@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.Constants;
+import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -79,7 +80,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_LIBRARYTHINGAUTHORURL = "LibrarythingAuthorUrl";
   private final static String PROPERTY_NAME_LIBRARYTHINGISBNURL = "LibrarythingIsbnUrl";
   private final static String PROPERTY_NAME_LIBRARYTHINGTITLEURL = "LibrarythingTitleUrl";
-
+  private final static String PROPERTY_NAME_INDEXCOMMENTS = "IndexComments";
+  private final static String PROPERTY_NAME_MAXKEYWORDS = "MaxKeywords";
+  private final static String PROPERTY_NAME_INDEXFILTERALGORITHM = "IndexFilterAlgorithm";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -1210,6 +1213,54 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public boolean isLibrarythingTitleUrlReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGTITLEURL);
+  }
+
+  public Index.FilterHintType getIndexFilterAlgorithm() {
+    String s = getProperty(PROPERTY_NAME_INDEXFILTERALGORITHM);
+    if (s == null)
+      return defaults.getIndexFilterAlgorithm();
+    else
+      return Index.FilterHintType.valueOf(s);
+  }
+
+  public void setIndexFilterAlgorithm(Index.FilterHintType value) {
+    setProperty(PROPERTY_NAME_INDEXFILTERALGORITHM, value);
+  }
+
+  public boolean isIndexFilterAlgorithmReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INDEXFILTERALGORITHM);
+  }
+
+  public boolean getIndexComments() {
+    Boolean b = getBoolean(PROPERTY_NAME_INDEXCOMMENTS);
+    if (b == null)
+      return defaults.getIndexComments();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIndexComments(boolean value) {
+    setProperty(PROPERTY_NAME_INDEXCOMMENTS, value);
+  }
+
+  public boolean isIndexCommentsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INDEXCOMMENTS);
+  }
+
+  public int getMaxKeywords() {
+    Integer i = getInteger(PROPERTY_NAME_MAXKEYWORDS);
+    if (i == null)
+      return defaults.getMaxKeywords();
+    else
+      return i.intValue();
+  }
+
+  public void setMaxKeywords(int value) {
+    setProperty(PROPERTY_NAME_MAXKEYWORDS, value);
+  }
+
+  public boolean isMaxKeywordsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_MAXKEYWORDS);
   }
 
 }

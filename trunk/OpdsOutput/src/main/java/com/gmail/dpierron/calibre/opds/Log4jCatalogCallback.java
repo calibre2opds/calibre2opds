@@ -168,6 +168,15 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void startCreateJavascriptDatabase(long nb) {
+    logger.info(Localization.Main.getText("info.step.index"));
+    progressStep.setMaxScale(nb);
+  }
+
+  public void endCreateJavascriptDatabase(long milliseconds) {
+    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  }
+
   public void startCopyLibToTarget(long nb) {
     logger.info(Localization.Main.getText("info.step.copylib"));
     progressStep.setMaxScale(nb);
