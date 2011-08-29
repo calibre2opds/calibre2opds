@@ -61,7 +61,7 @@ public class Catalog {
   /**
    * Default Constructor
    */
-  public Catalog()
+  private Catalog()
   {
     super();
   }

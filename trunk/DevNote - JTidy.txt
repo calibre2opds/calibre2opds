@@ -1,0 +1,4 @@
+Please install JTidy r938 in your local maven repository by using the following command :
+mvn install:install-file -DgroupId=net.sf.jtidy -DartifactId=jtidy -Dversion=r938 -Dpackaging=jar -Dfile=lib\jtidy-r938.jar
+
+I'm sorry but I couldn't find an onlive repository containing this version, and it's needed because we have to use setInputEncoding or it won't work !
