@@ -11,6 +11,7 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
@@ -20,8 +21,6 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import sun.awt.image.OffScreenImage;
-import sun.rmi.runtime.Log;
 
 import javax.swing.*;
 import java.io.*;
@@ -451,7 +450,8 @@ public class Catalog {
       try
       {
         FileInputStream is = new FileInputStream(summaryFile);
-        List<Element> htmlElements = JDOM.INSTANCE.tidyInputStream(is);
+        String text = Helper.readTextFile(is);
+        List<Element> htmlElements = JDOM.INSTANCE.convertBookCommentToXhtml(text);
         if (htmlElements != null) for (Element htmlElement : htmlElements)
         {
           contentElement.addContent(htmlElement.detach());
@@ -460,10 +460,6 @@ public class Catalog {
       catch (FileNotFoundException e)
       {
         logger.error(Localization.Main.getText("error.summary.cannotFindFile", summaryFile.getAbsolutePath()), e);
-      }
-      catch (JDOMException e)
-      {
-        logger.error(Localization.Main.getText("error.summary.errorParsingFile"), e);
       }
       catch (IOException e)
       {
@@ -625,14 +621,8 @@ public class Catalog {
     callback.endReadDatabase(System.currentTimeMillis() - now);
 
     String filename = SecureFileManager.INSTANCE.encode("index.xml");
-    File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
-    FileOutputStream fos = null;
-    Document document = new Document();
 
-    logger.trace("try");
 
-    try
-    {
       if (currentProfile.getDeviceMode() == DeviceMode.Nook)
       {
         // prepare the Trook specific search database
@@ -640,7 +630,6 @@ public class Catalog {
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
 
-      fos = new FileOutputStream(outputFile);
 
       String title = Localization.Main.getText("home.title");
       String urn = "calibre:catalog";
@@ -728,6 +717,23 @@ public class Catalog {
       callback.endCreateAllbooks(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating All Books catalog");
 
+    File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
+    Document document = new Document();
+    FileOutputStream fos = null;
+    try
+    {
+      fos = new FileOutputStream(outputFile);
+
+      // write the element to the file
+      document.addContent(main);
+      JDOM.INSTANCE.getOutputter().output(document, fos);
+    }
+    finally
+    {
+      if (fos != null)
+        fos.close();
+    }
+
       /* Thumbnails */
       logger.debug("STARTING: Generating Thumbnails");
       int nbThumbnails = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
@@ -746,6 +752,15 @@ public class Catalog {
       countCovers = CatalogContext.INSTANCE.getCoverManager().generateImages();
       callback.endCreateCovers(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Reduced Covers");
+
+    /* Javascript database */
+    logger.debug("STARTING: Generating Javascript database");
+    long nbKeywords  = IndexManager.INSTANCE.size();
+    callback.startCreateJavascriptDatabase(nbKeywords);
+    now = System.currentTimeMillis();
+    IndexManager.INSTANCE.exportToJavascriptArrays();
+    callback.endCreateJavascriptDatabase(System.currentTimeMillis() - now);
+    logger.debug("COMPLETED: Generating Javascript database");
 
       /* Epub metadata reprocessing */
       logger.debug("STARTING: Processing ePub Metadata");
@@ -768,16 +783,6 @@ public class Catalog {
       }
       callback.endReprocessingEpubMetadata(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Processing ePub Metadata");
-
-      // write the element to the file
-      document.addContent(main);
-      JDOM.INSTANCE.getOutputter().output(document, fos);
-    }
-    finally
-    {
-      if (fos != null)
-        fos.close();
-    }
 
     // create the same file as html
     logger.debug("STARTED: Generating HTML Files");

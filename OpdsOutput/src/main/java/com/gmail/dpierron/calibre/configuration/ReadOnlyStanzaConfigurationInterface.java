@@ -9,6 +9,8 @@ package com.gmail.dpierron.calibre.configuration;
  *          to specify what variables are to be dumped via the
  *          ??? function.
  */
+import com.gmail.dpierron.calibre.opds.indexer.Index;
+
 import java.io.File;
 
 public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurationInterface {
@@ -76,4 +78,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public String getLibrarythingAuthorUrl();
   public String getLibrarythingIsbnUrl();
   public String getLibrarythingTitleUrl();
+
+  public boolean getIndexComments();
+  public int getMaxKeywords();
+  public Index.FilterHintType getIndexFilterAlgorithm();
 }

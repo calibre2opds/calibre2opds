@@ -1,0 +1,4 @@
+set MVN_HOME=c:\java\apache-maven-2.0.9
+
+
+set PATH=%PATH%;%MVN_HOME%\bin

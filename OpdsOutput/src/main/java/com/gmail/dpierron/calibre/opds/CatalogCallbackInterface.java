@@ -53,6 +53,10 @@ public interface CatalogCallbackInterface {
   public void incStepProgressIndicatorPosition();
   public void showMessage(String message);
 
+  // Javascript database
+  public void startCreateJavascriptDatabase(long nb);
+  public void endCreateJavascriptDatabase(long milliseconds);
+
   // Copy to target
   public void startCopyLibToTarget(long nb);
   public void startCopyCatToTarget(long nb);

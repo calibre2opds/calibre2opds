@@ -15,6 +15,7 @@ import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
 import com.l2fprod.common.swing.JDirectoryChooser;
@@ -487,6 +488,17 @@ public class Mainframe extends javax.swing.JFrame
     chkZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
     lblZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
 
+    chkIndexComments.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIndexComments());
+    chkIndexComments.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexCommentsReadOnly());
+    lblIndexComments.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexCommentsReadOnly());
+    txtMaxKeywords.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords());
+    txtMaxKeywords.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxKeywordsReadOnly());
+    lblMaxKeywords.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxKeywordsReadOnly());
+    cboIndexFilterAlgorithm.setModel(new DefaultComboBoxModel(Index.FilterHintType.values()));
+    cboIndexFilterAlgorithm.setSelectedItem(ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
+    cboIndexFilterAlgorithm.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexFilterAlgorithmReadOnly());
+    lblIndexFilterAlgorithm.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexFilterAlgorithmReadOnly());
+
     chkNogenerateopdsfiles.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateDownloads());
     chkNogenerateopdsfiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateDownloadsReadOnly());
     lblNogenerateopdsfiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateDownloadsReadOnly());
@@ -693,6 +705,10 @@ public class Mainframe extends javax.swing.JFrame
     ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingAuthorUrl(txtLibrarythingAuthorUrl.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingIsbnUrl(txtLibrarythingIsbnUrl.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingTitleUrl(txtLibrarythingTitleUrl.getText());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setIndexComments(chkIndexComments.isSelected());
+    i = getValue(txtMaxKeywords);
+    ConfigurationManager.INSTANCE.getCurrentProfile().setMaxKeywords(i);
+    ConfigurationManager.INSTANCE.getCurrentProfile().setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
   }
 
   /**
@@ -892,6 +908,12 @@ public class Mainframe extends javax.swing.JFrame
     cmdLibrarythingIsbnReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
     lblLibrarythingTitleUrl.setText(Localization.Main.getText("config.LibrarythingTitleUrl.label")); // NOI18N
     lblLibrarythingTitleUrl.setToolTipText(Localization.Main.getText("config.LibrarythingTitleUrl.description")); // NOI18N
+    lblMaxKeywords.setText(Localization.Main.getText("config.MaxKeywords.label")); // NOI18N
+    lblMaxKeywords.setToolTipText(Localization.Main.getText("config.MaxKeywords.description")); // NOI18N
+    lblIndexComments.setText(Localization.Main.getText("config.IndexComments.label")); // NOI18N
+    lblIndexComments.setToolTipText(Localization.Main.getText("config.IndexComments.description")); // NOI18N
+    lblIndexFilterAlgorithm.setText(Localization.Main.getText("config.IndexFilterAlgorithm.label")); // NOI18N
+    lblIndexFilterAlgorithm.setToolTipText(Localization.Main.getText("config.IndexFilterAlgorithm.description")); // NOI18N
     cmdLibrarythingTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
     cmdLibrarythingTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
 
@@ -972,6 +994,9 @@ public class Mainframe extends javax.swing.JFrame
     else if (label == lblMaxMobileResolution) popup = Localization.Main.getText("config.MaxMobileResolution.description");
     else if (label == lblNoSplitInAuthorBooks) popup = Localization.Main.getText("config.SplitInAuthorBooks.description");
     else if (label == lblNoSplitInSeriesBooks) popup = Localization.Main.getText("config.SplitInSeriesBooks.description");
+    else if (label == lblMaxKeywords) popup = Localization.Main.getText("config.MaxKeywords.description");
+    else if (label == lblIndexComments) popup = Localization.Main.getText("config.IndexComments.description");
+    else if (label == lblIndexFilterAlgorithm) popup = Localization.Main.getText("config.IndexFilterAlgorithm.description");
 
     // external links
     else if (label == lblWikipediaUrl) popup = Localization.Main.getText("config.WikipediaUrl.description");
@@ -1157,6 +1182,12 @@ public class Mainframe extends javax.swing.JFrame
         chkNoSplitInSeriesBooks = new javax.swing.JCheckBox();
         lblNoSplitInAuthorBooks = new javax.swing.JLabel();
         chkNoSplitInAuthorBooks = new javax.swing.JCheckBox();
+        lblIndexComments = new javax.swing.JLabel();
+        chkIndexComments = new javax.swing.JCheckBox();
+        lblMaxKeywords = new javax.swing.JLabel();
+        txtMaxKeywords = new javax.swing.JTextField();
+        lblIndexFilterAlgorithm = new javax.swing.JLabel();
+        cboIndexFilterAlgorithm = new javax.swing.JComboBox();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -1681,16 +1712,6 @@ public class Mainframe extends javax.swing.JFrame
 
         cboCompatibilityTrick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboCompatibilityTrick.setPreferredSize(new java.awt.Dimension(100, 20));
-        cboCompatibilityTrick.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboCompatibilityTrickActionPerformed(evt);
-            }
-        });
-        cboCompatibilityTrick.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
-            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
-                cboCompatibilityTrickVetoableChange(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 12;
@@ -2183,6 +2204,73 @@ public class Mainframe extends javax.swing.JFrame
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlGenerationOptions.add(chkNoSplitInAuthorBooks, gridBagConstraints);
+
+        lblIndexComments.setText(Localization.Main.getText("config.IndexComments.label")); // NOI18N
+        lblIndexComments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlGenerationOptions.add(lblIndexComments, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlGenerationOptions.add(chkIndexComments, gridBagConstraints);
+
+        lblMaxKeywords.setText(Localization.Main.getText("config.MaxKeywords.label")); // NOI18N
+        lblMaxKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlGenerationOptions.add(lblMaxKeywords, gridBagConstraints);
+
+        txtMaxKeywords.setText("txtMaxKeywords");
+        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(187, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        pnlGenerationOptions.add(txtMaxKeywords, gridBagConstraints);
+
+        lblIndexFilterAlgorithm.setText(Localization.Main.getText("config.IndexFilterAlgorithm.label")); // NOI18N
+        lblIndexFilterAlgorithm.setToolTipText(Localization.Main.getText("config.CompatibilityTrick.description")); // NOI18N
+        lblIndexFilterAlgorithm.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
+        pnlGenerationOptions.add(lblIndexFilterAlgorithm, gridBagConstraints);
+
+        cboIndexFilterAlgorithm.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboIndexFilterAlgorithm.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
+        pnlGenerationOptions.add(cboIndexFilterAlgorithm, gridBagConstraints);
 
         tabOptionsTabs.addTab(Localization.Main.getText("gui.tab2"), pnlGenerationOptions); // NOI18N
 
@@ -3238,14 +3326,6 @@ public class Mainframe extends javax.swing.JFrame
       setTargetFolder(txtTargetFolder.getText());
   }//GEN-LAST:event_txtTargetFolderActionPerformed
 
-  private void cboCompatibilityTrickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCompatibilityTrickActionPerformed
-      // TODO add your handling code here:
-  }//GEN-LAST:event_cboCompatibilityTrickActionPerformed
-
-  private void cboCompatibilityTrickVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_cboCompatibilityTrickVetoableChange
-      // TODO add your handling code here:
-  }//GEN-LAST:event_cboCompatibilityTrickVetoableChange
-
   private void mnuHelpOpenSupportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenSupportActionPerformed
       debugShowSupportFolder();
   }//GEN-LAST:event_mnuHelpOpenSupportActionPerformed
@@ -3424,6 +3504,7 @@ public class Mainframe extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboCompatibilityTrick;
+    private javax.swing.JComboBox cboIndexFilterAlgorithm;
     private javax.swing.JComboBox cboLang;
     private javax.swing.JCheckBox chkBrowseByCover;
     private javax.swing.JCheckBox chkBrowseByCoverWithoutSplit;
@@ -3434,6 +3515,7 @@ public class Mainframe extends javax.swing.JFrame
     private javax.swing.JCheckBox chkIncludeAboutLink;
     private javax.swing.JCheckBox chkIncludeOnlyOneFile;
     private javax.swing.JCheckBox chkIncludeemptybooks;
+    private javax.swing.JCheckBox chkIndexComments;
     private javax.swing.JCheckBox chkMinimizeChangedFiles;
     private javax.swing.JCheckBox chkNoCoverResize;
     private javax.swing.JCheckBox chkNoGenerateTags;
@@ -3505,11 +3587,14 @@ public class Mainframe extends javax.swing.JFrame
     private javax.swing.JLabel lblIncludeOnlyOneFile;
     private javax.swing.JLabel lblIncludeemptybooks;
     private javax.swing.JLabel lblIncludeformat;
+    private javax.swing.JLabel lblIndexComments;
+    private javax.swing.JLabel lblIndexFilterAlgorithm;
     private javax.swing.JLabel lblIsfdbAuthorUrl;
     private javax.swing.JLabel lblLang;
     private javax.swing.JLabel lblLibrarythingAuthorUrl;
     private javax.swing.JLabel lblLibrarythingIsbnUrl;
     private javax.swing.JLabel lblLibrarythingTitleUrl;
+    private javax.swing.JLabel lblMaxKeywords;
     private javax.swing.JLabel lblMaxMobileResolution;
     private javax.swing.JLabel lblMaxbeforepaginate;
     private javax.swing.JLabel lblMaxbeforesplit;
@@ -3586,6 +3671,7 @@ public class Mainframe extends javax.swing.JFrame
     private javax.swing.JTextField txtLibrarythingAuthorUrl;
     private javax.swing.JTextField txtLibrarythingIsbnUrl;
     private javax.swing.JTextField txtLibrarythingTitleUrl;
+    private javax.swing.JTextField txtMaxKeywords;
     private javax.swing.JTextField txtMaxMobileResolution;
     private javax.swing.JTextField txtMaxbeforepaginate;
     private javax.swing.JTextField txtMaxbeforesplit;

@@ -665,8 +665,48 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://calibre2opds.googlecode.com/svn/branches">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://calibre2opds.googlecode.com/svn/tags">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                  <entry key="https://calibre2opds.googlecode.com/svn/wiki">
+                    <value>
+                      <list />
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://calibre2opds.googlecode.com/svn/branches" />
+                  <option value="https://calibre2opds.googlecode.com/svn/tags" />
+                  <option value="https://calibre2opds.googlecode.com/svn/wiki" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://calibre2opds.googlecode.com/svn/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="Bazaar" />
+    <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="libraryTable">
@@ -682,17 +722,6 @@
         <root url="jar://$PROJECT_DIR$/Tools/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/com/gmail/dpierron/Tools/2.2-SNAPSHOT/Tools-2.2-SNAPSHOT-sources.jar!/" />
         <root url="file://$PROJECT_DIR$/Tools/src/main/java" />
-      </SOURCES>
-    </library>
-    <library name="Maven: jtidy:jtidy:4aug2000r7-dev">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.7">

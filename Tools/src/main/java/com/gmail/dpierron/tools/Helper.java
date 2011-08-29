@@ -983,4 +983,13 @@ public class Helper {
     }
   }
 
+  public static String toTitleCase(String s) {
+    if (Helper.isNullOrEmpty(s))
+      return s;
+
+    StringBuffer sb = new StringBuffer(s.length());
+    sb.append(Character.toUpperCase(s.charAt(0)));
+    sb.append(s.substring(1));
+    return sb.toString();
+  }
 }

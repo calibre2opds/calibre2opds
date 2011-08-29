@@ -1,0 +1,48 @@
+<html>
+<head>
+<script src="database/database.js" ></script>
+<script src="database/books.js" ></script>
+<script src="database/keywords.js" ></script>
+<script src="database/catalogitems.js" ></script>
+<link href="css/desktop.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body onload="getKeywordsWithSize(document.getElementById('tag_cloud'),'')">
+
+<div id="content">
+
+<div id="header">
+<h1>
+Calibre2opds
+</h1>
+<h2>Search</h2>
+<div id="searchbox">
+<input type="search" autofocus placeholder="Search KeyWords" name="lookingFor" id="lookingFor" onkeyup="getKeywordsWithSize(document.getElementById('tag_cloud'),document.getElementById('lookingFor').value)" />
+</div>
+</div>
+
+<div id="Results">
+<div id="tag_cloud"></div>
+
+<div id="searchResult"></div>
+</div>
+</div>
+
+
+<div id="footer">
+
+<div id="footerInfo">
+<a href="#" onclick="createAndPopulateDB()">load c2opds database</a>
+</div>
+<div/>
+
+
+
+
+
+
+</body>
+
+
+
+</html>
