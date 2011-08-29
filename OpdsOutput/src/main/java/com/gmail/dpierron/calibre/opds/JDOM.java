@@ -4,24 +4,17 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.DefaultJDOMFactory;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMFactory;
+import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.w3c.tidy.Tidy;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -223,6 +216,60 @@ public enum JDOM {
     return element("p", Namespace.Atom);
   }
 
+  static Tidy tidyForTidyInputStream = null;
+
+  /**
+    * Routine to tidy up the HTML in the Summary field
+    * @param in
+    * @return
+    * @throws JDOMException
+    * @throws IOException
+    */
+  public List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException
+  {
+    List<Element> result = null;
+    // initializing tidy
+    if (logger.isTraceEnabled())
+      logger.trace("initializing tidy");
+    if (tidyForTidyInputStream == null) {
+      tidyForTidyInputStream = new Tidy();
+      tidyForTidyInputStream.setShowWarnings(false);
+      tidyForTidyInputStream.setXmlOut(true);
+      tidyForTidyInputStream.setInputEncoding("utf-8");
+      tidyForTidyInputStream.setQuiet(true);
+      tidyForTidyInputStream.setDropEmptyParas(false);
+    }
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    if (logger.isTraceEnabled())
+      logger.trace("parsing with Tidy");
+    try {
+      tidyForTidyInputStream.parseDOM(in, out);
+    } finally {
+      out.close();
+    }
+    String text2 = new String(out.toByteArray());
+    SAXBuilder sb = new SAXBuilder(false);
+    if (logger.isTraceEnabled())
+      logger.trace("building doc");
+    Document doc = sb.build(new StringReader(text2));
+    Element html = doc.getRootElement();
+    if (html.getName().equalsIgnoreCase("html")) {
+      if (logger.isTraceEnabled())
+        logger.trace("found html");
+      for (Object o : html.getChildren()) {
+        if (o instanceof Element) {
+          Element child = (Element) o;
+          if (child.getName().equalsIgnoreCase("body")) {
+            if (logger.isTraceEnabled())
+              logger.trace("found body");
+            (result = new ArrayList<Element>()).addAll(child.getChildren());
+          }
+        }
+      }
+    }
+    return result;
+  }
+
   public List<Element> convertBookCommentToXhtml(String text) {
     List<Element> result = null;
 
@@ -249,35 +296,14 @@ public enum JDOM {
         text = sb.toString();
       }
 
+      // tidy the text
+      if (logger.isTraceEnabled())
+        logger.trace("tidy the text");
       try {
-        EntityResolver er = new EntityResolver() {
-          public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-            if (Helper.isNullOrEmpty(systemId))
-              return null;
-            // find out the filename
-            String filename = systemId;
-            int lastSlash = systemId.lastIndexOf('/');
-            if (lastSlash > -1)
-              filename = systemId.substring(lastSlash);
-            InputStream is = getClass().getResourceAsStream("/dtd" + filename);
-            if (is != null)
-              return new InputSource(is);
-            else {
-              logger.warn("resolveEntity cannot find " + systemId);
-              return null;
-            }
-          }
-        };
-        SAXBuilder sb = new SAXBuilder(false);
-        sb.setEntityResolver(er);
-        if (logger.isTraceEnabled())
-          logger.trace("building doc");
-        Document doc = sb.build(new StringReader(text));
-        result = new ArrayList<Element>();
-        result.add(doc.getRootElement());
+        result = tidyInputStream(new ByteArrayInputStream(text.getBytes()));
       } catch (Exception ee) {
         if (logger.isTraceEnabled())
-          logger.trace("caught exception in the xhtml conversion process", ee);
+          logger.trace("caught exception in the tidy process", ee);
       }
 
       if (result != null) {

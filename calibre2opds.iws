@@ -2,90 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list readonly="true" id="1c6a0c92-e354-425e-af5a-631a16bb7a86" name="Default" comment="" />
-    <list default="true" id="aedf1858-5e4e-4f85-a271-91e407babc76" name="search index generation" comment="search index generation (first draft)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/database" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/Sorting icons.psd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/back_disabled.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/back_enabled.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/favicon.ico" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/forward_disabled.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/forward_enabled.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/sort_asc.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/sort_asc_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/sort_both.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/sort_desc.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images/sort_desc_disabled.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/images" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/setenv.cmd.sample" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/BookEntry.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/CatalogItem.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Index.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/IndexManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/ItemType.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Keyword.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/css/desktop.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/database/database.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/css/demo_page.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/css/demo_table.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/css/demo_table_jui.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/js/jquery.dataTables.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/js/jquery.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/media/license-bsd.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/_search/search.html" />
-      <change type="DELETED" beforePath="C:\projects\calibre2opds\trunk\OpdsOutput\src\test\java\TestJdom.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataModel" afterPath="$PROJECT_DIR$/DataModel" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Install" afterPath="$PROJECT_DIR$/Install" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization.xls" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization.xls" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput" afterPath="$PROJECT_DIR$/OpdsOutput" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Tools" afterPath="$PROJECT_DIR$/Tools" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$" afterPath="$PROJECT_DIR$" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/cache/CachedFileManager.java" afterPath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/cache/CachedFileManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/datamodel/Book.java" afterPath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/datamodel/Book.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/datamodel/DataModel.java" afterPath="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/datamodel/DataModel.java" />
+    <list id="aedf1858-5e4e-4f85-a271-91e407babc76" name="search index generation" comment="search index generation (first draft)" />
+    <list default="true" id="6dfb9f89-ab00-4763-948a-ee11ee36e9c4" name="correct the character set problem in books comments" comment="correct the character set problem in books comments">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/jtidy-r938.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DevNote - JTidy.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Install/Install.iml" afterPath="$PROJECT_DIR$/Install/Install.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/OpdsOutput.iml" afterPath="$PROJECT_DIR$/OpdsOutput/OpdsOutput.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/pom.xml" afterPath="$PROJECT_DIR$/OpdsOutput/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/CompatibilityTrick.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/CompatibilityTrick.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ConfigurationHolder.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ConfigurationHolder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ReadOnlyStanzaConfigurationInterface.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ReadOnlyStanzaConfigurationInterface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaDefaultConfiguration.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaDefaultConfiguration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/GenerateCatalogDialog.form" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/GenerateCatalogDialog.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/GenerateCatalogDialog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/GenerateCatalogDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.form" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.form" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/AuthorsSubCatalog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/AuthorsSubCatalog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/Runner.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/Runner.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/CatalogCallbackInterface.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/CatalogCallbackInterface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Log4jCatalogCallback.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Log4jCatalogCallback.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_en.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_en.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_es.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_es.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_fr.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_fr.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_it.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_it.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_ru.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Enumerations_ru.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_en.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_en.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_es.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_es.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_fr.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_fr.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_it.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_it.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_ru.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_ru.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java" afterPath="$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/calibre2opds.ipr" afterPath="$PROJECT_DIR$/calibre2opds.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/calibre2opds.iws" afterPath="$PROJECT_DIR$/calibre2opds.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="calibre2opds.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="setenv.cmd" />
+    <ignored mask="calibre2opds-*.exe" />
+    <ignored mask="calibre2opds-*.jar" />
+    <ignored mask="calibre2opds-*.zip" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +38,34 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" line="753" class="com.gmail.dpierron.calibre.opds.BooksSubCatalog" package="com.gmail.dpierron.calibre.opds">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="book.getId().equals(&quot;1527&quot;)" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" line="315" class="com.gmail.dpierron.calibre.opds.JDOM" package="com.gmail.dpierron.calibre.opds">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -142,14 +107,14 @@
       <property name="field_breakpoints_flattenPackages" value="true" />
       <property name="exception_breakpoints_groupByMethods" value="false" />
       <property name="line_breakpoints_groupByClasses" value="true" />
-      <property name="method_breakpoints_viewId" value="TABLE" />
       <property name="field_breakpoints_groupByMethods" value="false" />
-      <property name="line_breakpoints_flattenPackages" value="true" />
+      <property name="method_breakpoints_viewId" value="TABLE" />
       <property name="field_breakpoints_groupByClasses" value="true" />
+      <property name="line_breakpoints_flattenPackages" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -158,10 +123,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="JDOM.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="JDOM.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="225" column="23" selection-start="10475" selection-end="10475" vertical-scroll-proportion="0.0">
+            <state line="229" column="0" selection-start="10505" selection-end="10505" vertical-scroll-proportion="0.33216783">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -172,25 +137,34 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OpdsOutput/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="16" selection-start="2546" selection-end="2546" vertical-scroll-proportion="0.0">
+            <state line="55" column="28" selection-start="2112" selection-end="2112" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DataModel/pom.xml">
+      <file leaf-file-name="BooksSubCatalog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="16" selection-start="483" selection-end="483" vertical-scroll-proportion="0.23601398">
+            <state line="754" column="44" selection-start="27134" selection-end="27134" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Catalog.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java">
+      <file leaf-file-name="Mainframe.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="454" column="58" selection-start="18662" selection-end="18662" vertical-scroll-proportion="0.0">
+            <state line="254" column="32" selection-start="10739" selection-end="10739" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Runner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/Runner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="50" selection-start="1257" selection-end="1257" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -211,14 +185,18 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/cache/CachedFileManager.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/AuthorsSubCatalog.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/GenerateCatalogDialog.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/Runner.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
+        <option value="$PROJECT_DIR$/DataModel/src/test/java/com/gmail/dpierron/calibre/JdomTest.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/test/java/com/gmail/dpierron/calibre/JdomTest.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/pom.xml" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
       </list>
     </option>
   </component>
@@ -296,7 +274,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -307,7 +285,229 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Favorites" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataModel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataModel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataModel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataModel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataModel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
@@ -315,7 +515,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="preferences.editor" />
+    <property name="options.lastSelected" value="reference.settings.project.maven.repository.indices" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="GoToClass.includeJavaFiles" value="false" />
@@ -328,16 +528,117 @@
     <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
   </component>
-  <component name="RunManager" selected="JUnit.TestJdom">
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.gmail.dpierron.calibre" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Gui">
     <configuration default="false" name="TestJdom" type="JUnit" factoryName="JUnit" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="OpdsOutput" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TestJdom" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="JdomTest.testBookComment" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.gmail.dpierron.calibre.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <module name="OpdsOutput" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestJdom" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="com.gmail.dpierron.calibre" />
+      <option name="MAIN_CLASS_NAME" value="com.gmail.dpierron.calibre.JdomTest" />
+      <option name="METHOD_NAME" value="testBookComment" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="51457" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="JdomTest.testTidyBookComment" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.gmail.dpierron.calibre.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="OpdsOutput" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.gmail.dpierron.calibre" />
+      <option name="MAIN_CLASS_NAME" value="com.gmail.dpierron.calibre.JdomTest" />
+      <option name="METHOD_NAME" value="testTidyBookComment" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="51523" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="JdomTest.testParseBookComment" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false">
+        <pattern>
+          <option name="PATTERN" value="com.gmail.dpierron.calibre.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="OpdsOutput" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.gmail.dpierron.calibre" />
+      <option name="MAIN_CLASS_NAME" value="com.gmail.dpierron.calibre.JdomTest" />
+      <option name="METHOD_NAME" value="testParseBookComment" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -516,9 +817,38 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="2">
+    <configuration default="false" name="Cli" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="Cli" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="OpdsOutput" />
+      <envs>
+        <env name="HACKS_ENABLED" value="true" />
+        <env name="CALIBRE2OPDS_CONFIG" value="c:\data\dropbox\Calibre2opds" />
+        <env name="_CALIBRE2OPDS_CONFIG" value="c:\projects\calibre2opds\trunk\" />
+      </envs>
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="49749" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Application.Gui" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.TestJdom" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Cli" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.TestJdom" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.JdomTest.testBookComment" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.JdomTest.testTidyBookComment" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.JdomTest.testParseBookComment" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -595,10 +925,12 @@
       <updated>1314280288297</updated>
     </task>
     <task active="true" id="LOCAL-00002" summary="search index generation">
+      <option name="associatedChangelistId" value="6dfb9f89-ab00-4763-948a-ee11ee36e9c4" />
       <changelist id="aedf1858-5e4e-4f85-a271-91e407babc76" name="search index generation" comment="" />
       <changelist id="aedf1858-5e4e-4f85-a271-91e407babc76" name="search index generation" comment="" />
+      <changelist id="6dfb9f89-ab00-4763-948a-ee11ee36e9c4" name="correct the character set problem in books comments" comment="" />
       <created>1314280288284</created>
-      <updated>1314623860051</updated>
+      <updated>1314635234783</updated>
     </task>
     <task id="LOCAL-00003" summary="remove tidy">
       <created>1314623602735</created>
@@ -607,6 +939,26 @@
     <option name="localTasksCounter" value="4" />
     <servers />
   </component>
+  <component name="TodoView" selected-index="3">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1066" extended-state="6" />
     <editor active="false" />
@@ -614,19 +966,19 @@
       <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32968238" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Phing Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39978093" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3154436" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31659523" sideWeight="0.67031765" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33435395" sideWeight="0.67031765" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3288426" sideWeight="0.67031765" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33435395" sideWeight="0.67250824" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908976" sideWeight="0.6648412" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288426" sideWeight="0.2913472" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3274918" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -660,7 +1012,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="search index generation (first draft)" />
+    <option name="LAST_COMMIT_MESSAGE" value="correct the character set problem in books comments" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -675,6 +1027,7 @@
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="search index generation" />
     <MESSAGE value="search index generation (first draft)" />
+    <MESSAGE value="correct the character set problem in books comments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -684,26 +1037,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/AllBooksSubCatalog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="57" selection-start="2114" selection-end="2167" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Index.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="27" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/test/java/TestLocalisation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="30" selection-start="397" selection-end="397" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.6.0_27/src.zip!/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="944" column="0" selection-start="35779" selection-end="35779" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar!/org/w3c/tidy/Tidy.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="819" column="5" selection-start="19734" selection-end="19734" vertical-scroll-proportion="0.2723658" />
@@ -729,50 +1062,75 @@
         <state line="28" column="39" selection-start="996" selection-end="996" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java">
+    <entry file="file://$PROJECT_DIR$/DataModel/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3365" column="43" selection-start="200553" selection-end="200553" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="763" column="0" selection-start="27486" selection-end="27486" vertical-scroll-proportion="0.0" />
+        <state line="9" column="16" selection-start="483" selection-end="483" vertical-scroll-proportion="0.23076923">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="12" selection-start="312" selection-end="312" vertical-scroll-proportion="0.102564104">
+        <state line="73" column="29" selection-start="3096" selection-end="3096" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="454" column="58" selection-start="18662" selection-end="18662" vertical-scroll-proportion="0.0">
+        <state line="498" column="35" selection-start="20285" selection-end="20285" vertical-scroll-proportion="0.45755693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/jdom/jdom/1.1/jdom-1.1-sources.jar!/org/jdom/input/SAXBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="636" column="19" selection-start="22922" selection-end="22922" vertical-scroll-proportion="0.33205375">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sf/jtidy/jtidy/r938/jtidy-r938.jar!/org/w3c/tidy/Tidy.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="20" selection-start="114" selection-end="135" vertical-scroll-proportion="0.08226691">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="754" column="44" selection-start="27134" selection-end="27134" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="254" column="32" selection-start="10739" selection-end="10739" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/Runner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="50" selection-start="1257" selection-end="1257" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="28" selection-start="2112" selection-end="2112" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="225" column="23" selection-start="10475" selection-end="10475" vertical-scroll-proportion="0.0">
+        <state line="229" column="0" selection-start="10505" selection-end="10505" vertical-scroll-proportion="0.33216783">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="16" selection-start="2546" selection-end="2546" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataModel/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="16" selection-start="483" selection-end="483" vertical-scroll-proportion="0.23601398">
-          <folding />
         </state>
       </provider>
     </entry>

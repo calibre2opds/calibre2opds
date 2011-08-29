@@ -16,14 +16,9 @@
 
     <repositories>
         <repository>
-            <id>java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <!-- avoid looking for snapshots in this repository -->
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>http://repo1.maven.org/</url>
         </repository>
     </repositories>
 

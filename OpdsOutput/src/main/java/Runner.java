@@ -3,6 +3,7 @@ import com.gmail.dpierron.calibre.datamodel.test.TestDataModel;
 import com.gmail.dpierron.calibre.gui.Mainframe;
 import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
+import com.gmail.dpierron.calibre.opds.Log4jCatalogCallback;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -36,7 +37,7 @@ public class Runner {
         }
         else
         {
-            new Catalog().createMainCatalog();
+            new Catalog(new Log4jCatalogCallback()).createMainCatalog();
         }
     }
 
