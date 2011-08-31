@@ -7,7 +7,7 @@ REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
 call setenv.cmd
 
-SET VERSION=calibre2opds-2.5-beta1
+SET VERSION=calibre2opds-2.5-beta2
 SET ZIPFILE=%cd%\%VERSION%.zip
 
 del /q %cd%\%VERSION%.*
