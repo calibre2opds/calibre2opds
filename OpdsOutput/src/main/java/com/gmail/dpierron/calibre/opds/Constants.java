@@ -75,19 +75,19 @@ public class Constants {
   };
 
   public final static String getBzrVersion() {
-    String bzrVersion = "";
+    String vcsVersion = "";
     BufferedReader reader = null;
     try {
       try {
-        reader = new BufferedReader(new InputStreamReader(Constants.class.getResourceAsStream("/bzr_version.properties")));
-        bzrVersion = reader.readLine();
+        reader = new BufferedReader(new InputStreamReader(Constants.class.getResourceAsStream("/version_OpdsOutput.properties")));
+        vcsVersion = reader.readLine();
       } finally {
         if (reader != null) reader.close();
       }
     } catch (Exception e) {
       // we don't give a tiny rat's ass
     }
-    if (Helper.isNotNullOrEmpty(bzrVersion)) bzrVersion = " (rev. " + bzrVersion + ")";
-    return bzrVersion;
+    if (Helper.isNotNullOrEmpty(vcsVersion)) vcsVersion = " (rev. " + vcsVersion + ")";
+    return vcsVersion;
   }
 }

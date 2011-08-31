@@ -1,0 +1,1 @@
+This file sets up the development environment. You must copy it from setenv.cmd.sample, and edit it so the paths point to the right folder in your system.

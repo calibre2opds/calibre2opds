@@ -75,11 +75,8 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <exec executable="bzr"
-                                      output="target/classes/bzr_version.properties"
-                                      append="true">
-                                    <arg value="revno"/>
-                                </exec>
+                                <exec executable="${env.SVN_HOME}/bin/svnversion"
+                                      output="target/classes/version_OpdsOutput.properties" />
                             </tasks>
                         </configuration>
                     </execution>
