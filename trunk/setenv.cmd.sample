@@ -1,6 +1,0 @@
-set MVN_HOME=c:\java\apache-maven-2.0.9
-set JAVA_HOME=c:\Program Files\Java\jdk1.6.0_27
-set SVN_HOME=c:\tools\svn-win32-1.5.2
-SET ZIPPROG=zip
-
-set PATH=%PATH%;%MVN_HOME%\bin;%JAVA_HOME%\bin
