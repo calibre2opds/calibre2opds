@@ -685,9 +685,12 @@ public class Catalog {
       int nbRecentBooks = Math.min(currentProfile.getBooksInRecentAdditions(), DataModel.INSTANCE.getListOfBooks().size());
       callback.startCreateRecent(nbRecentBooks);
       now = System.currentTimeMillis();
-      entry = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
-      if (entry != null)
-        main.addContent(entry);
+      if (currentProfile.getGenerateRecent())
+      {
+        entry = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+        if (entry != null)
+          main.addContent(entry);
+    }
       callback.endCreateRecent(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Recent catalog");
 
@@ -902,8 +905,8 @@ public class Catalog {
         File destinationFile = new File(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
         Helper.copy(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
         // Also need to make sure catalog.xml exists for Trook use
-        File indexFile = new File("catalog.xml");
-        File catalogFile = new File(targetFolder, "catalog.xml");
+        File indexFile = new File(destinationFolder,"index.xml");       // Use index.xml already generated
+        File catalogFile = new File(targetFolder, "catalog.xml");       // replicate it to catalog.xml in final target
         Helper.copy(indexFile,catalogFile);
       }
       else
@@ -987,21 +990,45 @@ public class Catalog {
     // Now work put where to tell uer result has been placed
 
     String where = null;
+    if (logger.isTraceEnabled())
+      logger.trace("try to determine where the results have been put");
     if (currentProfile.getDeviceMode() == DeviceMode.Nook)
+    {
+      if (logger.isTraceEnabled())
+        logger.trace("Nook mode: set to " + Localization.Main.getText("info.step.done.nook"));
       where = Localization.Main.getText("info.step.done.nook");
+    }
     else if (currentProfile.getTargetFolder() != null)
+    {
+      if (logger.isTraceEnabled())
+        logger.trace("TargetFolder: " + currentProfile.getTargetFolder().getAbsolutePath());
       where = currentProfile.getTargetFolder().getAbsolutePath();
+    }
 
     if (currentProfile.getCopyToDatabaseFolder())
     {
+      if (logger.isTraceEnabled())
+          logger.trace("CopyToDatabawseFolder set");
       if (where != null)
+      {
+      if (logger.isTraceEnabled())
+          logger.trace(where + " " + Localization.Main.getText("info.step.done.andYourDb"));
         where = where + " " + Localization.Main.getText("info.step.done.andYourDb");
+      }
       else
+      {
+        if (logger.isTraceEnabled())
+            logger.trace("DatabaseFolder=" + currentProfile.getDatabaseFolder().getAbsolutePath());
         where = currentProfile.getDatabaseFolder().getAbsolutePath();
+      }
     }
 
     if (where == null)
+    {
+      if (logger.isTraceEnabled())
+          logger.trace("outputfile.getParent=" + outputFile.getParent());
       where = outputFile.getParent();
+    }
 
     callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
 

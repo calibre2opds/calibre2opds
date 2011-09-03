@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class RatingsSubCatalog extends BooksSubCatalog {
+  private final static Logger logger = Logger.getLogger(RatingsSubCatalog.class);
   private List<BookRating> ratings;
   Map<BookRating, List<Book>> mapOfBooksByRating;
 

@@ -688,7 +688,7 @@ public class Mainframe extends javax.swing.JFrame
     ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToGenerate(txtTagstogenerate.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToExclude(txtTagstoexclude.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateTags(!chkNoGenerateTags.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRatings(!chkNogeneraterecent.isSelected());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRecent(!chkNogeneraterecent.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRatings(!chkNogenerateratings.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToMakeDeep(txtTagsToMakeDeep.getText());
