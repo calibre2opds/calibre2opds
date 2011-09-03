@@ -42,6 +42,7 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void  setTagsToExclude(String value);
   public void  setMaxSummaryLength(int value);
   public void  setGenerateTags(boolean value);
+  public void  setGenerateRecent(boolean value);
   public void  setGenerateRatings(boolean value);
   public void  setGenerateAllbooks(boolean value);
   public void  setTargetFolder(File value);

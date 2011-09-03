@@ -49,6 +49,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
   private final static String PROPERTY_NAME_GENERATETAGS = "GenerateTags";
+  private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
   private final static String PROPERTY_NAME_GENERATEALLBOOKS = "GenerateAllbooks";
   private final static String PROPERTY_NAME_DEVICEMODE = "DeviceMode";
@@ -721,6 +722,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setGenerateTags(boolean value) {
     setProperty(PROPERTY_NAME_GENERATETAGS, value);
+  }
+
+  public boolean isGenerateRecentReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATERECENT);
+  }
+
+  public boolean getGenerateRecent() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATERECENT);
+    if (b == null)
+      return defaults.getGenerateRecent();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateRecent(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATERECENT, value);
   }
 
   public boolean isGenerateRatingsReadOnly() {

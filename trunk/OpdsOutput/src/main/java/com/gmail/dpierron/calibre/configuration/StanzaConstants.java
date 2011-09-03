@@ -53,6 +53,7 @@ public class StanzaConstants {
   public final static boolean generateExternalLinks = true;
   public final static boolean generateCrossLinks = true;
   public final static boolean generateTags = true;
+  public final static boolean generateRecent = true;
   public final static boolean generateRatings = true;
   public final static boolean generateAllbooks = true;
   public final static boolean suppressRatingsInTitles = false;
