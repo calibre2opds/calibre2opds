@@ -389,7 +389,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       stuffToFilterOutPlusAuthor.addAll(stuffToFilterOut);
     stuffToFilterOutPlusAuthor.add(author);
 
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog() && areThereSeries)
+    if (areThereSeries
+    &&  ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog())
     {
       logger.debug("processing the series by " + author);
 

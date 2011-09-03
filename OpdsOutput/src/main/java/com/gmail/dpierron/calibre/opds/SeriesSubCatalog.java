@@ -147,12 +147,31 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Map<String, List<Series>> mapOfSeriesByLetter = null;
     List<Element> result;
 
-    boolean willSplitByLetter = (splitOption != SplitOption.Paginate);
-    logger.trace("getContentOfListOfSeries: title=" + title);
-    logger.trace("getContentOfListOfSeries: willSplitByLetter=" + willSplitByLetter
-            + " (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit())="
-            + (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit()));
-    willSplitByLetter = willSplitByLetter && (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    if (logger.isTraceEnabled())
+        logger.trace("getContentOfListOfSeries: title=" + title);
+    boolean willSplitByLetter;
+    if (null == splitOption)
+        splitOption = SplitOption.SplitByLetter;
+    switch (splitOption)
+    {
+      // case SplitOptionNone:
+      case Paginate:
+      case SplitOptionNone:
+              if (logger.isTraceEnabled())
+                  logger.trace("splitOption=" + splitOption);
+              willSplitByLetter = false;
+              break;
+
+      default:
+              if (logger.isTraceEnabled())
+                  logger.trace("getContentOfListOfSeries: splitOption=" + splitOption
+                             + ", series.size()=" + series.size()
+                             + ", MaxBeforeSplit==" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+              willSplitByLetter = series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+              break;
+    }
+    if (logger.isTraceEnabled())
+        logger.trace("getContentOfListOfSeries:  willSplitByLetter=" + willSplitByLetter);
 
     if (willSplitByLetter) {
       mapOfSeriesByLetter = DataModel.splitSeriesByLetter(series);
@@ -439,7 +458,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
-    
+
+    if (logger.isTraceEnabled())
+      logger.trace("getSeries: splitOption=" + (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks()
+                                                ? SplitOption.SplitByLetter
+                                                : SplitOption.SplitOptionNone));
+
     Element result = getListOfBooks(pBreadcrumbs,
                                     books,
                                     0,              // Starting at 0

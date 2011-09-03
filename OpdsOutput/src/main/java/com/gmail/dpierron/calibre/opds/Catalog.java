@@ -761,7 +761,8 @@ public class Catalog {
     long nbKeywords  = IndexManager.INSTANCE.size();
     callback.startCreateJavascriptDatabase(nbKeywords);
     now = System.currentTimeMillis();
-    IndexManager.INSTANCE.exportToJavascriptArrays();
+    if (currentProfile.getGenerateIndex())
+      IndexManager.INSTANCE.exportToJavascriptArrays();
     callback.endCreateJavascriptDatabase(System.currentTimeMillis() - now);
     logger.debug("COMPLETED: Generating Javascript database");
 
@@ -800,7 +801,7 @@ public class Catalog {
       InputStream resourceStream = JDOM.class.getResourceAsStream(resource);
       Helper.copy(resourceStream, resourceFile);
     }
-    logger.debug("COMPLETED: Copyin Resource files");
+    logger.debug("COMPLETED: Copying Resource files");
 
     if (syncLog)
         syncLogFile = new PrintWriter(ConfigurationManager.INSTANCE.getConfigurationDirectory()

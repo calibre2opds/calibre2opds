@@ -52,6 +52,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
   private final static String PROPERTY_NAME_GENERATEALLBOOKS = "GenerateAllbooks";
+  private final static String PROPERTY_NAME_GENERATEINDEX = "GenerateIndex";
   private final static String PROPERTY_NAME_DEVICEMODE = "DeviceMode";
   private final static String PROPERTY_NAME_COPYTODATABASEFOLDER = "CopyToDatabaseFolder";
   private final static String PROPERTY_NAME_BROWSEBYCOVER = "BrowseByCover";
@@ -771,6 +772,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setGenerateAllbooks(boolean value) {
     setProperty(PROPERTY_NAME_GENERATEALLBOOKS, value);
   }
+
+  public boolean isGenerateIndexReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATEALLBOOKS);
+  }
+
+  public boolean getGenerateIndex() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATEINDEX);
+    if (b == null)
+      return defaults.getGenerateAllbooks();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateIndex(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATEINDEX, value);
+  }
+
 
   public boolean isCopyToDatabaseFolderReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_COPYTODATABASEFOLDER);

@@ -6,6 +6,7 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.*;
  */
 public class Index {
   private static int MIN_KEYWORD_SIZE = 3;
+  private final static Logger logger = Logger.getLogger(Index.class);
 //  private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
   Map<String, Keyword> mapOfKeywords;
@@ -107,6 +109,8 @@ public class Index {
   }
 
   public void indexBook(Book book, String url, String coverUrl) {
+    if (logger.isTraceEnabled())
+        logger.trace("indexBook: book=" + book + ", url=" + url + ", coverUrl=" + coverUrl);
     if (book == null)
       return;
 

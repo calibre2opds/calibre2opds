@@ -45,6 +45,7 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void  setGenerateRecent(boolean value);
   public void  setGenerateRatings(boolean value);
   public void  setGenerateAllbooks(boolean value);
+  public void  setGenerateIndex(boolean value);
   public void  setTargetFolder(File value);
   public void  setDeviceMode(DeviceMode value);
   public void  setCopyToDatabaseFolder(boolean value);

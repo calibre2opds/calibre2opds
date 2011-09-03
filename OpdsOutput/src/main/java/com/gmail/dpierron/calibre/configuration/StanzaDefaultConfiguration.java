@@ -276,6 +276,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.LIBRARYTHING_TITLE_URL;
   }
 
+  public boolean getGenerateIndex() {
+    return StanzaConstants.GenerateIndex;
+  }
+
   public boolean getIndexComments() {
     return StanzaConstants.IndexComments;
   }

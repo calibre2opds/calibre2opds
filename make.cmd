@@ -20,6 +20,7 @@ rem	set SVN_HOME=C:\Program Files\SubVersion
 
 
 set C2O_ENV=
+cls
 echo Build calibre2opds
 echo ~~~~~~~~~~~~~~~~~~
 :CHECK_M2_HOME
@@ -71,6 +72,15 @@ if NOT EXIST "%SVN_HOME%" (
 	set C2O_ENV=BAD
 	goto CHECK_OK
 )
+if NOT EXIST "%SVN_HOME%\bin\svnversion.exe" (
+	echo SVN_HOME=%SVN_HOME%
+	echo ERROR: Subversion 'svnversion' command not found.
+	echo        You need to install an implementation that provides
+	echo        this as a command line utility.  In particular it
+	echo        it is not included with TortoiseSVN.
+	set C2O_ENV=BAD
+	goto CHECK_OK
+)
 PATH=%PATH%;%SVN_HOME%\bin
 
 :CHECK_OKset
@@ -82,8 +92,9 @@ if NOT "%C2O_ENV%" == "" (
 	exit /b 1
 )
 
+echo Dependency Checks OK
 
-echo Started at %TIME%
+echo Started compile at %TIME%
 mvn clean install dependency:copy-dependencies
 echo Completed at %TIME%
 pause
