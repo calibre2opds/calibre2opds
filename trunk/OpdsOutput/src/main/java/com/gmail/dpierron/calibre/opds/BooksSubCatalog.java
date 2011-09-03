@@ -218,6 +218,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
                          String icon,
                          List<Element> firstElements,
                          Option... options) throws IOException {
+    logger.debug("getListOfBooks: START" );
     int catalogSize = books.size();
     logger.debug("getListOfBooks:catalogSize=" + catalogSize);
     Map<String, List<Book>> mapOfBooksByLetter = null;
@@ -307,6 +308,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     FileOutputStream fos = null;
     Document document = new Document();
     try {
+      if (logger.isTraceEnabled())
+        logger.trace("getListOfBooks:: fos=" + outputFile);
       fos = new FileOutputStream(outputFile);
 
       Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
@@ -357,18 +360,20 @@ public abstract class BooksSubCatalog extends SubCatalog {
           } else {
             Book book = books.get(i);
             if (logger.isTraceEnabled())
-              logger.trace("adding book to the list : " + book);
+              logger.trace("getListOfBooks: adding book to the list : " + book);
             Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs,
               title,
               getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
             try {
+              logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
               Element entry = getBookEntry(breadcrumbs, book, options);
               if (entry != null) {
+                logger.trace("getListOfBooks: entry=" + entry);
                 result.add(entry);
                 TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
               }
             } catch (Exception e) {
-              logger.error("Exception" + e);
+              logger.error("getListOfBooks: Exception" + e);
               logger.error("...on book: " + book.getTitle());
             }
           }
@@ -559,14 +564,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
                                Option... options)
     throws IOException {
     if (logger.isDebugEnabled())
-      logger.debug(pBreadcrumbs + "/" + book);
+      logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
 
     CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel() && isBookTheStepUnit())
       CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
 
     String filename = "book_" + book.getId() + ".xml";
-    logger.debug("getBookEntry:" + book);
+    if (logger.isDebugEnabled())
+      logger.debug("getBookEntry:" + book);
     if (logger.isTraceEnabled()) {
       logger.trace("getBookEntry:" + pBreadcrumbs.toString());
       logger.trace("getBookEntry: generating " + filename);
@@ -629,9 +635,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // create the same file as html
       getHtmlManager().generateHtmlFromXml(document, outputFile);
-      // index the book
-      logger.debug("indexing book");
-      IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(trueFilename), getThumbnailManager().getImageUri(book));
+
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex())
+      {
+        // index the book
+        logger.debug("getBookEntry: indexing book");
+        IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(trueFilename), getThumbnailManager().getImageUri(book));
+      }
     }
 
     Element result = FeedHelper.INSTANCE.getAtomElement(false, "entry", title, urn, null, null, null, (String) null, false, null);

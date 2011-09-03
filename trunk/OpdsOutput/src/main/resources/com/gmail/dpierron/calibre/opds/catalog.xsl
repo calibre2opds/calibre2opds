@@ -11,6 +11,7 @@
     <xsl:param name="thumbWidth" />
     <xsl:param name="thumbHeight" />
     <xsl:param name="generateDownloads">true</xsl:param>
+    <xsl:param name="generateIndex">false</xsl:param>
     <xsl:param name="browseByCover">false</xsl:param>
     <xsl:param name="i18n.dateGenerated"/>
     <xsl:param name="i18n.backToMain"/>
@@ -368,18 +369,20 @@
                     </tr>
                 </xsl:if>
                 <xsl:if test="string-length($programName) > 0">
-                    <!-- search link -->
-                    <div class="x_menulisting" id="calibre:search">
-                        <div class="cover">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEWcZjTcViTMuqT8/vzcYjTkhhTkljT87tz03sRkZmS8mnT03tT89vTsvoTk1sz86uTkekzkjmzkwpT01rTsmnzsplTUwqz89uy0jmzsrmTknkT0zqT3X4fRAAAAbklEQVR4XnXOVw6FIBBAUafQsZfX9r/PB8JoTPT+QE4o01AtMoS8HkALcH8BGmGIAvaXLw0wCqxKz0Q9w1LBfFSiJBzljVerlbYhlBO4dZHM/F3llybncbIC6N+70Q7OlUm7DdO+gKs9gyRwdgd/LOcGXHzLN5gAAAAASUVORK5CYII="></img>
+                    <xsl:if test="$generateIndex = 'true'">
+                        <!-- search link -->
+                        <div class="x_menulisting" id="calibre:search">
+                            <div class="cover">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEWcZjTcViTMuqT8/vzcYjTkhhTkljT87tz03sRkZmS8mnT03tT89vTsvoTk1sz86uTkekzkjmzkwpT01rTsmnzsplTUwqz89uy0jmzsrmTknkT0zqT3X4fRAAAAbklEQVR4XnXOVw6FIBBAUafQsZfX9r/PB8JoTPT+QE4o01AtMoS8HkALcH8BGmGIAvaXLw0wCqxKz0Q9w1LBfFSiJBzljVerlbYhlBO4dZHM/F3llybncbIC6N+70Q7OlUm7DdO+gKs9gyRwdgd/LOcGXHzLN5gAAAAASUVORK5CYII="></img>
+                            </div>
+                            <div class="details">
+                                <a href="_search/search.html" title="Search the books">Search the books</a>
+                                <br>
+                                    <small>Search the full-text index of the books (work in progress!)</small>
+                                </br>
+                            </div>
                         </div>
-                        <div class="details">
-                            <a href="_search/search.html" title="Search the books">Search the books</a>
-                            <br>
-                                <small>Search the full-text index of the books (work in progress!)</small>
-                            </br>
-                        </div>
-                    </div>
+                    </xsl:if>
                     <!-- on the main page, let's talk -->
                     <p/>
                     <p/>

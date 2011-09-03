@@ -88,6 +88,7 @@ public class StanzaConstants {
   public final static String AMAZON_AUTHOR_URL = "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-author={0}";
   public final static String ISFDB_AUTHOR_URL = "http://www.isfdb.org/cgi-bin/ea.cgi?{0}";
   public final static String WIKIPEDIA_URL = "http://{0}.wikipedia.org/wiki/{1}";
+  public final static boolean GenerateIndex = false;
   public final static boolean IndexComments = true;
   public final static int MaxKeywords = -1; // don't filter
   public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;

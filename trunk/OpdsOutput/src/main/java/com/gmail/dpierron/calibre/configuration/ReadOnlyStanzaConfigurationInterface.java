@@ -45,6 +45,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public boolean getGenerateRecent();
   public boolean getGenerateRatings();
   public boolean getGenerateAllbooks();
+  public boolean getGenerateIndex();
   public boolean getGenerateOpds();
   public boolean getGenerateHtml();
   public boolean getGenerateOpdsDownloads();
