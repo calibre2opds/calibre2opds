@@ -20,7 +20,7 @@ import java.util.List;
 
 public abstract class SubCatalog {
 
-  private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SubCatalog.class);
+  private final static Logger logger = Logger.getLogger(SubCatalog.class);
 
   private List<Book> books;
   List<Object> stuffToFilterOut;
@@ -159,9 +159,11 @@ public abstract class SubCatalog {
         feed.addContent(entry);
   
       /* Recent books */
-      entry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-      if (entry != null)
-        feed.addContent(entry);
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent()) {
+        entry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+        if (entry != null)
+          feed.addContent(entry);
+      }
   
       /* Rated books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings()) {
