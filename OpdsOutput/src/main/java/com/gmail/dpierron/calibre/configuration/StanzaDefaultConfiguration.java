@@ -140,6 +140,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.generateTags;
   }
 
+  public boolean getGenerateRecent() {
+    return StanzaConstants.generateRecent;
+  }
+
   public boolean getGenerateRatings() {
     return StanzaConstants.generateRatings;
   }
