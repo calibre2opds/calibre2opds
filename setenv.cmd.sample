@@ -1,6 +1,105 @@
-set MVN_HOME=c:\java\apache-maven-2.0.9
-set JAVA_HOME=c:\Program Files\Java\jdk1.6.0_27
-set SVN_HOME=c:\tools\svn-win32-1.5.2
-SET ZIPPROG=zip
+@echo OFF
+rem		calibre2opds setenv.cmd sample file
+rem		~~~~~~~~~~~~~~~~~~~~~~~------------
+rem	A sample of a suitable setenv.cmd Batch file to set up the environment
+rem build the calibre2opds program when running under Windows.
+rem
+rem INSTRUCTIONS:
+rem ~~~~~~~~~~~~
+rem - Copy the file to one called 'setenv.cmd' in the same folder
+rem - Edit the following environment variables to suit your system
+rem   (or alternatively set them up at the system properties level)
+rem   The values given show a typical set as an example
 
-set PATH=%PATH%;%MVN_HOME%\bin;%JAVA_HOME%\bin
+set M2_HOME=C:\Program Files\Maven
+set JAVA_HOME=C:\Program Files\Java\jdk1.6.0_27
+set SVN_HOME=C:\Program Files\SubVersion
+set ZIPPROG=zip
+
+rem NOTES:
+rem     1.  The zip program is specified above without a path as it is
+rem         located on the system search path.  If this is not the case
+rem         then a full path to the program needs to be specified.
+
+
+rem =========================================================
+rem YOU SHOULD NOT NEED TO CHANGE THE REMAINDER OF THIS FILE
+rem The checks are just to make sure that the settings above
+rem seem to be sensible.
+rem =========================================================
+
+set C2O_ENV=
+cls
+echo Build calibre2opds
+echo ~~~~~~~~~~~~~~~~~~
+:CHECK_M2_HOME
+if "%M2_HOME%" == "" (
+	echo ERROR: The M2_HOME environe=ment variable is not set.
+	echo        This needs to point to where Maven has been installed.
+	echo        A typical value might be something like:
+	echo        set M2_HOME=C:\Program Files\Maven
+	set C2O_ENV=BAD
+	goto CHECK_JAVA_HOME
+)
+if NOT EXIST "%M2_HOME%" (
+	echo M2_HOME=%M2_HOME%
+	echo ERROR: Maven not found at location specified by M2_HOME
+	set C2O_ENV=BAD
+	goto CHECK_JAVA_HOME
+)
+PATH=%PATH%;%M2_HOME%\bin
+
+:CHECK_JAVA_HOME
+if "%JAVA_HOME" == "" (
+	echo ERROR: The JAVA_HOME environment variable is not set.
+	echo        This needs to point to where the Java SDK has been installed.
+	echo        A typical value might be something like:
+	echo        set JAVA_HOME=C:\Program Files\Java\jdk1.6.0_27
+	set C2O_ENV=BAD
+	goto CHECK_SVN_HOME
+)
+if NOT EXIST "%JAVA_HOME%" (
+	echo JAVA_HOME=%JAVA_HOME%
+	echo ERROR: Java SDK not found at location specified by JAVA_HOME
+	set C2O_ENV=BAD
+	goto CHECK_SVN_HOME
+)
+PATH=%PATH%;%JAVA_HOME%\bin
+
+:CHECK_SVN_HOME
+if "%SVN_HOME%" == "" (
+	echo ERROR: The SVN_HOME environment variable is not set.
+	echo        This needs to point to where Subversion has been installed.
+	echo        A typical value might be something like:
+	echo        set SVN_HOME=C:\Program Files\SubVersion
+	set C2O_ENV=BAD
+	goto CHECK_OK
+)
+if NOT EXIST "%SVN_HOME%" (
+	echo SVN_HOME=%SVN_HOME%
+	echo ERROR: Subversion not found at location specified by SVN_HOME
+	set C2O_ENV=BAD
+	goto CHECK_OK
+)
+if NOT EXIST "%SVN_HOME%\bin\svnversion.exe" (
+	echo SVN_HOME=%SVN_HOME%
+	echo ERROR: Subversion 'svnversion' command not found.
+	echo        You need to install an implementation that provides
+	echo        this as a command line utility.  In particular it
+	echo        it is not included with TortoiseSVN.
+	set C2O_ENV=BAD
+	goto CHECK_OK
+)
+PATH=%PATH%;%SVN_HOME%\bin
+
+:CHECK_OK
+
+if NOT "%C2O_ENV%" == "" (
+	echo ------ ERRORS IN ENVIRONMENT SETUP -------
+	echo Please correct errors listed and try again
+	echo ------------------------------------------
+	exit /b -1
+)
+
+echo Dependency Checks OK
+exit /b 0
