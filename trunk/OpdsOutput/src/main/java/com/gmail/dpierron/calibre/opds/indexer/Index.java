@@ -59,16 +59,20 @@ public class Index {
     return result;
   }
 
-  private List<String> splitStringIntoKeywords(String text, boolean tags) {
+  private List<String> splitStringIntoKeywords(String text, boolean pTags) {
     List<String> result = new ArrayList<String>();
-    char tagChar = ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn().charAt(0);
+    String splitTagsOn = ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn();
+    boolean processingTags = pTags && Helper.isNotNullOrEmpty(splitTagsOn);
+    char tagChar = ' ';
+    if (processingTags)
+      tagChar = splitTagsOn.charAt(0);
     if (Helper.isNullOrEmpty(text)) {
       return result;
     }
 
     StringBuffer currentKeyword = new StringBuffer();
     for (char c : text.toCharArray()) {
-      if (Character.isLetter(c) || (tags && (c == tagChar)))
+      if (Character.isLetter(c) || (processingTags && (c == tagChar)))
         currentKeyword.append(c);
       else {
         if (currentKeyword.length() >= MIN_KEYWORD_SIZE)

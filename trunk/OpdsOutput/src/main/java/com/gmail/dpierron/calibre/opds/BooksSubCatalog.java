@@ -373,8 +373,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
                 TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
               }
             } catch (Exception e) {
-              logger.error("getListOfBooks: Exception" + e);
-              logger.error("...on book: " + book.getTitle());
+              logger.error("getListOfBooks: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
             }
           }
         }
