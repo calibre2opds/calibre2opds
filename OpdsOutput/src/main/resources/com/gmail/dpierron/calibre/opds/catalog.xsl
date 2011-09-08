@@ -150,11 +150,8 @@
                                             <div class="cover">
                                                 <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
                                                     <xsl:choose>
-                                                        <xsl:when test="opds:link[@rel='http://opds-spec.org/thumbnail']">
-                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/thumbnail']/@href}" title="{$bookTitle}" />
-                                                        </xsl:when>
-                                                        <xsl:when test="opds:link[@rel='x-stanza-cover-image-thumbnail']">
-                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='x-stanza-cover-image-thumbnail']/@href}" title="{$bookTitle}" />
+                                                        <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
+                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" title="{$bookTitle}" />
                                                         </xsl:when>
                                                         <xsl:otherwise>
                                                             <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="../default_thumbnail.png" title="{$bookTitle}" />
@@ -251,11 +248,8 @@
                                             <div class="fullEntry_cover">
                                                 <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.coversection"/></h2>
                                                 <xsl:choose>
-                                                    <xsl:when test="opds:link[@rel='http://opds-spec.org/cover']">
-                                                        <img    width="{$coverWidth}" height="{$coverHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/cover']/@href}" />
-                                                    </xsl:when>
-                                                    <xsl:when test="opds:link[@rel='x-stanza-cover-image']">
-                                                        <img  alt="{opds:title}" src="{opds:link[@rel='x-stanza-cover-image']/@href}" />
+                                                    <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
+                                                        <img    width="{$coverWidth}" height="{$coverHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" />
                                                     </xsl:when>
                                                     <xsl:otherwise>
 
@@ -277,10 +271,10 @@
 
                                             <!-- related catalogs -->
                                             <div class="fullEntry_related">
-                                                <xsl:if test="opds:link[@rel='related' and @type='application/atom+xml;type=feed;profile=opds-catalog']">
+                                                <xsl:if test="opds:link[@rel='related' and @type='application/atom+xmlprofile=opds-catalog']">
                                                     <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.relatedsection"/></h2>
                                                     <ul>
-                                                        <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;type=feed;profile=opds-catalog']">
+                                                        <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog']">
                                                             <li>
                                                                 <xsl:element name="a">
                                                                     <xsl:attribute name="href">
@@ -321,18 +315,15 @@
                                 <div class="x_menulisting" id="{opds:id}">
                                     <div class="cover">
                                         <xsl:choose>
-                                            <xsl:when test="opds:link[@rel='http://opds-spec.org/thumbnail']">
-                                                <img  src="{opds:link[@rel='http://opds-spec.org/thumbnail']/@href}" />
-                                            </xsl:when>
-                                            <xsl:when test="opds:link[@rel='x-stanza-cover-image-thumbnail']">
-                                                <img  src="{opds:link[@rel='x-stanza-cover-image-thumbnail']/@href}" />
+                                            <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
+                                                <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
                                             </xsl:when>
                                         </xsl:choose>
                                     </div>
                                     <xsl:variable name="url">
                                         <xsl:choose>
-                                            <xsl:when test="opds:link[@type='application/atom+xml;type=feed;profile=opds-catalog']">
-                                                <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;type=feed;profile=opds-catalog']/@href, '.xml'), '.html')"/>
+                                            <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog']">
+                                                <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog']/@href, '.xml'), '.html')"/>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="opds:link[@type='text/html']/@href"/>

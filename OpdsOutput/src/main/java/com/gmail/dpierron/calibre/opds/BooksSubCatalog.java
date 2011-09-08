@@ -1117,7 +1117,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     if (logger.isTraceEnabled())
       logger.trace("addCoverLink: coverUri=" + coverUri);
-    entry.addContent(FeedHelper.INSTANCE.getLinkElement(coverUri, "image/jpeg", "http://opds-spec.org/cover", null));
+    entry.addContent(FeedHelper.INSTANCE.getLinkElement(coverUri, "image/jpeg", "http://opds-spec.org/image", null));
 
     // add the thumbnail link
 
@@ -1166,6 +1166,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     if (logger.isTraceEnabled())
       logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
-    entry.addContent(FeedHelper.INSTANCE.getLinkElement(thumbnailUri, "image/jpeg", "http://opds-spec.org/thumbnail", null));
+    entry.addContent(FeedHelper.INSTANCE.getLinkElement(thumbnailUri, "image/jpeg", "http://opds-spec.org/image/thumbnail", null));
   }
 }
