@@ -4,7 +4,6 @@ public enum CompatibilityTrick {
   OPDS,
   TROOK,
   STANZA,
-  ALDIKO,
   ;
   
   public static CompatibilityTrick fromString(String value) {
