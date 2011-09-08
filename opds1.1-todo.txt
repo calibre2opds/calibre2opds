@@ -24,6 +24,8 @@ Specifically, see with Aldiko team if the reltype=http://opds-spec.org/cover tri
 4. opds:// protocol
 Add a HTML link in our HTML catalog, pointing to the OPDS catalog. Easy !
 
+Well, not so easy because the OPDS catalog url should not be relative... POSTPONED
+
 5. Use the new "kind" attribute in our links
 http://opds-spec.org/specs/opds-catalog-1-1-20110627/#The_OPDS_Kind_Parameter
 The complete media type for a relation to an Acquisition Feed SHOULD be: application/atom+xml;profile=opds-catalog;kind=acquisition
