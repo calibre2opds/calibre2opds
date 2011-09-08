@@ -115,7 +115,7 @@ public enum FeedHelper {
     default:
             return (forEntry == true)
                    ? "application/atom+xml;type=entry;profile=opds-catalog"
-                   : "application/atom+xml;type=feed;profile=opds-catalog";
+                   : "application/atom+xml;profile=opds-catalog";
     }
   }
     
