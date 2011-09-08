@@ -24,6 +24,7 @@ public class Constants {
   public final static String TROOK_FOLDER_EXTENSION = ".library";
   public final static String TROOK_SEARCH_DATABASE_FILENAME = "calibre2opds_trook_search.db";
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
+  public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
 
 

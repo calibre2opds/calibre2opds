@@ -525,15 +525,30 @@ public class Catalog {
       callback.errorOccured(Localization.Main.getText("error.nodatabase", calibreLibraryFolder), null);
       return;
     }
-    // Check that target folder (if set) is not set to be the same as the library folder
+    // Additional checks if destination folder also set.
     File calibreTargetFolder = currentProfile.getTargetFolder();
-    if ((calibreTargetFolder != null)
-    &&  (calibreLibraryFolder.getAbsolutePath().equals(calibreTargetFolder.getAbsolutePath())))
+    if ((calibreTargetFolder != null))
     {
+      // Check that target folder (if set) is not set to be the same as the library folder
+      if (calibreLibraryFolder.getAbsolutePath().equals(calibreTargetFolder.getAbsolutePath()))
+      {
         logger.warn (Localization.Main.getText("error.targetsame"));
         JOptionPane.showMessageDialog(null, Localization.Main.getText("error.targetsame"), "error",
                                       JOptionPane.ERROR_MESSAGE);
         return;
+      }
+      // If not already a catalog at target, give overwrite warning
+      if (!checkCatalogExistence(calibreTargetFolder))
+      {
+        logger.warn(Localization.Main.getText("gui.confirm.clear", calibreTargetFolder));
+        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreTargetFolder),
+                "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+            if (logger.isTraceEnabled())
+                logger.trace("User declined to overwrite folder " + calibreTargetFolder);
+            return;
+        }
+
+      }
     }
     logger.trace("calibreTargetFolder set to " + calibreTargetFolder);
     // If catalog folder exists, then see if it looks like it already contains a catalog
@@ -542,28 +557,41 @@ public class Catalog {
     // N.B.  Whether calibreTargetFolder was set to be different to the Library folder is mode dependent
     if (catalogParentFolder == null
     || catalogParentFolder.getName().length() == 0)
-       catalogParentFolder = calibreLibraryFolder;
+    {
+      if (!checkCatalogExistence(catalogParentFolder))
+      {
+        logger.warn(Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder));
+        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder),
+                "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+            if (logger.isTraceEnabled())
+                logger.trace("User declined to overwrite folder " + calibreLibraryFolder);
+            return;
+        }
+      }
+      catalogParentFolder = calibreLibraryFolder;
+    }
     logger.trace("catalogParentFolder set to " + catalogParentFolder);
     File catalogFolder = new File(catalogParentFolder,currentProfile.getCatalogFolderName());
     if (logger.isTraceEnabled())
       logger.trace ("New catalog to be generated at " + catalogFolder.getPath());
-    if (catalogFolder.exists())
-    {
-      if (logger.isTraceEnabled())
-        logger.trace ("catalog folder exists - so check for presence of desktop.css file");
-        boolean desktopCssExists = checkCssExistence(catalogFolder, "desktop.css");
-        boolean mobileCssExists = checkCssExistence(catalogFolder,"mobile.css");
-        if (!desktopCssExists || !mobileCssExists) {
-            logger.warn(Localization.Main.getText("gui.confirm.clear", catalogFolder));
-            if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", catalogFolder),
-                    "alert", JOptionPane.YES_NO_OPTION)) {
-                if (logger.isTraceEnabled())
-                    logger.trace("User declined to overwrite folder " + catalogFolder);
-                return;
-            }
-        }
-    }
 
+    // If copying catalog back to database folder check it is safe to overwrite
+    if (currentProfile.getCopyToDatabaseFolder())
+    {
+      logger.debug ("STARTING: Copy Catalog Folder to Database Folder");
+      File targetFolder = currentProfile.getDatabaseFolder();
+      if (!checkCatalogExistence(targetFolder))
+      {
+        logger.warn(Localization.Main.getText("gui.confirm.clear", targetFolder));
+        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", targetFolder + "/" + currentProfile.getCatalogFolderName()),
+                "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+            if (logger.isTraceEnabled())
+                logger.trace("User declined to overwrite folder " + targetFolder);
+            return;
+        }
+      }
+      catalogParentFolder = calibreLibraryFolder;
+    }
     logger.trace ("Passed sanity checks, so proceed with generation");
 
     // Sanity checks OK - get on with generation
@@ -598,6 +626,8 @@ public class Catalog {
     if (currentProfile.getDeviceMode() == DeviceMode.Nook)
     {
       destinationFolder = new File(destinationFolder, currentProfile.getCatalogFolderName()+Constants.TROOK_FOLDER_EXTENSION);
+      if (logger.isTraceEnabled())
+        logger.trace("Nook mode - destinationFolder set to " + destinationFolder);
     }
     destinationFolder.mkdirs();
     CatalogContext.INSTANCE.getCatalogManager().setDestinationFolder(destinationFolder);
@@ -819,8 +849,11 @@ public class Catalog {
       File targetFolder = currentProfile.getTargetFolder();
 
       if (currentProfile.getDeviceMode() == DeviceMode.Nook)
+      {
         targetFolder = new File(targetFolder, currentProfile.getCatalogFolderName()+Constants.TROOK_FOLDER_EXTENSION);
-
+        if (logger.isTraceEnabled())
+          logger.trace("Nook mode - targetFolder set to" + targetFolder);
+      }
       // syncFiles the eBook files
       logger.debug ("STARTING: syncFiles eBook files to target");
       now = System.currentTimeMillis();
@@ -832,7 +865,7 @@ public class Catalog {
       }
       logger.debug ("COMPLETED: syncFiles eBook files to target");
 
-      callback.showMessage(Localization.Main.getText("step.tidyingtarget"));
+      callback.showMessage(Localization.Main.getText("info.step.tidyingtarget"));
 
       // delete the target folders that were not in the source list (minus the catalog folder, of course)
       logger.debug ("STARTING: Build list of files to delete from target");
@@ -891,6 +924,8 @@ public class Catalog {
       {
         logger.debug("...in NOOK mode");
         targetFolder = new File(targetFolder, currentProfile.getCatalogFolderName()+Constants.TROOK_FOLDER_EXTENSION);
+        if (logger.isTraceEnabled())
+          logger.trace("targetFolder=" + targetFolder);
         if (currentProfile.getZipTrookCatalog())
         {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
@@ -906,8 +941,15 @@ public class Catalog {
         File destinationFile = new File(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
         Helper.copy(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
         // Also need to make sure catalog.xml exists for Trook use
-        File indexFile = new File(destinationFolder,"index.xml");       // Use index.xml already generated
-        File catalogFile = new File(targetFolder, "catalog.xml");       // replicate it to catalog.xml in final target
+        // Use index.xml already generated
+        // logger.trace("dewstinationFolder=" + destinationFolder);
+        // logger.trace("targetFolder" + targetFolder);
+        // logger.trace("getCatalogFolderName=" + currentProfile.getCatalogFolderName());
+        File indexFile = new File(destinationFolder, Constants.NOOK_CATALOG_FOLDERNAME + "/index.xml");
+       // replicate it to catalog.xml in final target
+        File catalogFile = new File(targetFolder,  Constants.NOOK_CATALOG_FOLDERNAME + "/catalog.xml");
+        if (logger.isTraceEnabled())
+            logger.trace("copy '" + indexFile + "' to '" + catalogFile + "'");
         Helper.copy(indexFile,catalogFile);
       }
       else
@@ -923,7 +965,9 @@ public class Catalog {
     {
       logger.debug ("STARTING: Copy Catalog Folder to Database Folder");
       File targetFolder = currentProfile.getDatabaseFolder();
-      File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+      File targetCatalogFolder = new File(targetFolder, currentProfile.getCatalogFolderName());
+      if (logger.isTraceEnabled())
+          logger.trace("syncfiles (" + CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder() + ", " + targetCatalogFolder);
       syncFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), targetCatalogFolder);
       logger.debug ("COMPLETED: Copy Catalog Folder to Database Folder");
     }
@@ -1035,8 +1079,41 @@ public class Catalog {
 
   }
 
-    private boolean checkCssExistence(File catalogFolder, String css) {
-        File catalogFile = new File(catalogFolder, css);
-        return catalogFile.exists();
+  /**
+   * Check to see if there appears to already be an existing calibre2opds catalog
+   * at the specified location (by checking for specific files).  Note that a false
+   * is always definitive, while a true could return a false (although unlikely) positive.
+   * @param catalogParentFolder  Path that contains the catalog folder
+   * @return                     true if cataog appears to be present
+    *                            false if catalog definitely not there.
+   */
+  private boolean checkCatalogExistence (File catalogParentFolder)
+  {
+    File catalogFolder = new File(catalogParentFolder,currentProfile.getCatalogFolderName());
+    if (logger.isTraceEnabled())
+      logger.trace ("checkCatalogExistence: Check for catalog at " + catalogFolder.getPath());
+    if ( !catalogFolder.exists())
+    {
+      if (logger.isTraceEnabled())
+        logger.trace ("checkCatalogExistence: false (catalog folder does not exist)");
+      return false;
     }
+    File desktopFile = new File(catalogFolder, "desktop.css");
+    if (! desktopFile.exists())
+    {
+      if (logger.isTraceEnabled())
+        logger.trace ("checkCatalogExistence: false (desktop.css file does not exist)");
+      return false;
+    }
+    File mobileFile = new File(catalogFolder, "mobile.css");
+    if (! mobileFile.exists())
+    {
+      if (logger.isTraceEnabled())
+        logger.trace ("checkCatalogExistence: false (desktop.css file does not exist)");
+      return false;
+    }
+    if (logger.isTraceEnabled())
+      logger.trace ("checkCatalogExistence: true");
+    return true;
+  }
 }
