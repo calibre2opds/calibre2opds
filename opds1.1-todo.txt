@@ -1,0 +1,75 @@
+List of things to do for OPDS 1.1 compatibility
+-----------------------------------------------
+
+1. Facets
+http://opds-spec.org/2011/06/14/faceted-search-browsing/
+Difficult to implement in our staticly generated catalog, but Hadrien thinks that with a little imagination, we could 
+find a way to use this concept. For example, generate several catalogs for each tag, facetted to sort by title or date.
+
+2. Featured books
+http://opds-spec.org/2011/06/15/creating-a-better-opds-catalog-root/
+We can easily add a link to the recent books catalog, in the main catalog. This way, modern clients could display a 
+specific widget (for example, Aldiko shows a scrollable carousel) on the same screen where the main catalog is rendered.
+
+<link type="application/atom+xml;profile=opds-catalog;kind=acquisition" title="Featured Books" rel="http://opds-spec.org/featured" href="link-to-our-recent-books-catalog"/>
+
+Maybe a reduced, specific, custom catalog could be generated instead; I would like to see my books tagged "Interest:5" or "Interest:4" featured, for example...
+
+3. Update the compatibility tricks mechanism
+Most of the clients supporting OPDS 1.1 will not be needing the old compatibility tricks that we implemented for them before.
+A notable exception is Stanza, RIP... 
+However, it would be good to check every special case we programmed for specific compatibility, and see if it's still needed.
+Specifically, see with Aldiko team if the reltype=http://opds-spec.org/cover trick is still needed
+
+4. opds:// protocol
+Add a HTML link in our HTML catalog, pointing to the OPDS catalog. Easy !
+
+5. Use the new "kind" attribute in our links
+http://opds-spec.org/specs/opds-catalog-1-1-20110627/#The_OPDS_Kind_Parameter
+The complete media type for a relation to an Acquisition Feed SHOULD be: application/atom+xml;profile=opds-catalog;kind=acquisition
+The complete media type for a relation to a Navigation Feed SHOULD be: application/atom+xml;profile=opds-catalog;kind=navigation
+
+6. Correct the rel attributes used in the breadcrumb
+We're not allowed to use values for this attribute that are not listed in the RFC : http://tools.ietf.org/html/rfc5988
+Hadrien suggests that we post on the OPDS mailing list, because he says that our breadcrumb system may interest other. I doubt it...
+In the examples (http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Feed_Examples) we can find :
+  <link rel="self"    
+        href="/opds-catalogs/unpopular.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=acquisition"/>
+  <link rel="start"   
+        href="/opds-catalogs/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+  <link rel="up"      
+        href="/opds-catalogs/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/>
+ 
+With "self" being the current catalog, "start" being the root page and "up" is the navigation to the upper level.
+
+7. In the type attribute
+No need to specify "type=feed", it's the default in AtomPub
+
+8. Artwork relations
+http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Artwork_Relations
+We specify old relation types (pre-opds 1.0), we must change this :
+"http://opds-spec.org/image": a graphical Resource associated to the OPDS Catalog Entry
+"http://opds-spec.org/image/thumbnail": a reduced-size version of a graphical Resource associated to the OPS Catalog Entry
+
+9. Book metadata
+Hadrien suggests using dedicated attributes to specify the book metadata, for example dcterms:publisher for the publisher and 
+atom:category for the tags, instead of putting all in the book comment. He says that, this way, client applications can use this 
+information even in the partial entries...
+
+10. Counters
+He also suggests that the links with a counter (568 in ...) could also be enhanced with a thr:count attribute.
+
+
+11. Something abount navigation links that I don't understand (I required clarification and I'll update the document asap)
+Dans les flux de navigation, on conseille de mettre rel="subsection" sur les liens des entrées qu'on ne peut pas qualifier de manière plus précise
+
+12. Check the value of the rel attribute
+There are specific rel attribute values that could be used in the catalog to better qualify some of our links.
+
+http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Relations
+
+13. Refer to the user library in ALL feeds
+It should be better to add a link in all the catalogs (feeds) pointing to a full (all books), time-descending sorted catalog.
