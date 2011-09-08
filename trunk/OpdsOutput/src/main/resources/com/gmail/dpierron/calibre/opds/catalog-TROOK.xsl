@@ -96,8 +96,8 @@
                                             <div class="cover">
                                                 <a href="{concat(substring-before(opds:link[@type='application/atom+xml'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
                                                     <xsl:choose>
-                                                        <xsl:when test="opds:link[@rel='http://opds-spec.org/thumbnail']">
-                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/thumbnail']/@href}" title="{$bookTitle}" />    
+                                                        <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
+                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" title="{$bookTitle}" />
                                                         </xsl:when>
                                                         <xsl:otherwise>
                                                             <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="../default_thumbnail.png" title="{$bookTitle}" />    
@@ -156,8 +156,8 @@
                                             <!-- cover -->
                                             <div class="fullEntry_cover">
                                                 <xsl:choose>
-                                                    <xsl:when test="opds:link[@rel='http://opds-spec.org/cover']">
-                                                        <img  alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/cover']/@href}" />    
+                                                    <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
+                                                        <img  alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" />
                                                     </xsl:when>
                                                     <xsl:otherwise>
                                                             
@@ -259,7 +259,7 @@
                             <xsl:otherwise>
                                 <div class="x_menulisting" id="opds:id">
                                     <div class="cover">
-                                        <img  src="{opds:link[@rel='http://opds-spec.org/thumbnail']/@href}" />
+                                        <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
                                     </div>
                                     <xsl:variable name="url">
                                         <xsl:choose>

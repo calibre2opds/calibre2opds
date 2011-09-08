@@ -55,7 +55,7 @@ public enum FeedHelper {
   private Element getIcon(String icon) {
     return getLinkElement(icon,
                           "image/png",
-                          "http://opds-spec.org/thumbnail",
+                          "http://opds-spec.org/image/thumbnail",
                           null);
   }
 
