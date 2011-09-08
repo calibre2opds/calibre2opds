@@ -667,15 +667,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // add thumbnail
     if (logger.isTraceEnabled())
       logger.trace("getBookEntry: add thumbnail");
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-      case ALDIKO:
-        // there's a bug in Aldiko that make we want to skip the covers
-        // (as their presence in books lists make Aldiko think it's an acquisition feed)
-        addCoverLink(book, result, false);
 
-      default:
-        addCoverLink(book, result, true);
-    }
+    addCoverLink(book, result);
 
     // add a full entry link to the partial entry
     if (logger.isTraceEnabled())
@@ -782,28 +775,16 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getBookFullEntry: add cover link");
-    addCoverLink(book, entry, true);
+    addCoverLink(book, entry);
 
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks()) {
-      String relType;
-      switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-        case STANZA:
-          relType = null;
-          // Stanza documentation says that the rel attribute is not used.
-          // However if it is omitted the book details seem to display wrong
-          relType = "related";
-          break;
-        default:
-          relType = "related";
-          break;
-      }
       // add the series link
       if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
         if (logger.isTraceEnabled())
           logger.trace("getBookFullEntry: add the series link");
         entry.addContent(FeedHelper.INSTANCE.getXmlLinkElement(
           getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
-          relType,
+          "related",
           Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())
         ));
       }
@@ -816,7 +797,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
           entry.addContent(FeedHelper.INSTANCE.getXmlLinkElement(
             getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
-            relType,
+            "related",
             Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())
           ));
         }
@@ -833,7 +814,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             if (nbBooks > 1) {
               entry.addContent(FeedHelper.INSTANCE.getXmlLinkElement(
                 getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + ".xml")),
-                relType,
+                "related",
                 Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks), tag.getName())
               ));
             }
@@ -849,7 +830,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (nbBooks > 1) {
           entry.addContent(FeedHelper.INSTANCE.getXmlLinkElement(
             getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + ".xml")),
-            relType,
+            "related",
             Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))
           ));
         }
@@ -1037,19 +1018,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
       return;
     }
 
-    String relType;
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-      case STANZA:
-        relType = null;
-        // There is no mention in the Stanza documentation of it supporting this
-        // type of link, but it does not seem to cause a problem in Stanza and
-        // is required by the XSLT transform to HTML to get the Download links.
-        relType = "http://opds-spec.org/acquisition";
-        break;
-      default:
-        relType = "http://opds-spec.org/acquisition";
-        break;
-    }
     // links to the ebook files
     if (logger.isTraceEnabled())
       logger.trace("addAcquisitionLinks: links to the ebook files");
@@ -1065,8 +1033,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       entry.addContent(FeedHelper.INSTANCE.getLinkElement(
         "../../" + FeedHelper.INSTANCE.urlEncode(book.getPath(), true) + "/" + FeedHelper.INSTANCE.urlEncode(file.getName() + file.getExtension(), true),
-        file.getFormat().getMime(),     // Mime type
-        relType,                        // Rel attribute
+        file.getFormat().getMime(), // Mime type
+        "http://opds-spec.org/acquisition", // Rel attribute
         Localization.Main.getText("bookentry.download", file.getFormat())
       ));
 
@@ -1082,10 +1050,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
   /**
    * @param book
    * @param entry
-   * @param includeCover
    */
-  private void addCoverLink(Book book, Element entry, boolean includeCover) {
-    String relType;
+  private void addCoverLink(Book book, Element entry) {
 
     if (logger.isDebugEnabled())
       logger.debug("addCoverLink for " + book.getTitle());
@@ -1099,91 +1065,61 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // add the cover
 
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-      case STANZA:
-        // This is the what the Stanza documentation says should be used
-        relType = "x-stanza-cover-image-cover";
-        // This is the OPDS variant and also appears to work with Stanza
-        relType = "http://opds-spec.org/cover";
-        break;
-      default:
-        relType = "http://opds-spec.org/cover";
-        break;
-    }
-
     // prepare to copy the cover file
 
     getCatalogManager().addFileToTheMapOfFilesToCopy(coverFile);
 
     // Add the Cover link
 
-    if (includeCover) {
-      String coverUri = getCoverManager().getImageUri(book);
+    String coverUri = getCoverManager().getImageUri(book);
 
-      // get the generated cover filename
-      CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getCoverManager().getResultFilename(book));
+    // get the generated cover filename
+    CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getCoverManager().getResultFilename(book));
 
-      // prepare to copy the thumbnail if we are using them file
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize()) {
-        getCatalogManager().addFileToTheMapOfFilesToCopy(resizedCoverFile);
+    // prepare to copy the thumbnail if we are using them file
+    if (ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize()) {
+      getCatalogManager().addFileToTheMapOfFilesToCopy(resizedCoverFile);
 
-        if (!resizedCoverFile.exists() || getCoverManager().hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
-          if (logger.isTraceEnabled()) {
-            if (!resizedCoverFile.exists())
-              logger.trace("addCoverLink: resizedCover set to be generated (not already existing)");
-            else if (getCoverManager().hasImageSizeChanged())
-              logger.trace("addCoverLink: resizedCover set to be generated (image size changed)");
-            else if (resizedCoverFile.lastModified() < coverFile.lastModified())
-              logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
-          }
-          getCoverManager().setImageToGenerate(resizedCoverFile, coverFile);
-        } else {
-          if (logger.isTraceEnabled())
-            logger.trace("addCoverLink: resizedCover not to be generated");
+      if (!resizedCoverFile.exists() || getCoverManager().hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
+        if (logger.isTraceEnabled()) {
+          if (!resizedCoverFile.exists())
+            logger.trace("addCoverLink: resizedCover set to be generated (not already existing)");
+          else if (getCoverManager().hasImageSizeChanged())
+            logger.trace("addCoverLink: resizedCover set to be generated (image size changed)");
+          else if (resizedCoverFile.lastModified() < coverFile.lastModified())
+            logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
         }
+        getCoverManager().setImageToGenerate(resizedCoverFile, coverFile);
       } else {
-        // Not using resized covers - use original cover.jpg
+        if (logger.isTraceEnabled())
+          logger.trace("addCoverLink: resizedCover not to be generated");
+      }
+    } else {
+      // Not using resized covers - use original cover.jpg
 
-        if (resizedCoverFile.exists()) {
-          // Safety check we never delete the Calibre cover
-          if (0 == resizedCoverFile.getName().compareTo(Constants.CALIBRE_COVER_FILENAME)) {
-            logger.warn("attempt to delete Calibre cover for book " + book.getTitle());
-          } else {
-            if (logger.isTraceEnabled())
-              logger.trace("addCoverLink: coverResize=false. Delete " + resizedCoverFile.getName());
-          }
-          resizedCoverFile.delete();
-          // Make sure it is no longer in the cache
-          CachedFileManager.INSTANCE.removeCachedFile(resizedCoverFile);
+      if (resizedCoverFile.exists()) {
+        // Safety check we never delete the Calibre cover
+        if (0 == resizedCoverFile.getName().compareTo(Constants.CALIBRE_COVER_FILENAME)) {
+          logger.warn("attempt to delete Calibre cover for book " + book.getTitle());
         } else {
           if (logger.isTraceEnabled())
-            logger.trace("addCoverLink: coverResize=false. No resizedCover file for book " + book.getTitle());
+            logger.trace("addCoverLink: coverResize=false. Delete " + resizedCoverFile.getName());
         }
-        // Change URI name to user cover.jpg
-        coverUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
+        resizedCoverFile.delete();
+        // Make sure it is no longer in the cache
+        CachedFileManager.INSTANCE.removeCachedFile(resizedCoverFile);
+      } else {
+        if (logger.isTraceEnabled())
+          logger.trace("addCoverLink: coverResize=false. No resizedCover file for book " + book.getTitle());
       }
-      if (logger.isTraceEnabled())
-        logger.trace("addCoverLink: coverUri=" + coverUri);
-      entry.addContent(FeedHelper.INSTANCE.getLinkElement(coverUri, "image/jpeg", relType, null));
-
-    } else {
-      if (logger.isTraceEnabled())
-        logger.trace("addCoverLink: includeCover=false for book " + book.getTitle());
+      // Change URI name to user cover.jpg
+      coverUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
     }
+    if (logger.isTraceEnabled())
+      logger.trace("addCoverLink: coverUri=" + coverUri);
+    entry.addContent(FeedHelper.INSTANCE.getLinkElement(coverUri, "image/jpeg", "http://opds-spec.org/cover", null));
 
     // add the thumbnail link
-
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-      case STANZA:
-        // This is the what the Stanza documentation says should be used
-        relType = "x-stanza-cover-image-thumbnail";
-        // This is the OPDS variant and also appears to work with Stanza
-        relType = "http://opds-spec.org/thumbnail";
-        break;
-      default:
-        relType = "http://opds-spec.org/thumbnail";
-        break;
-    }
 
     String thumbnailUri = getThumbnailManager().getImageUri(book);
     CachedFile thumbnailFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getThumbnailManager().getResultFilename(book));
@@ -1230,6 +1166,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     if (logger.isTraceEnabled())
       logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
-    entry.addContent(FeedHelper.INSTANCE.getLinkElement(thumbnailUri, "image/jpeg", relType, null));
+    entry.addContent(FeedHelper.INSTANCE.getLinkElement(thumbnailUri, "image/jpeg", "http://opds-spec.org/thumbnail", null));
   }
 }
