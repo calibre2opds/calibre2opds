@@ -620,7 +620,16 @@ public class Mainframe extends javax.swing.JFrame
     txtLibrarythingTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
     lblLibrarythingTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
 
-    adaptInterfaceToDeviceSpecificMode(ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode());
+    DeviceMode mode = ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode();
+    // Ensuer we have a Device Mode actually set
+    if (Helper.isNullOrEmpty(mode))
+    {
+      if (logger.isTraceEnabled())
+        logger.trace("Device mode was not set - setting to " + DeviceMode.Dropbox);
+      ConfigurationManager.INSTANCE.getCurrentProfile().setDeviceMode(DeviceMode.Dropbox);
+    }
+    // Set interface to match the mode
+    adaptInterfaceToDeviceSpecificMode(mode);
     computeBrowseByCoverWithoutSplitVisibility();
     
     changeLanguage();

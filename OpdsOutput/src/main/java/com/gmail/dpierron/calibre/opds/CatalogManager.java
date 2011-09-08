@@ -44,7 +44,7 @@ public class CatalogManager {
   
   public String getCatalogFolderName() {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook)
-      return "_catalog";
+      return Constants.NOOK_CATALOG_FOLDERNAME;
     else
       return ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName();
   }
