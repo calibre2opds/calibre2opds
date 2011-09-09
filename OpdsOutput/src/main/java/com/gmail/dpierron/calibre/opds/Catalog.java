@@ -537,8 +537,17 @@ public class Catalog {
                                       JOptionPane.ERROR_MESSAGE);
         return;
       }
+      // Check that target folder (if set) is not set to be a higher level than the library folder
+      // (which would have unfortunate consequences when deleting during sync operation)
+      if (calibreLibraryFolder.getAbsolutePath().startsWith(calibreTargetFolder.getAbsolutePath()))
+      {
+        logger.warn (Localization.Main.getText("error.targetparent"));
+        JOptionPane.showMessageDialog(null, Localization.Main.getText("error.targetparent"), "error",
+                                      JOptionPane.ERROR_MESSAGE);
+        return;
+      }
       // If not already a catalog at target, give overwrite warning
-      if (!checkCatalogExistence(calibreTargetFolder))
+      if (!checkCatalogExistence(calibreTargetFolder, false))
       {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreTargetFolder));
         if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreTargetFolder),
@@ -558,10 +567,10 @@ public class Catalog {
     if (catalogParentFolder == null
     || catalogParentFolder.getName().length() == 0)
     {
-      if (!checkCatalogExistence(catalogParentFolder))
+      if (!checkCatalogExistence(calibreLibraryFolder, true))
       {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder),
+        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder + File.separator + currentProfile.getCatalogFolderName()),
                 "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
             if (logger.isTraceEnabled())
                 logger.trace("User declined to overwrite folder " + calibreLibraryFolder);
@@ -576,14 +585,15 @@ public class Catalog {
       logger.trace ("New catalog to be generated at " + catalogFolder.getPath());
 
     // If copying catalog back to database folder check it is safe to overwrite
-    if (currentProfile.getCopyToDatabaseFolder())
+    if (true == currentProfile.getCopyToDatabaseFolder())
     {
       logger.debug ("STARTING: Copy Catalog Folder to Database Folder");
       File targetFolder = currentProfile.getDatabaseFolder();
-      if (!checkCatalogExistence(targetFolder))
+      if ((DeviceMode.Dropbox != currentProfile.getDeviceMode())
+      && (!checkCatalogExistence(targetFolder, true)))
       {
         logger.warn(Localization.Main.getText("gui.confirm.clear", targetFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", targetFolder + "/" + currentProfile.getCatalogFolderName()),
+        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()),
                 "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
             if (logger.isTraceEnabled())
                 logger.trace("User declined to overwrite folder " + targetFolder);
@@ -1083,13 +1093,33 @@ public class Catalog {
    * Check to see if there appears to already be an existing calibre2opds catalog
    * at the specified location (by checking for specific files).  Note that a false
    * is always definitive, while a true could return a false (although unlikely) positive.
-   * @param catalogParentFolder  Path that contains the catalog folder
-   * @return                     true if cataog appears to be present
-    *                            false if catalog definitely not there.
+   * @param catalogParentFolder     Path that contains the catalog folder
+   * @param checkCatalogFolderOnly  Set to true if it is OK if parent exists and catalog does not
+   * @return                        true if cataog appears to be present
+    *                               false if catalog definitely not there.
    */
-  private boolean checkCatalogExistence (File catalogParentFolder)
+  private boolean checkCatalogExistence (File catalogParentFolder, boolean checkCatalogFolderOnly)
   {
+    // We treat Parent folder as not existing as being equivalent to
+    // catalog existing as there is no problem with over-writing.
+    if (! catalogParentFolder.exists())
+    {
+      if (logger.isTraceEnabled())
+        logger.trace("checkCatalogExistence: true (parent does not exist");
+      return true;
+    }
     File catalogFolder = new File(catalogParentFolder,currentProfile.getCatalogFolderName());
+
+    // We treat catalog folder as not existing as being equivalent to
+    // catalog existing as there is no problem with over-writing.
+    if ((false == catalogFolder.exists())
+    && (true == checkCatalogFolderOnly))
+    {
+      if (logger.isTraceEnabled())
+        logger.trace("checkCatalogExistence: true (catalog folder does not exist");
+      return true;
+    }
+
     if (logger.isTraceEnabled())
       logger.trace ("checkCatalogExistence: Check for catalog at " + catalogFolder.getPath());
     if ( !catalogFolder.exists())
