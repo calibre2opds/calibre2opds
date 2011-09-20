@@ -88,17 +88,17 @@ public enum FeedHelper {
   private Element getUpdatedTag(Calendar c) {
     StringBuffer result = new StringBuffer();
 
-    result.append(c.get(Calendar.YEAR));
+    result.append(Helper.leftPad(""+c.get(Calendar.YEAR), '0', 4));
     result.append('-');
-    result.append(c.get(Calendar.MONTH));
+    result.append(Helper.leftPad(""+c.get(Calendar.MONTH), '0', 2));
     result.append('-');
-    result.append(c.get(Calendar.DAY_OF_MONTH));
+    result.append(Helper.leftPad(""+c.get(Calendar.DAY_OF_MONTH), '0', 2));
     result.append('T');
-    result.append(c.get(Calendar.HOUR));
+    result.append(Helper.leftPad(""+c.get(Calendar.HOUR), '0', 2));
     result.append(':');
-    result.append(c.get(Calendar.MINUTE));
+    result.append(Helper.leftPad(""+c.get(Calendar.MINUTE), '0', 2));
     result.append(':');
-    result.append(c.get(Calendar.SECOND));
+    result.append(Helper.leftPad(""+c.get(Calendar.SECOND), '0', 2));
     result.append('Z');
 
     return JDOM.INSTANCE.element("updated").addContent(result.toString());

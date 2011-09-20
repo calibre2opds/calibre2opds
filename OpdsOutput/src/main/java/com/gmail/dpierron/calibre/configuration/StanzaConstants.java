@@ -81,7 +81,7 @@ public class StanzaConstants {
   public final static String GOODREAD_TITLE_URL = "http://www.goodreads.com/book/title/{0}";
   public final static String GOODREAD_AUTHOR_URL = "http://www.goodreads.com/book/author/{0}";
   public final static String LIBRARYTHING_ISBN_URL = "http://www.librarything.com/isbn/{0}";
-  public final static String LIBRARYTHING_TITLE_URL = "http://www.librarything.com/title/{0} {1}";
+  public final static String LIBRARYTHING_TITLE_URL = "http://www.librarything.com/title/{0}%20{1}";
   public final static String LIBRARYTHING_AUTHOR_URL = "http://www.librarything.com/author/{0}";
   public final static String AMAZON_ISBN_URL = "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-isbn={0}";
   public final static String AMAZON_TITLE_URL = "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-title={0}&field-author={1}";
