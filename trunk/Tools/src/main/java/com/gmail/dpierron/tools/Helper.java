@@ -182,6 +182,16 @@ public class Helper {
     } else return "";
   }
 
+  public static String leftPad(String s, char paddingCharacter, int length) {
+    if (s.length() >= length) return s;
+    StringBuffer sb = new StringBuffer();
+    for (int i = s.length(); i < length; i++) {
+      sb.append(paddingCharacter);
+    }
+    sb.append(s);
+    return sb.toString();
+  }
+
   public static String pad(String s, char paddingCharacter, int length) {
     if (s.length() >= length) return s;
     StringBuffer sb = new StringBuffer(s);

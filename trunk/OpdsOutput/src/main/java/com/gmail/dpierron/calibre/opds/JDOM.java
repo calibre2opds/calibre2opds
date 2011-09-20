@@ -30,6 +30,7 @@ public enum JDOM {
   private XMLOutputter outputter;
   private XMLOutputter serializer;
   private TransformerFactory transformerFactory;
+  private Transformer bookFullEntryTransformer;
   private Transformer catalogTransformer;
   private Transformer headerTransformer;
   private Transformer mainTransformer;
@@ -120,6 +121,18 @@ public enum JDOM {
       }
     }
     return catalogTransformer;
+  }
+
+  public Transformer getBookFullEntryTransformer() {
+    if (bookFullEntryTransformer == null) {
+      try {
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
+        setParametersOnCatalog(bookFullEntryTransformer);
+      } catch (TransformerConfigurationException e) {
+        logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
+      }
+    }
+    return bookFullEntryTransformer;
   }
 
   private String getXsltFilename() {

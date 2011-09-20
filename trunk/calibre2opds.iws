@@ -2,15 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list readonly="true" id="1c6a0c92-e354-425e-af5a-631a16bb7a86" name="Default" comment="" />
-    <list default="true" id="d1376373-2c9b-4ca9-9a8e-116bc78f9f90" name="version number now uses svn" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/calibre2opds.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization.xls" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization.xls" />
+    <list id="6ccaa771-5690-43b6-9783-a67032c753cf" name="OPDS1.1-correct the links and their rel" comment="" />
+    <list default="true" id="ae5e8b59-573a-456a-a2ef-cba075ee1e1a" name="OPDS1.1-correct the partial and full entries mechanism" comment="OPDS1.1-correct the partial and full entries mechanism&#10;Also, corrected bugs in the external links urls (urlencoding) and the updated tag content (padding)">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/fullentry.xsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_en.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_en.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_es.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_es.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_fr.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_fr.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_it.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_it.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_ru.properties" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/resources/Localization_ru.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/FeedHelper.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/FeedHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" afterPath="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java" afterPath="$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/calibre2opds.iws" afterPath="$PROJECT_DIR$/calibre2opds.iws" />
     </list>
     <ignored path="calibre2opds.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -18,6 +20,7 @@
     <ignored mask="calibre2opds-*.exe" />
     <ignored mask="calibre2opds-*.jar" />
     <ignored mask="calibre2opds-*.zip" />
+    <ignored path="OpdsOutput/lib/" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,34 +40,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" line="316" class="com.gmail.dpierron.calibre.opds.JDOM" package="com.gmail.dpierron.calibre.opds">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" line="698" class="com.gmail.dpierron.calibre.opds.BooksSubCatalog" package="com.gmail.dpierron.calibre.opds">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -106,10 +81,10 @@
       <property name="field_breakpoints_flattenPackages" value="true" />
       <property name="exception_breakpoints_groupByMethods" value="false" />
       <property name="line_breakpoints_groupByClasses" value="true" />
-      <property name="field_breakpoints_groupByMethods" value="false" />
       <property name="method_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_groupByMethods" value="false" />
       <property name="line_breakpoints_flattenPackages" value="true" />
+      <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
@@ -122,46 +97,64 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="make.cmd" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/make.cmd">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="38" selection-start="386" selection-end="386" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Catalog.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Catalog.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="609" column="7" selection-start="26012" selection-end="26012" vertical-scroll-proportion="0.81417626">
+            <state line="832" column="53" selection-start="34861" selection-end="34861" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DevNote - Compatibility Modes.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DevNote - Compatibility Modes.txt">
+      <file leaf-file-name="BooksSubCatalog.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="0" selection-start="1300" selection-end="1300" vertical-scroll-proportion="0.0">
+            <state line="630" column="99" selection-start="22060" selection-end="22060" vertical-scroll-proportion="0.8581081">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CatalogManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/CatalogManager.java">
+      <file leaf-file-name="ConfigurationHolder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ConfigurationHolder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="46" selection-start="1735" selection-end="1735" vertical-scroll-proportion="0.0">
+            <state line="83" column="30" selection-start="6134" selection-end="6134" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java">
+      <file leaf-file-name="StanzaDefaultConfiguration.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaDefaultConfiguration.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="66" selection-start="1525" selection-end="1525" vertical-scroll-proportion="0.0">
+            <state line="91" column="37" selection-start="2165" selection-end="2165" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StanzaConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="83" column="95" selection-start="10955" selection-end="10955" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JDOM.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="113" column="33" selection-start="6343" selection-end="6343" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HtmlManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="40" selection-start="1692" selection-end="1692" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -181,22 +174,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Index.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConfigurationInterface.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ReadOnlyStanzaConfigurationInterface.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ConfigurationHolder.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaDefaultConfiguration.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/IndexManager.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
-        <option value="$PROJECT_DIR$/make.cmd" />
-        <option value="$PROJECT_DIR$/setenv.cmd.sample" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java" />
-        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/CatalogManager.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/pom.xml" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Index.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/CompatibilityTrick.java" />
+        <option value="$PROJECT_DIR$/DevNote - Compatibility Modes.txt" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog-TROOK.xsl" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/header.xsl" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java" />
+        <option value="$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/FeedHelper.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/fullentry.xsl" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java" />
         <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java" />
+        <option value="$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java" />
       </list>
     </option>
   </component>
@@ -257,7 +250,6 @@
     </treeState>
   </component>
   <component name="MavenRunner">
-    <option name="jreName" value="#JAVA_INTERNAL" />
     <option name="mavenProperties">
       <map>
         <entry key="env.SVN_HOME" value="c:\tools\svn-win32-1.5.2" />
@@ -272,7 +264,7 @@
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="false" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
     <ConfirmationsSetting value="0" id="Add" />
@@ -294,7 +286,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Favorites" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -309,7 +301,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Calibre2Opds" />
+              <option name="myItemId" value="trunk" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -319,27 +311,157 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Calibre2Opds" />
+              <option name="myItemId" value="trunk" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="DataModel" />
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calibre2opds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="OpdsOutput" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="editor.preferences.appearance" />
+    <property name="options.lastSelected" value="reference.settings.project.maven.runner" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="GoToClass.includeJavaFiles" value="false" />
@@ -348,11 +470,14 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projects\calibre2opds\trunk\OpdsOutput\src\main\resources\com\gmail\dpierron\calibre\opds" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.gmail.dpierron.calibre" />
     </key>
@@ -557,6 +682,27 @@
         <option name="PhingTarget" enabled="false" />
       </method>
     </configuration>
+    <configuration default="true" type="XSLT" factoryName="XSLT">
+      <option name="myOutputFile" />
+      <option name="myOpenOutputFile" value="false" />
+      <option name="myOpenInBrowser" value="false" />
+      <option name="mySmartErrorHandling" value="true" />
+      <option name="myRunnerPort" value="34873" />
+      <option name="myVmArguments" />
+      <option name="myWorkingDirectory" />
+      <option name="myModule" />
+      <option name="myJdk" />
+      <parameters />
+      <OutputType value="CONSOLE" save-to-file="false" />
+      <FileType name="XML" />
+      <JdkChoice value="FROM_MODULE" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="" />
@@ -619,8 +765,8 @@
       <module name="OpdsOutput" />
       <envs>
         <env name="HACKS_ENABLED" value="true" />
-        <env name="CALIBRE2OPDS_CONFIG" value="c:\data\dropbox\Calibre2opds" />
-        <env name="_CALIBRE2OPDS_CONFIG" value="c:\projects\calibre2opds\trunk\" />
+        <env name="" value="" />
+        <env name="_CALIBRE2OPDS_CONFIG" value="c:\tmp" />
       </envs>
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="50566" />
@@ -646,7 +792,7 @@
       <module name="OpdsOutput" />
       <envs>
         <env name="HACKS_ENABLED" value="true" />
-        <env name="CALIBRE2OPDS_CONFIG" value="c:\data\dropbox\Calibre2opds" />
+        <env name="" value="" />
         <env name="_CALIBRE2OPDS_CONFIG" value="c:\projects\calibre2opds\trunk\" />
       </envs>
       <RunnerSettings RunnerId="Debug">
@@ -654,16 +800,18 @@
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
     <list size="6">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.TestJdom" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.JdomTest.testBookComment" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.JdomTest.testTidyBookComment" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.JdomTest.testParseBookComment" />
-      <item index="4" class="java.lang.String" itemvalue="Application.Gui" />
-      <item index="5" class="java.lang.String" itemvalue="Application.Cli" />
+      <item index="0" class="java.lang.String" itemvalue="Application.Gui" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Cli" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.TestJdom" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.JdomTest.testBookComment" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.JdomTest.testTidyBookComment" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.JdomTest.testParseBookComment" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -698,32 +846,32 @@
     <option name="myMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds\OpdsOutput" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds\OpdsOutput" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk\OpdsOutput" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk\OpdsOutput" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds\DataModel" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds\DataModel" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk\DataModel" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk\DataModel" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk\Install" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk\Install" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds\Tools" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds\Tools" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk\Tools" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk\Tools" />
         </SvnCopyRootSimple>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds\Install" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds\Install" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk" />
         </SvnCopyRootSimple>
       </list>
     </option>
     <option name="myMoreRealMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\DropBox\Calibre2Opds" />
-          <option name="myCopyRoot" value="D:\DropBox\Calibre2Opds" />
+          <option name="myVcsRoot" value="C:\projects\calibre2opds\trunk" />
+          <option name="myCopyRoot" value="C:\projects\calibre2opds\trunk" />
         </SvnCopyRootSimple>
       </list>
     </option>
@@ -732,25 +880,52 @@
     <task id="Default" summary="Default task">
       <changelist id="1c6a0c92-e354-425e-af5a-631a16bb7a86" name="Default" comment="" />
       <created>1314278938810</created>
-      <updated>1314280267074</updated>
+      <updated>1315497236526</updated>
     </task>
     <task id="LOCAL-00001" summary="cleanup after move to SVN">
-      <changelist id="52eec459-02b8-4198-ab7e-ae46f7d6e2d1" name="cleanup after move to SVN" comment="" />
-      <changelist id="52eec459-02b8-4198-ab7e-ae46f7d6e2d1" name="cleanup after move to SVN" comment="" />
       <created>1314280267053</created>
       <updated>1314280288297</updated>
     </task>
-    <task active="true" id="LOCAL-00002" summary="search index generation">
+    <task id="LOCAL-00002" summary="search index generation">
       <option name="associatedChangelistId" value="6dfb9f89-ab00-4763-948a-ee11ee36e9c4" />
-      <changelist id="d1376373-2c9b-4ca9-9a8e-116bc78f9f90" name="version number now uses svn" comment="" />
       <created>1314280288284</created>
-      <updated>1314802437149</updated>
+      <updated>1314802581529</updated>
     </task>
     <task id="LOCAL-00003" summary="remove tidy">
       <created>1314623602735</created>
       <updated>1314623860051</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="OPDS1.1-remove the unneeded compatibility tricks">
+      <created>1315496142621</created>
+      <updated>1315497226446</updated>
+    </task>
+    <task id="LOCAL-00006" summary="correct for OPDS 1.1 ">
+      <option name="associatedChangelistId" value="7afc80c1-6880-416c-9ec0-75ce64ecce7f" />
+      <created>1315496669134</created>
+      <updated>1315496778801</updated>
+    </task>
+    <task id="LOCAL-00007" summary="OPDS11-8. Correct artwork relations">
+      <option name="associatedChangelistId" value="382e44a3-1465-48f7-a39c-426bfc1b571d" />
+      <created>1315496799790</created>
+      <updated>1315498505396</updated>
+    </task>
+    <task id="LOCAL-00008" summary="OPDS1.1-Add a HTML link in our HTML catalog, pointing to the OPDS catalog">
+      <created>1315498505383</created>
+      <updated>1315500540762</updated>
+    </task>
+    <task id="LOCAL-00009" summary="OPDS1.1-correct the links and their rel">
+      <changelist id="6ccaa771-5690-43b6-9783-a67032c753cf" name="OPDS1.1-correct the links and their rel" comment="" />
+      <changelist id="6ccaa771-5690-43b6-9783-a67032c753cf" name="OPDS1.1-correct the links and their rel" comment="" />
+      <created>1315500540750</created>
+      <updated>1316531233288</updated>
+    </task>
+    <task active="true" id="LOCAL-00010" summary="OPDS1.1-correct the partial and full entries mechanism">
+      <changelist id="ae5e8b59-573a-456a-a2ef-cba075ee1e1a" name="OPDS1.1-correct the partial and full entries mechanism" comment="" />
+      <changelist id="ae5e8b59-573a-456a-a2ef-cba075ee1e1a" name="OPDS1.1-correct the partial and full entries mechanism" comment="" />
+      <created>1316531233250</created>
+      <updated>1316531234174</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -774,29 +949,29 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1376" height="722" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16666667" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32979852" sideWeight="0.98702353" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.58156025" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3335878" sideWeight="0.6719858" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39872748" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32873806" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31495228" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32835025" sideWeight="0.6702015" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33414435" sideWeight="0.67305523" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32835025" sideWeight="0.19300106" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29389313" sideWeight="0.6719858" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39978093" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32624114" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32661718" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Phing Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3280142" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IvyIDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32968238" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31382978" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -826,7 +1001,7 @@
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="correct the character set problem in books comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="OPDS1.1-correct the partial and full entries mechanism&#10;Also, corrected bugs in the external links urls (urlencoding) and the updated tag content (padding)" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -842,6 +1017,14 @@
     <MESSAGE value="search index generation" />
     <MESSAGE value="search index generation (first draft)" />
     <MESSAGE value="correct the character set problem in books comments" />
+    <MESSAGE value="version number now uses svn" />
+    <MESSAGE value="corrected a NPE when generating the index and the splitTagsOn option is not set" />
+    <MESSAGE value="OPDS11-3. remove the unneeded compatibility tricks" />
+    <MESSAGE value="OPDS11-7. No need to specify &quot;type=feed&quot;, it's the default in AtomPub" />
+    <MESSAGE value="OPDS11-3. remove the unneeded compatibility tricks (updated the DevNote)" />
+    <MESSAGE value="OPDS11-8. Correct artwork relations (makes the thumbnails work in IbisReader ! Yay !)" />
+    <MESSAGE value="OPDS1.1- 4. Add a HTML link in our HTML catalog, pointing to the OPDS catalog" />
+    <MESSAGE value="OPDS1.1-correct the partial and full entries mechanism&#10;Also, corrected bugs in the external links urls (urlencoding) and the updated tag content (padding)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -851,86 +1034,106 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/CompatibilityTrick.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="0" selection-start="6101" selection-end="6101" vertical-scroll-proportion="0.72908366" />
+        <state line="6" column="3" selection-start="114" selection-end="114" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/Index.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="13" selection-start="540" selection-end="540" vertical-scroll-proportion="-0.50291264" />
+        <state line="74" column="61" selection-start="2343" selection-end="2343" vertical-scroll-proportion="0.028571429" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/setenv.cmd.sample">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog-TROOK.xsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="16" selection-start="250" selection-end="250" vertical-scroll-proportion="0.0" />
+        <state line="265" column="71" selection-start="18965" selection-end="18965" vertical-scroll-proportion="0.36134455" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/header.xsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="373" column="45" selection-start="24516" selection-end="24516" vertical-scroll-proportion="0.0" />
+        <state line="38" column="60" selection-start="1619" selection-end="1619" vertical-scroll-proportion="1.0677686" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
+    <entry file="file://$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/configuration/DefaultConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="639" column="25" selection-start="22370" selection-end="22370" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/indexer/IndexManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="0" selection-start="2150" selection-end="2150" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/SubCatalog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="204" column="39" selection-start="7044" selection-end="7044" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DataModel/src/main/java/com/gmail/dpierron/calibre/cache/CachedFileManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="162" column="40" selection-start="5165" selection-end="5165" vertical-scroll-proportion="0.0" />
+        <state line="4" column="13" selection-start="86" selection-end="86" vertical-scroll-proportion="0.1118421">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/ConfigurationHolder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="203" column="14" selection-start="9724" selection-end="9724" vertical-scroll-proportion="0.0" />
+        <state line="83" column="30" selection-start="6134" selection-end="6134" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/gui/Mainframe.java">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaDefaultConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="327" column="15" selection-start="13099" selection-end="13099" vertical-scroll-proportion="0.36653388" />
+        <state line="91" column="37" selection-start="2165" selection-end="2165" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/DeviceMode.java">
+    <entry file="file://$PROJECT_DIR$/Tools/src/main/java/com/gmail/dpierron/tools/Helper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="62" selection-start="594" selection-end="594" vertical-scroll-proportion="0.6037383" />
+        <state line="190" column="17" selection-start="6253" selection-end="6253" vertical-scroll-proportion="0.50680274">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/make.cmd">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/FeedHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="38" selection-start="386" selection-end="386" vertical-scroll-proportion="0.0" />
+        <state line="92" column="68" selection-start="2873" selection-end="2873" vertical-scroll-proportion="0.27631578">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DevNote - Compatibility Modes.txt">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/fullentry.xsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="0" selection-start="1300" selection-end="1300" vertical-scroll-proportion="0.0" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Constants.java">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/resources/com/gmail/dpierron/calibre/opds/catalog.xsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="66" selection-start="1525" selection-end="1525" vertical-scroll-proportion="0.0" />
+        <state line="139" column="44" selection-start="6691" selection-end="6691" vertical-scroll-proportion="0.27563027">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/CatalogManager.java">
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/configuration/StanzaConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="46" selection-start="1735" selection-end="1735" vertical-scroll-proportion="0.0">
+        <state line="83" column="95" selection-start="10955" selection-end="10955" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/JDOM.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="33" selection-start="6343" selection-end="6343" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/HtmlManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="40" selection-start="1692" selection-end="1692" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/Catalog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="609" column="7" selection-start="26012" selection-end="26012" vertical-scroll-proportion="0.81417626">
+        <state line="832" column="53" selection-start="34861" selection-end="34861" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OpdsOutput/src/main/java/com/gmail/dpierron/calibre/opds/BooksSubCatalog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="630" column="99" selection-start="22060" selection-end="22060" vertical-scroll-proportion="0.8581081">
           <folding />
         </state>
       </provider>
@@ -964,7 +1167,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Android</last-edited>
+          <last-edited>Bean Validation</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -999,11 +1202,12 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>OpdsOutput</last-edited>
+          <last-edited>DataModel</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

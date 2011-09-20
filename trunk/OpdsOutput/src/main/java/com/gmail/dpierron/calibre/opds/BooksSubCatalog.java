@@ -610,15 +610,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       try {
         fos = new FileOutputStream(outputFile);
 
-        Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
-
-        // add the entry to the feed
-        if (logger.isTraceEnabled())
-          logger.trace("getBookEntry: add the entry to the feed");
-        feed.addContent(getBookFullEntry(book));
+        Element entry = getBookFullEntry(book);
 
         // write the element to the file
-        document.addContent(feed);
+        document.addContent(entry);
         JDOM.INSTANCE.getOutputter().output(document, fos);
 
       } catch (Exception e) {
@@ -633,7 +628,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // create the same file as html
-      getHtmlManager().generateHtmlFromXml(document, outputFile);
+      getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
 
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex())
       {
@@ -864,7 +859,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getLinkElement(
-            MessageFormat.format(url, book.getTitle()),
+            MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle())),
             "text/html",
             "related",
             Localization.Main.getText("bookentry.goodreads")
@@ -899,7 +894,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getLinkElement(
-            MessageFormat.format(url, book.getTitle(), book.getMainAuthor().getName()),
+            MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
             "text/html",
             "related",
             Localization.Main.getText("bookentry.librarything")
@@ -922,7 +917,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getLinkElement(
-            MessageFormat.format(url, book.getTitle(), book.getMainAuthor().getName()),
+            MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
             "text/html",
             "related",
             Localization.Main.getText("bookentry.amazon")

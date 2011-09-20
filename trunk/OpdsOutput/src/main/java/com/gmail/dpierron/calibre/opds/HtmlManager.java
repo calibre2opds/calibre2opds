@@ -18,6 +18,12 @@ import com.gmail.dpierron.calibre.opds.i18n.Localization;
 
 public class HtmlManager {
   private final static Logger logger = Logger.getLogger(HtmlManager.class);
+
+  public enum FeedType {
+    MainCatalog,
+    Catalog,
+    BookFullEntry
+  }
   
   private long timeInHtml = 0;
 
@@ -30,10 +36,10 @@ public class HtmlManager {
   }
   
   public void generateHtmlFromXml(Document document, File outputFile) throws IOException {
-    generateHtmlFromXml(document, outputFile, false);
+    generateHtmlFromXml(document, outputFile, FeedType.Catalog);
   }
 
-  public void generateHtmlFromXml(Document document, File outputFile, boolean mainCatalog) throws IOException {
+  public void generateHtmlFromXml(Document document, File outputFile, FeedType feedType) throws IOException {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
       try {
@@ -45,13 +51,19 @@ public class HtmlManager {
         fos = new FileOutputStream(htmlFile);
         StreamResult streamResult = new StreamResult(fos);
         try {
-          Transformer transformer;
-          if (mainCatalog){
-              generateHeaderHtml(document,outputFile,mainCatalog);
+          Transformer transformer = null;
+          switch (feedType) {
+            case MainCatalog:
+              generateHeaderHtml(document,outputFile);
               transformer = JDOM.INSTANCE.getMainCatalogTransformer();
+              break;
+            case Catalog:
+              transformer = JDOM.INSTANCE.getCatalogTransformer();
+              break;
+            case BookFullEntry:
+              transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
+              break;
           }
-          else
-            transformer = JDOM.INSTANCE.getCatalogTransformer();
           transformer.transform(source, streamResult);
         } catch (TransformerException e) {
           logger.error(Localization.Main.getText("error.cannotTransform",outputFile.getAbsolutePath()),e);
@@ -64,7 +76,7 @@ public class HtmlManager {
     }
   }
 
-    private void generateHeaderHtml(Document document, File outputFile, boolean mainCatalog) throws IOException {
+    private void generateHeaderHtml(Document document, File outputFile) throws IOException {
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
             FileOutputStream fos = null;
             try {

@@ -830,7 +830,7 @@ public class Catalog {
 
     // create the same file as html
     logger.debug("STARTED: Generating HTML Files");
-    CatalogContext.INSTANCE.getHtmlManager().generateHtmlFromXml(document, outputFile, true);
+    CatalogContext.INSTANCE.getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.MainCatalog);
     logger.debug("COMPLETED: Generating HTML Files");
 
     // copy the resource files to the catalog folder
