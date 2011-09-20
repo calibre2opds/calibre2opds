@@ -121,7 +121,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     Document document = new Document();
     try {
       fos = new FileOutputStream(outputFile);
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
+      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
 
       // list the entries (or split them)
       List<Element> result;

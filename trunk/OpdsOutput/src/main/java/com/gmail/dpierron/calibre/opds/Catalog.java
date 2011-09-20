@@ -674,7 +674,7 @@ public class Catalog {
       String title = Localization.Main.getText("home.title");
       String urn = "calibre:catalog";
 
-      Element main = FeedHelper.INSTANCE.getFeed(null, title, urn, computeSummary(books));
+      Element main = FeedHelper.INSTANCE.getFeed(null, title, urn);
 
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(title, "../"+filename);
       Element entry;

@@ -312,7 +312,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         logger.trace("getListOfBooks:: fos=" + outputFile);
       fos = new FileOutputStream(outputFile);
 
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
+      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
 
       // list the books (or split them)
       List<Element> result;

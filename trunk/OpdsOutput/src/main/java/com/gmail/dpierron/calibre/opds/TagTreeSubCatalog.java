@@ -68,7 +68,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     try {
       fos = new FileOutputStream(outputFile);
   
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
+      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
       
       for (int i=from; i<itemsCount; i++) {
         if ((i-from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
