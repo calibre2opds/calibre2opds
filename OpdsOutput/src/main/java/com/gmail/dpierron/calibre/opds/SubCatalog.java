@@ -138,7 +138,7 @@ public abstract class SubCatalog {
     try {
       fos = new FileOutputStream(outputFile);
     
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn, summary);
+      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs,
                                                           title,
                                                           getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));

@@ -175,20 +175,9 @@ public enum FeedHelper {
 
   Element getFeed(Breadcrumbs breadcrumbs,
                   String pTitle,
-                  String urn,
-                  String pSummary)
+                  String urn)
   {
-    Element result = getAtomElement(true, "feed", pTitle, urn, null, getLinkTypeForFeed(), null, pSummary, true, null);
-    decorateFeed(result, breadcrumbs);
-    return result;
-  }
-
-  Element getFeed(Breadcrumbs breadcrumbs,
-                  String pTitle,
-                  String urn,
-                  Element pSummary)
-  {
-    Element result = getAtomElement(true, "feed", pTitle, urn, null, getLinkTypeForFeed(), null, pSummary, true, null);
+    Element result = getAtomElement(true, "feed", pTitle, urn, null, getLinkTypeForFeed(), null, true, null);
     decorateFeed(result, breadcrumbs);
     return result;
   }
@@ -253,7 +242,7 @@ public enum FeedHelper {
                             includeAuthor,
                             icon);
   }
-  
+
   public Element getAtomElement(boolean isRoot,
                                 String elementName,
                                 String title,
