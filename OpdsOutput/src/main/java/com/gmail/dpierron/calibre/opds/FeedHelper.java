@@ -293,58 +293,21 @@ public enum FeedHelper {
     return link;
   }
 
-  private Element getAtomElement(boolean isRoot,
-      String pElement,
-      String pTitle,
-      String urn,
-      String filename,
-      String pSummary,
-      boolean includeAuthor,
-      String icon) {
+  private Element getAtomElement(boolean isRoot, String pElement, String pTitle, String urn, String filename, String pSummary, boolean includeAuthor, String icon) {
     return getAtomElement(isRoot, pElement, pTitle, urn, filename, LINKTYPE_NAVIGATION, pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot,
-      String pElement,
-      String pTitle,
-      String urn,
-      String url,
-      String urlType,
-      String pSummary,
-      boolean includeAuthor,
-      String icon) {
+  private Element getAtomElement(boolean isRoot, String pElement, String pTitle, String urn, String url, String urlType, String pSummary, boolean includeAuthor, String icon) {
     return getAtomElement(isRoot, pElement, pTitle, urn, url, urlType, null,       // Relation not required
         pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot,
-      String elementName,
-      String title,
-      String id,
-      String url,
-      String urlType,
-      String urlRelation,
-      String content,
-      boolean includeAuthor,
-      String icon) {
+  private Element getAtomElement(boolean isRoot, String elementName, String title, String id, String url, String urlType, String urlRelation, String content, boolean includeAuthor, String icon) {
     Element contentElement = null;
     if (Helper.isNotNullOrEmpty(content)) {
       contentElement = JDOM.INSTANCE.element("content").addContent(content);
       contentElement.setAttribute("type", "text");
     }
-    return getAtomElement(isRoot, elementName, title, id, url, urlType, urlRelation, contentElement, includeAuthor, icon);
-  }
-
-  private Element getAtomElement(boolean isRoot,
-      String elementName,
-      String title,
-      String id,
-      String url,
-      String urlType,
-      String urlRelation,
-      Element contentElement,
-      boolean includeAuthor,
-      String icon) {
     Element element;
     if (isRoot)
       element = JDOM.INSTANCE.rootElement(elementName, Namespace.Atom,   // Namepaces to be added ...
