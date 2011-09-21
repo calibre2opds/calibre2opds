@@ -75,8 +75,13 @@ public enum FeedHelper {
   }
   
   private Element getUpdatedTag() {
-    Calendar c = Calendar.getInstance();
-    return getUpdatedTag(c);
+    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth()) {
+      Calendar c = Calendar.getInstance();
+      return getUpdatedTag(c);
+    } else {
+      // return fake updated time - Oh, my birthday, what a coincidence ;)
+      return JDOM.INSTANCE.element("updated").addContent("1973-01-26T08:00:00Z");
+    }
   }
 
   Element getUpdatedTag(long timeInMilli) {
@@ -189,12 +194,6 @@ public enum FeedHelper {
       }
     }
 
-    // updated tag
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth()) {
-      Element updated = getUpdatedTag();
-      feed.addContent(updated);
-    }
-    
     // root catalog link
     // feed.addContent(getXmlLinkElement("../catalog.xml", "start", Localization.Main.getText("home.title")));
     // ITIMPI:  Should this be an absolute link to the catalog folder index. file rather than a relative one?
@@ -300,10 +299,8 @@ public enum FeedHelper {
     element.addContent(idElement);
 
     // updated tag
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth()) {
-      Element updated = getUpdatedTag();
-      element.addContent(updated);
-    }
+    Element updated = getUpdatedTag();
+    element.addContent(updated);
 
     // content
     if (contentElement != null) {
