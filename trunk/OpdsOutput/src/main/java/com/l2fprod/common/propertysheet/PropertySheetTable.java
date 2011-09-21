@@ -20,24 +20,7 @@ package com.l2fprod.common.propertysheet;
 import com.l2fprod.common.propertysheet.PropertySheetTableModel.Item;
 import com.l2fprod.common.swing.HeaderlessColumnResizer;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyEditor;
-
-import javax.swing.AbstractAction;
-import javax.swing.CellEditor;
-import javax.swing.Icon;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -45,6 +28,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyEditor;
 
 /**
  * A table which allows the editing of Properties through
@@ -52,9 +41,9 @@ import javax.swing.table.TableModel;
  * PropertyEditorRegistry.
  */
 public class PropertySheetTable extends JTable {
-  
+
   private static final int HOTSPOT_SIZE = 18;
-  
+
   private static final String TREE_EXPANDED_ICON_KEY = "Tree.expandedIcon";
   private static final String TREE_COLLAPSED_ICON_KEY = "Tree.collapsedIcon";
   private static final String TABLE_BACKGROUND_COLOR_KEY = "Table.background";
@@ -66,10 +55,10 @@ public class PropertySheetTable extends JTable {
   private PropertyEditorFactory editorFactory;
   private PropertyRendererFactory rendererFactory;
 
-  private TableCellRenderer nameRenderer;  
-  
+  private TableCellRenderer nameRenderer;
+
   private boolean wantsExtraIndent = false;
-  
+
   /**
    * Cancel editing when editing row is changed
    */
@@ -84,7 +73,7 @@ public class PropertySheetTable extends JTable {
   private Color selectedPropertyForeground;
   private Color selectedCategoryBackground;
   private Color selectedCategoryForeground;
-  
+
   public PropertySheetTable() {
     this(new PropertySheetTableModel());
   }
@@ -109,36 +98,32 @@ public class PropertySheetTable extends JTable {
     // default renderers and editors
     setRendererFactory(new PropertyRendererRegistry());
     setEditorFactory(new PropertyEditorRegistry());
-    
+
     nameRenderer = new NameRenderer();
-    
+
     // force the JTable to commit the edit when it losts focus
     putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-    
+
     // only full rows can be selected
     setColumnSelectionAllowed(false);
     setRowSelectionAllowed(true);
 
     // replace the edit action to always trigger the editing of the value column
     getActionMap().put("startEditing", new StartEditingAction());
-    
+
     // ensure navigating with "TAB" moves to the next row
-    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0),
-      "selectNextRowCell");
-    getInputMap().put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK),
-      "selectPreviousRowCell");
-    
+    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "selectNextRowCell");
+    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK), "selectPreviousRowCell");
+
     // allow category toggle with SPACE and mouse
     getActionMap().put("toggle", new ToggleAction());
-    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
-      "toggle");    
+    getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "toggle");
     addMouseListener(new ToggleMouseHandler());
   }
 
   /**
    * Initializes the default set of colors used by the PropertySheetTable.
-   * 
+   *
    * @see #categoryBackground
    * @see #categoryForeground
    * @see #selectedCategoryBackground
@@ -148,32 +133,30 @@ public class PropertySheetTable extends JTable {
    * @see #selectedPropertyBackground
    * @see #selectedPropertyForeground
    */
-  private void initDefaultColors() {    
+  private void initDefaultColors() {
     this.categoryBackground = UIManager.getColor(PANEL_BACKGROUND_COLOR_KEY);
     this.categoryForeground = UIManager.getColor(TABLE_FOREGROUND_COLOR_KEY).darker().darker().darker();
-    
+
     this.selectedCategoryBackground = categoryBackground.darker();
     this.selectedCategoryForeground = categoryForeground;
-    
+
     this.propertyBackground = UIManager.getColor(TABLE_BACKGROUND_COLOR_KEY);
     this.propertyForeground = UIManager.getColor(TABLE_FOREGROUND_COLOR_KEY);
-    
-    this.selectedPropertyBackground = UIManager
-      .getColor(TABLE_SELECTED_BACKGROUND_COLOR_KEY);
-    this.selectedPropertyForeground = UIManager
-      .getColor(TABLE_SELECTED_FOREGROUND_COLOR_KEY);
-    
+
+    this.selectedPropertyBackground = UIManager.getColor(TABLE_SELECTED_BACKGROUND_COLOR_KEY);
+    this.selectedPropertyForeground = UIManager.getColor(TABLE_SELECTED_FOREGROUND_COLOR_KEY);
+
     setGridColor(categoryBackground);
   }
-    
-  
+
+
   public Color getCategoryBackground() {
     return categoryBackground;
   }
 
   /**
    * Sets the color used to paint a Category background.
-   * 
+   *
    * @param categoryBackground
    */
   public void setCategoryBackground(Color categoryBackground) {
@@ -187,7 +170,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a Category foreground.
-   * 
+   *
    * @param categoryForeground
    */
   public void setCategoryForeground(Color categoryForeground) {
@@ -201,7 +184,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a selected/focused Category background.
-   * 
+   *
    * @param selectedCategoryBackground
    */
   public void setSelectedCategoryBackground(Color selectedCategoryBackground) {
@@ -215,7 +198,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a selected/focused Category foreground.
-   * 
+   *
    * @param selectedCategoryForeground
    */
   public void setSelectedCategoryForeground(Color selectedCategoryForeground) {
@@ -229,7 +212,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a Property background.
-   * 
+   *
    * @param propertyBackground
    */
   public void setPropertyBackground(Color propertyBackground) {
@@ -243,7 +226,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a Property foreground.
-   * 
+   *
    * @param propertyForeground
    */
   public void setPropertyForeground(Color propertyForeground) {
@@ -257,7 +240,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a selected/focused Property background.
-   * 
+   *
    * @param selectedPropertyBackground
    */
   public void setSelectedPropertyBackground(Color selectedPropertyBackground) {
@@ -271,7 +254,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Sets the color used to paint a selected/focused Property foreground.
-   * 
+   *
    * @param selectedPropertyForeground
    */
   public void setSelectedPropertyForeground(Color selectedPropertyForeground) {
@@ -296,9 +279,9 @@ public class PropertySheetTable extends JTable {
   }
 
   /**
-   * @deprecated use {@link #getEditorFactory()}
    * @throws ClassCastException if the current editor factory is not a
-   *           PropertyEditorRegistry
+   *                            PropertyEditorRegistry
+   * @deprecated use {@link #getEditorFactory()}
    */
   public PropertyEditorRegistry getEditorRegistry() {
     return (PropertyEditorRegistry) editorFactory;
@@ -313,17 +296,17 @@ public class PropertySheetTable extends JTable {
   }
 
   /**
-   * @deprecated use {@link #setRendererFactory(PropertyRendererFactory)}
    * @param registry
+   * @deprecated use {@link #setRendererFactory(PropertyRendererFactory)}
    */
   public void setRendererRegistry(PropertyRendererRegistry registry) {
     setRendererFactory(registry);
   }
 
   /**
-   * @deprecated use {@link #getRendererFactory()}
    * @throws ClassCastException if the current renderer factory is not a
-   *           PropertyRendererRegistry
+   *                            PropertyRendererRegistry
+   * @deprecated use {@link #getRendererFactory()}
    */
   public PropertyRendererRegistry getRendererRegistry() {
     return (PropertyRendererRegistry) getRendererFactory();
@@ -343,6 +326,7 @@ public class PropertySheetTable extends JTable {
   /**
    * Gets the CellEditor for the given row and column. It uses the
    * editor registry to find a suitable editor for the property.
+   *
    * @see javax.swing.JTable#getCellEditor(int, int)
    */
   public TableCellEditor getCellEditor(int row, int column) {
@@ -351,7 +335,7 @@ public class PropertySheetTable extends JTable {
     Item item = getSheetModel().getPropertySheetElement(row);
     if (!item.isProperty())
       return null;
-    
+
     TableCellEditor result = null;
     Property propery = item.getProperty();
     PropertyEditor editor = getEditorFactory().createPropertyEditor(propery);
@@ -365,8 +349,7 @@ public class PropertySheetTable extends JTable {
    * @see javax.swing.JTable#getCellRenderer(int, int)
    */
   public TableCellRenderer getCellRenderer(int row, int column) {
-    PropertySheetTableModel.Item item = getSheetModel()
-      .getPropertySheetElement(row);
+    PropertySheetTableModel.Item item = getSheetModel().getPropertySheetElement(row);
 
     switch (column) {
       case PropertySheetTableModel.NAME_COLUMN:
@@ -392,6 +375,7 @@ public class PropertySheetTable extends JTable {
 
   /**
    * Helper method to lookup a cell renderer based on type.
+   *
    * @param type the type for which a renderer should be found
    * @return a renderer for the given object type
    */
@@ -420,15 +404,12 @@ public class PropertySheetTable extends JTable {
    * <li>to disable ({@link Component#setEnabled(boolean)} the renderer if the
    * Property is not editable
    */
-  public Component prepareRenderer(TableCellRenderer renderer, int row,
-    int column) {
+  public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
     Object value = getValueAt(row, column);
     boolean isSelected = isCellSelected(row, column);
-    Component component = renderer.getTableCellRendererComponent(this, value,
-      isSelected, false, row, column);
-    
-    PropertySheetTableModel.Item item = getSheetModel()
-      .getPropertySheetElement(row);
+    Component component = renderer.getTableCellRendererComponent(this, value, isSelected, false, row, column);
+
+    PropertySheetTableModel.Item item = getSheetModel().getPropertySheetElement(row);
     if (item.isProperty()) {
       component.setEnabled(item.getProperty().isEditable());
     }
@@ -438,15 +419,13 @@ public class PropertySheetTable extends JTable {
   /**
    * Overriden to register a listener on the model. This listener ensures
    * editing is cancelled when editing row is being changed.
-   * 
+   *
+   * @throws IllegalArgumentException if dataModel is not a {@link PropertySheetTableModel}
    * @see javax.swing.JTable#setModel(javax.swing.table.TableModel)
-   * @throws IllegalArgumentException
-   *           if dataModel is not a {@link PropertySheetTableModel}
    */
   public void setModel(TableModel newModel) {
     if (!(newModel instanceof PropertySheetTableModel)) {
-      throw new IllegalArgumentException("dataModel must be of type "
-          + PropertySheetTableModel.class.getName());
+      throw new IllegalArgumentException("dataModel must be of type " + PropertySheetTableModel.class.getName());
     }
 
     if (cancelEditing == null) {
@@ -477,14 +456,14 @@ public class PropertySheetTable extends JTable {
    * set of properties, the end-user might be confused by the category and
    * property handles. Sets this property to true to add an extra indent level
    * to properties.
-   * 
+   *
    * @param wantsExtraIndent
    */
   public void setWantsExtraIndent(boolean wantsExtraIndent) {
     this.wantsExtraIndent = wantsExtraIndent;
     repaint();
   }
-  
+
   /**
    * Ensures the table uses the full height of its parent
    * {@link javax.swing.JViewport}.
@@ -492,25 +471,25 @@ public class PropertySheetTable extends JTable {
   public boolean getScrollableTracksViewportHeight() {
     return getPreferredSize().height < getParent().getHeight();
   }
-  
+
   /**
-   * Commits on-going cell editing 
+   * Commits on-going cell editing
    */
   public void commitEditing() {
     TableCellEditor editor = getCellEditor();
     if (editor != null) {
       editor.stopCellEditing();
-    }    
+    }
   }
 
   /**
-   * Cancels on-going cell editing 
+   * Cancels on-going cell editing
    */
   public void cancelEditing() {
     TableCellEditor editor = getCellEditor();
     if (editor != null) {
       editor.cancelCellEditing();
-    }    
+    }
   }
 
   /**
@@ -546,7 +525,7 @@ public class PropertySheetTable extends JTable {
    */
   private static class StartEditingAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
-      JTable table = (JTable)e.getSource();
+      JTable table = (JTable) e.getSource();
       if (!table.hasFocus()) {
         CellEditor cellEditor = table.getCellEditor();
         if (cellEditor != null && !cellEditor.stopCellEditing()) { return; }
@@ -568,18 +547,17 @@ public class PropertySheetTable extends JTable {
    * with "toggle" knob.
    */
   private class ToggleAction extends AbstractAction {
-    public void actionPerformed(ActionEvent e) {      
+    public void actionPerformed(ActionEvent e) {
       int row = PropertySheetTable.this.getSelectedRow();
-      Item item = PropertySheetTable.this.getSheetModel()
-        .getPropertySheetElement(row);
+      Item item = PropertySheetTable.this.getSheetModel().getPropertySheetElement(row);
       item.toggle();
       PropertySheetTable.this.addRowSelectionInterval(row, row);
     }
+
     public boolean isEnabled() {
       int row = PropertySheetTable.this.getSelectedRow();
       if (row != -1) {
-        Item item = PropertySheetTable.this.getSheetModel()
-          .getPropertySheetElement(row);        
+        Item item = PropertySheetTable.this.getSheetModel().getPropertySheetElement(row);
         return item.hasToggle();
       } else {
         return false;
@@ -597,7 +575,7 @@ public class PropertySheetTable extends JTable {
       int column = table.columnAtPoint(event.getPoint());
       if (row != -1 && column == 0) {
         // if we clicked on an Item, see if we clicked on its hotspot
-        Item item = table.getSheetModel().getPropertySheetElement(row);        
+        Item item = table.getSheetModel().getPropertySheetElement(row);
         int x = event.getX() - getIndent(table, item);
         if (x > 0 && x < HOTSPOT_SIZE)
           item.toggle();
@@ -611,39 +589,37 @@ public class PropertySheetTable extends JTable {
    */
   static int getIndent(PropertySheetTable table, Item item) {
     int indent = 0;
-    
+
     if (item.isProperty()) {
       // it is a property, it has no parent or a category, and no child
-      if ((item.getParent() == null || !item.getParent().isProperty())
-        && !item.hasToggle()) {
-        indent = table.getWantsExtraIndent()?HOTSPOT_SIZE:0;
+      if ((item.getParent() == null || !item.getParent().isProperty()) && !item.hasToggle()) {
+        indent = table.getWantsExtraIndent() ? HOTSPOT_SIZE : 0;
       } else {
         // it is a property with children
         if (item.hasToggle()) {
           indent = item.getDepth() * HOTSPOT_SIZE;
-        } else {          
+        } else {
           indent = (item.getDepth() + 1) * HOTSPOT_SIZE;
-        }        
+        }
       }
-      
-      if (table.getSheetModel().getMode() == PropertySheet.VIEW_AS_CATEGORIES
-        && table.getWantsExtraIndent()) {
+
+      if (table.getSheetModel().getMode() == PropertySheet.VIEW_AS_CATEGORIES && table.getWantsExtraIndent()) {
         indent += HOTSPOT_SIZE;
       }
 
     } else {
       // category has no indent
       indent = 0;
-    }    
+    }
     return indent;
   }
-  
+
   /**
    * Paints the border around the name cell. It handles the indent from the left
    * side and the painting of the toggle knob.
    */
   private static class CellBorder implements Border {
-    
+
     private int indentWidth; // space before hotspot
     private boolean showToggle;
     private boolean toggleState;
@@ -651,10 +627,10 @@ public class PropertySheetTable extends JTable {
     private Icon collapsedIcon;
     private Insets insets = new Insets(1, 0, 1, 1);
     private boolean isProperty;
-    
+
     public CellBorder() {
-      expandedIcon = (Icon)UIManager.get(TREE_EXPANDED_ICON_KEY);
-      collapsedIcon = (Icon)UIManager.get(TREE_COLLAPSED_ICON_KEY);
+      expandedIcon = (Icon) UIManager.get(TREE_EXPANDED_ICON_KEY);
+      collapsedIcon = (Icon) UIManager.get(TREE_COLLAPSED_ICON_KEY);
       if (expandedIcon == null) {
         expandedIcon = new ExpandedIcon();
       }
@@ -663,40 +639,39 @@ public class PropertySheetTable extends JTable {
       }
     }
 
-    public void configure(PropertySheetTable table, Item item) {      
-      isProperty = item.isProperty();      
-      toggleState =  item.isVisible();
+    public void configure(PropertySheetTable table, Item item) {
+      isProperty = item.isProperty();
+      toggleState = item.isVisible();
       showToggle = item.hasToggle();
-      
-      indentWidth = getIndent(table, item);      
-      insets.left = indentWidth + (showToggle?HOTSPOT_SIZE:0) + 2;;
+
+      indentWidth = getIndent(table, item);
+      insets.left = indentWidth + (showToggle ? HOTSPOT_SIZE : 0) + 2;
+      ;
     }
-    
+
     public Insets getBorderInsets(Component c) {
       return insets;
     }
 
-    public void paintBorder(Component c, Graphics g, int x, int y, int width,
-        int height) {      
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
       if (!isProperty) {
-        Color oldColor = g.getColor();      
+        Color oldColor = g.getColor();
         g.setColor(c.getBackground());
         g.fillRect(x, y, x + HOTSPOT_SIZE - 2, y + height);
         g.setColor(oldColor);
       }
-      
+
       if (showToggle) {
         Icon drawIcon = (toggleState ? expandedIcon : collapsedIcon);
-        drawIcon.paintIcon(c, g,
-          x + indentWidth + (HOTSPOT_SIZE - 2 - drawIcon.getIconWidth()) / 2,
-          y + (height - drawIcon.getIconHeight()) / 2);
+        drawIcon.paintIcon(c, g, x + indentWidth + (HOTSPOT_SIZE - 2 - drawIcon.getIconWidth()) / 2,
+            y + (height - drawIcon.getIconHeight()) / 2);
       }
     }
 
     public boolean isBorderOpaque() {
       return true;
     }
-    
+
   }
 
   private static class ExpandedIcon implements Icon {
@@ -705,16 +680,19 @@ public class PropertySheetTable extends JTable {
 
       if (backgroundColor != null)
         g.setColor(backgroundColor);
-      else g.setColor(Color.white);
+      else
+        g.setColor(Color.white);
       g.fillRect(x, y, 8, 8);
       g.setColor(Color.gray);
       g.drawRect(x, y, 8, 8);
       g.setColor(Color.black);
       g.drawLine(x + 2, y + 4, x + (6), y + 4);
     }
+
     public int getIconWidth() {
       return 9;
     }
+
     public int getIconHeight() {
       return 9;
     }
@@ -733,23 +711,24 @@ public class PropertySheetTable extends JTable {
   private class NameRenderer extends DefaultTableCellRenderer {
 
     private CellBorder border;
-    
+
     public NameRenderer() {
       border = new CellBorder();
     }
-    
+
     private Color getForeground(boolean isProperty, boolean isSelected) {
-      return (isProperty ? (isSelected ? selectedPropertyForeground : propertyForeground) :
-        (isSelected ? selectedCategoryForeground : categoryForeground));
+      return (isProperty ?
+          (isSelected ? selectedPropertyForeground : propertyForeground) :
+          (isSelected ? selectedCategoryForeground : categoryForeground));
     }
 
     private Color getBackground(boolean isProperty, boolean isSelected) {
-      return (isProperty ? (isSelected ? selectedPropertyBackground : propertyBackground) :
-        (isSelected ? selectedCategoryBackground : categoryBackground));
+      return (isProperty ?
+          (isSelected ? selectedPropertyBackground : propertyBackground) :
+          (isSelected ? selectedCategoryBackground : categoryBackground));
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       super.getTableCellRendererComponent(table, value, isSelected, false, row, column);
       PropertySheetTableModel.Item item = (Item) value;
 
@@ -759,15 +738,15 @@ public class PropertySheetTable extends JTable {
         setText("");
         return this;
       }
-      
+
       setBorder(border);
 
       // configure the border
-      border.configure((PropertySheetTable)table, item);
-      
+      border.configure((PropertySheetTable) table, item);
+
       setBackground(getBackground(item.isProperty(), isSelected));
       setForeground(getForeground(item.isProperty(), isSelected));
-      
+
       setEnabled(isSelected || !item.isProperty() ? true : item.getProperty().isEditable());
       setText(item.getName());
 

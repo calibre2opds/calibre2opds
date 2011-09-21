@@ -1,18 +1,12 @@
 package com.gmail.dpierron.calibre.datamodel;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
-
 import com.gmail.dpierron.calibre.database.Database;
+
+import java.util.*;
 
 public enum DataModel {
   INSTANCE;
-  
+
   Map<String, List<EBookFile>> mapOfFilesByBookId;
   Map<String, List<Publisher>> mapOfPublishersByBookId;
   Map<String, List<Author>> mapOfAuthorsByBookId;
@@ -36,7 +30,7 @@ public enum DataModel {
   List<Series> listOfSeries;
   Map<String, Series> mapOfSeries;
   Map<Series, List<Book>> mapOfBooksBySeries;
-  
+
   Map<BookRating, List<Book>> mapOfBooksByRating;
 
   List<Publisher> listOfPublishers;
@@ -68,7 +62,7 @@ public enum DataModel {
     mapOfPublishers = null;
     mapOfBooksByPublisher = null;
   }
-  
+
   public void preloadDataModel() {
     getListOfBooks();
     getMapOfFilesByBookId();
@@ -88,9 +82,9 @@ public enum DataModel {
     getListOfSeries();
     getMapOfSeries();
     getMapOfBooksBySeries();
-    getMapOfBooksByRating();    
+    getMapOfBooksByRating();
   }
-  
+
   public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
     if (mapOfFilesByBookId == null) {
       mapOfFilesByBookId = Database.INSTANCE.listFilesByBookId();
@@ -158,10 +152,10 @@ public enum DataModel {
   }
 
   public List<Tag> getListOfTags(List<Book> books) {
-    if (books == null) 
+    if (books == null)
       return getListOfTags();
 
-    List<Tag> result = new Vector<Tag>();
+    List<Tag> result = new LinkedList<Tag>();
     for (Book book : books) {
       for (Tag tag : book.getTags()) {
         if (!result.contains(tag))
@@ -188,7 +182,7 @@ public enum DataModel {
         for (Tag tag : book.getTags()) {
           List<Book> books = mapOfBooksByTag.get(tag);
           if (books == null) {
-            books = new Vector<Book>();
+            books = new LinkedList<Book>();
             mapOfBooksByTag.put(tag, books);
           }
           books.add(book);
@@ -200,10 +194,10 @@ public enum DataModel {
   }
 
   public List<Author> getListOfAuthors(List<Book> books) {
-    if (books == null) 
+    if (books == null)
       return getListOfAuthors();
 
-    List<Author> result = new Vector<Author>();
+    List<Author> result = new LinkedList<Author>();
     for (Book book : books) {
       for (Author author : book.getAuthors()) {
         if (!result.contains(author))
@@ -237,7 +231,7 @@ public enum DataModel {
         for (Author author : book.getAuthors()) {
           List<Book> books = mapOfBooksByAuthor.get(author);
           if (books == null) {
-            books = new Vector<Book>();
+            books = new LinkedList<Book>();
             mapOfBooksByAuthor.put(author, books);
           }
           books.add(book);
@@ -248,17 +242,17 @@ public enum DataModel {
   }
 
   public Map<Author, List<Series>> getMapOfSeriesByAuthor() {
-    if (mapOfSeriesByAuthor == null) 
+    if (mapOfSeriesByAuthor == null)
       computeMapOfSeriesByAuthor();
     return mapOfSeriesByAuthor;
   }
 
   public Map<Author, List<Book>> getMapOfBooksNotInSeriesByAuthor() {
-    if (mapOfBooksNotInSerieByAuthor == null) 
+    if (mapOfBooksNotInSerieByAuthor == null)
       computeMapOfSeriesByAuthor();
     return mapOfBooksNotInSerieByAuthor;
   }
-  
+
   private void computeMapOfSeriesByAuthor() {
     mapOfSeriesByAuthor = new HashMap<Author, List<Series>>();
     mapOfBooksNotInSerieByAuthor = new HashMap<Author, List<Book>>();
@@ -268,15 +262,15 @@ public enum DataModel {
         if (serie != null) {
           List<Series> series = mapOfSeriesByAuthor.get(author);
           if (series == null) {
-            series = new Vector<Series>();
+            series = new LinkedList<Series>();
             mapOfSeriesByAuthor.put(author, series);
           }
           if (!series.contains(serie))
-              series.add(serie);
+            series.add(serie);
         } else {
           List<Book> books = mapOfBooksNotInSerieByAuthor.get(author);
           if (books == null) {
-            books = new Vector<Book>();
+            books = new LinkedList<Book>();
             mapOfBooksNotInSerieByAuthor.put(author, books);
           }
           if (!books.contains(book))
@@ -309,7 +303,7 @@ public enum DataModel {
       for (Book book : getListOfBooks()) {
         List<Book> books = mapOfBooksBySeries.get(book.getSeries());
         if (books == null) {
-          books = new Vector<Book>();
+          books = new LinkedList<Book>();
           Series series = book.getSeries();
           if (series != null)
             mapOfBooksBySeries.put(series, books);
@@ -326,9 +320,9 @@ public enum DataModel {
       for (Book book : getListOfBooks()) {
         List<Book> books = mapOfBooksByRating.get(book.getRating());
         if (books == null) {
-          books = new Vector<Book>();
+          books = new LinkedList<Book>();
           BookRating rating = book.getRating();
-          if (rating!= null)
+          if (rating != null)
             mapOfBooksByRating.put(rating, books);
         }
         books.add(book);
@@ -336,7 +330,7 @@ public enum DataModel {
     }
     return mapOfBooksByRating;
   }
-  
+
   public List<Publisher> getListOfPublishers() {
     if (listOfPublishers == null) {
       listOfPublishers = Database.INSTANCE.listPublishers();
@@ -361,7 +355,7 @@ public enum DataModel {
         Publisher publisher = book.getPublisher();
         List<Book> books = mapOfBooksByPublisher.get(publisher);
         if (books == null) {
-          books = new Vector<Book>();
+          books = new LinkedList<Book>();
           mapOfBooksByPublisher.put(publisher, books);
         }
         books.add(book);
@@ -393,7 +387,7 @@ public enum DataModel {
         return author1.compareTo(author2);
       }
     };
-     
+
     return splitByLetter(authors, comparator);
   }
 
@@ -406,7 +400,7 @@ public enum DataModel {
         return series1.compareTo(series2);
       }
     };
-     
+
     return splitByLetter(series, comparator);
   }
 
@@ -419,7 +413,7 @@ public enum DataModel {
         return tag1.compareTo(tag2);
       }
     };
-     
+
     return splitByLetter(tags, comparator);
   }
 
@@ -430,7 +424,7 @@ public enum DataModel {
       DateRange range = DateRange.valueOf(book.getTimestamp());
       List<Book> list = splitByDate.get(range);
       if (list == null) {
-        list = new Vector<Book>();
+        list = new LinkedList<Book>();
         splitByDate.put(range, list);
       }
       list.add(book);
@@ -441,7 +435,10 @@ public enum DataModel {
   private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
     return splitByLetter(objects, comparator, null);
   }
-  private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator, Object options) {
+
+  private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects,
+      Comparator<T> comparator,
+      Object options) {
     final String LETTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     // split by letter
@@ -460,7 +457,7 @@ public enum DataModel {
         firstLetter = "_";
       List<T> list = splitByLetter.get(firstLetter);
       if (list == null) {
-        list = new Vector<T>();
+        list = new LinkedList<T>();
         splitByLetter.put(firstLetter, list);
       }
       list.add(object);

@@ -51,27 +51,25 @@ import java.util.Observable;
 
 /**
  * BaseObject.<br>
- *
  */
 public class BaseObject extends Observable implements HasId {
 
   private Object id;
-  
+
   public void setId(Object id) {
-  	this.id = id;
+    this.id = id;
   }
-  
+
   public Object getId() {
-  	return id;  	
+    return id;
   }
-    
-	public String toString() {
-		return super.toString() +
-			"[" + paramString() + "]";
-	}
-  
-	protected String paramString() {
-		return "id=" + getId();
-	}
+
+  public String toString() {
+    return super.toString() + "[" + paramString() + "]";
+  }
+
+  protected String paramString() {
+    return "id=" + getId();
+  }
 
 }

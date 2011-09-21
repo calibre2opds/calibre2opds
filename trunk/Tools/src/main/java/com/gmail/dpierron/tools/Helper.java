@@ -29,7 +29,8 @@ public class Helper {
    * checked s1.equals(s2)
    */
   public static final boolean objectEquals(Object o1, Object o2) {
-    if (o1 == null || o2 == null) return (o1 == null && o2 == null);
+    if (o1 == null || o2 == null)
+      return (o1 == null && o2 == null);
 
     return o1.equals(o2);
   }
@@ -68,14 +69,17 @@ public class Helper {
     e.fillInStackTrace();
     StackTraceElement[] calls = e.getStackTrace();
     for (int i = skip; i < maxDepth + skip; i++) {
-      if (i >= calls.length) break;
+      if (i >= calls.length)
+        break;
       StackTraceElement call = e.getStackTrace()[i];
       String msg = call.toString();
       if (removePrefix != null) {
         int pos = msg.indexOf(removePrefix);
-        if (pos > -1) msg = msg.substring(pos + removePrefix.length());
+        if (pos > -1)
+          msg = msg.substring(pos + removePrefix.length());
       }
-      if (logger.isDebugEnabled()) logger.debug("Stack trace [" + (i - skip) + "] -> " + msg);
+      if (logger.isDebugEnabled())
+        logger.debug("Stack trace [" + (i - skip) + "] -> " + msg);
     }
   }
 
@@ -93,7 +97,8 @@ public class Helper {
 
   public static String concatenateList(String separator, Collection toConcatenate, String... methodName) {
     try {
-      if (toConcatenate == null || toConcatenate.size() == 0) return "";
+      if (toConcatenate == null || toConcatenate.size() == 0)
+        return "";
       StringBuffer lines = new StringBuffer();
       String theSeparator = (separator == null ? ", " : separator);
       for (Object o : toConcatenate) {
@@ -110,15 +115,16 @@ public class Helper {
             } catch (NoSuchMethodException e) {
               logger.warn(e.getMessage(), e);
             }
-            if (method != null) try {
-              result = method.invoke(result);
-            } catch (IllegalArgumentException e) {
-              logger.warn(e.getMessage(), e);
-            } catch (IllegalAccessException e) {
-              logger.warn(e.getMessage(), e);
-            } catch (InvocationTargetException e) {
-              logger.warn(e.getMessage(), e);
-            }
+            if (method != null)
+              try {
+                result = method.invoke(result);
+              } catch (IllegalArgumentException e) {
+                logger.warn(e.getMessage(), e);
+              } catch (IllegalAccessException e) {
+                logger.warn(e.getMessage(), e);
+              } catch (InvocationTargetException e) {
+                logger.warn(e.getMessage(), e);
+              }
           }
         }
         lines.append(result);
@@ -132,9 +138,10 @@ public class Helper {
   }
 
   public static Collection transformList(Collection toTransform, String... methodName) {
-    List transformed = new Vector();
+    List transformed = new LinkedList();
     try {
-      if (toTransform == null || toTransform.size() == 0) return toTransform;
+      if (toTransform == null || toTransform.size() == 0)
+        return toTransform;
       for (Object o : toTransform) {
         Object result = o;
         if (methodName == null) {
@@ -159,12 +166,13 @@ public class Helper {
   }
 
   public static List<String> tokenize(String text, String delim, boolean trim) {
-    List<String> result = new Vector<String>();
+    List<String> result = new LinkedList<String>();
     if (isNotNullOrEmpty(text)) {
       String s = text.replaceAll(delim, "�");
       String[] tokens = s.split("�");
       for (String token : tokens) {
-        if (trim) token = token.trim();
+        if (trim)
+          token = token.trim();
         result.add(token);
       }
     }
@@ -175,15 +183,18 @@ public class Helper {
     if (list.size() > 0) {
       StringBuffer sb = new StringBuffer();
       for (String text : list) {
-        if (sb.length() > 0) sb.append(delim);
+        if (sb.length() > 0)
+          sb.append(delim);
         sb.append(text);
       }
       return sb.toString();
-    } else return "";
+    } else
+      return "";
   }
 
   public static String leftPad(String s, char paddingCharacter, int length) {
-    if (s.length() >= length) return s;
+    if (s.length() >= length)
+      return s;
     StringBuffer sb = new StringBuffer();
     for (int i = s.length(); i < length; i++) {
       sb.append(paddingCharacter);
@@ -193,7 +204,8 @@ public class Helper {
   }
 
   public static String pad(String s, char paddingCharacter, int length) {
-    if (s.length() >= length) return s;
+    if (s.length() >= length)
+      return s;
     StringBuffer sb = new StringBuffer(s);
     for (int i = s.length(); i < length; i++) {
       sb.append(paddingCharacter);
@@ -207,9 +219,12 @@ public class Helper {
    */
   public static String getLastNumericComponent(String s) {
     int i = s.length() - 1;
-    while ((i >= 0) && (Character.isDigit(s.charAt(i)))) i--;
-    if (i < 0) return s;
-    if (i == s.length() - 1 && !Character.isDigit(s.charAt(i))) return null;
+    while ((i >= 0) && (Character.isDigit(s.charAt(i))))
+      i--;
+    if (i < 0)
+      return s;
+    if (i == s.length() - 1 && !Character.isDigit(s.charAt(i)))
+      return null;
     return (s.substring(i + 1));
   }
 
@@ -219,9 +234,12 @@ public class Helper {
    *         toSubstract
    */
   public static String substractString(String s, String toSubstract) {
-    if (isNullOrEmpty(s)) return s;
-    if (isNullOrEmpty(toSubstract)) return s;
-    if (!s.startsWith(toSubstract)) return s;
+    if (isNullOrEmpty(s))
+      return s;
+    if (isNullOrEmpty(toSubstract))
+      return s;
+    if (!s.startsWith(toSubstract))
+      return s;
     return s.substring(toSubstract.length());
   }
 
@@ -230,13 +248,17 @@ public class Helper {
   }
 
   public static boolean trueBoolean(Object o) {
-    if (o == null) return false;
-    if (o instanceof Boolean) return ((Boolean) o).booleanValue();
-    else return new Boolean(o.toString()).booleanValue();
+    if (o == null)
+      return false;
+    if (o instanceof Boolean)
+      return ((Boolean) o).booleanValue();
+    else
+      return new Boolean(o.toString()).booleanValue();
   }
 
   public static Integer parseInteger(String s) {
-    if (isNullOrEmpty(s)) return null;
+    if (isNullOrEmpty(s))
+      return null;
     try {
       int i = Integer.parseInt(s);
       return new Integer(i);
@@ -254,8 +276,10 @@ public class Helper {
   }
 
   public static String trueString(Object o) {
-    if (o == null) return "";
-    else return o.toString();
+    if (o == null)
+      return "";
+    else
+      return o.toString();
   }
 
   public static Object[] arrayThis(Object[] theArray, Object... objects) {
@@ -269,22 +293,27 @@ public class Helper {
 
   public static ArrayList listThis(boolean duplicates, Object... objects) {
     ArrayList result = new ArrayList();
-    if (objects != null) for (Object object : objects) {
-      if (object == null) continue;
-      if (object instanceof List) {
-        List list = (List) object;
-        if (duplicates) {
-          result.addAll(list);
-        } else {
-          if (list != null) for (Object item : list) {
-            if (item == null) continue;
-            if (!result.contains(item)) result.add(item);
+    if (objects != null)
+      for (Object object : objects) {
+        if (object == null)
+          continue;
+        if (object instanceof List) {
+          List list = (List) object;
+          if (duplicates) {
+            result.addAll(list);
+          } else {
+            if (list != null)
+              for (Object item : list) {
+                if (item == null)
+                  continue;
+                if (!result.contains(item))
+                  result.add(item);
+              }
           }
+        } else {
+          result.add(object);
         }
-      } else {
-        result.add(object);
       }
-    }
     return result;
   }
 
@@ -474,9 +503,10 @@ public class Helper {
    */
   public static Collection intersect(Collection c1, Collection c2, Comparator comparator) {
 
-    Collection result = new Vector();
+    Collection result = new LinkedList();
 
-    if (c1 == null || c2 == null || c1.size() == 0 || c2.size() == 0) return result;
+    if (c1 == null || c2 == null || c1.size() == 0 || c2.size() == 0)
+      return result;
 
     /*
      * This algorithm is shamelessly stolen from Collections.disjoint() ...
@@ -495,7 +525,8 @@ public class Helper {
     }
 
     for (Object l : left) {
-      if (contains(right, l, comparator)) result.add(l);
+      if (contains(right, l, comparator))
+        result.add(l);
     }
     return result;
   }
@@ -545,12 +576,18 @@ public class Helper {
   }
 
   private final static boolean isNullOrEmpty(Object object, boolean zeroEqualsEmpty) {
-    if (object == null) return true;
-    if (object instanceof Collection) return ((Collection) object).size() == 0;
-    else if (object instanceof Map) return ((Map) object).size() == 0;
-    else if (object.getClass().isArray()) return ((Object[]) object).length == 0;
-    else if (object instanceof Number && zeroEqualsEmpty) return ((Number) object).longValue() == 0;
-    else return object.toString().length() == 0;
+    if (object == null)
+      return true;
+    if (object instanceof Collection)
+      return ((Collection) object).size() == 0;
+    else if (object instanceof Map)
+      return ((Map) object).size() == 0;
+    else if (object.getClass().isArray())
+      return ((Object[]) object).length == 0;
+    else if (object instanceof Number && zeroEqualsEmpty)
+      return ((Number) object).longValue() == 0;
+    else
+      return object.toString().length() == 0;
   }
 
   /**
@@ -558,7 +595,7 @@ public class Helper {
    * and below
    */
   public static List<File> recursivelyGetFiles(final String extension, File currentDir) {
-    List<File> result = new Vector<File>();
+    List<File> result = new LinkedList<File>();
     recursivelyGetFiles(extension, currentDir, result);
     return result;
   }
@@ -575,8 +612,10 @@ public class Helper {
 
     for (String filename : files) {
       File f = new File(currentDir, filename);
-      if (f.isDirectory()) recursivelyGetFiles(extension, f, filesList);
-      else filesList.add(f);
+      if (f.isDirectory())
+        recursivelyGetFiles(extension, f, filesList);
+      else
+        filesList.add(f);
     }
   }
 
@@ -598,11 +637,13 @@ public class Helper {
   }
 
   public static Object getDelegateOrNull(Object source, boolean digDeep) {
-    if (source == null) return null;
+    if (source == null)
+      return null;
     Object result = source;
     try {
       Method method = source.getClass().getMethod("getDelegate", (Class[]) null);
-      if (method != null) result = method.invoke(source, (Object[]) null);
+      if (method != null)
+        result = method.invoke(source, (Object[]) null);
     } catch (SecurityException e) {
       // let's return the source object
     } catch (NoSuchMethodException e) {
@@ -614,20 +655,26 @@ public class Helper {
     } catch (InvocationTargetException e) {
       // let's return the source object
     }
-    if (digDeep && (result != source)) return getDelegateOrNull(result, digDeep);
-    else return result;
+    if (digDeep && (result != source))
+      return getDelegateOrNull(result, digDeep);
+    else
+      return result;
   }
 
   public static List filter(List source, List unwantedKeys, String method) {
-    if (isNullOrEmpty(unwantedKeys)) return source;
-    if (isNullOrEmpty(source)) return source;
-    List result = new Vector();
+    if (isNullOrEmpty(unwantedKeys))
+      return source;
+    if (isNullOrEmpty(source))
+      return source;
+    List result = new LinkedList();
     for (Object object : source) {
-      if (object == null) continue;
+      if (object == null)
+        continue;
       Object key = null;
       try {
         Method keyGetter = object.getClass().getMethod(method, (Class[]) null);
-        if (keyGetter != null) key = keyGetter.invoke(object, (Object[]) null);
+        if (keyGetter != null)
+          key = keyGetter.invoke(object, (Object[]) null);
       } catch (SecurityException e) {
         // key stays null
       } catch (NoSuchMethodException e) {
@@ -639,27 +686,33 @@ public class Helper {
       } catch (InvocationTargetException e) {
         // key stays null
       }
-      if (key == null) key = object.toString();
-      if (key != null && !unwantedKeys.contains(key)) result.add(object);
+      if (key == null)
+        key = object.toString();
+      if (key != null && !unwantedKeys.contains(key))
+        result.add(object);
     }
     return result;
   }
 
   public static List filter(List source, List<Class> unwantedClasses) {
-    if (isNullOrEmpty(unwantedClasses)) return source;
-    if (isNullOrEmpty(source)) return source;
-    List result = new Vector();
+    if (isNullOrEmpty(unwantedClasses))
+      return source;
+    if (isNullOrEmpty(source))
+      return source;
+    List result = new LinkedList();
     for (Object object : source) {
-      if (object == null) continue;
-      if (!unwantedClasses.contains(object.getClass())) result.add(object);
+      if (object == null)
+        continue;
+      if (!unwantedClasses.contains(object.getClass()))
+        result.add(object);
     }
     return result;
   }
 
-/**
-  * Fetch the entire contents of a text stream, and return it in a String.
-  * This style of implementation does not throw Exceptions to the caller.
-  */
+  /**
+   * Fetch the entire contents of a text stream, and return it in a String.
+   * This style of implementation does not throw Exceptions to the caller.
+   */
   public static String readTextFile(InputStream is) {
     //...checks on aFile are elided
     StringBuilder contents = new StringBuilder();
@@ -667,7 +720,7 @@ public class Helper {
     try {
       //use buffering, reading one line at a time
       //FileReader always assumes default encoding is OK!
-      BufferedReader input =  new BufferedReader(new InputStreamReader(is));
+      BufferedReader input = new BufferedReader(new InputStreamReader(is));
       try {
         String line = null; //not declared within while loop
         /*
@@ -676,16 +729,14 @@ public class Helper {
         * it returns null only for the END of the stream.
         * it returns an empty String if two newlines appear in a row.
         */
-        while (( line = input.readLine()) != null){
+        while ((line = input.readLine()) != null) {
           contents.append(line);
           contents.append(System.getProperty("line.separator"));
         }
-      }
-      finally {
+      } finally {
         input.close();
       }
-    }
-    catch (IOException ex){
+    } catch (IOException ex) {
       ex.printStackTrace();
     }
 
@@ -778,7 +829,8 @@ public class Helper {
   }
 
   public static String getStackTrace(Throwable t) {
-    if (t == null) return null;
+    if (t == null)
+      return null;
     StringBuffer sb = new StringBuffer();
     for (StackTraceElement element : t.getStackTrace()) {
       sb.append(element.toString());
@@ -798,11 +850,14 @@ public class Helper {
 
   public static class ListCopier<T> {
     public List<T> copyList(List<T> original, int pMaxSize) {
-      if (original == null) return null;
+      if (original == null)
+        return null;
       int maxSize = pMaxSize;
-      if (maxSize < 0) maxSize = original.size();
-      if (original.size() <= maxSize) return new Vector<T>(original);
-      List<T> result = new Vector<T>(maxSize);
+      if (maxSize < 0)
+        maxSize = original.size();
+      if (original.size() <= maxSize)
+        return new LinkedList<T>(original);
+      List<T> result = new LinkedList<T>();
       for (int i = 0; i < maxSize; i++) {
         result.add(original.get(i));
       }
@@ -812,41 +867,44 @@ public class Helper {
 
 
   public static String shorten(String s, int maxSize) {
-    if (isNullOrEmpty(s)) return s;
-    if (s.length() > maxSize) return s.substring(0, maxSize) + "...";
-    else return s;
+    if (isNullOrEmpty(s))
+      return s;
+    if (s.length() > maxSize)
+      return s.substring(0, maxSize) + "...";
+    else
+      return s;
   }
 
 
   // ITIMPI:  It appears this routine is no longer used!
   //          the logic has been subsumed into Catalog.merge()
-/*
-  public static void copy(File src, File dst, boolean checkDates) throws IOException {
-    if (src == null || dst == null) return;
+  /*
+    public static void copy(File src, File dst, boolean checkDates) throws IOException {
+      if (src == null || dst == null) return;
 
-    if (!src.exists()) return;
+      if (!src.exists()) return;
 
-    if (src.isDirectory()) {
+      if (src.isDirectory()) {
 
-      if (!dst.exists()) dst.mkdirs();
-      else if (!dst.isDirectory()) return;
-    } else {
+        if (!dst.exists()) dst.mkdirs();
+        else if (!dst.isDirectory()) return;
+      } else {
 
-      boolean copy = false;
-      if (!dst.exists()) {
-        // ITIMPI:  Is there a reason this is not logged via logger()?
-        System.out.println("creating dirs " + dst.getPath());
-        dst.mkdirs();
-        copy = true;
-      }
-      copy = copy || (!checkDates || (src.lastModified() > dst.lastModified()));
-      if (copy) {
-        InputStream in = new FileInputStream(src);
-        copy(in, dst);
+        boolean copy = false;
+        if (!dst.exists()) {
+          // ITIMPI:  Is there a reason this is not logged via logger()?
+          System.out.println("creating dirs " + dst.getPath());
+          dst.mkdirs();
+          copy = true;
+        }
+        copy = copy || (!checkDates || (src.lastModified() > dst.lastModified()));
+        if (copy) {
+          InputStream in = new FileInputStream(src);
+          copy(in, dst);
+        }
       }
     }
-  }
-*/
+  */
 
   public static void copy(File src, File dst) throws IOException {
     InputStream in = null;
@@ -854,13 +912,15 @@ public class Helper {
       in = new FileInputStream(src);
       Helper.copy(in, dst);
     } finally {
-      if (in != null) in.close();
+      if (in != null)
+        in.close();
     }
 
   }
 
   public static void copy(InputStream in, File dst) throws IOException {
-    if (!dst.exists()) dst.getParentFile().mkdirs();
+    if (!dst.exists())
+      dst.getParentFile().mkdirs();
     OutputStream out = null;
     try {
       out = new FileOutputStream(dst);
@@ -868,7 +928,8 @@ public class Helper {
       copy(in, out);
 
     } finally {
-      if (out != null) out.close();
+      if (out != null)
+        out.close();
     }
   }
 
@@ -881,7 +942,8 @@ public class Helper {
         out.write(buf, 0, len);
       }
     } finally {
-      if (out != null) out.close();
+      if (out != null)
+        out.close();
     }
   }
 
@@ -889,9 +951,10 @@ public class Helper {
     if (path.exists()) {
       if (path.isDirectory()) {
         File[] files = path.listFiles();
-        if (files != null) for (int i = 0; i < files.length; i++) {
-          delete(files[i]);
-        }
+        if (files != null)
+          for (int i = 0; i < files.length; i++) {
+            delete(files[i]);
+          }
       }
       boolean result = path.delete();
       if (!result) {
@@ -905,9 +968,10 @@ public class Helper {
     if (path.exists()) {
       if (path.isDirectory()) {
         File[] files = path.listFiles();
-        if (files != null) for (int i = 0; i < files.length; i++) {
-          result += count(files[i]);
-        }
+        if (files != null)
+          for (int i = 0; i < files.length; i++) {
+            result += count(files[i]);
+          }
       }
       result++;
     }
@@ -916,11 +980,15 @@ public class Helper {
 
   public static int checkedCompare(Comparable o1, Comparable o2) {
     if (o1 == null) {
-      if (o2 == null) return 0;
-      else return 1;
+      if (o2 == null)
+        return 0;
+      else
+        return 1;
     } else if (o2 == null) {
-      if (o1 == null) return 0;
-      else return -1;
+      if (o1 == null)
+        return 0;
+      else
+        return -1;
     }
     return o1.compareTo(o2);
   }
@@ -929,14 +997,11 @@ public class Helper {
     ArrayList<File> result = new ArrayList<File>();
     if (dir != null && dir.isDirectory()) {
       String[] children = dir.list();
-      if (children != null)
-      {
-        for (String childName : children)
-        {
+      if (children != null) {
+        for (String childName : children) {
           File child = new File(dir, childName);
-          if (child.isDirectory())
-          {
-              result.addAll(listFilesIn(child));
+          if (child.isDirectory()) {
+            result.addAll(listFilesIn(child));
           }
           result.add(child);
         }
@@ -953,10 +1018,13 @@ public class Helper {
     recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile);
   }
 
-  public static void recursivelyZipFiles(final String extension, boolean includeNameOfOriginalFolder, File inFolder, File outZipFile) throws IOException {
+  public static void recursivelyZipFiles(final String extension, boolean includeNameOfOriginalFolder, File inFolder,
+      File outZipFile) throws
+      IOException {
     ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZipFile)));
     String relativePath = "";
-    if (includeNameOfOriginalFolder) relativePath = inFolder.getName();
+    if (includeNameOfOriginalFolder)
+      relativePath = inFolder.getName();
     try {
       recursivelyZipFiles(extension, relativePath, inFolder, zipOutputStream);
     } finally {
@@ -964,13 +1032,18 @@ public class Helper {
     }
   }
 
-  private static void recursivelyZipFiles(final String extension, String currentRelativePath, File currentDir, ZipOutputStream zipOutputStream) throws IOException {
+  private static void recursivelyZipFiles(final String extension,
+      String currentRelativePath,
+      File currentDir,
+      ZipOutputStream zipOutputStream) throws IOException {
     String[] files = currentDir.list(new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
         File f = new File(dir, name);
-        if (extension == null) return true;
-        else return f.isDirectory() || name.endsWith(extension);
+        if (extension == null)
+          return true;
+        else
+          return f.isDirectory() || name.endsWith(extension);
       }
 
     });
@@ -978,7 +1051,8 @@ public class Helper {
     for (String filename : files) {
       File f = new File(currentDir, filename);
       String fileRelativePath = currentRelativePath + (Helper.isNullOrEmpty(currentRelativePath) ? "" : File.separator) + filename;
-      if (f.isDirectory()) recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream);
+      if (f.isDirectory())
+        recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream);
       else {
         BufferedInputStream in = null;
         byte[] data = new byte[1024];

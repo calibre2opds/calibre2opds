@@ -22,17 +22,13 @@ import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.renderer.ColorCellRenderer;
 import com.l2fprod.common.util.ResourceManager;
 
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JPanel;
-
 /**
  * ColorPropertyEditor. <br>
- *  
  */
 public class ColorPropertyEditor extends AbstractPropertyEditor {
 
@@ -42,24 +38,22 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
   public ColorPropertyEditor() {
     editor = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 0));
-    ((JPanel)editor).add("*", label = new ColorCellRenderer());
+    ((JPanel) editor).add("*", label = new ColorCellRenderer());
     label.setOpaque(false);
-    ((JPanel)editor).add(button = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add(button = ComponentFactory.Helper.getFactory().createMiniButton());
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         selectColor();
       }
     });
-    ((JPanel)editor).add(button = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add(button = ComponentFactory.Helper.getFactory().createMiniButton());
     button.setText("X");
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         selectNull();
       }
     });
-    ((JPanel)editor).setOpaque(false);
+    ((JPanel) editor).setOpaque(false);
   }
 
   public Object getValue() {
@@ -67,7 +61,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
   }
 
   public void setValue(Object value) {
-    color = (Color)value;
+    color = (Color) value;
     label.setValue(color);
   }
 
@@ -95,27 +89,27 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
   public static class AsInt extends ColorPropertyEditor {
     public void setValue(Object arg0) {
       if (arg0 instanceof Integer) {
-        super.setValue(new Color(((Integer)arg0).intValue()));
+        super.setValue(new Color(((Integer) arg0).intValue()));
       } else {
         super.setValue(arg0);
       }
     }
-    
+
     public Object getValue() {
       Object value = super.getValue();
       if (value == null) {
         return null;
       } else {
-        return new Integer(((Color)value).getRGB());
+        return new Integer(((Color) value).getRGB());
       }
     }
-    
+
     protected void firePropertyChange(Object oldValue, Object newValue) {
       if (oldValue instanceof Color) {
-        oldValue = new Integer(((Color)oldValue).getRGB());
+        oldValue = new Integer(((Color) oldValue).getRGB());
       }
       if (newValue instanceof Color) {
-        newValue = new Integer(((Color)newValue).getRGB());
+        newValue = new Integer(((Color) newValue).getRGB());
       }
       super.firePropertyChange(oldValue, newValue);
     }

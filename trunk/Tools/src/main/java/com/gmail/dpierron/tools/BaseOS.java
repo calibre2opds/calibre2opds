@@ -6,11 +6,11 @@ import java.io.IOException;
 public class BaseOS extends OS {
 
   String osTypeName;
-  
+
   public BaseOS(String osTypeName) {
     this.osTypeName = osTypeName;
   }
-  
+
   @Override
   public void openFile(File file) throws IOException {
     try {
@@ -25,12 +25,12 @@ public class BaseOS extends OS {
       if (process == null || process.exitValue() != 0)
         throw new IOException();
     } catch (IOException e) {
-      throw new IOException("Failed to open a file: "+file.getAbsolutePath()+" in OS: "+osTypeName);
+      throw new IOException("Failed to open a file: " + file.getAbsolutePath() + " in OS: " + osTypeName);
     }
   }
 
   Process _openFile(File file) throws IOException {
-    if (file == null) 
+    if (file == null)
       throw new IOException("file is null");
     throw new IOException();
   }

@@ -1,23 +1,17 @@
 package com.gmail.dpierron.calibre.configuration;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.Properties;
 
 public class PropertiesBasedConfiguration {
   private final static Logger logger = Logger.getLogger(PropertiesBasedConfiguration.class);
-  
+
   final static String COMMENT = Constants.PROGTITLE;
-  
+
   Properties properties;
   File propertiesFile;
   boolean readOnly = false;
@@ -27,17 +21,13 @@ public class PropertiesBasedConfiguration {
     logger.trace("new PropertiesBasedConfiguration: " + file);
     properties = new Properties();
     propertiesFile = file;
-    if (propertiesFile == null)
-    {
-        logger.warn("PropertiesBasedConfigurationFile: null parameter");
-    }
-    else
-    {
-        if (! propertiesFile.exists())
-        {
-            logger.trace ("propertiesFile does not exist!");
-            save();
-        }
+    if (propertiesFile == null) {
+      logger.warn("PropertiesBasedConfigurationFile: null parameter");
+    } else {
+      if (!propertiesFile.exists()) {
+        logger.trace("propertiesFile does not exist!");
+        save();
+      }
     }
   }
 
@@ -63,8 +53,7 @@ public class PropertiesBasedConfiguration {
   }
 
   public void save() {
-    if (readOnly)
-    {
+    if (readOnly) {
       return;
     }
     BufferedOutputStream bos = null;

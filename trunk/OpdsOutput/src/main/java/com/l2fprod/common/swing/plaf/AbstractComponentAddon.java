@@ -11,28 +11,26 @@ import com.l2fprod.common.swing.plaf.metal.MetalLookAndFeelAddons;
 import com.l2fprod.common.swing.plaf.motif.MotifLookAndFeelAddons;
 import com.l2fprod.common.swing.plaf.windows.WindowsLookAndFeelAddons;
 
-import java.awt.Color;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.swing.UIManager;
-
 /**
  * Ease the work of creating an addon for a component.<br>
- * 
+ *
  * @author Frederic Lavigne
  */
 public abstract class AbstractComponentAddon implements ComponentAddon {
 
   private String name;
-  
+
   protected AbstractComponentAddon(String name) {
     this.name = name;
   }
-  
+
   public final String getName() {
     return name;
   }
@@ -47,7 +45,7 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
 
   /**
    * Adds default key/value pairs to the given list.
-   * 
+   *
    * @param addon
    * @param defaults
    */
@@ -56,7 +54,7 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
 
   /**
    * Default implementation calls {@link #addBasicDefaults(LookAndFeelAddons, List)}
-   * 
+   *
    * @param addon
    * @param defaults
    */
@@ -66,17 +64,17 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
 
   /**
    * Default implementation calls {@link #addBasicDefaults(LookAndFeelAddons, List)}
-   * 
+   *
    * @param addon
    * @param defaults
    */
   protected void addMetalDefaults(LookAndFeelAddons addon, List defaults) {
     addBasicDefaults(addon, defaults);
   }
-  
+
   /**
    * Default implementation calls {@link #addBasicDefaults(LookAndFeelAddons, List)}
-   * 
+   *
    * @param addon
    * @param defaults
    */
@@ -86,17 +84,17 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
 
   /**
    * Default implementation calls {@link #addBasicDefaults(LookAndFeelAddons, List)}
-   * 
+   *
    * @param addon
    * @param defaults
    */
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
     addBasicDefaults(addon, defaults);
   }
-    
+
   /**
    * Gets the defaults for the given addon.
-   * 
+   * <p/>
    * Based on the addon, it calls
    * {@link #addMacDefaults(LookAndFeelAddons, List)} if isMac()
    * or
@@ -107,15 +105,16 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
    * {@link #addWindowsDefaults(LookAndFeelAddons, List)} if isWindows()
    * or
    * {@link #addBasicDefaults(LookAndFeelAddons, List)} if none of the above was called.
+   *
    * @param addon
    * @return an array of key/value pairs. For example:
-   * <pre>
-   * Object[] uiDefaults = {
-   *   "Font", new Font("Dialog", Font.BOLD, 12),
-   *   "Color", Color.red,
-   *   "five", new Integer(5)
-   * };
-   * </pre>
+   *         <pre>
+   *                         Object[] uiDefaults = {
+   *                           "Font", new Font("Dialog", Font.BOLD, 12),
+   *                           "Color", Color.red,
+   *                           "five", new Integer(5)
+   *                         };
+   *                         </pre>
    */
   private Object[] getDefaults(LookAndFeelAddons addon) {
     List defaults = new ArrayList();
@@ -145,33 +144,33 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
   protected void addResource(List defaults, String bundleName) {
     ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
     for (Enumeration keys = bundle.getKeys(); keys.hasMoreElements(); ) {
-      String key = (String)keys.nextElement();      
+      String key = (String) keys.nextElement();
       defaults.add(key);
       defaults.add(bundle.getObject(key));
     }
   }
-  
+
   /**
    * @return true if the addon is the Windows addon or its subclasses
    */
   protected boolean isWindows(LookAndFeelAddons addon) {
     return addon instanceof WindowsLookAndFeelAddons;
   }
-  
+
   /**
    * @return true if the addon is the Metal addon or its subclasses
    */
   protected boolean isMetal(LookAndFeelAddons addon) {
     return addon instanceof MetalLookAndFeelAddons;
   }
-  
+
   /**
    * @return true if the addon is the Aqua addon or its subclasses
    */
   protected boolean isMac(LookAndFeelAddons addon) {
     return addon instanceof AquaLookAndFeelAddons;
   }
-  
+
   /**
    * @return true if the addon is the Motif addon or its subclasses
    */
@@ -190,17 +189,17 @@ public abstract class AbstractComponentAddon implements ComponentAddon {
    * @return true if the current look and feel is Synth l&f
    */
   protected boolean isSynth() {
-    return UIManager.getLookAndFeel().getClass().getName().indexOf("ynth") != -1;    
+    return UIManager.getLookAndFeel().getClass().getName().indexOf("ynth") != -1;
   }
 
   protected Font getFont(String key, Font defaultFont) {
     Font result = UIManager.getFont(key);
-    return result != null?result:defaultFont;
+    return result != null ? result : defaultFont;
   }
 
   protected Color getColor(String key, Color defaultColor) {
     Color result = UIManager.getColor(key);
-    return result != null?result:defaultColor;
+    return result != null ? result : defaultColor;
   }
 
 }

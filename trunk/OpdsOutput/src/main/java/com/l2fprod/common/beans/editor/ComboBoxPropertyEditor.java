@@ -17,28 +17,21 @@
  */
 package com.l2fprod.common.beans.editor;
 
-import java.awt.Component;
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
 /**
  * ComboBoxPropertyEditor. <br>
- *  
  */
 public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
 
   private Object oldValue;
   private Icon[] icons;
-  
+
   public ComboBoxPropertyEditor() {
     editor = new JComboBox() {
       public void setSelectedItem(Object anObject) {
@@ -46,23 +39,23 @@ public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
         super.setSelectedItem(anObject);
       }
     };
-    
-    final JComboBox combo = (JComboBox)editor;
-    
+
+    final JComboBox combo = (JComboBox) editor;
+
     combo.setRenderer(new Renderer());
     combo.addPopupMenuListener(new PopupMenuListener() {
       public void popupMenuCanceled(PopupMenuEvent e) {}
+
       public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-        ComboBoxPropertyEditor.this.firePropertyChange(oldValue,
-          combo.getSelectedItem());
+        ComboBoxPropertyEditor.this.firePropertyChange(oldValue, combo.getSelectedItem());
       }
+
       public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
     });
     combo.addKeyListener(new KeyAdapter() {
       public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-          ComboBoxPropertyEditor.this.firePropertyChange(oldValue,
-            combo.getSelectedItem());          
+          ComboBoxPropertyEditor.this.firePropertyChange(oldValue, combo.getSelectedItem());
         }
       }
     });
@@ -70,16 +63,16 @@ public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
   }
 
   public Object getValue() {
-    Object selected = ((JComboBox)editor).getSelectedItem();
+    Object selected = ((JComboBox) editor).getSelectedItem();
     if (selected instanceof Value) {
-      return ((Value)selected).value;
+      return ((Value) selected).value;
     } else {
       return selected;
     }
   }
 
   public void setValue(Object value) {
-    JComboBox combo = (JComboBox)editor;
+    JComboBox combo = (JComboBox) editor;
     Object current = null;
     int index = -1;
     for (int i = 0, c = combo.getModel().getSize(); i < c; i++) {
@@ -89,32 +82,24 @@ public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
         break;
       }
     }
-    ((JComboBox)editor).setSelectedIndex(index);
+    ((JComboBox) editor).setSelectedIndex(index);
   }
 
   public void setAvailableValues(Object[] values) {
-    ((JComboBox)editor).setModel(new DefaultComboBoxModel(values));
+    ((JComboBox) editor).setModel(new DefaultComboBoxModel(values));
   }
 
   public void setAvailableIcons(Icon[] icons) {
     this.icons = icons;
   }
-  
+
   public class Renderer extends DefaultListCellRenderer {
-    public Component getListCellRendererComponent(
-    JList list,
-    Object value,
-    int index,
-    boolean isSelected,
-    boolean cellHasFocus) {
-      Component component = super.getListCellRendererComponent(
-          list,
-          (value instanceof Value) ? ((Value)value).visualValue : value,
-          index,
-          isSelected,
-          cellHasFocus);
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+      Component component = super
+          .getListCellRendererComponent(list, (value instanceof Value) ? ((Value) value).visualValue : value, index, isSelected,
+              cellHasFocus);
       if (icons != null && index >= 0 && component instanceof JLabel)
-        ((JLabel)component).setIcon(icons[index]);
+        ((JLabel) component).setIcon(icons[index]);
       return component;
     }
   }
@@ -122,10 +107,12 @@ public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
   public static final class Value {
     private Object value;
     private Object visualValue;
+
     public Value(Object value, Object visualValue) {
       this.value = value;
       this.visualValue = visualValue;
     }
+
     public boolean equals(Object o) {
       if (o == this)
         return true;
@@ -133,8 +120,9 @@ public class ComboBoxPropertyEditor extends AbstractPropertyEditor {
         return true;
       return false;
     }
+
     public int hashCode() {
-      return value==null?0:value.hashCode();
+      return value == null ? 0 : value.hashCode();
     }
   }
 }

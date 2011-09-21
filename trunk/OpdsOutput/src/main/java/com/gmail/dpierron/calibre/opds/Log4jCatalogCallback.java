@@ -17,37 +17,37 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   // step progress indicator
   ProgressIndicator progressStep = new ProgressIndicator().setIndicator('*');
 
-    /**
-     * Dump the value for the given option to the log file
-     *
-     * Makes the following assumptions about entries in the localization
-     * properties files for each option to be dumped:
-     * - The name in the localization file is of the form config.xxxx.label
-     * - The text associated with the name is the text to be used for dumping
-     * - If the xxxx part starts with "No" (or the localised equivalent)
-     *   then any boolean should be inverted
-     * @param option   Name of the option
-     * @param value    The value of the option
-     */
+  /**
+   * Dump the value for the given option to the log file
+   * <p/>
+   * Makes the following assumptions about entries in the localization
+   * properties files for each option to be dumped:
+   * - The name in the localization file is of the form config.xxxx.label
+   * - The text associated with the name is the text to be used for dumping
+   * - If the xxxx part starts with "No" (or the localised equivalent)
+   * then any boolean should be inverted
+   *
+   * @param option Name of the option
+   * @param value  The value of the option
+   */
   private void dumpOption(String option, Object value) {
     String label = Localization.Main.getText("config." + option + ".label");
     label = Helper.pad(label, ' ', 50) + " : ";
     // For yes/no boolean values negate displayed value if name starts
     // with 'Do not' (or its localized equivalent)
-    if  (label.startsWith(doNot))
-    {
-       if (value.toString().equalsIgnoreCase(yes))
-           value=no;
-       else
-           value=yes;
+    if (label.startsWith(doNot)) {
+      if (value.toString().equalsIgnoreCase(yes))
+        value = no;
+      else
+        value = yes;
     }
     logger.info(label + value);
   }
 
-    /**
-     * Dump all the configuration options listed as get methods in the
-     * configuration interface.
-     */
+  /**
+   * Dump all the configuration options listed as get methods in the
+   * configuration interface.
+   */
   public void dumpOptions() {
     logger.info("");
     for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {

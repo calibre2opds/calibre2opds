@@ -47,7 +47,7 @@ public interface TipModel {
     /**
      * The tip object to show. See {@link JTipOfTheDay} for supported object
      * types.
-     * 
+     *
      * @return the tip to display
      */
     Object getTip();

@@ -139,177 +139,48 @@
                         <xsl:choose>
                             <xsl:when test="contains(opds:id, ':book:')">
                                 <xsl:variable name="bookId" select="opds:id"/>
-                                <xsl:choose>
-                                    <xsl:when test="not(contains(/opds:feed/opds:id, 'calibre:book:'))">
-                                        <!-- partial entry -->
-                                        <div class="x_container" id="{$bookId}">
+                                <!-- partial entry -->
+                                <div class="x_container" id="{$bookId}">
 
-                                            <xsl:variable name="bookTitle"><xsl:value-of select="concat(opds:author/opds:name, ' - ', opds:title)"/></xsl:variable>
+                                    <xsl:variable name="bookTitle"><xsl:value-of select="concat(opds:author/opds:name, ' - ', opds:title)"/></xsl:variable>
 
-                                            <!-- thumbnail -->
-                                            <div class="cover">
-                                                <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
-                                                    <xsl:choose>
-                                                        <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
-                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" title="{$bookTitle}" />
-                                                        </xsl:when>
-                                                        <xsl:otherwise>
-                                                            <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="../default_thumbnail.png" title="{$bookTitle}" />
-                                                        </xsl:otherwise>
-                                                    </xsl:choose>
-                                                </a>
-                                            </div>
+                                    <!-- thumbnail -->
+                                    <div class="cover">
+                                        <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
+                                            <xsl:choose>
+                                                <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
+                                                    <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" title="{$bookTitle}" />
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="../default_thumbnail.png" title="{$bookTitle}" />
+                                                </xsl:otherwise>
+                                            </xsl:choose>
+                                        </a>
+                                    </div>
 
-                                            <xsl:if test="$browseByCover != 'true'">
-                                                <div class="details">
-                                                    <!-- title -->
-                                                    <div class="x_title">
-                                                        <xsl:value-of select="opds:title"/>
-                                                        <xsl:if test="string-length(opds:author/opds:name) > 1">
-                                                            <br/>
-                                                            <small>
-                                                                <em>
-                                                                    <xsl:value-of select="opds:author/opds:name"/>
-                                                                </em>
-                                                            </small>
-                                                        </xsl:if>
-                                                        <xsl:if test="string-length(opds:content) > 1">
-                                                            <br/>
-                                                            <small>
-                                                                <xsl:value-of select="opds:content"/>
-                                                            </small>
-                                                        </xsl:if>
-                                                    </div>
-                                                </div>
-                                            </xsl:if>
-                                        </div>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <!-- full entry -->
-                                        <div class="x_container" id="{$bookId}">
-
+                                    <xsl:if test="$browseByCover != 'true'">
+                                        <div class="details">
                                             <!-- title -->
-                                            <div class="fullEntry_title">
-                                                <h1>
-                                                    <xsl:value-of select="opds:title"/>
+                                            <div class="x_title">
+                                                <xsl:value-of select="opds:title"/>
+                                                <xsl:if test="string-length(opds:author/opds:name) > 1">
                                                     <br/>
                                                     <small>
                                                         <em>
-                                                            <xsl:if test="string-length(opds:author/opds:name) > 0">
-                                                                <small>
-                                                                    <em>
-                                                                        <xsl:value-of select="opds:author/opds:name"/>
-                                                                    </em>
-                                                                </small>
-                                                            </xsl:if>
+                                                            <xsl:value-of select="opds:author/opds:name"/>
                                                         </em>
                                                     </small>
-                                                </h1>
-                                            </div>
-
-                                            <!-- downloads -->
-                                            <div class="fullEntry_downloads">
-                                                <xsl:if test="$generateDownloads = 'true'">
-                                                    <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.downloadsection"/></h2>
-                                                    <ul>
-                                                        <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition']">
-                                                            <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']">
-                                                                <li>
-                                                                    <a href="{opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']/@href}">
-                                                                        <xsl:value-of select="opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']/@title"/>
-                                                                    </a>
-                                                                </li>
-                                                            </xsl:if>
-                                                            <xsl:for-each select="opds:link[@rel='http://opds-spec.org/acquisition']">
-                                                                <xsl:if test="not(@type='application/epub+zip')">
-                                                                    <li>
-                                                                        <xsl:element name="a">
-                                                                            <xsl:attribute name="href">
-                                                                                <xsl:value-of select="./@href"/>
-                                                                            </xsl:attribute>
-                                                                            <xsl:choose>
-                                                                                <xsl:when test="string-length(@title) > 0">
-                                                                                    <xsl:value-of select="./@title"/>
-                                                                                </xsl:when>
-                                                                                <xsl:otherwise>
-                                                                                    <xsl:value-of select="$i18n.downloadfile"/>
-                                                                                </xsl:otherwise>
-                                                                            </xsl:choose>
-                                                                        </xsl:element>
-                                                                    </li>
-                                                                </xsl:if>
-                                                            </xsl:for-each>
-                                                        </xsl:if>
-                                                    </ul>
                                                 </xsl:if>
-                                            </div>
-
-                                            <!-- cover -->
-                                            <div class="fullEntry_cover">
-                                                <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.coversection"/></h2>
-                                                <xsl:choose>
-                                                    <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
-                                                        <img    width="{$coverWidth}" height="{$coverHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" />
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
-                                            </div>
-
-                                            <!-- summary -->
-                                            <div class="fullEntry_summary">
                                                 <xsl:if test="string-length(opds:content) > 1">
-                                                    <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.summarysection"/></h2>
-                                                    <p>
-                                                        <xsl:if test="string-length(opds:content) > 0">
-                                                            <xsl:copy-of select="opds:content"/>
-                                                        </xsl:if>
-                                                    </p>
-                                                </xsl:if>
-                                            </div>
-
-                                            <!-- related catalogs -->
-                                            <div class="fullEntry_related">
-                                                <xsl:if test="opds:link[@rel='related' and @type='application/atom+xmlprofile=opds-catalog']">
-                                                    <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.relatedsection"/></h2>
-                                                    <ul>
-                                                        <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog']">
-                                                            <li>
-                                                                <xsl:element name="a">
-                                                                    <xsl:attribute name="href">
-                                                                        <xsl:value-of select="concat(substring-before(@href, '.xml'), '.html')"/>
-                                                                    </xsl:attribute>
-                                                                    <xsl:value-of select="@title"/>
-                                                                </xsl:element>
-                                                            </li>
-                                                        </xsl:for-each>
-                                                    </ul>
-                                                </xsl:if>
-                                            </div>
-
-                                            <!-- external links -->
-                                            <div class="fullEntry_links">
-                                                <xsl:if test="opds:link[@rel='related' and @type='text/html']">
-                                                    <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.linksection"/></h2>
-                                                    <ul>
-                                                        <xsl:for-each select="opds:link[@rel='related' and @type='text/html']">
-                                                            <li>
-                                                                <xsl:element name="a">
-                                                                    <xsl:attribute name="href">
-                                                                        <xsl:value-of select="@href"/>
-                                                                    </xsl:attribute>
-                                                                    <xsl:value-of select="@title"/>
-                                                                </xsl:element>
-                                                            </li>
-                                                        </xsl:for-each>
-                                                    </ul>
+                                                    <br/>
+                                                    <small>
+                                                        <xsl:value-of select="opds:content"/>
+                                                    </small>
                                                 </xsl:if>
                                             </div>
                                         </div>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-
+                                    </xsl:if>
+                                </div>
                             </xsl:when>
                             <xsl:otherwise>
                                 <div class="x_menulisting" id="{opds:id}">
@@ -322,8 +193,8 @@
                                     </div>
                                     <xsl:variable name="url">
                                         <xsl:choose>
-                                            <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog']">
-                                                <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog']/@href, '.xml'), '.html')"/>
+                                            <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']">
+                                                <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']/@href, '.xml'), '.html')"/>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:value-of select="opds:link[@type='text/html']/@href"/>

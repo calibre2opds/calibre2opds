@@ -20,16 +20,7 @@ package com.l2fprod.common.swing.plaf.misc;
 import com.l2fprod.common.swing.plaf.ButtonBarButtonUI;
 import com.l2fprod.common.swing.plaf.basic.BasicButtonBarUI;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.BorderUIResource;
@@ -39,6 +30,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
+import java.awt.*;
 
 /**
  * An implementation for the JButtonBar UI which looks like the one found in
@@ -55,14 +47,10 @@ public class IconPackagerButtonBarUI extends BasicButtonBarUI {
     Border b = bar.getBorder();
     if (b == null || b instanceof UIResource) {
       bar.setBorder(
-        new BorderUIResource(
-          new CompoundBorder(
-            BorderFactory.createEtchedBorder(),
-            BorderFactory.createEmptyBorder(2, 2, 2, 2))));
+          new BorderUIResource(new CompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(2, 2, 2, 2))));
     }
 
-    if (bar.getBackground() == null
-      || bar.getBackground() instanceof UIResource) {
+    if (bar.getBackground() == null || bar.getBackground() instanceof UIResource) {
       bar.setBackground(new ColorUIResource(128, 128, 128));
       bar.setOpaque(true);
     }
@@ -84,14 +72,14 @@ public class IconPackagerButtonBarUI extends BasicButtonBarUI {
     public void installUI(JComponent c) {
       super.installUI(c);
 
-      AbstractButton button = (AbstractButton)c;
+      AbstractButton button = (AbstractButton) c;
       button.setOpaque(false);
       button.setRolloverEnabled(true);
       button.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
 
     public void paint(Graphics g, JComponent c) {
-      AbstractButton button = (AbstractButton)c;
+      AbstractButton button = (AbstractButton) c;
 
       if (button.getModel().isSelected()) {
         Color oldColor = g.getColor();
@@ -122,11 +110,7 @@ public class IconPackagerButtonBarUI extends BasicButtonBarUI {
       super.paint(g, c);
     }
 
-    protected void paintText(
-      Graphics g,
-      AbstractButton b,
-      Rectangle textRect,
-      String text) {
+    protected void paintText(Graphics g, AbstractButton b, Rectangle textRect, String text) {
       ButtonModel model = b.getModel();
       FontMetrics fm = g.getFontMetrics();
       int mnemonicIndex = b.getDisplayedMnemonicIndex();
@@ -146,12 +130,8 @@ public class IconPackagerButtonBarUI extends BasicButtonBarUI {
       }
 
       //            
-      BasicGraphicsUtils.drawStringUnderlineCharAt(
-        g,
-        text,
-        mnemonicIndex,
-        textRect.x + getTextShiftOffset(),
-        textRect.y + fm.getAscent() + getTextShiftOffset());
+      BasicGraphicsUtils.drawStringUnderlineCharAt(g, text, mnemonicIndex, textRect.x + getTextShiftOffset(),
+          textRect.y + fm.getAscent() + getTextShiftOffset());
       //
       //      } else {
       //        g.setColor(b.getParent().getBackground().brighter());

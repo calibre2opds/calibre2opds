@@ -21,32 +21,22 @@ import com.l2fprod.common.swing.border.ButtonBorder;
 import com.l2fprod.common.swing.border.FourLineBorder;
 import com.l2fprod.common.swing.plaf.basic.BasicOutlookBarUI;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
-
-import javax.swing.AbstractButton;
-import javax.swing.JComponent;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import java.awt.*;
 
 /**
  * Implements of OutlookBarUI with the Windows look and feel. <br>
- *  
  */
 public class WindowsOutlookBarUI extends BasicOutlookBarUI {
 
   public static ComponentUI createUI(JComponent c) {
     return new WindowsOutlookBarUI();
   }
-  
+
   private Border tabButtonBorder;
 
   public JScrollPane makeScrollPane(Component component) {
@@ -55,7 +45,7 @@ public class WindowsOutlookBarUI extends BasicOutlookBarUI {
     scroll.getVerticalScrollBar().setUI(new ThinScrollBarUI());
     return scroll;
   }
-  
+
   protected void installDefaults() {
     super.installDefaults();
     tabButtonBorder = UIManager.getBorder("OutlookBar.tabButtonBorder");
@@ -67,40 +57,41 @@ public class WindowsOutlookBarUI extends BasicOutlookBarUI {
     button.setBorder(tabButtonBorder);
     return button;
   }
-  
+
   public static class WindowsTabButtonBorder extends ButtonBorder {
     FourLineBorder normalBorder;
     FourLineBorder pressedBorder;
+
     public WindowsTabButtonBorder(Color color1, Color color2) {
       normalBorder = new FourLineBorder(color1, color1, color2, color2);
-      pressedBorder = new FourLineBorder(color2, color2, color1, color1);      
+      pressedBorder = new FourLineBorder(color2, color2, color1, color1);
     }
-    protected void paintNormal(AbstractButton b, Graphics g, int x, int y,
-      int width, int height) {
+
+    protected void paintNormal(AbstractButton b, Graphics g, int x, int y, int width, int height) {
       normalBorder.paintBorder(b, g, x, y, width, height);
     }
-    protected void paintDisabled(AbstractButton b, Graphics g, int x, int y,
-      int width, int height) {
+
+    protected void paintDisabled(AbstractButton b, Graphics g, int x, int y, int width, int height) {
       normalBorder.paintBorder(b, g, x, y, width, height);
     }
-    protected void paintRollover(AbstractButton b, Graphics g, int x, int y,
-      int width, int height) {
+
+    protected void paintRollover(AbstractButton b, Graphics g, int x, int y, int width, int height) {
       normalBorder.paintBorder(b, g, x, y, width, height);
     }
-    protected void paintPressed(AbstractButton b, Graphics g, int x, int y,
-      int width, int height) {
+
+    protected void paintPressed(AbstractButton b, Graphics g, int x, int y, int width, int height) {
       pressedBorder.paintBorder(b, g, x, y, width, height);
     }
+
     public Insets getBorderInsets(Component c) {
       return normalBorder.getBorderInsets(c);
     }
   }
-  
+
   public static class ThinScrollBarUI extends BasicScrollBarUI {
     public Dimension getPreferredSize(JComponent c) {
-      return (scrollbar.getOrientation() == JScrollBar.VERTICAL)?new Dimension(8,
-        48):new Dimension(48, 8);
+      return (scrollbar.getOrientation() == JScrollBar.VERTICAL) ? new Dimension(8, 48) : new Dimension(48, 8);
     }
   }
-  
+
 }

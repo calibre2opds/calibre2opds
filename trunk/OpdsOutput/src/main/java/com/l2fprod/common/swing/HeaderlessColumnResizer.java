@@ -17,29 +17,21 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
+import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * HeaderlessColumnResizer. <br>
- * 
+ * <p/>
  * Allows table columns to be resized not only using the header but from any
  * rows. Based on the BasicTableHeaderUI code.
  */
 public class HeaderlessColumnResizer extends MouseInputAdapter {
 
-  private static Cursor resizeCursor =
-    Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
+  private static Cursor resizeCursor = Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
 
   private int mouseXOffset;
   private Cursor otherCursor = resizeCursor;
@@ -53,9 +45,7 @@ public class HeaderlessColumnResizer extends MouseInputAdapter {
   }
 
   private boolean canResize(TableColumn column) {
-    return (column != null)
-      && table.getTableHeader().getResizingAllowed()
-      && column.getResizable();
+    return (column != null) && table.getTableHeader().getResizingAllowed() && column.getResizable();
   }
 
   private TableColumn getResizingColumn(Point p) {
@@ -116,8 +106,7 @@ public class HeaderlessColumnResizer extends MouseInputAdapter {
   }
 
   public void mouseMoved(MouseEvent e) {
-    if (canResize(getResizingColumn(e.getPoint()))
-      != (table.getCursor() == resizeCursor)) {
+    if (canResize(getResizingColumn(e.getPoint())) != (table.getCursor() == resizeCursor)) {
       swapCursor();
     }
   }
@@ -127,8 +116,7 @@ public class HeaderlessColumnResizer extends MouseInputAdapter {
 
     TableColumn resizingColumn = table.getTableHeader().getResizingColumn();
 
-    boolean headerLeftToRight =
-      table.getTableHeader().getComponentOrientation().isLeftToRight();
+    boolean headerLeftToRight = table.getTableHeader().getComponentOrientation().isLeftToRight();
 
     if (resizingColumn != null) {
       int oldWidth = resizingColumn.getWidth();
@@ -141,16 +129,14 @@ public class HeaderlessColumnResizer extends MouseInputAdapter {
       resizingColumn.setWidth(newWidth);
 
       Container container;
-      if ((table.getTableHeader().getParent() == null)
-        || ((container = table.getTableHeader().getParent().getParent()) == null)
-        || !(container instanceof JScrollPane)) {
+      if ((table.getTableHeader().getParent() == null) || ((container = table.getTableHeader().getParent().getParent()) == null) ||
+          !(container instanceof JScrollPane)) {
         return;
       }
 
-      if (!container.getComponentOrientation().isLeftToRight()
-        && !headerLeftToRight) {
+      if (!container.getComponentOrientation().isLeftToRight() && !headerLeftToRight) {
         if (table != null) {
-          JViewport viewport = ((JScrollPane)container).getViewport();
+          JViewport viewport = ((JScrollPane) container).getViewport();
           int viewportWidth = viewport.getWidth();
           int diff = newWidth - oldWidth;
           int newHeaderWidth = table.getWidth() + diff;
@@ -164,11 +150,9 @@ public class HeaderlessColumnResizer extends MouseInputAdapter {
            * If this table is in AUTO_RESIZE_OFF mode and has a horizontal
            * scrollbar, we need to update a view's position.
            */
-          if ((newHeaderWidth >= viewportWidth)
-            && (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
+          if ((newHeaderWidth >= viewportWidth) && (table.getAutoResizeMode() == JTable.AUTO_RESIZE_OFF)) {
             Point p = viewport.getViewPosition();
-            p.x =
-              Math.max(0, Math.min(newHeaderWidth - viewportWidth, p.x + diff));
+            p.x = Math.max(0, Math.min(newHeaderWidth - viewportWidth, p.x + diff));
             viewport.setViewPosition(p);
 
             /* Update the original X offset value. */

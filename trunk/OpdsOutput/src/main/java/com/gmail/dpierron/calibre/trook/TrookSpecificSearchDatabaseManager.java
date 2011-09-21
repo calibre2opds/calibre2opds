@@ -1,22 +1,5 @@
 package com.gmail.dpierron.calibre.trook;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.log4j.Logger;
-import org.jdom.Element;
-
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.Author;
@@ -24,20 +7,27 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.JDOM;
+import org.apache.log4j.Logger;
+import org.jdom.Element;
 
-public enum TrookSpecificSearchDatabaseManager
-{
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.sql.*;
+import java.util.*;
+
+public enum TrookSpecificSearchDatabaseManager {
   INSTANCE;
 
   private final int MIN_KEYWORD_LEN = 3;
-  
+
   private File databaseFile = null;
   private Connection connection = null;
   private Map<String, Long> keywords = new HashMap<String, Long>();
-  private List<Book> storedBooks= new Vector<Book>();
-  private List<Author> storedAuthors = new Vector<Author>();
-  private List<Series> storedSeries= new Vector<Series>();
-  private List<Tag> storedTags= new Vector<Tag>();
+  private List<Book> storedBooks = new LinkedList<Book>();
+  private List<Author> storedAuthors = new LinkedList<Author>();
+  private List<Series> storedSeries = new LinkedList<Series>();
+  private List<Tag> storedTags = new LinkedList<Tag>();
   private long keywordCounter = 0;
   private long resultCounter = 0;
 
@@ -50,32 +40,32 @@ public enum TrookSpecificSearchDatabaseManager
   public File getDatabaseFile() {
     return databaseFile;
   }
-  
+
   public Connection getConnection() {
     if (connection == null) {
       initConnection();
     }
     return connection;
   }
-  
+
   public boolean databaseExists() {
     if (databaseFile == null)
       return false;
     if (!databaseFile.exists())
       return false;
-    
+
     return true;
   }
-  
+
   private void initConnection() {
     try {
       Class.forName("org.sqlite.JDBC");
-      if (databaseFile == null) 
+      if (databaseFile == null)
         return;
       if (databaseExists())
         databaseFile.delete();
       String url = databaseFile.toURI().getPath();
-      connection = DriverManager.getConnection("jdbc:sqlite:"+url);
+      connection = DriverManager.getConnection("jdbc:sqlite:" + url);
       Statement stat = connection.createStatement();
       // drop the indexes
       stat.executeUpdate("DROP INDEX IF EXISTS KEYWORDS_RESULTS_RELATION_INDEX_ON_RESULTS;");
@@ -101,7 +91,7 @@ public enum TrookSpecificSearchDatabaseManager
       logger.error(e);
     }
   }
-  
+
   private long addResult(String opdsEntry, ResultType type) throws SQLException {
     PreparedStatement ps = getConnection().prepareStatement("INSERT INTO results(result_id, result_type, result_entry) values (?, ?, ?);");
     ps.setLong(1, ++resultCounter);
@@ -110,7 +100,7 @@ public enum TrookSpecificSearchDatabaseManager
     ps.execute();
     return resultCounter;
   }
-  
+
   private long addKeyword(String keyword) throws SQLException {
     // check if keyword already exist (we test in memory to be quicker)
     if (keywords.containsKey(keyword))
@@ -124,7 +114,7 @@ public enum TrookSpecificSearchDatabaseManager
     }
     return keywordCounter;
   }
-  
+
   private void addKeywordResultRelation(long keywordId, long resultId) throws SQLException {
     PreparedStatement ps = getConnection().prepareStatement("INSERT INTO keywords_results_relation(keyword_id, result_id) values (?, ?);");
     ps.setLong(1, keywordId);
@@ -133,8 +123,8 @@ public enum TrookSpecificSearchDatabaseManager
   }
 
   private List<String> keywordize(String pKeywordString) {
-    List<String> keywords = new Vector<String>();
-    List<String> result = new Vector<String>();
+    List<String> keywords = new LinkedList<String>();
+    List<String> result = new LinkedList<String>();
     String keywordString = pKeywordString.toUpperCase(Locale.ENGLISH);
     StringBuffer currentKeyword = null;
     for (int pos = 0; pos < keywordString.length(); pos++) {
@@ -158,13 +148,13 @@ public enum TrookSpecificSearchDatabaseManager
       keywords.add(currentKeyword.toString());
       currentKeyword = null;
     }
-    
+
     // make packages with keywords, in increasing size
-    for(int size=1;size<=keywords.size();size++) {
+    for (int size = 1; size <= keywords.size(); size++) {
       int pos = 0;
       while (pos + size <= keywords.size()) {
         StringBuffer keywordPackage = new StringBuffer();
-        for (int i=pos; i<pos+size; i++) {
+        for (int i = pos; i < pos + size; i++) {
           keywordPackage.append(keywords.get(i));
           keywordPackage.append(' ');
         }
@@ -173,17 +163,17 @@ public enum TrookSpecificSearchDatabaseManager
         pos++;
       }
     }
-    
+
     // add the "whole string" keyword
     result.add(keywordString);
-    
+
     return result;
   }
-  
+
   public void addEntry(String opdsEntry, ResultType type, String... keywordStrings) throws SQLException {
     // add the result
     long resultId = addResult(opdsEntry, type);
-    
+
     for (String keywordString : keywordStrings) {
       // process the keyword string
       List<String> keywords = keywordize(keywordString);
@@ -212,7 +202,7 @@ public enum TrookSpecificSearchDatabaseManager
   public void addAuthor(Author item, Element entry) {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedAuthors.contains(item)) {
-        logger.debug("adding result for "+item);
+        logger.debug("adding result for " + item);
         String keywords = item.getName();
         addEntryToTrookSearchDatabase(entry, ResultType.AUTHOR, keywords);
         storedAuthors.add(item);
@@ -223,7 +213,7 @@ public enum TrookSpecificSearchDatabaseManager
   public void addSeries(Series item, Element entry) {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedSeries.contains(item)) {
-        logger.debug("adding result for "+item);
+        logger.debug("adding result for " + item);
         String keywords = item.getName();
         // TODO do this after Doug has added support for noise words filtering in series 
         // String noNoise = item.getTitleForSort(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
@@ -236,7 +226,7 @@ public enum TrookSpecificSearchDatabaseManager
   public void addTag(Tag item, Element entry) {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedTags.contains(item)) {
-        logger.debug("adding result for "+item);
+        logger.debug("adding result for " + item);
         String keywords = item.getName();
         addEntryToTrookSearchDatabase(entry, ResultType.TAG, keywords);
         storedTags.add(item);
@@ -247,7 +237,7 @@ public enum TrookSpecificSearchDatabaseManager
   public void addBook(Book item, Element entry) {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedBooks.contains(item)) {
-        logger.debug("adding result for "+item);
+        logger.debug("adding result for " + item);
         String keywords = item.getTitle();
         String noNoise = item.getTitleForSort(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
         addEntryToTrookSearchDatabase(entry, ResultType.BOOK, keywords, noNoise);

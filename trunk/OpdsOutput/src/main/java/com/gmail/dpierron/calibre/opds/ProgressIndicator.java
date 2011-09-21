@@ -35,9 +35,9 @@ public class ProgressIndicator {
   }
 
   public void setMaxScale(long maxScale) {
-    logger.debug("maxScale="+maxScale);
+    logger.debug("maxScale=" + maxScale);
     reset();
-    scale = (double)maxVisible / (double)maxScale;
+    scale = (double) maxVisible / (double) maxScale;
   }
 
   public void actOnPositionChange(int newPos) {

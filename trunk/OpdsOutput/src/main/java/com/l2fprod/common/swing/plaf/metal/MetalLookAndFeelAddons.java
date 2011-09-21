@@ -51,7 +51,6 @@ import com.l2fprod.common.swing.plaf.basic.BasicLookAndFeelAddons;
 
 /**
  * MetalLookAndFeelAddons.<br>
- *
  */
 public class MetalLookAndFeelAddons extends BasicLookAndFeelAddons {
 
@@ -64,14 +63,10 @@ public class MetalLookAndFeelAddons extends BasicLookAndFeelAddons {
     super.uninitialize();
     unloadDefaults(getDefaults());
   }
-  
+
   private Object[] getDefaults() {
-    Object[] defaults =
-      new Object[] {
-        "DirectoryChooserUI",
-        "com.l2fprod.common.swing.plaf.windows.WindowsDirectoryChooserUI",
-    };
+    Object[] defaults = new Object[]{"DirectoryChooserUI", "com.l2fprod.common.swing.plaf.windows.WindowsDirectoryChooserUI",};
     return defaults;
   }
-  
+
 }

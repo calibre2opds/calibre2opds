@@ -24,7 +24,6 @@ import java.util.List;
 
 /**
  * Addon for <code>JButtonBar</code>.<br>
- * 
  */
 public class JButtonBarAddon extends AbstractComponentAddon {
 
@@ -33,18 +32,15 @@ public class JButtonBarAddon extends AbstractComponentAddon {
   }
 
   protected void addBasicDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {JButtonBar.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.basic.BasicButtonBarUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{JButtonBar.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.basic.BasicButtonBarUI"}));
   }
 
   protected void addMetalDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {JButtonBar.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{JButtonBar.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI"}));
   }
 
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {JButtonBar.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{JButtonBar.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI"}));
   }
 
 }

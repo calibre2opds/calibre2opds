@@ -17,7 +17,7 @@ import java.util.*;
 public class Index {
   private static int MIN_KEYWORD_SIZE = 3;
   private final static Logger logger = Logger.getLogger(Index.class);
-//  private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+  //  private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
   Map<String, Keyword> mapOfKeywords;
 
@@ -47,8 +47,8 @@ public class Index {
 
     // all the keywords are in lower case
     result = result.toLowerCase(Locale.ENGLISH);
-//    String temp = Normalizer.normalize(result, Normalizer.Form.NFD);
-//    result = pattern.matcher(temp).replaceAll("");
+    //    String temp = Normalizer.normalize(result, Normalizer.Form.NFD);
+    //    result = pattern.matcher(temp).replaceAll("");
 
     // trim the keywords
     result = result.trim();
@@ -114,7 +114,7 @@ public class Index {
 
   public void indexBook(Book book, String url, String coverUrl) {
     if (logger.isTraceEnabled())
-        logger.trace("indexBook: book=" + book + ", url=" + url + ", coverUrl=" + coverUrl);
+      logger.trace("indexBook: book=" + book + ", url=" + url + ", coverUrl=" + coverUrl);
     if (book == null)
       return;
 
@@ -235,7 +235,9 @@ public class Index {
         // add a line in the KEYWORDS table
         String kwWord = keyword.word; // no need to search for apostrophes, the keywords are already cleaned-up and uppercase
         String kwWeight = "" + keyword.catalogItems.size();
-        String sql = "tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD, KW_WEIGHT) VALUES (?, ?, ?)', ['" + kwId + "', '" + kwWord + "', '" + kwWeight + "']);";
+        String sql =
+            "tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD, KW_WEIGHT) VALUES (?, ?, ?)', ['" + kwId + "', '" + kwWord + "', '" +
+                kwWeight + "']);";
         sqlKeywords.add(sql);
       }
       for (Map.Entry<ItemType, CatalogItem> catalogItemEntry : keyword.catalogItems.entrySet()) {
@@ -249,14 +251,18 @@ public class Index {
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
               String bkUrl = bookEntry.url;
               String bkCoverUrl = bookEntry.coverUrl;
-              String sql = "tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_COVER_URL) VALUES (?, ?, ?, ?)', ['" + bkId + "', '" + bkTitle + "', '" + bkUrl + "','" + bkCoverUrl + "']);";
+              String sql =
+                  "tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_COVER_URL) VALUES (?, ?, ?, ?)', ['" + bkId + "', '" +
+                      bkTitle + "', '" + bkUrl + "','" + bkCoverUrl + "']);";
               sqlBooks.add(sql);
             }
           }
           // add a line in the CATALOG_ITEMS table
           {
             String catType = catalogItemEntry.getKey().getCode();
-            String sql = "tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)', ['" + kwId + "', '" + bkId + "', '" + catType + "']);";
+            String sql =
+                "tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)', ['" + kwId + "', '" + bkId + "', '" +
+                    catType + "']);";
             sqlCatalogItems.add(sql);
           }
         }
@@ -425,7 +431,7 @@ public class Index {
           for (int i = 0; i < stringArray.length; i++) {
             String string = stringArray[i];
             pw.print("'" + string + "'");
-            if (i+1 < stringArray.length)
+            if (i + 1 < stringArray.length)
               pw.print(",");
           }
           pw.print("]");
@@ -456,7 +462,7 @@ public class Index {
         // add a line in the KEYWORDS table
         String kwWord = keyword.word; // no need to search for apostrophes, the keywords are already cleaned-up and uppercase
         String kwWeight = "" + keyword.size();
-        jsKeywords.add(new String[] {kwId, kwWord, kwWeight});
+        jsKeywords.add(new String[]{kwId, kwWord, kwWeight});
       }
       for (Map.Entry<ItemType, CatalogItem> catalogItemEntry : keyword.catalogItems.entrySet()) {
         for (BookEntry bookEntry : catalogItemEntry.getValue().bookEntries) {
@@ -469,13 +475,13 @@ public class Index {
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
               String bkUrl = bookEntry.url;
               String bkCoverUrl = bookEntry.coverUrl;
-              jsBooks.add(new String[] {bkId, bkTitle, bkUrl, bkCoverUrl});
+              jsBooks.add(new String[]{bkId, bkTitle, bkUrl, bkCoverUrl});
             }
           }
           // add a line in the CATALOG_ITEMS table
           {
             String catType = catalogItemEntry.getKey().getCode();
-            jsCatalogItems.add(new String[] {kwId, bkId, catType});
+            jsCatalogItems.add(new String[]{kwId, bkId, catType});
           }
         }
       }

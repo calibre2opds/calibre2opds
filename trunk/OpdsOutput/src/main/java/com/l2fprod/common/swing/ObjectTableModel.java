@@ -25,5 +25,5 @@ import javax.swing.table.TableModel;
 public interface ObjectTableModel extends TableModel {
 
   Object getObject(int p_Row);
-  
+
 }

@@ -21,15 +21,11 @@ import com.l2fprod.common.swing.JTipOfTheDay;
 import com.l2fprod.common.swing.plaf.basic.BasicTipOfTheDayUI;
 import com.l2fprod.common.swing.plaf.windows.WindowsTipOfTheDayUI;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
+import java.awt.*;
+import java.util.List;
 
 /**
  * Addon for <code>JTipOfTheDay</code>.<br>
@@ -54,15 +50,12 @@ public class JTipOfTheDayAddon extends AbstractComponentAddon {
     defaults.add(new ColorUIResource(Color.white));
 
     defaults.add("TipOfTheDay.icon");
-    defaults.add(LookAndFeel.makeIcon(BasicTipOfTheDayUI.class,
-      "TipOfTheDay24.gif"));
+    defaults.add(LookAndFeel.makeIcon(BasicTipOfTheDayUI.class, "TipOfTheDay24.gif"));
 
     defaults.add("TipOfTheDay.border");
-    defaults.add(new BorderUIResource(BorderFactory.createLineBorder(new Color(
-      117, 117, 117))));
+    defaults.add(new BorderUIResource(BorderFactory.createLineBorder(new Color(117, 117, 117))));
 
-    addResource(defaults,
-      "com.l2fprod.common.swing.plaf.basic.resources.TipOfTheDay");
+    addResource(defaults, "com.l2fprod.common.swing.plaf.basic.resources.TipOfTheDay");
   }
 
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
@@ -78,15 +71,12 @@ public class JTipOfTheDayAddon extends AbstractComponentAddon {
     defaults.add(UIManager.getFont("Label.font").deriveFont(13f));
 
     defaults.add("TipOfTheDay.icon");
-    defaults.add(LookAndFeel.makeIcon(WindowsTipOfTheDayUI.class,
-      "tipoftheday.png"));
+    defaults.add(LookAndFeel.makeIcon(WindowsTipOfTheDayUI.class, "tipoftheday.png"));
 
     defaults.add("TipOfTheDay.border");
-    defaults
-      .add(new BorderUIResource(new WindowsTipOfTheDayUI.TipAreaBorder()));
+    defaults.add(new BorderUIResource(new WindowsTipOfTheDayUI.TipAreaBorder()));
 
-    addResource(defaults,
-      "com.l2fprod.common.swing.plaf.windows.resources.TipOfTheDay");
+    addResource(defaults, "com.l2fprod.common.swing.plaf.windows.resources.TipOfTheDay");
   }
 
 }

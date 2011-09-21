@@ -11,7 +11,7 @@ public class WindowsOS extends BaseOS {
 
   @Override
   Process _openFile(File file) throws IOException {
-    return Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \"" + file.getAbsolutePath()+"\"");
+    return Runtime.getRuntime().exec("rundll32 SHELL32.DLL,ShellExec_RunDLL \"" + file.getAbsolutePath() + "\"");
   }
 
 }

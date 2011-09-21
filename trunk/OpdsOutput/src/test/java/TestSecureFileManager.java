@@ -1,8 +1,7 @@
-import static org.junit.Assert.*;
-
+import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import org.junit.Test;
 
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestSecureFileManager {

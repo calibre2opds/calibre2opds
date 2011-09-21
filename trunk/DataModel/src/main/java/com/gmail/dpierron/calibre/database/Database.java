@@ -4,39 +4,28 @@ package com.gmail.dpierron.calibre.database;
  * Abstract the basic database operations used by calibre2opds
  * Handles transfering data between database field and calibre2opds variables
  */
+
+import com.gmail.dpierron.calibre.datamodel.*;
+import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import com.gmail.dpierron.calibre.datamodel.Author;
-import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.BookRating;
-import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.datamodel.EBookFile;
-import com.gmail.dpierron.calibre.datamodel.Publisher;
-import com.gmail.dpierron.calibre.datamodel.Series;
-import com.gmail.dpierron.calibre.datamodel.Tag;
-import com.gmail.dpierron.tools.Helper;
+import java.util.*;
 
 public enum Database {
 
   INSTANCE;
-  
+
   private static final Logger logger = Logger.getLogger(Database.class);
   private static final DateFormat SQLITE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  
+
   public List<Tag> listTags() {
-    List<Tag> result = new Vector<Tag>();
+    List<Tag> result = new LinkedList<Tag>();
     PreparedStatement statement = DatabaseRequest.ALL_TAGS.getStatement();
     try {
       ResultSet set = statement.executeQuery();
@@ -58,9 +47,9 @@ public enum Database {
       return false;
     }
   }
-  
+
   public List<Book> listBooks() {
-    List<Book> result = new Vector<Book>();
+    List<Book> result = new LinkedList<Book>();
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
     try {
       ResultSet set = statement.executeQuery();
@@ -95,18 +84,15 @@ public enum Database {
 
         // fetch its author
         List<Author> authors = DataModel.INSTANCE.getMapOfAuthorsByBookId().get(bookId);
-        if (Helper .isNotNullOrEmpty(authors))
-        {
+        if (Helper.isNotNullOrEmpty(authors)) {
           for (Author author : authors) {
             book.addAuthor(author);
           }
+        } else {
+          if (logger.isTraceEnabled())
+            logger.trace("Appear to be no authors for bookId" + bookId);
         }
-        else
-        {
-            if (logger.isTraceEnabled())
-                logger.trace("Appear to be no authors for bookId" + bookId);
-        }
-        
+
         // fetch its publisher
         List<Publisher> publishers = DataModel.INSTANCE.getMapOfPublishersByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(publishers)) {
@@ -117,17 +103,17 @@ public enum Database {
         List<Series> series = DataModel.INSTANCE.getMapOfSeriesByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(series))
           book.setSeries(series.get(0));
-        
+
         // fetch its comment
         List<String> comments = DataModel.INSTANCE.getMapOfCommentsByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(comments))
           book.setComment(comments.get(0));
-        
+
         // fetch its categories
         List<Tag> tags = DataModel.INSTANCE.getMapOfTagsByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(tags))
           book.getTags().addAll(tags);
-        
+
         // fetch its files
         List<EBookFile> files = DataModel.INSTANCE.getMapOfFilesByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(files)) {
@@ -145,8 +131,8 @@ public enum Database {
   }
 
   public List<Author> listAuthors() {
-    List<Author> result = new Vector<Author>();
-    List<String> ids = new Vector<String>();
+    List<Author> result = new LinkedList<Author>();
+    List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_AUTHORS.getStatement();
     try {
       ResultSet set = statement.executeQuery();
@@ -162,10 +148,10 @@ public enum Database {
     }
     return result;
   }
-  
+
   public List<Publisher> listPublishers() {
-    List<Publisher> result = new Vector<Publisher>();
-    List<String> ids = new Vector<String>();
+    List<Publisher> result = new LinkedList<Publisher>();
+    List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_PUBLISHERS.getStatement();
     try {
       ResultSet set = statement.executeQuery();
@@ -183,8 +169,8 @@ public enum Database {
   }
 
   public List<Series> listSeries() {
-    List<Series> result = new Vector<Series>();
-    List<String> ids = new Vector<String>();
+    List<Series> result = new LinkedList<Series>();
+    List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_SERIES.getStatement();
     try {
       ResultSet set = statement.executeQuery();
@@ -212,7 +198,7 @@ public enum Database {
         String name = set.getString("name");
         List<EBookFile> files = result.get(id);
         if (files == null) {
-          files = new Vector<EBookFile>();
+          files = new LinkedList<EBookFile>();
           result.put(id, files);
         }
         files.add(new EBookFile(format, name));
@@ -233,14 +219,14 @@ public enum Database {
         String authorId = set.getString("author");
         List<Author> authors = result.get(bookId);
         if (authors == null) {
-          authors = new Vector<Author>();
+          authors = new LinkedList<Author>();
           result.put(bookId, authors);
         }
         Author author = DataModel.INSTANCE.getMapOfAuthors().get(authorId);
         if (author != null)
           authors.add(author);
-        else 
-          logger.warn("cannot find author #"+authorId);
+        else
+          logger.warn("cannot find author #" + authorId);
       }
     } catch (SQLException e) {
       logger.error(e);
@@ -258,14 +244,14 @@ public enum Database {
         String publisherId = set.getString("publisher");
         List<Publisher> publishers = result.get(bookId);
         if (publishers == null) {
-          publishers = new Vector<Publisher>();
+          publishers = new LinkedList<Publisher>();
           result.put(bookId, publishers);
         }
         Publisher publisher = DataModel.INSTANCE.getMapOfPublishers().get(publisherId);
         if (publisher != null)
           publishers.add(publisher);
-        else 
-          logger.warn("cannot find publisher #"+publisherId);
+        else
+          logger.warn("cannot find publisher #" + publisherId);
       }
     } catch (SQLException e) {
       logger.error(e);
@@ -283,14 +269,14 @@ public enum Database {
         String tagId = set.getString("tag");
         List<Tag> tags = result.get(bookId);
         if (tags == null) {
-          tags = new Vector<Tag>();
+          tags = new LinkedList<Tag>();
           result.put(bookId, tags);
         }
         Tag tag = DataModel.INSTANCE.getMapOfTags().get(tagId);
         if (tag != null)
           tags.add(tag);
-        else 
-          logger.warn("cannot find tag #"+tagId);
+        else
+          logger.warn("cannot find tag #" + tagId);
       }
     } catch (SQLException e) {
       logger.error(e);
@@ -308,14 +294,14 @@ public enum Database {
         String serieId = set.getString("series");
         List<Series> series = result.get(bookId);
         if (series == null) {
-          series = new Vector<Series>();
+          series = new LinkedList<Series>();
           result.put(bookId, series);
         }
         Series serie = DataModel.INSTANCE.getMapOfSeries().get(serieId);
         if (serie != null)
           series.add(serie);
-        else 
-          logger.warn("cannot find serie #"+serieId);
+        else
+          logger.warn("cannot find serie #" + serieId);
       }
     } catch (SQLException e) {
       logger.error(e);
@@ -333,7 +319,7 @@ public enum Database {
         String text = set.getString("text");
         List<String> comments = result.get(id);
         if (comments == null) {
-          comments = new Vector<String>();
+          comments = new LinkedList<String>();
           result.put(id, comments);
         }
         comments.add(text);
@@ -344,24 +330,19 @@ public enum Database {
     return result;
   }
 
-  public static String stringToHex(String base)
-  {
+  public static String stringToHex(String base) {
     StringBuffer buffer = new StringBuffer();
     int intValue;
-    for(int x = 0; x < base.length(); x++)
-    {
+    for (int x = 0; x < base.length(); x++) {
       int cursor = 0;
       intValue = base.charAt(x);
       String binaryChar = new String(Integer.toBinaryString(base.charAt(x)));
-      for(int i = 0; i < binaryChar.length(); i++)
-      {
-        if(binaryChar.charAt(i) == '1')
-        {
+      for (int i = 0; i < binaryChar.length(); i++) {
+        if (binaryChar.charAt(i) == '1') {
           cursor += 1;
         }
       }
-      if((cursor % 2) > 0)
-      {
+      if ((cursor % 2) > 0) {
         intValue += 128;
       }
       buffer.append(Integer.toHexString(intValue) + " ");

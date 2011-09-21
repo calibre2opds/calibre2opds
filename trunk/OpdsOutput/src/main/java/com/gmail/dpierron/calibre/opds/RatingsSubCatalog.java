@@ -26,14 +26,14 @@ public class RatingsSubCatalog extends BooksSubCatalog {
   public RatingsSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
   }
-  
+
   public RatingsSubCatalog(List<Book> books) {
     super(books);
   }
 
   List<BookRating> getRatings() {
     if (ratings == null) {
-      ratings = new Vector<BookRating>();
+      ratings = new LinkedList<BookRating>();
       for (Book book : getBooks()) {
         if (!ratings.contains(book.getRating()))
           ratings.add(book.getRating());
@@ -59,9 +59,9 @@ public class RatingsSubCatalog extends BooksSubCatalog {
       for (Book book : getBooks()) {
         List<Book> books = mapOfBooksByRating.get(book.getRating());
         if (books == null) {
-          books = new Vector<Book>();
+          books = new LinkedList<Book>();
           BookRating rating = book.getRating();
-          if (rating!= null)
+          if (rating != null)
             mapOfBooksByRating.put(rating, books);
         }
         books.add(book);
@@ -76,10 +76,10 @@ public class RatingsSubCatalog extends BooksSubCatalog {
       return null;
 
     if (books == null)
-      books = new Vector<Book>();
+      books = new LinkedList<Book>();
 
     String basename = "rated_";
-    String filename = getFilenamePrefix(pBreadcrumbs)+basename+rating.getId()+".xml";
+    String filename = getFilenamePrefix(pBreadcrumbs) + basename + rating.getId() + ".xml";
     filename = SecureFileManager.INSTANCE.encode(filename);
 
     String title = LocalizationHelper.INSTANCE.getEnumConstantHumanName(rating);
@@ -91,19 +91,11 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
-    Element result = getListOfBooks(pBreadcrumbs,
-                                    books,
-                                    0,
-                                    title,
-                                    summary,
-                                    urn,
-                                    filename,
-                                    null,
-                                    // #751211: Use external icons option
-                                    ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons()
-                                            ? getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_RATING
-                                            : StanzaConstants.ICON_RATING,
-                                    Option.DONOTINCLUDE_RATING);
+    Element result = getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null,
+        // #751211: Use external icons option
+        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+            getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_RATING :
+            StanzaConstants.ICON_RATING, Option.DONOTINCLUDE_RATING);
     return result;
   }
 
@@ -111,7 +103,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     if (Helper.isNullOrEmpty(getRatings()))
       return null;
 
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename()+"_rating.xml");
+    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_rating.xml");
     String title = Localization.Main.getText("rating.title");
     String urn = "calibre:rating";
     String summary = Localization.Main.getText("rating.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
@@ -119,16 +111,17 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
     Document document = new Document();
+    String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     try {
       fos = new FileOutputStream(outputFile);
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
+      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
       // list the entries (or split them)
       List<Element> result;
-      result = new Vector<Element>();
+      result = new LinkedList<Element>();
       for (int i = 0; i < BookRating.sortedRatings().length; i++) {
         BookRating rating = BookRating.sortedRatings()[i];
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         Element entry = getRatedBooks(breadcrumbs, rating, urn);
         if (entry != null)
           result.add(entry);
@@ -148,15 +141,13 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     // create the same file as html
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size()>1;
-    return FeedHelper.INSTANCE.getEntry(title,
-                                        urn,
-                                        getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder),
-                                        summary,
-                                        // #751211: Use external icons option
-                                        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons()
-                                                ? getCatalogManager().getPathToCatalogRoot(filename,weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RATING
-                                                : StanzaConstants.ICON_RATING);
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    return FeedHelper.INSTANCE
+        .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
+            // #751211: Use external icons option
+            ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+                getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RATING :
+                StanzaConstants.ICON_RATING);
   }
 
 }

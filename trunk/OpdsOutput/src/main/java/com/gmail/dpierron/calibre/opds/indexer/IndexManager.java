@@ -31,21 +31,24 @@ public enum IndexManager {
   }
 
   public void exportToJavascript() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(), ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
+    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
     File searchFolder = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJavascript(searchFolder);
   }
 
   public void exportToJSON() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(), ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
+    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
     File searchFolder = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJSON(searchFolder);
   }
 
   public void exportToJavascriptArrays() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(), ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
+    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
     File searchFolder = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), "_search");
     searchFolder = new File(searchFolder, "database");
     searchFolder.mkdirs();

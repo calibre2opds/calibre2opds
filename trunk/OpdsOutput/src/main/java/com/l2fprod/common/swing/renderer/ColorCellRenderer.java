@@ -17,14 +17,8 @@
  */
 package com.l2fprod.common.swing.renderer;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-
-import javax.swing.Icon;
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * ColorCellRenderer.
@@ -50,21 +44,20 @@ public class ColorCellRenderer extends DefaultCellRenderer {
 
   protected String convertToString(Object value) {
     if (value instanceof Integer) {
-      value = new Color(((Integer)value).intValue());
+      value = new Color(((Integer) value).intValue());
     }
     if (!(value instanceof Color)) { return null; }
 
-    Color color = (Color)value;
-    return "R:" + color.getRed() + " G:" + color.getGreen() + " B:"
-      + color.getBlue() + " - " + toHex(color);
+    Color color = (Color) value;
+    return "R:" + color.getRed() + " G:" + color.getGreen() + " B:" + color.getBlue() + " - " + toHex(color);
   }
 
   protected Icon convertToIcon(Object value) {
     if (value == null) { return null; }
     if (value instanceof Integer) {
-      value = new Color(((Integer)value).intValue());
+      value = new Color(((Integer) value).intValue());
     }
-    return new PaintIcon((Paint)value);
+    return new PaintIcon((Paint) value);
   }
 
   public static class PaintIcon implements Icon {
@@ -85,11 +78,13 @@ public class ColorCellRenderer extends DefaultCellRenderer {
     public int getIconHeight() {
       return height;
     }
+
     public int getIconWidth() {
       return width;
     }
+
     public void paintIcon(Component c, Graphics g, int x, int y) {
-      Graphics2D g2d = (Graphics2D)g;
+      Graphics2D g2d = (Graphics2D) g;
       Paint oldPaint = g2d.getPaint();
 
       if (color != null) {

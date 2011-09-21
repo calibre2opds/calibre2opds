@@ -22,12 +22,11 @@ import java.util.Map;
 
 /**
  * ConverterRegistry. <br>
- *  
  */
 public class ConverterRegistry implements Converter {
 
   private static ConverterRegistry sharedInstance = new ConverterRegistry();
-  
+
   private Map fromMap;
 
   public ConverterRegistry() {
@@ -39,7 +38,7 @@ public class ConverterRegistry implements Converter {
   }
 
   public void addConverter(Class from, Class to, Converter converter) {
-    Map toMap = (Map)fromMap.get(from);
+    Map toMap = (Map) fromMap.get(from);
     if (toMap == null) {
       toMap = new HashMap();
       fromMap.put(from, toMap);
@@ -48,9 +47,9 @@ public class ConverterRegistry implements Converter {
   }
 
   public Converter getConverter(Class from, Class to) {
-    Map toMap = (Map)fromMap.get(from);
+    Map toMap = (Map) fromMap.get(from);
     if (toMap != null) {
-      return (Converter)toMap.get(to);
+      return (Converter) toMap.get(to);
     } else {
       return null;
     }
@@ -60,11 +59,10 @@ public class ConverterRegistry implements Converter {
     if (value == null) {
       return null;
     }
-    
+
     Converter converter = getConverter(value.getClass(), targetType);
     if (converter == null) {
-      throw new IllegalArgumentException(
-        "No converter from " + value.getClass() + " to " + targetType.getName());
+      throw new IllegalArgumentException("No converter from " + value.getClass() + " to " + targetType.getName());
     } else {
       return converter.convert(targetType, value);
     }

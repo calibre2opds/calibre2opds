@@ -20,17 +20,14 @@ package com.l2fprod.common.swing.plaf.metal;
 import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.plaf.basic.BasicTaskPaneGroupUI;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 
 /**
  * Metal implementation of the <code>JTaskPaneGroup</code> UI. <br>
- * 
+ *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  */
 public class MetalTaskPaneGroupUI extends BasicTaskPaneGroupUI {
@@ -51,29 +48,22 @@ public class MetalTaskPaneGroupUI extends BasicTaskPaneGroupUI {
   /**
    * The border of the taskpane group paints the "text", the "icon",
    * the "expanded" status and the "special" type.
-   *  
    */
   class MetalPaneBorder extends PaneBorder {
 
-    protected void paintExpandedControls(JTaskPaneGroup group, Graphics g, int x,
-      int y, int width, int height) {
-      ((Graphics2D)g).setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
-      
+    protected void paintExpandedControls(JTaskPaneGroup group, Graphics g, int x, int y, int width, int height) {
+      ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
       g.setColor(getPaintColor(group));
-      paintRectAroundControls(group, g, x, y, width, height, g.getColor(), g
-        .getColor());
+      paintRectAroundControls(group, g, x, y, width, height, g.getColor(), g.getColor());
       paintChevronControls(group, g, x, y, width, height);
-      
-      ((Graphics2D)g).setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_OFF);      
+
+      ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
     }
 
     protected boolean isMouseOverBorder() {
       return true;
-    }    
+    }
   }
 
 }

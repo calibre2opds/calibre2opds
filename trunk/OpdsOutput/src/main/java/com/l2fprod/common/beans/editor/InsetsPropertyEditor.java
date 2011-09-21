@@ -19,16 +19,15 @@ package com.l2fprod.common.beans.editor;
 
 import com.l2fprod.common.util.converter.ConverterRegistry;
 
-import java.awt.Insets;
+import java.awt.*;
 
 /**
  * InsetsPropertyEditor. <br>
- *  
  */
 public class InsetsPropertyEditor extends StringConverterPropertyEditor {
 
   protected Object convertFromString(String text) {
     return ConverterRegistry.instance().convert(Insets.class, text);
   }
-  
+
 }

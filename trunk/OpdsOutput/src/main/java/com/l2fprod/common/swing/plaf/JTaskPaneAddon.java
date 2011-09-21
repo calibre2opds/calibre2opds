@@ -22,99 +22,81 @@ import com.l2fprod.common.swing.plaf.windows.WindowsClassicLookAndFeelAddons;
 import com.l2fprod.common.swing.plaf.windows.WindowsLookAndFeelAddons;
 import com.l2fprod.common.util.OS;
 
-import java.awt.Color;
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-
 /**
  * Addon for <code>JTaskPane</code>. <br>
- *  
  */
 public class JTaskPaneAddon extends AbstractComponentAddon {
 
   public JTaskPaneAddon() {
     super("JTaskPane");
   }
-  
+
   protected void addBasicDefaults(LookAndFeelAddons addon, List defaults) {
     super.addBasicDefaults(addon, defaults);
-    defaults.addAll(Arrays.asList(new Object[]{
-      JTaskPane.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.basic.BasicTaskPaneUI",
-      "TaskPane.useGradient",
-      Boolean.FALSE,
-      "TaskPane.background",
-      UIManager.getColor("Desktop.background")
-    }));
+    defaults.addAll(Arrays.asList(new Object[]{JTaskPane.UI_CLASS_ID,
+        "com.l2fprod.common.swing.plaf.basic.BasicTaskPaneUI",
+        "TaskPane.useGradient",
+        Boolean.FALSE,
+        "TaskPane.background",
+        UIManager.getColor("Desktop.background")}));
   }
 
   protected void addMetalDefaults(LookAndFeelAddons addon, List defaults) {
     super.addMetalDefaults(addon, defaults);
-    defaults.addAll(Arrays.asList(new Object[]{
-      "TaskPane.background",
-      MetalLookAndFeel.getDesktopColor()
-    }));
+    defaults.addAll(Arrays.asList(new Object[]{"TaskPane.background", MetalLookAndFeel.getDesktopColor()}));
   }
-  
+
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
     super.addWindowsDefaults(addon, defaults);
     if (addon instanceof WindowsClassicLookAndFeelAddons) {
-      defaults.addAll(Arrays.asList(new Object[]{
-        "TaskPane.background",
-        UIManager.getColor("List.background")
-      }));      
-    } else if (addon instanceof WindowsLookAndFeelAddons) {     
+      defaults.addAll(Arrays.asList(new Object[]{"TaskPane.background", UIManager.getColor("List.background")}));
+    } else if (addon instanceof WindowsLookAndFeelAddons) {
       String xpStyle = OS.getWindowsVisualStyle();
       ColorUIResource background;
       ColorUIResource backgroundGradientStart;
       ColorUIResource backgroundGradientEnd;
-      
-      if (WindowsLookAndFeelAddons.HOMESTEAD_VISUAL_STYLE
-        .equalsIgnoreCase(xpStyle)) {        
+
+      if (WindowsLookAndFeelAddons.HOMESTEAD_VISUAL_STYLE.equalsIgnoreCase(xpStyle)) {
         background = new ColorUIResource(201, 215, 170);
         backgroundGradientStart = new ColorUIResource(204, 217, 173);
         backgroundGradientEnd = new ColorUIResource(165, 189, 132);
-      } else if (WindowsLookAndFeelAddons.SILVER_VISUAL_STYLE
-        .equalsIgnoreCase(xpStyle)) {
+      } else if (WindowsLookAndFeelAddons.SILVER_VISUAL_STYLE.equalsIgnoreCase(xpStyle)) {
         background = new ColorUIResource(192, 195, 209);
         backgroundGradientStart = new ColorUIResource(196, 200, 212);
         backgroundGradientEnd = new ColorUIResource(177, 179, 200);
-      } else {        
+      } else {
         if (OS.isWindowsVista()) {
           final Toolkit toolkit = Toolkit.getDefaultToolkit();
-          background = new ColorUIResource((Color)toolkit.getDesktopProperty("win.3d.backgroundColor"));
-          backgroundGradientStart = new ColorUIResource((Color)toolkit.getDesktopProperty("win.frame.activeCaptionColor"));
-          backgroundGradientEnd = new ColorUIResource((Color)toolkit.getDesktopProperty("win.frame.inactiveCaptionColor"));
-		} else {
+          background = new ColorUIResource((Color) toolkit.getDesktopProperty("win.3d.backgroundColor"));
+          backgroundGradientStart = new ColorUIResource((Color) toolkit.getDesktopProperty("win.frame.activeCaptionColor"));
+          backgroundGradientEnd = new ColorUIResource((Color) toolkit.getDesktopProperty("win.frame.inactiveCaptionColor"));
+        } else {
           background = new ColorUIResource(117, 150, 227);
           backgroundGradientStart = new ColorUIResource(123, 162, 231);
           backgroundGradientEnd = new ColorUIResource(99, 117, 214);
-		}
-      }      
-      defaults.addAll(Arrays.asList(new Object[]{
-        "TaskPane.useGradient",
-        Boolean.TRUE,
-        "TaskPane.background",
-        background,
-        "TaskPane.backgroundGradientStart",
-        backgroundGradientStart,
-        "TaskPane.backgroundGradientEnd",
-        backgroundGradientEnd,
-      }));
+        }
+      }
+      defaults.addAll(Arrays.asList(new Object[]{"TaskPane.useGradient",
+          Boolean.TRUE,
+          "TaskPane.background",
+          background,
+          "TaskPane.backgroundGradientStart",
+          backgroundGradientStart,
+          "TaskPane.backgroundGradientEnd",
+          backgroundGradientEnd,}));
     }
   }
 
   protected void addMacDefaults(LookAndFeelAddons addon, List defaults) {
     super.addMacDefaults(addon, defaults);
-    defaults.addAll(Arrays.asList(new Object[]{
-      "TaskPane.background",
-      new ColorUIResource(238, 238, 238),
-    }));            
+    defaults.addAll(Arrays.asList(new Object[]{"TaskPane.background", new ColorUIResource(238, 238, 238),}));
   }
 
 }

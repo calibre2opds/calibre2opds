@@ -5,7 +5,7 @@ import org.junit.Test;
 
 
 public class DataModelTest {
-  
+
   @Test
   public void testDataModel() {
     new TestDataModel().testDataModel(false);

@@ -9,7 +9,7 @@ public class EBookFile {
   String extension;
   String name;
   Book book;
-  
+
   public EBookFile(String format, String name) {
     super();
     if (Helper.isNotNullOrEmpty(format)) {
@@ -26,31 +26,31 @@ public class EBookFile {
   public void setBook(Book value) {
     this.book = value;
   }
-  
+
   public EBookFormat getFormat() {
     return format;
   }
-  
+
   void setFormat(EBookFormat format) {
     this.format = format;
   }
-  
+
   public String getName() {
     return name;
   }
-  
+
   public String getExtension() {
     return extension;
   }
-  
+
   void setName(String name) {
     this.name = name;
   }
-  
+
   public CachedFile getFile() {
     return CachedFileManager.INSTANCE.addCachedFile(getBook().getBookFolder(), getName() + getExtension());
   }
-  
+
   public String toString() {
     return "" + getFormat() + " - " + getName();
   }

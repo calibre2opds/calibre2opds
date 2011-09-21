@@ -23,43 +23,38 @@ import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
 import com.l2fprod.common.util.ResourceManager;
 
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 /**
  * FontPropertyEditor.<br>
- *
  */
 public class FontPropertyEditor extends AbstractPropertyEditor {
 
   private DefaultCellRenderer label;
   private JButton button;
   private Font font;
-  
+
   public FontPropertyEditor() {
     editor = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 0));
-    ((JPanel)editor).add("*", label = new DefaultCellRenderer());
+    ((JPanel) editor).add("*", label = new DefaultCellRenderer());
     label.setOpaque(false);
-    ((JPanel)editor).add(button = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add(button = ComponentFactory.Helper.getFactory().createMiniButton());
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         selectFont();
       }
     });
-    ((JPanel)editor).add(button = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add(button = ComponentFactory.Helper.getFactory().createMiniButton());
     button.setText("X");
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         selectNull();
       }
     });
-    ((JPanel)editor).setOpaque(false);
+    ((JPanel) editor).setOpaque(false);
   }
 
   public Object getValue() {
@@ -67,14 +62,14 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
   }
 
   public void setValue(Object value) {
-    font = (Font)value;
+    font = (Font) value;
     label.setValue(value);
   }
 
   protected void selectFont() {
     ResourceManager rm = ResourceManager.all(FontPropertyEditor.class);
     String title = rm.getString("FontPropertyEditor.title");
-    
+
     Font selectedFont = JFontChooser.showDialog(editor, title, font);
 
     if (selectedFont != null) {
@@ -89,8 +84,8 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
   protected void selectNull() {
     Object oldFont = font;
     label.setValue(null);
-    font = null;    
+    font = null;
     firePropertyChange(oldFont, null);
   }
-  
+
 }

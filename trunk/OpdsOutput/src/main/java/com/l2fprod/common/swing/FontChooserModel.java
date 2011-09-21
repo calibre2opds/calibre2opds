@@ -24,6 +24,7 @@ public interface FontChooserModel {
 
   /**
    * Gets the available fonts for the given charset
+   *
    * @param charSetName not used yet
    */
   public String[] getFontFamilies(String charSetName);
@@ -35,7 +36,7 @@ public interface FontChooserModel {
 
   /**
    * Gets the available CharSet names {@link java.nio.charset.Charset}.
-   * 
+   *
    * @return the available CharSet names
    */
   public String[] getCharSets();
@@ -43,7 +44,7 @@ public interface FontChooserModel {
   /**
    * Gets the localized message to use in the Preview area for the
    * given charset.
-   * 
+   *
    * @param charSetName
    * @return a localized message for the Preview area.
    */

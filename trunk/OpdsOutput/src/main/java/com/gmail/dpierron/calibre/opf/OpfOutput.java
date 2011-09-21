@@ -143,7 +143,8 @@ public class OpfOutput {
     }
     if (Helper.isNotNullOrEmpty(book.getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag()))) {
       removeDcElements(source, "language");
-      addDublinCoreElement(source, "language", book.getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag()));
+      addDublinCoreElement(source, "language",
+          book.getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag()));
     }
     if (Helper.isNotNullOrEmpty(book.getAuthors())) {
       removeDcElements(source, "creator");
@@ -243,30 +244,30 @@ public class OpfOutput {
               // copy the entry to the output file
               BufferedInputStream in = null;
               try {
-// THIS COMMENTED-OUT CODE RENAMES THE .CSS_BAK FILES BACK TO .CSS
-//                try {
-//                  String filename = zipEntry.getName();
-//                  if (isRemoveCss() && filename.toUpperCase().endsWith(".CSS_BAK")) {
-//                    filename = filename.substring(0, filename.length() - 4);
-//                  }
-//                  ZipEntry newEntry = new ZipEntry(filename);
-//                  newEntry.setMethod(zipEntry.getMethod());
-//                  if (newEntry.getMethod() == ZipEntry.STORED) {
-//                    newEntry.setSize(zipEntry.getSize());
-//                    newEntry.setCrc(zipEntry.getCrc());
-//                  }
-//                  zos.putNextEntry(newEntry);
-//                  byte[] data = new byte[1024];
-//                  in = new BufferedInputStream(inputStream, 1024);
-//                  int count;
-//                  while ((count = in.read(data, 0, data.length)) != -1) {
-//                    zos.write(data, 0, count);
-//                  }
-//                } finally {
-//                  zos.closeEntry();
-//                  if (in != null)
-//                    in.close();
-//                }
+                // THIS COMMENTED-OUT CODE RENAMES THE .CSS_BAK FILES BACK TO .CSS
+                //                try {
+                //                  String filename = zipEntry.getName();
+                //                  if (isRemoveCss() && filename.toUpperCase().endsWith(".CSS_BAK")) {
+                //                    filename = filename.substring(0, filename.length() - 4);
+                //                  }
+                //                  ZipEntry newEntry = new ZipEntry(filename);
+                //                  newEntry.setMethod(zipEntry.getMethod());
+                //                  if (newEntry.getMethod() == ZipEntry.STORED) {
+                //                    newEntry.setSize(zipEntry.getSize());
+                //                    newEntry.setCrc(zipEntry.getCrc());
+                //                  }
+                //                  zos.putNextEntry(newEntry);
+                //                  byte[] data = new byte[1024];
+                //                  in = new BufferedInputStream(inputStream, 1024);
+                //                  int count;
+                //                  while ((count = in.read(data, 0, data.length)) != -1) {
+                //                    zos.write(data, 0, count);
+                //                  }
+                //                } finally {
+                //                  zos.closeEntry();
+                //                  if (in != null)
+                //                    in.close();
+                //                }
 
                 // check if we must remove the CSS files (rename them to .css_bak)
                 String filename = zipEntry.getName();

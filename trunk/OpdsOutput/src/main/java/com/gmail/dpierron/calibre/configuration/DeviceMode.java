@@ -8,51 +8,30 @@ package com.gmail.dpierron.calibre.configuration;
  * - The default value for the property for this mode
  * - Whether the item is locked against allowing to change the value
  */
+
 import com.gmail.dpierron.tools.Helper;
 
 
 public enum DeviceMode {
-  Dropbox(
-      "CatalogFolderName","_catalog",false,
-      "TargetFolder","",true,
-      "CopyToDatabaseFolder", true, true,
-      "ZipTrookCatalog", false, true,
-      "ReprocessEpubMetadata", false, false
-      ),
-  Nas(
-      "CatalogFolderName","_catalog",false,
-      "TargetFolder",".",false, 
-      "CopyToDatabaseFolder", false, false, 
-      "ZipTrookCatalog", false, true,
-      "ReprocessEpubMetadata", false, false
-      ),
-  Nook(
-      "CatalogFolderName","Calibre",false,
-      "IncludedFormatsList","EPUB,PDB,PDF",false,
-      "SaveBandwith",true,false,
-      "ThumbnailHeight",144,true,
-      "GenerateHtml",false,false,
-      "GenerateHtmlDownloads",false,false,
-      "GenerateDownloads",true,true,
-      "IncludeBooksWithNoFile",false,false,
-      "CryptFilenames",false,true,
-      "TargetFolder",".",false,
-      "CopyToDatabaseFolder", false, false,
-      "IncludeAboutLink", false, false,
-      "ZipTrookCatalog", false, false,
-      "ReprocessEpubMetadata", false, false
-      );
-  
+  Dropbox("CatalogFolderName", "_catalog", false, "TargetFolder", "", true, "CopyToDatabaseFolder", true, true, "ZipTrookCatalog", false,
+      true, "ReprocessEpubMetadata", false, false),
+  Nas("CatalogFolderName", "_catalog", false, "TargetFolder", ".", false, "CopyToDatabaseFolder", false, false, "ZipTrookCatalog", false,
+      true, "ReprocessEpubMetadata", false, false),
+  Nook("CatalogFolderName", "Calibre", false, "IncludedFormatsList", "EPUB,PDB,PDF", false, "SaveBandwith", true, false, "ThumbnailHeight",
+      144, true, "GenerateHtml", false, false, "GenerateHtmlDownloads", false, false, "GenerateDownloads", true, true,
+      "IncludeBooksWithNoFile", false, false, "CryptFilenames", false, true, "TargetFolder", ".", false, "CopyToDatabaseFolder", false,
+      false, "IncludeAboutLink", false, false, "ZipTrookCatalog", false, false, "ReprocessEpubMetadata", false, false);
+
   Object[] options;
-  
+
   private DeviceMode(Object... options) {
     this.options = options;
   }
-  
+
   public Object[] getOptions() {
     return options;
   }
-  
+
   public static DeviceMode fromName(String name) {
     if (Helper.isNotNullOrEmpty(name)) {
       for (DeviceMode mode : values()) {
@@ -62,19 +41,19 @@ public enum DeviceMode {
     }
     return Dropbox;
   }
-  
+
   public void setSpecificOptionsValues(PropertiesBasedConfiguration configuration) {
-    for (int i = 0; i < options.length; i+=3) {
+    for (int i = 0; i < options.length; i += 3) {
       String optionName = (String) options[i];
-      Object optionValue = options[i+1];
+      Object optionValue = options[i + 1];
       configuration.setProperty(optionName, optionValue);
     }
   }
-  
+
   public void setSpecificOptionsReadOnly(PropertiesBasedConfiguration configuration) {
-    for (int i = 0; i < options.length; i+=3) {
+    for (int i = 0; i < options.length; i += 3) {
       String optionName = (String) options[i];
-      Boolean readOnly = (Boolean) options[i+2];
+      Boolean readOnly = (Boolean) options[i + 2];
       configuration.setPropertyReadOnly(optionName, readOnly);
     }
   }

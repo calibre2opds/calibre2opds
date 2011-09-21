@@ -19,7 +19,7 @@ package com.l2fprod.common.swing;
 
 import com.l2fprod.common.swing.plaf.FontChooserUI;
 
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -32,8 +32,7 @@ import java.util.SortedMap;
  */
 public class DefaultFontChooserModel implements FontChooserModel {
 
-  public static final int[] DEFAULT_FONT_SIZES = {6, 8, 10, 11, 12, 14, 16, 18,
-    20, 22, 24, 26, 28, 32, 40, 48, 56, 64, 72};
+  public static final int[] DEFAULT_FONT_SIZES = {6, 8, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 40, 48, 56, 64, 72};
 
   protected String[] fontFamilies;
   private String[] charSets;
@@ -41,13 +40,10 @@ public class DefaultFontChooserModel implements FontChooserModel {
   private String previewMessage;
 
   public DefaultFontChooserModel() {
-    ResourceBundle bundle = ResourceBundle.getBundle(FontChooserUI.class
-      .getName()
-      + "RB");
+    ResourceBundle bundle = ResourceBundle.getBundle(FontChooserUI.class.getName() + "RB");
     setPreviewMessage(bundle.getString("FontChooserUI.previewText"));
 
-    String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getAvailableFontFamilyNames();
+    String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     Arrays.sort(fontFamilies);
     setFontFamilies(fontFamilies);
 
@@ -55,7 +51,7 @@ public class DefaultFontChooserModel implements FontChooserModel {
     String[] charSets = new String[map.size()];
     int i = 0;
     for (Iterator iter = map.keySet().iterator(); iter.hasNext(); i++) {
-      charSets[i] = (String)iter.next();
+      charSets[i] = (String) iter.next();
     }
     setCharSets(charSets);
 

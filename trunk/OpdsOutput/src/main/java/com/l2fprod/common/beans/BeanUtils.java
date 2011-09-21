@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 
 /**
  * BeanUtils. <br>
- *  
  */
 public class BeanUtils {
 
@@ -38,11 +37,11 @@ public class BeanUtils {
     // methods. If an "is" method exists, this is the official
     // reader method so look for this one first.
     try {
-      readMethod = clazz.getMethod("is" + base, (Class[])null);
+      readMethod = clazz.getMethod("is" + base, (Class[]) null);
     } catch (Exception getterExc) {
       try {
         // no "is" method, so look for a "get" method.
-        readMethod = clazz.getMethod("get" + base, (Class[])null);
+        readMethod = clazz.getMethod("get" + base, (Class[]) null);
       } catch (Exception e) {
         // no is and no get, we will return null
       }
@@ -51,14 +50,11 @@ public class BeanUtils {
     return readMethod;
   }
 
-  public static Method getWriteMethod(
-    Class clazz,
-    String propertyName,
-    Class propertyType) {
+  public static Method getWriteMethod(Class clazz, String propertyName, Class propertyType) {
     Method writeMethod = null;
     String base = capitalize(propertyName);
 
-    Class params[] = { propertyType };
+    Class params[] = {propertyType};
     try {
       writeMethod = clazz.getMethod("set" + base, params);
     } catch (Exception e) {

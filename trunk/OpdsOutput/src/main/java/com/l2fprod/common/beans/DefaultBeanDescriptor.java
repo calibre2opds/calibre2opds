@@ -22,7 +22,6 @@ import java.util.MissingResourceException;
 
 /**
  * DefaultBeanDescriptor. <br>
- *  
  */
 final class DefaultBeanDescriptor extends BeanDescriptor {
 

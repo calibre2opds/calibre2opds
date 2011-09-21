@@ -36,7 +36,7 @@ public class ResourceManager {
    * It looks for a ResourceBundle named against the class name plus
    * the string "RB". For example, for the com.mypackage.Main, the
    * ResourceBundle com.mypackage.MainRB will be looked up.
-   * 
+   *
    * @param clazz
    * @return the ResourceManager associated with the class
    */
@@ -47,12 +47,12 @@ public class ResourceManager {
 
   /**
    * Gets the ResourceManager with the given name.
-   * 
+   *
    * @param bundleName
    * @return the ResourceManager with the given name.
    */
   public static ResourceManager get(String bundleName) {
-    ResourceManager rm = (ResourceManager)nameToRM.get(bundleName);
+    ResourceManager rm = (ResourceManager) nameToRM.get(bundleName);
     if (rm == null) {
       ResourceBundle rb = ResourceBundle.getBundle(bundleName);
       rm = new ResourceManager(rb);
@@ -74,7 +74,7 @@ public class ResourceManager {
    * <code>all(ResourceManager.class)</code>. It returns the
    * ResourceManager named "AllRB" located in the same package
    * ResourceManager class (i.e com.l2fprod.common.util.AllRB).
-   * 
+   *
    * @return the default ResourceManager
    */
   public static ResourceManager common() {
@@ -87,14 +87,14 @@ public class ResourceManager {
   public static ResourceManager ui() {
     return get("com.l2fprod.common.swing.AllRB");
   }
-  
+
   /**
    * Resolves any references to a resource bundle contained in
    * <code>rbAndProperty</code>. To reference a resource bundle
    * inside a property use <code>${com.package.FileRB:key}</code>,
    * this will look for <code>key</code> in the ResourceBundle
    * <code>com.package.FileRB</code>.
-   * 
+   *
    * @param rbAndProperty
    * @return the resolved resource or rbAndProperty if no resource was
    *         found
@@ -107,7 +107,7 @@ public class ResourceManager {
    * Same as {@link #resolve(String)} but once the value as been
    * resolved, a MessageFormatter is applied with the given
    * <code>args</code>.
-   * 
+   *
    * @param rbAndProperty
    * @param args
    * @return the value for the resource parametrized by args
@@ -119,7 +119,7 @@ public class ResourceManager {
 
   /**
    * Can't be directly constructed
-   * 
+   *
    * @param bundle
    */
   private ResourceManager(ResourceBundle bundle) {
@@ -129,7 +129,7 @@ public class ResourceManager {
   /**
    * Gets the String associated with <code>key</code> after having
    * resolved any nested keys ({@link #resolve(String)}).
-   * 
+   *
    * @param key the key to lookup
    * @return the String associated with <code>key</code>
    */
@@ -141,8 +141,8 @@ public class ResourceManager {
    * Gets the String associated with <code>key</code> after having
    * resolved any nested keys ({@link #resolve(String)}) and applied
    * a formatter using the given <code>args</code>.
-   * 
-   * @param key the key to lookup
+   *
+   * @param key  the key to lookup
    * @param args the arguments to pass to the formatter
    * @return the String associated with <code>key</code>
    */
@@ -154,7 +154,7 @@ public class ResourceManager {
   /**
    * Gets the first character of the String associated with
    * <code>key</code>.
-   * 
+   *
    * @param key the key to lookup
    * @return the first character of the String associated with
    *         <code>key</code>.
@@ -162,7 +162,7 @@ public class ResourceManager {
   public char getChar(String key) {
     String s = getString(key);
     if (s == null || s.trim().length() == 0) {
-      return (char)0;
+      return (char) 0;
     } else {
       return s.charAt(0);
     }
@@ -185,8 +185,7 @@ public class ResourceManager {
           // it's a regular nested property
           sub = getString(sub);
         }
-        result = property.substring(0, index) + sub
-            + resolve0(property.substring(endIndex + 1));
+        result = property.substring(0, index) + sub + resolve0(property.substring(endIndex + 1));
       }
     }
     return result;

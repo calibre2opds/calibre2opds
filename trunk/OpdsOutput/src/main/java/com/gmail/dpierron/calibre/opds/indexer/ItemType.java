@@ -12,6 +12,7 @@ public enum ItemType {
   Series("S");
 
   String code;
+
   private ItemType(String code) {
     this.code = code;
   }

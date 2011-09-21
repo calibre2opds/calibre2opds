@@ -1,20 +1,20 @@
 package com.gmail.dpierron.calibre.datamodel.filter;
 
-import java.util.List;
-import java.util.Vector;
-
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.tools.Helper;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public enum FilterDataModel {
   INSTANCE;
 
   public void runOnDataModel(BookFilter filter) {
-    List<Book> booksCopy = new Vector<Book>(DataModel.INSTANCE.getListOfBooks());
+    List<Book> booksCopy = new LinkedList<Book>(DataModel.INSTANCE.getListOfBooks());
     for (Book book : booksCopy) {
-      
+
       if (!filter.didBookPassThroughFilter(book)) {
-        
+
         // remove the book from the map of books by tags
         for (Tag tag : book.getTags()) {
           List<Book> books = DataModel.INSTANCE.getMapOfBooksByTag().get(tag);
@@ -26,7 +26,7 @@ public enum FilterDataModel {
           }
         }
         DataModel.INSTANCE.getMapOfTagsByBookId().remove(book.getId());
-        
+
         // remove the book from the map of books by series
         Series serie = book.getSeries();
         List<Book> booksInSerie = DataModel.INSTANCE.getMapOfBooksBySeries().get(serie);
@@ -71,39 +71,42 @@ public enum FilterDataModel {
 
         // remove the book from the list of books
         DataModel.INSTANCE.getListOfBooks().remove(book);
-        
+
         // remove the book from the map of books
         DataModel.INSTANCE.getMapOfBooks().remove(book.getId());
 
         // remove the book from the maps of XXX by bookId
         DataModel.INSTANCE.getMapOfCommentsByBookId().remove(book.getId());
         DataModel.INSTANCE.getMapOfFilesByBookId().remove(book.getId());
-        
+
       }
     }
-  
+
     /* check that no empty list exist */
-    
+
     // check that no books by tag list is empty
-    for (Tag tag : new Vector<Tag>(DataModel.INSTANCE.getListOfTags(null))) {
+    LinkedList<Tag> tagList = new LinkedList<Tag>(DataModel.INSTANCE.getListOfTags(null));
+    for (Tag tag : tagList) {
       List<Book> books = DataModel.INSTANCE.getMapOfBooksByTag().get(tag);
       if (Helper.isNullOrEmpty(books)) {
         DataModel.INSTANCE.getMapOfBooksByTag().remove(tag);
         DataModel.INSTANCE.getListOfTags(null).remove(tag);
       }
     }
-    
+
     // check that no books by serie list is empty
-    for (Series serie : new Vector<Series>(DataModel.INSTANCE.getListOfSeries())) {
+    LinkedList<Series> seriesList = new LinkedList<Series>(DataModel.INSTANCE.getListOfSeries());
+    for (Series serie : seriesList) {
       List<Book> booksInSerie = DataModel.INSTANCE.getMapOfBooksBySeries().get(serie);
       if (Helper.isNullOrEmpty(booksInSerie)) {
         DataModel.INSTANCE.getMapOfBooksBySeries().remove(serie);
         DataModel.INSTANCE.getListOfSeries().remove(serie);
       }
     }
-    
+
     // check that no books by author list is empty
-    for (Author author : new Vector<Author>(DataModel.INSTANCE.getListOfAuthors())) {
+    LinkedList<Author> authorList = new LinkedList<Author>(DataModel.INSTANCE.getListOfAuthors());
+    for (Author author : authorList) {
       List<Book> booksByAuthor = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author);
       if (Helper.isNullOrEmpty(booksByAuthor)) {
         DataModel.INSTANCE.getMapOfBooksByAuthor().remove(author);

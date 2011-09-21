@@ -19,11 +19,9 @@ package com.l2fprod.common.swing.plaf.windows;
 
 import com.l2fprod.common.swing.plaf.basic.BasicLinkButtonUI;
 
-import java.awt.Graphics;
-
-import javax.swing.AbstractButton;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 
 /**
  * Windows implementation of the <code>JLinkButton</code> UI.
@@ -31,13 +29,13 @@ import javax.swing.plaf.ComponentUI;
 public class WindowsLinkButtonUI extends BasicLinkButtonUI {
 
   private static WindowsLinkButtonUI buttonUI = new WindowsLinkButtonUI();
-  
+
   public static ComponentUI createUI(JComponent c) {
     return buttonUI;
   }
-  
-  protected void paintButtonPressed(Graphics g, AbstractButton b){
+
+  protected void paintButtonPressed(Graphics g, AbstractButton b) {
     setTextShiftOffset();
   }
-  
+
 }

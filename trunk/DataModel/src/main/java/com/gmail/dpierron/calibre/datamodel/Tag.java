@@ -1,9 +1,8 @@
 package com.gmail.dpierron.calibre.datamodel;
 
-import java.util.List;
-
 import com.gmail.dpierron.tools.Helper;
 
+import java.util.List;
 
 
 public class Tag implements SplitableByLetter, Comparable<Tag> {
@@ -11,7 +10,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   private String name;
   private String[] partsOfTag;
   private int[] partsOfTagHash;
-  
+
   public Tag(String id, String name) {
     super();
     this.id = id;
@@ -29,7 +28,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   public String toString() {
     return getName();
   }
-  
+
   public String getTitleToSplitByLetter(Object options) {
     return getName();
   }
@@ -47,26 +46,28 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
     }
     return partsOfTag;
   }
-  
+
   public int[] getPartsOfTagHash(String splitTagsOn) {
-    if (partsOfTag == null) 
+    if (partsOfTag == null)
       getPartsOfTag(splitTagsOn);
     return partsOfTagHash;
   }
 
   public int compareTo(Tag o) {
-    if (o == null) return 1;
+    if (o == null)
+      return 1;
     return Helper.trueStringCompare(getId(), o.getId());
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Tag) {
-      if (obj == null) return false;
+      if (obj == null)
+        return false;
       return (Helper.checkedCompare(((Tag) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);
   }
 
-  
+
 }

@@ -6,6 +6,51 @@
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
+        <option name="OTHER_INDENT_OPTIONS">
+          <value>
+            <option name="INDENT_SIZE" value="2" />
+            <option name="CONTINUATION_INDENT_SIZE" value="2" />
+            <option name="TAB_SIZE" value="2" />
+            <option name="USE_TAB_CHARACTER" value="false" />
+            <option name="SMART_TABS" value="false" />
+            <option name="LABEL_INDENT_SIZE" value="0" />
+            <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+            <option name="USE_RELATIVE_INDENTS" value="false" />
+          </value>
+        </option>
+        <option name="RIGHT_MARGIN" value="9999999" />
+        <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
+        <option name="XML_ATTRIBUTE_WRAP" value="0" />
+        <option name="XML_TEXT_WRAP" value="0" />
+        <option name="XML_KEEP_LINE_BREAKS" value="false" />
+        <option name="XML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
+        <option name="XML_ALIGN_ATTRIBUTES" value="false" />
+        <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
+        <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
+        <option name="KEEP_LINE_BREAKS" value="false" />
+        <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+        <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
+        <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+        <option name="ALIGN_MULTILINE_RESOURCES" value="false" />
+        <option name="ALIGN_MULTILINE_FOR" value="false" />
+        <option name="CALL_PARAMETERS_WRAP" value="1" />
+        <option name="METHOD_PARAMETERS_WRAP" value="5" />
+        <option name="RESOURCE_LIST_WRAP" value="1" />
+        <option name="EXTENDS_LIST_WRAP" value="5" />
+        <option name="THROWS_LIST_WRAP" value="5" />
+        <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
+        <option name="BINARY_OPERATION_WRAP" value="1" />
+        <option name="TERNARY_OPERATION_WRAP" value="5" />
+        <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
+        <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
+        <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="true" />
+        <option name="FOR_STATEMENT_WRAP" value="5" />
+        <option name="ARRAY_INITIALIZER_WRAP" value="5" />
+        <option name="ASSIGNMENT_WRAP" value="1" />
+        <option name="ASSERT_STATEMENT_WRAP" value="1" />
+        <option name="ASSERT_STATEMENT_COLON_ON_NEXT_LINE" value="true" />
+        <option name="WRAP_LONG_LINES" value="true" />
+        <option name="CLASS_ANNOTATION_WRAP" value="0" />
         <ADDITIONAL_INDENT_OPTIONS fileType="css">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
@@ -48,7 +93,7 @@
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="java">
           <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
           <option name="TAB_SIZE" value="2" />
           <option name="USE_TAB_CHARACTER" value="false" />
           <option name="SMART_TABS" value="false" />
@@ -107,9 +152,9 @@
           <option name="USE_RELATIVE_INDENTS" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="xml">
-          <option name="INDENT_SIZE" value="4" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
           <option name="USE_TAB_CHARACTER" value="false" />
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
@@ -126,6 +171,12 @@
           <option name="LABEL_INDENT_ABSOLUTE" value="false" />
           <option name="USE_RELATIVE_INDENTS" value="false" />
         </ADDITIONAL_INDENT_OPTIONS>
+        <codeStyleSettings language="JavaScript">
+          <option name="KEEP_LINE_BREAKS" value="false" />
+          <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+          <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
+          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
+        </codeStyleSettings>
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />

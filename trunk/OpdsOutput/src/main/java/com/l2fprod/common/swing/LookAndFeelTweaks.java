@@ -17,37 +17,25 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Font;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
 import javax.swing.text.html.HTMLDocument;
+import java.awt.*;
 
 /**
  * LookAndFeelTweaks. <br>
- *  
  */
 public class LookAndFeelTweaks {
 
-  public final static Border PANEL_BORDER =
-    BorderFactory.createEmptyBorder(3, 3, 3, 3);
-  
-  public final static Border WINDOW_BORDER =
-    BorderFactory.createEmptyBorder(4, 10, 10, 10);
+  public final static Border PANEL_BORDER = BorderFactory.createEmptyBorder(3, 3, 3, 3);
 
-  public final static Border EMPTY_BORDER =
-  	BorderFactory.createEmptyBorder();
-  
+  public final static Border WINDOW_BORDER = BorderFactory.createEmptyBorder(4, 10, 10, 10);
+
+  public final static Border EMPTY_BORDER = BorderFactory.createEmptyBorder();
+
   public static void tweak() {
     Object listFont = UIManager.get("List.font");
     UIManager.put("Table.font", listFont);
@@ -60,19 +48,19 @@ public class LookAndFeelTweaks {
   public static PercentLayout createVerticalPercentLayout() {
     return new PercentLayout(PercentLayout.VERTICAL, 8);
   }
-  
+
   public static PercentLayout createHorizontalPercentLayout() {
     return new PercentLayout(PercentLayout.HORIZONTAL, 8);
   }
-  
+
   public static ButtonAreaLayout createButtonAreaLayout() {
     return new ButtonAreaLayout(6);
   }
-  
+
   public static BorderLayout createBorderLayout() {
     return new BorderLayout(8, 8);
   }
-  
+
   public static void setBorder(JComponent component) {
     if (component instanceof JPanel) {
       component.setBorder(PANEL_BORDER);
@@ -90,48 +78,37 @@ public class LookAndFeelTweaks {
   public static void makeMultilineLabel(JTextComponent area) {
     area.setFont(UIManager.getFont("Label.font"));
     area.setEditable(false);
-    area.setOpaque(false);    
+    area.setOpaque(false);
     if (area instanceof JTextArea) {
-      ((JTextArea)area).setWrapStyleWord(true);
-      ((JTextArea)area).setLineWrap(true);
+      ((JTextArea) area).setWrapStyleWord(true);
+      ((JTextArea) area).setLineWrap(true);
     }
   }
-  
+
   public static void htmlize(JComponent component) {
     htmlize(component, UIManager.getFont("Button.font"));
   }
 
   public static void htmlize(JComponent component, Font font) {
     String stylesheet =
-      "body { margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; font-family: "
-        + font.getName()
-        + "; font-size: "
-        + font.getSize()
-        + "pt;	}"
-        + "a, p, li { margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; font-family: "
-        + font.getName()
-        + "; font-size: "
-        + font.getSize()
-        + "pt;	}";
+        "body { margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; font-family: " + font.getName() + "; font-size: " +
+            font.getSize() + "pt;	}" + "a, p, li { margin-top: 0; margin-bottom: 0; margin-left: 0; margin-right: 0; font-family: " +
+            font.getName() + "; font-size: " + font.getSize() + "pt;	}";
 
     try {
       HTMLDocument doc = null;
-      if (component instanceof JEditorPane) {        
-        if (((JEditorPane)component).getDocument() instanceof HTMLDocument) {
-          doc = (HTMLDocument) ((JEditorPane)component).getDocument();
+      if (component instanceof JEditorPane) {
+        if (((JEditorPane) component).getDocument() instanceof HTMLDocument) {
+          doc = (HTMLDocument) ((JEditorPane) component).getDocument();
         }
       } else {
-        View v =
-          (View)component.getClientProperty(
-            javax.swing.plaf.basic.BasicHTML.propertyKey);
+        View v = (View) component.getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey);
         if (v != null && v.getDocument() instanceof HTMLDocument) {
-          doc = (HTMLDocument)v.getDocument();
+          doc = (HTMLDocument) v.getDocument();
         }
       }
       if (doc != null) {
-        doc.getStyleSheet().loadRules(
-          new java.io.StringReader(stylesheet),
-          null);
+        doc.getStyleSheet().loadRules(new java.io.StringReader(stylesheet), null);
       } // end of if (doc != null)
     } catch (Exception e) {
       e.printStackTrace();

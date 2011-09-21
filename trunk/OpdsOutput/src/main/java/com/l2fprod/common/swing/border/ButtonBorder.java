@@ -17,24 +17,18 @@
  */
 package com.l2fprod.common.swing.border;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Insets;
-
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
+import java.awt.*;
 
 /**
  * ButtonBorder. <br>
- *  
  */
 public class ButtonBorder extends AbstractBorder {
 
-  public void paintBorder(Component c, Graphics g, int x, int y, int width,
-    int height) {
+  public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     if (c instanceof AbstractButton) {
-      AbstractButton b = (AbstractButton)c;
+      AbstractButton b = (AbstractButton) c;
       ButtonModel model = b.getModel();
 
       boolean isPressed;
@@ -59,17 +53,13 @@ public class ButtonBorder extends AbstractBorder {
     }
   }
 
-  protected void paintNormal(AbstractButton b, Graphics g, int x, int y,
-    int width, int height) {}
+  protected void paintNormal(AbstractButton b, Graphics g, int x, int y, int width, int height) {}
 
-  protected void paintDisabled(AbstractButton b, Graphics g, int x, int y,
-    int width, int height) {}
+  protected void paintDisabled(AbstractButton b, Graphics g, int x, int y, int width, int height) {}
 
-  protected void paintRollover(AbstractButton b, Graphics g, int x, int y,
-    int width, int height) {}
+  protected void paintRollover(AbstractButton b, Graphics g, int x, int y, int width, int height) {}
 
-  protected void paintPressed(AbstractButton b, Graphics g, int x, int y,
-    int width, int height) {}
+  protected void paintPressed(AbstractButton b, Graphics g, int x, int y, int width, int height) {}
 
   public Insets getBorderInsets(Component c) {
     return getBorderInsets(c, new Insets(0, 0, 0, 0));

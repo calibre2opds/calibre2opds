@@ -17,22 +17,14 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.Icon;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 
 /**
  * BannerPanel. <br>
- *  
  */
 public class BannerPanel extends JPanel {
 
@@ -43,8 +35,7 @@ public class BannerPanel extends JPanel {
   private JLabel iconLabel;
 
   public BannerPanel() {
-    setBorder(
-      new CompoundBorder(new EtchedBorder(), LookAndFeelTweaks.PANEL_BORDER));
+    setBorder(new CompoundBorder(new EtchedBorder(), LookAndFeelTweaks.PANEL_BORDER));
 
     setOpaque(true);
     setBackground(UIManager.getColor("Table.background"));
@@ -79,15 +70,15 @@ public class BannerPanel extends JPanel {
   public Color getTitleColor() {
     return titleLabel.getForeground();
   }
-  
+
   public void setSubtitleColor(Color color) {
     subtitleLabel.setForeground(color);
   }
-  
+
   public Color getSubtitleColor() {
     return subtitleLabel.getForeground();
   }
-  
+
   public void setTitle(String title) {
     titleLabel.setText(title);
   }
@@ -95,37 +86,37 @@ public class BannerPanel extends JPanel {
   public String getTitle() {
     return titleLabel.getText();
   }
-  
+
   public void setSubtitle(String subtitle) {
     subtitleLabel.setText(subtitle);
   }
-  
+
   public String getSubtitle() {
     return subtitleLabel.getText();
   }
-  
+
   public void setSubtitleVisible(boolean b) {
     subtitleLabel.setVisible(b);
   }
-  
+
   public boolean isSubtitleVisible() {
     return subtitleLabel.isVisible();
   }
-  
+
   public void setIcon(Icon icon) {
     iconLabel.setIcon(icon);
   }
-  
+
   public Icon getIcon() {
     return iconLabel.getIcon();
   }
-  
+
   public void setIconVisible(boolean b) {
     iconLabel.setVisible(b);
   }
-  
+
   public boolean isIconVisible() {
     return iconLabel.isVisible();
   }
-  
+
 }

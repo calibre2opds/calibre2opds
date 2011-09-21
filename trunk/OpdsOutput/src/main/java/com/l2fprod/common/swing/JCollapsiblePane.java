@@ -17,58 +17,44 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
 /**
  * <code>JCollapsiblePane</code> provides a component which can collapse or
  * expand its content area with animation and fade in/fade out effects.
  * It also acts as a standard container for other Swing components.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * In this example, the <code>JCollapsiblePane</code> is used to build
  * a Search pane which can be shown and hidden on demand.
- * 
+ * <p/>
  * <pre>
  * <code>
  * JCollapsiblePane cp = new JCollapsiblePane();
  *
  * // JCollapsiblePane can be used like any other container
  * cp.setLayout(new BorderLayout());
- * 
+ *
  * // the Controls panel with a textfield to filter the tree
  * JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
  * controls.add(new JLabel("Search:"));
- * controls.add(new JTextField(10));    
+ * controls.add(new JTextField(10));
  * controls.add(new JButton("Refresh"));
  * controls.setBorder(new TitledBorder("Filters"));
  * cp.add("Center", controls);
- *   
+ *
  * JFrame frame = new JFrame();
  * frame.setLayout(new BorderLayout());
- *  
+ *
  * // Put the "Controls" first
  * frame.add("North", cp);
- *    
+ *
  * // Then the tree - we assume the Controls would somehow filter the tree
  * JScrollPane scroll = new JScrollPane(new JTree());
  * frame.add("Center", scroll);
@@ -82,29 +68,23 @@ import javax.swing.Timer;
  * frame.setVisible(true);
  * </code>
  * </pre>
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Note: <code>JCollapsiblePane</code> requires its parent container to have a
  * {@link java.awt.LayoutManager} using {@link #getPreferredSize()} when
  * calculating its layout (example {@link com.l2fprod.common.swing.PercentLayout},
- * {@link java.awt.BorderLayout}). 
- * 
- * @javabean.attribute
- *          name="isContainer"
- *          value="Boolean.TRUE"
- *          rtexpr="true"
- * 
- * @javabean.attribute
- *          name="containerDelegate"
- *          value="getContentPane"
- *          
- * @javabean.class
- *          name="JCollapsiblePane"
- *          shortDescription="A pane which hides its content with an animation."
- *          stopClass="java.awt.Component"
- *          
+ * {@link java.awt.BorderLayout}).
+ *
  * @author rbair (from the JDNC project)
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
+ * @javabean.attribute name="isContainer"
+ * value="Boolean.TRUE"
+ * rtexpr="true"
+ * @javabean.attribute name="containerDelegate"
+ * value="getContentPane"
+ * @javabean.class name="JCollapsiblePane"
+ * shortDescription="A pane which hides its content with an animation."
+ * stopClass="java.awt.Component"
  */
 public class JCollapsiblePane extends JPanel {
 
@@ -112,20 +92,20 @@ public class JCollapsiblePane extends JPanel {
    * Used when generating PropertyChangeEvents for the "animationState" property
    */
   public final static String ANIMATION_STATE_KEY = "animationState";
-  
+
   /**
    * JCollapsible has a built-in toggle action which can be bound to buttons.
    * Accesses the action through
    * <code>collapsiblePane.getActionMap().get(JCollapsiblePane.TOGGLE_ACTION)</code>.
    */
   public final static String TOGGLE_ACTION = "toggle";
-  
+
   /**
    * The icon used by the "toggle" action when the JCollapsiblePane is
    * expanded, i.e the icon which indicates the pane can be collapsed.
    */
   public final static String COLLAPSE_ICON = "collapseIcon";
-  
+
   /**
    * The icon used by the "toggle" action when the JCollapsiblePane is
    * collapsed, i.e the icon which indicates the pane can be expanded.
@@ -160,7 +140,7 @@ public class JCollapsiblePane extends JPanel {
 
     animator = new AnimationListener();
     setAnimationParams(new AnimationParams(30, 8, 0.01f, 1.0f));
-    
+
     // add an action to automatically toggle the state of the pane
     getActionMap().put(TOGGLE_ACTION, new ToggleAction());
   }
@@ -169,8 +149,7 @@ public class JCollapsiblePane extends JPanel {
    * Toggles the JCollapsiblePane state and updates its icon based on the
    * JCollapsiblePane "collapsed" status.
    */
-  private class ToggleAction extends AbstractAction  implements
-    PropertyChangeListener {
+  private class ToggleAction extends AbstractAction implements PropertyChangeListener {
     public ToggleAction() {
       super(TOGGLE_ACTION);
       updateIcon();
@@ -178,19 +157,23 @@ public class JCollapsiblePane extends JPanel {
       // icon
       JCollapsiblePane.this.addPropertyChangeListener("collapsed", this);
     }
+
     public void putValue(String key, Object newValue) {
       super.putValue(key, newValue);
       if (EXPAND_ICON.equals(key) || COLLAPSE_ICON.equals(key)) {
         updateIcon();
       }
     }
-    public void actionPerformed(ActionEvent e) {      
+
+    public void actionPerformed(ActionEvent e) {
       setCollapsed(!isCollapsed());
     }
+
     public void propertyChange(PropertyChangeEvent evt) {
       updateIcon();
     }
-    void updateIcon() {      
+
+    void updateIcon() {
       if (isCollapsed()) {
         putValue(SMALL_ICON, getValue(EXPAND_ICON));
       } else {
@@ -202,16 +185,15 @@ public class JCollapsiblePane extends JPanel {
   /**
    * Sets the content pane of this JCollapsiblePane. Components must be added
    * to this content pane, not to the JCollapsiblePane.
-   * 
+   *
    * @param contentPanel
-   * @throws IllegalArgumentException
-   *           if contentPanel is null
+   * @throws IllegalArgumentException if contentPanel is null
    */
   public void setContentPane(Container contentPanel) {
     if (contentPanel == null) {
       throw new IllegalArgumentException("Content pane can't be null");
     }
-    
+
     if (wrapper != null) {
       super.remove(wrapper);
     }
@@ -256,29 +238,29 @@ public class JCollapsiblePane extends JPanel {
   public void remove(int index) {
     getContentPane().remove(index);
   }
-  
+
   /**
    * Overriden to redirect call to the content pane.
    */
   public void removeAll() {
     getContentPane().removeAll();
   }
-  
+
   /**
    * If true, enables the animation when pane is collapsed/expanded. If false,
    * animation is turned off.
-   * 
-   * <p>
+   * <p/>
+   * <p/>
    * When animated, the <code>JCollapsiblePane</code> will progressively
    * reduce (when collapsing) or enlarge (when expanding) the height of its
    * content area until it becomes 0 or until it reaches the preferred height of
    * the components it contains. The transparency of the content area will also
    * change during the animation.
-   * 
-   * <p>
+   * <p/>
+   * <p/>
    * If not animated, the <code>JCollapsiblePane</code> will simply hide
    * (collapsing) or show (expanding) its content area.
-   * 
+   *
    * @param animated
    * @javabean.property bound="true" preferred="true"
    */
@@ -306,39 +288,35 @@ public class JCollapsiblePane extends JPanel {
 
   /**
    * Expands or collapses this <code>JCollapsiblePane</code>.
-   * 
-   * <p>
+   * <p/>
+   * <p/>
    * If the component is collapsed and <code>val</code> is false, then this
    * call expands the JCollapsiblePane, such that the entire JCollapsiblePane
    * will be visible. If {@link #isAnimated()} returns true, the expansion will
    * be accompanied by an animation.
-   * 
-   * <p>
+   * <p/>
+   * <p/>
    * However, if the component is expanded and <code>val</code> is true, then
    * this call collapses the JCollapsiblePane, such that the entire
    * JCollapsiblePane will be invisible. If {@link #isAnimated()} returns true,
    * the collapse will be accompanied by an animation.
-   * 
+   *
+   * @javabean.property bound="true"
+   * preferred="true"
    * @see #isAnimated()
    * @see #setAnimated(boolean)
-   * @javabean.property
-   *          bound="true"
-   *          preferred="true"
    */
   public void setCollapsed(boolean val) {
     if (collapsed != val) {
       collapsed = val;
       if (isAnimated()) {
         if (collapsed) {
-          setAnimationParams(new AnimationParams(30, Math.max(8, wrapper
-            .getHeight() / 10), 1.0f, 0.01f));
+          setAnimationParams(new AnimationParams(30, Math.max(8, wrapper.getHeight() / 10), 1.0f, 0.01f));
           animator.reinit(wrapper.getHeight(), 0);
           animateTimer.start();
         } else {
-          setAnimationParams(new AnimationParams(30, Math.max(8,
-            getContentPane().getPreferredSize().height / 10), 0.01f, 1.0f));
-          animator.reinit(wrapper.getHeight(), getContentPane()
-            .getPreferredSize().height);
+          setAnimationParams(new AnimationParams(30, Math.max(8, getContentPane().getPreferredSize().height / 10), 0.01f, 1.0f));
+          animator.reinit(wrapper.getHeight(), getContentPane().getPreferredSize().height);
           animateTimer.start();
         }
       } else {
@@ -360,7 +338,7 @@ public class JCollapsiblePane extends JPanel {
    * relies on the calculation of its preferred size. During the animation, its
    * preferred size (specially its height) will change, when expanding, from 0
    * to the preferred size of the content pane, and the reverse when collapsing.
-   * 
+   *
    * @return this component preferred size
    */
   public Dimension getPreferredSize() {
@@ -391,14 +369,14 @@ public class JCollapsiblePane extends JPanel {
 
   /**
    * Sets the parameters controlling the animation
-   * 
+   *
    * @param params
-   * @throws IllegalArgumentException
-   *           if params is null
+   * @throws IllegalArgumentException if params is null
    */
   private void setAnimationParams(AnimationParams params) {
-    if (params == null) { throw new IllegalArgumentException(
-      "params can't be null"); }
+    if (params == null) {
+      throw new IllegalArgumentException("params can't be null");
+    }
     if (animateTimer != null) {
       animateTimer.stop();
     }
@@ -406,7 +384,7 @@ public class JCollapsiblePane extends JPanel {
     animateTimer = new Timer(animationParams.waitTime, animator);
     animateTimer.setInitialDelay(0);
   }
-  
+
   /**
    * Tagging interface for containers in a JCollapsiblePane hierarchy who needs
    * to be revalidated (invalidate/validate/repaint) when the pane is expanding
@@ -428,19 +406,14 @@ public class JCollapsiblePane extends JPanel {
     final float alphaEnd;
 
     /**
-     * @param waitTime
-     *          the amount of time in milliseconds to wait between calls to the
-     *          animation thread
-     * @param deltaY
-     *          the delta in the Y direction to inc/dec the size of the scroll
-     *          up by
-     * @param alphaStart
-     *          the starting alpha transparency level
-     * @param alphaEnd
-     *          the ending alpha transparency level
+     * @param waitTime   the amount of time in milliseconds to wait between calls to the
+     *                   animation thread
+     * @param deltaY     the delta in the Y direction to inc/dec the size of the scroll
+     *                   up by
+     * @param alphaStart the starting alpha transparency level
+     * @param alphaEnd   the ending alpha transparency level
      */
-    public AnimationParams(int waitTime, int deltaY, float alphaStart,
-      float alphaEnd) {
+    public AnimationParams(int waitTime, int deltaY, float alphaStart, float alphaEnd) {
       this.waitTime = waitTime;
       this.deltaY = deltaY;
       this.alphaStart = alphaStart;
@@ -454,7 +427,7 @@ public class JCollapsiblePane extends JPanel {
    * fires off in response to scroll up/down requests. This listener is
    * responsible for modifying the size of the content container and causing it
    * to be repainted.
-   * 
+   *
    * @author Richard Bair
    */
   private final class AnimationListener implements ActionListener {
@@ -494,17 +467,15 @@ public class JCollapsiblePane extends JPanel {
           // keep the content pane hidden when it is collapsed, other it may
           // still receive focus.
           if (finalHeight > 0) {
-            wrapper.showContent();   
+            wrapper.showContent();
             validate();
-            JCollapsiblePane.this.firePropertyChange(ANIMATION_STATE_KEY, null,
-              "expanded");
+            JCollapsiblePane.this.firePropertyChange(ANIMATION_STATE_KEY, null, "expanded");
             return;
           }
         }
 
         final boolean contracting = startHeight > finalHeight;
-        final int delta_y = contracting?-1 * animationParams.deltaY
-          :animationParams.deltaY;
+        final int delta_y = contracting ? -1 * animationParams.deltaY : animationParams.deltaY;
         int newHeight = wrapper.getHeight() + delta_y;
         if (contracting) {
           if (newHeight < finalHeight) {
@@ -515,8 +486,7 @@ public class JCollapsiblePane extends JPanel {
             newHeight = finalHeight;
           }
         }
-        animateAlpha = (float)newHeight
-          / (float)wrapper.c.getPreferredSize().height;
+        animateAlpha = (float) newHeight / (float) wrapper.c.getPreferredSize().height;
 
         Rectangle bounds = wrapper.getBounds();
         int oldHeight = bounds.height;
@@ -527,7 +497,7 @@ public class JCollapsiblePane extends JPanel {
         currentHeight = bounds.height;
         setBounds(bounds);
         startHeight = newHeight;
-        
+
         // it happens the animateAlpha goes over the alphaStart/alphaEnd range
         // this code ensures it stays in bounds. This behavior is seen when
         // component such as JTextComponents are used in the container.
@@ -537,7 +507,7 @@ public class JCollapsiblePane extends JPanel {
             animateAlpha = animationParams.alphaEnd;
           }
           if (animateAlpha > animationParams.alphaStart) {
-            animateAlpha = animationParams.alphaStart;            
+            animateAlpha = animationParams.alphaStart;
           }
         } else {
           // alphaStart < animateAlpha < alphaEnd
@@ -553,39 +523,37 @@ public class JCollapsiblePane extends JPanel {
         validate();
       }
     }
-      
+
     void validate() {
-      Container parent = SwingUtilities.getAncestorOfClass(
-        JCollapsiblePaneContainer.class, JCollapsiblePane.this);
+      Container parent = SwingUtilities.getAncestorOfClass(JCollapsiblePaneContainer.class, JCollapsiblePane.this);
       if (parent != null) {
-        parent = ((JCollapsiblePaneContainer)parent).getValidatingContainer();
+        parent = ((JCollapsiblePaneContainer) parent).getValidatingContainer();
       } else {
         parent = getParent();
       }
 
       if (parent != null) {
         if (parent instanceof JComponent) {
-          ((JComponent)parent).revalidate();
+          ((JComponent) parent).revalidate();
         } else {
           parent.invalidate();
         }
         parent.doLayout();
         parent.repaint();
-      }        
+      }
     }
 
     /**
      * Reinitializes the timer for scrolling up/down the component. This method
      * is properly synchronized, so you may make this call regardless of whether
      * the timer is currently executing or not.
-     * 
+     *
      * @param startHeight
      * @param stopHeight
      */
     public void reinit(int startHeight, int stopHeight) {
       synchronized (ANIMATION_MUTEX) {
-        JCollapsiblePane.this.firePropertyChange(ANIMATION_STATE_KEY, null,
-          "reinit");
+        JCollapsiblePane.this.firePropertyChange(ANIMATION_STATE_KEY, null, "reinit");
         this.startHeight = startHeight;
         this.finalHeight = stopHeight;
         animateAlpha = animationParams.alphaStart;
@@ -604,12 +572,12 @@ public class JCollapsiblePane extends JPanel {
       super(new BorderLayout());
       this.c = c;
       add(c, BorderLayout.CENTER);
-      
+
       // we must ensure the container is opaque. It is not opaque it introduces
       // painting glitches specially on Linux with JDK 1.5 and GTK look and feel.
       // GTK look and feel calls setOpaque(false)
-      if (c instanceof JComponent && !((JComponent)c).isOpaque()) {
-        ((JComponent)c).setOpaque(true);
+      if (c instanceof JComponent && !((JComponent) c).isOpaque()) {
+        ((JComponent) c).setOpaque(true);
       }
     }
 
@@ -630,8 +598,7 @@ public class JCollapsiblePane extends JPanel {
         Dimension dim = c.getPreferredSize();
         // width and height must be > 0 to be able to create an image
         if (dim.height > 0) {
-          img = getGraphicsConfiguration().createCompatibleImage(getWidth(),
-            dim.height);
+          img = getGraphicsConfiguration().createCompatibleImage(getWidth(), dim.height);
           c.setSize(getWidth(), dim.height);
           c.paint(img.getGraphics());
         } else {
@@ -639,7 +606,7 @@ public class JCollapsiblePane extends JPanel {
         }
       }
     }
-    
+
     public void paintComponent(Graphics g) {
       if (!useAnimation || c.isVisible()) {
         super.paintComponent(g);
@@ -659,10 +626,9 @@ public class JCollapsiblePane extends JPanel {
     }
 
     public void paint(Graphics g) {
-      Graphics2D g2d = (Graphics2D)g;
+      Graphics2D g2d = (Graphics2D) g;
       Composite oldComp = g2d.getComposite();
-      Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-        alpha);
+      Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
       g2d.setComposite(alphaComp);
       super.paint(g2d);
       g2d.setComposite(oldComp);

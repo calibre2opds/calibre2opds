@@ -19,7 +19,7 @@ package com.l2fprod.common.beans;
 
 import com.l2fprod.common.util.ResourceManager;
 
-import java.awt.Image;
+import java.awt.*;
 import java.beans.BeanDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -61,7 +61,7 @@ public class BaseBeanInfo extends SimpleBeanInfo {
   }
 
   public PropertyDescriptor[] getPropertyDescriptors() {
-    return (PropertyDescriptor[])properties.toArray(new PropertyDescriptor[0]);
+    return (PropertyDescriptor[]) properties.toArray(new PropertyDescriptor[0]);
   }
 
   public int getPropertyDescriptorCount() {
@@ -69,7 +69,7 @@ public class BaseBeanInfo extends SimpleBeanInfo {
   }
 
   public PropertyDescriptor getPropertyDescriptor(int index) {
-    return (PropertyDescriptor)properties.get(index);
+    return (PropertyDescriptor) properties.get(index);
   }
 
   protected PropertyDescriptor addPropertyDescriptor(PropertyDescriptor property) {
@@ -84,18 +84,15 @@ public class BaseBeanInfo extends SimpleBeanInfo {
         throw new IntrospectionException("bad property name");
       }
 
-      descriptor = ExtendedPropertyDescriptor
-       .newPropertyDescriptor(propertyName, getType());
-      
+      descriptor = ExtendedPropertyDescriptor.newPropertyDescriptor(propertyName, getType());
+
       try {
         descriptor.setDisplayName(getResources().getString(propertyName));
       } catch (MissingResourceException e) {
         // ignore, the resource may not be provided
       }
       try {
-        descriptor.setShortDescription(
-          getResources().getString(
-            propertyName + ".shortDescription"));
+        descriptor.setShortDescription(getResources().getString(propertyName + ".shortDescription"));
       } catch (MissingResourceException e) {
         // ignore, the resource may not be provided
       }
@@ -105,9 +102,10 @@ public class BaseBeanInfo extends SimpleBeanInfo {
       throw new RuntimeException(e);
     }
   }
-  
+
   /**
    * Removes the first occurrence of the property named <code>propertyName</code>
+   *
    * @param propertyName
    * @return the removed PropertyDescriptor or null if not found.
    */
@@ -115,8 +113,8 @@ public class BaseBeanInfo extends SimpleBeanInfo {
     if (propertyName == null) {
       throw new IllegalArgumentException("Property name can not be null");
     }
-    for (Iterator iter = properties.iterator(); iter.hasNext();) {
-      PropertyDescriptor property = (PropertyDescriptor)iter.next();
+    for (Iterator iter = properties.iterator(); iter.hasNext(); ) {
+      PropertyDescriptor property = (PropertyDescriptor) iter.next();
       if (propertyName.equals(property.getName())) {
         // remove the property from the list
         iter.remove();
@@ -125,10 +123,10 @@ public class BaseBeanInfo extends SimpleBeanInfo {
     }
     return null;
   }
-  
+
   /**
    * Get the icon for displaying this bean.
-   * 
+   *
    * @param kind Kind of icon.
    * @return Image for bean, or null if none.
    */
@@ -138,7 +136,7 @@ public class BaseBeanInfo extends SimpleBeanInfo {
 
   /**
    * Return a text describing the object.
-   * 
+   *
    * @param value an <code>Object</code> value
    * @return a text describing the object.
    */
@@ -149,7 +147,7 @@ public class BaseBeanInfo extends SimpleBeanInfo {
   /**
    * Return a text describing briefly the object. The text will be used
    * whereever a explanation is needed to give to the user
-   * 
+   *
    * @param value an <code>Object</code> value
    * @return a <code>String</code> value
    */
@@ -160,7 +158,7 @@ public class BaseBeanInfo extends SimpleBeanInfo {
   /**
    * Return a text describing the object. The text will be displayed in a
    * tooltip.
-   * 
+   *
    * @param value an <code>Object</code> value
    * @return a <code>String</code> value
    */

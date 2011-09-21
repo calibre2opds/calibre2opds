@@ -4,8 +4,8 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
 
 public class ThumbnailManager extends ImageManager {
-  
-  
+
+
   public ThumbnailManager(int maxSize) {
     super(maxSize);
   }

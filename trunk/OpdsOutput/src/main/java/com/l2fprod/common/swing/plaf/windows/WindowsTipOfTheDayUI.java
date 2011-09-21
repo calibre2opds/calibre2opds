@@ -21,36 +21,23 @@ import com.l2fprod.common.swing.JTipOfTheDay;
 import com.l2fprod.common.swing.JTipOfTheDay.ShowOnStartupChoice;
 import com.l2fprod.common.swing.plaf.basic.BasicTipOfTheDayUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Insets;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 
 public class WindowsTipOfTheDayUI extends BasicTipOfTheDayUI {
 
   public static ComponentUI createUI(JComponent c) {
-    return new WindowsTipOfTheDayUI((JTipOfTheDay)c);
+    return new WindowsTipOfTheDayUI((JTipOfTheDay) c);
   }
 
   public WindowsTipOfTheDayUI(JTipOfTheDay tipPane) {
     super(tipPane);
   }
 
-  public JDialog createDialog(Component parentComponent,
-    final ShowOnStartupChoice choice) {
+  public JDialog createDialog(Component parentComponent, final ShowOnStartupChoice choice) {
     return createDialog(parentComponent, choice, false);
   }
 
@@ -68,14 +55,12 @@ public class WindowsTipOfTheDayUI extends BasicTipOfTheDayUI {
 
     // tip area
     JPanel rightPane = new JPanel(new BorderLayout());
-    JLabel didYouKnow = new JLabel(UIManager
-      .getString("TipOfTheDay.didYouKnowText"));
+    JLabel didYouKnow = new JLabel(UIManager.getString("TipOfTheDay.didYouKnowText"));
     didYouKnow.setPreferredSize(new Dimension(50, 32));
     didYouKnow.setOpaque(true);
     didYouKnow.setBackground(UIManager.getColor("TextArea.background"));
-    didYouKnow.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0,
-      0, 2, 0, tipPane.getBackground()), BorderFactory.createEmptyBorder(4, 4,
-      4, 4)));
+    didYouKnow.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, tipPane.getBackground()),
+        BorderFactory.createEmptyBorder(4, 4, 4, 4)));
     didYouKnow.setFont(tipPane.getFont().deriveFont(Font.BOLD, 15));
     rightPane.add("North", didYouKnow);
 
@@ -92,11 +77,12 @@ public class WindowsTipOfTheDayUI extends BasicTipOfTheDayUI {
     public Insets getBorderInsets(Component c) {
       return new Insets(2, 2, 2, 2);
     }
+
     public boolean isBorderOpaque() {
       return false;
     }
-    public void paintBorder(Component c, Graphics g, int x, int y, int width,
-      int height) {
+
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
       g.setColor(UIManager.getColor("TipOfTheDay.background"));
       g.drawLine(x, y, x + width - 1, y);
       g.drawLine(x, y, x, y + height - 1);

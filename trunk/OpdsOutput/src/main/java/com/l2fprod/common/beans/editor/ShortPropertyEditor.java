@@ -19,7 +19,6 @@ package com.l2fprod.common.beans.editor;
 
 /**
  * ShortPropertyEditor.<br>
- *
  */
 public class ShortPropertyEditor extends NumberPropertyEditor {
 

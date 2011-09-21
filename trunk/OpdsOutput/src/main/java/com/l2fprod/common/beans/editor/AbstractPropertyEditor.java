@@ -17,16 +17,13 @@
  */
 package com.l2fprod.common.beans.editor;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyEditor;
 
 /**
  * AbstractPropertyEditor. <br>
- *  
  */
 public class AbstractPropertyEditor implements PropertyEditor {
 
@@ -56,7 +53,7 @@ public class AbstractPropertyEditor implements PropertyEditor {
   protected void firePropertyChange(Object oldValue, Object newValue) {
     listeners.firePropertyChange("value", oldValue, newValue);
   }
-    
+
   public Object getValue() {
     return null;
   }

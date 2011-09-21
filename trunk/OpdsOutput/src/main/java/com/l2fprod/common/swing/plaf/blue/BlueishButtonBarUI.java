@@ -20,23 +20,17 @@ package com.l2fprod.common.swing.plaf.blue;
 import com.l2fprod.common.swing.plaf.ButtonBarButtonUI;
 import com.l2fprod.common.swing.plaf.basic.BasicButtonBarUI;
 
-import java.awt.Color;
-
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import java.awt.*;
 
 /**
  * BlueishButtonBarUI. <br>
- *  
  */
 public class BlueishButtonBarUI extends BasicButtonBarUI {
 
@@ -47,14 +41,10 @@ public class BlueishButtonBarUI extends BasicButtonBarUI {
   protected void installDefaults() {
     Border b = bar.getBorder();
     if (b == null || b instanceof UIResource) {
-      bar.setBorder(
-        new BorderUIResource(
-          new CompoundBorder(
-            BorderFactory.createLineBorder(
-              UIManager.getColor("controlDkShadow")),
-            BorderFactory.createEmptyBorder(1, 1, 1, 1))));
+      bar.setBorder(new BorderUIResource(new CompoundBorder(BorderFactory.createLineBorder(UIManager.getColor("controlDkShadow")),
+          BorderFactory.createEmptyBorder(1, 1, 1, 1))));
     }
-    
+
     Color color = bar.getBackground();
     if (color == null || color instanceof ColorUIResource) {
       bar.setOpaque(true);
@@ -69,8 +59,6 @@ public class BlueishButtonBarUI extends BasicButtonBarUI {
     button.setOpaque(false);
   }
 
-  static class BlueishButtonBarButtonUI
-    extends BlueishButtonUI implements ButtonBarButtonUI {
-  }
+  static class BlueishButtonBarButtonUI extends BlueishButtonUI implements ButtonBarButtonUI {}
 
 }

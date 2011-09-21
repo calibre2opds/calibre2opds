@@ -21,36 +21,23 @@ import com.l2fprod.common.swing.plaf.FontChooserUI;
 import com.l2fprod.common.swing.plaf.JFontChooserAddon;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Window;
-
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * <code>JFontChooser</code> provides a pane of controls designed to allow a
  * user to manipulate and select a font.
- * 
- * @javabean.class
- *          name="JFontChooser"
- *          shortDescription="A component that supports selecting a Font."
- *          stopClass="javax.swing.JComponent"
- * 
- * @javabean.attribute
- *          name="isContainer"
- *          value="Boolean.FALSE"
- *          rtexpr="true"
- * 
- * @javabean.icons
- *          mono16="JFontChooser16-mono.gif"
- *          color16="JFontChooser16.gif"
- *          mono32="JFontChooser32-mono.gif"
- *          color32="JFontChooser32.gif"
+ *
+ * @javabean.class name="JFontChooser"
+ * shortDescription="A component that supports selecting a Font."
+ * stopClass="javax.swing.JComponent"
+ * @javabean.attribute name="isContainer"
+ * value="Boolean.FALSE"
+ * rtexpr="true"
+ * @javabean.icons mono16="JFontChooser16-mono.gif"
+ * color16="JFontChooser16.gif"
+ * mono32="JFontChooser32-mono.gif"
+ * color32="JFontChooser32.gif"
  */
 public class JFontChooser extends JComponent {
 
@@ -76,7 +63,7 @@ public class JFontChooser extends JComponent {
   /**
    * Creates a font chooser with an initial default font and a custom
    * model.
-   * 
+   *
    * @param model
    */
   public JFontChooser(FontChooserModel model) {
@@ -90,23 +77,21 @@ public class JFontChooser extends JComponent {
    * Notification from the <code>UIManager</code> that the L&F has
    * changed. Replaces the current UI object with the latest version
    * from the <code>UIManager</code>.
-   * 
+   *
    * @see javax.swing.JComponent#updateUI
    */
   public void updateUI() {
-    setUI((FontChooserUI)LookAndFeelAddons.getUI(this, FontChooserUI.class));
+    setUI((FontChooserUI) LookAndFeelAddons.getUI(this, FontChooserUI.class));
   }
 
   /**
    * Sets the L&F object that renders this component.
-   * 
+   *
    * @param ui the <code>FontChooserUI</code> L&F object
+   * @beaninfo bound: true
+   * hidden: true
+   * description: The UI object that implements the font chooser's LookAndFeel.
    * @see javax.swing.UIDefaults#getUI
-   * 
-   * @beaninfo
-   *  bound: true
-   *  hidden: true
-   *  description: The UI object that implements the font chooser's LookAndFeel.
    */
   public void setUI(FontChooserUI ui) {
     super.setUI(ui);
@@ -114,7 +99,7 @@ public class JFontChooser extends JComponent {
 
   /**
    * Returns the name of the L&F class that renders this component.
-   * 
+   *
    * @return the string "FontChooserUI"
    * @see javax.swing.JComponent#getUIClassID
    * @see javax.swing.UIDefaults#getUI
@@ -126,14 +111,12 @@ public class JFontChooser extends JComponent {
   /**
    * Sets the selected font of this JFontChooser. This will fire a <code>PropertyChangeEvent</code>
    * for the property named {@link #SELECTED_FONT_CHANGED_KEY}.
-   * 
+   *
    * @param f the font to select
+   * @javabean.property bound="true"
+   * preferred="true"
+   * shortDescription="The current font the chooser is to display"
    * @see javax.swing.JComponent#addPropertyChangeListener(java.beans.PropertyChangeListener)
-   * 
-   * @javabean.property
-   *  bound="true"
-   *  preferred="true"
-   *  shortDescription="The current font the chooser is to display"
    */
   public void setSelectedFont(Font f) {
     Font oldFont = selectedFont;
@@ -143,7 +126,7 @@ public class JFontChooser extends JComponent {
 
   /**
    * Gets the current font value from the font chooser.
-   * 
+   *
    * @return the current font value of the font chooser
    */
   public Font getSelectedFont() {
@@ -152,7 +135,7 @@ public class JFontChooser extends JComponent {
 
   /**
    * Gets the font chooser model of this font chooser.
-   * 
+   *
    * @return the font chooser model of this font chooser.
    */
   public FontChooserModel getModel() {
@@ -166,14 +149,14 @@ public class JFontChooser extends JComponent {
    * user presses the "Cancel" button or closes the dialog without
    * pressing "OK", then this method hides/disposes the dialog and
    * returns <code>null</code>.
-   * 
+   *
    * @param parent the parent <code>Component</code> for the
-   *          dialog
-   * @param title the String containing the dialog's title
+   *               dialog
+   * @param title  the String containing the dialog's title
    * @return the selected font or <code>null</code> if the user
    *         opted out
-   * @exception java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
-   *              returns true.
+   * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
+   *                                    returns true.
    * @see java.awt.GraphicsEnvironment#isHeadless
    */
   public Font showFontDialog(Component parent, String title) {
@@ -184,19 +167,18 @@ public class JFontChooser extends JComponent {
       return null;
     }
   }
-  
-  protected BaseDialog createDialog(Component parent, String title) {    
+
+  protected BaseDialog createDialog(Component parent, String title) {
     BaseDialog dialog;
-    Window window = (parent == null?JOptionPane.getRootFrame():SwingUtilities
-      .windowForComponent(parent));
+    Window window = (parent == null ? JOptionPane.getRootFrame() : SwingUtilities.windowForComponent(parent));
     if (window instanceof Frame) {
-      dialog = new BaseDialog((Frame)window, title, true);
+      dialog = new BaseDialog((Frame) window, title, true);
     } else {
-      dialog = new BaseDialog((Dialog)window, title, true);
+      dialog = new BaseDialog((Dialog) window, title, true);
     }
     dialog.setDialogMode(BaseDialog.OK_CANCEL_DIALOG);
     dialog.getBanner().setVisible(false);
-    
+
     dialog.getContentPane().setLayout(new BorderLayout());
     dialog.getContentPane().add("Center", this);
     dialog.pack();
@@ -204,23 +186,19 @@ public class JFontChooser extends JComponent {
 
     return dialog;
   }
-  
+
   /**
    * Similar to {@link #showFontDialog(Component, String)} except it can be
    * called from a static context. Prefer
    * {@link #showFontDialog(Component, String)} if you want to control the
    * dialog created by the method call or if you want to specify a custom
    * {@link FontChooserModel}.
-   * 
-   * @param parent
-   *          the parent <code>Component</code> for the dialog
-   * @param title
-   *          the String containing the dialog's title
-   * @param initialFont
-   *          the initial Font set when the font-chooser is shown
+   *
+   * @param parent      the parent <code>Component</code> for the dialog
+   * @param title       the String containing the dialog's title
+   * @param initialFont the initial Font set when the font-chooser is shown
    * @return the selected font or <code>null</code> if the user opted out
-   * @exception java.awt.HeadlessException
-   *              if GraphicsEnvironment.isHeadless() returns true.
+   * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless() returns true.
    * @see java.awt.GraphicsEnvironment#isHeadless
    * @see #showFontDialog(Component, String)
    */

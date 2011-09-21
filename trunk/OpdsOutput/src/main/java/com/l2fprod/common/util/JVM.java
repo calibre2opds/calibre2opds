@@ -31,6 +31,7 @@ public class JVM {
   public final static int JDK1_6 = 16;
 
   private static JVM current;
+
   static {
     current = new JVM();
   }
@@ -47,7 +48,6 @@ public class JVM {
   /**
    * Creates a new JVM data from the <code>java.version</code>
    * System property
-   *  
    */
   public JVM() {
     this(System.getProperty("java.version"));

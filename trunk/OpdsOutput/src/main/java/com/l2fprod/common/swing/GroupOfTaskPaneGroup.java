@@ -25,7 +25,7 @@ import java.beans.PropertyChangeListener;
  * JTaskPaneGroups. Creating a set of JTaskPaneGroups with the same
  * GroupOfTaskPaneGroup object means that expanding one of those JTaskPaneGroups
  * will collapse all other JTaskPaneGroups in the group.
- * 
+ *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  */
 public class GroupOfTaskPaneGroup implements PropertyChangeListener {
@@ -34,7 +34,7 @@ public class GroupOfTaskPaneGroup implements PropertyChangeListener {
 
   /**
    * Adds a <code>JTaskPaneGroup</code> to this group.
-   * 
+   *
    * @param taskpaneGroup
    */
   public void add(JTaskPaneGroup taskpaneGroup) {
@@ -50,13 +50,13 @@ public class GroupOfTaskPaneGroup implements PropertyChangeListener {
       // we have a selection, so this taskpane must be collapsed
       taskpaneGroup.setExpanded(false);
     }
-     
+
     maybeUpdateSelection(taskpaneGroup);
   }
 
   /**
    * Removes a <code>JTaskPaneGroup</code> from this group.
-   * 
+   *
    * @param taskpaneGroup
    */
   public void remove(JTaskPaneGroup taskpaneGroup) {
@@ -84,13 +84,11 @@ public class GroupOfTaskPaneGroup implements PropertyChangeListener {
   }
 
   private void register(JTaskPaneGroup taskpaneGroup) {
-    taskpaneGroup.addPropertyChangeListener(
-        JTaskPaneGroup.EXPANDED_CHANGED_KEY, this);
+    taskpaneGroup.addPropertyChangeListener(JTaskPaneGroup.EXPANDED_CHANGED_KEY, this);
   }
 
   private void unregister(JTaskPaneGroup taskpaneGroup) {
-    taskpaneGroup.removePropertyChangeListener(
-        JTaskPaneGroup.EXPANDED_CHANGED_KEY, this);
+    taskpaneGroup.removePropertyChangeListener(JTaskPaneGroup.EXPANDED_CHANGED_KEY, this);
   }
 
 }

@@ -22,4 +22,4 @@ package com.l2fprod.common.swing.plaf.windows;
  * it extends the XP look and feel and overrides the <code>JTaskPane</code>
  * and <code>JTaskPaneGroup</code> UIs.
  */
-public class WindowsClassicLookAndFeelAddons extends WindowsLookAndFeelAddons { }
+public class WindowsClassicLookAndFeelAddons extends WindowsLookAndFeelAddons {}

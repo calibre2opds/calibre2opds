@@ -17,24 +17,19 @@
  */
 package com.l2fprod.common.util.converter;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.StringTokenizer;
-
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.InsetsUIResource;
+import java.awt.*;
+import java.util.StringTokenizer;
 
 /**
  * AWTConverters. <br>Converter commonly used AWT classes like Point,
  * Dimension, Rectangle, Insets to/from Strings and between each others when
  * possible.
- * 
+ * <p/>
  * The following convertions are supported:
- * 
+ * <p/>
  * <table>
  * <tr>
  * <th>From</th>
@@ -85,10 +80,10 @@ public class AWTConverters implements Converter {
 
     registry.addConverter(Point.class, String.class, this);
     registry.addConverter(String.class, Point.class, this);
-    
+
     registry.addConverter(Rectangle.class, String.class, this);
     registry.addConverter(String.class, Rectangle.class, this);
-    
+
     registry.addConverter(Font.class, String.class, this);
     registry.addConverter(FontUIResource.class, String.class, this);
   }
@@ -96,39 +91,22 @@ public class AWTConverters implements Converter {
   public Object convert(Class type, Object value) {
     if (String.class.equals(type)) {
       if (value instanceof Rectangle) {
-        return ((Rectangle)value).getX()
-          + " "
-          + ((Rectangle)value).getY()
-          + " "
-          + ((Rectangle)value).getWidth()
-          + " "
-          + ((Rectangle)value).getHeight();
+        return ((Rectangle) value).getX() + " " + ((Rectangle) value).getY() + " " + ((Rectangle) value).getWidth() + " " +
+            ((Rectangle) value).getHeight();
       } else if (value instanceof Insets) {
-        return ((Insets)value).top
-          + " "
-          + ((Insets)value).left
-          + " "
-          + ((Insets)value).bottom
-          + " "
-          + ((Insets)value).right;
+        return ((Insets) value).top + " " + ((Insets) value).left + " " + ((Insets) value).bottom + " " + ((Insets) value).right;
       } else if (value instanceof Dimension) {
-        return ((Dimension)value).getWidth()
-          + " x "
-          + ((Dimension)value).getHeight();
+        return ((Dimension) value).getWidth() + " x " + ((Dimension) value).getHeight();
       } else if (Point.class.equals(value.getClass())) {
-        return ((Point)value).getX() + " " + ((Point)value).getY();
+        return ((Point) value).getX() + " " + ((Point) value).getY();
       } else if (value instanceof Font) {
-        return ((Font)value).getFontName()
-          + ", "
-          + ((Font)value).getStyle()
-          + ", "
-          + ((Font)value).getSize();
+        return ((Font) value).getFontName() + ", " + ((Font) value).getStyle() + ", " + ((Font) value).getSize();
       }
     }
 
     if (value instanceof String) {
       if (Rectangle.class.equals(type)) {
-        double[] values = convert((String)value, 4, " ");
+        double[] values = convert((String) value, 4, " ");
         if (values == null) {
           throw new IllegalArgumentException("Invalid format");
         }
@@ -136,17 +114,13 @@ public class AWTConverters implements Converter {
         rect.setFrame(values[0], values[1], values[2], values[3]);
         return rect;
       } else if (Insets.class.equals(type)) {
-        double[] values = convert((String)value, 4, " ");
+        double[] values = convert((String) value, 4, " ");
         if (values == null) {
           throw new IllegalArgumentException("Invalid format");
         }
-        return new Insets(
-          (int)values[0],
-          (int)values[1],
-          (int)values[2],
-          (int)values[3]);
+        return new Insets((int) values[0], (int) values[1], (int) values[2], (int) values[3]);
       } else if (Dimension.class.equals(type)) {
-        double[] values = convert((String)value, 2, "x");
+        double[] values = convert((String) value, 2, "x");
         if (values == null) {
           throw new IllegalArgumentException("Invalid format");
         }
@@ -154,7 +128,7 @@ public class AWTConverters implements Converter {
         dim.setSize(values[0], values[1]);
         return dim;
       } else if (Point.class.equals(type)) {
-        double[] values = convert((String)value, 2, " ");
+        double[] values = convert((String) value, 2, " ");
         if (values == null) {
           throw new IllegalArgumentException("Invalid format");
         }

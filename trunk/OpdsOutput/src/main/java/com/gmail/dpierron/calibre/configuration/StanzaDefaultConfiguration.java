@@ -6,15 +6,12 @@ import com.gmail.dpierron.calibre.opds.indexer.Index;
 import java.io.File;
 import java.util.Locale;
 
-
-
-
 public class StanzaDefaultConfiguration extends DefaultConfiguration implements ReadOnlyStanzaConfigurationInterface {
 
   public String getLanguage() {
     return Locale.getDefault().getLanguage();
   }
-  
+
   public String getCatalogFolderName() {
     return StanzaConstants.CATALOGFOLDER;
   }
@@ -56,12 +53,12 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
 
   public boolean getCoverResize() {
-      return StanzaConstants.COVER_RESIZE;
-    }
+    return StanzaConstants.COVER_RESIZE;
+  }
 
   public boolean getThumbnailGenerate() {
-      return StanzaConstants.THUMBNAIL_GENERATE;
-    }
+    return StanzaConstants.THUMBNAIL_GENERATE;
+  }
 
   public int getThumbnailHeight() {
     return StanzaConstants.THUMBNAIL_HEIGHT;
@@ -85,7 +82,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getSuppressRatingsInTitles() {
-      return StanzaConstants.suppressRatingsInTitles;
+    return StanzaConstants.suppressRatingsInTitles;
   }
 
   public boolean getGenerateDownloads() {
@@ -101,7 +98,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getIncludeBooksWithNoFile() {
-	  return StanzaConstants.INCLUDEBOOKSWITHNOFILE;
+    return StanzaConstants.INCLUDEBOOKSWITHNOFILE;
   }
 
   public String getBookLanguageTag() {
@@ -183,11 +180,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public String getTagsToMakeDeep() {
     return StanzaConstants.tagsToMakeDeep;
   }
-  
+
   public boolean getBrowseByCoverWithoutSplit() {
     return StanzaConstants.browseByCoverWithoutSplit;
   }
-  
+
   public int getMinBooksToMakeDeepLevel() {
     return StanzaConstants.minBooksToMakeDeepLevel;
   }
@@ -203,15 +200,15 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public boolean getIncludeOnlyOneFile() {
     return StanzaConstants.IncludeOnlyOneFile;
   }
-  
+
   public CompatibilityTrick getCompatibilityTrick() {
     return StanzaConstants.COMPATIBILITYTRICK;
   }
-  
+
   public boolean getZipTrookCatalog() {
     return StanzaConstants.ZipTrookCatalog;
   }
-  
+
   public boolean getReprocessEpubMetadata() {
     return StanzaConstants.ReprocessEpubMetadata;
   }
@@ -292,4 +289,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.IndexFilterAlgorithm;
   }
 
+  public String getUrlBase() {
+    return StanzaConstants.UrlBase;
+  }
 }

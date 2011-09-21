@@ -19,8 +19,7 @@ package com.l2fprod.common.swing;
 
 import com.l2fprod.common.beans.editor.FixedButton;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.*;
 
 public interface ComponentFactory {
 
@@ -35,7 +34,7 @@ public interface ComponentFactory {
     public static ComponentFactory getFactory() {
       return factory;
     }
-    
+
     public static void setFactory(ComponentFactory factory) {
       Helper.factory = factory;
     }
@@ -45,6 +44,7 @@ public interface ComponentFactory {
     public JButton createMiniButton() {
       return new FixedButton();
     }
+
     public JComboBox createComboBox() {
       return new JComboBox();
     }

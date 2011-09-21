@@ -17,20 +17,18 @@
  */
 package com.l2fprod.common.swing.plaf;
 
-import java.awt.Component;
-
-import javax.swing.JScrollPane;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Tagging interface for the JOutlookBar UI.
- *  
  */
 public interface OutlookBarUI {
 
   /**
-   * @see com.l2fprod.common.swing.JOutlookBar#makeScrollPane(Component)
    * @param component
    * @return a JScrollPane with <code>component</code> as view
+   * @see com.l2fprod.common.swing.JOutlookBar#makeScrollPane(Component)
    */
   JScrollPane makeScrollPane(Component component);
 
