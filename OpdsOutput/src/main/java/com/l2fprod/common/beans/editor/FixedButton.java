@@ -19,11 +19,8 @@ package com.l2fprod.common.beans.editor;
 
 import com.l2fprod.common.util.OS;
 
-import java.awt.Dimension;
-import java.awt.Insets;
-
-import javax.swing.JButton;
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * A button with a fixed size to workaround bugs in OSX. Submitted by Hani
@@ -38,7 +35,7 @@ public final class FixedButton extends JButton {
     if (OS.isMacOSX() && UIManager.getLookAndFeel().isNativeLookAndFeel()) {
       setPreferredSize(new Dimension(16, 30));
     }
-    
+
     setMargin(new Insets(0, 0, 0, 0));
   }
 

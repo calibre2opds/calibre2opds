@@ -36,32 +36,32 @@ public enum JDOM {
   private Transformer mainTransformer;
   private SAXBuilder sb;
 
-    public Transformer getHeaderTransformer() {
-        if (headerTransformer == null) {
-            try {
-                headerTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("header.xsl")));
-                setParametersOnCatalog(headerTransformer);
-                headerTransformer.setParameter("programName", Constants.PROGNAME);
-                headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
-                headerTransformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
-                headerTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
-                headerTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
-                headerTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
-                headerTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
-                headerTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
-                headerTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
-                headerTransformer.setParameter("intro.team.list3", Localization.Main.getText("intro.team.list3"));
-                headerTransformer.setParameter("intro.team.list4", Localization.Main.getText("intro.team.list4"));
-                headerTransformer.setParameter("intro.thanks.1", Localization.Main.getText("intro.thanks.1"));
-                headerTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
-            } catch (TransformerConfigurationException e) {
-                logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
-            }
-        }
-        return headerTransformer;
+  public Transformer getHeaderTransformer() {
+    if (headerTransformer == null) {
+      try {
+        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("header.xsl")));
+        setParametersOnCatalog(headerTransformer);
+        headerTransformer.setParameter("programName", Constants.PROGNAME);
+        headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
+        headerTransformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
+        headerTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
+        headerTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
+        headerTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
+        headerTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
+        headerTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
+        headerTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
+        headerTransformer.setParameter("intro.team.list3", Localization.Main.getText("intro.team.list3"));
+        headerTransformer.setParameter("intro.team.list4", Localization.Main.getText("intro.team.list4"));
+        headerTransformer.setParameter("intro.thanks.1", Localization.Main.getText("intro.thanks.1"));
+        headerTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
+      } catch (TransformerConfigurationException e) {
+        logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
+      }
     }
+    return headerTransformer;
+  }
 
-    public enum Namespace {
+  public enum Namespace {
     Atom("", "http://www.w3.org/2005/Atom"),
     Opds("opds", "http://opds-spec.org/2010/catalog"),
     Opf("opf", "http://www.idpf.org/2007/opf"),
@@ -94,7 +94,8 @@ public enum JDOM {
     lw = (long) Math.floor(dw);
     catalogTransformer.setParameter("thumbWidth", lw);
     catalogTransformer.setParameter("thumbHeight", lh);
-    catalogTransformer.setParameter("generateDownloads", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
+    catalogTransformer.setParameter("generateDownloads",
+        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
     catalogTransformer.setParameter("libraryTitle", ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle());
     catalogTransformer.setParameter("i18n.backToMain", Localization.Main.getText("i18n.backToMain"));
     catalogTransformer.setParameter("i18n.downloads", Localization.Main.getText("i18n.downloads"));
@@ -105,10 +106,14 @@ public enum JDOM {
     catalogTransformer.setParameter("i18n.downloadsection", Localization.Main.getText("i18n.downloadsection"));
     catalogTransformer.setParameter("i18n.relatedsection", Localization.Main.getText("i18n.relatedsection"));
     catalogTransformer.setParameter("i18n.linksection", Localization.Main.getText("i18n.linksection"));
-    String dateGenerated = DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
+    String dateGenerated =
+        DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()))
+            .format(new Date());
     catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
-    catalogTransformer.setParameter("browseByCover", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
-    catalogTransformer.setParameter("generateIndex", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
+    catalogTransformer.setParameter("browseByCover",
+        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
+    catalogTransformer.setParameter("generateIndex",
+        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
   }
 
   public Transformer getCatalogTransformer() {
@@ -126,7 +131,8 @@ public enum JDOM {
   public Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
+        bookFullEntryTransformer =
+            getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
@@ -136,12 +142,11 @@ public enum JDOM {
   }
 
   private String getXsltFilename() {
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick())
-    {
-    case TROOK:
-            return "catalog-TROOK.xsl";
-    default:
-            return "catalog.xsl";
+    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
+      case TROOK:
+        return "catalog-TROOK.xsl";
+      default:
+        return "catalog.xsl";
     }
   }
 
@@ -233,14 +238,14 @@ public enum JDOM {
   static Tidy tidyForTidyInputStream = null;
 
   /**
-    * Routine to tidy up the HTML in the Summary field
-    * @param in
-    * @return
-    * @throws JDOMException
-    * @throws IOException
-    */
-  public List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException
-  {
+   * Routine to tidy up the HTML in the Summary field
+   *
+   * @param in
+   * @return
+   * @throws JDOMException
+   * @throws IOException
+   */
+  public List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException {
     List<Element> result = null;
     // initializing tidy
     if (logger.isTraceEnabled())

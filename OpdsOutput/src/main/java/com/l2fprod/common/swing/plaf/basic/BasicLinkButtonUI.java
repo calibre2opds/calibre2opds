@@ -17,22 +17,16 @@
  */
 package com.l2fprod.common.swing.plaf.basic;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
-import javax.swing.JComponent;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Basic implementation of the <code>JLinkButton</code> UI. <br>
@@ -47,7 +41,7 @@ public class BasicLinkButtonUI extends BasicButtonUI {
   private static Rectangle textRect = new Rectangle();
   private static Rectangle iconRect = new Rectangle();
   private static MouseListener handCursorListener = new HandCursor();
-  
+
   protected int dashedRectGapX;
   protected int dashedRectGapY;
   protected int dashedRectGapWidth;
@@ -74,18 +68,18 @@ public class BasicLinkButtonUI extends BasicButtonUI {
     super.installListeners(b);
     b.addMouseListener(handCursorListener);
   }
-  
+
   protected void uninstallListeners(AbstractButton b) {
     super.uninstallListeners(b);
     b.removeMouseListener(handCursorListener);
   }
-  
+
   protected Color getFocusColor() {
     return focusColor;
   }
 
   public void paint(Graphics g, JComponent c) {
-    AbstractButton b = (AbstractButton)c;
+    AbstractButton b = (AbstractButton) c;
     ButtonModel model = b.getModel();
 
     FontMetrics fm = g.getFontMetrics();
@@ -104,19 +98,8 @@ public class BasicLinkButtonUI extends BasicButtonUI {
     g.setFont(f);
 
     // layout the text and icon
-    String text =
-      SwingUtilities.layoutCompoundLabel(
-        c,
-        fm,
-        b.getText(),
-        b.getIcon(),
-        b.getVerticalAlignment(),
-        b.getHorizontalAlignment(),
-        b.getVerticalTextPosition(),
-        b.getHorizontalTextPosition(),
-        viewRect,
-        iconRect,
-        textRect,
+    String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(), b.getIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(),
+        b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect,
         b.getText() == null ? 0 : b.getIconTextGap());
 
     clearTextShiftOffset();
@@ -131,15 +114,14 @@ public class BasicLinkButtonUI extends BasicButtonUI {
       paintIcon(g, c, iconRect);
     }
 
-    Composite oldComposite = ((Graphics2D)g).getComposite();
+    Composite oldComposite = ((Graphics2D) g).getComposite();
 
     if (model.isRollover()) {
-      ((Graphics2D)g).setComposite(
-        AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+      ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
     }
 
     if (text != null && !text.equals("")) {
-      View v = (View)c.getClientProperty(BasicHTML.propertyKey);
+      View v = (View) c.getClientProperty(BasicHTML.propertyKey);
       if (v != null) {
         textRect.x += getTextShiftOffset();
         textRect.y += getTextShiftOffset();
@@ -156,15 +138,10 @@ public class BasicLinkButtonUI extends BasicButtonUI {
       paintFocus(g, b, viewRect, textRect, iconRect);
     }
 
-    ((Graphics2D)g).setComposite(oldComposite);
+    ((Graphics2D) g).setComposite(oldComposite);
   }
 
-  protected void paintFocus(
-    Graphics g,
-    AbstractButton b,
-    Rectangle viewRect,
-    Rectangle textRect,
-    Rectangle iconRect) {
+  protected void paintFocus(Graphics g, AbstractButton b, Rectangle viewRect, Rectangle textRect, Rectangle iconRect) {
     if (b.getParent() instanceof JToolBar) {
       // Windows doesn't draw the focus rect for buttons in a toolbar.
       return;
@@ -174,12 +151,7 @@ public class BasicLinkButtonUI extends BasicButtonUI {
     int width = b.getWidth();
     int height = b.getHeight();
     g.setColor(getFocusColor());
-    BasicGraphicsUtils.drawDashedRect(
-      g,
-      dashedRectGapX,
-      dashedRectGapY,
-      width - dashedRectGapWidth,
-      height - dashedRectGapHeight);
+    BasicGraphicsUtils.drawDashedRect(g, dashedRectGapX, dashedRectGapY, width - dashedRectGapWidth, height - dashedRectGapHeight);
   }
 
   protected void paintButtonPressed(Graphics g, AbstractButton b) {
@@ -188,9 +160,9 @@ public class BasicLinkButtonUI extends BasicButtonUI {
 
   static class HandCursor extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
-      e.getComponent().setCursor(
-        Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
+
     public void mouseExited(MouseEvent e) {
       e.getComponent().setCursor(Cursor.getDefaultCursor());
     }

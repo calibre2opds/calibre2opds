@@ -19,12 +19,11 @@ package com.l2fprod.common.beans.editor;
 
 /**
  * LongPropertyEditor.<br>
- *
  */
 public class LongPropertyEditor extends NumberPropertyEditor {
 
   public LongPropertyEditor() {
     super(Long.class);
   }
-    
+
 }

@@ -23,37 +23,7 @@ import com.l2fprod.common.swing.plaf.DirectoryChooserUI;
 import com.l2fprod.common.swing.tree.LazyMutableTreeNode;
 import com.l2fprod.common.util.OS;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Stack;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -62,23 +32,28 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicFileChooserUI;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.List;
+
+import com.l2fprod.common.swing.plaf.windows.WindowsDirectoryChooserUI.Queue;
 
 /**
  * WindowsDirectoryChooserUI. <br>
- *  
  */
-public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
-  DirectoryChooserUI {
+public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements DirectoryChooserUI {
 
   public static ComponentUI createUI(JComponent c) {
-    return new WindowsDirectoryChooserUI((JFileChooser)c);
+    return new WindowsDirectoryChooserUI((JFileChooser) c);
   }
-  
+
   private static Queue nodeQueue;
 
   private JFileChooser chooser;
@@ -102,12 +77,11 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
 
   public void rescanCurrentDirectory(JFileChooser fc) {
     super.rescanCurrentDirectory(fc);
-    findFile(chooser.getSelectedFile() == null?chooser.getCurrentDirectory()
-      :chooser.getSelectedFile(), true, true);
+    findFile(chooser.getSelectedFile() == null ? chooser.getCurrentDirectory() : chooser.getSelectedFile(), true, true);
   }
 
   public void ensureFileIsVisible(JFileChooser fc, File f) {
-    super.ensureFileIsVisible(fc, f);    
+    super.ensureFileIsVisible(fc, f);
     File selectedFile = fc.getSelectedFile();
     boolean select = selectedFile != null && selectedFile.equals(f);
     findFile(f, select, false);
@@ -116,9 +90,8 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   protected String getToolTipText(MouseEvent event) {
     TreePath path = tree.getPathForLocation(event.getX(), event.getY());
     if (path != null && path.getLastPathComponent() instanceof FileTreeNode) {
-      FileTreeNode node = (FileTreeNode)path.getLastPathComponent();
-      String typeDescription = getFileView(chooser).getTypeDescription(
-        node.getFile());
+      FileTreeNode node = (FileTreeNode) path.getLastPathComponent();
+      String typeDescription = getFileView(chooser).getTypeDescription(node.getFile());
       if (typeDescription == null || typeDescription.length() == 0) {
         return node.toString();
       } else {
@@ -158,7 +131,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     tree.setShowsRootHandles(false);
     tree.setCellRenderer(new FileSystemTreeRenderer());
     tree.setToolTipText("");
-    
+
     chooser.add("Center", treeScroll = new JScrollPane(tree));
     treeScroll.setPreferredSize(new Dimension(300, 300));
 
@@ -168,12 +141,12 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     cancelButton = new JButton();
     cancelButton.setAction(getCancelSelectionAction());
     cancelButton.setDefaultCapable(true);
-    
+
     newFolderButton = new JButton();
     newFolderButton.setAction(getNewFolderAction());
 
     buttonPanel = new JPanel(new GridBagLayout());
-    
+
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     gridBagConstraints.insets = new Insets(0, 0, 0, 25);
     gridBagConstraints.anchor = GridBagConstraints.EAST;
@@ -207,16 +180,12 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   protected void installStrings(JFileChooser fc) {
     super.installStrings(fc);
 
-    saveButtonToolTipText = UIManager
-      .getString("DirectoryChooser.saveButtonToolTipText");
-    openButtonToolTipText = UIManager
-      .getString("DirectoryChooser.openButtonToolTipText");
-    cancelButtonToolTipText = UIManager
-      .getString("DirectoryChooser.cancelButtonToolTipText");
+    saveButtonToolTipText = UIManager.getString("DirectoryChooser.saveButtonToolTipText");
+    openButtonToolTipText = UIManager.getString("DirectoryChooser.openButtonToolTipText");
+    cancelButtonToolTipText = UIManager.getString("DirectoryChooser.cancelButtonToolTipText");
 
     newFolderText = UIManager.getString("DirectoryChooser.newFolderButtonText");
-    newFolderToolTipText = UIManager
-      .getString("DirectoryChooser.newFolderButtonToolTipText");
+    newFolderToolTipText = UIManager.getString("DirectoryChooser.newFolderButtonToolTipText");
   }
 
   protected void uninstallStrings(JFileChooser fc) {
@@ -239,10 +208,9 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     super.installListeners(fc);
 
     tree.addTreeSelectionListener(new SelectionListener());
-    
+
     fc.getActionMap().put("refreshTree", new UpdateAction());
-    fc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
-      KeyStroke.getKeyStroke("F5"), "refreshTree");
+    fc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("F5"), "refreshTree");
   }
 
   private class UpdateAction extends AbstractAction {
@@ -281,7 +249,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
 
     newFolderButton.setText(newFolderText);
     newFolderButton.setToolTipText(newFolderToolTipText);
-    newFolderButton.setVisible(((JDirectoryChooser)chooser).isShowingCreateDirectory());
+    newFolderButton.setVisible(((JDirectoryChooser) chooser).isShowingCreateDirectory());
 
     buttonPanel.setVisible(chooser.getControlButtonsAreShown());
 
@@ -290,16 +258,15 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     cancelButton.setPreferredSize(null);
 
     Dimension preferredSize = approveButton.getMinimumSize();
-    preferredSize = new Dimension(Math.max(preferredSize.width, cancelButton
-      .getPreferredSize().width), preferredSize.height);
+    preferredSize = new Dimension(Math.max(preferredSize.width, cancelButton.getPreferredSize().width), preferredSize.height);
     approveButton.setPreferredSize(preferredSize);
-    cancelButton.setPreferredSize(preferredSize);    
+    cancelButton.setPreferredSize(preferredSize);
   }
 
   /**
    * Ensures the file is visible, tree expanded and optionally
    * selected
-   * 
+   *
    * @param fileToLocate
    * @param selectFile
    */
@@ -333,8 +300,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       List path = new ArrayList();
 
       // start from the root
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getModel()
-        .getRoot();
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getModel().getRoot();
       path.add(node);
 
       DefaultMutableTreeNode current;
@@ -349,8 +315,8 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       while (files.size() > 0 && found) {
         found = false;
         for (int i = 0, c = node.getChildCount(); i < c; i++) {
-          current = (DefaultMutableTreeNode)node.getChildAt(i);
-          File f = ((FileTreeNode)current).getFile();
+          current = (DefaultMutableTreeNode) node.getChildAt(i);
+          File f = ((FileTreeNode) current).getFile();
           if (files.get(0).equals(f)) {
             path.add(current);
             files.remove(0);
@@ -366,8 +332,8 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       // subpath only
       pathToSelect = new TreePath(path.toArray());
       if (pathToSelect.getLastPathComponent() instanceof FileTreeNode && reload) {
-        ((FileTreeNode)(pathToSelect.getLastPathComponent())).clear();
-        enqueueChildren((FileTreeNode)pathToSelect.getLastPathComponent());
+        ((FileTreeNode) (pathToSelect.getLastPathComponent())).clear();
+        enqueueChildren((FileTreeNode) pathToSelect.getLastPathComponent());
       }
     } finally {
       // re-enable background loading
@@ -385,19 +351,15 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   private class ChangeListener implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
-      if (JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY.equals(evt
-        .getPropertyName())) {
+      if (JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
         updateView(chooser);
       }
 
-      if (JFileChooser.MULTI_SELECTION_ENABLED_CHANGED_PROPERTY.equals(evt
-        .getPropertyName())) {
+      if (JFileChooser.MULTI_SELECTION_ENABLED_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
         if (chooser.isMultiSelectionEnabled()) {
-          tree.getSelectionModel().setSelectionMode(
-            TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+          tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         } else {
-          tree.getSelectionModel().setSelectionMode(
-            TreeSelectionModel.SINGLE_TREE_SELECTION);
+          tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         }
       }
 
@@ -406,8 +368,8 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       }
 
       if (JFileChooser.ACCESSORY_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
-        Component oldValue = (Component)evt.getOldValue();
-        Component newValue = (Component)evt.getNewValue();
+        Component oldValue = (Component) evt.getOldValue();
+        Component newValue = (Component) evt.getNewValue();
         if (oldValue != null) {
           chooser.remove(oldValue);
         }
@@ -418,13 +380,11 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
         chooser.repaint();
       }
 
-      if (JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY.equals(evt
-        .getPropertyName())) {
+      if (JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
         updateView(chooser);
       }
-      
-      if (JDirectoryChooser.SHOWING_CREATE_DIRECTORY_CHANGED_KEY.equals(evt
-        .getPropertyName())) {
+
+      if (JDirectoryChooser.SHOWING_CREATE_DIRECTORY_CHANGED_KEY.equals(evt.getPropertyName())) {
         updateView(chooser);
       }
     }
@@ -439,8 +399,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       // the current directory is the one currently selected
       TreePath currentDirectoryPath = tree.getSelectionPath();
       if (currentDirectoryPath != null) {
-        File currentDirectory = ((FileTreeNode)currentDirectoryPath
-          .getLastPathComponent()).getFile();
+        File currentDirectory = ((FileTreeNode) currentDirectoryPath.getLastPathComponent()).getFile();
         chooser.setCurrentDirectory(currentDirectory);
       }
     }
@@ -459,15 +418,14 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
 
     List files = new ArrayList();
     for (int i = 0, c = selectedPaths.length; i < c; i++) {
-      LazyMutableTreeNode node = (LazyMutableTreeNode)selectedPaths[i]
-        .getLastPathComponent();
+      LazyMutableTreeNode node = (LazyMutableTreeNode) selectedPaths[i].getLastPathComponent();
       if (node instanceof FileTreeNode) {
-        File f = ((FileTreeNode)node).getFile();
+        File f = ((FileTreeNode) node).getFile();
         files.add(f);
       }
     }
 
-    chooser.setSelectedFiles((File[])files.toArray(new File[0]));
+    chooser.setSelectedFiles((File[]) files.toArray(new File[0]));
   }
 
   private class ApproveSelectionAction extends AbstractAction {
@@ -496,8 +454,8 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       if (event.getPath() != null) {
         Object lastElement = event.getPath().getLastPathComponent();
         if (lastElement instanceof FileTreeNode && useNodeQueue) {
-          if (((FileTreeNode)lastElement).isLoaded()) {
-            enqueueChildren((FileTreeNode)lastElement);
+          if (((FileTreeNode) lastElement).isLoaded()) {
+            enqueueChildren((FileTreeNode) lastElement);
           }
         }
       }
@@ -505,21 +463,20 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   }
 
   private void enqueueChildren(FileTreeNode node) {
-    for (Enumeration e = node.children(); e.hasMoreElements();) {
-      addToQueue((FileTreeNode)e.nextElement(), tree);
+    for (Enumeration e = node.children(); e.hasMoreElements(); ) {
+      addToQueue((FileTreeNode) e.nextElement(), tree);
     }
   }
 
   private class FileSystemTreeRenderer extends DefaultTreeCellRenderer {
 
-    public Component getTreeCellRendererComponent(JTree tree, Object value,
-      boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       super.getTreeCellRendererComponent(tree, value, sel, expanded, false,
-      // even "leaf" folders should look like other folders
-        row, hasFocus);
+          // even "leaf" folders should look like other folders
+          row, hasFocus);
 
       if (value instanceof FileTreeNode) {
-        FileTreeNode node = (FileTreeNode)value;
+        FileTreeNode node = (FileTreeNode) value;
         setText(getFileView(chooser).getName(node.getFile()));
         // @PMD:REVIEWED:EmptyIfStmt: by fred on 14/08/04 17:25
         if (OS.isMacOSX() && UIManager.getLookAndFeel().isNativeLookAndFeel()) {
@@ -546,33 +503,22 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
       File currentDirectory = fc.getCurrentDirectory();
 
       if (!currentDirectory.canWrite()) {
-        JOptionPane.showMessageDialog(fc,
-          UIManager
-          .getString("DirectoryChooser.cantCreateFolderHere"),
-          UIManager
-          .getString("DirectoryChooser.cantCreateFolderHere.title"),
-          JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(fc, UIManager.getString("DirectoryChooser.cantCreateFolderHere"), UIManager.getString("DirectoryChooser.cantCreateFolderHere.title"), JOptionPane.ERROR_MESSAGE);
         return;
       }
-      
-      String newFolderName = JOptionPane.showInputDialog(fc, UIManager
-        .getString("DirectoryChooser.enterFolderName"), newFolderText,
-        JOptionPane.QUESTION_MESSAGE);
+
+      String newFolderName = JOptionPane.showInputDialog(fc, UIManager.getString("DirectoryChooser.enterFolderName"), newFolderText, JOptionPane.QUESTION_MESSAGE);
       if (newFolderName != null) {
         File newFolder = new File(currentDirectory, newFolderName);
         if (newFolder.mkdir()) {
           if (fc.isMultiSelectionEnabled()) {
-            fc.setSelectedFiles(new File[] {newFolder});
+            fc.setSelectedFiles(new File[]{newFolder});
           } else {
             fc.setSelectedFile(newFolder);
           }
           fc.rescanCurrentDirectory();
         } else {
-          JOptionPane.showMessageDialog(fc,
-            UIManager
-            .getString("DirectoryChooser.createFolderFailed"), UIManager
-            .getString("DirectoryChooser.createFolderFailed.title"),
-            JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(fc, UIManager.getString("DirectoryChooser.createFolderFailed"), UIManager.getString("DirectoryChooser.createFolderFailed.title"), JOptionPane.ERROR_MESSAGE);
         }
       }
     }
@@ -592,7 +538,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     }
 
     protected void loadChildren() {
-      FileSystemView fsv = (FileSystemView)getUserObject();
+      FileSystemView fsv = (FileSystemView) getUserObject();
       File[] roots = fsv.getRoots();
       if (roots != null) {
         Arrays.sort(roots);
@@ -614,9 +560,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     }
 
     public boolean canEnqueue() {
-      return !isLoaded()
-        && !chooser.getFileSystemView().isFloppyDrive(getFile())
-        && !chooser.getFileSystemView().isFileSystemRoot(getFile());
+      return !isLoaded() && !chooser.getFileSystemView().isFloppyDrive(getFile()) && !chooser.getFileSystemView().isFileSystemRoot(getFile());
     }
 
     public boolean isLeaf() {
@@ -635,10 +579,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     }
 
     private FileTreeNode[] getChildren() {
-      File[] files =
-        chooser.getFileSystemView().getFiles(
-          getFile(),
-          chooser.isFileHidingEnabled());
+      File[] files = chooser.getFileSystemView().getFiles(getFile(), chooser.isFileHidingEnabled());
       ArrayList nodes = new ArrayList();
       // keep only directories, no "file" in the tree.
       if (files != null) {
@@ -649,29 +590,27 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
         }
       }
       // sort directories, FileTreeNode implements Comparable
-      FileTreeNode[] result = (FileTreeNode[])nodes
-        .toArray(new FileTreeNode[0]);
+      FileTreeNode[] result = (FileTreeNode[]) nodes.toArray(new FileTreeNode[0]);
       Arrays.sort(result);
       return result;
     }
 
     public File getFile() {
-      return (File)getUserObject();
+      return (File) getUserObject();
     }
 
     public String toString() {
-      return chooser.getFileSystemView().getSystemDisplayName(
-        (File)getUserObject());
+      return chooser.getFileSystemView().getSystemDisplayName((File) getUserObject());
     }
 
     public int compareTo(Object o) {
       if (!(o instanceof FileTreeNode)) { return 1; }
-      return getFile().compareTo(((FileTreeNode)o).getFile());
+      return getFile().compareTo(((FileTreeNode) o).getFile());
     }
 
     public void clear() {
       super.clear();
-      ((DefaultTreeModel)tree.getModel()).nodeStructureChanged(this);
+      ((DefaultTreeModel) tree.getModel()).nodeStructureChanged(this);
     }
   }
 
@@ -707,7 +646,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   /**
    * This queue takes care of loading nodes in the background.
    */
-  private static final class Queue extends Thread {
+  static final class Queue extends Thread {
 
     private volatile Stack nodes = new Stack();
 
@@ -736,7 +675,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
     public void run() {
       while (running) {
         while (nodes.size() > 0) {
-          final QueueItem item = (QueueItem)nodes.pop();
+          final QueueItem item = (QueueItem) nodes.pop();
           final WindowsDirectoryChooserUI.FileTreeNode node = item.node;
           final JTree tree = item.tree;
 
@@ -746,7 +685,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
           Runnable runnable = new Runnable() {
 
             public void run() {
-              ((DefaultTreeModel)tree.getModel()).nodeChanged(node);
+              ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
               tree.repaint();
             }
           };
@@ -784,6 +723,7 @@ public class WindowsDirectoryChooserUI extends BasicFileChooserUI implements
   private static final class QueueItem {
     WindowsDirectoryChooserUI.FileTreeNode node;
     JTree tree;
+
     public QueueItem(WindowsDirectoryChooserUI.FileTreeNode node, JTree tree) {
       this.node = node;
       this.tree = tree;

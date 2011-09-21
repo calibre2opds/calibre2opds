@@ -44,7 +44,7 @@ public class Keyword implements Comparable<Keyword> {
 
     int size = 0;
     for (CatalogItem catalogItem : catalogItems.values()) {
-      size+=catalogItem.size();
+      size += catalogItem.size();
     }
     return size;
   }

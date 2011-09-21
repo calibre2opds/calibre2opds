@@ -85,6 +85,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INDEXCOMMENTS = "IndexComments";
   private final static String PROPERTY_NAME_MAXKEYWORDS = "MaxKeywords";
   private final static String PROPERTY_NAME_INDEXFILTERALGORITHM = "IndexFilterAlgorithm";
+  private final static String PROPERTY_NAME_URLBASE = "UrlBase";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -1296,6 +1297,25 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public boolean isMaxKeywordsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXKEYWORDS);
+  }
+
+  public boolean isUrlBaseReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_URLBASE);
+  }
+
+  public String getUrlBase() {
+    String s = getProperty(PROPERTY_NAME_URLBASE);
+    if (s == null)
+      return defaults.getUrlBase();
+    else
+      return s;
+  }
+
+  public void setUrlBase(String value) {
+    // correct the value if needed
+    if (value != null && value.charAt(value.length() - 1) != '/')
+      value += "/";
+    setProperty(PROPERTY_NAME_URLBASE, value);
   }
 
 }

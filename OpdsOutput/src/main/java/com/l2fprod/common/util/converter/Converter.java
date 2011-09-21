@@ -25,11 +25,11 @@ public interface Converter {
 
   /**
    * Converts <code>value</code> to an object of <code>type</code>.
-   *  
+   *
    * @param type
    * @param value
    * @return <code>value</code> converted to an object of <code>type</code>.
    */
   public Object convert(Class type, Object value);
-  
+
 }

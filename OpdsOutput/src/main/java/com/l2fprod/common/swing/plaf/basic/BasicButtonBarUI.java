@@ -21,16 +21,14 @@ import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.plaf.ButtonBarUI;
 
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JComponent;
-import javax.swing.plaf.ComponentUI;
-
 /**
  * BasicButtonBarUI. <br>
- *  
  */
 public class BasicButtonBarUI extends ButtonBarUI {
 
@@ -40,11 +38,11 @@ public class BasicButtonBarUI extends ButtonBarUI {
   public static ComponentUI createUI(JComponent c) {
     return new BasicButtonBarUI();
   }
-  
+
   public void installUI(JComponent c) {
     super.installUI(c);
 
-    bar = (JButtonBar)c;
+    bar = (JButtonBar) c;
 
     installDefaults();
     installListeners();
@@ -86,7 +84,7 @@ public class BasicButtonBarUI extends ButtonBarUI {
   }
 
   public Dimension getPreferredSize(JComponent c) {
-    JButtonBar b = (JButtonBar)c;
+    JButtonBar b = (JButtonBar) c;
     Dimension preferred;
     // it happens the layout is null - Netbeans 5.5 beta 2 
     if (b.getLayout() == null) {
@@ -94,7 +92,7 @@ public class BasicButtonBarUI extends ButtonBarUI {
     } else {
       preferred = b.getLayout().preferredLayoutSize(c);
     }
-    
+
     if (b.getOrientation() == JButtonBar.HORIZONTAL) {
       return new Dimension(preferred.width, 53);
     } else {
@@ -102,7 +100,7 @@ public class BasicButtonBarUI extends ButtonBarUI {
     }
   }
 
-  
+
   private class ChangeListener implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
       if (evt.getPropertyName().equals(JButtonBar.ORIENTATION_CHANGED_KEY)) {

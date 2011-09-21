@@ -24,7 +24,7 @@ import java.util.Locale;
 
 /**
  * A renderer for Date.
- *  
+ *
  * @author Ricardo Lopes
  */
 public class DateRenderer extends DefaultCellRenderer {
@@ -55,8 +55,8 @@ public class DateRenderer extends DefaultCellRenderer {
     if (value == null) {
       setText("");
     } else {
-      setText(dateFormat.format((Date)value));
+      setText(dateFormat.format((Date) value));
     }
   }
-  
+
 }

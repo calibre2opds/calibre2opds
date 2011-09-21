@@ -21,29 +21,22 @@ import com.l2fprod.common.swing.plaf.DirectoryChooserUI;
 import com.l2fprod.common.swing.plaf.JDirectoryChooserAddon;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
-import java.awt.Component;
-import java.awt.HeadlessException;
-import java.io.File;
-
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
+import java.io.File;
 
 /**
  * An extension of the JFileChooser but dedicated to directory selection. <br>
- *  
- * @javabean.class
- *          name="JDirectoryChooser"
- *          shortDescription="JDirectoryChooser allows to select one or more directories."
- *          stopClass="javax.swing.JFileChooser"
- * 
- * @javabean.icons
- *          mono16="JDirectoryChooser16-mono.gif"
- *          color16="JDirectoryChooser16.gif"
- *          mono32="JDirectoryChooser32-mono.gif"
- *          color32="JDirectoryChooser32.gif"
+ *
+ * @javabean.class name="JDirectoryChooser"
+ * shortDescription="JDirectoryChooser allows to select one or more directories."
+ * stopClass="javax.swing.JFileChooser"
+ * @javabean.icons mono16="JDirectoryChooser16-mono.gif"
+ * color16="JDirectoryChooser16.gif"
+ * mono32="JDirectoryChooser32-mono.gif"
+ * color32="JDirectoryChooser32.gif"
  */
 public class JDirectoryChooser extends JFileChooser {
 
@@ -71,7 +64,7 @@ public class JDirectoryChooser extends JFileChooser {
 
   /**
    * Creates a JDirectoryChooser using the given File as the path.
-   * 
+   *
    * @param currentDirectory
    */
   public JDirectoryChooser(File currentDirectory) {
@@ -82,7 +75,7 @@ public class JDirectoryChooser extends JFileChooser {
   /**
    * Creates a JDirectoryChooser using the given current directory and
    * FileSystemView
-   * 
+   *
    * @param currentDirectory
    * @param fsv
    */
@@ -93,7 +86,7 @@ public class JDirectoryChooser extends JFileChooser {
 
   /**
    * Creates a JDirectoryChooser using the given FileSystemView
-   * 
+   *
    * @param fsv
    */
   public JDirectoryChooser(FileSystemView fsv) {
@@ -103,7 +96,7 @@ public class JDirectoryChooser extends JFileChooser {
 
   /**
    * Creates a JDirectoryChooser using the given path.
-   * 
+   *
    * @param currentDirectoryPath
    */
   public JDirectoryChooser(String currentDirectoryPath) {
@@ -119,30 +112,28 @@ public class JDirectoryChooser extends JFileChooser {
   /**
    * Notification from the <code>UIManager</code> that the L&F has changed.
    * Replaces the current UI object with the latest version from the <code>UIManager</code>.
-   * 
+   *
    * @see javax.swing.JComponent#updateUI
    */
   public void updateUI() {
-    setUI((DirectoryChooserUI)LookAndFeelAddons.getUI(this,
-      DirectoryChooserUI.class));
+    setUI((DirectoryChooserUI) LookAndFeelAddons.getUI(this, DirectoryChooserUI.class));
   }
-  
+
   /**
    * Sets the L&F object that renders this component.
-   * 
+   *
    * @param ui the <code>DirectoryChooserUI</code> L&F object
-   * @see javax.swing.UIDefaults#getUI
-   * 
    * @beaninfo bound: true hidden: true description: The UI object that
    * implements the taskpane group's LookAndFeel.
+   * @see javax.swing.UIDefaults#getUI
    */
   public void setUI(DirectoryChooserUI ui) {
-    super.setUI((ComponentUI)ui);
+    super.setUI((ComponentUI) ui);
   }
-  
+
   /**
    * Returns the name of the L&F class that renders this component.
-   * 
+   *
    * @return the string {@link #UI_CLASS_ID}
    * @see javax.swing.JComponent#getUIClassID
    * @see javax.swing.UIDefaults#getUI
@@ -150,9 +141,8 @@ public class JDirectoryChooser extends JFileChooser {
   public String getUIClassID() {
     return UI_CLASS_ID;
   }
-  
+
   /**
-   *
    * @return true if the "Make New Folder" button is shown, false otherwise
    */
   public boolean isShowingCreateDirectory() {
@@ -162,23 +152,20 @@ public class JDirectoryChooser extends JFileChooser {
   /**
    * Sets whether or not the "Make New Folder" button is shown in the control
    * button area. Default is true.
-   * 
+   *
    * @param showingCreateDirectory
-   * @javabean.property
-   *          bound="true"
-   *          preferred="true"
+   * @javabean.property bound="true"
+   * preferred="true"
    */
-  public void setShowingCreateDirectory(boolean showingCreateDirectory) {    
+  public void setShowingCreateDirectory(boolean showingCreateDirectory) {
     this.showingCreateDirectory = showingCreateDirectory;
-    firePropertyChange(SHOWING_CREATE_DIRECTORY_CHANGED_KEY, !showingCreateDirectory,
-      showingCreateDirectory);
+    firePropertyChange(SHOWING_CREATE_DIRECTORY_CHANGED_KEY, !showingCreateDirectory, showingCreateDirectory);
   }
-  
+
   protected JDialog createDialog(Component parent) throws HeadlessException {
     JDialog dialog = super.createDialog(parent);
-    ((JComponent)dialog.getContentPane()).setBorder(
-      LookAndFeelTweaks.WINDOW_BORDER);
+    ((JComponent) dialog.getContentPane()).setBorder(LookAndFeelTweaks.WINDOW_BORDER);
     return dialog;
   }
-  
+
 }

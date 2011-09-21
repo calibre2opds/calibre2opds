@@ -39,7 +39,7 @@ public class DefaultTipModel implements TipModel {
   }
 
   public Tip getTipAt(int index) {
-    return (Tip)tips.get(index);
+    return (Tip) tips.get(index);
   }
 
   public int getTipCount() {
@@ -55,7 +55,7 @@ public class DefaultTipModel implements TipModel {
   }
 
   public Tip[] getTips() {
-    return (Tip[])tips.toArray(new Tip[tips.size()]);
+    return (Tip[]) tips.toArray(new Tip[tips.size()]);
   }
 
   public void setTips(Tip[] tips) {

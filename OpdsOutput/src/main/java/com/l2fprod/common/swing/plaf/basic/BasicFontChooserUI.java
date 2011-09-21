@@ -22,8 +22,13 @@ import com.l2fprod.common.swing.LookAndFeelTweaks;
 import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.plaf.FontChooserUI;
 
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
@@ -33,16 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.ComponentUI;
-
 /**
  * BasicFontChooserUI. <br>
- *  
  */
 public class BasicFontChooserUI extends FontChooserUI {
 
@@ -70,7 +67,7 @@ public class BasicFontChooserUI extends FontChooserUI {
   public void installUI(JComponent c) {
     super.installUI(c);
 
-    chooser = (JFontChooser)c;
+    chooser = (JFontChooser) c;
 
     installComponents();
     installListeners();
@@ -79,18 +76,15 @@ public class BasicFontChooserUI extends FontChooserUI {
   protected void installComponents() {
     JLabel label;
 
-    ResourceBundle bundle =
-      ResourceBundle.getBundle(FontChooserUI.class.getName() + "RB");
+    ResourceBundle bundle = ResourceBundle.getBundle(FontChooserUI.class.getName() + "RB");
 
     fontPanel = new JPanel(new PercentLayout(PercentLayout.VERTICAL, 2));
-    fontPanel.add(
-      label = new JLabel(bundle.getString("FontChooserUI.fontLabel")));
+    fontPanel.add(label = new JLabel(bundle.getString("FontChooserUI.fontLabel")));
     fontPanel.add(fontField = new JTextField(25));
     fontField.setEditable(false);
     fontPanel.add(new JScrollPane(fontList = new JList()), "*");
     label.setLabelFor(fontList);
-    label.setDisplayedMnemonic(
-      bundle.getString("FontChooserUI.fontLabel.mnemonic").charAt(0));
+    label.setDisplayedMnemonic(bundle.getString("FontChooserUI.fontLabel.mnemonic").charAt(0));
     fontList.setVisibleRowCount(7);
     fontList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -99,28 +93,20 @@ public class BasicFontChooserUI extends FontChooserUI {
 
     fontSizePanel = new JPanel(new PercentLayout(PercentLayout.VERTICAL, 2));
 
-    fontSizePanel.add(
-      label = new JLabel(bundle.getString("FontChooserUI.styleLabel")));
-    fontSizePanel.add(
-      boldCheck = new JCheckBox(bundle.getString("FontChooserUI.style.bold")));
-    fontSizePanel.add(
-      italicCheck =
-        new JCheckBox(bundle.getString("FontChooserUI.style.italic")));
-    boldCheck.setMnemonic(
-      bundle.getString("FontChooserUI.style.bold.mnemonic").charAt(0));
-    italicCheck.setMnemonic(
-      bundle.getString("FontChooserUI.style.italic.mnemonic").charAt(0));
+    fontSizePanel.add(label = new JLabel(bundle.getString("FontChooserUI.styleLabel")));
+    fontSizePanel.add(boldCheck = new JCheckBox(bundle.getString("FontChooserUI.style.bold")));
+    fontSizePanel.add(italicCheck = new JCheckBox(bundle.getString("FontChooserUI.style.italic")));
+    boldCheck.setMnemonic(bundle.getString("FontChooserUI.style.bold.mnemonic").charAt(0));
+    italicCheck.setMnemonic(bundle.getString("FontChooserUI.style.italic.mnemonic").charAt(0));
 
-    fontSizePanel.add(
-      label = new JLabel(bundle.getString("FontChooserUI.sizeLabel")));
+    fontSizePanel.add(label = new JLabel(bundle.getString("FontChooserUI.sizeLabel")));
 
-    label.setDisplayedMnemonic(
-      bundle.getString("FontChooserUI.sizeLabel.mnemonic").charAt(0));
+    label.setDisplayedMnemonic(bundle.getString("FontChooserUI.sizeLabel.mnemonic").charAt(0));
 
     fontSizePanel.add(fontSizeField = new JTextField());
     label.setLabelFor(fontSizeField);
     fontSizePanel.add(new JScrollPane(fontSizeList = new JList()), "*");
-    
+
     int[] defaultFontSizes = chooser.getModel().getDefaultSizes();
     String[] sizes = new String[defaultFontSizes.length];
     for (int i = 0, c = sizes.length; i < c; i++) {
@@ -153,9 +139,7 @@ public class BasicFontChooserUI extends FontChooserUI {
     italicCheck.addActionListener(listener);
 
     propertyListener = createPropertyChangeListener();
-    chooser.addPropertyChangeListener(
-      JFontChooser.SELECTED_FONT_CHANGED_KEY,
-      propertyListener);
+    chooser.addPropertyChangeListener(JFontChooser.SELECTED_FONT_CHANGED_KEY, propertyListener);
   }
 
   public void uninstallUI(JComponent c) {
@@ -191,12 +175,11 @@ public class BasicFontChooserUI extends FontChooserUI {
 
   private void updateSelectedFont() {
     Font currentFont = chooser.getSelectedFont();
-    String fontFamily =
-      currentFont == null ? "SansSerif" : currentFont.getName();
+    String fontFamily = currentFont == null ? "SansSerif" : currentFont.getName();
     int fontSize = currentFont == null ? 11 : currentFont.getSize();
 
     if (fontList.getSelectedIndex() >= 0) {
-      fontFamily = (String)fontList.getSelectedValue();
+      fontFamily = (String) fontList.getSelectedValue();
     }
 
     if (fontSizeField.getText().trim().length() > 0) {
@@ -224,30 +207,33 @@ public class BasicFontChooserUI extends FontChooserUI {
     }
   }
 
-  private class SelectedFontUpdater
-    implements ListSelectionListener, DocumentListener, ActionListener {
+  private class SelectedFontUpdater implements ListSelectionListener, DocumentListener, ActionListener {
     public void valueChanged(ListSelectionEvent e) {
       if (fontList == e.getSource() && fontList.getSelectedValue() != null) {
-        fontField.setText((String)fontList.getSelectedValue());
+        fontField.setText((String) fontList.getSelectedValue());
       }
-      if (fontSizeList == e.getSource()
-        && fontSizeList.getSelectedValue() != null) {
-        fontSizeField.setText((String)fontSizeList.getSelectedValue());
+      if (fontSizeList == e.getSource() && fontSizeList.getSelectedValue() != null) {
+        fontSizeField.setText((String) fontSizeList.getSelectedValue());
       }
       updateSelectedFont();
     }
+
     public void changedUpdate(DocumentEvent e) {
       updateLater();
     }
+
     public void insertUpdate(DocumentEvent e) {
       updateLater();
     }
+
     public void removeUpdate(DocumentEvent e) {
       updateLater();
     }
+
     public void actionPerformed(ActionEvent e) {
       updateLater();
     }
+
     void updateLater() {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {

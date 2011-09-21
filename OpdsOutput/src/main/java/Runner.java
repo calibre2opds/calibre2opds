@@ -19,34 +19,27 @@ public class Runner {
   private boolean testMode = false;
   private final static Logger logger = Logger.getLogger(Runner.class);
 
-    public void run(boolean startGui) throws IOException
-    {
-        intro();
-        if (testMode)
-        {
-            new TestDataModel().testDataModel();
+  public void run(boolean startGui) throws IOException {
+    intro();
+    if (testMode) {
+      new TestDataModel().testDataModel();
+    } else if (startGui) {
+      java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+          new Mainframe().setVisible(true);
         }
-        else if (startGui)
-        {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run()
-                {
-                    new Mainframe().setVisible(true);
-                }
-            });
-        }
-        else
-        {
-            new Catalog(new Log4jCatalogCallback()).createMainCatalog();
-        }
+      });
+    } else {
+      new Catalog(new Log4jCatalogCallback()).createMainCatalog();
     }
+  }
 
-    private static void intro() {
+  private static void intro() {
     if (!introDone) {
       logger.info(Constants.PROGTITLE);
       logger.info("");
       logger.info(Localization.Main.getText("intro.goal"));
-      logger.info(Localization.Main.getText("intro.wiki.title")+ Localization.Main.getText("intro.wiki.url"));
+      logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
       logger.info("");
       logger.info(Localization.Main.getText("intro.team.title"));
       logger.info("  * " + Localization.Main.getText("intro.team.list1"));
@@ -58,18 +51,20 @@ public class Runner {
       logger.info(Localization.Main.getText("intro.thanks.1"));
       logger.info(Localization.Main.getText("intro.thanks.2"));
       logger.info("");
-      logger.info(Localization.Main.getText("usage.intro", ConfigurationManager.INSTANCE.getCurrentProfile().getPropertiesFile().getPath()));
+      logger
+          .info(Localization.Main.getText("usage.intro", ConfigurationManager.INSTANCE.getCurrentProfile().getPropertiesFile().getPath()));
       logger.info("");
       introDone = true;
     }
   }
 
   private void initLog4J() {
-    String[] levels = new String[] {".info", ".debug", ".trace", ".trace.noCachedFileTracing", "STANDARD"};
+    String[] levels = new String[]{".info", ".debug", ".trace", ".trace.noCachedFileTracing", "STANDARD"};
     String standardLevel = ".info";
     File home = ConfigurationManager.getDefaultConfigurationDirectory();
     System.setProperty("calibre2opds.home", home.getAbsolutePath());
-    if (home == null) return;
+    if (home == null)
+      return;
     String defaultOutFileName = "log/log4j.properties";
     File log4jConfig = null;
     for (String level : levels) {
@@ -93,7 +88,7 @@ public class Runner {
           try {
             is = this.getClass().getResourceAsStream(inFileName);
             if (is == null) {
-              logger.info("Cannot find "+inFileName + " in the resources");
+              logger.info("Cannot find " + inFileName + " in the resources");
             }
             os = new FileOutputStream(log4jConfig);
             byte buffer[] = new byte[1024];
@@ -127,7 +122,8 @@ public class Runner {
     try {
       if (args.length == 1) {
         String profileName = args[0];
-        if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName)) ConfigurationManager.INSTANCE.changeProfile(profileName);
+        if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))
+          ConfigurationManager.INSTANCE.changeProfile(profileName);
       }
       runner.run(startGui);
     } catch (IOException e) {

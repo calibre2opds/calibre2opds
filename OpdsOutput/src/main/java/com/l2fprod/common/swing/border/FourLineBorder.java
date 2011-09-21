@@ -17,16 +17,11 @@
  */
 package com.l2fprod.common.swing.border;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Insets;
-
 import javax.swing.border.Border;
+import java.awt.*;
 
 /**
  * FourLineBorder. <br>
- * 
  */
 public class FourLineBorder implements Border {
 
@@ -43,16 +38,14 @@ public class FourLineBorder implements Border {
   }
 
   public Insets getBorderInsets(Component c) {
-    return new Insets(top == null?0:1, left == null?0:1, bottom == null?0:1,
-      right == null?0:1);
+    return new Insets(top == null ? 0 : 1, left == null ? 0 : 1, bottom == null ? 0 : 1, right == null ? 0 : 1);
   }
 
   public boolean isBorderOpaque() {
     return true;
   }
 
-  public void paintBorder(Component c, Graphics g, int x, int y, int width,
-    int height) {
+  public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
     if (bottom != null) {
       g.setColor(bottom);
       g.drawLine(x, y + height - 1, x + width - 1, y + height - 1);

@@ -21,5 +21,4 @@ package com.l2fprod.common.swing.plaf;
  * DirectoryChooserUI.<br>
  * Tagging interface to identify UI classes for JDirectoryChooser
  */
-public interface DirectoryChooserUI {
-}
+public interface DirectoryChooserUI {}

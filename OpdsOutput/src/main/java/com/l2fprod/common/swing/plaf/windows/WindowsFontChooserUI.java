@@ -22,8 +22,13 @@ import com.l2fprod.common.swing.LookAndFeelTweaks;
 import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.plaf.FontChooserUI;
 
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
@@ -32,13 +37,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.ComponentUI;
 
 /**
  * Windows implementation of the JFontChooser pluggable UI.
@@ -70,7 +68,7 @@ public class WindowsFontChooserUI extends FontChooserUI {
   public void installUI(JComponent c) {
     super.installUI(c);
 
-    chooser = (JFontChooser)c;
+    chooser = (JFontChooser) c;
 
     installComponents();
     installListeners();
@@ -79,54 +77,42 @@ public class WindowsFontChooserUI extends FontChooserUI {
   protected void installComponents() {
     JLabel label;
 
-    ResourceBundle bundle = ResourceBundle.getBundle(FontChooserUI.class
-        .getName()
-        + "RB");
+    ResourceBundle bundle = ResourceBundle.getBundle(FontChooserUI.class.getName() + "RB");
 
     // FIRST PANEL with Font list
     fontPanel = new JPanel(new PercentLayout(PercentLayout.VERTICAL, 2));
-    fontPanel.add(label = new JLabel(bundle
-        .getString("FontChooserUI.fontLabel")));
+    fontPanel.add(label = new JLabel(bundle.getString("FontChooserUI.fontLabel")));
     fontPanel.add(fontField = new JTextField(25));
     fontField.setEditable(false);
     fontPanel.add(new JScrollPane(fontList = new JList()), "*");
     label.setLabelFor(fontList);
-    label.setDisplayedMnemonic(bundle.getString(
-        "FontChooserUI.fontLabel.mnemonic").charAt(0));
+    label.setDisplayedMnemonic(bundle.getString("FontChooserUI.fontLabel.mnemonic").charAt(0));
     fontList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     String[] fontFamilies = chooser.getModel().getFontFamilies(null);
     fontList.setListData(fontFamilies);
 
     // SECOND PANEL with Bold, Italic, Charset
-    JPanel fontEffectPanel = new JPanel(new PercentLayout(
-        PercentLayout.VERTICAL, 2));
-    fontEffectPanel.add(label = new JLabel(bundle
-        .getString("FontChooserUI.styleLabel")));
+    JPanel fontEffectPanel = new JPanel(new PercentLayout(PercentLayout.VERTICAL, 2));
+    fontEffectPanel.add(label = new JLabel(bundle.getString("FontChooserUI.styleLabel")));
     fontEffectPanel.add(fontEffectField = new JTextField(10));
     fontEffectField.setEditable(false);
     fontEffectPanel.add(new JScrollPane(fontEffectList = new JList()), "*");
     label.setLabelFor(fontEffectList);
-    label.setDisplayedMnemonic(bundle.getString(
-        "FontChooserUI.styleLabel.mnemonic").charAt(0));
+    label.setDisplayedMnemonic(bundle.getString("FontChooserUI.styleLabel.mnemonic").charAt(0));
     fontEffectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    FontStyle[] fontStyles = new FontStyle[]{
-        new FontStyle(Font.PLAIN, bundle.getString("FontChooserUI.style.plain")),
+    FontStyle[] fontStyles = new FontStyle[]{new FontStyle(Font.PLAIN, bundle.getString("FontChooserUI.style.plain")),
         new FontStyle(Font.BOLD, bundle.getString("FontChooserUI.style.bold")),
-        new FontStyle(Font.ITALIC, bundle
-            .getString("FontChooserUI.style.italic")),
-        new FontStyle(Font.BOLD | Font.ITALIC, bundle
-            .getString("FontChooserUI.style.bolditalic")),};
+        new FontStyle(Font.ITALIC, bundle.getString("FontChooserUI.style.italic")),
+        new FontStyle(Font.BOLD | Font.ITALIC, bundle.getString("FontChooserUI.style.bolditalic")),};
     fontEffectList.setListData(fontStyles);
 
     // The SIZE PANEL
     fontSizePanel = new JPanel(new PercentLayout(PercentLayout.VERTICAL, 2));
-    fontSizePanel.add(label = new JLabel(bundle
-        .getString("FontChooserUI.sizeLabel")));
+    fontSizePanel.add(label = new JLabel(bundle.getString("FontChooserUI.sizeLabel")));
 
-    label.setDisplayedMnemonic(bundle.getString(
-        "FontChooserUI.sizeLabel.mnemonic").charAt(0));
+    label.setDisplayedMnemonic(bundle.getString("FontChooserUI.sizeLabel.mnemonic").charAt(0));
 
     fontSizePanel.add(fontSizeField = new JTextField(5));
     label.setLabelFor(fontSizeField);
@@ -163,9 +149,8 @@ public class WindowsFontChooserUI extends FontChooserUI {
 
     // allow the split pane to completely hide the top panel
     panel.setMinimumSize(new Dimension(0, 0));
-    
-    JPanel charSetPanel = new JPanel(new PercentLayout(
-        PercentLayout.HORIZONTAL, 2));
+
+    JPanel charSetPanel = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 2));
     label = new JLabel("CHARSET");
     label.setHorizontalAlignment(JLabel.RIGHT);
     charSetPanel.add(label, "*");
@@ -184,8 +169,7 @@ public class WindowsFontChooserUI extends FontChooserUI {
     fontSizeField.getDocument().addDocumentListener(listener);
 
     propertyListener = createPropertyChangeListener();
-    chooser.addPropertyChangeListener(JFontChooser.SELECTED_FONT_CHANGED_KEY,
-        propertyListener);
+    chooser.addPropertyChangeListener(JFontChooser.SELECTED_FONT_CHANGED_KEY, propertyListener);
   }
 
   public void uninstallUI(JComponent c) {
@@ -212,34 +196,34 @@ public class WindowsFontChooserUI extends FontChooserUI {
     Font selected = chooser.getSelectedFont();
     if (selected != null) {
       /** PENDING(fred) implement charset
-      String charset = (String)charSetCombo.getSelectedItem();
-      String text = chooser.getModel().getPreviewMessage(charset);
-      boolean canDisplay = selected.canDisplayUpTo(text) == -1;
-      if (canDisplay) {
-        previewPanel.setText(text);
-      } else {
-        previewPanel.setText("Charset not supported");
-      }
-      **/
+       String charset = (String)charSetCombo.getSelectedItem();
+       String text = chooser.getModel().getPreviewMessage(charset);
+       boolean canDisplay = selected.canDisplayUpTo(text) == -1;
+       if (canDisplay) {
+       previewPanel.setText(text);
+       } else {
+       previewPanel.setText("Charset not supported");
+       }
+       **/
       previewPanel.setFont(selected);
       fontList.setSelectedValue(selected.getName(), true);
       fontSizeField.setText(String.valueOf(selected.getSize()));
       fontSizeList.setSelectedValue(String.valueOf(selected.getSize()), true);
-      
+
       FontStyle style = new FontStyle(selected.getStyle(), null);
       fontEffectList.setSelectedValue(style, true);
-      style = (FontStyle)fontEffectList.getSelectedValue();
+      style = (FontStyle) fontEffectList.getSelectedValue();
       fontEffectField.setText(style.toString());
     }
   }
 
   private void updateSelectedFont() {
     Font currentFont = chooser.getSelectedFont();
-    String fontFamily = currentFont == null?"SansSerif":currentFont.getName();
-    int fontSize = currentFont == null?11:currentFont.getSize();
+    String fontFamily = currentFont == null ? "SansSerif" : currentFont.getName();
+    int fontSize = currentFont == null ? 11 : currentFont.getSize();
 
     if (fontList.getSelectedIndex() >= 0) {
-      fontFamily = (String)fontList.getSelectedValue();
+      fontFamily = (String) fontList.getSelectedValue();
     }
 
     if (fontSizeField.getText().trim().length() > 0) {
@@ -254,7 +238,7 @@ public class WindowsFontChooserUI extends FontChooserUI {
     attributes.put(TextAttribute.SIZE, new Float(fontSize));
     attributes.put(TextAttribute.FAMILY, fontFamily);
 
-    FontStyle style = (FontStyle)fontEffectList.getSelectedValue();
+    FontStyle style = (FontStyle) fontEffectList.getSelectedValue();
     if (style != null) {
       if (style.isBold()) {
         attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
@@ -271,19 +255,14 @@ public class WindowsFontChooserUI extends FontChooserUI {
     }
   }
 
-  private class SelectedFontUpdater
-      implements
-        ListSelectionListener,
-        DocumentListener,
-        ActionListener {
+  private class SelectedFontUpdater implements ListSelectionListener, DocumentListener, ActionListener {
 
     public void valueChanged(ListSelectionEvent e) {
       if (fontList == e.getSource() && fontList.getSelectedValue() != null) {
-        fontField.setText((String)fontList.getSelectedValue());
+        fontField.setText((String) fontList.getSelectedValue());
       }
-      if (fontSizeList == e.getSource()
-          && fontSizeList.getSelectedValue() != null) {
-        fontSizeField.setText((String)fontSizeList.getSelectedValue());
+      if (fontSizeList == e.getSource() && fontSizeList.getSelectedValue() != null) {
+        fontSizeField.setText((String) fontSizeList.getSelectedValue());
       }
       updateSelectedFont();
     }
@@ -335,15 +314,15 @@ public class WindowsFontChooserUI extends FontChooserUI {
     public boolean isItalic() {
       return (value & Font.ITALIC) != 0;
     }
-    
+
     public int hashCode() {
       return value;
     }
-    
+
     public boolean equals(Object obj) {
-      return (obj instanceof FontStyle) && (((FontStyle)obj).value == value);
+      return (obj instanceof FontStyle) && (((FontStyle) obj).value == value);
     }
-    
+
   }
 
 }

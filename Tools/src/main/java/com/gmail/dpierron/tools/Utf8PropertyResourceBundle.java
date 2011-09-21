@@ -42,6 +42,6 @@ public class Utf8PropertyResourceBundle extends ResourceBundle {
   public Locale getLocale() {
     return bundle.getLocale();
   }
-  
-  
+
+
 }

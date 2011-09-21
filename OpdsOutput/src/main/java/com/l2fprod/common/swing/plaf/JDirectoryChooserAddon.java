@@ -32,14 +32,12 @@ public class JDirectoryChooserAddon extends AbstractComponentAddon {
   public JDirectoryChooserAddon() {
     super("JDirectoryChooser");
   }
-  
+
   protected void addBasicDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[]{
-      JDirectoryChooser.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.windows.WindowsDirectoryChooserUI",
-    }));
-    
+    defaults.addAll(
+        Arrays.asList(new Object[]{JDirectoryChooser.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.windows.WindowsDirectoryChooserUI",}));
+
     addResource(defaults, "com.l2fprod.common.swing.plaf.DirectoryChooserUIRB");
   }
- 
+
 }

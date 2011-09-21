@@ -23,6 +23,7 @@ import com.l2fprod.common.swing.PercentLayout;
 import com.l2fprod.common.swing.UserPreferences;
 import com.l2fprod.common.util.ResourceManager;
 
+import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -30,27 +31,19 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.TransferHandler;
-
 /**
  * FilePropertyEditor. <br>
- *  
  */
 public class FilePropertyEditor extends AbstractPropertyEditor {
 
   protected JTextField textfield;
   private JButton button;
   private JButton cancelButton;
-    
+
   public FilePropertyEditor() {
     this(true);
   }
-  
+
   public FilePropertyEditor(boolean asTableEditor) {
     editor = new JPanel(new PercentLayout(PercentLayout.HORIZONTAL, 0)) {
       public void setEnabled(boolean enabled) {
@@ -60,19 +53,17 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
         cancelButton.setEnabled(enabled);
       }
     };
-    ((JPanel)editor).add("*", textfield = new JTextField());
-    ((JPanel)editor).add(button = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add("*", textfield = new JTextField());
+    ((JPanel) editor).add(button = ComponentFactory.Helper.getFactory().createMiniButton());
     if (asTableEditor) {
       textfield.setBorder(LookAndFeelTweaks.EMPTY_BORDER);
-    }    
+    }
     button.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         selectFile();
       }
     });
-    ((JPanel)editor).add(cancelButton = ComponentFactory.Helper.getFactory()
-      .createMiniButton());
+    ((JPanel) editor).add(cancelButton = ComponentFactory.Helper.getFactory().createMiniButton());
     cancelButton.setText("X");
     cancelButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -82,7 +73,7 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
     textfield.setTransferHandler(new FileTransferHandler());
   }
 
-  class FileTransferHandler extends TransferHandler {    
+  class FileTransferHandler extends TransferHandler {
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
       for (int i = 0, c = transferFlavors.length; i < c; i++) {
         if (transferFlavors[i].equals(DataFlavor.javaFileListFlavor)) {
@@ -91,12 +82,13 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
       }
       return false;
     }
+
     public boolean importData(JComponent comp, Transferable t) {
       try {
-        List list = (List)t.getTransferData(DataFlavor.javaFileListFlavor);
+        List list = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
         if (list.size() > 0) {
-          File oldFile = (File)getValue();
-          File newFile = (File)list.get(0);
+          File oldFile = (File) getValue();
+          File newFile = (File) list.get(0);
           String text = newFile.getAbsolutePath();
           textfield.setText(text);
           firePropertyChange(oldFile, newFile);
@@ -107,7 +99,7 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
       return true;
     }
   }
-  
+
   public Object getValue() {
     if ("".equals(textfield.getText().trim())) {
       return null;
@@ -118,7 +110,7 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
 
   public void setValue(Object value) {
     if (value instanceof File) {
-      textfield.setText(((File)value).getAbsolutePath());
+      textfield.setText(((File) value).getAbsolutePath());
     } else {
       textfield.setText("");
     }
@@ -129,14 +121,12 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
 
     JFileChooser chooser = UserPreferences.getDefaultFileChooser();
     chooser.setDialogTitle(rm.getString("FilePropertyEditor.dialogTitle"));
-    chooser.setApproveButtonText(
-      rm.getString("FilePropertyEditor.approveButtonText"));
-    chooser.setApproveButtonMnemonic(
-      rm.getChar("FilePropertyEditor.approveButtonMnemonic"));
+    chooser.setApproveButtonText(rm.getString("FilePropertyEditor.approveButtonText"));
+    chooser.setApproveButtonMnemonic(rm.getChar("FilePropertyEditor.approveButtonMnemonic"));
     customizeFileChooser(chooser);
-    
+
     if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(editor)) {
-      File oldFile = (File)getValue();
+      File oldFile = (File) getValue();
       File newFile = chooser.getSelectedFile();
       String text = newFile.getAbsolutePath();
       textfield.setText(text);
@@ -147,16 +137,16 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
   /**
    * Placeholder for subclasses to customize the JFileChooser shown to select a
    * file.
-   * 
+   *
    * @param chooser
    */
-  protected void customizeFileChooser(JFileChooser chooser) {    
+  protected void customizeFileChooser(JFileChooser chooser) {
   }
-  
+
   protected void selectNull() {
     Object oldFile = getValue();
     textfield.setText("");
     firePropertyChange(oldFile, null);
   }
-  
+
 }

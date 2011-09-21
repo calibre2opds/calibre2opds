@@ -17,15 +17,13 @@
  */
 package com.l2fprod.common.swing.plaf;
 
-import java.awt.Component;
-
-import javax.swing.Action;
-import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.plaf.PanelUI;
+import java.awt.*;
 
 /**
  * Pluggable UI for <code>JTaskPaneGroup</code>.
- *  
+ *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  */
 public class TaskPaneGroupUI extends PanelUI {
@@ -33,7 +31,7 @@ public class TaskPaneGroupUI extends PanelUI {
   /**
    * Called by the component when an action is added to the component through
    * the {@link com.l2fprod.common.swing.JTaskPaneGroup#add(Action)} method.
-   * 
+   *
    * @param action
    * @return a component built from the action.
    */

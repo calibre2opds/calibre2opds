@@ -23,15 +23,13 @@ import java.io.IOException;
 
 /**
  * AbstractProperty. <br>
- *  
  */
 public abstract class AbstractProperty implements Property {
 
   private Object value;
-  
+
   // PropertyChangeListeners are not serialized.
-  private transient PropertyChangeSupport listeners =
-    new PropertyChangeSupport(this);
+  private transient PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
   public Object getValue() {
     return value;
@@ -40,13 +38,13 @@ public abstract class AbstractProperty implements Property {
   public Object clone() {
     AbstractProperty clone = null;
     try {
-      clone = (AbstractProperty)super.clone();
+      clone = (AbstractProperty) super.clone();
       return clone;
     } catch (CloneNotSupportedException e) {
-      throw new RuntimeException(e);      
+      throw new RuntimeException(e);
     }
   }
-  
+
   public void setValue(Object value) {
     Object oldValue = this.value;
     this.value = value;
@@ -62,33 +60,32 @@ public abstract class AbstractProperty implements Property {
     listeners.addPropertyChangeListener(listener);
     Property[] subProperties = getSubProperties();
     if (subProperties != null)
-	  for ( int i = 0; i < subProperties.length; ++i )
-	    subProperties[i].addPropertyChangeListener( listener );
+      for (int i = 0; i < subProperties.length; ++i)
+        subProperties[i].addPropertyChangeListener(listener);
   }
 
   public void removePropertyChangeListener(PropertyChangeListener listener) {
     listeners.removePropertyChangeListener(listener);
     Property[] subProperties = getSubProperties();
     if (subProperties != null)
-	  for ( int i = 0; i < subProperties.length; ++i )
-	    subProperties[i].removePropertyChangeListener( listener );
+      for (int i = 0; i < subProperties.length; ++i)
+        subProperties[i].removePropertyChangeListener(listener);
   }
 
   protected void firePropertyChange(Object oldValue, Object newValue) {
     listeners.firePropertyChange("value", oldValue, newValue);
   }
 
-  private void readObject(java.io.ObjectInputStream in) throws IOException,
-    ClassNotFoundException {
+  private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
     in.defaultReadObject();
-    listeners = new PropertyChangeSupport(this);    
+    listeners = new PropertyChangeSupport(this);
   }
-  
+
   public Property getParentProperty() {
-  	return null;
+    return null;
   }
-  
+
   public Property[] getSubProperties() {
-  	return null;
+    return null;
   }
 }

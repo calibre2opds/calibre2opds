@@ -15,7 +15,6 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * 
  * @author David
  */
 public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
@@ -29,7 +28,9 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   File defaultStyleSheet = null;
   String onlyForTag = null;
 
-  /** Creates new form GenerateCatalogDialog */
+  /**
+   * Creates new form GenerateCatalogDialog
+   */
   public ReprocessEpubMetadataDialog(java.awt.Frame parent, boolean modal, boolean removeCss, File defaultStyleSheet, String onlyForTag) {
     super(parent, modal);
     setLocationRelativeTo(parent);
@@ -40,8 +41,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   }
 
   public void start() {
-    Runnable runnable = new Runnable()
-    {
+    Runnable runnable = new Runnable() {
       public void run() {
         try {
           ReprocessEpubMetadataDialog.this.run();
@@ -53,7 +53,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
     new Thread(runnable).start();
     setVisible(true);
   }
-  
+
   private void run() {
     jProgress.setValue(0);
     ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
@@ -86,7 +86,8 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(this, message);
         message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks2");
         int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-        if (result != JOptionPane.YES_OPTION) return;
+        if (result != JOptionPane.YES_OPTION)
+          return;
       }
       incPosition();
     }
@@ -95,13 +96,13 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
       JOptionPane.showMessageDialog(this, message);
     }
   }
-  
+
   @Override
   public void pack() {
     super.pack();
     Rectangle oldbounds = getBounds();
     oldbounds.width += 10;
-    oldbounds.height+= 10;
+    oldbounds.height += 10;
     setBounds(oldbounds);
   }
 
@@ -109,12 +110,11 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
     if (maxScale > 30000) {
       to30000 = 30000d / maxScale;
       this.maxScale = 30000;
-    }
-    else 
-      this.maxScale = (int)maxScale;
+    } else
+      this.maxScale = (int) maxScale;
     jProgress.setMaximum(this.maxScale);
   }
-  
+
   public void incPosition() {
     position++;
     int newPos;
@@ -123,7 +123,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
     else
       newPos = position;
     if (newPos > pos) {
-      jProgress.setValue(newPos+8);
+      jProgress.setValue(newPos + 8);
       pos = newPos;
     }
   }
@@ -152,54 +152,54 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed"
   // <editor-fold defaultstate="collapsed"
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+  private void initComponents() {
+    java.awt.GridBagConstraints gridBagConstraints;
 
-        jProgress = new javax.swing.JProgressBar();
-        cmdCancel = new javax.swing.JButton();
-        lblBookTitle = new javax.swing.JLabel();
+    jProgress = new javax.swing.JProgressBar();
+    cmdCancel = new javax.swing.JButton();
+    lblBookTitle = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle(Localization.Main.getText("gui.tools.processEpubMetadataOfAllBooks")); // NOI18N
-        getContentPane().setLayout(new java.awt.GridBagLayout());
+    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+    setTitle(Localization.Main.getText("gui.tools.processEpubMetadataOfAllBooks")); // NOI18N
+    getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jProgress.setMaximum(61);
-        jProgress.setPreferredSize(new java.awt.Dimension(300, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(jProgress, gridBagConstraints);
+    jProgress.setMaximum(61);
+    jProgress.setPreferredSize(new java.awt.Dimension(300, 19));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    getContentPane().add(jProgress, gridBagConstraints);
 
-        cmdCancel.setText(Localization.Main.getText("gui.cancel")); // NOI18N
-        cmdCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdCancelActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        getContentPane().add(cmdCancel, gridBagConstraints);
+    cmdCancel.setText(Localization.Main.getText("gui.cancel")); // NOI18N
+    cmdCancel.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cmdCancelActionPerformed(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    getContentPane().add(cmdCancel, gridBagConstraints);
 
-        lblBookTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblBookTitle.setText("jLabel1");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(lblBookTitle, gridBagConstraints);
+    lblBookTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    lblBookTitle.setText("jLabel1");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    getContentPane().add(lblBookTitle, gridBagConstraints);
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+    pack();
+  }// </editor-fold>//GEN-END:initComponents
 
   private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelActionPerformed
-      stopThread = true;
+    stopThread = true;
   }//GEN-LAST:event_cmdCancelActionPerformed
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmdCancel;
-    private javax.swing.JProgressBar jProgress;
-    private javax.swing.JLabel lblBookTitle;
-    // End of variables declaration//GEN-END:variables
+  // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton cmdCancel;
+  private javax.swing.JProgressBar jProgress;
+  private javax.swing.JLabel lblBookTitle;
+  // End of variables declaration//GEN-END:variables
 
 }

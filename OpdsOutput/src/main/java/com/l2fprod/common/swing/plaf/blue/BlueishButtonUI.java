@@ -17,20 +17,14 @@
  */
 package com.l2fprod.common.swing.plaf.blue;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.*;
 
 /**
  * BlueishButtonUI. <br>
- *  
  */
-public class BlueishButtonUI
-  extends BasicButtonUI {
+public class BlueishButtonUI extends BasicButtonUI {
 
   private static Color blueishBackgroundOver = new Color(224, 232, 246);
   private static Color blueishBorderOver = new Color(152, 180, 226);
@@ -45,16 +39,14 @@ public class BlueishButtonUI
   public void installUI(JComponent c) {
     super.installUI(c);
 
-    AbstractButton button = (AbstractButton)c;
+    AbstractButton button = (AbstractButton) c;
     button.setRolloverEnabled(true);
     button.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
   }
 
   public void paint(Graphics g, JComponent c) {
-    AbstractButton button = (AbstractButton)c;
-    if (button.getModel().isRollover()
-      || button.getModel().isArmed()
-      || button.getModel().isSelected()) {
+    AbstractButton button = (AbstractButton) c;
+    if (button.getModel().isRollover() || button.getModel().isArmed() || button.getModel().isSelected()) {
       Color oldColor = g.getColor();
       if (button.getModel().isSelected()) {
         g.setColor(blueishBackgroundSelected);

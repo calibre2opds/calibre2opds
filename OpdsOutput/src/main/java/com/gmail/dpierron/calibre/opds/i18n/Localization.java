@@ -1,17 +1,16 @@
 package com.gmail.dpierron.calibre.opds.i18n;
 
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.Utf8ResourceBundle;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.tools.Helper;
-import com.gmail.dpierron.tools.Utf8ResourceBundle;
 
 /**
  * Manages the localization of the messages in an application
@@ -20,7 +19,7 @@ public enum Localization {
   Enum("Enumerations"), Main("Localization");
 
   Logger logger = Logger.getLogger(Localization.class);
-  
+
   private boolean initialized = false;
 
   /**
@@ -29,7 +28,9 @@ public enum Localization {
    */
   private String localizationBundleName;
 
-  /** the resource bundle used by this localization resource */
+  /**
+   * the resource bundle used by this localization resource
+   */
   private ResourceBundle localizations;
 
   public ResourceBundle getBundle() {
@@ -46,9 +47,8 @@ public enum Localization {
 
   /**
    * Constructs a new {@link Localization}
-   * 
-   * @param localizationBundleName
-   *          the properties files to load
+   *
+   * @param localizationBundleName the properties files to load
    */
   private Localization(String localizationBundleName) {
     this.localizationBundleName = localizationBundleName;
@@ -57,7 +57,7 @@ public enum Localization {
 
   public Vector<String> getAvailableLocalizations() {
     Vector<String> result = new Vector<String>();
-    for (String lang: Locale.getISOLanguages()) {
+    for (String lang : Locale.getISOLanguages()) {
       Locale locale = new Locale(lang);
       ResourceBundle bundle = getResourceBundle(localizationBundleName, locale, false);
       if (bundle != null) {
@@ -67,12 +67,12 @@ public enum Localization {
     }
     return result;
   }
-  
+
   private ResourceBundle getResourceBundle(String name) {
     return getResourceBundle(name, null);
   }
 
-  private ResourceBundle getResourceBundle(String name, Locale locale, boolean englishIfNull)  {
+  private ResourceBundle getResourceBundle(String name, Locale locale, boolean englishIfNull) {
     ResourceBundle result = null;
     try {
       if (locale != null)
@@ -82,22 +82,23 @@ public enum Localization {
     } catch (Exception e) {
       // do nothing
     }
-    if (result == null && englishIfNull) 
+    if (result == null && englishIfNull)
       return getResourceBundle(name, Locale.ENGLISH, false); // English is always there
     return result;
   }
-  
-  private ResourceBundle getResourceBundle(String name, Locale locale)  {
+
+  private ResourceBundle getResourceBundle(String name, Locale locale) {
     return getResourceBundle(name, locale, true);
   }
 
   public void reloadLocalizations() {
     reloadLocalizations(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage());
   }
+
   /**
    * forces the resource bundle to reload from the properties file (use when the
    * locale changes)
-   * 
+   *
    * @throws IOException
    */
   public void reloadLocalizations(String language) {
@@ -119,9 +120,8 @@ public enum Localization {
 
   /**
    * fetches a localized, zero-parameter message
-   * 
-   * @param key
-   *          the key in the resource bundle
+   *
+   * @param key the key in the resource bundle
    * @return the message, or the key if the message does not exist
    */
   public String getText(String key) {
@@ -131,11 +131,9 @@ public enum Localization {
 
   /**
    * fetches a localized message with parameters
-   * 
-   * @param key
-   *          the key in the resource bundle
-   * @param parameters
-   *          the parameters used to construct the message
+   *
+   * @param key        the key in the resource bundle
+   * @param parameters the parameters used to construct the message
    * @return the message
    */
   public String getText(String key, Object... parameters) {

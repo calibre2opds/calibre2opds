@@ -19,7 +19,6 @@ package com.l2fprod.common.beans.editor;
 
 /**
  * FloatPropertyEditor.<br>
- *
  */
 public class FloatPropertyEditor extends NumberPropertyEditor {
 

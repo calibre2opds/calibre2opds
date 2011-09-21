@@ -31,30 +31,39 @@ public class TagListSubCatalog extends TagSubCatalog {
 
   @Override
   Element _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename()+"_tags.xml");
+    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_tags.xml");
     String title = Localization.Main.getText("tags.title");
     String urn = "calibre:tags";
-    
+
     String summary = "";
     if (getTags().size() > 1)
       summary = Localization.Main.getText("tags.alphabetical", getTags().size());
     else if (getTags().size() == 1)
       summary = Localization.Main.getText("authors.alphabetical.single");
-  
+
     return getListOfTags(pBreadcrumbs, getTags(), 0, null, title, summary, urn, filename, null);
   }
 
-  private Element getListOfTags(Breadcrumbs pBreadcrumbs, List<Tag> tags, int from, String guid, String title, String summary, String urn, String pFilename, SplitOption splitOption) throws IOException {
+  private Element getListOfTags(Breadcrumbs pBreadcrumbs,
+      List<Tag> tags,
+      int from,
+      String guid,
+      String title,
+      String summary,
+      String urn,
+      String pFilename,
+      SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    boolean willSplit = splitOption != SplitOption.Paginate && (tags.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    boolean willSplit =
+        splitOption != SplitOption.Paginate && (tags.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
     if (willSplit) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
       catalogSize = 0;
     } else
       catalogSize = tags.size();
 
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from+1);
+    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
     String filename = SecureFileManager.INSTANCE.decode(pFilename);
@@ -62,54 +71,56 @@ public class TagListSubCatalog extends TagSubCatalog {
       filename = filename + "_" + guid;
     if (from > 0) {
       int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0) filename = filename.substring(0, pos);
+      if (pos >= 0)
+        filename = filename.substring(0, pos);
       filename = filename + "_" + pageNumber;
     }
     if (!filename.endsWith(".xml"))
       filename = filename + ".xml";
 
-    logger.debug("getListOfTags: generating "+filename);
+    logger.debug("getListOfTags: generating " + filename);
     filename = SecureFileManager.INSTANCE.encode(filename);
-    
+
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
     Document document = new Document();
+    String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     try {
       fos = new FileOutputStream(outputFile);
-    
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
-      
+
+      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+
       // list the entries (or split them)
       List<Element> result;
       if (willSplit) {
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         logger.debug("calling getListOfTagsSplitByLetter");
         result = getListOfTagsSplitByLetter(breadcrumbs, mapOfTagsByLetter, guid, title, urn, pFilename);
       } else {
         logger.debug("no split by letter");
-        result = new Vector<Element>();
-        for (int i=from; i<tags.size(); i++) {
-          if ((i-from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+        result = new LinkedList<Element>();
+        for (int i = from; i < tags.size(); i++) {
+          if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
             Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename, splitOption);
-            result.add(nextLink);
+            result.add(0, nextLink);
             break;
           } else {
             Tag tag = tags.get(i);
-            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
-            logger.debug("getTag:"+tag);
+            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+            logger.debug("getTag:" + tag);
             Element entry = getTag(breadcrumbs, tag, urn, null);
             if (entry != null) {
-              logger.debug("adding tag to the TROOK database:"+tag);
+              logger.debug("adding tag to the TROOK database:" + tag);
               result.add(entry);
               TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
             }
           }
         }
       }
-    
-        // add the entries to the feed
+
+      // add the entries to the feed
       feed.addContent(result);
-    
+
       // write the element to the file
       document.addContent(feed);
       JDOM.INSTANCE.getOutputter().output(document, fos);
@@ -120,7 +131,7 @@ public class TagListSubCatalog extends TagSubCatalog {
 
     // create the same file as html
     getHtmlManager().generateHtmlFromXml(document, outputFile);
-    
+
     Element entry;
     if (from > 0) {
       String titleNext;
@@ -128,35 +139,36 @@ public class TagListSubCatalog extends TagSubCatalog {
         titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
       else
         titleNext = Localization.Main.getText("title.lastpage");
-      
-      entry = FeedHelper.INSTANCE.getNext(getCatalogManager().getCatalogFileUrlInItsSubfolder(filename), titleNext);
-    }
-    else
-    {
+
+      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+    } else {
       if (logger.isDebugEnabled())
-          logger.trace("getListOfTags" + pBreadcrumbs.toString());
+        logger.trace("getListOfTags" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = (pBreadcrumbs.size() > 1);
 
-      entry = FeedHelper.INSTANCE.getEntry(title,
-                                           urn,
-                                           getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder),
-                                           summary,
-                                           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons()
-                                                ? getCatalogManager().getPathToCatalogRoot(filename,weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS
-                                                : StanzaConstants.ICON_TAGS);
+      entry = FeedHelper.INSTANCE
+          .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
+              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+                  getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
+                  StanzaConstants.ICON_TAGS);
     }
     return entry;
   }
 
-  private List<Element> getListOfTagsSplitByLetter(Breadcrumbs pBreadcrumbs, Map<String, List<Tag>> mapOfTagsByLetter, String guid, String baseTitle, String baseUrn, String baseFilename) throws IOException {
-    if (Helper.isNullOrEmpty(mapOfTagsByLetter)) 
+  private List<Element> getListOfTagsSplitByLetter(Breadcrumbs pBreadcrumbs,
+      Map<String, List<Tag>> mapOfTagsByLetter,
+      String guid,
+      String baseTitle,
+      String baseUrn,
+      String baseFilename) throws IOException {
+    if (Helper.isNullOrEmpty(mapOfTagsByLetter))
       return null;
-    
+
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
       sTitle = sTitle + ", ";
-    
-    List<Element> result = new Vector<Element>(mapOfTagsByLetter.keySet().size());
+
+    List<Element> result = new LinkedList<Element>();
     SortedSet<String> letters = new TreeSet<String>(mapOfTagsByLetter.keySet());
     for (String letter : letters) {
       // generate the letter file
@@ -164,11 +176,11 @@ public class TagListSubCatalog extends TagSubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_"+letter+ ".xml";
+      String letterFilename = baseFilenameCleanedUp + "_" + letter + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
-      
+
       String letterUrn = baseUrn + ":" + letter;
-      
+
       List<Tag> tagsInThisLetter = mapOfTagsByLetter.get(letter);
       String letterTitle;
       if (letter.equals("_"))
@@ -178,13 +190,14 @@ public class TagListSubCatalog extends TagSubCatalog {
 
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeTags(tagsInThisLetter);
-      
+
       Element element = null;
       if (tagsInThisLetter.size() > 0) {
-        logger.debug("calling getListOfTags for the letter "+letter);
-        element = getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate);
+        logger.debug("calling getListOfTags for the letter " + letter);
+        element =
+            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate);
       }
-      
+
       if (element != null)
         result.add(element);
     }

@@ -49,12 +49,11 @@ package com.l2fprod.common.model;
 
 /**
  * HasId.<br>
- *
  */
 public interface HasId {
-	
-	public void setId(Object id);
-  
-	public Object getId();
+
+  public void setId(Object id);
+
+  public Object getId();
 
 }

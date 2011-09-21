@@ -29,51 +29,48 @@ public class Constants {
 
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
-  public final static String[] FILE_RESOURCES =
-  {
-        ".skip",
-        "desktop.css",
-        "mobile.css",
-        "homeIwebKit.png",
-        "navleft.png",
-        "functions.js",
-        "oval-red-left.gif",
-        "oval-red-right.gif",
-        "bg_button_a.gif",
-        "bg_button_span.gif",
-        "bc_bg.png",
-        "bc_separator.png",
-        "home.png",
-        "default_thumbnail.png",
-        // External image files for catalog sections
-        "allbooks.png",
-        "authors.png",
-        "c2o.png",
-        "ratings.png",
-        "recent.png",
-        "series.png",
-        "tags.png",
-        "_search/search.html",
-        "_search/css/desktop.css",
-        "_search/database/database.js",
-        "_search/media/license-bsd.txt",
-        "_search/media/css/demo_page.css",
-        "_search/media/css/demo_table.css",
-        "_search/media/css/demo_table_jui.css",
-        "_search/media/images/back_disabled.jpg",
-        "_search/media/images/back_enabled.jpg",
-        "_search/media/images/favicon.ico",
-        "_search/media/images/forward_disabled.jpg",
-        "_search/media/images/forward_enabled.jpg",
-        "_search/media/images/Sorting icons.psd",
-        "_search/media/images/sort_asc.png",
-        "_search/media/images/sort_asc_disabled.png",
-        "_search/media/images/sort_both.png",
-        "_search/media/images/sort_desc.png",
-        "_search/media/images/sort_desc_disabled.png",
-        "_search/media/js/jquery.dataTables.min.js",
-        "_search/media/js/jquery.js",
-  };
+  public final static String[] FILE_RESOURCES = {".skip",
+      "desktop.css",
+      "mobile.css",
+      "homeIwebKit.png",
+      "navleft.png",
+      "functions.js",
+      "oval-red-left.gif",
+      "oval-red-right.gif",
+      "bg_button_a.gif",
+      "bg_button_span.gif",
+      "bc_bg.png",
+      "bc_separator.png",
+      "home.png",
+      "default_thumbnail.png",
+      // External image files for catalog sections
+      "allbooks.png",
+      "authors.png",
+      "c2o.png",
+      "ratings.png",
+      "recent.png",
+      "series.png",
+      "tags.png",
+      "_search/search.html",
+      "_search/css/desktop.css",
+      "_search/database/database.js",
+      "_search/media/license-bsd.txt",
+      "_search/media/css/demo_page.css",
+      "_search/media/css/demo_table.css",
+      "_search/media/css/demo_table_jui.css",
+      "_search/media/images/back_disabled.jpg",
+      "_search/media/images/back_enabled.jpg",
+      "_search/media/images/favicon.ico",
+      "_search/media/images/forward_disabled.jpg",
+      "_search/media/images/forward_enabled.jpg",
+      "_search/media/images/Sorting icons.psd",
+      "_search/media/images/sort_asc.png",
+      "_search/media/images/sort_asc_disabled.png",
+      "_search/media/images/sort_both.png",
+      "_search/media/images/sort_desc.png",
+      "_search/media/images/sort_desc_disabled.png",
+      "_search/media/js/jquery.dataTables.min.js",
+      "_search/media/js/jquery.js",};
 
   public final static String getBzrVersion() {
     String vcsVersion = "";
@@ -83,12 +80,14 @@ public class Constants {
         reader = new BufferedReader(new InputStreamReader(Constants.class.getResourceAsStream("/version_OpdsOutput.properties")));
         vcsVersion = reader.readLine();
       } finally {
-        if (reader != null) reader.close();
+        if (reader != null)
+          reader.close();
       }
     } catch (Exception e) {
       // we don't give a tiny rat's ass
     }
-    if (Helper.isNotNullOrEmpty(vcsVersion)) vcsVersion = " (rev. " + vcsVersion + ")";
+    if (Helper.isNotNullOrEmpty(vcsVersion))
+      vcsVersion = " (rev. " + vcsVersion + ")";
     return vcsVersion;
   }
 }

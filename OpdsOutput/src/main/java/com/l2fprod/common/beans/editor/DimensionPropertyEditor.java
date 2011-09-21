@@ -19,7 +19,7 @@ package com.l2fprod.common.beans.editor;
 
 import com.l2fprod.common.util.converter.ConverterRegistry;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 /**
  * DimensionPropertyEditor. <br>Editor for java.awt.Dimension object, where
@@ -30,5 +30,5 @@ public class DimensionPropertyEditor extends StringConverterPropertyEditor {
   protected Object convertFromString(String text) {
     return ConverterRegistry.instance().convert(Dimension.class, text);
   }
-  
+
 }

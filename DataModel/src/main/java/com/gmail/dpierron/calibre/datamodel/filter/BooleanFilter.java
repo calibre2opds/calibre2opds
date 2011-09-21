@@ -1,15 +1,15 @@
 package com.gmail.dpierron.calibre.datamodel.filter;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import com.gmail.dpierron.calibre.datamodel.Book;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BooleanFilter implements BookFilter {
 
-  private List<BookFilter> filters = new Vector<BookFilter>();
-  
+  private List<BookFilter> filters = new LinkedList<BookFilter>();
+
   public void addFilter(BookFilter filter) {
     if (filters.contains(filter))
       return;
@@ -23,7 +23,6 @@ public class BooleanFilter implements BookFilter {
       result &= iterator.next().didBookPassThroughFilter(book);
     return result;
   }
-  
-  
-  
+
+
 }

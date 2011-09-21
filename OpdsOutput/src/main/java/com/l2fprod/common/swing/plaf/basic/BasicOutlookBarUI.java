@@ -23,54 +23,24 @@ import com.l2fprod.common.swing.PercentLayoutAnimator;
 import com.l2fprod.common.swing.plaf.OutlookBarUI;
 import com.l2fprod.common.util.JVM;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.LookAndFeel;
-import javax.swing.Scrollable;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+import java.util.List;
 
 /**
  * BasicOutlookBarUI. <br>
- *  
  */
-public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
-  OutlookBarUI {
+public class BasicOutlookBarUI extends BasicTabbedPaneUI implements OutlookBarUI {
 
   private static final String BUTTON_ORIGINAL_FOREGROUND = "TabButton/foreground";
   private static final String BUTTON_ORIGINAL_BACKGROUND = "TabButton/background";
@@ -84,7 +54,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   private Map tabToButton;
   private Component nextVisibleComponent;
   private PercentLayoutAnimator animator;
-  
+
   public JScrollPane makeScrollPane(Component component) {
     // the component is not scrollable, wraps it in a ScrollableJPanel
     JScrollPane scroll = new JScrollPane();
@@ -112,11 +82,10 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
     tabToButton = new HashMap();
 
     LookAndFeel.installBorder(tabPane, "OutlookBar.border");
-    LookAndFeel.installColors(tabPane, "OutlookBar.background",
-      "OutlookBar.foreground");
+    LookAndFeel.installColors(tabPane, "OutlookBar.background", "OutlookBar.foreground");
 
     tabPane.setOpaque(true);
-    
+
     // add buttons for the current components already added in this panel
     Component[] components = tabPane.getComponents();
     for (int i = 0, c = components.length; i < c; i++) {
@@ -128,17 +97,17 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
     // remove all buttons created for components
     List tabs = new ArrayList(buttonToTab.values());
     for (Iterator iter = tabs.iterator(); iter.hasNext(); ) {
-      Component tab = (Component)iter.next();
+      Component tab = (Component) iter.next();
       tabRemoved(tab);
-    }        
-    super.uninstallDefaults();    
+    }
+    super.uninstallDefaults();
   }
-  
+
   protected void installListeners() {
     tabPane.addContainerListener(tabListener = createTabListener());
     tabPane.addPropertyChangeListener(propertyChangeListener = createPropertyChangeListener());
     tabPane.addChangeListener(tabChangeListener = createChangeListener());
-  }    
+  }
 
   protected ContainerListener createTabListener() {
     return new ContainerTabHandler();
@@ -147,11 +116,11 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   protected PropertyChangeListener createPropertyChangeListener() {
     return new PropertyChangeHandler();
   }
-  
+
   protected ChangeListener createChangeListener() {
     return new ChangeHandler();
   }
-  
+
   protected void uninstallListeners() {
     tabPane.removeChangeListener(tabChangeListener);
     tabPane.removePropertyChangeListener(propertyChangeListener);
@@ -197,16 +166,16 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   }
 
   protected void tabAdded(final Component newTab) {
-    TabButton button = (TabButton)tabToButton.get(newTab);
+    TabButton button = (TabButton) tabToButton.get(newTab);
     if (button == null) {
       button = createTabButton();
-      
+
       // save the button original color,
       // later they would be restored if the button colors are not customized on
       // the OutlookBar
       button.putClientProperty(BUTTON_ORIGINAL_FOREGROUND, button.getForeground());
       button.putClientProperty(BUTTON_ORIGINAL_BACKGROUND, button.getBackground());
-      
+
       buttonToTab.put(button, newTab);
       tabToButton.put(newTab, button);
       button.addActionListener(new ActionListener() {
@@ -216,13 +185,11 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
 
           // animate the tabPane if there is a current tab selected and if the
           // tabPane allows animation
-          if (((JOutlookBar)tabPane).isAnimated() && current != target
-            && current != null && target != null) {
+          if (((JOutlookBar) tabPane).isAnimated() && current != target && current != null && target != null) {
             if (animator != null) {
               animator.stop();
             }
-            animator = new PercentLayoutAnimator(tabPane,
-              (PercentLayout)tabPane.getLayout()) {
+            animator = new PercentLayoutAnimator(tabPane, (PercentLayout) tabPane.getLayout()) {
               protected void complete() {
                 super.complete();
                 tabPane.setSelectedComponent(newTab);
@@ -231,8 +198,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
                 // reset to 100% in the case it becomes visible again without
                 // animation
                 if (current.getParent() == tabPane) {
-                  ((PercentLayout)tabPane.getLayout()).setConstraint(current,
-                    "100%");
+                  ((PercentLayout) tabPane.getLayout()).setConstraint(current, "100%");
                 }
               }
             };
@@ -266,7 +232,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   }
 
   protected void tabRemoved(Component removedTab) {
-    TabButton button = (TabButton)tabToButton.get(removedTab);
+    TabButton button = (TabButton) tabToButton.get(removedTab);
     tabPane.remove(button);
     buttonToTab.remove(button);
     tabToButton.remove(removedTab);
@@ -274,7 +240,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
 
   /**
    * Called whenever a property of a tab is changed
-   * 
+   *
    * @param index
    */
   protected void updateTabButtonAt(int index) {
@@ -282,46 +248,45 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
     button.setText(tabPane.getTitleAt(index));
     button.setIcon(tabPane.getIconAt(index));
     button.setDisabledIcon(tabPane.getDisabledIconAt(index));
-    
+
     Color background = tabPane.getBackgroundAt(index);
     if (background == null) {
-      background = (Color)button.getClientProperty(BUTTON_ORIGINAL_BACKGROUND);
+      background = (Color) button.getClientProperty(BUTTON_ORIGINAL_BACKGROUND);
     }
     button.setBackground(background);
-    
+
     Color foreground = tabPane.getForegroundAt(index);
     if (foreground == null) {
-      foreground = (Color)button.getClientProperty(BUTTON_ORIGINAL_FOREGROUND);
-    }    
+      foreground = (Color) button.getClientProperty(BUTTON_ORIGINAL_FOREGROUND);
+    }
     button.setForeground(foreground);
-    
+
     button.setToolTipText(tabPane.getToolTipTextAt(index));
-    button
-      .setDisplayedMnemonicIndex(tabPane.getDisplayedMnemonicIndexAt(index));
+    button.setDisplayedMnemonicIndex(tabPane.getDisplayedMnemonicIndexAt(index));
     button.setMnemonic(tabPane.getMnemonicAt(index));
     button.setEnabled(tabPane.isEnabledAt(index));
-    button.setHorizontalAlignment(((JOutlookBar)tabPane).getAlignmentAt(index));
+    button.setHorizontalAlignment(((JOutlookBar) tabPane).getAlignmentAt(index));
   }
 
   protected TabButton buttonForTab(int index) {
     Component component = tabPane.getComponentAt(index);
-    return (TabButton)tabToButton.get(component);
+    return (TabButton) tabToButton.get(component);
   }
 
-  class ChangeHandler implements ChangeListener {    
+  class ChangeHandler implements ChangeListener {
     public void stateChanged(ChangeEvent e) {
-      JTabbedPane tabPane = (JTabbedPane)e.getSource();
+      JTabbedPane tabPane = (JTabbedPane) e.getSource();
       tabPane.revalidate();
       tabPane.repaint();
     }
   }
-  
+
   class PropertyChangeHandler implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent e) {
       //JTabbedPane pane = (JTabbedPane)e.getSource();
       String name = e.getPropertyName();
       if ("tabPropertyChangedAtIndex".equals(name)) {
-        int index = ((Integer)e.getNewValue()).intValue();
+        int index = ((Integer) e.getNewValue()).intValue();
         updateTabButtonAt(index);
       } else if ("tabPlacement".equals(name)) {
         updateTabLayoutOrientation();
@@ -330,7 +295,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   }
 
   protected void updateTabLayoutOrientation() {
-    TabLayout layout = (TabLayout)tabPane.getLayout();
+    TabLayout layout = (TabLayout) tabPane.getLayout();
     int placement = tabPane.getTabPlacement();
     if (placement == JTabbedPane.TOP || placement == JTabbedPane.BOTTOM) {
       layout.setOrientation(PercentLayout.HORIZONTAL);
@@ -338,7 +303,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
       layout.setOrientation(PercentLayout.VERTICAL);
     }
   }
-  
+
   /**
    * Manages tabs being added or removed
    */
@@ -374,6 +339,7 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
         super.addLayoutComponent(component, constraints);
       }
     }
+
     public void setLayoutConstraints(Container parent) {
       Component[] components = parent.getComponents();
       for (int i = 0, c = components.length; i < c; i++) {
@@ -382,10 +348,11 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
         }
       }
     }
+
     public void layoutContainer(Container parent) {
       int selectedIndex = tabPane.getSelectedIndex();
       Component visibleComponent = getVisibleComponent();
-      
+
       if (selectedIndex < 0) {
         if (visibleComponent != null) {
           // The last tab was removed, so remove the component
@@ -405,12 +372,9 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
         if (selectedComponent != null) {
           if (selectedComponent != visibleComponent && visibleComponent != null) {
             // get the current focus owner
-            Component currentFocusOwner = KeyboardFocusManager
-              .getCurrentKeyboardFocusManager().getFocusOwner();
+            Component currentFocusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             // check if currentFocusOwner is a descendant of visibleComponent
-            if (currentFocusOwner != null
-              && SwingUtilities.isDescendingFrom(currentFocusOwner,
-                visibleComponent)) {
+            if (currentFocusOwner != null && SwingUtilities.isDescendingFrom(currentFocusOwner, visibleComponent)) {
               shouldChangeFocus = true;
             }
           }
@@ -419,14 +383,12 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
           // make sure only the selected component is visible
           Component[] components = parent.getComponents();
           for (int i = 0; i < components.length; i++) {
-            if (!(components[i] instanceof UIResource)
-              && components[i].isVisible()
-              && components[i] != selectedComponent) {
+            if (!(components[i] instanceof UIResource) && components[i].isVisible() && components[i] != selectedComponent) {
               components[i].setVisible(false);
               setConstraint(components[i], "*");
             }
           }
-          
+
           if (BasicOutlookBarUI.this.nextVisibleComponent != null) {
             BasicOutlookBarUI.this.nextVisibleComponent.setVisible(true);
           }
@@ -451,13 +413,14 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
       visibleComponent.requestFocus();
       return true;
     } else if (visibleComponent instanceof JComponent) {
-      if (((JComponent)visibleComponent).requestDefaultFocus()) { return true; }
+      if (((JComponent) visibleComponent).requestDefaultFocus()) { return true; }
     }
     return false;
   }
 
   protected static class TabButton extends JButton implements UIResource {
     public TabButton() {}
+
     public TabButton(ButtonUI ui) {
       setUI(ui);
     }
@@ -485,20 +448,23 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
       add("Center", component);
       setOpaque(false);
     }
-    public int getScrollableUnitIncrement(Rectangle visibleRect,
-      int orientation, int direction) {
+
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
       return 16;
     }
+
     public Dimension getPreferredScrollableViewportSize() {
       return (super.getPreferredSize());
     }
-    public int getScrollableBlockIncrement(Rectangle visibleRect,
-      int orientation, int direction) {
+
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
       return 16;
     }
+
     public boolean getScrollableTracksViewportWidth() {
       return true;
     }
+
     public boolean getScrollableTracksViewportHeight() {
       return false;
     }
@@ -509,29 +475,41 @@ public class BasicOutlookBarUI extends BasicTabbedPaneUI implements
   //
 
   public void paint(Graphics g, JComponent c) {}
-  protected void paintContentBorder(Graphics g, int tabPlacement,
-    int selectedIndex) {}
-  protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement,
-    int selectedIndex, int x, int y, int w, int h) {}
-  protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
-    int selectedIndex, int x, int y, int w, int h) {}
-  protected void paintContentBorderRightEdge(Graphics g, int tabPlacement,
-    int selectedIndex, int x, int y, int w, int h) {}
-  protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
-    int selectedIndex, int x, int y, int w, int h) {}
-  protected void paintFocusIndicator(Graphics g, int tabPlacement,
-    Rectangle[] rects, int tabIndex, Rectangle iconRect, Rectangle textRect,
-    boolean isSelected) {}
-  protected void paintIcon(Graphics g, int tabPlacement, int tabIndex,
-    Icon icon, Rectangle iconRect, boolean isSelected) {}
-  protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects,
-    int tabIndex, Rectangle iconRect, Rectangle textRect) {}
+
+  protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {}
+
+  protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+  protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+  protected void paintContentBorderRightEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+  protected void paintContentBorderTopEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+  protected void paintFocusIndicator(Graphics g,
+      int tabPlacement,
+      Rectangle[] rects,
+      int tabIndex,
+      Rectangle iconRect,
+      Rectangle textRect,
+      boolean isSelected) {}
+
+  protected void paintIcon(Graphics g, int tabPlacement, int tabIndex, Icon icon, Rectangle iconRect, boolean isSelected) {}
+
+  protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects, int tabIndex, Rectangle iconRect, Rectangle textRect) {}
+
   protected void paintTabArea(Graphics g, int tabPlacement, int selectedIndex) {}
-  protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex,
-    int x, int y, int w, int h, boolean isSelected) {}
-  protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex,
-    int x, int y, int w, int h, boolean isSelected) {}
-  protected void paintText(Graphics g, int tabPlacement, Font font,
-    FontMetrics metrics, int tabIndex, String title, Rectangle textRect,
-    boolean isSelected) {}
+
+  protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {}
+
+  protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {}
+
+  protected void paintText(Graphics g,
+      int tabPlacement,
+      Font font,
+      FontMetrics metrics,
+      int tabIndex,
+      String title,
+      Rectangle textRect,
+      boolean isSelected) {}
 }

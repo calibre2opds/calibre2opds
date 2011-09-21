@@ -1,17 +1,14 @@
 package com.gmail.dpierron.calibre.thumbnails;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
+import com.gmail.dpierron.calibre.opds.CatalogContext;
+import com.gmail.dpierron.calibre.opds.i18n.Localization;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
-import com.gmail.dpierron.calibre.opds.CatalogContext;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
 
 public class CreateThumbnail {
 
@@ -34,12 +31,12 @@ public class CreateThumbnail {
         // I don't give a tiny rat's ass
       }
       if (!isImageLoaded())
-        CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName),null);
+        CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName), null);
     }
   }
-  
+
   public boolean isImageLoaded() {
-    return (image != null && image.getImageLoadStatus() == MediaTracker.COMPLETE); 
+    return (image != null && image.getImageLoadStatus() == MediaTracker.COMPLETE);
   }
 
   public Image getThumbnail(int size, int dir) {
@@ -68,10 +65,12 @@ public class CreateThumbnail {
       try {
         ImageIO.write(bi, imageType, file);
       } catch (IOException ioe) {
-        CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()),ioe);
+        CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()),
+            ioe);
       }
     } else {
-      CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
+      CatalogContext.INSTANCE.getCallback()
+          .errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
     }
   }
 }

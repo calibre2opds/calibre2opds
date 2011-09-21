@@ -20,15 +20,10 @@ package com.l2fprod.common.propertysheet;
 import com.l2fprod.common.beans.BeanUtils;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * DefaultProperty. <br>
- *  
  */
 public class DefaultProperty extends AbstractProperty {
 
@@ -98,11 +93,11 @@ public class DefaultProperty extends AbstractProperty {
     try {
       Method method = BeanUtils.getReadMethod(object.getClass(), getName());
       if (method != null) {
-    	Object value = method.invoke(object, (Object[])null);
+        Object value = method.invoke(object, (Object[]) null);
         initializeValue(value); // avoid updating parent or firing property change
         if (value != null) {
-          for (Iterator iter = subProperties.iterator(); iter.hasNext();) {
-            Property subProperty = (Property)iter.next();
+          for (Iterator iter = subProperties.iterator(); iter.hasNext(); ) {
+            Property subProperty = (Property) iter.next();
             subProperty.readFromObject(value);
           }
         }
@@ -119,45 +114,41 @@ public class DefaultProperty extends AbstractProperty {
    */
   public void writeToObject(Object object) {
     try {
-      Method method =
-        BeanUtils.getWriteMethod(object.getClass(), getName(), getType());
+      Method method = BeanUtils.getWriteMethod(object.getClass(), getName(), getType());
       if (method != null) {
-        method.invoke(object, new Object[] { getValue()});
+        method.invoke(object, new Object[]{getValue()});
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
-  
+
   /* (non-Javadoc)
-   * @see com.l2fprod.common.propertysheet.Property#setValue(java.lang.Object)
-   */
-  public void setValue( Object value ) {
-	super.setValue( value );
-	if ( parent != null ) {
-	  Object parentValue = parent.getValue();
-	  if (parentValue != null) {
+  * @see com.l2fprod.common.propertysheet.Property#setValue(java.lang.Object)
+  */
+  public void setValue(Object value) {
+    super.setValue(value);
+    if (parent != null) {
+      Object parentValue = parent.getValue();
+      if (parentValue != null) {
         writeToObject(parentValue);
         parent.setValue(parentValue);
-	  }
-	}
-    if (value != null) {
-        for (Iterator iter = subProperties.iterator(); iter.hasNext();) {
-          Property subProperty = (Property)iter.next();
-          subProperty.readFromObject(value);
-        }
       }
+    }
+    if (value != null) {
+      for (Iterator iter = subProperties.iterator(); iter.hasNext(); ) {
+        Property subProperty = (Property) iter.next();
+        subProperty.readFromObject(value);
+      }
+    }
   }
 
   public int hashCode() {
-    return 28 + ((name != null)?name.hashCode():3)
-      + ((displayName != null)?displayName.hashCode():94)
-      + ((shortDescription != null)?shortDescription.hashCode():394)
-      + ((category != null)?category.hashCode():34)
-      + ((type != null)?type.hashCode():39)
-      + Boolean.valueOf(editable).hashCode();
+    return 28 + ((name != null) ? name.hashCode() : 3) + ((displayName != null) ? displayName.hashCode() : 94) +
+        ((shortDescription != null) ? shortDescription.hashCode() : 394) + ((category != null) ? category.hashCode() : 34) +
+        ((type != null) ? type.hashCode() : 39) + Boolean.valueOf(editable).hashCode();
   }
-      
+
   /**
    * Compares two DefaultProperty objects. Two DefaultProperty objects are equal
    * if they are the same object or if their name, display name, short
@@ -168,68 +159,63 @@ public class DefaultProperty extends AbstractProperty {
     if (other == null || getClass() != other.getClass()) {
       return false;
     }
-          
+
     if (other == this) {
       return true;
     }
-          
+
     DefaultProperty dp = (DefaultProperty) other;
-    
-    return compare(name, dp.name) &&
-      compare(displayName, dp.displayName) &&
-      compare(shortDescription, dp.shortDescription) &&
-      compare(category, dp.category) &&
-      compare(type, dp.type) &&
-      editable == dp.editable;
+
+    return compare(name, dp.name) && compare(displayName, dp.displayName) && compare(shortDescription, dp.shortDescription) &&
+        compare(category, dp.category) && compare(type, dp.type) && editable == dp.editable;
   }
-      
+
   private boolean compare(Object o1, Object o2) {
-    return (o1 != null)? o1.equals(o2) : o2 == null;
+    return (o1 != null) ? o1.equals(o2) : o2 == null;
   }
-      
+
   public String toString() {
-    return "name=" + getName() + ", displayName=" + getDisplayName()
-      + ", type=" + getType() + ", category=" + getCategory() + ", editable="
-      + isEditable() + ", value=" + getValue();
+    return "name=" + getName() + ", displayName=" + getDisplayName() + ", type=" + getType() + ", category=" + getCategory() +
+        ", editable=" + isEditable() + ", value=" + getValue();
   }
 
   public Property getParentProperty() {
-  	return parent;
+    return parent;
   }
-  
-  public void setParentProperty( Property parent ) {
+
+  public void setParentProperty(Property parent) {
     this.parent = parent;
   }
-  
+
   public Property[] getSubProperties() {
-  	return (Property[]) subProperties.toArray( new Property[subProperties.size()] );
+    return (Property[]) subProperties.toArray(new Property[subProperties.size()]);
   }
-  
+
   public void clearSubProperties() {
-	for (Iterator iter = this.subProperties.iterator(); iter.hasNext();) {
-		Property subProp = (Property) iter.next();
-		if (subProp instanceof DefaultProperty)
-			((DefaultProperty)subProp).setParentProperty(null);
-	}
-	this.subProperties.clear();
+    for (Iterator iter = this.subProperties.iterator(); iter.hasNext(); ) {
+      Property subProp = (Property) iter.next();
+      if (subProp instanceof DefaultProperty)
+        ((DefaultProperty) subProp).setParentProperty(null);
+    }
+    this.subProperties.clear();
   }
-  
-  public void addSubProperties( Collection subProperties ) {
-	this.subProperties.addAll( subProperties );
-	for (Iterator iter = this.subProperties.iterator(); iter.hasNext();) {
-		Property subProp = (Property) iter.next();
-		if (subProp instanceof DefaultProperty)
-			((DefaultProperty)subProp).setParentProperty(this);
-	}
+
+  public void addSubProperties(Collection subProperties) {
+    this.subProperties.addAll(subProperties);
+    for (Iterator iter = this.subProperties.iterator(); iter.hasNext(); ) {
+      Property subProp = (Property) iter.next();
+      if (subProp instanceof DefaultProperty)
+        ((DefaultProperty) subProp).setParentProperty(this);
+    }
   }
-  
-  public void addSubProperties( Property[] subProperties ) {
-	this.addSubProperties( Arrays.asList( subProperties ) );
+
+  public void addSubProperties(Property[] subProperties) {
+    this.addSubProperties(Arrays.asList(subProperties));
   }
-  
-  public void addSubProperty( Property subProperty ) {
-	this.subProperties.add( subProperty );
-	if (subProperty instanceof DefaultProperty)
-		((DefaultProperty)subProperty).setParentProperty(this);
+
+  public void addSubProperty(Property subProperty) {
+    this.subProperties.add(subProperty);
+    if (subProperty instanceof DefaultProperty)
+      ((DefaultProperty) subProperty).setParentProperty(this);
   }
 }

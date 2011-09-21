@@ -19,11 +19,7 @@ package com.l2fprod.common.propertysheet;
 
 import com.l2fprod.common.beans.editor.*;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
@@ -49,12 +45,12 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
   public PropertyEditor createPropertyEditor(Property property) {
     return getEditor(property);
   }
-  
+
   /**
    * Gets an editor for the given property. The lookup is as follow:
    * <ul>
-   * <li>if propertyDescriptor.getPropertyEditorClass() returns a valid value, 
-   * it is returned, else, 
+   * <li>if propertyDescriptor.getPropertyEditorClass() returns a valid value,
+   * it is returned, else,
    * <li>if an editor was registered with
    * {@link #registerEditor(Property, PropertyEditor)}, it is
    * returned, else</li>
@@ -67,7 +63,7 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
    * <li>look for editor using PropertyEditorManager.findEditor(Class);
    * </li>
    * </ul>
-   * 
+   *
    * @param property
    * @return an editor suitable for the Property.
    */
@@ -102,6 +98,7 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
 
   /**
    * Load PropertyEditor from clz through reflection.
+   *
    * @param clz Class to load from.
    * @return Loaded propertyEditor
    */
@@ -127,7 +124,7 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
    * <li>
    * <li>it returns null.</li>
    * </ul>
-   * 
+   *
    * @param type
    * @return an editor suitable for the Property type or null if none
    *         found
@@ -136,10 +133,10 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
     PropertyEditor editor = null;
     Object value = typeToEditor.get(type);
     if (value instanceof PropertyEditor) {
-      editor = (PropertyEditor)value;
+      editor = (PropertyEditor) value;
     } else if (value instanceof Class) {
       try {
-        editor = (PropertyEditor)((Class)value).newInstance();
+        editor = (PropertyEditor) ((Class) value).newInstance();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -163,8 +160,7 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
     propertyToEditor.put(property, editorClass);
   }
 
-  public synchronized void registerEditor(Property property,
-      PropertyEditor editor) {
+  public synchronized void registerEditor(Property property, PropertyEditor editor) {
     propertyToEditor.put(property, editor);
   }
 
@@ -211,40 +207,35 @@ public class PropertyEditorRegistry implements PropertyEditorFactory {
     registerEditor(Dimension.class, DimensionPropertyEditor.class);
     registerEditor(Insets.class, InsetsPropertyEditor.class);
     try {
-      Class fontEditor =
-        Class.forName("com.l2fprod.common.beans.editor.FontPropertyEditor");
+      Class fontEditor = Class.forName("com.l2fprod.common.beans.editor.FontPropertyEditor");
       registerEditor(Font.class, fontEditor);
     } catch (Exception e) {
       // FontPropertyEditor might not be there when using the split jars
     }
     registerEditor(Rectangle.class, RectanglePropertyEditor.class);
 
-    
+
     //
     // Date Editors based on what we have in the classpath
     //
-    
+
     boolean foundDateEditor = false;
-    
+
     // if JCalendar jar is available, use it as the default date
     // editor
     try {
       Class.forName("com.toedter.calendar.JDateChooser");
-      registerEditor(Date.class, Class
-        .forName("com.l2fprod.common.beans.editor.JCalendarDatePropertyEditor"));
+      registerEditor(Date.class, Class.forName("com.l2fprod.common.beans.editor.JCalendarDatePropertyEditor"));
       foundDateEditor = true;
     } catch (ClassNotFoundException e) {
       // No JCalendar found
     }
-    
+
     if (!foundDateEditor) {
       // try NachoCalendar
       try {
         Class.forName("net.sf.nachocalendar.components.DateField");
-        registerEditor(
-          Date.class,
-          Class
-            .forName("com.l2fprod.common.beans.editor.NachoCalendarDatePropertyEditor"));
+        registerEditor(Date.class, Class.forName("com.l2fprod.common.beans.editor.NachoCalendarDatePropertyEditor"));
         foundDateEditor = true;
       } catch (ClassNotFoundException e) {
         // No NachoCalendar found

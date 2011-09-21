@@ -22,7 +22,6 @@ import java.util.List;
 
 /**
  * Addon for the <code>JFontChooser</code>.<br>
- * 
  */
 public class JFontChooserAddon extends AbstractComponentAddon {
 
@@ -31,13 +30,11 @@ public class JFontChooserAddon extends AbstractComponentAddon {
   }
 
   protected void addBasicDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {"FontChooserUI",
-      "com.l2fprod.common.swing.plaf.basic.BasicFontChooserUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{"FontChooserUI", "com.l2fprod.common.swing.plaf.basic.BasicFontChooserUI"}));
   }
 
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {"FontChooserUI",
-      "com.l2fprod.common.swing.plaf.windows.WindowsFontChooserUI",}));
+    defaults.addAll(Arrays.asList(new Object[]{"FontChooserUI", "com.l2fprod.common.swing.plaf.windows.WindowsFontChooserUI",}));
   }
 
 }

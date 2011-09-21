@@ -19,11 +19,10 @@ package com.l2fprod.common.beans.editor;
 
 import com.l2fprod.common.util.converter.ConverterRegistry;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * RectanglePropertyEditor. <br>
- *  
  */
 public class RectanglePropertyEditor extends StringConverterPropertyEditor {
 

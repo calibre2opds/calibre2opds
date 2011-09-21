@@ -49,10 +49,9 @@ package com.l2fprod.common.model;
 
 /**
  * Openable.<br>
- *
  */
 public interface Openable {
 
-	public void open();
-	
+  public void open();
+
 }

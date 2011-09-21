@@ -21,7 +21,7 @@ import javax.swing.plaf.ComponentUI;
 
 /**
  * Pluggable UI for <code>JTaskPane</code>.
- * 
+ *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  */
 public class TaskPaneUI extends ComponentUI {

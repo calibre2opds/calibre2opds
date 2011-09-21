@@ -19,14 +19,12 @@ package com.l2fprod.common.swing.plaf;
 
 import com.l2fprod.common.swing.JTipOfTheDay;
 
-import java.awt.Component;
-
-import javax.swing.JDialog;
+import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import java.awt.*;
 
 /**
  * Pluggable UI for <code>JTipOfTheDay</code>.
- * 
  */
 public abstract class TipOfTheDayUI extends ComponentUI {
 
@@ -34,11 +32,10 @@ public abstract class TipOfTheDayUI extends ComponentUI {
    * Creates a new JDialog suitable to display a TipOfTheDay panel. If
    * <code>choice</code> is not null then the window will offer a way for the
    * end-user to not show the tip of the day dialog.
-   * 
+   *
    * @param parentComponent
    * @param choice
    */
-  public abstract JDialog createDialog(Component parentComponent,
-    JTipOfTheDay.ShowOnStartupChoice choice);
+  public abstract JDialog createDialog(Component parentComponent, JTipOfTheDay.ShowOnStartupChoice choice);
 
 }

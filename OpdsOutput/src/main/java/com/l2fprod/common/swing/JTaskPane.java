@@ -21,18 +21,14 @@ import com.l2fprod.common.swing.plaf.JTaskPaneAddon;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 import com.l2fprod.common.swing.plaf.TaskPaneUI;
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
-import javax.swing.JComponent;
-import javax.swing.JViewport;
-import javax.swing.Scrollable;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * <code>JTaskPane</code> provides an elegant view
  * to display a list of tasks ordered by groups ({@link JTaskPane}.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Although {@link JTaskPaneGroup} can be added to any other
  * container, the <code>JTaskPane</code> will provide better
  * fidelity when it comes to matching the look and feel of the host operating
@@ -43,19 +39,19 @@ import javax.swing.Scrollable;
  * {@link JCollapsiblePane}) so that
  * {@link JTaskPaneGroup} behaves correctly when collapsing and
  * expanding its content.
- *  
- * <p>
+ * <p/>
+ * <p/>
  * <code>JTaskPane<code> can be added to a JScrollPane.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Example:
  * <pre>
  * <code>
  * JFrame frame = new JFrame();
- * 
+ *
  * // a container to put all JTaskPaneGroup together
  * JTaskPane taskPaneContainer = new JTaskPane();
- * 
+ *
  * // add JTaskPaneGroups to the container
  * JTaskPaneGroup actionPane = createActionPane();
  * JTaskPaneGroup miscActionPane = createMiscActionPane();
@@ -66,39 +62,33 @@ import javax.swing.Scrollable;
  *
  * // put the action list on the left in a JScrollPane
  * // as we have several taskPane and we want to make sure they
- * // all get visible.   
+ * // all get visible.
  * frame.add(new JScrollPane(taskPaneContainer), BorderLayout.EAST);
- * 
+ *
  * // and a file browser in the middle
  * frame.add(fileBrowser, BorderLayout.CENTER);
- * 
+ *
  * frame.pack().
  * frame.setVisible(true);
  * </code>
  * </pre>
  *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
- * 
- * @javabean.attribute
- *          name="isContainer"
- *          value="Boolean.TRUE"
- *          rtexpr="true"
- * 
- * @javabean.class
- *          name="JTaskPane"
- *          shortDescription="A component that contains JTaskPaneGroups."
- *          stopClass="java.awt.Component"
- * 
- * @javabean.icons
- *          mono16="JTaskPane16-mono.gif"
- *          color16="JTaskPane16.gif"
- *          mono32="JTaskPane32-mono.gif"
- *          color32="JTaskPane32.gif"
+ * @javabean.attribute name="isContainer"
+ * value="Boolean.TRUE"
+ * rtexpr="true"
+ * @javabean.class name="JTaskPane"
+ * shortDescription="A component that contains JTaskPaneGroups."
+ * stopClass="java.awt.Component"
+ * @javabean.icons mono16="JTaskPane16-mono.gif"
+ * color16="JTaskPane16.gif"
+ * mono32="JTaskPane32-mono.gif"
+ * color32="JTaskPane32.gif"
  */
 public class JTaskPane extends JComponent implements Scrollable {
 
   public final static String UI_CLASS_ID = "TaskPaneUI";
-  
+
   // ensure at least the default ui is registered
   static {
     LookAndFeelAddons.contribute(new JTaskPaneAddon());
@@ -114,21 +104,20 @@ public class JTaskPane extends JComponent implements Scrollable {
   /**
    * Notification from the <code>UIManager</code> that the L&F has changed.
    * Replaces the current UI object with the latest version from the <code>UIManager</code>.
-   * 
+   *
    * @see javax.swing.JComponent#updateUI
    */
   public void updateUI() {
-    setUI((TaskPaneUI)LookAndFeelAddons.getUI(this, TaskPaneUI.class));
+    setUI((TaskPaneUI) LookAndFeelAddons.getUI(this, TaskPaneUI.class));
   }
 
   /**
    * Sets the L&F object that renders this component.
-   * 
+   *
    * @param ui the <code>TaskPaneUI</code> L&F object
-   * @see javax.swing.UIDefaults#getUI
-   * 
    * @beaninfo bound: true hidden: true description: The UI object that
    * implements the taskpane's LookAndFeel.
+   * @see javax.swing.UIDefaults#getUI
    */
   public void setUI(TaskPaneUI ui) {
     super.setUI(ui);
@@ -136,7 +125,7 @@ public class JTaskPane extends JComponent implements Scrollable {
 
   /**
    * Returns the name of the L&F class that renders this component.
-   * 
+   *
    * @return the string {@link #UI_CLASS_ID}
    * @see javax.swing.JComponent#getUIClassID
    * @see javax.swing.UIDefaults#getUI
@@ -147,7 +136,7 @@ public class JTaskPane extends JComponent implements Scrollable {
 
   /**
    * Adds a new <code>JTaskPaneGroup</code> to this JTaskPane.
-   * 
+   *
    * @param group
    */
   public void add(JTaskPaneGroup group) {
@@ -156,7 +145,7 @@ public class JTaskPane extends JComponent implements Scrollable {
 
   /**
    * Removes a new <code>JTaskPaneGroup</code> from this JTaskPane.
-   * 
+   *
    * @param group
    */
   public void remove(JTaskPaneGroup group) {
@@ -173,39 +162,33 @@ public class JTaskPane extends JComponent implements Scrollable {
   /**
    * @see Scrollable#getScrollableBlockIncrement(java.awt.Rectangle, int, int)
    */
-  public int getScrollableBlockIncrement(
-    Rectangle visibleRect,
-    int orientation,
-    int direction) {
+  public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
     return 10;
   }
-  
+
   /**
    * @see Scrollable#getScrollableTracksViewportHeight()
    */
   public boolean getScrollableTracksViewportHeight() {
     if (getParent() instanceof JViewport) {
-      return (((JViewport)getParent()).getHeight() > getPreferredSize().height);
+      return (((JViewport) getParent()).getHeight() > getPreferredSize().height);
     } else {
       return false;
     }
   }
-  
+
   /**
    * @see Scrollable#getScrollableTracksViewportWidth()
    */
   public boolean getScrollableTracksViewportWidth() {
     return true;
   }
-  
+
   /**
    * @see Scrollable#getScrollableUnitIncrement(java.awt.Rectangle, int, int)
    */
-  public int getScrollableUnitIncrement(
-    Rectangle visibleRect,
-    int orientation,
-    int direction) {
+  public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
     return 10;
   }
-  
+
 }

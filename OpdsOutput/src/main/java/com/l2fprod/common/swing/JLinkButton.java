@@ -20,35 +20,28 @@ package com.l2fprod.common.swing;
 import com.l2fprod.common.swing.plaf.JLinkButtonAddon;
 import com.l2fprod.common.swing.plaf.LookAndFeelAddons;
 
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JButton;
+import javax.swing.*;
 
 /**
  * A button targeted to be used as an hyperlink. Most UI will make it
  * transparent and it will react on mouse over by changing the cursor to the
  * hand cursor.
- * 
- * @javabean.class
- *          name="JLinkButton"
- *          shortDescription="A button looking as an hyperlink."
- *          stopClass="java.awt.Component"
- * 
- * @javabean.attribute
- *          name="isContainer"
- *          value="Boolean.FALSE"
- *          rtexpr="true"
- * 
- * @javabean.icons
- *          mono16="JLinkButton16-mono.gif"
- *          color16="JLinkButton16.gif"
- *          mono32="JLinkButton32-mono.gif"
- *          color32="JLinkButton32.gif"
+ *
+ * @javabean.class name="JLinkButton"
+ * shortDescription="A button looking as an hyperlink."
+ * stopClass="java.awt.Component"
+ * @javabean.attribute name="isContainer"
+ * value="Boolean.FALSE"
+ * rtexpr="true"
+ * @javabean.icons mono16="JLinkButton16-mono.gif"
+ * color16="JLinkButton16.gif"
+ * mono32="JLinkButton32-mono.gif"
+ * color32="JLinkButton32.gif"
  */
 public class JLinkButton extends JButton {
 
   public static final String UI_CLASS_ID = "LinkButtonUI";
-  
+
   // ensure at least the default ui is registered
   static {
     LookAndFeelAddons.contribute(new JLinkButtonAddon());
@@ -76,7 +69,7 @@ public class JLinkButton extends JButton {
 
   /**
    * Returns the name of the L&F class that renders this component.
-   * 
+   *
    * @return the string {@link #UI_CLASS_ID}
    * @see javax.swing.JComponent#getUIClassID
    * @see javax.swing.UIDefaults#getUI
@@ -84,5 +77,5 @@ public class JLinkButton extends JButton {
   public String getUIClassID() {
     return UI_CLASS_ID;
   }
-  
+
 }

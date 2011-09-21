@@ -21,7 +21,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * LazyMutableTreeNode. <br>
- *  
  */
 public abstract class LazyMutableTreeNode extends DefaultMutableTreeNode {
 

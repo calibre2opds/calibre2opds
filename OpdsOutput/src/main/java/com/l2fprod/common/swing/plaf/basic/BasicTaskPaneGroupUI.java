@@ -23,31 +23,7 @@ import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.icons.EmptyIcon;
 import com.l2fprod.common.swing.plaf.TaskPaneGroupUI;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.MouseInputAdapter;
@@ -55,6 +31,13 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ActionMapUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Base implementation of the <code>JTaskPaneGroup</code> UI.
@@ -69,17 +52,17 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
 
   protected static int TITLE_HEIGHT = 25;
   protected static int ROUND_HEIGHT = 5;
-  
+
   protected JTaskPaneGroup group;
 
   protected boolean mouseOver;
   protected MouseInputListener mouseListener;
 
   protected PropertyChangeListener propertyListener;
-  
+
   public void installUI(JComponent c) {
     super.installUI(c);
-    group = (JTaskPaneGroup)c;
+    group = (JTaskPaneGroup) c;
 
     installDefaults();
     installListeners();
@@ -89,19 +72,12 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
   protected void installDefaults() {
     group.setOpaque(true);
     group.setBorder(createPaneBorder());
-    ((JComponent)group.getContentPane()).setBorder(createContentPaneBorder());
+    ((JComponent) group.getContentPane()).setBorder(createContentPaneBorder());
 
-    LookAndFeel.installColorsAndFont(
-      group,
-      "TaskPaneGroup.background",
-      "TaskPaneGroup.foreground",
-      "TaskPaneGroup.font");
+    LookAndFeel.installColorsAndFont(group, "TaskPaneGroup.background", "TaskPaneGroup.foreground", "TaskPaneGroup.font");
 
-    LookAndFeel.installColorsAndFont(
-      (JComponent)group.getContentPane(),
-      "TaskPaneGroup.background",
-      "TaskPaneGroup.foreground",
-      "TaskPaneGroup.font");    
+    LookAndFeel.installColorsAndFont((JComponent) group.getContentPane(), "TaskPaneGroup.background", "TaskPaneGroup.foreground",
+        "TaskPaneGroup.font");
   }
 
   protected void installListeners() {
@@ -115,12 +91,9 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
   }
 
   protected void installKeyboardActions() {
-    InputMap inputMap = (InputMap)UIManager.get("TaskPaneGroup.focusInputMap");
+    InputMap inputMap = (InputMap) UIManager.get("TaskPaneGroup.focusInputMap");
     if (inputMap != null) {
-      SwingUtilities.replaceUIInputMap(
-        group,
-        JComponent.WHEN_FOCUSED,
-        inputMap);
+      SwingUtilities.replaceUIInputMap(group, JComponent.WHEN_FOCUSED, inputMap);
     }
 
     ActionMap map = getActionMap();
@@ -154,7 +127,7 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
   protected PropertyChangeListener createPropertyListener() {
     return new ChangeListener();
   }
-  
+
   protected boolean isInBorder(MouseEvent event) {
     return event.getY() < getTitleHeight();
   }
@@ -173,28 +146,27 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       // something wrong in this JTaskPaneGroup
       return super.getPreferredSize(c);
     }
-    
-    JCollapsiblePane collapsible = (JCollapsiblePane)component;
+
+    JCollapsiblePane collapsible = (JCollapsiblePane) component;
     Dimension dim = collapsible.getPreferredSize();
-    
+
     Border groupBorder = group.getBorder();
     if (groupBorder instanceof PaneBorder) {
-      Dimension border = ((PaneBorder)groupBorder).getPreferredSize(group);
+      Dimension border = ((PaneBorder) groupBorder).getPreferredSize(group);
       dim.width = Math.max(dim.width, border.width);
       dim.height += border.height;
     } else {
       dim.height += getTitleHeight();
-    }      
-    
+    }
+
     return dim;
   }
-  
+
   protected Border createContentPaneBorder() {
     Color borderColor = UIManager.getColor("TaskPaneGroup.borderColor");
-    return new CompoundBorder(new ContentPaneBorder(borderColor), BorderFactory
-      .createEmptyBorder(10, 10, 10, 10));
+    return new CompoundBorder(new ContentPaneBorder(borderColor), BorderFactory.createEmptyBorder(10, 10, 10, 10));
   }
-  
+
   public Component createAction(Action action) {
     JLinkButton link = new JLinkButton(action) {
       public void updateUI() {
@@ -208,7 +180,7 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
     configure(link);
     return link;
   }
-  
+
   protected void configure(JLinkButton link) {
     link.setOpaque(false);
     link.setBorder(null);
@@ -220,62 +192,61 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
   protected void ensureVisible() {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        group.scrollRectToVisible(        
-          new Rectangle(group.getWidth(), group.getHeight()));
+        group.scrollRectToVisible(new Rectangle(group.getWidth(), group.getHeight()));
       }
     });
   }
-  
+
   static class RepaintOnFocus implements FocusListener {
     public void focusGained(FocusEvent e) {
       e.getComponent().repaint();
     }
+
     public void focusLost(FocusEvent e) {
       e.getComponent().repaint();
     }
   }
-  
+
   class ChangeListener implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
       // if group is expanded but not animated
       // or if animated has reached expanded state
       // scroll to visible if scrollOnExpand is enabled
-      if ((JTaskPaneGroup.EXPANDED_CHANGED_KEY.equals(evt.getPropertyName()) && Boolean.TRUE
-        .equals(evt.getNewValue()) && !group.isAnimated())
-        || (JCollapsiblePane.ANIMATION_STATE_KEY.equals(evt.getPropertyName()) && "expanded"
-          .equals(evt.getNewValue()))) {
+      if ((JTaskPaneGroup.EXPANDED_CHANGED_KEY.equals(evt.getPropertyName()) && Boolean.TRUE.equals(evt.getNewValue()) &&
+          !group.isAnimated()) ||
+          (JCollapsiblePane.ANIMATION_STATE_KEY.equals(evt.getPropertyName()) && "expanded".equals(evt.getNewValue()))) {
         if (group.isScrollOnExpand()) {
           ensureVisible();
         }
-      } else if (JTaskPaneGroup.ICON_CHANGED_KEY.equals(evt.getPropertyName())
-        || JTaskPaneGroup.TITLE_CHANGED_KEY.equals(evt.getPropertyName())
-        || JTaskPaneGroup.SPECIAL_CHANGED_KEY.equals(evt.getPropertyName())
-        || JTaskPaneGroup.COLLAPSABLE_CHANGED_KEY.equals(evt.getPropertyName())) {
+      } else if (JTaskPaneGroup.ICON_CHANGED_KEY.equals(evt.getPropertyName()) ||
+          JTaskPaneGroup.TITLE_CHANGED_KEY.equals(evt.getPropertyName()) ||
+          JTaskPaneGroup.SPECIAL_CHANGED_KEY.equals(evt.getPropertyName()) ||
+          JTaskPaneGroup.COLLAPSABLE_CHANGED_KEY.equals(evt.getPropertyName())) {
         // icon, title, special must lead to a repaint()
         group.repaint();
       }
     }
   }
-  
+
   class ToggleListener extends MouseInputAdapter {
     public void mouseEntered(MouseEvent e) {
       if (isInBorder(e)) {
-        e.getComponent().setCursor(
-          Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       } else {
         mouseOver = false;
         group.repaint();
       }
     }
+
     public void mouseExited(MouseEvent e) {
       e.getComponent().setCursor(null);
       mouseOver = false;
       group.repaint();
     }
+
     public void mouseMoved(MouseEvent e) {
       if (isInBorder(e) && group.isCollapsable()) {
-        e.getComponent().setCursor(
-          Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mouseOver = true;
         group.repaint();
       } else {
@@ -284,20 +255,23 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
         group.repaint();
       }
     }
+
     public void mouseReleased(MouseEvent e) {
       if (isInBorder(e) && group.isCollapsable()) {
         group.setExpanded(!group.isExpanded());
       }
     }
   }
-  
+
   class ToggleExpandedAction extends AbstractAction {
     public ToggleExpandedAction() {
       super("toggleExpanded");
     }
+
     public void actionPerformed(ActionEvent e) {
       group.setExpanded(!group.isExpanded());
     }
+
     public boolean isEnabled() {
       return group.isVisible() && group.isCollapsable();
     }
@@ -305,15 +279,19 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
 
   protected static class ChevronIcon implements Icon {
     boolean up = true;
+
     public ChevronIcon(boolean up) {
       this.up = up;
     }
+
     public int getIconHeight() {
       return 3;
     }
+
     public int getIconWidth() {
       return 6;
     }
+
     public void paintIcon(Component c, Graphics g, int x, int y) {
       if (up) {
         g.drawLine(x + 3, y, x, y + 3);
@@ -330,15 +308,19 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
    */
   protected static class ContentPaneBorder implements Border {
     Color color;
+
     public ContentPaneBorder(Color color) {
       this.color = color;
     }
+
     public Insets getBorderInsets(Component c) {
       return new Insets(0, 1, 1, 1);
     }
+
     public boolean isBorderOpaque() {
       return true;
     }
+
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
       g.setColor(color);
       g.drawLine(x, y, x, y + height - 1);
@@ -346,11 +328,10 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       g.drawLine(x + width - 1, y, x + width - 1, y + height - 1);
     }
   }
-  
+
   /**
    * The border of the taskpane group paints the "text", the "icon", the
    * "expanded" status and the "special" type.
-   *  
    */
   protected class PaneBorder implements Border {
 
@@ -363,24 +344,20 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
 
     protected Color titleOver;
     protected Color specialTitleOver;
-    
+
     protected JLabel label;
-    
+
     public PaneBorder() {
-      borderColor = UIManager.getColor("TaskPaneGroup.borderColor");      
+      borderColor = UIManager.getColor("TaskPaneGroup.borderColor");
 
       titleForeground = UIManager.getColor("TaskPaneGroup.titleForeground");
 
-      specialTitleBackground = UIManager
-        .getColor("TaskPaneGroup.specialTitleBackground");
-      specialTitleForeground = UIManager
-        .getColor("TaskPaneGroup.specialTitleForeground");
+      specialTitleBackground = UIManager.getColor("TaskPaneGroup.specialTitleBackground");
+      specialTitleForeground = UIManager.getColor("TaskPaneGroup.specialTitleForeground");
 
-      titleBackgroundGradientStart = UIManager
-        .getColor("TaskPaneGroup.titleBackgroundGradientStart");
-      titleBackgroundGradientEnd = UIManager
-        .getColor("TaskPaneGroup.titleBackgroundGradientEnd");
-      
+      titleBackgroundGradientStart = UIManager.getColor("TaskPaneGroup.titleBackgroundGradientStart");
+      titleBackgroundGradientEnd = UIManager.getColor("TaskPaneGroup.titleBackgroundGradientEnd");
+
       titleOver = UIManager.getColor("TaskPaneGroup.titleOver");
       if (titleOver == null) {
         titleOver = specialTitleBackground.brighter();
@@ -389,12 +366,12 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       if (specialTitleOver == null) {
         specialTitleOver = specialTitleBackground.brighter();
       }
-      
+
       label = new JLabel();
       label.setOpaque(false);
       label.setIconTextGap(8);
     }
-    
+
     public Insets getBorderInsets(Component c) {
       return new Insets(getTitleHeight(), 0, 0, 0);
     }
@@ -417,11 +394,11 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       dim.width += TITLE_HEIGHT;
       // and some space between label and controls
       dim.width += 3;
-      
+
       dim.height = getTitleHeight();
       return dim;
     }
-    
+
     protected void paintTitleBackground(JTaskPaneGroup group, Graphics g) {
       if (group.isSpecial()) {
         g.setColor(specialTitleBackground);
@@ -431,14 +408,7 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       g.fillRect(0, 0, group.getWidth(), getTitleHeight() - 1);
     }
 
-    protected void paintTitle(
-      JTaskPaneGroup group,
-      Graphics g,
-      Color textColor,
-      int x,
-      int y,
-      int width,
-      int height) {
+    protected void paintTitle(JTaskPaneGroup group, Graphics g, Color textColor, int x, int y, int width, int height) {
       configureLabel(group);
       label.setForeground(textColor);
       g.translate(x, y);
@@ -451,12 +421,10 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       label.applyComponentOrientation(group.getComponentOrientation());
       label.setFont(group.getFont());
       label.setText(group.getTitle());
-      label.setIcon(
-        group.getIcon() == null ? new EmptyIcon() : group.getIcon());      
+      label.setIcon(group.getIcon() == null ? new EmptyIcon() : group.getIcon());
     }
-    
-    protected void paintExpandedControls(JTaskPaneGroup group, Graphics g, int x,
-      int y, int width, int height) {}
+
+    protected void paintExpandedControls(JTaskPaneGroup group, Graphics g, int x, int y, int width, int height) {}
 
     protected Color getPaintColor(JTaskPaneGroup group) {
       Color paintColor;
@@ -483,41 +451,34 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
       }
       return paintColor;
     }
-    
-    public void paintBorder(
-      Component c,
-      Graphics g,
-      int x,
-      int y,
-      int width,
-      int height) {
 
-      JTaskPaneGroup group = (JTaskPaneGroup)c;
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+
+      JTaskPaneGroup group = (JTaskPaneGroup) c;
 
       // calculate position of title and toggle controls
       int controlWidth = TITLE_HEIGHT - 2 * ROUND_HEIGHT;
       // oval looks more like a circle with odd width
       if (controlWidth % 2 != 0) { controlWidth++; }
-      
+
       int controlX = group.getWidth() - TITLE_HEIGHT;
       int controlY = ROUND_HEIGHT - 1;
       int titleX = 3;
       int titleY = 0;
       int titleWidth = group.getWidth() - getTitleHeight() - 3;
       int titleHeight = getTitleHeight();
-      
+
       if (!group.getComponentOrientation().isLeftToRight()) {
-        controlX = group.getWidth() - controlX - controlWidth;        
+        controlX = group.getWidth() - controlX - controlWidth;
         titleX = group.getWidth() - titleX - titleWidth;
       }
-      
+
       // paint the title background
       paintTitleBackground(group, g);
 
       // paint the the toggles
       if (group.isCollapsable()) {
-        paintExpandedControls(group, g, controlX, controlY, controlWidth,
-          controlWidth);
+        paintExpandedControls(group, g, controlX, controlY, controlWidth, controlWidth);
       }
 
       // paint the title text and icon
@@ -525,26 +486,20 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
 
       // focus painted same color as text
       if (group.hasFocus()) {
-        paintFocus(g, 
-          paintColor, 
-          3,
-          3,
-          width - 6,
-          getTitleHeight() - 6);
+        paintFocus(g, paintColor, 3, 3, width - 6, getTitleHeight() - 6);
       }
 
-      paintTitle(
-        group,
-        g,
-        paintColor,
-        titleX,
-        titleY,
-        titleWidth,
-        titleHeight);
+      paintTitle(group, g, paintColor, titleX, titleY, titleWidth, titleHeight);
     }
-    
-    protected void paintRectAroundControls(JTaskPaneGroup group, Graphics g, int x,
-      int y, int width, int height, Color highColor, Color lowColor) {      
+
+    protected void paintRectAroundControls(JTaskPaneGroup group,
+        Graphics g,
+        int x,
+        int y,
+        int width,
+        int height,
+        Color highColor,
+        Color lowColor) {
       if (mouseOver) {
         int x2 = x + width;
         int y2 = y + height;
@@ -556,35 +511,21 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
         g.drawLine(x, y2, x2, y2);
       }
     }
-    
-    protected void paintOvalAroundControls(JTaskPaneGroup group, Graphics g, int x,
-      int y, int width, int height) {      
+
+    protected void paintOvalAroundControls(JTaskPaneGroup group, Graphics g, int x, int y, int width, int height) {
       if (group.isSpecial()) {
         g.setColor(specialTitleBackground.brighter());
-        g.drawOval(
-          x,
-          y,
-          width,
-          height);
+        g.drawOval(x, y, width, height);
       } else {
         g.setColor(titleBackgroundGradientStart);
-        g.fillOval(
-          x,
-          y,
-          width,
-          width);
+        g.fillOval(x, y, width, width);
 
         g.setColor(titleBackgroundGradientEnd.darker());
-        g.drawOval(
-          x,
-          y,
-          width,
-          width);
+        g.drawOval(x, y, width, width);
       }
     }
-    
-    protected void paintChevronControls(JTaskPaneGroup group, Graphics g, int x,
-      int y, int width, int height) {      
+
+    protected void paintChevronControls(JTaskPaneGroup group, Graphics g, int x, int y, int width, int height) {
       ChevronIcon chevron;
       if (group.isExpanded()) {
         chevron = new ChevronIcon(true);
@@ -592,28 +533,19 @@ public class BasicTaskPaneGroupUI extends TaskPaneGroupUI {
         chevron = new ChevronIcon(false);
       }
       int chevronX = x + width / 2 - chevron.getIconWidth() / 2;
-      int chevronY = y + (height / 2 - chevron.getIconHeight()) - (group.isExpanded()?1:0);
+      int chevronY = y + (height / 2 - chevron.getIconHeight()) - (group.isExpanded() ? 1 : 0);
       chevron.paintIcon(group, g, chevronX, chevronY);
-      chevron.paintIcon(
-        group,
-        g,
-        chevronX,
-        chevronY + chevron.getIconHeight() + 1);
+      chevron.paintIcon(group, g, chevronX, chevronY + chevron.getIconHeight() + 1);
     }
-    
+
     protected void paintFocus(Graphics g, Color paintColor, int x, int y, int width, int height) {
-        g.setColor(paintColor);
-        BasicGraphicsUtils.drawDashedRect(
-          g,
-          x,
-          y,
-          width,
-          height);
+      g.setColor(paintColor);
+      BasicGraphicsUtils.drawDashedRect(g, x, y, width, height);
     }
-    
+
     /**
      * Default implementation returns false.
-     *  
+     *
      * @return true if this border wants to display things differently when the
      *         mouse is over it
      */

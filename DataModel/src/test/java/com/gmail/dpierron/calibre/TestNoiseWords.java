@@ -1,10 +1,9 @@
 package com.gmail.dpierron.calibre;
 
-import static org.junit.Assert.*;
-
+import com.gmail.dpierron.calibre.datamodel.NoiseWord;
 import org.junit.Test;
 
-import com.gmail.dpierron.calibre.datamodel.NoiseWord;
+import static org.junit.Assert.assertTrue;
 
 public class TestNoiseWords {
 
@@ -25,7 +24,7 @@ public class TestNoiseWords {
     assertTrue("cat who liked girls".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("the un cat who liked girls");
     assertTrue("un cat who liked girls".equals(withoutNoise));
-    
+
     noiseWord = NoiseWord.fromLanguage("DE");
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein voegel");
     assertTrue("voegel".equals(withoutNoise));
@@ -33,7 +32,7 @@ public class TestNoiseWords {
     assertTrue("voegel".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein un voegel");
     assertTrue("un voegel".equals(withoutNoise));
-    
+
   }
 
 }

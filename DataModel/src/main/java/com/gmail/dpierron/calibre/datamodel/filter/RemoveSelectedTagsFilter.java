@@ -1,11 +1,11 @@
 package com.gmail.dpierron.calibre.datamodel.filter;
 
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class RemoveSelectedTagsFilter implements BookFilter {
 
@@ -19,7 +19,7 @@ public class RemoveSelectedTagsFilter implements BookFilter {
     if (book == null)
       return false;
 
-    List<Tag> tags = new Vector<Tag>(book.getTags());
+    List<Tag> tags = new LinkedList<Tag>(book.getTags());
     for (Tag tag : tags) {
       if (tagsToRemove.contains(tag)) {
         book.getTags().remove(tag);

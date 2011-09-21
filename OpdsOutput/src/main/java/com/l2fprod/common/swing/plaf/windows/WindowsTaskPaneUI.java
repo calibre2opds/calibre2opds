@@ -19,12 +19,12 @@ package com.l2fprod.common.swing.plaf.windows;
 
 import com.l2fprod.common.swing.plaf.basic.BasicTaskPaneUI;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
 /**
  * Windows implementation of the TaskPaneUI.
- * 
+ *
  * @author <a href="mailto:fred@L2FProd.com">Frederic Lavigne</a>
  */
 public class WindowsTaskPaneUI extends BasicTaskPaneUI {
@@ -36,5 +36,5 @@ public class WindowsTaskPaneUI extends BasicTaskPaneUI {
   public void installUI(JComponent c) {
     super.installUI(c);
   }
-    
+
 }

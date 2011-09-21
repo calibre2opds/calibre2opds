@@ -19,30 +19,29 @@ package com.l2fprod.common.beans.editor;
 
 import com.l2fprod.common.swing.LookAndFeelTweaks;
 
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 /**
  * StringPropertyEditor.<br>
- *
  */
 public class StringPropertyEditor extends AbstractPropertyEditor {
 
   public StringPropertyEditor() {
     editor = new JTextField();
-    ((JTextField)editor).setBorder(LookAndFeelTweaks.EMPTY_BORDER);
+    ((JTextField) editor).setBorder(LookAndFeelTweaks.EMPTY_BORDER);
   }
-  
+
   public Object getValue() {
-    return ((JTextComponent)editor).getText();
+    return ((JTextComponent) editor).getText();
   }
-  
+
   public void setValue(Object value) {
     if (value == null) {
-      ((JTextComponent)editor).setText("");
+      ((JTextComponent) editor).setText("");
     } else {
-      ((JTextComponent)editor).setText(String.valueOf(value));
+      ((JTextComponent) editor).setText(String.valueOf(value));
     }
   }
-  
+
 }

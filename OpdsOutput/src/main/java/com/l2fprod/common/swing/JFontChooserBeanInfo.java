@@ -3,13 +3,8 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.Image;
-import java.beans.BeanDescriptor;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.beans.SimpleBeanInfo;
+import java.awt.*;
+import java.beans.*;
 import java.util.Vector;
 
 /**
@@ -17,19 +12,30 @@ import java.util.Vector;
  */
 public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
-  /** Description of the Field */
-  protected BeanDescriptor bd = new BeanDescriptor(
-    com.l2fprod.common.swing.JFontChooser.class);
-  /** Description of the Field */
+  /**
+   * Description of the Field
+   */
+  protected BeanDescriptor bd = new BeanDescriptor(com.l2fprod.common.swing.JFontChooser.class);
+  /**
+   * Description of the Field
+   */
   protected Image iconMono16 = loadImage("JFontChooser16-mono.gif");
-  /** Description of the Field */
+  /**
+   * Description of the Field
+   */
   protected Image iconColor16 = loadImage("JFontChooser16.gif");
-  /** Description of the Field */
+  /**
+   * Description of the Field
+   */
   protected Image iconMono32 = loadImage("JFontChooser32-mono.gif");
-  /** Description of the Field */
+  /**
+   * Description of the Field
+   */
   protected Image iconColor32 = loadImage("JFontChooser32.gif");
 
-  /** Constructor for the JFontChooserBeanInfo object */
+  /**
+   * Constructor for the JFontChooserBeanInfo object
+   */
   public JFontChooserBeanInfo() throws java.beans.IntrospectionException {
     // setup bean descriptor in constructor.
     bd.setName("JFontChooser");
@@ -38,14 +44,13 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
     bd.setValue("isContainer", Boolean.FALSE);
 
-    BeanInfo info = Introspector.getBeanInfo(getBeanDescriptor().getBeanClass()
-      .getSuperclass());
-    String order = info.getBeanDescriptor().getValue("propertyorder") == null?""
-      :(String)info.getBeanDescriptor().getValue("propertyorder");
+    BeanInfo info = Introspector.getBeanInfo(getBeanDescriptor().getBeanClass().getSuperclass());
+    String order =
+        info.getBeanDescriptor().getValue("propertyorder") == null ? "" : (String) info.getBeanDescriptor().getValue("propertyorder");
     PropertyDescriptor[] pd = getPropertyDescriptors();
     for (int i = 0; i != pd.length; i++) {
       if (order.indexOf(pd[i].getName()) == -1) {
-        order = order + (order.length() == 0?"":":") + pd[i].getName();
+        order = order + (order.length() == 0 ? "" : ":") + pd[i].getName();
       }
     }
     getBeanDescriptor().setValue("propertyorder", order);
@@ -53,16 +58,16 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
   /**
    * Gets the additionalBeanInfo
-   * 
+   *
    * @return The additionalBeanInfo value
    */
   public BeanInfo[] getAdditionalBeanInfo() {
     Vector bi = new Vector();
     BeanInfo[] biarr = null;
     try {
-      for (Class cl = com.l2fprod.common.swing.JFontChooser.class
-        .getSuperclass(); !cl.equals(javax.swing.JComponent.class
-        .getSuperclass()); cl = cl.getSuperclass()) {
+      for (Class cl = com.l2fprod.common.swing.JFontChooser.class.getSuperclass();
+          !cl.equals(javax.swing.JComponent.class.getSuperclass());
+          cl = cl.getSuperclass()) {
         bi.addElement(Introspector.getBeanInfo(cl));
       }
       biarr = new BeanInfo[bi.size()];
@@ -75,7 +80,7 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
   /**
    * Gets the beanDescriptor
-   * 
+   *
    * @return The beanDescriptor value
    */
   public BeanDescriptor getBeanDescriptor() {
@@ -84,7 +89,7 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
   /**
    * Gets the defaultPropertyIndex
-   * 
+   *
    * @return The defaultPropertyIndex value
    */
   public int getDefaultPropertyIndex() {
@@ -99,9 +104,8 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
   /**
    * Gets the icon
-   * 
-   * @param type
-   *          Description of the Parameter
+   *
+   * @param type Description of the Parameter
    * @return The icon value
    */
   public Image getIcon(int type) {
@@ -114,7 +118,7 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
   /**
    * Gets the Property Descriptors
-   * 
+   *
    * @return The propertyDescriptors value
    */
   public PropertyDescriptor[] getPropertyDescriptors() {
@@ -123,15 +127,12 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
       PropertyDescriptor descriptor = null;
 
       try {
-        descriptor = new PropertyDescriptor("selectedFont",
-          com.l2fprod.common.swing.JFontChooser.class);
+        descriptor = new PropertyDescriptor("selectedFont", com.l2fprod.common.swing.JFontChooser.class);
       } catch (IntrospectionException e) {
-        descriptor = new PropertyDescriptor("selectedFont",
-          com.l2fprod.common.swing.JFontChooser.class, "getSelectedFont", null);
+        descriptor = new PropertyDescriptor("selectedFont", com.l2fprod.common.swing.JFontChooser.class, "getSelectedFont", null);
       }
 
-      descriptor
-        .setShortDescription("The current font the chooser is to display");
+      descriptor.setShortDescription("The current font the chooser is to display");
 
       descriptor.setPreferred(true);
 
@@ -139,8 +140,7 @@ public class JFontChooserBeanInfo extends SimpleBeanInfo {
 
       descriptors.add(descriptor);
 
-      return (PropertyDescriptor[])descriptors
-        .toArray(new PropertyDescriptor[descriptors.size()]);
+      return (PropertyDescriptor[]) descriptors.toArray(new PropertyDescriptor[descriptors.size()]);
     } catch (Exception e) {
       // do not ignore, bomb politely so use has chance to discover what went
       // wrong...

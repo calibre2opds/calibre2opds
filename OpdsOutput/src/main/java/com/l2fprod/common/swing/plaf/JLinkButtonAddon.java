@@ -24,7 +24,6 @@ import java.util.List;
 
 /**
  * Addon for <code>JLinkButton</code>.<br>
- * 
  */
 public class JLinkButtonAddon extends AbstractComponentAddon {
 
@@ -33,13 +32,11 @@ public class JLinkButtonAddon extends AbstractComponentAddon {
   }
 
   protected void addBasicDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {JLinkButton.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.basic.BasicLinkButtonUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{JLinkButton.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.basic.BasicLinkButtonUI"}));
   }
 
   protected void addWindowsDefaults(LookAndFeelAddons addon, List defaults) {
-    defaults.addAll(Arrays.asList(new Object[] {JLinkButton.UI_CLASS_ID,
-      "com.l2fprod.common.swing.plaf.windows.WindowsLinkButtonUI"}));
+    defaults.addAll(Arrays.asList(new Object[]{JLinkButton.UI_CLASS_ID, "com.l2fprod.common.swing.plaf.windows.WindowsLinkButtonUI"}));
   }
 
 }

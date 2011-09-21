@@ -186,10 +186,10 @@
 
                             <!-- related catalogs -->
                             <div class="fullEntry_related">
-                                <xsl:if test="opds:link[@rel='related' and @type='application/atom+xmlprofile=opds-catalog']">
+                                <xsl:if test="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog;kind=navigation']">
                                     <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.relatedsection"/></h2>
                                     <ul>
-                                        <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog']">
+                                        <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog;kind=navigation']">
                                             <li>
                                                 <xsl:element name="a">
                                                     <xsl:attribute name="href">

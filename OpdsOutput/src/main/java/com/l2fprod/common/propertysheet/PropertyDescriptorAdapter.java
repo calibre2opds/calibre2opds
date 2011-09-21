@@ -26,16 +26,15 @@ import java.lang.reflect.Method;
 
 /**
  * PropertyDescriptorAdapter.<br>
- *
  */
 class PropertyDescriptorAdapter extends AbstractProperty {
 
   private PropertyDescriptor descriptor;
-  
+
   public PropertyDescriptorAdapter() {
     super();
   }
-  
+
   public PropertyDescriptorAdapter(PropertyDescriptor descriptor) {
     this();
     setDescriptor(descriptor);
@@ -44,19 +43,19 @@ class PropertyDescriptorAdapter extends AbstractProperty {
   public void setDescriptor(PropertyDescriptor descriptor) {
     this.descriptor = descriptor;
   }
-  
+
   public PropertyDescriptor getDescriptor() {
     return descriptor;
   }
-  
+
   public String getName() {
     return descriptor.getName();
   }
-  
+
   public String getDisplayName() {
     return descriptor.getDisplayName();
   }
-  
+
   public String getShortDescription() {
     return descriptor.getShortDescription();
   }
@@ -70,12 +69,12 @@ class PropertyDescriptorAdapter extends AbstractProperty {
     clone.setValue(getValue());
     return clone;
   }
-  
+
   public void readFromObject(Object object) {
     try {
       Method method = descriptor.getReadMethod();
       if (method != null) {
-        setValue(method.invoke(object, (Object[])null));
+        setValue(method.invoke(object, (Object[]) null));
       }
     } catch (Exception e) {
       String message = "Got exception when reading property " + getName();
@@ -87,7 +86,7 @@ class PropertyDescriptorAdapter extends AbstractProperty {
       throw new RuntimeException(message, e);
     }
   }
-  
+
   public void writeToObject(Object object) {
     try {
       Method method = descriptor.getWriteMethod();
@@ -96,9 +95,9 @@ class PropertyDescriptorAdapter extends AbstractProperty {
       }
     } catch (Exception e) {
       // let PropertyVetoException go to the upper level without logging
-      if (e instanceof InvocationTargetException &&
-        ((InvocationTargetException)e).getTargetException() instanceof PropertyVetoException) {
-        throw new RuntimeException(((InvocationTargetException)e).getTargetException());
+      if (e instanceof InvocationTargetException && ((InvocationTargetException) e).getTargetException() instanceof
+          PropertyVetoException) {
+        throw new RuntimeException(((InvocationTargetException) e).getTargetException());
       }
 
       String message = "Got exception when writing property " + getName();
@@ -110,17 +109,17 @@ class PropertyDescriptorAdapter extends AbstractProperty {
       throw new RuntimeException(message, e);
     }
   }
-  
+
   public boolean isEditable() {
     return descriptor.getWriteMethod() != null;
   }
 
   public String getCategory() {
     if (descriptor instanceof ExtendedPropertyDescriptor) {
-      return ((ExtendedPropertyDescriptor)descriptor).getCategory();
+      return ((ExtendedPropertyDescriptor) descriptor).getCategory();
     } else {
       return null;
     }
   }
-  
+
 }

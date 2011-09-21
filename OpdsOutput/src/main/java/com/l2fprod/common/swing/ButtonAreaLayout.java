@@ -17,15 +17,10 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.LayoutManager;
+import java.awt.*;
 
 /**
  * ButtonAreaLayout. <br>
- *  
  */
 public final class ButtonAreaLayout implements LayoutManager {
 
@@ -58,18 +53,12 @@ public final class ButtonAreaLayout implements LayoutManager {
     }
 
     int usedWidth = maxWidth * visibleCount + gap * (visibleCount - 1);
-    
+
     visibleCount = 0;
     for (int i = 0, c = children.length; i < c; i++) {
       if (children[i].isVisible()) {
-        children[i].setBounds(
-          container.getWidth()
-            - insets.right
-            - usedWidth
-            + (maxWidth + gap) * visibleCount,
-          insets.top,
-          maxWidth,
-          maxHeight);
+        children[i]
+            .setBounds(container.getWidth() - insets.right - usedWidth + (maxWidth + gap) * visibleCount, insets.top, maxWidth, maxHeight);
         visibleCount++;
       }
     }
@@ -100,9 +89,7 @@ public final class ButtonAreaLayout implements LayoutManager {
 
     int usedWidth = maxWidth * visibleCount + gap * (visibleCount - 1);
 
-    return new Dimension(
-      insets.left + usedWidth + insets.right,
-      insets.top + maxHeight + insets.bottom);
+    return new Dimension(insets.left + usedWidth + insets.right, insets.top + maxHeight + insets.bottom);
   }
 
   public void removeLayoutComponent(Component c) {

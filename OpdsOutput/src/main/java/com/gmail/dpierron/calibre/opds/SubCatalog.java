@@ -3,6 +3,7 @@ package com.gmail.dpierron.calibre.opds;
 /**
  * Abstract class containing functions common to all catalog types
  */
+
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.StanzaConstants;
 import com.gmail.dpierron.calibre.datamodel.Book;
@@ -29,16 +30,17 @@ public abstract class SubCatalog {
   public SubCatalog(List<Book> books) {
     this(null, books);
   }
-  
+
   public SubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     setStuffToFilterOut(stuffToFilterOut);
     setBooks(books);
   }
 
   /**
-    * Set the list of books to be included in this aa(sub) catalog
-    * @param books
-    */
+   * Set the list of books to be included in this aa(sub) catalog
+   *
+   * @param books
+   */
   void setBooks(List<Book> books) {
     this.books = null;
     if (Helper.isNotNullOrEmpty(stuffToFilterOut)) {
@@ -51,7 +53,7 @@ public abstract class SubCatalog {
   List<Book> getBooks() {
     return books;
   }
-  
+
   List<Object> getStuffToFilterOut() {
     return stuffToFilterOut;
   }
@@ -78,7 +80,7 @@ public abstract class SubCatalog {
   boolean isInDeepLevel() {
     return Helper.isNotNullOrEmpty(stuffToFilterOut);
   }
-  
+
   HtmlManager getHtmlManager() {
     return CatalogContext.INSTANCE.getHtmlManager();
   }
@@ -111,67 +113,64 @@ public abstract class SubCatalog {
     CatalogContext.INSTANCE.setCoverManager(coverManager);
   }
 
-/*
-  public abstract Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs,
-                                             SplitOption splitOption)
-                          throws IOException;
-*/
-
-  public abstract Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs)
+  /*
+    public abstract Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs,
+                                               SplitOption splitOption)
                             throws IOException;
+  */
+
+  public abstract Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException;
 
   public Element getSubCatalogLevel(Breadcrumbs pBreadcrumbs,
-                                    List<Book> books,
-                                    List<Object> stuffToFilterOut,
-                                    String title,
-                                    String summary,
-                                    String urn,
-                                    String filename,
-                                    SplitOption splitOption,
-                                    String icon,
-                                    Option... options)
-                                            throws IOException {
+      List<Book> books,
+      List<Object> stuffToFilterOut,
+      String title,
+      String summary,
+      String urn,
+      String filename,
+      SplitOption splitOption,
+      String icon,
+      Option... options) throws IOException {
     // generate an additional level
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
     Document document = new Document();
     try {
       fos = new FileOutputStream(outputFile);
-    
-      Element feed = FeedHelper.INSTANCE.getFeed(pBreadcrumbs, title, urn);
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs,
-                                                          title,
-                                                          getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
-      
+
+      String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
+      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+
       /* Tags */
       Element entry = TagSubCatalog.getTagSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (entry != null)
         feed.addContent(entry);
-  
+
       /* Authors */
       entry = new AuthorsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (entry != null)
         feed.addContent(entry);
-  
+
       /* Series */
       entry = new SeriesSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (entry != null)
         feed.addContent(entry);
-  
+
       /* Recent books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent()) {
         entry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (entry != null)
           feed.addContent(entry);
       }
-  
+
       /* Rated books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings()) {
         entry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (entry != null)
           feed.addContent(entry);
       }
-      
+
       /* All books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
         entry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
@@ -182,7 +181,7 @@ public abstract class SubCatalog {
       // write the element to the file
       document.addContent(feed);
       JDOM.INSTANCE.getOutputter().output(document, fos);
-      
+
     } finally {
       if (fos != null)
         fos.close();
@@ -191,22 +190,20 @@ public abstract class SubCatalog {
     // create the same file as html
     getHtmlManager().generateHtmlFromXml(document, outputFile);
     if (logger.isTraceEnabled())
-        logger.trace("getSubCatalogLevel  Breadcrumbs=" + pBreadcrumbs.toString());
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size()>1;
-    return FeedHelper.INSTANCE.getEntry(title,
-                                        urn,
-                                        getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder ),
-                                        summary,
-                                        // #751211: Use external icons option
-                                        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons()
-                                            ? getCatalogManager().getPathToCatalogRoot(filename,weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS
-                                            : StanzaConstants.ICON_TAGS);
+      logger.trace("getSubCatalogLevel  Breadcrumbs=" + pBreadcrumbs.toString());
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    return FeedHelper.INSTANCE
+        .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
+            // #751211: Use external icons option
+            ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+                getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
+                StanzaConstants.ICON_TAGS);
 
   }
-  
+
   String getFilenamePrefix(Breadcrumbs pBreadcrumbs) {
     if (isInDeepLevel())
-      return pBreadcrumbs.getFilename()+"_";
+      return pBreadcrumbs.getFilename() + "_";
     else
       return "";
   }

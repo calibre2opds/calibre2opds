@@ -17,19 +17,18 @@
  */
 package com.l2fprod.common.propertysheet;
 
+import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 import com.l2fprod.common.swing.renderer.BooleanCellRenderer;
 import com.l2fprod.common.swing.renderer.ColorCellRenderer;
 import com.l2fprod.common.swing.renderer.DateRenderer;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
-import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 
-import java.awt.Color;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.beans.PropertyDescriptor;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.beans.PropertyDescriptor;
-
-import javax.swing.table.TableCellRenderer;
 
 /**
  * Mapping between Properties, Property Types and Renderers.
@@ -44,7 +43,7 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
     propertyToRenderer = new HashMap();
     registerDefaults();
   }
-  
+
   public TableCellRenderer createTableCellRenderer(Property property) {
     return getRenderer(property);
   }
@@ -68,34 +67,32 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
    * <li>look for renderer for the property type using
    * {@link #getRenderer(Class)}.</li>
    * </ul>
-   * 
+   *
    * @param property
    * @return a renderer suitable for the Property.
    */
-  public synchronized TableCellRenderer getRenderer(Property property)
- {
+  public synchronized TableCellRenderer getRenderer(Property property) {
 
-   // editors bound to the property descriptor have the highest priority
-   TableCellRenderer renderer = null;
-   if (property instanceof PropertyDescriptorAdapter) {
-     PropertyDescriptor descriptor = ((PropertyDescriptorAdapter) property).getDescriptor();
-     if (descriptor instanceof ExtendedPropertyDescriptor) {
-       if (((ExtendedPropertyDescriptor) descriptor).getPropertyTableRendererClass() != null) {
-         try {
-           return (TableCellRenderer) (((ExtendedPropertyDescriptor) descriptor).getPropertyTableRendererClass()).newInstance();
-         }
-         catch (Exception ex){
-           ex.printStackTrace();
-         }
-       }
-     }
-   }
+    // editors bound to the property descriptor have the highest priority
+    TableCellRenderer renderer = null;
+    if (property instanceof PropertyDescriptorAdapter) {
+      PropertyDescriptor descriptor = ((PropertyDescriptorAdapter) property).getDescriptor();
+      if (descriptor instanceof ExtendedPropertyDescriptor) {
+        if (((ExtendedPropertyDescriptor) descriptor).getPropertyTableRendererClass() != null) {
+          try {
+            return (TableCellRenderer) (((ExtendedPropertyDescriptor) descriptor).getPropertyTableRendererClass()).newInstance();
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+    }
     Object value = propertyToRenderer.get(property);
     if (value instanceof TableCellRenderer) {
-      renderer = (TableCellRenderer)value;
+      renderer = (TableCellRenderer) value;
     } else if (value instanceof Class) {
       try {
-        renderer = (TableCellRenderer)((Class)value).newInstance();
+        renderer = (TableCellRenderer) ((Class) value).newInstance();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -117,7 +114,7 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
    * <li>
    * <li>it returns null.</li>
    * </ul>
-   * 
+   *
    * @param type
    * @return a renderer editor suitable for the Property type or null if none
    *         found
@@ -126,10 +123,10 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
     TableCellRenderer renderer = null;
     Object value = typeToRenderer.get(type);
     if (value instanceof TableCellRenderer) {
-      renderer = (TableCellRenderer)value;
+      renderer = (TableCellRenderer) value;
     } else if (value instanceof Class) {
       try {
-        renderer = (TableCellRenderer)((Class)value).newInstance();
+        renderer = (TableCellRenderer) ((Class) value).newInstance();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -153,8 +150,7 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
     propertyToRenderer.put(property, rendererClass);
   }
 
-  public synchronized void registerRenderer(Property property,
-      TableCellRenderer renderer) {
+  public synchronized void registerRenderer(Property property, TableCellRenderer renderer) {
     propertyToRenderer.put(property, renderer);
   }
 
@@ -184,7 +180,7 @@ public class PropertyRendererRegistry implements PropertyRendererFactory {
 
     DateRenderer dateRenderer = new DateRenderer();
     dateRenderer.setShowOddAndEvenRows(false);
-    
+
     registerRenderer(Object.class, renderer);
     registerRenderer(Color.class, colorRenderer);
     registerRenderer(boolean.class, booleanRenderer);

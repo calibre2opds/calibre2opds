@@ -17,34 +17,20 @@
  */
 package com.l2fprod.common.propertysheet;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.tree.TreeCellEditor;
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.util.EventObject;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.JComponent;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableCellEditor;
-import javax.swing.tree.TreeCellEditor;
-
 /**
  * Allows to use any PropertyEditor as a Table or Tree cell editor. <br>
  */
-public class CellEditorAdapter
-  extends AbstractCellEditor
-  implements TableCellEditor, TreeCellEditor {
+public class CellEditorAdapter extends AbstractCellEditor implements TableCellEditor, TreeCellEditor {
 
   protected PropertyEditor editor;
   protected int clickCountToStart = 1;
@@ -66,7 +52,7 @@ public class CellEditorAdapter
    */
   class SelectOnFocus implements FocusListener {
     public void focusGained(final FocusEvent e) {
-      if (! (e.getSource() instanceof JTextField))
+      if (!(e.getSource() instanceof JTextField))
         return;
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
@@ -74,8 +60,9 @@ public class CellEditorAdapter
         }
       });
     }
+
     public void focusLost(final FocusEvent e) {
-      if (! (e.getSource() instanceof JTextField))
+      if (!(e.getSource() instanceof JTextField))
         return;
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
@@ -84,44 +71,30 @@ public class CellEditorAdapter
       });
     }
   }
-  
+
   public CellEditorAdapter(PropertyEditor editor) {
     this.editor = editor;
     Component component = editor.getCustomEditor();
     if (component instanceof JTextField) {
-      JTextField field = (JTextField)component;
+      JTextField field = (JTextField) component;
       field.addFocusListener(new SelectOnFocus());
       field.addActionListener(new CommitEditing());
-      field.registerKeyboardAction(
-        new CancelEditing(),
-        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-        JComponent.WHEN_FOCUSED);
+      field.registerKeyboardAction(new CancelEditing(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_FOCUSED);
     }
 
     // when the editor notifies a change, commit the changes
     editor.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent evt) {       
+      public void propertyChange(PropertyChangeEvent evt) {
         stopCellEditing();
       }
     });
   }
-  
-  public Component getTreeCellEditorComponent(
-    JTree tree,
-    Object value,
-    boolean selected,
-    boolean expanded,
-    boolean leaf,
-    int row) {
+
+  public Component getTreeCellEditorComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row) {
     return getEditor(value);
   }
 
-  public Component getTableCellEditorComponent(
-    JTable table,
-    Object value,
-    boolean selected,
-    int row,
-    int column) {
+  public Component getTableCellEditorComponent(JTable table, Object value, boolean selected, int row, int column) {
     return getEditor(value);
   }
 
@@ -139,7 +112,7 @@ public class CellEditorAdapter
 
   public boolean isCellEditable(EventObject event) {
     if (event instanceof MouseEvent) {
-      return ((MouseEvent)event).getClickCount() >= clickCountToStart;
+      return ((MouseEvent) event).getClickCount() >= clickCountToStart;
     }
     return true;
   }

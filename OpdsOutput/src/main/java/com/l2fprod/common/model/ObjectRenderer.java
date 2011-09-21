@@ -49,10 +49,9 @@ package com.l2fprod.common.model;
 
 /**
  * ObjectRenderer.<br>
- *
  */
 public interface ObjectRenderer {
 
-	public String getText(Object object);
-	
+  public String getText(Object object);
+
 }

@@ -3,12 +3,11 @@ package com.gmail.dpierron.calibre.datamodel;
 import com.gmail.dpierron.tools.Helper;
 
 
-
 public class Series implements SplitableByLetter {
   private String id;
   private String name;
   private String sort;
-  
+
   public Series(String id, String name, String sort) {
     super();
     this.id = id;
@@ -27,15 +26,16 @@ public class Series implements SplitableByLetter {
   public String getSort() {
     return sort;
   }
-  
+
   public String toString() {
     return getId() + " - " + getName();
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Series) {
-      if (obj == null) return false;
+      if (obj == null)
+        return false;
       return (Helper.checkedCompare(((Series) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);

@@ -27,5 +27,5 @@ public interface PropertyRendererFactory {
   TableCellRenderer createTableCellRenderer(Property property);
 
   TableCellRenderer createTableCellRenderer(Class type);
-  
+
 }

@@ -49,12 +49,11 @@ package com.l2fprod.common.model;
 
 /**
  * TitledObject.<br>
- *
  */
 public interface TitledObject {
-	
-	String getTitle();
-	
-	void setTitle(String title);
+
+  String getTitle();
+
+  void setTitle(String title);
 
 }

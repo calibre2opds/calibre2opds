@@ -17,9 +17,8 @@
  */
 package com.l2fprod.common.util;
 
-import java.awt.Toolkit;
-
-import javax.swing.UIManager;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Provides methods related to the runtime environment.
@@ -78,7 +77,7 @@ public class OS {
   public static boolean isWindowsVista() {
     return osIsWindowsVista;
   }
-  
+
   /**
    * @return true if this VM is running on a Linux distribution
    */
@@ -95,8 +94,7 @@ public class OS {
       return false;
     }
 
-    boolean xpthemeActive = Boolean.TRUE.equals(Toolkit.getDefaultToolkit()
-        .getDesktopProperty("win.xpstyle.themeActive"));
+    boolean xpthemeActive = Boolean.TRUE.equals(Toolkit.getDefaultToolkit().getDesktopProperty("win.xpstyle.themeActive"));
     if (!xpthemeActive) {
       return false;
     } else {
@@ -114,8 +112,8 @@ public class OS {
    * <li>it looks for a property name "win.xpstyle.name" in UIManager and if not found
    * <li>it queries the win.xpstyle.colorName desktop property ({@link Toolkit#getDesktopProperty(java.lang.String)})
    * </ul>
-   * 
-   * @return the name of the current Windows visual style if any. 
+   *
+   * @return the name of the current Windows visual style if any.
    */
   public static String getWindowsVisualStyle() {
     String style = UIManager.getString("win.xpstyle.name");
@@ -123,10 +121,9 @@ public class OS {
       // guess the name of the current XPStyle
       // (win.xpstyle.colorName property found in awt_DesktopProperties.cpp in
       // JDK source)
-      style = (String)Toolkit.getDefaultToolkit().getDesktopProperty(
-        "win.xpstyle.colorName");
+      style = (String) Toolkit.getDefaultToolkit().getDesktopProperty("win.xpstyle.colorName");
     }
     return style;
   }
-  
+
 }

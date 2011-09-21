@@ -17,7 +17,7 @@
  */
 package com.l2fprod.common.swing;
 
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,8 +32,7 @@ public class MonospacedFontChooserModel extends DefaultFontChooserModel {
     super();
 
     List monospaces = new ArrayList();
-    String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getAvailableFontFamilyNames();
+    String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
     Arrays.sort(fontFamilies);
     for (int i = 0, c = fontFamilies.length; i < c; i++) {
       if (isMonospaced(fontFamilies[i])) {
@@ -41,7 +40,7 @@ public class MonospacedFontChooserModel extends DefaultFontChooserModel {
       }
     }
 
-    setFontFamilies((String[])monospaces.toArray(new String[monospaces.size()]));
+    setFontFamilies((String[]) monospaces.toArray(new String[monospaces.size()]));
   }
 
   /**
@@ -52,9 +51,8 @@ public class MonospacedFontChooserModel extends DefaultFontChooserModel {
    */
   protected boolean isMonospaced(String fontFamily) {
     String lower = fontFamily.toLowerCase();
-    return lower.indexOf("fixed") >= 0 || lower.indexOf("monospaced") >= 0
-      || lower.indexOf("profont") >= 0 || lower.indexOf("console") >= 0
-      || lower.indexOf("typewriter") >= 0;
+    return lower.indexOf("fixed") >= 0 || lower.indexOf("monospaced") >= 0 || lower.indexOf("profont") >= 0 ||
+        lower.indexOf("console") >= 0 || lower.indexOf("typewriter") >= 0;
   }
 
 }

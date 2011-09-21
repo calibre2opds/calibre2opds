@@ -11,10 +11,13 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 public class RecentBooksSubCatalog extends BooksSubCatalog {
-    private final static Logger logger = Logger.getLogger(RecentBooksSubCatalog.class);
+  private final static Logger logger = Logger.getLogger(RecentBooksSubCatalog.class);
 
   public RecentBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
@@ -42,7 +45,8 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
     });
 
-    setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
+    setBooks(
+        new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
   }
 
   public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
@@ -61,20 +65,12 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size()>1;
-    Element result = getListOfBooks(pBreadcrumbs,
-                          getBooks(),
-                          0,
-                          title,
-                          summary,
-                          urn,
-                          filename,
-                          SplitOption.SplitByDate,
-                          // #751211: Use external icons option
-                          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons()
-                                ? getCatalogManager().getPathToCatalogRoot(filename,weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RECENT
-                                : StanzaConstants.ICON_RECENT,
-                          Option.INCLUDE_TIMESTAMP);
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    Element result = getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, SplitOption.SplitByDate,
+        // #751211: Use external icons option
+        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RECENT :
+            StanzaConstants.ICON_RECENT, Option.INCLUDE_TIMESTAMP);
     return result;
   }
 

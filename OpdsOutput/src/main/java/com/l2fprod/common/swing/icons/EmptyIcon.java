@@ -17,10 +17,8 @@
  */
 package com.l2fprod.common.swing.icons;
 
-import java.awt.Component;
-import java.awt.Graphics;
-
-import javax.swing.Icon;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * An empty icon with arbitrary width and height.
@@ -29,11 +27,11 @@ public final class EmptyIcon implements Icon {
 
   private int width;
   private int height;
-  
+
   public EmptyIcon() {
     this(0, 0);
   }
-  
+
   public EmptyIcon(int width, int height) {
     this.width = width;
     this.height = height;

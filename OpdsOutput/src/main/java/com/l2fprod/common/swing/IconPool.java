@@ -17,35 +17,32 @@
  */
 package com.l2fprod.common.swing;
 
+import javax.swing.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
 /**
  * IconPool.<br>
- *
  */
 public class IconPool {
 
   private static IconPool iconPool = new IconPool();
-  
+
   private Map pool;
-  
+
   public IconPool() {
-    pool = new HashMap();    
+    pool = new HashMap();
   }
 
   public static IconPool shared() {
     return iconPool;
   }
-  
+
   /**
    * Gets the icon denoted by url.
    * If url is relative, it is relative to the caller.
-   * 
+   *
    * @param url
    * @return an icon
    */
@@ -58,22 +55,22 @@ public class IconPool {
       throw new RuntimeException(e);
     }
   }
-  
+
   public synchronized Icon get(URL url) {
     if (url == null) {
       return null;
     }
-    
-    Icon icon = (Icon)pool.get(url.toString());
+
+    Icon icon = (Icon) pool.get(url.toString());
     if (icon == null) {
       icon = new ImageIcon(url);
       pool.put(url.toString(), icon);
     }
     return icon;
   }
-  
+
   public synchronized void clear() {
     pool.clear();
   }
-  
+
 }

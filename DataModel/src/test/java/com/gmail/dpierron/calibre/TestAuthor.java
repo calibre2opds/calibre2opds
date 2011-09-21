@@ -1,10 +1,9 @@
 package com.gmail.dpierron.calibre;
 
-import static org.junit.Assert.assertTrue;
-
+import com.gmail.dpierron.calibre.datamodel.Author;
 import org.junit.Test;
 
-import com.gmail.dpierron.calibre.datamodel.Author;
+import static org.junit.Assert.assertTrue;
 
 public class TestAuthor {
 

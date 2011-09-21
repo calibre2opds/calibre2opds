@@ -21,9 +21,9 @@ import java.text.NumberFormat;
 
 /**
  * Convert to and from numbers. <br>
- * 
+ * <p/>
  * The following convertions are supported:
- * 
+ * <p/>
  * <table>
  * <tr>
  * <th>From</th>
@@ -105,7 +105,7 @@ public class NumberConverters implements Converter {
     registry.addConverter(Short.class, Long.class, this);
     registry.addConverter(Short.class, Short.class, this);
     registry.addConverter(Short.class, String.class, this);
-    
+
     registry.addConverter(String.class, Double.class, this);
     registry.addConverter(String.class, Float.class, this);
     registry.addConverter(String.class, Integer.class, this);
@@ -117,35 +117,35 @@ public class NumberConverters implements Converter {
     // are we dealing with a number to number conversion?
     if ((value instanceof Number) && Number.class.isAssignableFrom(targetType)) {
       if (Double.class.equals(targetType)) {
-        return new Double(((Number)value).doubleValue());
+        return new Double(((Number) value).doubleValue());
       } else if (Float.class.equals(targetType)) {
-        return new Float(((Number)value).floatValue());
+        return new Float(((Number) value).floatValue());
       } else if (Integer.class.equals(targetType)) {
-        return new Integer(((Number)value).intValue());
+        return new Integer(((Number) value).intValue());
       } else if (Long.class.equals(targetType)) {
-        return new Long(((Number)value).longValue());
+        return new Long(((Number) value).longValue());
       } else if (Short.class.equals(targetType)) {
-        return new Short(((Number)value).shortValue());
+        return new Short(((Number) value).shortValue());
       } else {
         throw new IllegalArgumentException("this code must not be reached");
       }
     } else if ((value instanceof Number) && String.class.equals(targetType)) {
       if ((value instanceof Double) || (value instanceof Float)) {
-        return format.format(((Number)value).doubleValue());
+        return format.format(((Number) value).doubleValue());
       } else {
-        return format.format(((Number)value).longValue());
+        return format.format(((Number) value).longValue());
       }
     } else if ((value instanceof String) && Number.class.isAssignableFrom(targetType)) {
       if (Double.class.equals(targetType)) {
-        return new Double((String)value);
+        return new Double((String) value);
       } else if (Float.class.equals(targetType)) {
-        return new Float((String)value);
+        return new Float((String) value);
       } else if (Integer.class.equals(targetType)) {
-        return new Integer((String)value);
+        return new Integer((String) value);
       } else if (Long.class.equals(targetType)) {
-        return new Long((String)value);
+        return new Long((String) value);
       } else if (Short.class.equals(targetType)) {
-        return new Short((String)value);
+        return new Short((String) value);
       } else {
         throw new IllegalArgumentException("this code must not be reached");
       }

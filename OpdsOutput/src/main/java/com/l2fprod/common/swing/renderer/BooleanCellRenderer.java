@@ -17,30 +17,17 @@
  */
 package com.l2fprod.common.swing.renderer;
 
-import java.awt.Component;
-
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 /**
  * BooleanCellRenderer. <br>
- *  
  */
-public class BooleanCellRenderer
-  extends JCheckBox
-  implements TableCellRenderer, ListCellRenderer {
+public class BooleanCellRenderer extends JCheckBox implements TableCellRenderer, ListCellRenderer {
 
-  public Component getTableCellRendererComponent(
-    JTable table,
-    Object value,
-    boolean isSelected,
-    boolean hasFocus,
-    int row,
-    int column) {
-        
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
     if (isSelected) {
       setBackground(table.getSelectionBackground());
       setForeground(table.getSelectionForeground());
@@ -48,18 +35,13 @@ public class BooleanCellRenderer
       setBackground(table.getBackground());
       setForeground(table.getForeground());
     }
-    
+
     setSelected(Boolean.TRUE.equals(value));
-    
+
     return this;
   }
-  
-  public Component getListCellRendererComponent(
-    JList list,
-    Object value,
-    int index,
-    boolean isSelected,
-    boolean cellHasFocus) {
+
+  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
     if (isSelected) {
       setBackground(list.getSelectionBackground());
@@ -68,9 +50,9 @@ public class BooleanCellRenderer
       setBackground(list.getBackground());
       setForeground(list.getForeground());
     }
-    
+
     setSelected(Boolean.TRUE.equals(value));
-    
-    return this;    
+
+    return this;
   }
 }
