@@ -18,7 +18,7 @@
             <option name="USE_RELATIVE_INDENTS" value="false" />
           </value>
         </option>
-        <option name="RIGHT_MARGIN" value="9999999" />
+        <option name="RIGHT_MARGIN" value="160" />
         <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
         <option name="XML_ATTRIBUTE_WRAP" value="0" />
         <option name="XML_TEXT_WRAP" value="0" />
