@@ -6,6 +6,7 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -45,11 +46,10 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
     });
 
-    setBooks(
-        new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
+    setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
   }
 
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 
@@ -66,12 +66,13 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     Element result = getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, SplitOption.SplitByDate,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RECENT :
-            StanzaConstants.ICON_RECENT, Option.INCLUDE_TIMESTAMP);
-    return result;
+            StanzaConstants.ICON_RECENT, Option.INCLUDE_TIMESTAMP).getFirstElement();
+    return new Composite<Element, String>(result, urlInItsSubfolder);
   }
 
 }

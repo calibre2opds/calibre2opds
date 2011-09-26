@@ -192,6 +192,30 @@ public enum FeedHelper {
     return getLinkElement(url, "image/jpeg", RELATION_THUMBNAIL, null);
   }
 
+  public Element getFeaturedLink(String url, String title) {
+    return getLinkElement(url, LINKTYPE_NAVIGATION, RELATION_FEATURED, title);
+  }
+
+  /* ---------- METADATA ----------*/
+
+  public Element getDublinCoreLanguageElement(String lang) {
+    Element result = JDOM.INSTANCE.element("language", Namespace.DcTerms);
+    result.setText(lang);
+    return result;
+  }
+
+  public Element getDublinCorePublisherElement(String publisher) {
+    Element result = JDOM.INSTANCE.element("publisher", Namespace.DcTerms);
+    result.setText(publisher);
+    return result;
+  }
+
+  public Element getCategoryElement(String label) {
+    Element result = JDOM.INSTANCE.element("category");
+    result.setAttribute("label", label);
+    return result;
+  }
+
   /* ---------- UTILITIES  -----------*/
 
   /**
@@ -293,16 +317,40 @@ public enum FeedHelper {
     return link;
   }
 
-  private Element getAtomElement(boolean isRoot, String pElement, String pTitle, String urn, String filename, String pSummary, boolean includeAuthor, String icon) {
+  private Element getAtomElement(boolean isRoot,
+      String pElement,
+      String pTitle,
+      String urn,
+      String filename,
+      String pSummary,
+      boolean includeAuthor,
+      String icon) {
     return getAtomElement(isRoot, pElement, pTitle, urn, filename, LINKTYPE_NAVIGATION, pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot, String pElement, String pTitle, String urn, String url, String urlType, String pSummary, boolean includeAuthor, String icon) {
+  private Element getAtomElement(boolean isRoot,
+      String pElement,
+      String pTitle,
+      String urn,
+      String url,
+      String urlType,
+      String pSummary,
+      boolean includeAuthor,
+      String icon) {
     return getAtomElement(isRoot, pElement, pTitle, urn, url, urlType, null,       // Relation not required
         pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot, String elementName, String title, String id, String url, String urlType, String urlRelation, String content, boolean includeAuthor, String icon) {
+  private Element getAtomElement(boolean isRoot,
+      String elementName,
+      String title,
+      String id,
+      String url,
+      String urlType,
+      String urlRelation,
+      String content,
+      boolean includeAuthor,
+      String icon) {
     Element contentElement = null;
     if (Helper.isNotNullOrEmpty(content)) {
       contentElement = JDOM.INSTANCE.element("content").addContent(content);
@@ -310,9 +358,7 @@ public enum FeedHelper {
     }
     Element element;
     if (isRoot)
-      element = JDOM.INSTANCE.rootElement(elementName, Namespace.Atom,   // Namepaces to be added ...
-          Namespace.Atom,   // ITIMPI - not sure why this is repeated
-          Namespace.Xhtml, Namespace.Opds);
+      element = JDOM.INSTANCE.rootElement(elementName, Namespace.Atom, Namespace.DcTerms, Namespace.Atom, Namespace.Xhtml, Namespace.Opds);
     else
       element = JDOM.INSTANCE.element(elementName);
 

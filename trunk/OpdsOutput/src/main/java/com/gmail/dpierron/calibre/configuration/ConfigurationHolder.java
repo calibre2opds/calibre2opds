@@ -37,7 +37,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
   private final static String PROPERTY_NAME_SPLITTAGSON = "SplitTagsOn";
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
-  private final static String PROPERTY_NAME_BOOKLANGUAGETAG = "BookLanguageTag";
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
   private final static String PROPERTY_NAME_EXTERNALICONS = "ExternalIcons";
@@ -580,22 +579,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setIncludeBooksWithNoFile(boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE, value);
-  }
-
-  public boolean isBookLanguageTagReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_BOOKLANGUAGETAG);
-  }
-
-  public String getBookLanguageTag() {
-    String s = getProperty(PROPERTY_NAME_BOOKLANGUAGETAG);
-    if (s == null)
-      return defaults.getBookLanguageTag();
-    else
-      return s;
-  }
-
-  public void setBookLanguageTag(String value) {
-    setProperty(PROPERTY_NAME_BOOKLANGUAGETAG, value);
   }
 
   public boolean isCryptFilenamesReadOnly() {

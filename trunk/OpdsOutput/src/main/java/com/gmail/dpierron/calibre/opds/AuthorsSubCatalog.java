@@ -16,6 +16,7 @@ import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -132,7 +133,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getListOfAuthors(Breadcrumbs pBreadcrumbs,
+  private Composite<Element, String> getListOfAuthors(Breadcrumbs pBreadcrumbs,
       List<Author> authors,
       int from,
       String title,
@@ -142,9 +143,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
-    boolean willSplit =
-        (splitOption != SplitOption.Paginate) && ((authors.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit()
-        ));
+    boolean willSplit = (splitOption != SplitOption.Paginate) && ((authors.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit()));
     if (willSplit) {
       mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(authors);
       catalogSize = 0;
@@ -187,7 +186,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         result = new LinkedList<Element>();
         for (int i = from; i < authors.size(); i++) {
           if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
-            Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename, splitOption);
+            Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename, splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {
@@ -223,24 +222,23 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
     Element entry;
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     if (from > 0) {
       String titleNext;
-      if (pageNumber != maxPages)
-        titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
-      else
+      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
         titleNext = Localization.Main.getText("title.lastpage");
+      }
 
       entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
     } else {
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      entry = FeedHelper.INSTANCE
-          .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
-              // #751211: Use external icons option
-              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_AUTHORS :
-                  StanzaConstants.ICON_AUTHORS);
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+          // #751211: Use external icons option
+          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_AUTHORS :
+              StanzaConstants.ICON_AUTHORS);
     }
-    return entry;
+    return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
 
   /**
@@ -299,7 +297,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          */
         logger.debug("calling getListOfAuthors for the letter " + letter);
         element =
-            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate);
+            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate).getFirstElement();
 
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
@@ -316,7 +314,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
               // #751211: Use external icons option
               ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
                   getCatalogManager().getPathToCatalogRoot(letterFilename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_BOOKS :
-                  StanzaConstants.ICON_BOOKS);
+                  StanzaConstants.ICON_BOOKS).getFirstElement();
         }
       }
 
@@ -384,12 +382,11 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       if (books == null)
         books = new LinkedList<Book>();
 
-      Breadcrumbs breadcrumbs =
-          Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
       logger.debug("processing the other books by " + author);
       // Do we need a way to suppress split by letter on next call?
-      Element entry =
-          new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author)).getSubCatalogEntry(breadcrumbs);
+      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author)).getSubCatalogEntry(breadcrumbs).getFirstElement
+          ();
       if (entry != null)
         firstElements.add(0, entry);
 
@@ -416,7 +413,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_AUTHORS :
-            StanzaConstants.ICON_AUTHORS, firstElements);
+            StanzaConstants.ICON_AUTHORS, firstElements).getFirstElement();
     return result;
   }
 
@@ -425,7 +422,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getAuthors()))
       return null;
 

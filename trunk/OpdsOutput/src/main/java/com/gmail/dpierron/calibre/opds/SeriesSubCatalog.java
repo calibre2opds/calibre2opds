@@ -13,6 +13,7 @@ import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -54,7 +55,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           series.add(book.getSeries());
       }
 
-      final String bookLang = getBooks().get(0).getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
+      final Language bookLang = getBooks().get(0).getBookLanguage();
 
       // sort the series alphabetically
       Collections.sort(series, new Comparator<Series>() {
@@ -99,9 +100,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  public List<Element> getContentOfListOfSeries(Breadcrumbs pBreadcrumbs, String title, String summary, String urn,
-      String pFilename) throws
-      IOException {
+  public List<Element> getContentOfListOfSeries(Breadcrumbs pBreadcrumbs, String title, String summary, String urn, String pFilename) throws IOException {
     if (Helper.isNullOrEmpty(getSeries()))
       return null;
     return getContentOfListOfSeries(pBreadcrumbs, getSeries(), 0, title, summary, urn, pFilename, null, true);
@@ -177,8 +176,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // list the entries (or split them)
     if (willSplitByLetter) {
       // split the series list by letter
-      Breadcrumbs breadcrumbs =
-          Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
       result = getListOfSeriesSplitByLetter(breadcrumbs, mapOfSeriesByLetter, title, urn, pFilename, addTheSeriesWordToTheTitle);
     } else {
       // list the series list
@@ -186,13 +184,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       for (int i = from; i < series.size(); i++) {
         if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
           Element nextLink =
-              getListOfSeries(pBreadcrumbs, series, i, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
+              getListOfSeries(pBreadcrumbs, series, i, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle).getFirstElement();
           result.add(0, nextLink);
           break;
         } else {
           Series serie = series.get(i);
-          Breadcrumbs breadcrumbs =
-              Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
+          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
           Element entry = getSeries(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
@@ -218,7 +215,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getListOfSeries(Breadcrumbs pBreadcrumbs,
+  private Composite<Element, String> getListOfSeries(Breadcrumbs pBreadcrumbs,
       List<Series> series,
       int from,
       String title,
@@ -228,8 +225,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       SplitOption splitOption,
       boolean addTheSeriesWordToTheTitle) throws IOException {
     int catalogSize;
-    boolean willSplit =
-        splitOption != SplitOption.Paginate && (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    boolean willSplit = splitOption != SplitOption.Paginate && (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
     if (willSplit) {
       catalogSize = 0;
     } else
@@ -258,8 +254,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
       // list the entries (or split them)
-      List<Element> result =
-          getContentOfListOfSeries(pBreadcrumbs, series, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
+      List<Element> result = getContentOfListOfSeries(pBreadcrumbs, series, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
 
       // add the entries to the feed
       feed.addContent(result);
@@ -276,6 +271,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
     Element entry;
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages)
@@ -283,17 +280,15 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       else
         titleNext = Localization.Main.getText("title.lastpage");
 
-      entry = FeedHelper.INSTANCE.getNextLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(filename), titleNext);
+      entry = FeedHelper.INSTANCE.getNextLink(urlInItsSubfolder, titleNext);
     } else {
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      entry = FeedHelper.INSTANCE
-          .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
-              // #751211: Use external icons option
-              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_SERIES :
-                  StanzaConstants.ICON_SERIES);
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+          // #751211: Use external icons option
+          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_SERIES :
+              StanzaConstants.ICON_SERIES);
     }
-    return entry;
+    return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
 
   /**
@@ -343,9 +338,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element =
-            getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate,
-                addTheSeriesWordToTheTitle);
+        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate,
+            addTheSeriesWordToTheTitle).getFirstElement();
       }
 
       if (element != null)
@@ -362,8 +356,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getSeries(Breadcrumbs pBreadcrumbs, Series series, String baseurn, boolean addTheSeriesWordToTheTitle) throws
-      IOException {
+  private Element getSeries(Breadcrumbs pBreadcrumbs, Series series, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + series);
 
@@ -398,19 +391,17 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
 
     if (logger.isTraceEnabled())
-      logger.trace("getSeries: splitOption=" + (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ?
-          SplitOption.SplitByLetter :
-          SplitOption.SplitOptionNone));
+      logger.trace("getSeries: splitOption=" +
+          (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.SplitOptionNone));
 
     Element result = getListOfBooks(pBreadcrumbs, books, 0,              // Starting at 0
         title, summary, urn, filename,
         // Bug #716917 Split on letter in series according to user option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption
-            .SplitOptionNone,
+        ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.SplitOptionNone,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_SERIES :
-            StanzaConstants.ICON_SERIES, Option.INCLUDE_SERIE_NUMBER);
+            StanzaConstants.ICON_SERIES, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
 
     return result;
   }
@@ -420,7 +411,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getSeries()))
       return null;
 

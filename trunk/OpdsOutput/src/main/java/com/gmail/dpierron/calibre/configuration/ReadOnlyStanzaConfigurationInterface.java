@@ -50,8 +50,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeBooksWithNoFile();
 
-  public String getBookLanguageTag();
-
   public boolean getCryptFilenames();
 
   public boolean getShowSeriesInAuthorCatalog();

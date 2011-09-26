@@ -11,6 +11,7 @@ import com.gmail.dpierron.calibre.configuration.StanzaConstants;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -45,7 +46,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
     }
   }
 
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 

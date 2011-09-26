@@ -15,6 +15,7 @@ import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -471,8 +472,8 @@ public class Catalog {
       if (!checkCatalogExistence(calibreTargetFolder, false)) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreTargetFolder));
         if (JOptionPane.NO_OPTION == JOptionPane
-            .showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreTargetFolder), "WARNING",
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+            .showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreTargetFolder), "WARNING", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE)) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + calibreTargetFolder);
           return;
@@ -489,8 +490,8 @@ public class Catalog {
       if (!checkCatalogExistence(calibreLibraryFolder, true)) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder));
         if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null,
-            Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder + File.separator + currentProfile.getCatalogFolderName()),
-            "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+            Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder + File.separator + currentProfile.getCatalogFolderName()), "WARNING",
+            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + calibreLibraryFolder);
           return;
@@ -509,9 +510,9 @@ public class Catalog {
       File targetFolder = currentProfile.getDatabaseFolder();
       if ((DeviceMode.Dropbox != currentProfile.getDeviceMode()) && (!checkCatalogExistence(targetFolder, true))) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", targetFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null,
-            Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()),
-            "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+        if (JOptionPane.NO_OPTION == JOptionPane
+            .showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()),
+                "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + targetFolder);
           return;
@@ -602,7 +603,7 @@ public class Catalog {
     logger.debug("STARTING: Generating Authors catalog");
     callback.startCreateAuthors(DataModel.INSTANCE.getListOfAuthors().size());
     now = System.currentTimeMillis();
-    entry = new AuthorsSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+    entry = new AuthorsSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
     if (entry != null)
       main.addContent(entry);
     callback.endCreateAuthors(System.currentTimeMillis() - now);
@@ -613,7 +614,7 @@ public class Catalog {
     callback.startCreateTags(DataModel.INSTANCE.getListOfTags().size());
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateTags()) {
-      entry = TagSubCatalog.getTagSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+      entry = TagSubCatalog.getTagSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
       if (entry != null)
         main.addContent(entry);
     }
@@ -624,7 +625,7 @@ public class Catalog {
     logger.debug("STARTING: Generating Series catalog");
     callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
     now = System.currentTimeMillis();
-    entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+    entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
     if (entry != null)
       main.addContent(entry);
     callback.endCreateSeries(System.currentTimeMillis() - now);
@@ -636,9 +637,11 @@ public class Catalog {
     callback.startCreateRecent(nbRecentBooks);
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateRecent()) {
-      entry = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
-      if (entry != null)
-        main.addContent(entry);
+      Composite<Element, String> recent = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+      if (recent != null) {
+        main.addContent(recent.getFirstElement());
+        main.addContent(6, FeedHelper.INSTANCE.getFeaturedLink(recent.getSecondElement(), "Featured books")); // 6 places the link right wher we want it...
+      }
     }
     callback.endCreateRecent(System.currentTimeMillis() - now);
     logger.debug("COMPLETED: Generating Recent catalog");
@@ -648,7 +651,7 @@ public class Catalog {
     callback.startCreateRated(DataModel.INSTANCE.getListOfBooks().size());
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateRatings()) {
-      entry = new RatingsSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+      entry = new RatingsSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
       if (entry != null)
         main.addContent(entry);
     }
@@ -660,7 +663,7 @@ public class Catalog {
     callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateAllbooks()) {
-      entry = new AllBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+      entry = new AllBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
       if (entry != null)
         main.addContent(entry);
     }
@@ -744,8 +747,8 @@ public class Catalog {
     logger.debug("COMPLETED: Copying Resource files");
 
     if (syncLog)
-      syncLogFile = new PrintWriter(
-          ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+      syncLogFile = new PrintWriter(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants
+          .SYNCFILE_NAME);
 
     /* copy the catalogs (and books, if the target folder is set) to the destination folder */
 
@@ -790,8 +793,7 @@ public class Catalog {
       logger.debug("STARTED: Creating list of files on target");
       List<File> existingTargetFiles = Helper.listFilesIn(targetFolder);
       logger.debug("COMPLETED: Creating list of files on target");
-      String targetCatalogFolderPath =
-          new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName()).getAbsolutePath();
+      String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName()).getAbsolutePath();
       String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
       logger.debug("STARTING: Delete superfluous files from target");
@@ -799,8 +801,7 @@ public class Catalog {
         if (!usefulTargetFiles.contains(existingTargetFile)) {
           if (!existingTargetFile.getAbsolutePath().startsWith(targetCatalogFolderPath)) // don't delete the catalog files
           {
-            if (!existingTargetFile.getAbsolutePath()
-                .startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
+            if (!existingTargetFile.getAbsolutePath().startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
             {
               if (logger.isTraceEnabled())
                 logger.trace("deleting " + existingTargetFile.getPath());
@@ -873,8 +874,7 @@ public class Catalog {
     callback.endCopyCatToTarget(System.currentTimeMillis() - now);
 
     if (syncLog) {
-      logger.info("Sync Log: " + ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" +
-          Constants.SYNCFILE_NAME);
+      logger.info("Sync Log: " + ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
     }
     // Save the CRC cache to the catalog folder
     // We always do this even if CRC Checking not enabled

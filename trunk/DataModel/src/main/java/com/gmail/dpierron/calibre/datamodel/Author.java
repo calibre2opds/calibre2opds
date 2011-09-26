@@ -98,7 +98,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
     return getId() + " - " + getName();
   }
 
-  public String getTitleToSplitByLetter(Object options) {
+  public String getTitleToSplitByLetter() {
     return getLastName();
   }
 

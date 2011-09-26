@@ -54,8 +54,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setIncludeBooksWithNoFile(boolean value);
 
-  public void setBookLanguageTag(String value);
-
   public void setCryptFilenames(boolean value);
 
   public void setShowSeriesInAuthorCatalog(boolean value);

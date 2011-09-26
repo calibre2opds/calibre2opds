@@ -5,14 +5,14 @@ import com.gmail.dpierron.tools.Helper;
 import java.util.*;
 
 public enum NoiseWord {
-  ENGLISH("EN", "the ", "a ", "an "),
-  FRENCH("FR", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
-  GERMAN("DE", "der ", "die ", "das ", "ein ", "eine ");
+  EN("eng", "the ", "a ", "an "),
+  FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
+  DE("deu", "der ", "die ", "das ", "ein ", "eine ");
 
   private List<String> noiseWords;
   private String lang;
   private static Map<String, NoiseWord> map;
-  public static NoiseWord DEFAULT = ENGLISH;
+  public static NoiseWord DEFAULT = EN;
 
   private NoiseWord(String lang, String... words) {
     List<String> temp = Arrays.asList(words);
@@ -28,13 +28,20 @@ public enum NoiseWord {
   private void addToMap() {
     if (map == null)
       map = new HashMap<String, NoiseWord>();
-    map.put(lang.toUpperCase(), this);
+    map.put(lang.toLowerCase(), this);
+  }
+
+  public static NoiseWord fromLanguage(Language lang) {
+    if (lang == null)
+      return DEFAULT;
+    else
+      return fromLanguage(lang.getCalibreCode());
   }
 
   public static NoiseWord fromLanguage(String lang) {
     if (lang == null)
       return DEFAULT;
-    NoiseWord result = map.get(lang.toUpperCase());
+    NoiseWord result = map.get(lang.toLowerCase());
     if (result == null)
       result = DEFAULT;
     return result;

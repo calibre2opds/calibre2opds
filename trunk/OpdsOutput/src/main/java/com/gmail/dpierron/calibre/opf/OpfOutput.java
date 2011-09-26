@@ -1,10 +1,6 @@
 package com.gmail.dpierron.calibre.opf;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.datamodel.Author;
-import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.BookRating;
-import com.gmail.dpierron.calibre.datamodel.Tag;
+import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
 import com.gmail.dpierron.tools.Helper;
@@ -19,6 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -141,10 +138,12 @@ public class OpfOutput {
       dc.setAttribute("id", "calibre-uuid");
       source.addContent(dc);
     }
-    if (Helper.isNotNullOrEmpty(book.getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag()))) {
+    List<Language> bookLanguages = book.getBookLanguages();
+    if (Helper.isNotNullOrEmpty(bookLanguages)) {
       removeDcElements(source, "language");
-      addDublinCoreElement(source, "language",
-          book.getBookLanguage(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag()));
+      for (Language language : bookLanguages) {
+        addDublinCoreElement(source, "language", language.getCalibreCode());
+      }
     }
     if (Helper.isNotNullOrEmpty(book.getAuthors())) {
       removeDcElements(source, "creator");

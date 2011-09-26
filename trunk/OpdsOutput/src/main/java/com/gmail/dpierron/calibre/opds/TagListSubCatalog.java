@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -30,7 +31,7 @@ public class TagListSubCatalog extends TagSubCatalog {
   }
 
   @Override
-  Element _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_tags.xml");
     String title = Localization.Main.getText("tags.title");
     String urn = "calibre:tags";
@@ -44,7 +45,7 @@ public class TagListSubCatalog extends TagSubCatalog {
     return getListOfTags(pBreadcrumbs, getTags(), 0, null, title, summary, urn, filename, null);
   }
 
-  private Element getListOfTags(Breadcrumbs pBreadcrumbs,
+  private Composite<Element, String> getListOfTags(Breadcrumbs pBreadcrumbs,
       List<Tag> tags,
       int from,
       String guid,
@@ -55,8 +56,7 @@ public class TagListSubCatalog extends TagSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    boolean willSplit =
-        splitOption != SplitOption.Paginate && (tags.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    boolean willSplit = splitOption != SplitOption.Paginate && (tags.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
     if (willSplit) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
       catalogSize = 0;
@@ -101,7 +101,7 @@ public class TagListSubCatalog extends TagSubCatalog {
         result = new LinkedList<Element>();
         for (int i = from; i < tags.size(); i++) {
           if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
-            Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename, splitOption);
+            Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename, splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {
@@ -133,6 +133,8 @@ public class TagListSubCatalog extends TagSubCatalog {
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
     Element entry;
+    boolean weAreAlsoInSubFolder = (pBreadcrumbs.size() > 1);
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages)
@@ -144,15 +146,13 @@ public class TagListSubCatalog extends TagSubCatalog {
     } else {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());
-      boolean weAreAlsoInSubFolder = (pBreadcrumbs.size() > 1);
 
-      entry = FeedHelper.INSTANCE
-          .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
-              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
-                  StanzaConstants.ICON_TAGS);
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons
+          () ?
+          getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
+          StanzaConstants.ICON_TAGS);
     }
-    return entry;
+    return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
 
   private List<Element> getListOfTagsSplitByLetter(Breadcrumbs pBreadcrumbs,
@@ -195,7 +195,7 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (tagsInThisLetter.size() > 0) {
         logger.debug("calling getListOfTags for the letter " + letter);
         element =
-            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate);
+            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate).getFirstElement();
       }
 
       if (element != null)

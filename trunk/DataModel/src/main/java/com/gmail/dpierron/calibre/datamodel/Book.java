@@ -45,10 +45,19 @@ public class Book implements SplitableByLetter {
   private String epubFileName;
   private long latestFileModifiedDate = -1;
   private BookRating rating;
-  private String bookLanguage;
+  private List<Language> bookLanguages;
   private boolean flag;
 
-  public Book(String id, String uuid, String title, String path, Float serieIndex, Date timestamp, Date publicationDate, String isbn, String authorSort, BookRating rating) {
+  public Book(String id,
+      String uuid,
+      String title,
+      String path,
+      Float serieIndex,
+      Date timestamp,
+      Date publicationDate,
+      String isbn,
+      String authorSort,
+      BookRating rating) {
     super();
     this.id = id;
     this.uuid = uuid;
@@ -90,28 +99,31 @@ public class Book implements SplitableByLetter {
     return title;
   }
 
-  public String getTitleForSort(String bookTag) {
+  public String getTitleForSort() {
     if (titleForSort == null)
-      titleForSort = NoiseWord.fromLanguage(getBookLanguage(bookTag)).removeLeadingNoiseWords(getTitle());
+      titleForSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
     return titleForSort;
   }
 
-  public String getBookLanguage(String bookLanguageTag) {
-    if (bookLanguage == null) {
-      // make sure the entire book catalog is loaded before calling this
-      bookLanguage = NoiseWord.DEFAULT.getLang();
-      bookLanguageTag = bookLanguageTag.toUpperCase();
-      List<Tag> tags = DataModel.INSTANCE.getMapOfTagsByBookId().get(getId());
-      if (Helper.isNotNullOrEmpty(tags)) {
-        for (Tag tag : tags) {
-          if (tag.getName().toUpperCase().startsWith(bookLanguageTag)) {
-            bookLanguage = tag.getName().substring(bookLanguageTag.length());
-            break;
-          }
-        }
-      }
-    }
-    return bookLanguage;
+  public Language getBookLanguage() {
+    List<Language> languages = getBookLanguages();
+    if (languages == null)
+      return null;
+    else
+      return languages.get(0);
+  }
+
+  public List<Language> getBookLanguages() {
+    return bookLanguages;
+  }
+
+  public void addBookLanguage(Language bookLanguage) {
+    if (bookLanguage == null)
+      return;
+    if (bookLanguages == null)
+      bookLanguages = new LinkedList<Language>();
+    if (!bookLanguages.contains(bookLanguage))
+      bookLanguages.add(bookLanguage);
   }
 
   public String getIsbn() {
@@ -412,8 +424,8 @@ public class Book implements SplitableByLetter {
     return rating;
   }
 
-  public String getTitleToSplitByLetter(Object options) {
-    return getTitleForSort((String) options);
+  public String getTitleToSplitByLetter() {
+    return getTitleForSort();
   }
 
   public Book copy() {

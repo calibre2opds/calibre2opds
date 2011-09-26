@@ -7,6 +7,7 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.RootTreeNode;
 import com.gmail.dpierron.tools.TreeNode;
@@ -31,7 +32,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     super(books);
   }
 
-  private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
+  private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int itemsCount = level.getChildren().size();
 
@@ -72,13 +73,13 @@ public class TagTreeSubCatalog extends TagSubCatalog {
 
       for (int i = from; i < itemsCount; i++) {
         if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
-          Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i);
+          Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i).getFirstElement();
           result.add(0, nextLink);
           break;
         } else {
           TreeNode childLevel = level.getChildren().get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-          Element entry = getLevelOfTreeNode(breadcrumbs, childLevel);
+          Element entry = getLevelOfTreeNode(breadcrumbs, childLevel).getFirstElement();
           if (entry != null)
             result.add(entry);
         }
@@ -99,29 +100,26 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
     Element entry;
+    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
     if (from > 0) {
       String titleNext;
-      if (pageNumber != maxPages)
-        titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
-      else
+      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
         titleNext = Localization.Main.getText("title.lastpage");
+      }
 
       entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
     } else {
-      if (logger.isTraceEnabled())
-        logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-
-      entry = FeedHelper.INSTANCE
-          .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1), summary,
-              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
-                  StanzaConstants.ICON_TAGS);
+      if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons
+          () ?
+          getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
+          StanzaConstants.ICON_TAGS);
     }
-    return entry;
+    return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
 
-  private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
+  private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
     logger.debug("getLevelOfTreeNode:" + level);
     if (Helper.isNullOrEmpty(level.getChildren())) {
       // it's a leaf, consisting of a single tag : make a list of books
@@ -130,7 +128,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
       String urn = "calibre:tags";
       Element entry = getTag(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
-      return entry;
+      return new Composite<Element, String>(entry, urn);
     } else {
       logger.debug("calling getLevelOfTreeNode,int");
       return getLevelOfTreeNode(pBreadcrumbs, level, 0);
@@ -138,7 +136,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
   }
 
   @Override
-  Element _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     TreeNode root = getTreeOfTags(getTags());
     logger.debug("_getEntry:" + pBreadcrumbs.toString());
     return getLevelOfTreeNode(pBreadcrumbs, root);
