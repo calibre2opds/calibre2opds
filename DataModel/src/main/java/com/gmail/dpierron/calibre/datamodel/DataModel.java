@@ -37,6 +37,9 @@ public enum DataModel {
   Map<String, Publisher> mapOfPublishers;
   Map<Publisher, List<Book>> mapOfBooksByPublisher;
 
+  Map<String, Language> mapOfLanguagesById;
+  Map<String, Language> mapOfLanguagesByIsoCode;
+
   public void reset() {
     mapOfFilesByBookId = null;
     mapOfPublishersByBookId = null;
@@ -61,9 +64,13 @@ public enum DataModel {
     listOfPublishers = null;
     mapOfPublishers = null;
     mapOfBooksByPublisher = null;
+    mapOfLanguagesById = null;
+    mapOfLanguagesByIsoCode = null;
   }
 
   public void preloadDataModel() {
+    getMapOfLanguagesById();
+    // getMapOfLanguagesByIsoCode(); not useful, loaded by getMapOfLanguagesById();
     getListOfBooks();
     getMapOfFilesByBookId();
     getMapOfAuthorsByBookId();
@@ -83,6 +90,20 @@ public enum DataModel {
     getMapOfSeries();
     getMapOfBooksBySeries();
     getMapOfBooksByRating();
+  }
+
+  public Map<String, Language> getMapOfLanguagesById() {
+    if (mapOfLanguagesById == null) {
+      mapOfLanguagesById = Database.INSTANCE.getMapOfLanguagesById();
+    }
+    return mapOfLanguagesById;
+  }
+
+  public Map<String, Language> getMapOfLanguagesByIsoCode() {
+    if (mapOfLanguagesByIsoCode == null) {
+      getMapOfLanguagesById();
+    }
+    return mapOfLanguagesById;
   }
 
   public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
@@ -365,17 +386,17 @@ public enum DataModel {
   }
 
 
-  public static Map<String, List<Book>> splitBooksByLetter(List<Book> books, final String bookLanguageTag) {
-    Comparator comparator = new Comparator<Book>() {
+  public static Map<String, List<Book>> splitBooksByLetter(List<Book> books) {
+    Comparator<Book> comparator = new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String title1 = (o1 == null ? "" : o1.getTitleForSort(bookLanguageTag));
-        String title2 = (o2 == null ? "" : o2.getTitleForSort(bookLanguageTag));
+        String title1 = (o1 == null ? "" : o1.getTitleForSort());
+        String title2 = (o2 == null ? "" : o2.getTitleForSort());
         return title1.compareTo(title2);
       }
     };
 
-    return splitByLetter(books, comparator, bookLanguageTag);
+    return splitByLetter(books, comparator);
   }
 
   public static Map<String, List<Author>> splitAuthorsByLetter(List<Author> authors) {
@@ -433,12 +454,6 @@ public enum DataModel {
   }
 
   private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
-    return splitByLetter(objects, comparator, null);
-  }
-
-  private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects,
-      Comparator<T> comparator,
-      Object options) {
     final String LETTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     // split by letter
@@ -448,7 +463,7 @@ public enum DataModel {
       if (object == null)
         continue;
       String firstLetter = "";
-      String string = object.getTitleToSplitByLetter(options);
+      String string = object.getTitleToSplitByLetter();
       if (string == null)
         string = "";
       else

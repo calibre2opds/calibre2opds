@@ -48,9 +48,29 @@ public enum Database {
     }
   }
 
+  public Map<String, Language> getMapOfLanguagesById() {
+    Map<String, Language> mapOfLanguagesById = new HashMap<String, Language>();
+    Map<String, Language> mapOfLanguagesByIsoCode = new HashMap<String, Language>();
+    PreparedStatement statement = DatabaseRequest.ALL_LANGUAGES.getStatement();
+    try {
+      ResultSet set = statement.executeQuery();
+      while (set.next()) {
+        String id = set.getString("id");
+        String isoCode = set.getString("lang_code");
+        Language language = new Language(id, isoCode);
+        mapOfLanguagesById.put(id, language);
+        mapOfLanguagesByIsoCode.put(isoCode, language);
+      }
+    } catch (SQLException e) {
+      logger.error(e);
+    }
+    return mapOfLanguagesById;
+  }
+
   public List<Book> listBooks() {
     List<Book> result = new LinkedList<Book>();
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
+    PreparedStatement stmtBooksLanguagesLink = DatabaseRequest.BOOKS_LANGUAGES.getStatement();
     try {
       ResultSet set = statement.executeQuery();
       // if (logger.isTraceEnabled())
@@ -81,6 +101,14 @@ public enum Database {
         int iRating = set.getInt("rating");
         BookRating rating = BookRating.fromValue(iRating);
         Book book = new Book(bookId, uuid, title, path, index, timestamp, publicationDate, isbn, authorSort, rating);
+
+        // fetch its languages
+        stmtBooksLanguagesLink.setString(1, book.getId());
+        ResultSet setLanguages = stmtBooksLanguagesLink.executeQuery();
+        while (setLanguages.next()) {
+          String languageId = setLanguages.getString("lang_code");
+          book.addBookLanguage(DataModel.INSTANCE.getMapOfLanguagesById().get(languageId));
+        }
 
         // fetch its author
         List<Author> authors = DataModel.INSTANCE.getMapOfAuthorsByBookId().get(bookId);

@@ -41,7 +41,7 @@ public class Series implements SplitableByLetter {
       return super.equals(obj);
   }
 
-  public String getTitleToSplitByLetter(Object options) {
+  public String getTitleToSplitByLetter() {
     return getName();
   }
 }

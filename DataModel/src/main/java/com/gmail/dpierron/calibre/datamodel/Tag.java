@@ -29,7 +29,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
     return getName();
   }
 
-  public String getTitleToSplitByLetter(Object options) {
+  public String getTitleToSplitByLetter() {
     return getName();
   }
 

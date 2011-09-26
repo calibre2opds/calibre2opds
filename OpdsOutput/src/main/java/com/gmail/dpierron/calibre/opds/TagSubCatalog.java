@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -168,16 +169,15 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
         logger.debug("making a simple book list");
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null,
-          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, true) + StanzaConstants.ICONFILE_TAGS :
-              StanzaConstants.ICON_TAGS);
+      return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+          getCatalogManager().getPathToCatalogRoot(filename, true) + StanzaConstants.ICONFILE_TAGS :
+          StanzaConstants.ICON_TAGS).getFirstElement();
     }
   }
 
-  abstract Element _getEntry(Breadcrumbs pBreadcrumbs) throws IOException;
+  abstract Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException;
 
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getTags()))
       return null;
 

@@ -68,8 +68,10 @@ public class Mainframe extends javax.swing.JFrame {
     int result;
     if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
       String yesAndRemoveCss = Localization.Main.getText("gui.confirm.tools.removeCss");
-      result = JOptionPane.showOptionDialog(this, message, "", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-          new Object[]{yes, yesAndRemoveCss, cancel}, cancel);
+      result = JOptionPane
+          .showOptionDialog(this, message, "", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{yes, yesAndRemoveCss,
+              cancel},
+              cancel);
       if (result == JOptionPane.CANCEL_OPTION)
         return;
       removeCss = (result == JOptionPane.NO_OPTION);
@@ -92,9 +94,8 @@ public class Mainframe extends javax.swing.JFrame {
           defaultCss = chooser.getSelectedFile();
       }
     } else {
-      result = JOptionPane
-          .showOptionDialog(this, message, "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{yes, cancel},
-              cancel);
+      result =
+          JOptionPane.showOptionDialog(this, message, "", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{yes, cancel}, cancel);
       if (result == JOptionPane.NO_OPTION)
         return;
     }
@@ -244,9 +245,9 @@ public class Mainframe extends javax.swing.JFrame {
     String intro_team_list4 = Localization.Main.getText("intro.team.list4");
     String intro_thanks_1 = Localization.Main.getText("intro.thanks.1");
     String intro_thanks_2 = Localization.Main.getText("intro.thanks.2");
-    String message = "<html>" + intro_goal + "<br>" + intro_wiki_title + intro_wiki_url + "<br>" + intro_team_title + "<br><ul>" + "<li>" +
-        intro_team_list1 + "<li>" + intro_team_list2 + "<li>" + intro_team_list3 + "<li>" + intro_team_list4 + "</ul><br>" +
-        intro_thanks_1 + "<br>" + intro_thanks_2 + "</html>";
+    String message =
+        "<html>" + intro_goal + "<br>" + intro_wiki_title + intro_wiki_url + "<br>" + intro_team_title + "<br><ul>" + "<li>" + intro_team_list1 + "<li>" +
+            intro_team_list2 + "<li>" + intro_team_list3 + "<li>" + intro_team_list4 + "</ul><br>" + intro_thanks_1 + "<br>" + intro_thanks_2 + "</html>";
     JOptionPane.showMessageDialog(this, message, Localization.Main.getText("gui.menu.help.about"), JOptionPane.INFORMATION_MESSAGE);
   }
 
@@ -329,7 +330,7 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void saveNewProfile() {
     String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new"));
-    if ("default".equalsIgnoreCase(newProfileName))
+    if ("default" .equalsIgnoreCase(newProfileName))
       return;
     ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
     loadValues();
@@ -546,13 +547,8 @@ public class Mainframe extends javax.swing.JFrame {
     chkOrderAllBooksBySeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isOrderAllBooksBySeriesReadOnly());
     lblOrderAllBooksBySeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isOrderAllBooksBySeriesReadOnly());
     chkSplitByAuthorInitialGoToBooks.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks());
-    chkSplitByAuthorInitialGoToBooks
-        .setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
-    chkSplitByAuthorInitialGoToBooks
-        .setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
-    txtBookLanguageTag.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
-    txtBookLanguageTag.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBookLanguageTagReadOnly());
-    lblBookLanguageTag.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBookLanguageTagReadOnly());
+    chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
+    chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
     txtTagstogenerate.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate());
     txtTagstogenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToGenerateReadOnly());
     lblTagstogenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToGenerateReadOnly());
@@ -675,8 +671,7 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void storeValues() {
     ConfigurationManager.INSTANCE.getCurrentProfile().setLanguage("" + cboLang.getSelectedItem());
-    ConfigurationManager.INSTANCE.getCurrentProfile()
-        .setCompatibilityTrick(CompatibilityTrick.valueOf("" + cboCompatibilityTrick.getSelectedItem()));
+    ConfigurationManager.INSTANCE.getCurrentProfile().setCompatibilityTrick(CompatibilityTrick.valueOf("" + cboCompatibilityTrick.getSelectedItem()));
     File f = new File(txtDatabaseFolder.getText());
     if (f.exists())
       ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(f);
@@ -730,7 +725,6 @@ public class Mainframe extends javax.swing.JFrame {
     ConfigurationManager.INSTANCE.getCurrentProfile().setBrowseByCoverWithoutSplit(chkBrowseByCoverWithoutSplit.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeAboutLink(chkIncludeAboutLink.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateDownloads(!chkNogenerateopdsfiles.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setBookLanguageTag(txtBookLanguageTag.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setCryptFilenames(chkCryptFilenames.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setShowSeriesInAuthorCatalog(!chkNoShowSeries.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setOrderAllBooksBySeries(chkOrderAllBooksBySeries.isSelected());
@@ -770,8 +764,7 @@ public class Mainframe extends javax.swing.JFrame {
     ConfigurationManager.INSTANCE.getCurrentProfile().setIndexComments(chkIndexComments.isSelected());
     i = getValue(txtMaxKeywords);
     ConfigurationManager.INSTANCE.getCurrentProfile().setMaxKeywords(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile()
-        .setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
+    ConfigurationManager.INSTANCE.getCurrentProfile().setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
   }
 
   /**
@@ -792,12 +785,12 @@ public class Mainframe extends javax.swing.JFrame {
     tabOptionsTabs.setTitleAt(1, Localization.Main.getText("gui.tab2"));
     tabOptionsTabs.setTitleAt(2, Localization.Main.getText("gui.tab3"));
     tabOptionsTabs.setTitleAt(3, Localization.Main.getText("gui.tab4"));
-    lblDeviceDropbox.setToolTipText(Localization.Main.getText("config.DeviceMode.dropbox.description1") + " " +
-        Localization.Main.getText("config.DeviceMode.dropbox.description2"));
-    lblDeviceNAS.setToolTipText(Localization.Main.getText("config.DeviceMode.nas.description1") + " " +
-        Localization.Main.getText("config.DeviceMode.nas.description2"));
-    lblDeviceNook.setToolTipText(Localization.Main.getText("config.DeviceMode.nook.description1") + " " +
-        Localization.Main.getText("config.DeviceMode.nook.description2"));
+    lblDeviceDropbox.setToolTipText(
+        Localization.Main.getText("config.DeviceMode.dropbox.description1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.description2"));
+    lblDeviceNAS.setToolTipText(
+        Localization.Main.getText("config.DeviceMode.nas.description1") + " " + Localization.Main.getText("config.DeviceMode.nas.description2"));
+    lblDeviceNook.setToolTipText(
+        Localization.Main.getText("config.DeviceMode.nook.description1") + " " + Localization.Main.getText("config.DeviceMode.nook.description2"));
     adaptInterfaceToDeviceSpecificMode(ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode());
 
     // main options
@@ -822,8 +815,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblSplittagson.setText(Localization.Main.getText("config.SplitTagsOn.label")); // NOI18N
     lblSplittagson.setToolTipText(Localization.Main.getText("config.SplitTagsOn.description")); // NOI18N
     chkDontsplittags.setText(Localization.Main.getText("config.SplitTagsOn.splitbyletter")); // NOI18N
-    lblBookLanguageTag.setText(Localization.Main.getText("config.BookLanguageTag.label")); // NOI18N
-    lblBookLanguageTag.setToolTipText(Localization.Main.getText("config.BookLanguageTag.description")); // NOI18N
     lblTagstogenerate.setText(Localization.Main.getText("config.TagsToGenerate.label")); // NOI18N
     lblTagstogenerate.setToolTipText(Localization.Main.getText("config.TagsToGenerate.description")); // NOI18N
     lblTagstoexclude.setText(Localization.Main.getText("config.TagsToExclude.label")); // NOI18N
@@ -912,8 +903,7 @@ public class Mainframe extends javax.swing.JFrame {
     lblOrderAllBooksBySeries.setText(Localization.Main.getText("config.OrderAllBooksBySeries.label")); // NOI18N
     lblOrderAllBooksBySeries.setToolTipText(Localization.Main.getText("config.OrderAllBooksBySeries.description")); // NOI18N
     lblSplitByAuthorInitialGoToBooks.setText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.label")); // NOI18N
-    lblSplitByAuthorInitialGoToBooks
-        .setToolTipText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.description")); // NOI18N
+    lblSplitByAuthorInitialGoToBooks.setToolTipText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.description")); // NOI18N
     lblNoThumbnailGenerate.setText(Localization.Main.getText("config.ThumbnailGenerate.label")); // NOI18N
     lblNoThumbnailGenerate.setToolTipText(Localization.Main.getText("config.ThumbnailGenerate.description")); // NOI18N
     lblThumbnailheight.setText(Localization.Main.getText("config.ThumbnailHeight.label")); // NOI18N
@@ -1039,8 +1029,6 @@ public class Mainframe extends javax.swing.JFrame {
       popup = Localization.Main.getText("config.CatalogTitle.description");
     else if (label == lblSplittagson)
       popup = Localization.Main.getText("config.SplitTagsOn.description");
-    else if (label == lblBookLanguageTag)
-      popup = Localization.Main.getText("config.BookLanguageTag.description");
     else if (label == lblTagstogenerate)
       popup = Localization.Main.getText("config.TagsToGenerate.description");
     else if (label == lblTagstoexclude)
@@ -1186,8 +1174,7 @@ public class Mainframe extends javax.swing.JFrame {
       File oldFolder = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
       ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(newFolder);
       if (DatabaseManager.INSTANCE.databaseExists()) {
-        JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null,
-            JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
         return true;
       } else
         ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(oldFolder);
@@ -1224,8 +1211,7 @@ public class Mainframe extends javax.swing.JFrame {
         return false;
       newFolder.mkdirs();
     }
-    JOptionPane
-        .showMessageDialog(this, Localization.Main.getText("info.targetfolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, Localization.Main.getText("info.targetfolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
     return true;
   }
 
@@ -1289,8 +1275,6 @@ public class Mainframe extends javax.swing.JFrame {
     pnlSplitTagsOn = new javax.swing.JPanel();
     txtSplittagson = new javax.swing.JTextField();
     chkDontsplittags = new javax.swing.JCheckBox();
-    lblBookLanguageTag = new javax.swing.JLabel();
-    txtBookLanguageTag = new javax.swing.JTextField();
     lblTagstogenerate = new javax.swing.JLabel();
     txtTagstogenerate = new javax.swing.JTextField();
     lblTagstoexclude = new javax.swing.JLabel();
@@ -1771,30 +1755,6 @@ public class Mainframe extends javax.swing.JFrame {
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     pnlMainOptions.add(pnlSplitTagsOn, gridBagConstraints);
-
-    lblBookLanguageTag.setText(Localization.Main.getText("config.BookLanguageTag.label")); // NOI18N
-    lblBookLanguageTag.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseClicked(java.awt.event.MouseEvent evt) {
-        handleMouseClickOnLabel(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 9;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-    gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-    pnlMainOptions.add(lblBookLanguageTag, gridBagConstraints);
-
-    txtBookLanguageTag.setText("txtBookLanguageTag");
-    txtBookLanguageTag.setPreferredSize(new java.awt.Dimension(200, 20));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 9;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-    pnlMainOptions.add(txtBookLanguageTag, gridBagConstraints);
 
     lblTagstogenerate.setText(Localization.Main.getText("config.TagsToGenerate.label")); // NOI18N
     lblTagstogenerate.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -3593,8 +3553,7 @@ public class Mainframe extends javax.swing.JFrame {
     txtCoverHeight.setVisible(true);
   }//GEN-LAST:event_chkNoCoverResizeActionPerformed
 
-  private void chkNoThumbnailGenerateActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_chkNoThumbnailGenerateActionPerformed
+  private void chkNoThumbnailGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoThumbnailGenerateActionPerformed
     // lblThumbnailheight.setVisible(!chkNoThumbnailGenerate.isSelected());
     lblThumbnailheight.setVisible(true);
     // txtThumbnailheight.setVisible(!chkNoThumbnailGenerate.isSelected());
@@ -3617,8 +3576,7 @@ public class Mainframe extends javax.swing.JFrame {
     txtAmazonTitleUrl.setText(StanzaConstants.AMAZON_TITLE_URL);
   }//GEN-LAST:event_cmdAmazonTitleResetActionPerformed
 
-  private void cmdGoodreadAuthorResetActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_cmdGoodreadAuthorResetActionPerformed
+  private void cmdGoodreadAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadAuthorResetActionPerformed
     txtGoodreadAuthorUrl.setText(StanzaConstants.GOODREAD_AUTHOR_URL);
   }//GEN-LAST:event_cmdGoodreadAuthorResetActionPerformed
 
@@ -3630,8 +3588,7 @@ public class Mainframe extends javax.swing.JFrame {
     txtGoodreadTitleUrl.setText(StanzaConstants.GOODREAD_TITLE_URL);
   }//GEN-LAST:event_cmdGoodreadTitleResetActionPerformed
 
-  private void cmdGoodreadReviewResetActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_cmdGoodreadReviewResetActionPerformed
+  private void cmdGoodreadReviewResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadReviewResetActionPerformed
     txtGoodreadReviewIsbnUrl.setText(StanzaConstants.GOODREAD_REVIEW_ISBN_URL);
   }//GEN-LAST:event_cmdGoodreadReviewResetActionPerformed
 
@@ -3639,18 +3596,15 @@ public class Mainframe extends javax.swing.JFrame {
     txtIsfdbAuthorUrl.setText(StanzaConstants.ISFDB_AUTHOR_URL);
   }//GEN-LAST:event_cmdIsfdbAuthorResetActionPerformed
 
-  private void cmdLibrarythingAuthorResetActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_cmdLibrarythingAuthorResetActionPerformed
+  private void cmdLibrarythingAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingAuthorResetActionPerformed
     txtLibrarythingAuthorUrl.setText(StanzaConstants.LIBRARYTHING_AUTHOR_URL);
   }//GEN-LAST:event_cmdLibrarythingAuthorResetActionPerformed
 
-  private void cmdLibrarythingIsbnResetActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_cmdLibrarythingIsbnResetActionPerformed
+  private void cmdLibrarythingIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingIsbnResetActionPerformed
     txtLibrarythingIsbnUrl.setText(StanzaConstants.LIBRARYTHING_ISBN_URL);
   }//GEN-LAST:event_cmdLibrarythingIsbnResetActionPerformed
 
-  private void cmdLibrarythingTitleResetActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_cmdLibrarythingTitleResetActionPerformed
+  private void cmdLibrarythingTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingTitleResetActionPerformed
     txtLibrarythingTitleUrl.setText(StanzaConstants.LIBRARYTHING_TITLE_URL);
   }//GEN-LAST:event_cmdLibrarythingTitleResetActionPerformed
 
@@ -3658,8 +3612,7 @@ public class Mainframe extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_lblNoenerateOpdsfile
 
-  private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt)
-  {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
+  private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
     // We do not allow HTML Downloads if OPDS Downloads are suppressed
     if (chkNogenerateopdsfiles.isSelected() == true) {
       chkNogeneratehtmlfiles.setSelected(true);
@@ -3680,8 +3633,7 @@ public class Mainframe extends javax.swing.JFrame {
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
 
-  private void cboLangVetoableChange(java.beans.PropertyChangeEvent evt) throws
-      java.beans.PropertyVetoException {// GEN-FIRST:event_cboLangVetoableChange
+  private void cboLangVetoableChange(java.beans.PropertyChangeEvent evt) throws java.beans.PropertyVetoException {// GEN-FIRST:event_cboLangVetoableChange
     changeLanguage();
   }// GEN-LAST:event_cboLangVetoableChange
 
@@ -3814,7 +3766,6 @@ public class Mainframe extends javax.swing.JFrame {
   private javax.swing.JLabel lblAmazonAuthorUrl;
   private javax.swing.JLabel lblAmazonIsbnUrl;
   private javax.swing.JLabel lblAmazonTitleUrl;
-  private javax.swing.JLabel lblBookLanguageTag;
   private javax.swing.JLabel lblBooksinrecent;
   private javax.swing.JLabel lblBottom0;
   private javax.swing.JLabel lblBrowseByCover;
@@ -3914,7 +3865,6 @@ public class Mainframe extends javax.swing.JFrame {
   private javax.swing.JTextField txtAmazonAuthorUrl;
   private javax.swing.JTextField txtAmazonIsbnUrl;
   private javax.swing.JTextField txtAmazonTitleUrl;
-  private javax.swing.JTextField txtBookLanguageTag;
   private javax.swing.JTextField txtBooksinrecent;
   private javax.swing.JTextField txtCatalogFolder;
   private javax.swing.JTextField txtCatalogTitle;

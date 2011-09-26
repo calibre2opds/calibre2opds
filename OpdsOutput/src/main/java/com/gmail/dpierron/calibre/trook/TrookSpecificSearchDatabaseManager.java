@@ -239,7 +239,7 @@ public enum TrookSpecificSearchDatabaseManager {
       if (!storedBooks.contains(item)) {
         logger.debug("adding result for " + item);
         String keywords = item.getTitle();
-        String noNoise = item.getTitleForSort(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
+        String noNoise = item.getTitleForSort();
         addEntryToTrookSearchDatabase(entry, ResultType.BOOK, keywords, noNoise);
         storedBooks.add(item);
       }

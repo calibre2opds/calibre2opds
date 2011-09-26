@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -95,11 +96,11 @@ public class RatingsSubCatalog extends BooksSubCatalog {
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_RATING :
-            StanzaConstants.ICON_RATING, Option.DONOTINCLUDE_RATING);
+            StanzaConstants.ICON_RATING, Option.DONOTINCLUDE_RATING).getFirstElement();
     return result;
   }
 
-  public Element getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getRatings()))
       return null;
 
@@ -142,12 +143,13 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     getHtmlManager().generateHtmlFromXml(document, outputFile);
 
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    return FeedHelper.INSTANCE
-        .getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
-            // #751211: Use external icons option
-            ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RATING :
-                StanzaConstants.ICON_RATING);
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
+    Element result = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+        // #751211: Use external icons option
+        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RATING :
+            StanzaConstants.ICON_RATING);
+    return new Composite<Element, String>(result, urlInItsSubfolder);
   }
 
 }

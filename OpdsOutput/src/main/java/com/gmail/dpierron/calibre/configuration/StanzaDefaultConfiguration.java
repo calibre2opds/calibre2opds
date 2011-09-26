@@ -101,10 +101,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.INCLUDEBOOKSWITHNOFILE;
   }
 
-  public String getBookLanguageTag() {
-    return StanzaConstants.DEFAULTBOOKLANGUAGETAG;
-  }
-
   public boolean getCryptFilenames() {
     return StanzaConstants.CRYPT_FILENAMES;
   }
