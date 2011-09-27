@@ -9,6 +9,8 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.rmi.dgc.VMID;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -236,8 +238,7 @@ public class Index {
         String kwWord = keyword.word; // no need to search for apostrophes, the keywords are already cleaned-up and uppercase
         String kwWeight = "" + keyword.catalogItems.size();
         String sql =
-            "tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD, KW_WEIGHT) VALUES (?, ?, ?)', ['" + kwId + "', '" + kwWord + "', '" +
-                kwWeight + "']);";
+            "tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD, KW_WEIGHT) VALUES (?, ?, ?)', ['" + kwId + "', '" + kwWord + "', '" + kwWeight + "']);";
         sqlKeywords.add(sql);
       }
       for (Map.Entry<ItemType, CatalogItem> catalogItemEntry : keyword.catalogItems.entrySet()) {
@@ -252,8 +253,8 @@ public class Index {
               String bkUrl = bookEntry.url;
               String bkCoverUrl = bookEntry.coverUrl;
               String sql =
-                  "tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_COVER_URL) VALUES (?, ?, ?, ?)', ['" + bkId + "', '" +
-                      bkTitle + "', '" + bkUrl + "','" + bkCoverUrl + "']);";
+                  "tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_COVER_URL) VALUES (?, ?, ?, ?)', ['" + bkId + "', '" + bkTitle + "', '" +
+                      bkUrl + "','" + bkCoverUrl + "']);";
               sqlBooks.add(sql);
             }
           }
@@ -261,8 +262,7 @@ public class Index {
           {
             String catType = catalogItemEntry.getKey().getCode();
             String sql =
-                "tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)', ['" + kwId + "', '" + bkId + "', '" +
-                    catType + "']);";
+                "tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)', ['" + kwId + "', '" + bkId + "', '" + catType + "']);";
             sqlCatalogItems.add(sql);
           }
         }
@@ -486,22 +486,13 @@ public class Index {
         }
       }
     }
-
-    writeJavascript(exportFolder, "books", jsBooks, new ArrayList<String>() {{
-      add("bkId");
-      add("bkTitle");
-      add("bkUrl");
-      add("bkCoverUrl");
-    }});
-    writeJavascript(exportFolder, "keywords", jsKeywords, new ArrayList<String>() {{
-      add("kwId");
-      add("kwWord");
-      add("kwWeight");
-    }});
-    writeJavascript(exportFolder, "catalogitems", jsCatalogItems, new ArrayList<String>() {{
-      add("kwId");
-      add("bkId");
-      add("catType");
-    }});
+    List<String[]> jsIdentifier = new LinkedList<String[]>();
+    jsIdentifier.add(new String[]{new VMID().toString(),
+        ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle(),
+        SimpleDateFormat.getInstance().format(new Date())});
+    writeJavascript(exportFolder, "identifier", jsIdentifier, Helper.listThis("id", "label", "date"));
+    writeJavascript(exportFolder, "books", jsBooks, Helper.listThis("bkId", "bkTitle", "bkUrl", "bkCoverUrl"));
+    writeJavascript(exportFolder, "keywords", jsKeywords, Helper.listThis("kwId", "kwWord", "kwWeight"));
+    writeJavascript(exportFolder, "catalogitems", jsCatalogItems, Helper.listThis("kwId", "bkId", "catType"));
   }
 }
