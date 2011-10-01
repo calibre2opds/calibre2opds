@@ -3,8 +3,11 @@ package com.gmail.dpierron.calibre.database;
  * Abstract the SQL underlying standard requests for calibre2opds
  */
 
+import com.gmail.dpierron.calibre.configuration.Configuration;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -30,7 +33,8 @@ public enum DatabaseRequest {
   BOOKS_PUBLISHERS("select book, publisher from books_publishers_link"),
   BOOKS_DATA("select book, format, name from data"),
   BOOKS_COMMENTS("select book, text from comments"),
-  BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),;
+  BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
+  SAVED_SEARCHES("select val from preferences where key='saved_searches'");
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
   private String sql;
@@ -43,7 +47,13 @@ public enum DatabaseRequest {
   public PreparedStatement getStatement() {
     if (preparedStatement == null) {
       try {
-        preparedStatement = DatabaseManager.INSTANCE.getConnection().prepareStatement(sql);
+        Connection connection = DatabaseManager.INSTANCE.getConnection();
+        if (connection == null) {
+          String e = "Cannot establish a database connection to " + new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
+          logger.error(e);
+          throw new RuntimeException(e);
+        }
+        preparedStatement = connection.prepareStatement(sql);
       } catch (SQLException e) {
         logger.error(e);
       }

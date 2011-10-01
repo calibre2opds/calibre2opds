@@ -138,9 +138,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (null == splitOption)
       splitOption = SplitOption.SplitByLetter;
     switch (splitOption) {
-      // case SplitOptionNone:
+      // case DontSplit:
       case Paginate:
-      case SplitOptionNone:
+      case DontSplit:
         if (logger.isTraceEnabled())
           logger.trace("splitOption=" + splitOption);
         willSplitByLetter = false;
@@ -392,12 +392,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSeries: splitOption=" +
-          (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.SplitOptionNone));
+          (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit));
 
     Element result = getListOfBooks(pBreadcrumbs, books, 0,              // Starting at 0
         title, summary, urn, filename,
         // Bug #716917 Split on letter in series according to user option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.SplitOptionNone,
+        ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_SERIES :

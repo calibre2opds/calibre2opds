@@ -85,6 +85,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_MAXKEYWORDS = "MaxKeywords";
   private final static String PROPERTY_NAME_INDEXFILTERALGORITHM = "IndexFilterAlgorithm";
   private final static String PROPERTY_NAME_URLBASE = "UrlBase";
+  private final static String PROPERTY_NAME_CUSTOMCATALOGTITLE = "CustomCatalogTitle";
+  private final static String PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME = "CustomCatalogSavedSearchName";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -1301,4 +1303,41 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_URLBASE, value);
   }
 
+  public boolean isCustomCatalogSavedSearchNameReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME);
+  }
+
+  public String getCustomCatalogSavedSearchName() {
+    String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME);
+    if (s == null)
+      return defaults.getCustomCatalogSavedSearchName();
+    else
+      return s;
+  }
+
+  public void setCustomCatalogSavedSearchName(String value) {
+    // correct the value if needed
+    if (value != null && value.charAt(value.length() - 1) != '/')
+      value += "/";
+    setProperty(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME, value);
+  }
+
+  public boolean isCustomCatalogTitleReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGTITLE);
+  }
+
+  public String getCustomCatalogTitle() {
+    String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGTITLE);
+    if (s == null)
+      return defaults.getCustomCatalogTitle();
+    else
+      return s;
+  }
+
+  public void setCustomCatalogTitle(String value) {
+    // correct the value if needed
+    if (value != null && value.charAt(value.length() - 1) != '/')
+      value += "/";
+    setProperty(PROPERTY_NAME_CUSTOMCATALOGTITLE, value);
+  }
 }

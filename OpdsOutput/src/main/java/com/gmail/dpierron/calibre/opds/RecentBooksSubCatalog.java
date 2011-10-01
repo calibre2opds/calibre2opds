@@ -12,9 +12,6 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class RecentBooksSubCatalog extends BooksSubCatalog {
@@ -35,17 +32,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
   }
 
   private void sortBooks() {
-    // sort the books by timestamp
-    Collections.sort(getBooks(), new Comparator<Book>() {
-
-      public int compare(Book o1, Book o2) {
-        Date ts1 = (o1 == null ? new Date() : o1.getTimestamp());
-        Date ts2 = (o2 == null ? new Date() : o2.getTimestamp());
-        return ts2.compareTo(ts1);
-      }
-
-    });
-
+    sortBooksByTimestamp(getBooks());
     setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
   }
 

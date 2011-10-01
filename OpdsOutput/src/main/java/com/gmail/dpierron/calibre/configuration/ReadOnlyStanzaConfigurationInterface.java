@@ -148,4 +148,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public int getMaxKeywords();
 
   public Index.FilterHintType getIndexFilterAlgorithm();
+
+  public String getCustomCatalogTitle();
+
+  public String getCustomCatalogSavedSearchName();
 }

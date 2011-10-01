@@ -10,6 +10,9 @@ import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
+import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
+import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
+import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
@@ -640,7 +643,6 @@ public class Catalog {
       Composite<Element, String> recent = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
       if (recent != null) {
         main.addContent(recent.getFirstElement());
-        main.addContent(6, FeedHelper.INSTANCE.getFeaturedLink(recent.getSecondElement(), "Featured books")); // 6 places the link right wher we want it...
       }
     }
     callback.endCreateRecent(System.currentTimeMillis() - now);
@@ -669,6 +671,34 @@ public class Catalog {
     }
     callback.endCreateAllbooks(System.currentTimeMillis() - now);
     logger.debug("COMPLETED: Generating All Books catalog");
+
+    /* Featured catalog */
+    String savedSearchName = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
+    if (Helper.isNotNullOrEmpty(savedSearchName)) {
+      logger.debug("STARTED: Generating Featured books catalog");
+      String savedSearch = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName);
+      if (Helper.isNullOrEmpty(savedSearch))
+        savedSearch = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName.toUpperCase());
+      if (Helper.isNotNullOrEmpty(savedSearch)) {
+        CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(savedSearch);
+        try {
+          BookFilter filter = interpreter.interpret();
+          List<Book> featuredBooks = FilterHelper.filter(filter, books);
+          callback.startCreateFeaturedBooks(featuredBooks.size());
+          now = System.currentTimeMillis();
+          Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks, SplitOption.DontSplit).getSubCatalogEntry(breadcrumbs);
+          if (featuredCatalog != null) {
+            //main.addContent(featuredCatalog.getFirstElement());
+            main.addContent(6, FeedHelper.INSTANCE.getFeaturedLink(featuredCatalog.getSecondElement(),
+                Localization.Main.getText("featuredbooks.title"))); // 6 places the link right wher we want it...
+          }
+          callback.endCreateAllbooks(System.currentTimeMillis() - now);
+          logger.debug("COMPLETED: Generating All Books catalog");
+        } catch (CalibreQueryInterpreter.InterpretException e) {
+          callback.errorOccured("Error occured while interpreting the featured books saved search", e);
+        }
+      }
+    }
 
     File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
     Document document = new Document();

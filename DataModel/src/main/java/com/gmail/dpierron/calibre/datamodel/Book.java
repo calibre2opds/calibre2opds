@@ -45,7 +45,7 @@ public class Book implements SplitableByLetter {
   private String epubFileName;
   private long latestFileModifiedDate = -1;
   private BookRating rating;
-  private List<Language> bookLanguages;
+  private List<Language> bookLanguages = new LinkedList<Language>();
   private boolean flag;
 
   public Book(String id,
@@ -194,18 +194,22 @@ public class Book implements SplitableByLetter {
       // process possible HTML tags
       StringBuffer sb = new StringBuffer();
       String comment = getComment();
-      boolean skipping = false;
-      for (int i = 0; i < comment.length(); i++) {
-        char c = comment.charAt(i);
-        if (!skipping) {
-          if (c == '<')
-            skipping = true;
-          else
-            sb.append(c);
-        } else {
-          if (c == '>')
-            skipping = false;
+      if (comment != null) {
+        boolean skipping = false;
+        for (int i = 0; i < comment.length(); i++) {
+          char c = comment.charAt(i);
+          if (!skipping) {
+            if (c == '<')
+              skipping = true;
+            else
+              sb.append(c);
+          } else {
+            if (c == '>')
+              skipping = false;
+          }
         }
+      } else {
+        shortComment = "";
       }
       shortComment = Helper.shorten(sb.toString(), maxLength);
     }

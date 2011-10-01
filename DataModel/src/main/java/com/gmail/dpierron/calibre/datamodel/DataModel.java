@@ -39,6 +39,7 @@ public enum DataModel {
 
   Map<String, Language> mapOfLanguagesById;
   Map<String, Language> mapOfLanguagesByIsoCode;
+  Map<String, String> mapOfSavedSearches;
 
   public void reset() {
     mapOfFilesByBookId = null;
@@ -66,6 +67,7 @@ public enum DataModel {
     mapOfBooksByPublisher = null;
     mapOfLanguagesById = null;
     mapOfLanguagesByIsoCode = null;
+    mapOfSavedSearches = null;
   }
 
   public void preloadDataModel() {
@@ -91,6 +93,14 @@ public enum DataModel {
     getMapOfBooksBySeries();
     getMapOfBooksByRating();
   }
+
+  public Map<String, String> getMapOfSavedSearches() {
+    if (mapOfSavedSearches == null) {
+      mapOfSavedSearches = Database.INSTANCE.getMapOfSavedSearches();
+    }
+    return mapOfSavedSearches;
+  }
+
 
   public Map<String, Language> getMapOfLanguagesById() {
     if (mapOfLanguagesById == null) {

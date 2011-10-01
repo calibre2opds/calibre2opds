@@ -140,4 +140,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void setLibrarythingIsbnUrl(String value);
 
   public void setLibrarythingTitleUrl(String value);
+
+  public void setCustomCatalogTitle(String value);
+
+  public void setCustomCatalogSavedSearchName(String value);
 }
