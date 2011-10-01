@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0
+.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>calibre2opds</artifactId>
+    <groupId>com.gmail.dpierron.calibre</groupId>
+    <version>2.5-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.gmail.dpierron.calibre</groupId>
+  <artifactId>CalibreQueryLanguage</artifactId>
+  <name>Calibre Query Language parser</name>
+
+  <!-- This is the version of YOUR project -->
+  <version>2.5-SNAPSHOT</version>
+
+  <packaging>jar</packaging>
+  <url>http://antlr.org</url>
+
+  <dependencies>
+
+    <!--
+      We need to have the ANTLR runtime jar when running and compiling.
+    -->
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr-runtime</artifactId>
+      <version>3.1.3</version>
+      <scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <!--
+
+    Tell Maven which other artifacts we need in order to
+    build with the ANTLR Tool. Here we also make the default
+    goal be install so that you can just type mvn at the command
+    line instead of mvn install. And we add the java compiler plugin
+    for convenience to show how you can use 1.6 source files but
+    generate 1.4 compatible .class files (as few people seem to
+    know about the jsr14 target).
+    -->
+  <build>
+
+    <defaultGoal>install</defaultGoal>
+
+    <plugins>
+
+      <plugin>
+
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr3-maven-plugin</artifactId>
+        <version>3.1.3-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>antlr</goal>
+            </goals>
+          </execution>
+        </executions>
+
+      </plugin>
+
+
+    </plugins>
+  </build>
+
+</project>

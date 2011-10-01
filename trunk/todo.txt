@@ -1,1 +1,2 @@
 remove *BookLanguageTag* from the localizations
+add info.step.featuredbooks

@@ -1,17 +1,19 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 public enum BookRating {
-  ONE(2),
-  TWO(4),
-  THREE(6),
-  FOUR(8),
-  FIVE(10),
-  NOTRATED(0);
+  ONE(2, '1'),
+  TWO(4, '2'),
+  THREE(6, '3'),
+  FOUR(8, '4'),
+  FIVE(10, '5'),
+  NOTRATED(0, '0');
 
   private int value;
+  private char charEquivalent;
 
-  private BookRating(int value) {
+  private BookRating(int value, char charEquivalent) {
     this.value = value;
+    this.charEquivalent = charEquivalent;
   }
 
   public static BookRating[] sortedRatings() {
@@ -24,6 +26,10 @@ public enum BookRating {
 
   public int getValue() {
     return value;
+  }
+
+  public char getCharEquivalent() {
+    return charEquivalent;
   }
 
   public static BookRating fromValue(int value) {

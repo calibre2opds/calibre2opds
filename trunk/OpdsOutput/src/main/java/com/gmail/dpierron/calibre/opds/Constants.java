@@ -15,7 +15,6 @@ public class Constants {
   public final static String SYNCFILE_NAME = "synclog.log";
   public final static String CONFIGURATION_COMPATIBILITY_VERSIONCHIP = "02030101";
   public final static String DSNNAME = "CALIBRE";
-  public final static String METADATA = "metadata.db";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
   public final static String FEED_URL = "http://wiki.mobileread.com/wiki/Calibre2opds";

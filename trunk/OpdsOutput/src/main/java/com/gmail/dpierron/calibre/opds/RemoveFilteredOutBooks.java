@@ -7,18 +7,21 @@ public enum RemoveFilteredOutBooks {
   INSTANCE;
 
   public void runOnDataModel() {
-    BooleanFilter booleanFilter = new BooleanFilter();
+    BooleanAndFilter level2BooleanAndFilter = new BooleanAndFilter();
 
     // remove all books that have no ebook format in the included list
-    booleanFilter.addFilter(new SelectedEbookFormatsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludedFormatsList(),
+    level2BooleanAndFilter.setLeftFilter(new SelectedEbookFormatsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludedFormatsList(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeBooksWithNoFile()));
 
     // remove all books that have no tag in the included list
-    booleanFilter.addFilter(new RequiredTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate(), false));
+    level2BooleanAndFilter.setRightFilter(new RequiredTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate(), false));
+
+    BooleanAndFilter level1BooleanAndFilter = new BooleanAndFilter();
 
     // remove all books that have a tag in the excluded list
-    booleanFilter.addFilter(new ForbiddenTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude(), false));
+    level1BooleanAndFilter.setLeftFilter(level2BooleanAndFilter);
+    level1BooleanAndFilter.setRightFilter(new ForbiddenTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude(), false));
 
-    FilterDataModel.INSTANCE.runOnDataModel(booleanFilter);
+    FilterDataModel.INSTANCE.runOnDataModel(level1BooleanAndFilter);
   }
 }

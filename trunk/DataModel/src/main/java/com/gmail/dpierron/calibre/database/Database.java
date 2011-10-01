@@ -377,4 +377,39 @@ public enum Database {
     }
     return buffer.toString();
   }
+
+  public Map<String, String> getMapOfSavedSearches() {
+    final String MIDDLE_DELIMITER = "\": \"";
+    Map<String, String> result = new HashMap<String, String>();
+    PreparedStatement statement = DatabaseRequest.SAVED_SEARCHES.getStatement();
+    try {
+      ResultSet set = statement.executeQuery();
+      while (set.next()) {
+        String val = set.getString("val");
+        /* interpret the python dictionary */
+        String dictionary = val.substring(1, val.length() - 1); // skip the opening and closing brackets
+        List<String> lines = Helper.tokenize(dictionary, ", \n");
+        for (String line : lines) {
+          int posStart = line.indexOf("\"");
+          if (posStart > -1) {
+            int posMiddle = line.indexOf(MIDDLE_DELIMITER);
+            if (posMiddle > -1) {
+              String name = line.substring(posStart + 1, posMiddle);
+              int posEnd = line.lastIndexOf("\"");
+              if (posEnd > -1) {
+                String search = line.substring(posMiddle + MIDDLE_DELIMITER.length(), posEnd);
+                // unescape double quotes
+                search = search.replace("\\\"", "\"");
+                result.put(name, search);
+                result.put(name.toUpperCase(Locale.ENGLISH), search);
+              }
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      logger.error(e);
+    }
+    return result;
+  }
 }

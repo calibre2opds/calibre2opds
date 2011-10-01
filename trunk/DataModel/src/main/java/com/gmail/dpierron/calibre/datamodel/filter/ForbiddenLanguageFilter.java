@@ -9,39 +9,39 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-public class RequiredLanguageFilter implements BookFilter {
+public class ForbiddenLanguageFilter implements BookFilter {
 
-  List<Language> requiredLanguages;
+  List<Language> forbiddenLanguages;
   boolean includeBooksWithNoLanguage;
 
-  public RequiredLanguageFilter(String requiredLanguageList, boolean includeBooksWithNoLanguage) {
-    if (Helper.isNotNullOrEmpty(requiredLanguageList)) {
-      requiredLanguages = new LinkedList<Language>();
-      List<String> isoCodes = Helper.tokenize(requiredLanguageList.toLowerCase(Locale.ENGLISH), ",", true);
+  public ForbiddenLanguageFilter(String forbiddenLanguageList, boolean includeBooksWithNoLanguage) {
+    if (Helper.isNotNullOrEmpty(forbiddenLanguageList)) {
+      forbiddenLanguages = new LinkedList<Language>();
+      List<String> isoCodes = Helper.tokenize(forbiddenLanguageList.toLowerCase(Locale.ENGLISH), ",", true);
       for (String isoCode : isoCodes) {
         Language lang = DataModel.INSTANCE.getMapOfLanguagesByIsoCode().get(isoCode);
         if (lang != null)
-          requiredLanguages.add(lang);
+          forbiddenLanguages.add(lang);
       }
     }
     this.includeBooksWithNoLanguage = includeBooksWithNoLanguage;
   }
 
-  private List<Language> getRequiredLanguages() {
-    return requiredLanguages;
+  private List<Language> getForbiddenLanguages() {
+    return forbiddenLanguages;
   }
 
   public boolean didBookPassThroughFilter(Book book) {
     if (book == null)
       return false;
 
-    if (Helper.isNullOrEmpty(requiredLanguages))
+    if (Helper.isNullOrEmpty(forbiddenLanguages))
       return true;
 
     if (Helper.isNullOrEmpty(book.getBookLanguages()))
       return includeBooksWithNoLanguage;
 
-    for (Language requiredLanguage : getRequiredLanguages()) {
+    for (Language requiredLanguage : getForbiddenLanguages()) {
       boolean found = false;
 
       for (Language bookLanguage : book.getBookLanguages()) {
@@ -50,7 +50,7 @@ public class RequiredLanguageFilter implements BookFilter {
           break;
         }
       }
-      if (!found)
+      if (found)
         return false;
     }
     return true;

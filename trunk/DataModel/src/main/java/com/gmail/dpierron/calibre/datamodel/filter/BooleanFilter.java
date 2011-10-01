@@ -2,27 +2,43 @@ package com.gmail.dpierron.calibre.datamodel.filter;
 
 import com.gmail.dpierron.calibre.datamodel.Book;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+public abstract class BooleanFilter implements BookFilter {
 
-public class BooleanFilter implements BookFilter {
+  private BookFilter leftFilter;
+  private BookFilter rightFilter;
+  private boolean isOrFilter; // if true, the filter is an OR filter, else it's an AND filter
 
-  private List<BookFilter> filters = new LinkedList<BookFilter>();
+  BooleanFilter(boolean orFilter) {
+    isOrFilter = orFilter;
+  }
 
-  public void addFilter(BookFilter filter) {
-    if (filters.contains(filter))
-      return;
-    filters.add(filter);
+  protected BooleanFilter(BookFilter leftFilter, BookFilter rightFilter, boolean orFilter) {
+    this.leftFilter = leftFilter;
+    this.rightFilter = rightFilter;
+    isOrFilter = orFilter;
+  }
+
+  public BookFilter getLeftFilter() {
+    return leftFilter;
+  }
+
+  public void setLeftFilter(BookFilter leftFilter) {
+    this.leftFilter = leftFilter;
+  }
+
+  public BookFilter getRightFilter() {
+    return rightFilter;
+  }
+
+  public void setRightFilter(BookFilter rightFilter) {
+    this.rightFilter = rightFilter;
   }
 
   public boolean didBookPassThroughFilter(Book book) {
-    boolean result = true;
-    Iterator<BookFilter> iterator = filters.iterator();
-    while (result && iterator.hasNext())
-      result &= iterator.next().didBookPassThroughFilter(book);
-    return result;
+    if (isOrFilter)
+      return getLeftFilter().didBookPassThroughFilter(book) || getRightFilter().didBookPassThroughFilter(book);
+    else
+      return getLeftFilter().didBookPassThroughFilter(book) && getRightFilter().didBookPassThroughFilter(book);
   }
-
 
 }

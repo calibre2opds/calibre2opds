@@ -310,7 +310,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
 
           element = getListOfBooks(pBreadcrumbs, books, 0,                       // Starting from start
-              letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitOptionNone,     // Bug #716917 Do not split on letter
+              letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
               ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
                   getCatalogManager().getPathToCatalogRoot(letterFilename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_BOOKS :
@@ -409,7 +409,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
 
     Element result = getListOfBooks(pBreadcrumbs, books, 0,              // from
-        title, summary, urn, filename, SplitOption.SplitOptionNone,        // Bug #716917 Do not split on letter
+        title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_AUTHORS :

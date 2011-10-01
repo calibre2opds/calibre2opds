@@ -4,5 +4,5 @@ public enum SplitOption {
   Paginate,
   SplitByLetter,
   SplitByDate,
-  SplitOptionNone;
+  DontSplit;
 }

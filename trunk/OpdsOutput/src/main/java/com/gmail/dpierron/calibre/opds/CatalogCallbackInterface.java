@@ -46,6 +46,11 @@ public interface CatalogCallbackInterface {
 
   public void endCreateAllbooks(long milliseconds);
 
+  // Featured books
+  public void startCreateFeaturedBooks(long nb);
+
+  public void endCreateFeaturedBooks(long milliseconds);
+
   // Thumbnails
   public void startCreateThumbnails(long nb);
 

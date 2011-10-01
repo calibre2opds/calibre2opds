@@ -148,6 +148,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
     });
   }
 
+  void sortBooksByTimestamp(List<Book> books) {
+    // sort the books by timestamp
+    Collections.sort(books, new Comparator<Book>() {
+
+      public int compare(Book o1, Book o2) {
+        Date ts1 = (o1 == null ? new Date() : o1.getTimestamp());
+        Date ts2 = (o2 == null ? new Date() : o2.getTimestamp());
+        return ts2.compareTo(ts1);
+      }
+
+    });
+  }
+
   /**
    * @param pBreadcrumbs
    * @param books
@@ -227,9 +240,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
-      case SplitOptionNone:
+      case DontSplit:
         // Bug #716917 Do not split on letter (used in Author and Series book lists)
-        logger.debug("getListOfBooks:splitOption=SplitOptionNone");
+        logger.debug("getListOfBooks:splitOption=DontSplit");
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
@@ -552,8 +565,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       } catch (Exception e) {
         // Exceptions are not expected, but if one does occur as well
         // as logging the details, also log the book that caused it
-        logger.warn(e);
-        logger.warn("... " + book.getAuthors() + ": " + book.getTitle());
+        logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
         // Increment the warning count for advising the user to look at the log after the run
       } finally {
         if (fos != null)

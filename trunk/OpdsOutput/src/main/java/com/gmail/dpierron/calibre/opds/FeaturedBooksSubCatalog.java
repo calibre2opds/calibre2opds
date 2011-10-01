@@ -19,23 +19,23 @@ import org.jdom.Element;
 import java.io.IOException;
 import java.util.List;
 
-public class AllBooksSubCatalog extends BooksSubCatalog {
-  private final static org.apache.log4j.Logger logger = Logger.getLogger(AllBooksSubCatalog.class);
+public class FeaturedBooksSubCatalog extends BooksSubCatalog {
+  private final static Logger logger = Logger.getLogger(FeaturedBooksSubCatalog.class);
 
   private SplitOption splitOption;
 
-  public AllBooksSubCatalog(List<Book> books) {
+  public FeaturedBooksSubCatalog(List<Book> books) {
     super(books);
     sortBooks();
   }
 
-  public AllBooksSubCatalog(List<Book> books, SplitOption splitOption) {
+  public FeaturedBooksSubCatalog(List<Book> books, SplitOption splitOption) {
     super(books);
     this.splitOption = splitOption;
     sortBooks();
   }
 
-  public AllBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
+  public FeaturedBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
     sortBooks();
   }
@@ -45,22 +45,16 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
   }
 
   private void sortBooks() {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getOrderAllBooksBySeries()) {
-      // sort the books by series
-      sortBooksBySeries(getBooks());
-    } else {
-      // sort the books by title
-      sortBooksByTitle(getBooks());
-    }
+    sortBooksByTimestamp(getBooks());
   }
 
   public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_books.xml");
-    String title = Localization.Main.getText("allbooks.title");
-    String urn = "calibre:books";
+    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_featuredbooks.xml");
+    String title = Localization.Main.getText("featuredbooks.title");
+    String urn = "calibre:featuredbooks";
 
     String summary = "";
     if (getBooks().size() > 1)

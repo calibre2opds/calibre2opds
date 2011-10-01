@@ -225,6 +225,15 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblAllbooksTime);
   }
 
+  public void startCreateFeaturedBooks(long nb) {
+    logger.info(Localization.Main.getText("info.step.featuredbooks"));
+    progressStep.setMaxScale(nb);
+  }
+
+  public void endCreateFeaturedBooks(long milliseconds) {
+    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  }
+
   public void startCreateThumbnails(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.thumbnails"));
