@@ -19,11 +19,9 @@
           </value>
         </option>
         <option name="RIGHT_MARGIN" value="160" />
-        <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
+        <option name="XML_KEEP_WHITESPACES" value="true" />
         <option name="XML_ATTRIBUTE_WRAP" value="0" />
         <option name="XML_TEXT_WRAP" value="0" />
-        <option name="XML_KEEP_LINE_BREAKS" value="false" />
-        <option name="XML_KEEP_LINE_BREAKS_IN_TEXT" value="false" />
         <option name="XML_ALIGN_ATTRIBUTES" value="false" />
         <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
         <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
