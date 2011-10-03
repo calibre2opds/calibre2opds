@@ -107,7 +107,8 @@ public class Book implements SplitableByLetter {
 
   public Language getBookLanguage() {
     List<Language> languages = getBookLanguages();
-    if (languages == null)
+    if ((languages == null)
+    || (languages.size() == 0))
       return null;
     else
       return languages.get(0);
