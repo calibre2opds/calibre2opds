@@ -127,7 +127,7 @@ public class Index {
 
     // parse the book comments
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getIndexComments())
-      indexMultipleKeywords(book.getComment(), ItemType.BookComment, bookEntry, false);
+      indexMultipleKeywords(Helper.removeHtmlElements(book.getComment()), ItemType.BookComment, bookEntry, false);
 
     // parse the book series
     if (book.getSeries() != null)
