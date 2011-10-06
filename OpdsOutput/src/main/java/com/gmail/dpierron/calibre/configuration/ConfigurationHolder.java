@@ -1316,9 +1316,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void setCustomCatalogSavedSearchName(String value) {
-    // correct the value if needed
-    if (value != null && value.charAt(value.length() - 1) != '/')
-      value += "/";
     setProperty(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME, value);
   }
 
@@ -1335,9 +1332,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void setCustomCatalogTitle(String value) {
-    // correct the value if needed
-    if (value != null && value.charAt(value.length() - 1) != '/')
-      value += "/";
     setProperty(PROPERTY_NAME_CUSTOMCATALOGTITLE, value);
   }
 }

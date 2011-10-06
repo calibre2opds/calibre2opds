@@ -330,7 +330,7 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void saveNewProfile() {
     String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new"));
-    if ("default" .equalsIgnoreCase(newProfileName))
+    if ("default".equalsIgnoreCase(newProfileName))
       return;
     ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
     loadValues();
@@ -596,6 +596,12 @@ public class Mainframe extends javax.swing.JFrame {
     chkNoSplitInSeriesBooks.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks());
     chkNoSplitInSeriesBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitInSeriesBooksReadOnly());
     lblNoSplitInSeriesBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitInSeriesBooksReadOnly());
+    txtCustomCatalogTitle.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle());
+    txtCustomCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogTitleReadOnly());
+    lblCustomCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogTitleReadOnly());
+    txtCustomCatalogSavedSearchName.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName());
+    txtCustomCatalogSavedSearchName.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogSavedSearchNameReadOnly());
+    lblCustomCatalogSavedSearchName.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogSavedSearchNameReadOnly());
 
     /* external links */
     txtWikipediaUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl());
@@ -765,6 +771,8 @@ public class Mainframe extends javax.swing.JFrame {
     i = getValue(txtMaxKeywords);
     ConfigurationManager.INSTANCE.getCurrentProfile().setMaxKeywords(i);
     ConfigurationManager.INSTANCE.getCurrentProfile().setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
+    ConfigurationManager.INSTANCE.getCurrentProfile().setCustomCatalogTitle(txtCustomCatalogTitle.getText());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setCustomCatalogSavedSearchName(txtCustomCatalogSavedSearchName.getText());
   }
 
   /**
@@ -925,6 +933,10 @@ public class Mainframe extends javax.swing.JFrame {
     lblGenerateIndex.setText(Localization.Main.getText("config.GenerateIndex.label")); // NOI18N
     lblGenerateIndex.setToolTipText(Localization.Main.getText("config.GenerateIndex.description")); // NOI18N
     chkGenerateIndex.setToolTipText(Localization.Main.getText("config.GenerateIndex.description")); // NOI18N
+    lblCustomCatalogTitle.setText(Localization.Main.getText("config.CustomCatalogTitle.label")); // NOI18N
+    lblCustomCatalogTitle.setToolTipText(Localization.Main.getText("config.CustomCatalogTitle.description")); // NOI18N
+    lblCustomCatalogSavedSearchName.setText(Localization.Main.getText("config.CustomCatalogSavedSearchName.label")); // NOI18N
+    lblCustomCatalogSavedSearchName.setToolTipText(Localization.Main.getText("config.CustomCatalogSavedSearchName.description")); // NOI18N
 
     // external links
     lblWikipediaUrl.setText(Localization.Main.getText("config.WikipediaUrl.label")); // NOI18N
@@ -1123,6 +1135,10 @@ public class Mainframe extends javax.swing.JFrame {
       popup = Localization.Main.getText("config.IndexComments.description");
     else if (label == lblIndexFilterAlgorithm)
       popup = Localization.Main.getText("config.IndexFilterAlgorithm.description");
+    else if (label == lblCustomCatalogTitle)
+      popup = Localization.Main.getText("config.CustomCatalogTitle.description");
+    else if (label == lblCustomCatalogSavedSearchName)
+      popup = Localization.Main.getText("config.CustomCatalogSavedSearchName.description");
 
       // external links
     else if (label == lblWikipediaUrl)
@@ -1375,6 +1391,10 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm = new javax.swing.JComboBox();
     lblGenerateIndex = new javax.swing.JLabel();
     chkGenerateIndex = new javax.swing.JCheckBox();
+    lblCustomCatalogSavedSearchName = new javax.swing.JLabel();
+    txtCustomCatalogSavedSearchName = new javax.swing.JTextField();
+    lblCustomCatalogTitle = new javax.swing.JLabel();
+    txtCustomCatalogTitle = new javax.swing.JTextField();
     pnlExternalUrlsOptions = new javax.swing.JPanel();
     lblWikipediaUrl = new javax.swing.JLabel();
     txtWikipediaUrl = new javax.swing.JTextField();
@@ -2626,7 +2646,7 @@ public class Mainframe extends javax.swing.JFrame {
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 9;
-    gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+    gridBagConstraints.gridwidth = 4;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.weightx = 1.0;
@@ -2889,6 +2909,54 @@ public class Mainframe extends javax.swing.JFrame {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
     pnlAdvancedOptions.add(chkGenerateIndex, gridBagConstraints);
+
+    lblCustomCatalogSavedSearchName.setText(Localization.Main.getText("config.CustomCatalogSavedSearchName.label")); // NOI18N
+    lblCustomCatalogSavedSearchName.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        handleMouseClickOnLabel(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 12;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    pnlAdvancedOptions.add(lblCustomCatalogSavedSearchName, gridBagConstraints);
+
+    txtCustomCatalogSavedSearchName.setText("txtCustomCatalogSavedSearchName");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 12;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    pnlAdvancedOptions.add(txtCustomCatalogSavedSearchName, gridBagConstraints);
+
+    lblCustomCatalogTitle.setText(Localization.Main.getText("config.CustomCatalogTitle.label")); // NOI18N
+    lblCustomCatalogTitle.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        handleMouseClickOnLabel(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 13;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    pnlAdvancedOptions.add(lblCustomCatalogTitle, gridBagConstraints);
+
+    txtCustomCatalogTitle.setText("txtCustomCatalogTitle");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 13;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+    pnlAdvancedOptions.add(txtCustomCatalogTitle, gridBagConstraints);
 
     tabOptionsTabs.addTab(Localization.Main.getText("gui.tab3"), pnlAdvancedOptions); // NOI18N
 
@@ -3777,6 +3845,8 @@ public class Mainframe extends javax.swing.JFrame {
   private javax.swing.JLabel lblCoverHeight;
   private javax.swing.JLabel lblCryptFilenames;
   private javax.swing.JLabel lblCurrentProfile;
+  private javax.swing.JLabel lblCustomCatalogSavedSearchName;
+  private javax.swing.JLabel lblCustomCatalogTitle;
   private javax.swing.JLabel lblDatabaseFolder;
   private javax.swing.JLabel lblDeviceDropbox;
   private javax.swing.JLabel lblDeviceMode1;
@@ -3869,6 +3939,8 @@ public class Mainframe extends javax.swing.JFrame {
   private javax.swing.JTextField txtCatalogFolder;
   private javax.swing.JTextField txtCatalogTitle;
   private javax.swing.JTextField txtCoverHeight;
+  private javax.swing.JTextField txtCustomCatalogSavedSearchName;
+  private javax.swing.JTextField txtCustomCatalogTitle;
   private javax.swing.JTextField txtDatabaseFolder;
   private javax.swing.JTextField txtGoodreadAuthorUrl;
   private javax.swing.JTextField txtGoodreadIsbnUrl;
