@@ -686,14 +686,17 @@ public class Catalog {
           List<Book> featuredBooks = FilterHelper.filter(filter, books);
           callback.startCreateFeaturedBooks(featuredBooks.size());
           now = System.currentTimeMillis();
-          Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks, SplitOption.DontSplit).getSubCatalogEntry(breadcrumbs);
+          Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
           if (featuredCatalog != null) {
             //main.addContent(featuredCatalog.getFirstElement());
-            main.addContent(6, FeedHelper.INSTANCE.getFeaturedLink(featuredCatalog.getSecondElement(),
-                Localization.Main.getText("featuredbooks.title"))); // 6 places the link right wher we want it...
+            // add a "featured" link - 6 places the link right wher we want it...
+            main.addContent(6, FeedHelper.INSTANCE
+                .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle()));
+            // add the actual catalog
+            main.addContent(featuredCatalog.getFirstElement());
           }
-          callback.endCreateAllbooks(System.currentTimeMillis() - now);
-          logger.debug("COMPLETED: Generating All Books catalog");
+          callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
+          logger.debug("COMPLETED: Generating Featured books catalog");
         } catch (CalibreQueryInterpreter.InterpretException e) {
           callback.errorOccured("Error occured while interpreting the featured books saved search", e);
         }

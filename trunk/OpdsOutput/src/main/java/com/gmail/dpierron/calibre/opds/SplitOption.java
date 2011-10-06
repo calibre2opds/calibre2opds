@@ -4,5 +4,6 @@ public enum SplitOption {
   Paginate,
   SplitByLetter,
   SplitByDate,
-  DontSplit;
+  DontSplit,
+  DontSplitNorPaginate; // useful for featured books catalog
 }

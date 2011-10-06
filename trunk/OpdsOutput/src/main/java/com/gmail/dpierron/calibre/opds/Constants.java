@@ -50,6 +50,7 @@ public class Constants {
       "recent.png",
       "series.png",
       "tags.png",
+      "featured.png",
       "_search/search.html",
       "_search/css/desktop.css",
       "_search/database/database.js",

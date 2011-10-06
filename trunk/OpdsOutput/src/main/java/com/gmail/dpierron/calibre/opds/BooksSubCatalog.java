@@ -228,6 +228,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // Fixes #716917 when applied to author books list
     boolean willSplitByLetter;
     boolean willSplitByDate;
+    int maxBeforePaginate = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate();
     if (splitOption == null) {
       // ITIMPI: Null seems to be equivalent to SplitByLetter !
       //         Might be better to replace calls by explicit value?
@@ -237,6 +238,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
     switch (splitOption) {
       case Paginate:
         logger.debug("getListOfBooks:splitOption=Paginate");
+        willSplitByLetter = false;
+        willSplitByDate = false;
+        break;
+      case DontSplitNorPaginate:
+        logger.debug("getListOfBooks:splitOption=DontSplitNorPaginate");
+        maxBeforePaginate = Integer.MAX_VALUE; // don't paginate !
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
@@ -326,7 +333,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       } else {
         result = new LinkedList<Element>();
         for (int i = from; i < books.size(); i++) {
-          if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+          if ((i - from) >= maxBeforePaginate) {
             if (logger.isDebugEnabled())
               logger.debug("making a nextpage link");
             Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, splitOption, icon, options).getFirstElement();
