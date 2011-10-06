@@ -94,8 +94,8 @@ public enum JDOM {
     lw = (long) Math.floor(dw);
     catalogTransformer.setParameter("thumbWidth", lw);
     catalogTransformer.setParameter("thumbHeight", lh);
-    catalogTransformer.setParameter("generateDownloads",
-        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
+    catalogTransformer
+        .setParameter("generateDownloads", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
     catalogTransformer.setParameter("libraryTitle", ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle());
     catalogTransformer.setParameter("i18n.backToMain", Localization.Main.getText("i18n.backToMain"));
     catalogTransformer.setParameter("i18n.downloads", Localization.Main.getText("i18n.downloads"));
@@ -107,13 +107,10 @@ public enum JDOM {
     catalogTransformer.setParameter("i18n.relatedsection", Localization.Main.getText("i18n.relatedsection"));
     catalogTransformer.setParameter("i18n.linksection", Localization.Main.getText("i18n.linksection"));
     String dateGenerated =
-        DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()))
-            .format(new Date());
+        DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
     catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
-    catalogTransformer.setParameter("browseByCover",
-        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
-    catalogTransformer.setParameter("generateIndex",
-        Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
+    catalogTransformer.setParameter("browseByCover", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
+    catalogTransformer.setParameter("generateIndex", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
   }
 
   public Transformer getCatalogTransformer() {
@@ -131,8 +128,7 @@ public enum JDOM {
   public Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer =
-            getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
@@ -319,7 +315,7 @@ public enum JDOM {
       if (logger.isTraceEnabled())
         logger.trace("tidy the text");
       try {
-        result = tidyInputStream(new ByteArrayInputStream(text.getBytes()));
+        result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (Exception ee) {
         if (logger.isTraceEnabled())
           logger.trace("caught exception in the tidy process", ee);
