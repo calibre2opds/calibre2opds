@@ -1018,9 +1018,7 @@ public class Helper {
     recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile);
   }
 
-  public static void recursivelyZipFiles(final String extension, boolean includeNameOfOriginalFolder, File inFolder,
-      File outZipFile) throws
-      IOException {
+  public static void recursivelyZipFiles(final String extension, boolean includeNameOfOriginalFolder, File inFolder, File outZipFile) throws IOException {
     ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZipFile)));
     String relativePath = "";
     if (includeNameOfOriginalFolder)
@@ -1032,10 +1030,8 @@ public class Helper {
     }
   }
 
-  private static void recursivelyZipFiles(final String extension,
-      String currentRelativePath,
-      File currentDir,
-      ZipOutputStream zipOutputStream) throws IOException {
+  private static void recursivelyZipFiles(final String extension, String currentRelativePath, File currentDir, ZipOutputStream zipOutputStream) throws
+      IOException {
     String[] files = currentDir.list(new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
@@ -1074,6 +1070,29 @@ public class Helper {
     StringBuffer sb = new StringBuffer(s.length());
     sb.append(Character.toUpperCase(s.charAt(0)));
     sb.append(s.substring(1));
+    return sb.toString();
+  }
+
+  public static String removeHtmlElements(String s) {
+    // process possible HTML tags
+    StringBuffer sb = new StringBuffer();
+    if (s != null) {
+      boolean skipping = false;
+      for (int i = 0; i < s.length(); i++) {
+        char c = s.charAt(i);
+        if (!skipping) {
+          if (c == '<')
+            skipping = true;
+          else
+            sb.append(c);
+        } else {
+          if (c == '>')
+            skipping = false;
+        }
+      }
+    } else {
+      return "";
+    }
     return sb.toString();
   }
 }

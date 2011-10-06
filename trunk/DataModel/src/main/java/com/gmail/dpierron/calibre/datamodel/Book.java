@@ -107,8 +107,7 @@ public class Book implements SplitableByLetter {
 
   public Language getBookLanguage() {
     List<Language> languages = getBookLanguages();
-    if ((languages == null)
-    || (languages.size() == 0))
+    if ((languages == null) || (languages.size() == 0))
       return null;
     else
       return languages.get(0);
@@ -192,27 +191,8 @@ public class Book implements SplitableByLetter {
 
   public String getShortComment(int maxLength) {
     if (shortComment == null) {
-      // process possible HTML tags
-      StringBuffer sb = new StringBuffer();
-      String comment = getComment();
-      if (comment != null) {
-        boolean skipping = false;
-        for (int i = 0; i < comment.length(); i++) {
-          char c = comment.charAt(i);
-          if (!skipping) {
-            if (c == '<')
-              skipping = true;
-            else
-              sb.append(c);
-          } else {
-            if (c == '>')
-              skipping = false;
-          }
-        }
-      } else {
-        shortComment = "";
-      }
-      shortComment = Helper.shorten(sb.toString(), maxLength);
+      String noHtml = Helper.removeHtmlElements(getComment());
+      shortComment = Helper.shorten(noHtml, maxLength);
     }
     return shortComment;
   }
