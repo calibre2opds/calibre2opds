@@ -1759,5 +1759,5 @@ public class StanzaConstants {
   public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
   public final static String UrlBase = "http://dl.dropbox.com/u/958355/demo.OPDS/_catalog/";
   public final static String CustomCatalogTitle = "Featured books";
-  public final static String CustomCatalogSavedSearchName = "Featured";
+  public final static String CustomCatalogSavedSearchName = "Saved:Featured";
 }

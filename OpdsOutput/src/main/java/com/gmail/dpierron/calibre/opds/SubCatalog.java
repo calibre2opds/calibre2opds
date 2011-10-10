@@ -140,40 +140,61 @@ public abstract class SubCatalog {
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
+      Composite<Element, String> subCatalogEntry;
+      Element entry;
+
       /* Tags */
-      Element entry = TagSubCatalog.getTagSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-      if (entry != null)
-        feed.addContent(entry);
+      subCatalogEntry = TagSubCatalog.getTagSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+      if (subCatalogEntry != null) {
+        entry = subCatalogEntry.getFirstElement();
+        if (entry != null)
+          feed.addContent(entry);
+      }
 
       /* Authors */
-      entry = new AuthorsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-      if (entry != null)
-        feed.addContent(entry);
+      subCatalogEntry = new AuthorsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+      if (subCatalogEntry != null) {
+        entry = subCatalogEntry.getFirstElement();
+        if (entry != null)
+          feed.addContent(entry);
+      }
 
       /* Series */
-      entry = new SeriesSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-      if (entry != null)
-        feed.addContent(entry);
+      subCatalogEntry = new SeriesSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+      if (subCatalogEntry != null) {
+        entry = subCatalogEntry.getFirstElement();
+        if (entry != null)
+          feed.addContent(entry);
+      }
 
       /* Recent books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent()) {
-        entry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+        if (subCatalogEntry != null) {
+          subCatalogEntry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+          entry = subCatalogEntry.getFirstElement();
+          if (entry != null)
+            feed.addContent(entry);
+        }
       }
 
       /* Rated books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings()) {
-        entry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+        if (subCatalogEntry != null) {
+          subCatalogEntry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+          entry = subCatalogEntry.getFirstElement();
+          if (entry != null)
+            feed.addContent(entry);
+        }
       }
 
       /* All books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
-        entry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+        if (subCatalogEntry != null) {
+          subCatalogEntry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
+          entry = subCatalogEntry.getFirstElement();
+          if (entry != null)
+            feed.addContent(entry);
+        }
       }
 
       // write the element to the file
