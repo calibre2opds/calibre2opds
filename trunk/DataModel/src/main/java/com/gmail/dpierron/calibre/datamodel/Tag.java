@@ -6,10 +6,9 @@ import java.util.List;
 
 
 public class Tag implements SplitableByLetter, Comparable<Tag> {
-  private String id;
-  private String name;
+  private final String id;
+  private final String name;
   private String[] partsOfTag;
-  private int[] partsOfTagHash;
 
   public Tag(String id, String name) {
     super();
@@ -37,7 +36,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
     if (partsOfTag == null) {
       List<String> parts = Helper.tokenize(getName(), splitTagsOn);
       partsOfTag = new String[parts.size()];
-      partsOfTagHash = new int[partsOfTag.length];
+      int[] partsOfTagHash = new int[partsOfTag.length];
       for (int i = 0; i < parts.size(); i++) {
         String part = parts.get(i);
         partsOfTag[i] = part;
@@ -45,12 +44,6 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
       }
     }
     return partsOfTag;
-  }
-
-  public int[] getPartsOfTagHash(String splitTagsOn) {
-    if (partsOfTag == null)
-      getPartsOfTag(splitTagsOn);
-    return partsOfTagHash;
   }
 
   public int compareTo(Tag o) {
@@ -61,9 +54,9 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
     if (obj instanceof Tag) {
-      if (obj == null)
-        return false;
       return (Helper.checkedCompare(((Tag) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);

@@ -1,7 +1,5 @@
 package com.gmail.dpierron.calibre.datamodel;
 
-import com.gmail.dpierron.tools.Helper;
-
 import java.util.*;
 
 public enum NoiseWord {
@@ -9,20 +7,19 @@ public enum NoiseWord {
   FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
   DE("deu", "der ", "die ", "das ", "ein ", "eine ");
 
-  private List<String> noiseWords;
-  private String lang;
+  private final List<String> noiseWords;
+  private final String lang;
   private static Map<String, NoiseWord> map;
-  public static NoiseWord DEFAULT = EN;
+  private static final NoiseWord DEFAULT = EN;
 
   private NoiseWord(String lang, String... words) {
     List<String> temp = Arrays.asList(words);
-    this.noiseWords = new LinkedList<String>(Helper.transformList(temp, "toUpperCase"));
+    this.noiseWords = new LinkedList<String>();
+    for (String s : temp) {
+      noiseWords.add(s.toUpperCase(Locale.ENGLISH));
+    }
     this.lang = lang;
     addToMap();
-  }
-
-  public String getLang() {
-    return lang;
   }
 
   private void addToMap() {

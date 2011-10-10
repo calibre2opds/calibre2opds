@@ -3,7 +3,7 @@ package com.gmail.dpierron.calibre.datamodel.filter;
 import com.gmail.dpierron.calibre.datamodel.Book;
 
 public class NotFilter implements BookFilter {
-  private BookFilter negatedFilter;
+  private final BookFilter negatedFilter;
 
   public NotFilter(BookFilter negatedFilter) {
     this.negatedFilter = negatedFilter;

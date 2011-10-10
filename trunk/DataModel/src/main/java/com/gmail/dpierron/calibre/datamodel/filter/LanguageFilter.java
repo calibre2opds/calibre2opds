@@ -8,7 +8,7 @@ import java.util.List;
 
 public class LanguageFilter implements BookFilter {
 
-  String requiredLanguage;
+  private final String requiredLanguage;
 
   public LanguageFilter(String requiredLanguage) {
     this.requiredLanguage = requiredLanguage;
@@ -26,7 +26,7 @@ public class LanguageFilter implements BookFilter {
       return false;
 
     for (Language language : bookLanguages) {
-      if (language.equals(requiredLanguage)) {
+      if (language.equals(requiredLanguage)) { // Language overrides equals()
         return true;
       }
     }

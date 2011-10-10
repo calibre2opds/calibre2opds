@@ -9,6 +9,7 @@ import org.jdom.Element;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.Date;
 
 public enum FeedHelper {
   INSTANCE;
@@ -275,13 +276,13 @@ public enum FeedHelper {
     }
   }
 
-  public Element getUpdatedTag(long timeInMilli) {
+  private String getDateAsIsoDate(Date d) {
     Calendar c = Calendar.getInstance();
-    c.setTimeInMillis(timeInMilli);
-    return getUpdatedTag(c);
-  }
+    c.setTime(d);
+    return getDateAsIsoDate(c);
 
-  private Element getUpdatedTag(Calendar c) {
+  }
+  private String getDateAsIsoDate(Calendar c) {
     StringBuffer result = new StringBuffer();
 
     result.append(Helper.leftPad("" + c.get(Calendar.YEAR), '0', 4));
@@ -297,7 +298,21 @@ public enum FeedHelper {
     result.append(Helper.leftPad("" + c.get(Calendar.SECOND), '0', 2));
     result.append('Z');
 
-    return JDOM.INSTANCE.element("updated").addContent(result.toString());
+    return result.toString();
+  }
+
+  public Element getUpdatedTag(long timeInMilli) {
+    Calendar c = Calendar.getInstance();
+    c.setTimeInMillis(timeInMilli);
+    return getUpdatedTag(c);
+  }
+
+  private Element getUpdatedTag(Calendar c) {
+    return JDOM.INSTANCE.element("updated").addContent(getDateAsIsoDate(c));
+  }
+
+  public Element getPublishedTag(Date d) {
+    return JDOM.INSTANCE.element("published").addContent(getDateAsIsoDate(d));
   }
 
   private Element getLinkElement(String url, String urlType, String urlRelation, String title) {

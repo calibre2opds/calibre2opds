@@ -8,8 +8,8 @@ public enum BookRating {
   FIVE(10, '5'),
   NOTRATED(0, '0');
 
-  private int value;
-  private char charEquivalent;
+  private final int value;
+  private final char charEquivalent;
 
   private BookRating(int value, char charEquivalent) {
     this.value = value;

@@ -648,6 +648,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry.addContent(author);
     }
 
+    // published element
+    if (logger.isTraceEnabled())
+      logger.trace("getBookFullEntry: published element");
+    Element published = FeedHelper.INSTANCE.getPublishedTag(book.getPublicationDate());
+    entry.addContent(published);
+
     // updated element
     if (logger.isTraceEnabled())
       logger.trace("getBookFullEntry: updated element");

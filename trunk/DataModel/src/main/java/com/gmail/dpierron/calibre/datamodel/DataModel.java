@@ -1,45 +1,46 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.calibre.database.Database;
+import com.gmail.dpierron.tools.Composite;
+import com.gmail.dpierron.tools.Helper;
 
 import java.util.*;
 
 public enum DataModel {
   INSTANCE;
+  private static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
 
-  Map<String, List<EBookFile>> mapOfFilesByBookId;
-  Map<String, List<Publisher>> mapOfPublishersByBookId;
-  Map<String, List<Author>> mapOfAuthorsByBookId;
-  Map<String, List<Tag>> mapOfTagsByBookId;
-  Map<String, List<Series>> mapOfSeriesByBookId;
-  Map<String, List<String>> mapOfCommentsByBookId;
+  private Map<String, List<EBookFile>> mapOfFilesByBookId;
+  private Map<String, List<Publisher>> mapOfPublishersByBookId;
+  private Map<String, List<Author>> mapOfAuthorsByBookId;
+  private Map<String, List<Tag>> mapOfTagsByBookId;
+  private Map<String, List<Series>> mapOfSeriesByBookId;
+  private Map<String, List<String>> mapOfCommentsByBookId;
 
-  List<Book> listOfBooks;
-  Map<String, Book> mapOfBooks;
+  private List<Book> listOfBooks;
+  private Map<String, Book> mapOfBooks;
 
-  List<Tag> listOfTags;
-  Map<String, Tag> mapOfTags;
-  Map<Tag, List<Book>> mapOfBooksByTag;
+  private List<Tag> listOfTags;
+  private Map<String, Tag> mapOfTags;
+  private Map<Tag, List<Book>> mapOfBooksByTag;
 
-  List<Author> listOfAuthors;
-  Map<String, Author> mapOfAuthors;
-  Map<Author, List<Book>> mapOfBooksByAuthor;
-  Map<Author, List<Series>> mapOfSeriesByAuthor;
-  Map<Author, List<Book>> mapOfBooksNotInSerieByAuthor;
+  private List<Author> listOfAuthors;
+  private Map<String, Author> mapOfAuthors;
+  private Map<Author, List<Book>> mapOfBooksByAuthor;
 
-  List<Series> listOfSeries;
-  Map<String, Series> mapOfSeries;
-  Map<Series, List<Book>> mapOfBooksBySeries;
+  private List<Series> listOfSeries;
+  private Map<String, Series> mapOfSeries;
+  private Map<Series, List<Book>> mapOfBooksBySeries;
 
-  Map<BookRating, List<Book>> mapOfBooksByRating;
+  private Map<BookRating, List<Book>> mapOfBooksByRating;
 
-  List<Publisher> listOfPublishers;
-  Map<String, Publisher> mapOfPublishers;
-  Map<Publisher, List<Book>> mapOfBooksByPublisher;
+  private List<Publisher> listOfPublishers;
+  private Map<String, Publisher> mapOfPublishers;
+  private Map<Publisher, List<Book>> mapOfBooksByPublisher;
 
-  Map<String, Language> mapOfLanguagesById;
-  Map<String, Language> mapOfLanguagesByIsoCode;
-  Map<String, String> mapOfSavedSearches;
+  private Map<String, Language> mapOfLanguagesById;
+  private Map<String, Language> mapOfLanguagesByIsoCode;
+  private Map<String, String> mapOfSavedSearches;
 
   public void reset() {
     mapOfFilesByBookId = null;
@@ -56,8 +57,6 @@ public enum DataModel {
     listOfAuthors = null;
     mapOfAuthors = null;
     mapOfBooksByAuthor = null;
-    mapOfSeriesByAuthor = null;
-    mapOfBooksNotInSerieByAuthor = null;
     listOfSeries = null;
     mapOfSeries = null;
     mapOfBooksBySeries = null;
@@ -82,12 +81,11 @@ public enum DataModel {
     getMapOfBooks();
     getListOfTags();
     getMapOfTags();
+    generateImplicitLanguageTags();
     getMapOfBooksByTag();
     getListOfAuthors();
     getMapOfAuthors();
     getMapOfBooksByAuthor();
-    getMapOfSeriesByAuthor();
-    getMapOfBooksNotInSeriesByAuthor();
     getListOfSeries();
     getMapOfSeries();
     getMapOfBooksBySeries();
@@ -104,7 +102,9 @@ public enum DataModel {
 
   public Map<String, Language> getMapOfLanguagesById() {
     if (mapOfLanguagesById == null) {
-      mapOfLanguagesById = Database.INSTANCE.getMapOfLanguagesById();
+      Composite<Map<String, Language>, Map<String, Language>> result = Database.INSTANCE.getMapsOfLanguages();
+      mapOfLanguagesById = result.getFirstElement();
+      mapOfLanguagesByIsoCode = result.getSecondElement();
     }
     return mapOfLanguagesById;
   }
@@ -182,20 +182,6 @@ public enum DataModel {
     return listOfTags;
   }
 
-  public List<Tag> getListOfTags(List<Book> books) {
-    if (books == null)
-      return getListOfTags();
-
-    List<Tag> result = new LinkedList<Tag>();
-    for (Book book : books) {
-      for (Tag tag : book.getTags()) {
-        if (!result.contains(tag))
-          result.add(tag);
-      }
-    }
-    return result;
-  }
-
   public Map<String, Tag> getMapOfTags() {
     if (mapOfTags == null) {
       mapOfTags = new HashMap<String, Tag>();
@@ -204,6 +190,12 @@ public enum DataModel {
       }
     }
     return mapOfTags;
+  }
+
+  void addTag(Tag tag) {
+    if (getListOfTags().contains(tag)) return;
+    getListOfTags().add(tag);
+    getMapOfTags().put(tag.getId(), tag);
   }
 
   public Map<Tag, List<Book>> getMapOfBooksByTag() {
@@ -218,24 +210,9 @@ public enum DataModel {
           }
           books.add(book);
         }
-
       }
     }
     return mapOfBooksByTag;
-  }
-
-  public List<Author> getListOfAuthors(List<Book> books) {
-    if (books == null)
-      return getListOfAuthors();
-
-    List<Author> result = new LinkedList<Author>();
-    for (Book book : books) {
-      for (Author author : book.getAuthors()) {
-        if (!result.contains(author))
-          result.add(author);
-      }
-    }
-    return result;
   }
 
   public List<Author> getListOfAuthors() {
@@ -270,45 +247,6 @@ public enum DataModel {
       }
     }
     return mapOfBooksByAuthor;
-  }
-
-  public Map<Author, List<Series>> getMapOfSeriesByAuthor() {
-    if (mapOfSeriesByAuthor == null)
-      computeMapOfSeriesByAuthor();
-    return mapOfSeriesByAuthor;
-  }
-
-  public Map<Author, List<Book>> getMapOfBooksNotInSeriesByAuthor() {
-    if (mapOfBooksNotInSerieByAuthor == null)
-      computeMapOfSeriesByAuthor();
-    return mapOfBooksNotInSerieByAuthor;
-  }
-
-  private void computeMapOfSeriesByAuthor() {
-    mapOfSeriesByAuthor = new HashMap<Author, List<Series>>();
-    mapOfBooksNotInSerieByAuthor = new HashMap<Author, List<Book>>();
-    for (Book book : getListOfBooks()) {
-      for (Author author : book.getAuthors()) {
-        Series serie = book.getSeries();
-        if (serie != null) {
-          List<Series> series = mapOfSeriesByAuthor.get(author);
-          if (series == null) {
-            series = new LinkedList<Series>();
-            mapOfSeriesByAuthor.put(author, series);
-          }
-          if (!series.contains(serie))
-            series.add(serie);
-        } else {
-          List<Book> books = mapOfBooksNotInSerieByAuthor.get(author);
-          if (books == null) {
-            books = new LinkedList<Book>();
-            mapOfBooksNotInSerieByAuthor.put(author, books);
-          }
-          if (!books.contains(book))
-            books.add(book);
-        }
-      }
-    }
   }
 
   public List<Series> getListOfSeries() {
@@ -410,7 +348,7 @@ public enum DataModel {
   }
 
   public static Map<String, List<Author>> splitAuthorsByLetter(List<Author> authors) {
-    Comparator comparator = new Comparator<Author>() {
+    Comparator<Author> comparator = new Comparator<Author>() {
 
       public int compare(Author o1, Author o2) {
         String author1 = (o1 == null ? "" : o1.getNameForSort());
@@ -423,7 +361,7 @@ public enum DataModel {
   }
 
   public static Map<String, List<Series>> splitSeriesByLetter(List<Series> series) {
-    Comparator comparator = new Comparator<Series>() {
+    Comparator<Series> comparator = new Comparator<Series>() {
 
       public int compare(Series o1, Series o2) {
         String series1 = (o1 == null ? "" : o1.getName());
@@ -436,7 +374,7 @@ public enum DataModel {
   }
 
   public static Map<String, List<Tag>> splitTagsByLetter(List<Tag> tags) {
-    Comparator comparator = new Comparator<Tag>() {
+    Comparator<Tag> comparator = new Comparator<Tag>() {
 
       public int compare(Tag o1, Tag o2) {
         String tag1 = (o1 == null ? "" : o1.getName());
@@ -494,5 +432,47 @@ public enum DataModel {
       Collections.sort(objectsInThisLetter, comparator);
     }
     return splitByLetter;
+  }
+
+  /**
+   * This method generates implicit Lang:XX tags based on the books languages (as specified in the database).
+   * It checks for collisions with existing tags (i.e. it will not add a book twice to an already set tag).
+   * Must be called AFTER the datamodel list of books and tags has been loaded, but before the map of books by
+   * tags is loaded (or else it'll be reloaded)
+   */
+  void generateImplicitLanguageTags() {
+    // compute the latest id
+    int lastId = -1;
+    for (Tag tag : getListOfTags()) {
+      int id = Integer.parseInt(tag.getId());
+      if (lastId < id)
+        lastId = id;
+    }
+    Map<String, Tag> mapOfLanguageTags = new HashMap<String, Tag>();
+    for (Book book : getListOfBooks()) {
+      if (Helper.isNotNullOrEmpty(book.getBookLanguages())) {
+        for (Language language : book.getBookLanguages()) {
+          String languageTagName = IMPLICIT_LANGUAGE_TAG_PREFIX + language.getIsoLanguage().getIso();
+          Tag languageTag = mapOfLanguageTags.get(languageTagName.toUpperCase(Locale.ENGLISH));
+          if (languageTag == null) {
+            // check in the existing tags
+            for (Tag tag : getListOfTags()) {
+              if (tag.getName().equalsIgnoreCase(languageTagName)) {
+                languageTag = tag;
+                break;
+              }
+            }
+            if (languageTag == null) {
+              languageTag = new Tag(""+(++lastId), languageTagName);
+              addTag(languageTag);
+            }
+            mapOfLanguageTags.put(languageTagName.toUpperCase(Locale.ENGLISH), languageTag);
+          }
+          if (!book.getTags().contains(languageTag))
+            book.getTags().add(languageTag);
+        }
+      }
+    }
+    mapOfBooksByTag = null;
   }
 }

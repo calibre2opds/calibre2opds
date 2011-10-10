@@ -22,7 +22,7 @@ public enum FilterDataModel {
             books.remove(book);
           if (Helper.isNullOrEmpty(books)) {
             DataModel.INSTANCE.getMapOfBooksByTag().remove(tag);
-            DataModel.INSTANCE.getListOfTags(null).remove(tag);
+            DataModel.INSTANCE.getListOfTags().remove(tag);
           }
         }
         DataModel.INSTANCE.getMapOfTagsByBookId().remove(book.getId());
@@ -85,12 +85,12 @@ public enum FilterDataModel {
     /* check that no empty list exist */
 
     // check that no books by tag list is empty
-    LinkedList<Tag> tagList = new LinkedList<Tag>(DataModel.INSTANCE.getListOfTags(null));
+    LinkedList<Tag> tagList = new LinkedList<Tag>(DataModel.INSTANCE.getListOfTags());
     for (Tag tag : tagList) {
       List<Book> books = DataModel.INSTANCE.getMapOfBooksByTag().get(tag);
       if (Helper.isNullOrEmpty(books)) {
         DataModel.INSTANCE.getMapOfBooksByTag().remove(tag);
-        DataModel.INSTANCE.getListOfTags(null).remove(tag);
+        DataModel.INSTANCE.getListOfTags().remove(tag);
       }
     }
 

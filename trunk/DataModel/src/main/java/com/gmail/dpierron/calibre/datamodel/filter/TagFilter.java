@@ -6,7 +6,7 @@ import com.gmail.dpierron.tools.Helper;
 
 public class TagFilter implements BookFilter {
 
-  String requiredTag;
+  private final String requiredTag;
 
   public TagFilter(String requiredTag) {
     this.requiredTag = requiredTag;

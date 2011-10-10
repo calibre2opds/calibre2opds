@@ -4,9 +4,9 @@ import com.gmail.dpierron.tools.Helper;
 
 
 public class Series implements SplitableByLetter {
-  private String id;
-  private String name;
-  private String sort;
+  private final String id;
+  private final String name;
+  private final String sort;
 
   public Series(String id, String name, String sort) {
     super();
@@ -33,9 +33,9 @@ public class Series implements SplitableByLetter {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
     if (obj instanceof Series) {
-      if (obj == null)
-        return false;
       return (Helper.checkedCompare(((Series) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);

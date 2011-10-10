@@ -5,7 +5,7 @@ import com.gmail.dpierron.tools.Helper;
 import java.util.List;
 
 public class Author implements SplitableByLetter, Comparable<Author> {
-  private String id;
+  private final String id;
   private String name;
   private String sort;
   private String guessedLastName;
@@ -23,7 +23,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
     this.sort = sort;
   }
 
-  public void setName(String name) {
+  void setName(String name) {
     this.name = name.replace('|', ',');
   }
 
@@ -90,8 +90,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
       return words.get(0);
     guessedLastName = words.get(words.size() - 1);
     words.remove(words.size() - 1);
-    String result = guessedLastName + ", " + Helper.concatenateList(" ", words);
-    return result;
+    return guessedLastName + ", " + Helper.concatenateList(" ", words);
   }
 
   public String toString() {
@@ -108,8 +107,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
     if (o == null)
       return 1;
     else {
-      int i = Helper.trueStringCompare(getSort(), o.getSort());
-      return i;
+      return Helper.trueStringCompare(getSort(), o.getSort());
     }
   }
 

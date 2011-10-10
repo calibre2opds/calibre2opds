@@ -15,7 +15,7 @@ public class ConfigurationImpl implements ReadOnlyConfigurationInterface {
     return databaseFolder;
   }
 
-  public void setDatabaseFolder(File databaseFolder) {
+  void setDatabaseFolder(File databaseFolder) {
     this.databaseFolder = databaseFolder;
   }
 

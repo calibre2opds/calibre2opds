@@ -27,23 +27,18 @@ public class CachedFile extends File {
   private boolean existsChecked = false;
   private long lastModified;
   private boolean lastModifiedChecked;
-  private boolean isDirectory;
-  private boolean isDirectoryChecked;
   private long length;
   private boolean lengthChecked;
   private long crc;                     // A -ve value indicates invalid CRC;
   private boolean crcCalced;
   private boolean targetFile;           // Set to true if file/directory is only on target
   private boolean cachedFile;           // Set to true if data is from cache and nor filing system
-  //---------------------------------------------------------------------------------------------------------
-  private final boolean logCachedFile = true;   // Set to false to get verbose code for logging optimised out.
-  //---------------------------------------------------------------------------------------------------------
 
   // Constructors mirror those for the File class
 
   public CachedFile(String pathname) {
     super(pathname);
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("new CachedFile: " + getAbsolutePath());
     clearCached();
   }
@@ -52,13 +47,12 @@ public class CachedFile extends File {
   /**
    * Clear all cached information.
    */
-  public void clearCached() {
+  void clearCached() {
     //        if (logCachedFile && logger.isTraceEnabled())
     //            logger.trace("reset to defaults");
     cachedFile = false;
     targetFile = false;
     crcCalced = false;
-    isDirectoryChecked = false;
     lastModifiedChecked = false;
     existsChecked = false;
     lengthChecked = false;
@@ -66,7 +60,6 @@ public class CachedFile extends File {
     lastModified = 0;
     crc = -1;
     exists = false;
-    return;
   }
 
   /**
@@ -80,14 +73,14 @@ public class CachedFile extends File {
       return;
     }
 
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("Check Cached data for " + getPath());
 
     existsChecked = true;
     if (!super.exists()) {
       // Cached entry for non-existent file needs resetting
       clearCached();
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("File does not exist - reset to defaults");
       return;
     }
@@ -97,11 +90,11 @@ public class CachedFile extends File {
     long d = super.lastModified();
     long l = super.length();
     if ((lastModifiedChecked && (d == lastModified)) || (lengthChecked && (l != length))) {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("date/length matched - CRC assumed valid");
       crcCalced = true;
     } else {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("date/length not matched - CRC needs recalculating");
       crc = -1;
       crcCalced = false;
@@ -110,27 +103,24 @@ public class CachedFile extends File {
     lastModifiedChecked = true;
     length = l;
     lengthChecked = true;
-    return;
   }
 
   /**
-   * Return exists status, using cached value if already known
-   *
-   * @return
+   * @return exists status, using cached value if already known
    */
   @Override
   public boolean exists() {
     checkCachedValues();
     if (!existsChecked) {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("checking exists for " + getAbsolutePath());
       exists = super.exists();
       existsChecked = true;
     } else {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("skipping check exists for " + getAbsolutePath());
     }
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("exists=" + exists + ": " + getAbsolutePath());
     return exists;
   }
@@ -141,15 +131,15 @@ public class CachedFile extends File {
     checkCachedValues();
 
     if (!lastModifiedChecked) {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("checking lastModified for " + getAbsolutePath());
       lastModified = super.lastModified();
       lastModifiedChecked = true;
     } else {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("skipping check lastModified for " + getAbsolutePath());
     }
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("lastMoodified=" + lastModified + ": " + getAbsolutePath());
     return lastModified;
   }
@@ -158,17 +148,16 @@ public class CachedFile extends File {
   @Override
   public long length() {
     checkCachedValues();
-    ;
     if (!lengthChecked) {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("checking length for " + getAbsolutePath());
       length = super.length();
       lengthChecked = true;
     } else {
-      if (logCachedFile && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("skipping check length for " + getAbsolutePath());
     }
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("length=" + length + ": " + getAbsolutePath());
     return length;
   }
@@ -185,7 +174,7 @@ public class CachedFile extends File {
     checkCachedValues();
     if (!crcCalced)
       calcCrc();
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("getCrc=" + crc + ": " + getAbsolutePath());
     return crc;
   }
@@ -199,9 +188,8 @@ public class CachedFile extends File {
   private void setCrc(long value) {
     crc = value;
     crcCalced = true;
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("setCrc(" + crc + "): " + getAbsolutePath());
-    return;
   }
 
   /**
@@ -212,13 +200,11 @@ public class CachedFile extends File {
    * @return True if yes, false if not.
    */
   public boolean isCrc() {
-    if (cachedFile)
-      return false;
-    return crcCalced;
+    return !cachedFile && crcCalced;
   }
 
 
-  private boolean calcCrc() {
+  private void calcCrc() {
     CheckedInputStream cis;
     try {
       // Note that Adler32 is used as it is significantly faster than CRC32
@@ -228,7 +214,7 @@ public class CachedFile extends File {
     } catch (IOException e) {
       crcCalced = false;
       crc = -1;
-      return false;
+      return;
     }
     byte[] buf = new byte[128];
     try {
@@ -238,7 +224,7 @@ public class CachedFile extends File {
     } catch (IOException e) {
       crcCalced = false;
       crc = -1;
-      return false;
+      return;
     }
     // Close file ignoring any errors
     try {
@@ -246,9 +232,8 @@ public class CachedFile extends File {
     } catch (IOException e) {
       // Do nothing
     }
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("calcCrc=" + crcCalced + " (crc=" + crc + "): " + getAbsolutePath());
-    return crcCalced;
   }
 
   /**
@@ -257,7 +242,6 @@ public class CachedFile extends File {
   public void clearCrc() {
     crc = -1;
     crcCalced = false;
-    return;
   }
 
   /**
@@ -267,22 +251,18 @@ public class CachedFile extends File {
    */
   public void setTarget(boolean b) {
     targetFile = b;
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("setTarget(" + targetFile + "): " + getAbsolutePath());
-    return;
   }
 
 
   /**
-   * Set to indicate whether data is only from cache
-   *
-   * @param b True if it is, false otherwise
+   * indicates that data is in cache
    */
-  public void setCached(boolean b) {
-    cachedFile = b;
-    if (logCachedFile && logger.isTraceEnabled())
+  public void setCached() {
+    cachedFile = true;
+    if (logger.isTraceEnabled())
       logger.trace("setCached(" + cachedFile + "): " + getAbsolutePath());
-    return;
   }
 
 
@@ -292,7 +272,7 @@ public class CachedFile extends File {
    * @return true if cached data
    */
   public boolean isCached() {
-    if (logCachedFile && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("isCached=" + cachedFile + ": " + getAbsolutePath());
     return cachedFile;
   }
