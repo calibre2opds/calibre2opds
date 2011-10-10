@@ -676,11 +676,15 @@ public class Catalog {
     String savedSearchName = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
     if (Helper.isNotNullOrEmpty(savedSearchName)) {
       logger.debug("STARTED: Generating Featured books catalog");
-      String savedSearch = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName);
-      if (Helper.isNullOrEmpty(savedSearch))
-        savedSearch = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName.toUpperCase());
-      if (Helper.isNotNullOrEmpty(savedSearch)) {
-        CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(savedSearch);
+      String calibreQuery = savedSearchName;
+      if (savedSearchName.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
+        savedSearchName = savedSearchName.substring(6);
+        calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName);
+        if (Helper.isNullOrEmpty(calibreQuery))
+          calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName.toUpperCase());
+      }
+      if (Helper.isNotNullOrEmpty(calibreQuery)) {
+        CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
         try {
           BookFilter filter = interpreter.interpret();
           List<Book> featuredBooks = FilterHelper.filter(filter, books);
