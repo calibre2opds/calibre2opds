@@ -56,8 +56,7 @@ public class TestDataModel {
         logger.info("epub:" + book.getEpubFilename());
         if (book.getBookFolder().exists()) {
           String[] files = book.getBookFolder().list();
-          for (int i = 0; i < files.length; i++) {
-            String filename = files[i];
+          for (String filename : files) {
             logger.info("file:" + filename);
             if (filename.toUpperCase().endsWith(".EPUB"))
               withWrongEpub.add(book);
@@ -76,8 +75,7 @@ public class TestDataModel {
         logger.info("epub:" + book.getEpubFilename());
         if (book.getBookFolder().exists()) {
           String[] files = book.getBookFolder().list();
-          for (int i = 0; i < files.length; i++) {
-            String filename = files[i];
+          for (String filename : files) {
             if (filename.toUpperCase().endsWith(".EPUB"))
               logger.info("file:" + filename);
           }
@@ -91,7 +89,7 @@ public class TestDataModel {
 
     skipLine();
     logger.info("loading tags");
-    List<Tag> list = DataModel.INSTANCE.getListOfTags(null);
+    List<Tag> list = DataModel.INSTANCE.getListOfTags();
     logger.info("there are " + list.size() + " tag(s)");
     skipLine();
 

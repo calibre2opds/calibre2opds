@@ -15,11 +15,15 @@ specific widget (for example, Aldiko shows a scrollable carousel) on the same sc
 
 Maybe a reduced, specific, custom catalog could be generated instead; I would like to see my books tagged "Interest:5" or "Interest:4" featured, for example...
 
+*** DONE ***
+
 3. Update the compatibility tricks mechanism
 Most of the clients supporting OPDS 1.1 will not be needing the old compatibility tricks that we implemented for them before.
 A notable exception is Stanza, RIP... 
 However, it would be good to check every special case we programmed for specific compatibility, and see if it's still needed.
 Specifically, see with Aldiko team if the reltype=http://opds-spec.org/cover trick is still needed
+
+*** DONE ***
 
 4. opds:// protocol
 Add a HTML link in our HTML catalog, pointing to the OPDS catalog. Easy !
@@ -56,22 +60,28 @@ We specify old relation types (pre-opds 1.0), we must change this :
 "http://opds-spec.org/image": a graphical Resource associated to the OPDS Catalog Entry
 "http://opds-spec.org/image/thumbnail": a reduced-size version of a graphical Resource associated to the OPS Catalog Entry
 
+*** DONE ***
+
 9. Book metadata
 Hadrien suggests using dedicated attributes to specify the book metadata, for example dcterms:publisher for the publisher and 
 atom:category for the tags, instead of putting all in the book comment. He says that, this way, client applications can use this 
 information even in the partial entries...
 
+*** DONE ***
+
 10. Counters
 He also suggests that the links with a counter (568 in ...) could also be enhanced with a thr:count attribute.
 
 
-11. Something abount navigation links that I don't understand (I required clarification and I'll update the document asap)
+11. Something about navigation links that I don't understand (I required clarification and I'll update the document asap)
 Dans les flux de navigation, on conseille de mettre rel="subsection" sur les liens des entrées qu'on ne peut pas qualifier de manière plus précise
 
 12. Check the value of the rel attribute
 There are specific rel attribute values that could be used in the catalog to better qualify some of our links.
 
 http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Relations
+
+*** DONE ***
 
 13. Refer to the user library in ALL feeds
 It should be better to add a link in all the catalogs (feeds) pointing to a full (all books), time-descending sorted catalog.

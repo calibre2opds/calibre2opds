@@ -25,7 +25,7 @@ public class CalibreQueryInterpreter {
   private static final String WORD_AND = "and";
   private static final String WORD_OR = "or";
 
-  private String calibreQuery;
+  private final String calibreQuery;
 
   public CalibreQueryInterpreter(String calibreQuery) {
     this.calibreQuery = calibreQuery;
@@ -39,36 +39,51 @@ public class CalibreQueryInterpreter {
     String template = node.getText();
     if (template.toLowerCase().startsWith(WORD_TAG)) {
       String tag = template.substring(WORD_TAG.length() + 2, template.length() - 1); // skip the "= and the "
+      if (logger.isDebugEnabled())
+        logger.debug("found tag filter: "+tag);
       return new TagFilter(tag);
     } else if (template.toLowerCase().startsWith(WORD_LANGUAGE)) {
       String lang = template.substring(WORD_LANGUAGE.length() + 2, template.length() - 1); // skip the "= and the "
+      if (logger.isDebugEnabled())
+        logger.debug("found language filter: "+lang);
       return new LanguageFilter(lang);
     } else if (template.toLowerCase().startsWith(WORD_RATING)) {
       char comparator = template.charAt(WORD_RATING.length() + 1);
       char rating = template.charAt(WORD_RATING.length() + 2);
+      if (logger.isDebugEnabled())
+        logger.debug("found rating filter: "+comparator+" "+rating);
       return new RatingFilter(comparator, rating);
     } else if (template.equalsIgnoreCase(WORD_NOT)) {
       // descend into the parsing with a negation filter
+      if (logger.isDebugEnabled())
+        logger.debug("found not filter!");
       return new NotFilter(getFilterForNode(node.getChild(0)));
     } else if (template.equalsIgnoreCase(WORD_OR)) {
       // descend into the parsing with a boolean OR filter
+      if (logger.isDebugEnabled())
+        logger.debug("found OR filter!");
       return new BooleanOrFilter(getFilterForNode(node.getChild(0)), getFilterForNode(node.getChild(1)));
     } else if (template.equalsIgnoreCase(WORD_AND)) {
       // descend into the parsing with a boolean AND filter
+      if (logger.isDebugEnabled())
+        logger.debug("found AND filter!");
       return new BooleanAndFilter(getFilterForNode(node.getChild(0)), getFilterForNode(node.getChild(1)));
     } else
+    if (logger.isDebugEnabled())
+      logger.debug("found unsupported filter! "+template);
       return new PassthroughFilter();
   }
 
   /**
    * @return a filter, possibly composite, built as a parse tree of the calibreQuery string
+   * @throws com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter.InterpretException when something failed
    */
   public BookFilter interpret() throws InterpretException {
     CharStream cs = new ANTLRStringStream(calibreQuery);
     CalibreQueryLexer lexer = new CalibreQueryLexer(cs);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     CalibreQueryParser parser = new CalibreQueryParser(tokens);
-    CalibreQueryParser.expr_return result = null;
+    CalibreQueryParser.expr_return result;
     try {
       result = parser.expr();
     } catch (RecognitionException e) {

@@ -5,10 +5,10 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.tools.Helper;
 
 public class EBookFile {
-  EBookFormat format;
-  String extension;
-  String name;
-  Book book;
+  private EBookFormat format;
+  private String extension;
+  private String name;
+  private Book book;
 
   public EBookFile(String format, String name) {
     super();
@@ -19,7 +19,7 @@ public class EBookFile {
     this.name = name;
   }
 
-  public Book getBook() {
+  Book getBook() {
     return book;
   }
 
@@ -31,20 +31,12 @@ public class EBookFile {
     return format;
   }
 
-  void setFormat(EBookFormat format) {
-    this.format = format;
-  }
-
   public String getName() {
     return name;
   }
 
   public String getExtension() {
     return extension;
-  }
-
-  void setName(String name) {
-    this.name = name;
   }
 
   public CachedFile getFile() {

@@ -10,13 +10,11 @@ import java.util.Locale;
 
 public class ForbiddenTagsFilter implements BookFilter {
 
-  List<String> forbiddenTags;
-  boolean includeBooksWithNoTag;
+  private List<String> forbiddenTags;
 
-  public ForbiddenTagsFilter(String forbiddenTagsList, boolean includeBooksWithNoTag) {
+  public ForbiddenTagsFilter(String forbiddenTagsList) {
     if (Helper.isNotNullOrEmpty(forbiddenTagsList))
       forbiddenTags = Helper.tokenize(forbiddenTagsList.toUpperCase(Locale.ENGLISH), ",", true);
-    this.includeBooksWithNoTag = includeBooksWithNoTag;
   }
 
   private List<String> getForbiddenTags() {

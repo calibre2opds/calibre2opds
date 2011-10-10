@@ -3,8 +3,7 @@ package com.gmail.dpierron.calibre.datamodel;
 public enum Option {
   INCLUDE_SERIE_NUMBER,
   INCLUDE_TIMESTAMP,
-  DONOTINCLUDE_RATING,
-  SPLIT_BY_DATE,;
+  DONOTINCLUDE_RATING,;
 
   public static boolean contains(Option[] options, Option checkedOption) {
     for (Option option : options) {

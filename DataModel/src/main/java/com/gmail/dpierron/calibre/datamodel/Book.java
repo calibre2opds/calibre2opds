@@ -16,20 +16,20 @@ public class Book implements SplitableByLetter {
   private final static Logger logger = Logger.getLogger(Book.class);
 
   private File bookFolder;
-  private String id;
-  private String uuid;
+  private final String id;
+  private final String uuid;
   private String title;
   private String titleForSort;
   private String titleWithSerieNumber;
   private String titleWithTimestamp;
   private String titleWithRating;
-  private String path;
+  private final String path;
   private String comment;
   private String shortComment;
-  private Float serieIndex;
-  private Date timestamp;
-  private Date publicationDate;
-  private String isbn;
+  private final Float serieIndex;
+  private final Date timestamp;
+  private final Date publicationDate;
+  private final String isbn;
   private List<Author> authors;
   private String listOfAuthors;
   private String authorSort;
@@ -44,9 +44,16 @@ public class Book implements SplitableByLetter {
   private boolean preferredFileComputed = false;
   private String epubFileName;
   private long latestFileModifiedDate = -1;
-  private BookRating rating;
+  private final BookRating rating;
   private List<Language> bookLanguages = new LinkedList<Language>();
   private boolean flag;
+
+  private static Date ZERO;
+  static {
+    Calendar c = Calendar.getInstance();
+    c.setTimeInMillis(0);
+    ZERO = c.getTime();
+  }
 
   public Book(String id,
       String uuid,
@@ -168,11 +175,10 @@ public class Book implements SplitableByLetter {
   }
 
   /**
-   * Get the comment value
+   * Sets the comment value
    * If it starts with 'SUMMARY' then this is removed as superfluous
    * TODO  Enhance this by looking beyond starting HTML tag?
-   *
-   * @param value
+   * @param value the new comment
    */
   public void setComment(String value) {
     shortComment = null;
@@ -211,12 +217,11 @@ public class Book implements SplitableByLetter {
   }
 
   public Date getPublicationDate() {
-    // ITIMPI:  Return 'now' if date not set - would 0 be better?
     if (publicationDate == null) {
       logger.warn("Publication Date not set for book '" + title + "'");
-      return new Date();
+      return ZERO;
     }
-    return (publicationDate == null ? new Date() : publicationDate);
+    return (publicationDate);
   }
 
   public boolean hasAuthor() {
@@ -245,10 +250,6 @@ public class Book implements SplitableByLetter {
 
   public String getAuthorSort() {
     return authorSort;
-  }
-
-  public void setAuthorSort(String authorSort) {
-    this.authorSort = authorSort;
   }
 
   public Publisher getPublisher() {
@@ -340,9 +341,9 @@ public class Book implements SplitableByLetter {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
     if (obj instanceof Book) {
-      if (obj == null)
-        return false;
       return (Helper.checkedCompare(((Book) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);
@@ -419,9 +420,9 @@ public class Book implements SplitableByLetter {
     result.setSeries(this.getSeries());
     result.setPublisher(this.getPublisher());
 
-    result.files = new LinkedList(this.getFiles());
-    result.tags = new LinkedList(this.getTags());
-    result.authors = new LinkedList(this.getAuthors());
+    result.files = new LinkedList<EBookFile>(this.getFiles());
+    result.tags = new LinkedList<Tag>(this.getTags());
+    result.authors = new LinkedList<Author>(this.getAuthors());
 
     return result;
   }

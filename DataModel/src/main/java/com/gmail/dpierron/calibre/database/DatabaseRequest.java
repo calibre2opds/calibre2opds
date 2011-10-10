@@ -37,7 +37,7 @@ public enum DatabaseRequest {
   SAVED_SEARCHES("select val from preferences where key='saved_searches'");
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
-  private String sql;
+  private final String sql;
   private PreparedStatement preparedStatement;
 
   private DatabaseRequest(String sql) {

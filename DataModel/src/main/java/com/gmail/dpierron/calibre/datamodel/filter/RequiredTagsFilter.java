@@ -9,13 +9,11 @@ import java.util.Locale;
 
 public class RequiredTagsFilter implements BookFilter {
 
-  List<String> requiredTags;
-  boolean includeBooksWithNoTag;
+  private List<String> requiredTags;
 
-  public RequiredTagsFilter(String requiredTagsList, boolean includeBooksWithNoTag) {
+  public RequiredTagsFilter(String requiredTagsList) {
     if (Helper.isNotNullOrEmpty(requiredTagsList))
       requiredTags = Helper.tokenize(requiredTagsList.toUpperCase(Locale.ENGLISH), ",", true);
-    this.includeBooksWithNoTag = includeBooksWithNoTag;
   }
 
   private List<String> getRequiredTags() {

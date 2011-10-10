@@ -36,7 +36,7 @@ public enum DatabaseManager {
     initConnection(Configuration.instance().getDatabaseFolder());
   }
 
-  public void initConnection(File calibreLibrary) {
+  void initConnection(File calibreLibrary) {
     try {
       Class.forName("org.sqlite.JDBC");
       File database = new File(calibreLibrary, "metadata.db");

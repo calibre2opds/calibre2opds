@@ -3,9 +3,9 @@ package com.gmail.dpierron.calibre.datamodel;
 import com.gmail.dpierron.tools.Helper;
 
 public class Publisher implements SplitableByLetter, Comparable<Publisher> {
-  private String id;
+  private final String id;
   private String name;
-  private String sort;
+  private final String sort;
 
   public Publisher(String id, String name, String sort) {
     super();
@@ -18,15 +18,11 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
     return id;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getName() {
     return name;
   }
 
-  public String getSort() {
+  String getSort() {
     return sort;
   }
 
@@ -36,9 +32,9 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null)
+      return false;
     if (obj instanceof Publisher) {
-      if (obj == null)
-        return false;
       return (Helper.checkedCompare(((Publisher) obj).getId(), getId()) == 0);
     } else
       return super.equals(obj);
@@ -54,8 +50,7 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
     if (o == null)
       return 1;
     else {
-      int i = Helper.trueStringCompare(getSort(), o.getSort());
-      return i;
+      return Helper.trueStringCompare(getSort(), o.getSort());
     }
   }
 

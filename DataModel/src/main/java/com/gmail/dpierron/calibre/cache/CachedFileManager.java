@@ -25,10 +25,6 @@ public enum CachedFileManager {
   private File cacheFolder = null;
   private File cacheFile = null;
 
-  //-----------------------------------------------------------------------------------------------------------
-  private final boolean logCacheManager = true;   // Set to false to get verbose code for logging optimised out.
-  //-----------------------------------------------------------------------------------------------------------
-
   public void initialize() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
@@ -41,9 +37,9 @@ public enum CachedFileManager {
    * @param cf CachedFile object to check
    * @return null if not present, object otherwise
    */
-  public CachedFile inCache(CachedFile cf) {
+  CachedFile inCache(CachedFile cf) {
     CachedFile cf_result = cachedFilesMap.get(cf.getPath());
-    if (logCacheManager && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("inCache=" + (cf_result != null) + ": " + cf.getPath());
     return cf_result;
   }
@@ -56,7 +52,7 @@ public enum CachedFileManager {
    */
   public CachedFile inCache(File f) {
     CachedFile cf_result = cachedFilesMap.get(f.getPath());
-    if (logCacheManager && logger.isTraceEnabled())
+    if (logger.isTraceEnabled())
       logger.trace("inCache=" + (cf_result != null) + ": " + f.getPath());
     return cf_result;
   }
@@ -69,13 +65,13 @@ public enum CachedFileManager {
    * @param cf CachedFile object representing file
    * @return A CachedFile object for the given path
    */
-  public CachedFile addCachedFile(CachedFile cf) {
+  CachedFile addCachedFile(CachedFile cf) {
     String path = cf.getPath();
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
       cf2 = new CachedFile(path);
       cachedFilesMap.put(path, cf2);
-      if (logCacheManager && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("Added CachedFile: " + path);
     }
     return cf2;
@@ -95,7 +91,7 @@ public enum CachedFileManager {
     if (cf == null) {
       cf = new CachedFile(path);
       cachedFilesMap.put(path, cf);
-      if (logCacheManager && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("Added file to cache: " + path);
     }
     return cf;
@@ -123,13 +119,12 @@ public enum CachedFileManager {
     String path = f.getPath();
     if (cachedFilesMap.containsKey(path)) {
       cachedFilesMap.remove(path);
-      if (logCacheManager && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("Remove CachedFile: " + path);
     } else {
-      if (logCacheManager && logger.isTraceEnabled())
+      if (logger.isTraceEnabled())
         logger.trace("Remove CachedFile (not found): " + path);
     }
-    return;
   }
 
 
@@ -177,25 +172,25 @@ public enum CachedFileManager {
         // We are only interested in caching entries for which the CRC is known
         // as this is the expensive operation we do not want to do unnecessarily
         if (!cf.isCrc()) {
-          if (logCacheManager && logger.isTraceEnabled())
+          if (logger.isTraceEnabled())
             logger.trace("CRC not known.  Not saving CachedFile " + key);
           ignoredCount++;
         } else {
           // We only want to cache items that have actually been used this time
           // around, so ignore entries that indicate cached values not used.
           if (cf.isCached()) {
-            if (logCacheManager && logger.isTraceEnabled())
+            if (logger.isTraceEnabled())
               logger.trace("Not used.  Not saving CachedFile " + key);
             ignoredCount++;
           } else {
             // No point in caching entries for non-existent files
             if (!cf.exists()) {
-              if (logCacheManager && logger.isTraceEnabled())
+              if (logger.isTraceEnabled())
                 logger.trace("Not exists.  Not saving CachedFile " + key);
               ignoredCount++;
             } else {
               os.writeObject(cf);
-              if (logCacheManager && logger.isTraceEnabled())
+              if (logger.isTraceEnabled())
                 logger.trace("Saved " + key);
               savedCount++;
             }
@@ -217,7 +212,6 @@ public enum CachedFileManager {
     logger.debug("Cache Entries Saved:   " + savedCount);
     logger.debug("Cache Entries Ignored: " + ignoredCount);
     logger.debug("COMPLETED Saving CRC cache to file " + cacheFile.getPath());
-    return;
   }
 
   /**
@@ -240,7 +234,7 @@ public enum CachedFileManager {
       return;
     }
     // Open Cache file
-    ObjectInputStream os = null;
+    ObjectInputStream os;
     FileInputStream fs;
     long loadedCount = 0;
     try {
@@ -260,16 +254,16 @@ public enum CachedFileManager {
         cf = (CachedFile) os.readObject();
 
         String path = cf.getPath();
-        if (logCacheManager && logger.isTraceEnabled())
+        if (logger.isTraceEnabled())
           logger.trace("Loaded cached object " + path);
         loadedCount++;
         CachedFile cf2 = inCache(cf);
         if (cf2 == null) {
           // Not in cache, so simply add it and
           // set indicator that values not yet checked
-          cf.setCached(true);
+          cf.setCached();
           addCachedFile(cf);
-          if (logCacheManager && logger.isTraceEnabled())
+          if (logger.isTraceEnabled())
             logger.trace("added entry to cache");
         } else {
           // Already in cache (can this happen?), so we
@@ -299,7 +293,6 @@ public enum CachedFileManager {
 
     logger.info("Cache Entries Loaded: " + loadedCount);
     logger.info("COMPLETED Loading CRC cache from file " + cacheFile.getPath());
-    return;
   }
 
   /**
@@ -314,7 +307,6 @@ public enum CachedFileManager {
     Helper.delete(cacheFile);
     if (logger.isDebugEnabled())
       logger.debug("Deleted CRC cache file " + cacheFile.getPath());
-    return;
   }
 
 }

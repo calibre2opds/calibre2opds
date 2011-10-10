@@ -6,19 +6,19 @@ public abstract class BooleanFilter implements BookFilter {
 
   private BookFilter leftFilter;
   private BookFilter rightFilter;
-  private boolean isOrFilter; // if true, the filter is an OR filter, else it's an AND filter
+  private final boolean isOrFilter; // if true, the filter is an OR filter, else it's an AND filter
 
   BooleanFilter(boolean orFilter) {
     isOrFilter = orFilter;
   }
 
-  protected BooleanFilter(BookFilter leftFilter, BookFilter rightFilter, boolean orFilter) {
+  BooleanFilter(BookFilter leftFilter, BookFilter rightFilter, boolean orFilter) {
     this.leftFilter = leftFilter;
     this.rightFilter = rightFilter;
     isOrFilter = orFilter;
   }
 
-  public BookFilter getLeftFilter() {
+  BookFilter getLeftFilter() {
     return leftFilter;
   }
 
@@ -26,7 +26,7 @@ public abstract class BooleanFilter implements BookFilter {
     this.leftFilter = leftFilter;
   }
 
-  public BookFilter getRightFilter() {
+  BookFilter getRightFilter() {
     return rightFilter;
   }
 

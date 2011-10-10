@@ -6,8 +6,8 @@ import com.gmail.dpierron.tools.Helper;
 
 public class RatingFilter implements BookFilter {
 
-  char rating;
-  char comparator;
+  private final char rating;
+  private final char comparator;
 
   public RatingFilter(char comparator, char rating) {
     this.rating = rating;

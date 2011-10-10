@@ -9,8 +9,8 @@ import java.util.*;
 
 public class SelectedEbookFormatsFilter implements BookFilter {
 
-  List<EBookFormat> includedFormats;
-  boolean includeBooksWithNoFile;
+  private List<EBookFormat> includedFormats;
+  private final boolean includeBooksWithNoFile;
 
   public SelectedEbookFormatsFilter(String includedFormatsList, boolean includeBooksWithNoFile) {
     includedFormats = new LinkedList<EBookFormat>();
@@ -51,11 +51,11 @@ public class SelectedEbookFormatsFilter implements BookFilter {
         public int compare(EBookFile o1, EBookFile o2) {
           if (o1 == null && o2 == null)
             return 0;
-          if (o1 == null && o2 != null)
+          if (o1 == null)
             return 1;
-          if (o1 != null && o2 == null)
+          if (o2 == null)
             return -1;
-          return new Integer(o2.getFormat().getPriority()).compareTo(new Integer(o1.getFormat().getPriority()));
+          return new Integer(o2.getFormat().getPriority()).compareTo(o1.getFormat().getPriority());
         }
 
       });

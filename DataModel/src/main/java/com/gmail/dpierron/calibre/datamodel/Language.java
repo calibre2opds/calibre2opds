@@ -1,9 +1,9 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 public class Language {
-  String id;
-  String calibreCode;
-  ISOLANGUAGE isoLanguage;
+  private final String id;
+  private final String calibreCode;
+  private ISOLANGUAGE isoLanguage;
 
   public Language(String id, String calibreCode) {
     this.id = id;
@@ -39,10 +39,10 @@ public class Language {
     eng("english", "English", "english", "en"),
     deu("deutsch", "Deutsch", "german", "de");
 
-    String lower;
-    String upper;
-    String english;
-    String iso;
+    final String lower;
+    final String upper;
+    final String english;
+    final String iso;
 
     private ISOLANGUAGE(String lower, String upper, String english, String iso) {
       this.lower = lower;

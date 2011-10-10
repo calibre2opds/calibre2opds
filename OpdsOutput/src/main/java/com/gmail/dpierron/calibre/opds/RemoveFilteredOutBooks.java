@@ -14,13 +14,13 @@ public enum RemoveFilteredOutBooks {
         ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeBooksWithNoFile()));
 
     // remove all books that have no tag in the included list
-    level2BooleanAndFilter.setRightFilter(new RequiredTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate(), false));
+    level2BooleanAndFilter.setRightFilter(new RequiredTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate()));
 
     BooleanAndFilter level1BooleanAndFilter = new BooleanAndFilter();
 
     // remove all books that have a tag in the excluded list
     level1BooleanAndFilter.setLeftFilter(level2BooleanAndFilter);
-    level1BooleanAndFilter.setRightFilter(new ForbiddenTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude(), false));
+    level1BooleanAndFilter.setRightFilter(new ForbiddenTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude()));
 
     FilterDataModel.INSTANCE.runOnDataModel(level1BooleanAndFilter);
   }

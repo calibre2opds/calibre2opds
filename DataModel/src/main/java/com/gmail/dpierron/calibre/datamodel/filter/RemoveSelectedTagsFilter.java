@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class RemoveSelectedTagsFilter implements BookFilter {
 
-  Set<Tag> tagsToRemove;
+  private final Set<Tag> tagsToRemove;
 
   public RemoveSelectedTagsFilter(Set<Tag> tagsToRemove) {
     this.tagsToRemove = tagsToRemove;
@@ -26,10 +26,8 @@ public class RemoveSelectedTagsFilter implements BookFilter {
       }
     }
 
-    if (book.getTags().size() == 0)
-      return false;
+    return book.getTags().size() != 0;
 
-    return true;
   }
 
 }
