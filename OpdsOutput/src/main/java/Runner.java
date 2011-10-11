@@ -36,7 +36,7 @@ public class Runner {
 
   private static void intro() {
     if (!introDone) {
-      logger.info(Constants.PROGTITLE);
+      logger.info(Constants.PROGTITLE + Constants.BZR_VERSION);
       logger.info("");
       logger.info(Localization.Main.getText("intro.goal"));
       logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
