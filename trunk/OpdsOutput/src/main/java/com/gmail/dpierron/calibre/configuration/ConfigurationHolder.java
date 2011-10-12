@@ -1298,7 +1298,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setUrlBase(String value) {
     // correct the value if needed
-    if (value != null && value.charAt(value.length() - 1) != '/')
+    if (Helper.isNotNullOrEmpty(value) && value.charAt(value.length() - 1) != '/')
       value += "/";
     setProperty(PROPERTY_NAME_URLBASE, value);
   }
