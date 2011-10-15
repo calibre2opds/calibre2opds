@@ -2,5 +2,5 @@
 old=$(pwd)
 f=`dirname "$0"`
 cd $f
-java -cp ./OpdsOutput-2.5-SNAPSHOT.jar Gui
+java -cp ./OpdsOutput-3.0-SNAPSHOT.jar Gui
 cd $old

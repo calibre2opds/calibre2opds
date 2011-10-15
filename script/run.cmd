@@ -34,7 +34,7 @@ if "%_JAVACMD%" == "" set _JAVACMD=java.exe
 
 :run_c2o
 
-"%_JAVACMD%" -cp OpdsOutput-2.5-SNAPSHOT.jar Cli %*
+"%_JAVACMD%" -cp OpdsOutput-3.0-SNAPSHOT.jar Cli %*
 goto end
 
 :end

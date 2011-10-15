@@ -18,9 +18,9 @@ zip "$ZIPFILE" calibre2opds-icon_192.png      calibre2opds-icon-small_32.ico  ca
 zip "$ZIPFILE" calibre2opds-text-icon_64.png
 cd ..
 cd Install/target
-zip "$ZIPFILE"  OpdsOutput-2.5-SNAPSHOT.jar
+zip "$ZIPFILE"  OpdsOutput-3.0-SNAPSHOT.jar
 cd Dependency
-zip "$ZIPFILE"  DataModel-2.5-SNAPSHOT.jar    Tools-2.5-SNAPSHOT.jar
+zip "$ZIPFILE"  DataModel-3.0-SNAPSHOT.jar    Tools-3.0-SNAPSHOT.jar
 zip "$ZIPFILE"  jdom-1.1.jar   junit-4.7.jar  log4j-1.2.12.jar    sqlite-jdbc-3.6.17.1.jar
 cd ../../..
 

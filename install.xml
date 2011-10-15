@@ -71,9 +71,9 @@
             <file src="script/run.cmd" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.sh" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.cmd" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/OpdsOutput-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/DataModel-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/Tools-2.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/OpdsOutput-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/DataModel-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/Tools-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/jdom-1.1.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/junit-4.7.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/log4j-1.2.12.jar" targetdir="$INSTALL_PATH"/>

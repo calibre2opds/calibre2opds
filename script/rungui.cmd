@@ -32,7 +32,7 @@ REM not found so hope on search path
 if "%_JAVACMD%" == "" set _JAVACMD=javaw.exe
 
 :run_c2o
-START "Calibre2Opds" "%_JAVACMD%" -cp OpdsOutput-2.5-SNAPSHOT.jar Gui
+START "Calibre2Opds" "%_JAVACMD%" -cp OpdsOutput-3.0-SNAPSHOT.jar Gui
 goto end
 
 :end
