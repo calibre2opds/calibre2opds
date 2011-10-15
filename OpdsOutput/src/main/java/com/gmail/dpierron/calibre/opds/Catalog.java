@@ -673,6 +673,7 @@ public class Catalog {
     logger.debug("COMPLETED: Generating All Books catalog");
 
     /* Featured catalog */
+    now = System.currentTimeMillis();
     String savedSearchName = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
     if (Helper.isNotNullOrEmpty(savedSearchName)) {
       logger.debug("STARTED: Generating Featured books catalog");
@@ -689,7 +690,6 @@ public class Catalog {
           BookFilter filter = interpreter.interpret();
           List<Book> featuredBooks = FilterHelper.filter(filter, books);
           callback.startCreateFeaturedBooks(featuredBooks.size());
-          now = System.currentTimeMillis();
           Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
           if (featuredCatalog != null) {
             //main.addContent(featuredCatalog.getFirstElement());
@@ -699,13 +699,13 @@ public class Catalog {
             // add the actual catalog
             main.addContent(featuredCatalog.getFirstElement());
           }
-          callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
           logger.debug("COMPLETED: Generating Featured books catalog");
         } catch (CalibreQueryInterpreter.InterpretException e) {
           callback.errorOccured("Error occured while interpreting the featured books saved search", e);
         }
       }
     }
+    callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
 
     File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
     Document document = new Document();
