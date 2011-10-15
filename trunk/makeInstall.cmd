@@ -7,7 +7,7 @@ REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
 call setenv.cmd
 
-SET VERSION=calibre2opds-2.5-beta2
+SET VERSION=calibre2opds-3.0-beta1
 SET ZIPFILE=%cd%\%VERSION%.zip
 
 del /q %cd%\%VERSION%.*
@@ -33,7 +33,7 @@ cd brand
 "%ZIPPROG%" "%ZIPFILE%" calibre2opds-text-icon_64.png
 cd ..
 cd Install\target\Dependency
-"%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-2.5-SNAPSHOT.jar  DataModel-2.5-SNAPSHOT.jar    Tools-2.5-SNAPSHOT.jar
+"%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-3.0-SNAPSHOT.jar  DataModel-3.0-SNAPSHOT.jar    Tools-3.0-SNAPSHOT.jar
 "%ZIPPROG%" "%ZIPFILE%"  jdom-1.1.jar   junit-4.7.jar  log4j-1.2.12.jar    sqlite-jdbc-3.6.17.1.jar    jtidy-4aug2000r7-dev.jar
 cd ..\..\..\
 
