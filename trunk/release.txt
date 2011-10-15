@@ -33,7 +33,6 @@ Known Issues
  - #716914  Series not sorted correctly by Series Index when more than 1 digit
  - #729859  Internal links not working in XML catalogs
             (may not be fixable)
- - #806869  Russian (possible all non-ASCII) text in comments field not displayed correctly
                                                                                                    d
 Planned Enhancements
 ~~~~~~~~~~~~~~~~~~~~
@@ -49,12 +48,17 @@ that have been recorded in Launchpad.
 
 v3.0 beta 1
     - New: Experimental support for creating and using a search index in HTML catalogs
+    - New: support for Featured Books sub-catalog
     - New: Current profile now displayed on main screen
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
+    - New: Support for external icon files instead of embedded binary images
     - Fix: #836797 Null pointer exception trying to run calibre2opds in commandline mode.
+    - Fix: #840830 Command line not working in Windows
+    - Fix: #831976 Accented characters not displaying correctly in comments
+    - Fix: #806869 Russian text in comments field not displayed correctly
     - Fix: Missing catalog.xml file in Nook/Trook mode
 
-v2.5 beta 1   (NOTE:  it has now been decided to label the next release as 3.0)
+v2.5 beta 1   (NOTE:  it has now been decided to label the next release as 3.0 and not 2.5)
     - New: #826209: Allow suppression of resized cover generation - use calibre cover directly
     - New: #826211: Allow suppression of thumbnail generation - use calibre cover as thumbnail
     - New: added completion times to each phase in Progress dialog to improve feedback
