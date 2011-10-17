@@ -61,6 +61,10 @@ public enum Database {
         Language language = new Language(id, isoCode);
         mapOfLanguagesById.put(id, language);
         mapOfLanguagesByIsoCode.put(isoCode, language);
+        if (logger.isDebugEnabled()) {
+          logger.debug("language id:"+id+", lang_code:"+isoCode);
+          logger.debug("language = "+language);
+        }
       }
     } catch (SQLException e) {
       logger.error(e);

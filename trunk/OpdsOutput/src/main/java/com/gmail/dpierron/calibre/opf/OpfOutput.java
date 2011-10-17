@@ -142,7 +142,7 @@ public class OpfOutput {
     if (Helper.isNotNullOrEmpty(bookLanguages)) {
       removeDcElements(source, "language");
       for (Language language : bookLanguages) {
-        addDublinCoreElement(source, "language", language.getCalibreCode());
+        addDublinCoreElement(source, "language", language.getIso3());
       }
     }
     if (Helper.isNotNullOrEmpty(book.getAuthors())) {

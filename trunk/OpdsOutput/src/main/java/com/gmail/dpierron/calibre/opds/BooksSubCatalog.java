@@ -662,7 +662,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // dublin core - language
     for (Language language : book.getBookLanguages()) {
-      Element dcLang = FeedHelper.INSTANCE.getDublinCoreLanguageElement(language.getIsoLanguage().getIso());
+      Element dcLang = FeedHelper.INSTANCE.getDublinCoreLanguageElement(language.getIso2());
       entry.addContent(dcLang);
     }
 
