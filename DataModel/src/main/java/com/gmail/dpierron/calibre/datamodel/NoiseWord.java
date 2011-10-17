@@ -32,7 +32,7 @@ public enum NoiseWord {
     if (lang == null)
       return DEFAULT;
     else
-      return fromLanguage(lang.getCalibreCode());
+      return fromLanguage(lang.getIso3());
   }
 
   public static NoiseWord fromLanguage(String lang) {

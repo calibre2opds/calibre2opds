@@ -3,11 +3,15 @@ package com.gmail.dpierron.calibre.datamodel;
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
 public enum DataModel {
   INSTANCE;
+
+  private final static Logger logger = Logger.getLogger(DataModel.class);
+
   private static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
 
   private Map<String, List<EBookFile>> mapOfFilesByBookId;
@@ -452,24 +456,31 @@ public enum DataModel {
     for (Book book : getListOfBooks()) {
       if (Helper.isNotNullOrEmpty(book.getBookLanguages())) {
         for (Language language : book.getBookLanguages()) {
-          String languageTagName = IMPLICIT_LANGUAGE_TAG_PREFIX + language.getIsoLanguage().getIso();
-          Tag languageTag = mapOfLanguageTags.get(languageTagName.toUpperCase(Locale.ENGLISH));
-          if (languageTag == null) {
-            // check in the existing tags
-            for (Tag tag : getListOfTags()) {
-              if (tag.getName().equalsIgnoreCase(languageTagName)) {
-                languageTag = tag;
-                break;
-              }
-            }
+          if (language != null) {
+            String languageTagName = IMPLICIT_LANGUAGE_TAG_PREFIX + language.getIso2();
+            Tag languageTag = mapOfLanguageTags.get(languageTagName.toUpperCase(Locale.ENGLISH));
             if (languageTag == null) {
-              languageTag = new Tag(""+(++lastId), languageTagName);
-              addTag(languageTag);
+              // check in the existing tags
+              for (Tag tag : getListOfTags()) {
+                if (tag.getName().equalsIgnoreCase(languageTagName)) {
+                  languageTag = tag;
+                  break;
+                }
+              }
+              if (languageTag == null) {
+                languageTag = new Tag(""+(++lastId), languageTagName);
+                addTag(languageTag);
+              }
+              mapOfLanguageTags.put(languageTagName.toUpperCase(Locale.ENGLISH), languageTag);
             }
-            mapOfLanguageTags.put(languageTagName.toUpperCase(Locale.ENGLISH), languageTag);
+            if (!book.getTags().contains(languageTag))
+              book.getTags().add(languageTag);
+          } else {
+            logger.error("found a null language for book "+book);
+            for (Language language1 : book.getBookLanguages()) {
+              logger.error(language1);
+            }
           }
-          if (!book.getTags().contains(languageTag))
-            book.getTags().add(languageTag);
         }
       }
     }

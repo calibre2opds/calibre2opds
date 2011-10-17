@@ -1,82 +1,532 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Language {
   private final String id;
-  private final String calibreCode;
-  private ISOLANGUAGE isoLanguage;
+  private final String iso3;
+  private final String iso2;
 
-  public Language(String id, String calibreCode) {
+  public Language(String id, String iso3) {
     this.id = id;
-    this.calibreCode = calibreCode;
+    this.iso3 = iso3;
+    this.iso2 = iso3_to_iso2.get(iso3.toLowerCase());
   }
 
   public String getId() {
     return id;
   }
 
-  public String getCalibreCode() {
-    return calibreCode;
+  public String getIso3() {
+    return iso3;
+  }
+
+  public String getIso2() {
+    return iso2;
   }
 
   public String toString() {
-    return calibreCode;
-  }
-
-  public ISOLANGUAGE getIsoLanguage() {
-    if (isoLanguage == null) {
-      for (ISOLANGUAGE language_name : ISOLANGUAGE.values()) {
-        if (language_name.name().equals(getCalibreCode())) {
-          isoLanguage = language_name;
-          break;
-        }
-      }
-    }
-    return isoLanguage;
-  }
-
-  public enum ISOLANGUAGE {
-    fra("français", "Français", "french", "fr"),
-    eng("english", "English", "english", "en"),
-    deu("deutsch", "Deutsch", "german", "de");
-
-    final String lower;
-    final String upper;
-    final String english;
-    final String iso;
-
-    private ISOLANGUAGE(String lower, String upper, String english, String iso) {
-      this.lower = lower;
-      this.upper = upper;
-      this.english = english;
-      this.iso = iso;
-    }
-
-    public String getLower() {
-      return lower;
-    }
-
-    public String getUpper() {
-      return upper;
-    }
-
-    public String getIso() {
-      return iso;
-    }
-
-    public String getEnglish() {
-      return english;
-    }
+    return "iso2:"+iso2+", iso3:"+iso3;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof String) {
       String lang = (String) obj;
-      return (getCalibreCode().equalsIgnoreCase(lang)) || (getIsoLanguage().getIso().equalsIgnoreCase(lang)) ||
-          (getIsoLanguage().getEnglish().equalsIgnoreCase(lang)) || (getIsoLanguage().getLower().equalsIgnoreCase(lang)) ||
-          (getIsoLanguage().getUpper().equalsIgnoreCase(lang));
+      return (getIso3().equalsIgnoreCase(lang)) || (getIso2().equalsIgnoreCase(lang));
     } else
       return super.equals(obj);
 
   }
+
+  static Map<String, String> iso3_to_iso2 = new HashMap<String, String>() {{
+    put("abk", "ab");
+    put("aar", "aa");
+    put("afr", "af");
+    put("aka", "ak");
+    put("alb", "sq");
+    put("sqi", "sq");
+    put("amh", "am");
+    put("ara", "ar");
+    put("arg", "an");
+    put("arm", "hy");
+    put("hye", "hy");
+    put("asm", "as");
+    put("ava", "av");
+    put("ave", "ae");
+    put("aym", "ay");
+    put("aze", "az");
+    put("bam", "bm");
+    put("bak", "ba");
+    put("baq", "eu");
+    put("eus", "eu");
+    put("bel", "be");
+    put("ben", "bn");
+    put("bih", "bh");
+    put("bis", "bi");
+    put("nob", "nb");
+    put("bos", "bs");
+    put("bre", "br");
+    put("bul", "bg");
+    put("bur", "my");
+    put("mya", "my");
+    put("spa", "es");
+    put("cat", "ca");
+    put("khm", "km");
+    put("cha", "ch");
+    put("che", "ce");
+    put("nya", "ny");
+    put("nya", "ny");
+    put("chi", "zh");
+    put("zho", "zh");
+    put("zha", "za");
+    put("chu", "cu");
+    put("chu", "cu");
+    put("chv", "cv");
+    put("cor", "kw");
+    put("cos", "co");
+    put("cre", "cr");
+    put("hrv", "hr");
+    put("cze", "cs");
+    put("ces", "cs");
+    put("dan", "da");
+    put("div", "dv");
+    put("div", "dv");
+    put("dut", "nl");
+    put("nld", "nl");
+    put("dzo", "dz");
+    put("eng", "en");
+    put("epo", "eo");
+    put("est", "et");
+    put("ewe", "ee");
+    put("fao", "fo");
+    put("fij", "fj");
+    put("fin", "fi");
+    put("dut", "nl");
+    put("nld", "nl");
+    put("fre", "fr");
+    put("fra", "fr");
+    put("ful", "ff");
+    put("gla", "gd");
+    put("glg", "gl");
+    put("lug", "lg");
+    put("geo", "ka");
+    put("kat", "ka");
+    put("ger", "de");
+    put("deu", "de");
+    put("kik", "ki");
+    put("gre", "el");
+    put("ell", "el");
+    put("kal", "kl");
+    put("grn", "gn");
+    put("guj", "gu");
+    put("hat", "ht");
+    put("hat", "ht");
+    put("hau", "ha");
+    put("heb", "he");
+    put("her", "hz");
+    put("hin", "hi");
+    put("hmo", "ho");
+    put("hun", "hu");
+    put("ice", "is");
+    put("isl", "is");
+    put("ido", "io");
+    put("ibo", "ig");
+    put("ind", "id");
+    put("ina", "ia");
+    put("ile", "ie");
+    put("iku", "iu");
+    put("ipk", "ik");
+    put("gle", "ga");
+    put("ita", "it");
+    put("jpn", "ja");
+    put("jav", "jv");
+    put("kal", "kl");
+    put("kan", "kn");
+    put("kau", "kr");
+    put("kas", "ks");
+    put("kaz", "kk");
+    put("kik", "ki");
+    put("kin", "rw");
+    put("kir", "ky");
+    put("kom", "kv");
+    put("kon", "kg");
+    put("kor", "ko");
+    put("kua", "kj");
+    put("kur", "ku");
+    put("kua", "kj");
+    put("kir", "ky");
+    put("lao", "lo");
+    put("lat", "la");
+    put("lav", "lv");
+    put("ltz", "lb");
+    put("lim", "li");
+    put("lim", "li");
+    put("lim", "li");
+    put("lin", "ln");
+    put("lit", "lt");
+    put("lub", "lu");
+    put("ltz", "lb");
+    put("mac", "mk");
+    put("mkd", "mk");
+    put("mlg", "mg");
+    put("may", "ms");
+    put("msa", "ms");
+    put("mal", "ml");
+    put("div", "dv");
+    put("mlt", "mt");
+    put("glv", "gv");
+    put("mao", "mi");
+    put("mri", "mi");
+    put("mar", "mr");
+    put("mah", "mh");
+    put("rum", "ro");
+    put("ron", "ro");
+    put("rum", "ro");
+    put("ron", "ro");
+    put("mon", "mn");
+    put("nau", "na");
+    put("nav", "nv");
+    put("nav", "nv");
+    put("nde", "nd");
+    put("nbl", "nr");
+    put("ndo", "ng");
+    put("nep", "ne");
+    put("nde", "nd");
+    put("sme", "se");
+    put("nor", "no");
+    put("nob", "nb");
+    put("nno", "nn");
+    put("iii", "ii");
+    put("nya", "ny");
+    put("nno", "nn");
+    put("ile", "ie");
+    put("oci", "oc");
+    put("oji", "oj");
+    put("chu", "cu");
+    put("chu", "cu");
+    put("chu", "cu");
+    put("ori", "or");
+    put("orm", "om");
+    put("oss", "os");
+    put("oss", "os");
+    put("pli", "pi");
+    put("pan", "pa");
+    put("pus", "ps");
+    put("per", "fa");
+    put("fas", "fa");
+    put("pol", "pl");
+    put("por", "pt");
+    put("pan", "pa");
+    put("pus", "ps");
+    put("que", "qu");
+    put("rum", "ro");
+    put("ron", "ro");
+    put("roh", "rm");
+    put("run", "rn");
+    put("rus", "ru");
+    put("smo", "sm");
+    put("sag", "sg");
+    put("san", "sa");
+    put("srd", "sc");
+    put("gla", "gd");
+    put("srp", "sr");
+    put("sna", "sn");
+    put("iii", "ii");
+    put("snd", "sd");
+    put("sin", "si");
+    put("sin", "si");
+    put("slo", "sk");
+    put("slk", "sk");
+    put("slv", "sl");
+    put("som", "so");
+    put("sot", "st");
+    put("nbl", "nr");
+    put("spa", "es");
+    put("sun", "su");
+    put("swa", "sw");
+    put("ssw", "ss");
+    put("swe", "sv");
+    put("tgl", "tl");
+    put("tah", "ty");
+    put("tgk", "tg");
+    put("tam", "ta");
+    put("tat", "tt");
+    put("tel", "te");
+    put("tha", "th");
+    put("tib", "bo");
+    put("bod", "bo");
+    put("tir", "ti");
+    put("ton", "to");
+    put("tso", "ts");
+    put("tsn", "tn");
+    put("tur", "tr");
+    put("tuk", "tk");
+    put("twi", "tw");
+    put("uig", "ug");
+    put("ukr", "uk");
+    put("urd", "ur");
+    put("uig", "ug");
+    put("uzb", "uz");
+    put("cat", "ca");
+    put("ven", "ve");
+    put("vie", "vi");
+    put("vol", "vo");
+    put("wln", "wa");
+    put("wel", "cy");
+    put("cym", "cy");
+    put("fry", "fy");
+    put("wol", "wo");
+    put("xho", "xh");
+    put("yid", "yi");
+    put("yor", "yo");
+    put("zha", "za");
+    put("zul", "zu");
+  }};
+
+  static Map<String, String> iso2_to_iso3 = new HashMap<String, String>() {{
+    put("ab", "abk");
+    put("aa", "aar");
+    put("af", "afr");
+    put("ak", "aka");
+    put("sq", "alb");
+    put("sq", "sqi");
+    put("am", "amh");
+    put("ar", "ara");
+    put("an", "arg");
+    put("hy", "arm");
+    put("hy", "hye");
+    put("as", "asm");
+    put("av", "ava");
+    put("ae", "ave");
+    put("ay", "aym");
+    put("az", "aze");
+    put("bm", "bam");
+    put("ba", "bak");
+    put("eu", "baq");
+    put("eu", "eus");
+    put("be", "bel");
+    put("bn", "ben");
+    put("bh", "bih");
+    put("bi", "bis");
+    put("nb", "nob");
+    put("bs", "bos");
+    put("br", "bre");
+    put("bg", "bul");
+    put("my", "bur");
+    put("my", "mya");
+    put("es", "spa");
+    put("ca", "cat");
+    put("km", "khm");
+    put("ch", "cha");
+    put("ce", "che");
+    put("ny", "nya");
+    put("ny", "nya");
+    put("zh", "chi");
+    put("zh", "zho");
+    put("za", "zha");
+    put("cu", "chu");
+    put("cu", "chu");
+    put("cv", "chv");
+    put("kw", "cor");
+    put("co", "cos");
+    put("cr", "cre");
+    put("hr", "hrv");
+    put("cs", "cze");
+    put("cs", "ces");
+    put("da", "dan");
+    put("dv", "div");
+    put("dv", "div");
+    put("nl", "dut");
+    put("nl", "nld");
+    put("dz", "dzo");
+    put("en", "eng");
+    put("eo", "epo");
+    put("et", "est");
+    put("ee", "ewe");
+    put("fo", "fao");
+    put("fj", "fij");
+    put("fi", "fin");
+    put("nl", "dut");
+    put("nl", "nld");
+    put("fr", "fre");
+    put("fr", "fra");
+    put("ff", "ful");
+    put("gd", "gla");
+    put("gl", "glg");
+    put("lg", "lug");
+    put("ka", "geo");
+    put("ka", "kat");
+    put("de", "ger");
+    put("de", "deu");
+    put("ki", "kik");
+    put("el", "gre");
+    put("el", "ell");
+    put("kl", "kal");
+    put("gn", "grn");
+    put("gu", "guj");
+    put("ht", "hat");
+    put("ht", "hat");
+    put("ha", "hau");
+    put("he", "heb");
+    put("hz", "her");
+    put("hi", "hin");
+    put("ho", "hmo");
+    put("hu", "hun");
+    put("is", "ice");
+    put("is", "isl");
+    put("io", "ido");
+    put("ig", "ibo");
+    put("id", "ind");
+    put("ia", "ina");
+    put("ie", "ile");
+    put("iu", "iku");
+    put("ik", "ipk");
+    put("ga", "gle");
+    put("it", "ita");
+    put("ja", "jpn");
+    put("jv", "jav");
+    put("kl", "kal");
+    put("kn", "kan");
+    put("kr", "kau");
+    put("ks", "kas");
+    put("kk", "kaz");
+    put("ki", "kik");
+    put("rw", "kin");
+    put("ky", "kir");
+    put("kv", "kom");
+    put("kg", "kon");
+    put("ko", "kor");
+    put("kj", "kua");
+    put("ku", "kur");
+    put("kj", "kua");
+    put("ky", "kir");
+    put("lo", "lao");
+    put("la", "lat");
+    put("lv", "lav");
+    put("lb", "ltz");
+    put("li", "lim");
+    put("li", "lim");
+    put("li", "lim");
+    put("ln", "lin");
+    put("lt", "lit");
+    put("lu", "lub");
+    put("lb", "ltz");
+    put("mk", "mac");
+    put("mk", "mkd");
+    put("mg", "mlg");
+    put("ms", "may");
+    put("ms", "msa");
+    put("ml", "mal");
+    put("dv", "div");
+    put("mt", "mlt");
+    put("gv", "glv");
+    put("mi", "mao");
+    put("mi", "mri");
+    put("mr", "mar");
+    put("mh", "mah");
+    put("ro", "rum");
+    put("ro", "ron");
+    put("ro", "rum");
+    put("ro", "ron");
+    put("mn", "mon");
+    put("na", "nau");
+    put("nv", "nav");
+    put("nv", "nav");
+    put("nd", "nde");
+    put("nr", "nbl");
+    put("ng", "ndo");
+    put("ne", "nep");
+    put("nd", "nde");
+    put("se", "sme");
+    put("no", "nor");
+    put("nb", "nob");
+    put("nn", "nno");
+    put("ii", "iii");
+    put("ny", "nya");
+    put("nn", "nno");
+    put("ie", "ile");
+    put("oc", "oci");
+    put("oj", "oji");
+    put("cu", "chu");
+    put("cu", "chu");
+    put("cu", "chu");
+    put("or", "ori");
+    put("om", "orm");
+    put("os", "oss");
+    put("os", "oss");
+    put("pi", "pli");
+    put("pa", "pan");
+    put("ps", "pus");
+    put("fa", "per");
+    put("fa", "fas");
+    put("pl", "pol");
+    put("pt", "por");
+    put("pa", "pan");
+    put("ps", "pus");
+    put("qu", "que");
+    put("ro", "rum");
+    put("ro", "ron");
+    put("rm", "roh");
+    put("rn", "run");
+    put("ru", "rus");
+    put("sm", "smo");
+    put("sg", "sag");
+    put("sa", "san");
+    put("sc", "srd");
+    put("gd", "gla");
+    put("sr", "srp");
+    put("sn", "sna");
+    put("ii", "iii");
+    put("sd", "snd");
+    put("si", "sin");
+    put("si", "sin");
+    put("sk", "slo");
+    put("sk", "slk");
+    put("sl", "slv");
+    put("so", "som");
+    put("st", "sot");
+    put("nr", "nbl");
+    put("es", "spa");
+    put("su", "sun");
+    put("sw", "swa");
+    put("ss", "ssw");
+    put("sv", "swe");
+    put("tl", "tgl");
+    put("ty", "tah");
+    put("tg", "tgk");
+    put("ta", "tam");
+    put("tt", "tat");
+    put("te", "tel");
+    put("th", "tha");
+    put("bo", "tib");
+    put("bo", "bod");
+    put("ti", "tir");
+    put("to", "ton");
+    put("ts", "tso");
+    put("tn", "tsn");
+    put("tr", "tur");
+    put("tk", "tuk");
+    put("tw", "twi");
+    put("ug", "uig");
+    put("uk", "ukr");
+    put("ur", "urd");
+    put("ug", "uig");
+    put("uz", "uzb");
+    put("ca", "cat");
+    put("ve", "ven");
+    put("vi", "vie");
+    put("vo", "vol");
+    put("wa", "wln");
+    put("cy", "wel");
+    put("cy", "cym");
+    put("fy", "fry");
+    put("wo", "wol");
+    put("xh", "xho");
+    put("yi", "yid");
+    put("yo", "yor");
+    put("za", "zha");
+    put("zu", "zul");
+  }};
 }
