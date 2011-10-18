@@ -511,398 +511,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
-   * @param pBreadcrumbs
-   * @param book
-   * @param options
-   * @return
-   * @throws IOException
-   */
-  private Element getBookEntry(Breadcrumbs pBreadcrumbs, Book book, Option... options) throws IOException {
-    if (logger.isDebugEnabled())
-      logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
-
-    CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
-    if (!isInDeepLevel() && isBookTheStepUnit())
-      CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
-
-    String filename = "book_" + book.getId() + ".xml";
-    if (logger.isDebugEnabled())
-      logger.debug("getBookEntry:" + book);
-    if (logger.isTraceEnabled()) {
-      logger.trace("getBookEntry:" + pBreadcrumbs.toString());
-      logger.trace("getBookEntry: generating " + filename);
-    }
-    String title;
-    if (Option.contains(options, Option.INCLUDE_SERIE_NUMBER))
-      if (book.getSerieIndex() != 0) {
-        title = book.getTitleWithSerieNumber();
-      } else {
-        title = book.getTitle();
-      }
-    else if (Option.contains(options, Option.INCLUDE_TIMESTAMP))
-      title = book.getTitleWithTimestamp();
-    else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles())
-      title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
-    else
-      title = book.getTitle();
-
-    String urn = "calibre:book:" + book.getId();
-
-    filename = SecureFileManager.INSTANCE.encode(filename);
-
-    if (logger.isTraceEnabled())
-      logger.trace("getBookEntry: checking book in the Catalog manager");
-    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    String trueFilename = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-    if (getCatalogManager().addBookEntryFile(outputFile)) {
-      if (logger.isTraceEnabled())
-        logger.trace("getBookEntry: book was not yet done");
-      FileOutputStream fos = null;
-
-      Document document = new Document();
-      try {
-        fos = new FileOutputStream(outputFile);
-
-        Element entry = getBookFullEntry(book);
-
-        // write the element to the file
-        document.addContent(entry);
-        JDOM.INSTANCE.getOutputter().output(document, fos);
-
-      } catch (Exception e) {
-        // Exceptions are not expected, but if one does occur as well
-        // as logging the details, also log the book that caused it
-        logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
-        // Increment the warning count for advising the user to look at the log after the run
-      } finally {
-        if (fos != null)
-          fos.close();
-      }
-
-      // create the same file as html
-      getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
-
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
-        // index the book
-        logger.debug("getBookEntry: indexing book");
-        IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(trueFilename), getThumbnailManager().getImageUri(book));
-      }
-    }
-
-    Element result = FeedHelper.INSTANCE.getBookEntry(title, urn, book.getLatestFileModifiedDate());
-    if (logger.isTraceEnabled())
-      logger.trace("getBookEntry: getting short comment");
-    String summary = book.getShortComment(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSummaryLength());
-    if (Helper.isNotNullOrEmpty(summary)) {
-      Element summaryElement = JDOM.INSTANCE.element("summary").addContent(summary);
-      result.addContent(0, summaryElement);
-    }
-
-
-    // add author
-    if (logger.isTraceEnabled())
-      logger.trace("getBookEntry: add author");
-    if (book.hasAuthor()) {
-      Element author = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(book.getListOfAuthors()))
-          .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + book.getMainAuthor().getId() + ".xml"));
-      result.addContent(author);
-    }
-
-    // add thumbnail
-    if (logger.isTraceEnabled())
-      logger.trace("getBookEntry: add thumbnail");
-
-    addCoverLink(book, result);
-
-    // add a full entry link to the partial entry
-    if (logger.isTraceEnabled())
-      logger.trace("add a full entry link to the partial entry");
-    result.addContent(FeedHelper.INSTANCE.getFullEntryLink(trueFilename));
-
-    // add the acquisition links (mandatory in partial entries as per OPDS spec. 1.0)
-    // However it breaks Stanza so we need to suppress it in Stanza mode
-    addAcquisitionLinks(book, result);
-
-    return result;
-  }
-
-  /**
-   * @param book
-   * @return
-   */
-  private Element getBookFullEntry(Book book) {
-    if (logger.isDebugEnabled())
-      logger.debug("getBookFullEntry: " + book);
-    Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
-
-    String sTitle = book.getTitle();
-    Element title = JDOM.INSTANCE.element("title").addContent(sTitle);
-    entry.addContent(title);
-
-    Element id = JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid());
-    entry.addContent(id);
-
-    if (book.hasAuthor()) {
-      Element author = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(book.getListOfAuthors()))
-          .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + book.getMainAuthor().getId() + ".xml"));
-      entry.addContent(author);
-    }
-
-    // published element
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: published element");
-    Element published = FeedHelper.INSTANCE.getPublishedTag(book.getPublicationDate());
-    entry.addContent(published);
-
-    // updated element
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: updated element");
-    Element updated = FeedHelper.INSTANCE.getUpdatedTag(book.getLatestFileModifiedDate());
-    entry.addContent(updated);
-
-    // dublin core - language
-    for (Language language : book.getBookLanguages()) {
-      Element dcLang = FeedHelper.INSTANCE.getDublinCoreLanguageElement(language.getIso2());
-      entry.addContent(dcLang);
-    }
-
-    // dublin core - publisher
-    Publisher publisher = book.getPublisher();
-    if (Helper.isNotNullOrEmpty(publisher)) {
-      Element dcPublisher = FeedHelper.INSTANCE.getDublinCorePublisherElement(publisher.getName());
-      entry.addContent(dcPublisher);
-    }
-
-    // categories
-    Series series = book.getSeries();
-    if (Helper.isNotNullOrEmpty(book.getTags())) {
-      // tags
-      for (Tag tag : book.getTags()) {
-        Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(tag.getName());
-        entry.addContent(categoryElement);
-      }
-      // series
-      if (Helper.isNotNullOrEmpty(series)) {
-        Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(series.getName());
-        entry.addContent(categoryElement);
-      }
-    }
-
-
-    // content element
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: content element");
-    Element content = JDOM.INSTANCE.element("content").setAttribute("type", "text/html");
-    boolean hasContent = false;
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: computing comments");
-    if (Helper.isNotNullOrEmpty(series)) {
-      String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), series.getName());
-      content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series") + " ")).addContent(data)
-          .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
-      hasContent = true;
-    }
-    List<Element> comments = JDOM.INSTANCE.convertBookCommentToXhtml(book.getComment());
-    if (Helper.isNotNullOrEmpty(comments)) {
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: got comments");
-      content.addContent(JDOM.INSTANCE.newParagraph().addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.summary"))));
-      for (Element p : comments) {
-        content.addContent(p.detach());
-      }
-      hasContent = true;
-    }
-    if (hasContent) {
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: had content");
-      entry.addContent(content);
-    }
-
-    addAcquisitionLinks(book, entry);
-
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: add cover link");
-    addCoverLink(book, entry);
-
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks()) {
-      // add the series link
-      if (series != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(series).size() > 1) {
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the series link");
-        entry.addContent(FeedHelper.INSTANCE
-            .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + series.getId() + ".xml")),
-                Localization.Main.getText("bookentry.series", book.getSerieIndex(), series.getName())));
-      }
-
-      // add the author page link(s)
-      if (book.hasAuthor()) {
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the author page link(s)");
-        for (Author author : book.getAuthors()) {
-          int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
-          entry.addContent(FeedHelper.INSTANCE
-              .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
-                  Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
-        }
-      }
-
-      // add the tags links
-
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags()) {
-        if (Helper.isNotNullOrEmpty(book.getTags())) {
-          if (logger.isTraceEnabled())
-            logger.trace("getBookFullEntry: add the tags links");
-          for (Tag tag : book.getTags()) {
-            int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
-            if (nbBooks > 1) {
-              entry.addContent(FeedHelper.INSTANCE
-                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + ".xml")),
-                      Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks), tag.getName())));
-            }
-          }
-        }
-      }
-
-      // add the ratings links
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the ratings links");
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
-        int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
-        if (nbBooks > 1) {
-          entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + ".xml")),
-              Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks),
-                  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
-        }
-      }
-    }
-
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateExternalLinks()) {
-      String url;
-      // add the GoodReads book link
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the GoodReads book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
-          ));
-
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadReviewIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(
-              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
-      } else {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE
-              .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
-              ));
-      }
-
-      // add the Wikipedia book link
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the Wikipedia book link");
-      url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
-      if (Helper.isNotNullOrEmpty(url))
-        entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-            MessageFormat.format(url, ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(book.getTitle()
-            )),
-            Localization.Main.getText("bookentry.wikipedia")));
-
-      // Add Librarything book link
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: Add Librarything book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(
-              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
-      } else if (Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
-              Localization.Main.getText("bookentry.librarything")));
-      }
-
-      // Add Amazon book link
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: Add Amazon book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
-      } else if (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
-              Localization.Main.getText("bookentry.amazon")));
-      }
-
-      // Author Links
-      if (book.hasAuthor()) {
-        // add the GoodReads author link
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the GoodReads author link");
-        for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.goodreads.author", author.getName())));
-        }
-
-        // add the Wikipedia author link
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the Wikipedia author link");
-        for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl(),
-                ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.wikipedia.author", author.getName())));
-        }
-
-        // add the LibraryThing author link
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the LibraryThing author link");
-        for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-                // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
-                MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl(),
-                    FeedHelper.INSTANCE.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
-                Localization.Main.getText("bookentry.librarything.author", author.getName())));
-        }
-
-        // add the Amazon author link
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the Amazon author link");
-        for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.amazon.author", author.getName())));
-        }
-
-        // add the ISFDB author link
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the ISFDB author link");
-        for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.isfdb.author", author.getName())));
-        }
-      }
-    }
-
-    return entry;
-  }
-
-  /**
    * @param book
    * @param entry
    */
@@ -1061,4 +669,401 @@ public abstract class BooksSubCatalog extends SubCatalog {
       logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
     entry.addContent(FeedHelper.INSTANCE.getThumbnailLink(thumbnailUri));
   }
+
+  private void addNavigationLinks(Element entry, Book book) {
+    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks()) {
+      // add the series link
+      if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the series link");
+        entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
+            getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
+            Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
+      }
+
+      // add the author page link(s)
+      if (book.hasAuthor()) {
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the author page link(s)");
+        for (Author author : book.getAuthors()) {
+          int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
+          entry.addContent(FeedHelper.INSTANCE
+              .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
+                  Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
+        }
+      }
+
+      // add the tags links
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags()) {
+        if (Helper.isNotNullOrEmpty(book.getTags())) {
+          if (logger.isTraceEnabled())
+            logger.trace("getBookFullEntry: add the tags links");
+          for (Tag tag : book.getTags()) {
+            int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
+            if (nbBooks > 1) {
+              entry.addContent(FeedHelper.INSTANCE
+                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + ".xml")),
+                      Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks), tag.getName())));
+            }
+          }
+        }
+      }
+
+      // add the ratings links
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: add the ratings links");
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
+        int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
+        if (nbBooks > 1) {
+          entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + ".xml")),
+              Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks),
+                  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
+        }
+      }
+    }
+  }
+
+  private void addExternalLinks(Element entry, Book book) {
+    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateExternalLinks()) {
+      String url;
+      // add the GoodReads book link
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: add the GoodReads book link");
+      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
+          ));
+
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadReviewIsbnUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(
+              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
+      } else {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(FeedHelper.INSTANCE
+              .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
+              ));
+      }
+
+      // add the Wikipedia book link
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: add the Wikipedia book link");
+      url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
+      if (Helper.isNotNullOrEmpty(url))
+        entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
+            MessageFormat.format(url, ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(book.getTitle()
+            )),
+            Localization.Main.getText("bookentry.wikipedia")));
+
+      // Add Librarything book link
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: Add Librarything book link");
+      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(
+              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
+      } else if (Helper.isNotNullOrEmpty(book.getTitle())) {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
+              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
+              Localization.Main.getText("bookentry.librarything")));
+      }
+
+      // Add Amazon book link
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: Add Amazon book link");
+      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
+      } else if (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle())) {
+        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl();
+        if (Helper.isNotNullOrEmpty(url))
+          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
+              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
+              Localization.Main.getText("bookentry.amazon")));
+      }
+
+      // Author Links
+      if (book.hasAuthor()) {
+        // add the GoodReads author link
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the GoodReads author link");
+        for (Author author : book.getAuthors()) {
+          url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl();
+          if (Helper.isNotNullOrEmpty(url))
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+                Localization.Main.getText("bookentry.goodreads.author", author.getName())));
+        }
+
+        // add the Wikipedia author link
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the Wikipedia author link");
+        for (Author author : book.getAuthors()) {
+          url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
+          if (Helper.isNotNullOrEmpty(url))
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl(),
+                ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(author.getName())),
+                Localization.Main.getText("bookentry.wikipedia.author", author.getName())));
+        }
+
+        // add the LibraryThing author link
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the LibraryThing author link");
+        for (Author author : book.getAuthors()) {
+          url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl();
+          if (Helper.isNotNullOrEmpty(url))
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
+                // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
+                MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl(),
+                    FeedHelper.INSTANCE.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
+                Localization.Main.getText("bookentry.librarything.author", author.getName())));
+        }
+
+        // add the Amazon author link
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the Amazon author link");
+        for (Author author : book.getAuthors()) {
+          url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl();
+          if (Helper.isNotNullOrEmpty(url))
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+                Localization.Main.getText("bookentry.amazon.author", author.getName())));
+        }
+
+        // add the ISFDB author link
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the ISFDB author link");
+        for (Author author : book.getAuthors()) {
+          url = ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl();
+          if (Helper.isNotNullOrEmpty(url))
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+                Localization.Main.getText("bookentry.isfdb.author", author.getName())));
+        }
+      }
+    }
+  }
+
+  private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
+    if (book.hasAuthor()) {
+      for (Author author : book.getAuthors()) {
+        Element authorElement = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(book.getListOfAuthors()))
+            .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + book.getMainAuthor().getId() + ".xml"));
+        entry.addContent(authorElement);
+      }
+    }
+
+    // published element
+    if (logger.isTraceEnabled()) {logger.trace("getBookFullEntry: published element");}
+    Element published = FeedHelper.INSTANCE.getPublishedTag(book.getPublicationDate());
+    entry.addContent(published);
+
+    // dublin core - language
+    for (Language language : book.getBookLanguages()) {
+      Element dcLang = FeedHelper.INSTANCE.getDublinCoreLanguageElement(language.getIso2());
+      entry.addContent(dcLang);
+    }
+
+    // dublin core - publisher
+    Publisher publisher = book.getPublisher();
+    if (Helper.isNotNullOrEmpty(publisher)) {
+      Element dcPublisher = FeedHelper.INSTANCE.getDublinCorePublisherElement(publisher.getName());
+      entry.addContent(dcPublisher);
+    }
+
+    // categories
+    if (Helper.isNotNullOrEmpty(book.getTags())) {
+      // tags
+      for (Tag tag : book.getTags()) {
+        Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(tag.getName());
+        entry.addContent(categoryElement);
+      }
+      // series
+      if (Helper.isNotNullOrEmpty(book.getSeries())) {
+        Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(book.getSeries().getName());
+        entry.addContent(categoryElement);
+      }
+    }
+
+    // book description
+    if (isFullEntry) {
+      // content element
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: content element");
+      Element content = JDOM.INSTANCE.element("content").setAttribute("type", "text/html");
+      boolean hasContent = false;
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: computing comments");
+      if (Helper.isNotNullOrEmpty(book.getSeries())) {
+        String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
+        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series") + " ")).addContent(data)
+            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+        hasContent = true;
+      }
+      List<Element> comments = JDOM.INSTANCE.convertBookCommentToXhtml(book.getComment());
+      if (Helper.isNotNullOrEmpty(comments)) {
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: got comments");
+        content.addContent(JDOM.INSTANCE.newParagraph().addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.summary"))));
+        for (Element p : comments) {
+          content.addContent(p.detach());
+        }
+        hasContent = true;
+      }
+      if (hasContent) {
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: had content");
+        entry.addContent(content);
+      }
+    } else {
+      // summary element (the shortened book comment)
+      if (logger.isTraceEnabled())
+        logger.trace("getBookEntry: getting short comment");
+      String summary = book.getShortComment(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSummaryLength());
+      if (Helper.isNotNullOrEmpty(summary)) {
+        Element summaryElement = JDOM.INSTANCE.element("summary").addContent(summary);
+        entry.addContent(summaryElement);
+      }
+    }
+
+    // acquisition links
+    addAcquisitionLinks(book, entry);
+
+    // cover and thumbnail links
+    addCoverLink(book, entry);
+
+    if (isFullEntry) {
+      // navigation links
+      addNavigationLinks(entry, book);
+
+      // external links
+      addExternalLinks(entry, book);
+    }
+  }
+
+  /**
+   * @param pBreadcrumbs
+   * @param book
+   * @param options
+   * @return
+   * @throws IOException
+   */
+  private Element getBookEntry(Breadcrumbs pBreadcrumbs, Book book, Option... options) throws IOException {
+    if (logger.isDebugEnabled())
+      logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
+
+    CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
+    if (!isInDeepLevel() && isBookTheStepUnit())
+      CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
+
+    String filename = "book_" + book.getId() + ".xml";
+    if (logger.isDebugEnabled())
+      logger.debug("getBookEntry:" + book);
+    if (logger.isTraceEnabled()) {
+      logger.trace("getBookEntry:" + pBreadcrumbs.toString());
+      logger.trace("getBookEntry: generating " + filename);
+    }
+
+    // construct the contextual title (including the date, or the series, or the rating)
+    String title;
+    if (Option.contains(options, Option.INCLUDE_SERIE_NUMBER))
+      if (book.getSerieIndex() != 0) {
+        title = book.getTitleWithSerieNumber();
+      } else {
+        title = book.getTitle();
+      }
+    else if (Option.contains(options, Option.INCLUDE_TIMESTAMP))
+      title = book.getTitleWithTimestamp();
+    else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles())
+      title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
+    else
+      title = book.getTitle();
+
+    String urn = "calibre:book:" + book.getId();
+    filename = SecureFileManager.INSTANCE.encode(filename);
+
+    if (logger.isTraceEnabled())
+      logger.trace("getBookEntry: checking book in the Catalog manager");
+    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
+    String trueFilename = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
+    if (getCatalogManager().addBookEntryFile(outputFile)) {
+      if (logger.isTraceEnabled())
+        logger.trace("getBookEntry: book was not yet done");
+
+      // generate the book full entry
+      FileOutputStream fos = null;
+      Document document = new Document();
+      try {
+        fos = new FileOutputStream(outputFile);
+        Element entry = getBookFullEntry(book);
+
+        // write the element to the file
+        document.addContent(entry);
+        JDOM.INSTANCE.getOutputter().output(document, fos);
+
+      } catch (Exception e) {
+        // Exceptions are not expected, but if one does occur as well
+        // as logging the details, also log the book that caused it
+        logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
+        // Increment the warning count for advising the user to look at the log after the run
+      } finally {
+        if (fos != null)
+          fos.close();
+      }
+
+      // create the same file as html
+      getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
+
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
+        // index the book
+        logger.debug("getBookEntry: indexing book");
+        IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(trueFilename), getThumbnailManager().getImageUri(book));
+      }
+    }
+
+    Element entry = FeedHelper.INSTANCE.getBookEntry(title, urn, book.getLatestFileModifiedDate());
+
+    // add the required data to the book entry
+    decorateBookEntry(entry, book, false);
+
+    // add a full entry link to the partial entry
+    if (logger.isTraceEnabled())
+      logger.trace("add a full entry link to the partial entry");
+    entry.addContent(FeedHelper.INSTANCE.getFullEntryLink(trueFilename));
+
+    return entry;
+  }
+
+  /**
+   * @param book
+   * @return
+   */
+  private Element getBookFullEntry(Book book) {
+    if (logger.isDebugEnabled())
+      logger.debug("getBookFullEntry: " + book);
+    Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
+
+    String sTitle = book.getTitle();
+    Element title = JDOM.INSTANCE.element("title").addContent(sTitle);
+    entry.addContent(title);
+
+    Element id = JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid());
+    entry.addContent(id);
+
+    // updated element
+    if (logger.isTraceEnabled())
+      logger.trace("getBookFullEntry: updated element");
+    Element updated = FeedHelper.INSTANCE.getUpdatedTag(book.getLatestFileModifiedDate());
+    entry.addContent(updated);
+
+    // add the required data to the book entry
+    decorateBookEntry(entry, book, true);
+
+    return entry;
+  }
+
 }
