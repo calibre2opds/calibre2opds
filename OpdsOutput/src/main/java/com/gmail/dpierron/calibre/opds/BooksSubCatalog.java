@@ -317,7 +317,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     try {
       if (logger.isTraceEnabled())
-        logger.trace("getListOfBooks:: fos=" + outputFile);
+        logger.trace("getListOfBooks: fos=" + outputFile);
       fos = new FileOutputStream(outputFile);
 
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
@@ -696,6 +696,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
     boolean hasContent = false;
     if (logger.isTraceEnabled())
       logger.trace("getBookFullEntry: computing comments");
+    if (Helper.isNotNullOrEmpty(series)) {
+      String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), series.getName());
+      content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series") + " ")).addContent(data)
+          .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+      hasContent = true;
+    }
     List<Element> comments = JDOM.INSTANCE.convertBookCommentToXhtml(book.getComment());
     if (Helper.isNotNullOrEmpty(comments)) {
       if (logger.isTraceEnabled())
@@ -704,12 +710,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
       for (Element p : comments) {
         content.addContent(p.detach());
       }
-      hasContent = true;
-    }
-    if (Helper.isNotNullOrEmpty(series)) {
-      String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), series.getName());
-      content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series"))).addContent(data)
-          .addContent(JDOM.INSTANCE.element("br"));
       hasContent = true;
     }
     if (hasContent) {
