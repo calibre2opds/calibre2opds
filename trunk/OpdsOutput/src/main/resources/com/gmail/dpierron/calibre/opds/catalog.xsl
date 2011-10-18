@@ -171,10 +171,10 @@
                                                         </em>
                                                     </small>
                                                 </xsl:if>
-                                                <xsl:if test="string-length(opds:content) > 1">
+                                                <xsl:if test="string-length(opds:summary) > 1">
                                                     <br/>
                                                     <small>
-                                                        <xsl:value-of select="opds:content"/>
+                                                        <xsl:value-of select="opds:summary"/>
                                                     </small>
                                                 </xsl:if>
                                             </div>
