@@ -160,53 +160,50 @@ public enum CachedFileManager {
     ObjectOutputStream os = null;
     FileOutputStream fs = null;
     try {
-      logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
-      fs = new FileOutputStream(cacheFile);
-      os = new ObjectOutputStream(fs);
+      try {
+        logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
+        fs = new FileOutputStream(cacheFile);
+        os = new ObjectOutputStream(fs);
 
-      // Write out the cache entries
-      for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
-        CachedFile cf = m.getValue();
-        String key = m.getKey();
+        // Write out the cache entries
+        for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
+          CachedFile cf = m.getValue();
+          String key = m.getKey();
 
-        // We are only interested in caching entries for which the CRC is known
-        // as this is the expensive operation we do not want to do unnecessarily
-        if (!cf.isCrc()) {
-          if (logger.isTraceEnabled())
-            logger.trace("CRC not known.  Not saving CachedFile " + key);
-          ignoredCount++;
-        } else {
-          // We only want to cache items that have actually been used this time
-          // around, so ignore entries that indicate cached values not used.
-          if (cf.isCached()) {
+          // We are only interested in caching entries for which the CRC is known
+          // as this is the expensive operation we do not want to do unnecessarily
+          if (!cf.isCrc()) {
             if (logger.isTraceEnabled())
-              logger.trace("Not used.  Not saving CachedFile " + key);
+              logger.trace("CRC not known.  Not saving CachedFile " + key);
             ignoredCount++;
           } else {
-            // No point in caching entries for non-existent files
-            if (!cf.exists()) {
+            // We only want to cache items that have actually been used this time
+            // around, so ignore entries that indicate cached values not used.
+            if (cf.isCached()) {
               if (logger.isTraceEnabled())
-                logger.trace("Not exists.  Not saving CachedFile " + key);
+                logger.trace("Not used.  Not saving CachedFile " + key);
               ignoredCount++;
             } else {
-              os.writeObject(cf);
-              if (logger.isTraceEnabled())
-                logger.trace("Saved " + key);
-              savedCount++;
+              // No point in caching entries for non-existent files
+              if (!cf.exists()) {
+                if (logger.isTraceEnabled())
+                  logger.trace("Not exists.  Not saving CachedFile " + key);
+                ignoredCount++;
+              } else {
+                os.writeObject(cf);
+                if (logger.isTraceEnabled())
+                  logger.trace("Saved " + key);
+                savedCount++;
+              }
             }
           }
         }
+      } finally {
+        os.close();
+        fs.close();
       }
-    } catch (Exception e) {
+    } catch (IOException e) {
       logger.warn("Exception trying to write cache: " + e);
-    }
-
-    // Close cache file
-    try {
-      os.close();
-      fs.close();
-    } catch (Exception e) {
-      // Do nothing
     }
 
     logger.debug("Cache Entries Saved:   " + savedCount);
@@ -241,7 +238,7 @@ public enum CachedFileManager {
       logger.info("STARTED Loading CRC cache from file " + cacheFile.getPath());
       fs = new FileInputStream(cacheFile);
       os = new ObjectInputStream(fs);
-    } catch (Exception e) {
+    } catch (IOException e) {
       logger.warn("Aborting loadCache() as cache file failed to open");
       // Abort any cache loading
       return;
@@ -249,28 +246,34 @@ public enum CachedFileManager {
 
     // Read in entries from cache
     try {
-      for (; ; ) {
-        CachedFile cf;
-        cf = (CachedFile) os.readObject();
+      try {
+        for (; ; ) {
+          CachedFile cf;
+          cf = (CachedFile) os.readObject();
 
-        String path = cf.getPath();
-        if (logger.isTraceEnabled())
-          logger.trace("Loaded cached object " + path);
-        loadedCount++;
-        CachedFile cf2 = inCache(cf);
-        if (cf2 == null) {
-          // Not in cache, so simply add it and
-          // set indicator that values not yet checked
-          cf.setCached();
-          addCachedFile(cf);
+          String path = cf.getPath();
           if (logger.isTraceEnabled())
-            logger.trace("added entry to cache");
-        } else {
-          // Already in cache (can this happen?), so we
-          // need to determine what values (if any) can
-          // be set in the entry already there.
-          logger.debug("Entry already in cache - ignore cached entry for now");
+            logger.trace("Loaded cached object " + path);
+          loadedCount++;
+          CachedFile cf2 = inCache(cf);
+          if (cf2 == null) {
+            // Not in cache, so simply add it and
+            // set indicator that values not yet checked
+            cf.setCached();
+            addCachedFile(cf);
+            if (logger.isTraceEnabled())
+              logger.trace("added entry to cache");
+          } else {
+            // Already in cache (can this happen?), so we
+            // need to determine what values (if any) can
+            // be set in the entry already there.
+            logger.debug("Entry already in cache - ignore cached entry for now");
+          }
         }
+      } finally {
+        // Close cache file
+        os.close();
+        fs.close();
       }
     } catch (java.io.EOFException io) {
       logger.trace("End of Cache file encountered");
@@ -278,17 +281,11 @@ public enum CachedFileManager {
     } catch (java.io.InvalidClassException ic) {
       logger.debug("Cache ignored as CachedFile class changed since it was created");
       // Should just mean that CachedFile class was changed so old cache invalid
-    } catch (Exception e) {
+    } catch (ClassNotFoundException cnfe) {
+      logger.error("", cnfe);
+    } catch (IOException e) {
       // This is to catch any currently unexpected error cnditions
       logger.warn("Exception trying to read cache: " + e);
-    }
-
-    // Close cache file
-    try {
-      os.close();
-      fs.close();
-    } catch (Exception e) {
-      // Do nothing
     }
 
     logger.info("Cache Entries Loaded: " + loadedCount);

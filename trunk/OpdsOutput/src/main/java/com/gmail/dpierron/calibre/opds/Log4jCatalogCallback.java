@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Log4jCatalogCallback implements CatalogCallbackInterface {
@@ -19,6 +20,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   private final static String no = Localization.Main.getText("boolean.no");
   // step progress indicator
   ProgressIndicator progressStep = new ProgressIndicator().setIndicator('*');
+  protected boolean continueGenerating = true;
 
   /**
    * Dump the value for the given option to the log file
@@ -62,8 +64,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
         }
         String optionName = getterName.substring(3);
         dumpOption(optionName, result);
-      } catch (Exception e) {
-        logger.warn(e);
+      } catch (IllegalAccessException e) {
+        logger.warn("", e);
+      } catch (InvocationTargetException e) {
+        logger.warn("", e);
       }
     }
     logger.info("");
@@ -200,6 +204,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   }
 
   public void incStepProgressIndicatorPosition() {
+    checkIfContinueGenerating();
     progressStep.incPosition();
   }
 
@@ -232,7 +237,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
       // do nothing
     }
     if (nAnswer > 0) {
-      String logMessage = message + " (answered " + possibleAnswers[nAnswer-1] + ")";
+      String logMessage = message + " (answered " + possibleAnswers[nAnswer - 1] + ")";
       logger.info(logMessage);
     }
     return nAnswer - 1;
@@ -240,5 +245,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
 
   public void showMessage(String message) {
     progressStep.actOnMessage(message);
+  }
+
+  public void checkIfContinueGenerating() throws GenerationStoppedException {
+    if (!continueGenerating)
+      throw new GenerationStoppedException();
   }
 }

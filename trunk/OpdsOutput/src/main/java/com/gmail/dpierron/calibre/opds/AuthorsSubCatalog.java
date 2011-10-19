@@ -209,9 +209,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       // write the element to the file
       document.addContent(feed);
       JDOM.INSTANCE.getOutputter().output(document, fos);
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       if (logger.isTraceEnabled())
         logger.trace("Exception generating: " + outputFile.getName() + "\n" + e);
+      throw e;
       // ITIMPI:  Should we log something when NOT in trace mode?
     } finally {
       if (fos != null)

@@ -317,8 +317,7 @@ public enum JDOM {
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (Exception ee) {
-        if (logger.isTraceEnabled())
-          logger.trace("caught exception in the tidy process", ee);
+        logger.warn("caught exception in the tidy process", ee);
       }
 
       if (result != null) {

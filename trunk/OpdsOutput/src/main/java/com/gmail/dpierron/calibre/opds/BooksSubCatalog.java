@@ -352,8 +352,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
                 result.add(entry);
                 TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
               }
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
               logger.error("getListOfBooks: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
+              throw e;
             }
           }
         }
@@ -1005,10 +1006,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
         document.addContent(entry);
         JDOM.INSTANCE.getOutputter().output(document, fos);
 
-      } catch (Exception e) {
+      } catch (RuntimeException e) {
         // Exceptions are not expected, but if one does occur as well
         // as logging the details, also log the book that caused it
         logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
+        throw e;
         // Increment the warning count for advising the user to look at the log after the run
       } finally {
         if (fos != null)

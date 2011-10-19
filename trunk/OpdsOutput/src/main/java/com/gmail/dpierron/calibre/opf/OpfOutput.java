@@ -5,10 +5,7 @@ import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom.*;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -190,7 +187,7 @@ public class OpfOutput {
     try {
       processEPubFile(outputFile);
       Helper.copy(outputFile, book.getEpubFile().getFile());
-    } catch (Exception e) {
+    } catch (IOException e) {
       logger.error(e);
       logger.error("... for book: " + book.getTitle() + " (file " + book.getEpubFile().getFile() + ")");
     } finally {
@@ -235,7 +232,7 @@ public class OpfOutput {
                 } finally {
                   zos.closeEntry();
                 }
-              } catch (Exception e) {
+              } catch (IOException e) {
                 logger.error(e);
                 logger.error("... for book: " + book.getTitle() + " (file " + inputFile + ")");
               }
@@ -290,7 +287,7 @@ public class OpfOutput {
                         if (in2 != null)
                           in2.close();
                       }
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                       logger.error(e);
                       logger.error("... for book: " + book.getTitle() + " (cannot copy the default stylesheet)");
                     }
@@ -321,7 +318,7 @@ public class OpfOutput {
                       in.close();
                   }
                 }
-              } catch (Exception e) {
+              } catch (IOException e) {
                 logger.error(e);
                 logger.error("... for book: " + book.getTitle() + " (file " + inputFile + ")");
               }
@@ -336,8 +333,9 @@ public class OpfOutput {
           zipInputFile.close();
 
       }
-    } catch (Exception e) {
-      logger.error(e);
+    } catch (JDOMException e) {
+      logger.error("", e);
+      throw new IOException(e);
     }
   }
 }

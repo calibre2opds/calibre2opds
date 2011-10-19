@@ -185,7 +185,7 @@ public enum Summarizer {
           }
         }
         return new Composite<Integer, String>(howMuch, lines.toString());
-      } catch (Exception e) {
+      } catch (RuntimeException e) {
         return badResult;
       }
     }

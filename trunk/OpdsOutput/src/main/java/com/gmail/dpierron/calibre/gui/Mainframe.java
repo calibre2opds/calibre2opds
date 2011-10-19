@@ -44,7 +44,13 @@ public class Mainframe extends javax.swing.JFrame {
   public Mainframe() {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
+    } catch (ClassNotFoundException e) {
+      // do nothing
+    } catch (InstantiationException e) {
+      // do nothing
+    } catch (IllegalAccessException e) {
+      // do nothing
+    } catch (UnsupportedLookAndFeelException e) {
       // do nothing
     }
     if (ConfigurationManager.INSTANCE.getCurrentProfile().isObsolete()) {
@@ -266,11 +272,6 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void generateCatalog() {
-
-    String message = Localization.Main.getText("gui.confirm.generate");
-    int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION)
-      return;
 
     storeValues();
 
@@ -1253,7 +1254,7 @@ public class Mainframe extends javax.swing.JFrame {
     System.exit(0);
   }
 
-  private void cancelDialog() {
+  private void exitProgram() {
     System.exit(0);
   }
 
@@ -3770,7 +3771,7 @@ public class Mainframe extends javax.swing.JFrame {
   }// GEN-LAST:event_mnuFileSaveActionPerformed
 
   private void mnuFileExitActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuFileExitActionPerformed
-    cancelDialog();
+    exitProgram();
   }// GEN-LAST:event_mnuFileExitActionPerformed
 
   private void mnuFileGenerateCatalogsActionPerformed(java.awt.event.ActionEvent evt) {//
@@ -3803,7 +3804,7 @@ public class Mainframe extends javax.swing.JFrame {
   }// GEN-LAST:event_cmdSaveActionPerformed
 
   private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdCancelActionPerformed
-    cancelDialog();
+    exitProgram();
   }// GEN-LAST:event_cmdCancelActionPerformed
 
   private void cmdSetDatabaseFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetDatabaseFolderActionPerformed

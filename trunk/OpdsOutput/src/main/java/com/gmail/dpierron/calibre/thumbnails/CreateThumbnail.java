@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class CreateThumbnail {
   private final static Logger logger = Logger.getLogger(CreateThumbnail.class);
@@ -69,7 +70,7 @@ public class CreateThumbnail {
         boolean error = false;
         try {
           ImageIO.write(bi, imageType, file);
-        } catch (Exception e) {
+        } catch (IOException e) {
           logger.warn("error occured while writing image " + file.getName() + " - trying again (" + (nbTries) + " remaining)", e);
           if (exception == null)
             exception = e;
