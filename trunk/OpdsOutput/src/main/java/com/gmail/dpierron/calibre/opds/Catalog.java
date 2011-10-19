@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -424,6 +423,9 @@ public class Catalog {
     long countThumbnails;   // Count of thumbnail files that are generated/updated
     long countCovers;       // Count of image files that are generated/updated
 
+    String textYES = Localization.Main.getText("boolean.yes");
+    String textNO = Localization.Main.getText("boolean.no");
+
     // reinitialize caches (in case of multiple calls in the same session)
     CachedFileManager.INSTANCE.initialize();
     CatalogContext.INSTANCE.initialize();
@@ -436,7 +438,7 @@ public class Catalog {
     // Make sure that at least one of OPDS and HTML catalog types is activated
     if ((!currentProfile.getGenerateOpds()) && (!currentProfile.getGenerateHtml())) {
       logger.warn(Localization.Main.getText("error.nogeneratetype"));
-      JOptionPane.showMessageDialog(null, Localization.Main.getText("error.nogeneratetype"), "error", JOptionPane.ERROR_MESSAGE);
+      callback.errorOccured(Localization.Main.getText("error.nogeneratetype"), null);
       return;
     }
 
@@ -445,7 +447,7 @@ public class Catalog {
     String catalogFolderName = currentProfile.getCatalogFolderName();
     if (catalogFolderName.length() == 0) {
       logger.warn(Localization.Main.getText("error.nocatalog"));
-      JOptionPane.showMessageDialog(null, Localization.Main.getText("error.nocatalog"), null, JOptionPane.ERROR_MESSAGE);
+      callback.errorOccured(Localization.Main.getText("error.nocatalog"), null);
       return;
     }
     // Check that folder specified as library folder actually contains a calibre database
@@ -461,27 +463,25 @@ public class Catalog {
       // Check that target folder (if set) is not set to be the same as the library folder
       if (calibreLibraryFolder.getAbsolutePath().equals(calibreTargetFolder.getAbsolutePath())) {
         logger.warn(Localization.Main.getText("error.targetsame"));
-        JOptionPane.showMessageDialog(null, Localization.Main.getText("error.targetsame"), "error", JOptionPane.ERROR_MESSAGE);
+        callback.errorOccured(Localization.Main.getText("error.targetsame"), null);
         return;
       }
       // Check that target folder (if set) is not set to be a higher level than the library folder
       // (which would have unfortunate consequences when deleting during sync operation)
       if (calibreLibraryFolder.getAbsolutePath().startsWith(calibreTargetFolder.getAbsolutePath())) {
         logger.warn(Localization.Main.getText("error.targetparent"));
-        JOptionPane.showMessageDialog(null, Localization.Main.getText("error.targetparent"), "error", JOptionPane.ERROR_MESSAGE);
+        callback.errorOccured(Localization.Main.getText("error.targetparent"), null);
         return;
       }
       // If not already a catalog at target, give overwrite warning
       if (!checkCatalogExistence(calibreTargetFolder, false)) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreTargetFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane
-            .showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", calibreTargetFolder), "WARNING", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE)) {
+        int n = callback.askUser(Localization.Main.getText("gui.confirm.clear", calibreTargetFolder), textYES, textNO);
+        if (1 == n) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + calibreTargetFolder);
           return;
         }
-
       }
     }
     logger.trace("calibreTargetFolder set to " + calibreTargetFolder);
@@ -492,9 +492,8 @@ public class Catalog {
     if (catalogParentFolder == null || catalogParentFolder.getName().length() == 0) {
       if (!checkCatalogExistence(calibreLibraryFolder, true)) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null,
-            Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder + File.separator + currentProfile.getCatalogFolderName()), "WARNING",
-            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+        int n = callback.askUser(Localization.Main.getText("gui.confirm.clear", calibreLibraryFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
+        if (1 == n) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + calibreLibraryFolder);
           return;
@@ -513,9 +512,8 @@ public class Catalog {
       File targetFolder = currentProfile.getDatabaseFolder();
       if ((DeviceMode.Dropbox != currentProfile.getDeviceMode()) && (!checkCatalogExistence(targetFolder, true))) {
         logger.warn(Localization.Main.getText("gui.confirm.clear", targetFolder));
-        if (JOptionPane.NO_OPTION == JOptionPane
-            .showConfirmDialog(null, Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()),
-                "WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+        int n = callback.askUser(Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
+        if (1 == n) {
           if (logger.isTraceEnabled())
             logger.trace("User declined to overwrite folder " + targetFolder);
           return;
@@ -563,15 +561,49 @@ public class Catalog {
     now = System.currentTimeMillis();
 
     DataModel.INSTANCE.reset();
+    DataModel.INSTANCE.preloadDataModel();
+
+    // first, prepare the search queries
+    BookFilter filter = null;
+    String customCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
+    if (Helper.isNotNullOrEmpty(customCatalogSearch)) {
+      String calibreQuery = customCatalogSearch;
+      if (customCatalogSearch.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
+        customCatalogSearch = customCatalogSearch.substring(6);
+        calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(customCatalogSearch);
+        if (Helper.isNullOrEmpty(calibreQuery))
+          calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(customCatalogSearch.toUpperCase());
+      }
+      if (Helper.isNotNullOrEmpty(calibreQuery)) {
+        CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
+        try {
+          filter = interpreter.interpret();
+        } catch (CalibreQueryInterpreter.InterpretException e) {
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret",calibreQuery), e);
+        }
+      } else {
+        callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch",customCatalogSearch), null);
+      }
+      if (filter == null) {
+        // an error occured, let's ask the user if he wants to abort
+        int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
+        if (n == 1) {
+          callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+          return;
+        }
+      }
+    }
+
+
+    // filter the datamodel
     RemoveFilteredOutBooks.INSTANCE.runOnDataModel();
 
     List<Book> books = DataModel.INSTANCE.getListOfBooks();
     if (Helper.isNullOrEmpty(books)) {
-      JOptionPane.showMessageDialog(null, Localization.Main.getText("error.nobooks"), "error", JOptionPane.ERROR_MESSAGE);
+      callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
       logger.info(Localization.Main.getText("error.nobooks"));
       return;
     }
-    DataModel.INSTANCE.preloadDataModel();
 
     callback.endReadDatabase(System.currentTimeMillis() - now);
 
@@ -674,35 +706,18 @@ public class Catalog {
 
     /* Featured catalog */
     now = System.currentTimeMillis();
-    String savedSearchName = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
-    if (Helper.isNotNullOrEmpty(savedSearchName)) {
+    if (filter != null) {
       logger.debug("STARTED: Generating Featured books catalog");
-      String calibreQuery = savedSearchName;
-      if (savedSearchName.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
-        savedSearchName = savedSearchName.substring(6);
-        calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName);
-        if (Helper.isNullOrEmpty(calibreQuery))
-          calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(savedSearchName.toUpperCase());
-      }
-      if (Helper.isNotNullOrEmpty(calibreQuery)) {
-        CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
-        try {
-          BookFilter filter = interpreter.interpret();
-          List<Book> featuredBooks = FilterHelper.filter(filter, books);
-          callback.startCreateFeaturedBooks(featuredBooks.size());
-          Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
-          if (featuredCatalog != null) {
-            //main.addContent(featuredCatalog.getFirstElement());
-            // add a "featured" link - 6 places the link right wher we want it...
-            main.addContent(6, FeedHelper.INSTANCE
-                .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle()));
-            // add the actual catalog
-            main.addContent(featuredCatalog.getFirstElement());
-          }
-          logger.debug("COMPLETED: Generating Featured books catalog");
-        } catch (CalibreQueryInterpreter.InterpretException e) {
-          callback.errorOccured("Error occured while interpreting the featured books saved search", e);
-        }
+      List<Book> featuredBooks = FilterHelper.filter(filter, books);
+      callback.startCreateFeaturedBooks(featuredBooks.size());
+      Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
+      if (featuredCatalog != null) {
+        // add a "featured" link - 6 places the link right wher we want it...
+        main.addContent(6,
+            FeedHelper.INSTANCE.getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle()
+            ));
+        // add the actual catalog
+        main.addContent(featuredCatalog.getFirstElement());
       }
     }
     callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
