@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -116,13 +117,19 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       String setterName = "set" + getterName.substring(3);
-      try {
+      //try {
         Class returnType = getter.getReturnType();
-        Method setter = this.getClass().getMethod(setterName, returnType);
+      Method setter = null;
+      try {
+        setter = this.getClass().getMethod(setterName, returnType);
         Object result = getter.invoke(defaults);
         setter.invoke(this, result);
-      } catch (Exception e) {
-        logger.warn(e);
+      } catch (NoSuchMethodException e) {
+        logger.warn("", e);
+      } catch (InvocationTargetException e) {
+        logger.warn("", e);
+      } catch (IllegalAccessException e) {
+        logger.warn("", e);
       }
     }
     setDeviceMode(getDeviceMode());

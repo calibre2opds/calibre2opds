@@ -58,9 +58,8 @@ public abstract class ImageManager {
           if (ois != null)
             ois.close();
         }
-      } catch (Exception e) {
-        // ITIMPI:  Why is this commented out?  Seems it should ne logged to me
-        // logger.warn("cannot read the file " + imageSizeFile.getAbsolutePath());
+      } catch (IOException e) {
+        // we don't care about the file error, let's just say size has changed
         imageSizeChanged = true;
       }
     }
@@ -92,9 +91,8 @@ public abstract class ImageManager {
         if (oos != null)
           oos.close();
       }
-    } catch (Exception e) {
-      // ITIMPI:   Why is this commented out - seems it should not be to me?
-      // logger.warn("cannot write the file " + imageSizeFile.getAbsolutePath());
+    } catch (IOException e) {
+      // we don't care if the image height file cannot be written, image will be recomputed and that's all
     }
   }
 

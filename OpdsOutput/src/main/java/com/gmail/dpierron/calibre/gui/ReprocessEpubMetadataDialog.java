@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author David
@@ -80,7 +81,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
       OpfOutput opfOutput = new OpfOutput(book, removeCss, defaultStyleSheet);
       try {
         opfOutput.processEPubFile();
-      } catch (Exception e) {
+      } catch (IOException e) {
         logger.error(e);
         String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getTitle(), e.getMessage());
         JOptionPane.showMessageDialog(this, message);

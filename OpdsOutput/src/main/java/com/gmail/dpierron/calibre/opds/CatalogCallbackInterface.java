@@ -89,9 +89,15 @@ public interface CatalogCallbackInterface {
 
   /**
    * ask the user a question
-   * @param message the question
+   *
+   * @param message         the question
    * @param possibleAnswers the possible answers (3 max)
    * @return the number of the choosen answer, -1 if error or cancel
    */
   public int askUser(String message, String... possibleAnswers);
+
+  /**
+   * @throws GenerationStoppedException if the user has specified that he wants to stop the generation
+   */
+  public void checkIfContinueGenerating() throws GenerationStoppedException;
 }
