@@ -1710,6 +1710,7 @@ public class StanzaConstants {
   public final static boolean CRYPT_FILENAMES = false;
   public final static boolean SHOWSERIESINAUTHORCATALOG = true;
   public final static int MAX_SUMMARY_LENGTH = 30;
+  public final static int MAX_BOOK_SUMMARY_LENGTH = 250;
   public final static String tagsToGenerate = "";
   public final static String tagsToExclude = "";
   public final static boolean generateExternalLinks = true;

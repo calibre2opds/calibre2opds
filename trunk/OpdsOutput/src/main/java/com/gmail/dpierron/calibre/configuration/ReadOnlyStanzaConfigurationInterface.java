@@ -66,6 +66,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public int getMaxSummaryLength();
 
+  public int getMaxBookSummaryLength();
+
   public boolean getGenerateTags();
 
   public boolean getGenerateRecent();

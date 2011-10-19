@@ -129,6 +129,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.MAX_SUMMARY_LENGTH;
   }
 
+  public int getMaxBookSummaryLength() {
+    return StanzaConstants.MAX_BOOK_SUMMARY_LENGTH;
+  }
+
   public boolean getGenerateTags() {
     return StanzaConstants.generateTags;
   }

@@ -47,6 +47,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
+  private final static String PROPERTY_NAME_MAXBOOKSUMMARYLENGTH = "MaxBookSummaryLength";
   private final static String PROPERTY_NAME_GENERATETAGS = "GenerateTags";
   private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
@@ -694,6 +695,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setMaxSummaryLength(int value) {
     setProperty(PROPERTY_NAME_MAXSUMMARYLENGTH, value);
   }
+
+  public void setMaxBookSummaryLength(int value) {
+    setProperty(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH, value);
+  }
+
+    public boolean isMaxBookSummaryLengthReadOnly() {
+      return isPropertyReadOnly(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
+    }
+
+    public int getMaxBookSummaryLength() {
+      Integer i = getInteger(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
+      if (i == null)
+        return defaults.getMaxBookSummaryLength();
+      else
+        return i.intValue();
+    }
 
   public boolean isGenerateTagsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATETAGS);
