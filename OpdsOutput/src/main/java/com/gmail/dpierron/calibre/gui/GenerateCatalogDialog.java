@@ -324,11 +324,13 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     progressStep.reset();
     chkFinished.setSelected(true);
     setTimeNow(lblFinishedTime);
-    String message = Localization.Main.getText("info.step.done", where);
-    logger.info(message);
-    int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-    if (result == JOptionPane.YES_OPTION)
-      System.exit(0);
+    if (where != null) {
+      String message = Localization.Main.getText("info.step.done", where);
+      logger.info(message);
+      int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+      if (result == JOptionPane.YES_OPTION)
+        System.exit(0);
+    }
   }
 
   public void incStepProgressIndicatorPosition() {
@@ -353,6 +355,16 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     }
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
     logger.error(message, error);
+  }
+
+  public int askUser(String message, String... possibleAnswers) {
+    int nAnswer = JOptionPane
+        .showOptionDialog(this, message, message, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleAnswers, possibleAnswers[0]);
+    if (nAnswer > -1) {
+      String logMessage = message + " (answered " + possibleAnswers[nAnswer] + ")";
+      logger.info(logMessage);
+    }
+    return nAnswer;
   }
 
   /**

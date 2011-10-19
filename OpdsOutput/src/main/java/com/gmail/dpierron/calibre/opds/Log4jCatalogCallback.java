@@ -7,6 +7,9 @@ import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 
 public class Log4jCatalogCallback implements CatalogCallbackInterface {
@@ -210,6 +213,29 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
 
   public void errorOccured(String message, Throwable error) {
     logger.error(message, error);
+  }
+
+  public int askUser(String message, String... possibleAnswers) {
+    System.out.println(message);
+    int num = 1;
+    for (String possibleAnswer : possibleAnswers) {
+      String s = "" + num++ + ". " + possibleAnswer;
+      System.out.println(s);
+    }
+    InputStreamReader converter = new InputStreamReader(System.in);
+    BufferedReader in = new BufferedReader(converter);
+    int nAnswer = 0;
+    try {
+      String answer = in.readLine();
+      nAnswer = Integer.parseInt(answer);
+    } catch (IOException e) {
+      // do nothing
+    }
+    if (nAnswer > 0) {
+      String logMessage = message + " (answered " + possibleAnswers[nAnswer-1] + ")";
+      logger.info(logMessage);
+    }
+    return nAnswer - 1;
   }
 
   public void showMessage(String message) {

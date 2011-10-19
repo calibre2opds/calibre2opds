@@ -86,4 +86,12 @@ public interface CatalogCallbackInterface {
 
   // Error
   public void errorOccured(String message, Throwable error);
+
+  /**
+   * ask the user a question
+   * @param message the question
+   * @param possibleAnswers the possible answers (3 max)
+   * @return the number of the choosen answer, -1 if error or cancel
+   */
+  public int askUser(String message, String... possibleAnswers);
 }
