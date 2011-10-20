@@ -5,7 +5,9 @@ import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
+import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public enum DataModel {
   INSTANCE;
@@ -197,7 +199,8 @@ public enum DataModel {
   }
 
   void addTag(Tag tag) {
-    if (getListOfTags().contains(tag)) return;
+    if (getListOfTags().contains(tag))
+      return;
     getListOfTags().add(tag);
     getMapOfTags().put(tag.getId(), tag);
   }
@@ -405,8 +408,7 @@ public enum DataModel {
     return splitByDate;
   }
 
-  private static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
-    final String LETTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
 
     // split by letter
     Map<String, List<T>> splitByLetter = new HashMap<String, List<T>>();
@@ -416,18 +418,33 @@ public enum DataModel {
         continue;
       String firstLetter = "";
       String string = object.getTitleToSplitByLetter();
-      if (string == null)
-        string = "";
-      else
-        firstLetter = string.substring(0, 1).toUpperCase(Locale.ENGLISH); // we don't want accented chars
-      if (!LETTERS.contains(firstLetter))
-        firstLetter = "_";
-      List<T> list = splitByLetter.get(firstLetter);
-      if (list == null) {
-        list = new LinkedList<T>();
-        splitByLetter.put(firstLetter, list);
+      if (Helper.isNotNullOrEmpty(string)) {
+        // remove any diacritic mark
+        String temp = Normalizer.normalize(string, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String norm = pattern.matcher(temp).replaceAll("");
+        string = norm;
+
+        if (Helper.isNotNullOrEmpty(string)) {
+          // take the first letter and uppercase it
+          firstLetter = string.substring(0, 1).toUpperCase();
+
+          // if not a letter or a digit, use a '_' character
+          if (!Character.isLetterOrDigit(firstLetter.codePointAt(0)))
+            firstLetter = "_";
+
+          // find the already existing list (of items split by this letter)
+          List<T> list = splitByLetter.get(firstLetter);
+          if (list == null) {
+            // no list yet, create one
+            list = new LinkedList<T>();
+            splitByLetter.put(firstLetter, list);
+          }
+
+          // add the current item to the list
+          list.add(object);
+        }
       }
-      list.add(object);
     }
 
     // sort each list
@@ -468,7 +485,7 @@ public enum DataModel {
                 }
               }
               if (languageTag == null) {
-                languageTag = new Tag(""+(++lastId), languageTagName);
+                languageTag = new Tag("" + (++lastId), languageTagName);
                 addTag(languageTag);
               }
               mapOfLanguageTags.put(languageTagName.toUpperCase(Locale.ENGLISH), languageTag);
@@ -476,7 +493,7 @@ public enum DataModel {
             if (!book.getTags().contains(languageTag))
               book.getTags().add(languageTag);
           } else {
-            logger.error("found a null language for book "+book);
+            logger.error("found a null language for book " + book);
             for (Language language1 : book.getBookLanguages()) {
               logger.error(language1);
             }
