@@ -867,7 +867,7 @@ public class Helper {
 
 
   public static String shorten(String s, int maxSize) {
-    if (isNullOrEmpty(s))
+    if (isNullOrEmpty(s) || maxSize < 2)
       return s;
     if (s.length() > maxSize)
       return s.substring(0, maxSize) + "...";

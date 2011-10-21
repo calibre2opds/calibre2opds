@@ -52,11 +52,15 @@ v3.0 beta 1
     - New: Current profile now displayed on main screen
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
     - New: Support for external icon files instead of embedded binary images
+    - New: A catalog generation run that ahs started can be cancelled
+    = New: Maximum length of books summary can now be specified
+    - Change: Series name/number is now at start of Books summary
     - Fix: #836797 Null pointer exception trying to run calibre2opds in commandline mode.
     - Fix: #840830 Command line not working in Windows
     - Fix: #831976 Accented characters not displaying correctly in comments
     - Fix: #806869 Russian text in comments field not displayed correctly
     - Fix: Missing catalog.xml file in Nook/Trook mode
+    - Fix: Books summaries were not being displayed in book lists in HTML catalogs
 
 v2.5 beta 1   (NOTE:  it has now been decided to label the next release as 3.0 and not 2.5)
     - New: #826209: Allow suppression of resized cover generation - use calibre cover directly

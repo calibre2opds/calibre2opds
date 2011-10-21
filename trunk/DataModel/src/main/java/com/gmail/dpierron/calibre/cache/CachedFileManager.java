@@ -199,8 +199,13 @@ public enum CachedFileManager {
           }
         }
       } finally {
-        os.close();
-        fs.close();
+        try {
+          os.close();
+          fs.close();
+        } catch (IOException e) {
+          // Do nothing - we ignore an error at this point
+          // Having said that, an error here is a bit unexpected
+        }
       }
     } catch (IOException e) {
       logger.warn("Exception trying to write cache: " + e);

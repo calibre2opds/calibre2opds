@@ -26,9 +26,15 @@ Editing the Form
    X-Position
    y-position
 
+-  If it is a label field then set the onMouseClick event to ??? so that you can get the tooltip to be shown
+
+
 Localization
 ~~~~~~~~~~~~
 - All fields to be used in the GUI should have a localization entry in the localization.xls spreadsheet
+- If the field is one for setting a setting then there will normally be two entries set up.  One will end
+  in .label and is the text to be shown in the GUI.   The other will end in .description and is the
+  tooltip text that can also be shown by clicking on the label field.
 - Export button on the spreadsheet should be used to ensure that the language specific .properties files
   are updated with the latest text strings.
 
