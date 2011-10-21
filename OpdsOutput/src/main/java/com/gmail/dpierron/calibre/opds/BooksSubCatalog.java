@@ -20,13 +20,15 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
+import org.jdom.*;
 import org.jdom.Element;
 
+import javax.lang.model.element.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -922,13 +924,36 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     } else {
       // summary element (the shortened book comment)
+      // ITIMPI:  Should this be refactored to calculate this
+        //
       if (logger.isTraceEnabled())
-        logger.trace("getBookEntry: getting short comment");
-      String summary = book.getShortComment(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSummaryLength());
-      if (Helper.isNotNullOrEmpty(summary)) {
-        Element summaryElement = JDOM.INSTANCE.element("summary").addContent(summary);
-        entry.addContent(summaryElement);
+        logger.trace("getBookEntry: short comment");
+      Element summary = JDOM.INSTANCE.element("summary");
+      Boolean hasContent = false;
+      Integer maxLength = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength();
+      // Check for series info to include
+      if (Helper.isNotNullOrEmpty(book.getSeries())) {
+        DecimalFormat df = new DecimalFormat("####.##");
+
+        // String seriesDetails = book.getSeries().getName() + "[" + df.format(book.getSerieIndex())+ ": ";
+        String seriesDetails = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName()) +": ";
+        seriesDetails = Helper.shorten(seriesDetails,maxLength);
+        summary.addContent(JDOM.INSTANCE.element("strong").addContent(seriesDetails)).addContent(JDOM.INSTANCE.element("br"));
+        maxLength -= seriesDetails.length();
+        hasContent = true;
       }
+      // See if still space for comment info
+      if (maxLength > 0) {
+        String noHtml = Helper.removeHtmlElements(book.getComment());
+        // Is there actually any comment info?
+        if (Helper.isNotNullOrEmpty(noHtml)) {
+          summary.addContent(Helper.shorten(noHtml, maxLength));
+          hasContent = true;
+        }
+      }
+      // If we had anything for the summary then it needs to be added to the output.
+      if (hasContent)
+          entry.addContent(summary);
     }
 
     // acquisition links
