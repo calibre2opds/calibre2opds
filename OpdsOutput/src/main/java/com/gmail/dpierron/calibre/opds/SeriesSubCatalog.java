@@ -322,7 +322,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + letter + ".xml";
+      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
 
       String letterUrn = baseUrn + ":" + letter;
@@ -338,7 +338,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate,
+        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter,
             addTheSeriesWordToTheTitle).getFirstElement();
       }
 

@@ -176,7 +176,7 @@ public class TagListSubCatalog extends TagSubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + letter + ".xml";
+      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
 
       String letterUrn = baseUrn + ":" + letter;
@@ -195,7 +195,7 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (tagsInThisLetter.size() > 0) {
         logger.debug("calling getListOfTags for the letter " + letter);
         element =
-            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate).getFirstElement();
+            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter).getFirstElement();
       }
 
       if (element != null)

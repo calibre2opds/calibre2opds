@@ -1760,5 +1760,5 @@ public class StanzaConstants {
   public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
   public final static String UrlBase = null;
   public final static String CustomCatalogTitle = "Featured books";
-  public final static String CustomCatalogSavedSearchName = "Saved:Featured";
+  public final static String CustomCatalogSavedSearchName = "";
 }
