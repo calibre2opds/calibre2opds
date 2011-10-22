@@ -408,51 +408,78 @@ public enum DataModel {
     return splitByDate;
   }
 
+  /**
+   * Split a list of items by the first letter that is different in some (e.g. Mortal, More and Morris will be splitted on t, e and r)
+   * @param objects
+   * @param comparator
+   * @return
+   */
   static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
+    Map<String, List<T>> splitMap = new HashMap<String, List<T>>();
 
-    // split by letter
-    Map<String, List<T>> splitByLetter = new HashMap<String, List<T>>();
-
+    // construct a list of all strings to split
+    Vector<String> stringsToSplit = new Vector<String>(objects.size());
+    String commonPart = null;
     for (T object : objects) {
       if (object == null)
         continue;
-      String firstLetter = "";
       String string = object.getTitleToSplitByLetter();
-      if (Helper.isNotNullOrEmpty(string)) {
-        // remove any diacritic mark
-        String temp = Normalizer.normalize(string, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        String norm = pattern.matcher(temp).replaceAll("");
-        string = norm;
 
-        if (Helper.isNotNullOrEmpty(string)) {
-          // take the first letter and uppercase it
-          firstLetter = string.substring(0, 1).toUpperCase();
+      // remove any diacritic mark
+      String temp = Normalizer.normalize(string, Normalizer.Form.NFD);
+      Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+      String norm = pattern.matcher(temp).replaceAll("");
+      string = norm;
+      stringsToSplit.add(string);
 
-          // if not a letter or a digit, use a '_' character
-          if (!Character.isLetterOrDigit(firstLetter.codePointAt(0)))
-            firstLetter = "_";
-
-          // find the already existing list (of items split by this letter)
-          List<T> list = splitByLetter.get(firstLetter);
-          if (list == null) {
-            // no list yet, create one
-            list = new LinkedList<T>();
-            splitByLetter.put(firstLetter, list);
-          }
-
-          // add the current item to the list
-          list.add(object);
+      // find the common part
+      if (commonPart == null) {
+        commonPart = string.toUpperCase();
+      } else if (commonPart.length() > 0) {
+        String tempCommonPart = commonPart;
+        while (tempCommonPart.length() > 0 && !string.toUpperCase().startsWith(tempCommonPart)) {
+          tempCommonPart = tempCommonPart.substring(0, tempCommonPart.length()-1);
         }
+        commonPart = tempCommonPart.toUpperCase();
+      }
+    }
+
+    // note the position of the first different char
+    int firstDifferentCharPosition = commonPart.length();
+
+    // browse all objects and split them up
+    for (int i=0; i<objects.size(); i++) {
+      T object = objects.get(i);
+      if (object == null)
+        continue;
+
+      String string = stringsToSplit.get(i);
+      String discriminantPart = "_";
+      if (Helper.isNotNullOrEmpty(string)) {
+        if (firstDifferentCharPosition + 1 >= string.length())
+          discriminantPart = string.toUpperCase();
+        else
+          discriminantPart = string.substring(0, firstDifferentCharPosition+1).toUpperCase();
+
+        // find the already existing list (of items split by this discriminant part)
+        List<T> list = splitMap.get(discriminantPart);
+        if (list == null) {
+          // no list yet, create one
+          list = new LinkedList<T>();
+          splitMap.put(discriminantPart, list);
+        }
+
+        // add the current item to the list
+        list.add(object);
       }
     }
 
     // sort each list
-    for (String letter : splitByLetter.keySet()) {
-      List<T> objectsInThisLetter = splitByLetter.get(letter);
+    for (String letter : splitMap.keySet()) {
+      List<T> objectsInThisLetter = splitMap.get(letter);
       Collections.sort(objectsInThisLetter, comparator);
     }
-    return splitByLetter;
+    return splitMap;
   }
 
   /**

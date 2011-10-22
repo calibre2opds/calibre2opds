@@ -1116,4 +1116,13 @@ public class Helper {
     return buffer.toString();
   }
 
+  public static String convertToHex(String s) {
+    if (isNullOrEmpty(s)) return "";
+    StringBuffer sb = new StringBuffer();
+    for (int pos=0;pos<s.length();pos++) {
+      int codepoint = s.codePointAt(pos);
+      sb.append(Integer.toHexString(codepoint));
+    }
+    return sb.toString();
+  }
 }

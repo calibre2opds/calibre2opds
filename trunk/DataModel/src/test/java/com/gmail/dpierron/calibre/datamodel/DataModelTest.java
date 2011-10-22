@@ -31,30 +31,30 @@ public class DataModelTest {
     new TestDataModel().testDataModel(false);
   }
 
+  class FakeBook implements SplitableByLetter {
+    String title;
+
+    FakeBook(String title) {
+      this.title = title;
+    }
+
+    public String getTitleToSplitByLetter() {
+      return title;
+    }
+  }
+
+  Comparator<FakeBook> comparator = new Comparator<FakeBook>() {
+
+    public int compare(FakeBook o1, FakeBook o2) {
+      String s1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+      String s2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+      return s1.compareTo(s2);
+    }
+  };
+
   @Test
   public void testSplitByLetter() throws Exception {
     int expected[] = new int[]{2, 18, 3, 12, 23};
-
-    class FakeBook implements SplitableByLetter {
-      String title;
-
-      FakeBook(String title) {
-        this.title = title;
-      }
-
-      public String getTitleToSplitByLetter() {
-        return title;
-      }
-    }
-
-    Comparator<FakeBook> comparator = new Comparator<FakeBook>() {
-
-      public int compare(FakeBook o1, FakeBook o2) {
-        String s1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String s2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
-        return s1.compareTo(s2);
-      }
-    };
 
     BufferedReader r = null;
     try {
@@ -79,5 +79,24 @@ public class DataModelTest {
       if (r != null)
         r.close();
     }
+  }
+
+  @Test
+  public void testSplit() throws Exception {
+    String[] names = new String[] {"Morrisson", "More", "Morris", "Maman", "Papa", "pépé"};
+    List<FakeBook> books = new LinkedList<FakeBook>();
+    for (String line : names) {
+      books.add(new FakeBook(line));
+    }
+    Map<String, List<FakeBook>> result = DataModel.splitByLetter(books, comparator);
+    Assert.assertNotNull(result);
+    //for (int i = 0; i < 5; i++) {
+    //  String letter = lines.get(i).substring(0, 1).toUpperCase();
+    //  List<FakeBook> listOfBooksByLetter = result.get(letter);
+    //  Assert.assertEquals(expected[i], listOfBooksByLetter.size());
+    //  for (FakeBook book : listOfBooksByLetter) {
+    //    Assert.assertEquals(book.getTitleToSplitByLetter().substring(0, 1).toUpperCase(), letter);
+    //  }
+    //}
   }
 }

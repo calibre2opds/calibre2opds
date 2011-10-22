@@ -20,10 +20,9 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.*;
+import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.lang.model.element.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -430,7 +429,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + letter + ".xml";
+      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
 
       String letterUrn = baseUrn + ":" + letter;
@@ -447,7 +446,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisLetter.size() > 0) {
-        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate, icon, options)
+        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter, icon, options)
             .getFirstElement();
       }
 

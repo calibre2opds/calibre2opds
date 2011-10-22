@@ -272,7 +272,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + letter + ".xml";
+      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
 
       String letterUrn = baseUrn + ":" + letter;
@@ -298,7 +298,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          */
         logger.debug("calling getListOfAuthors for the letter " + letter);
         element =
-            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.Paginate).getFirstElement();
+            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter).getFirstElement();
 
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
