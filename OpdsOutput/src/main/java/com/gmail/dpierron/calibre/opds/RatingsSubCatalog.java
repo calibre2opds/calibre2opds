@@ -1,7 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.BookRating;
 import com.gmail.dpierron.calibre.datamodel.Option;
@@ -95,8 +95,8 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     Element result = getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_RATING :
-            StanzaConstants.ICON_RATING, Option.DONOTINCLUDE_RATING).getFirstElement();
+            getCatalogManager().getPathToCatalogRoot(filename) + Icons.ICONFILE_RATING :
+            Icons.ICON_RATING, Option.DONOTINCLUDE_RATING).getFirstElement();
     return result;
   }
 
@@ -147,8 +147,8 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     Element result = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_RATING :
-            StanzaConstants.ICON_RATING);
+            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_RATING :
+            Icons.ICON_RATING);
     return new Composite<Element, String>(result, urlInItsSubfolder);
   }
 

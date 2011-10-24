@@ -1,7 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
@@ -160,8 +160,8 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
       return getSubCatalogLevel(pBreadcrumbs, books, getStuffToFilterOutAnd(tag), title, summary, urn, filename, null,
           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_TAGS :
-              StanzaConstants.ICON_TAGS);
+              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_TAGS :
+              Icons.ICON_TAGS);
     } else {
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeBooks(books);
@@ -170,8 +170,8 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
       return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-          getCatalogManager().getPathToCatalogRoot(filename, true) + StanzaConstants.ICONFILE_TAGS :
-          StanzaConstants.ICON_TAGS).getFirstElement();
+          getCatalogManager().getPathToCatalogRoot(filename, true) + Icons.ICONFILE_TAGS :
+          Icons.ICON_TAGS).getFirstElement();
     }
   }
 

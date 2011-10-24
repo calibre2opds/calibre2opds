@@ -62,9 +62,7 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setGenerateExternalLinks(boolean value);
 
-  public void setTagsToGenerate(String value);
-
-  public void setTagsToExclude(String value);
+  public void setCatalogFilter(String value);
 
   public void setMaxSummaryLength(int value);
 

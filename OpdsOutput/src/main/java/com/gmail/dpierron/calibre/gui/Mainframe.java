@@ -554,12 +554,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkSplitByAuthorInitialGoToBooks.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks());
     chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
     chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
-    txtTagstogenerate.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate());
-    txtTagstogenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToGenerateReadOnly());
-    lblTagstogenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToGenerateReadOnly());
-    txtTagstoexclude.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude());
-    txtTagstoexclude.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToExcludeReadOnly());
-    lblTagstoexclude.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToExcludeReadOnly());
+    txtCatalogFilter.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFilter());
+    txtCatalogFilter.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFilterReadOnly());
+    lblCatalogFilter.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFilterReadOnly());
     chkPublishedDateAsYear.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear());
     chkPublishedDateAsYear.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isPublishedDateAsYearReadOnly());
     lblPublishedDateAsYear.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isPublishedDateAsYearReadOnly());
@@ -743,8 +740,7 @@ public class Mainframe extends javax.swing.JFrame {
     ConfigurationManager.INSTANCE.getCurrentProfile().setSplitByAuthorInitialGoToBooks(chkSplitByAuthorInitialGoToBooks.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToGenerate(txtTagstogenerate.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToExclude(txtTagstoexclude.getText());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setCatalogFilter(txtCatalogFilter.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateTags(!chkNoGenerateTags.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRecent(!chkNogeneraterecent.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRatings(!chkNogenerateratings.isSelected());
@@ -829,10 +825,8 @@ public class Mainframe extends javax.swing.JFrame {
     lblSplittagson.setText(Localization.Main.getText("config.SplitTagsOn.label")); // NOI18N
     lblSplittagson.setToolTipText(Localization.Main.getText("config.SplitTagsOn.description")); // NOI18N
     chkDontsplittags.setText(Localization.Main.getText("config.SplitTagsOn.splitbyletter")); // NOI18N
-    lblTagstogenerate.setText(Localization.Main.getText("config.TagsToGenerate.label")); // NOI18N
-    lblTagstogenerate.setToolTipText(Localization.Main.getText("config.TagsToGenerate.description")); // NOI18N
-    lblTagstoexclude.setText(Localization.Main.getText("config.TagsToExclude.label")); // NOI18N
-    lblTagstoexclude.setToolTipText(Localization.Main.getText("config.TagsToExclude.description")); // NOI18N
+    lblCatalogFilter.setText(Localization.Main.getText("config.CatalogFilter.label")); // NOI18N
+    lblCatalogFilter.setToolTipText(Localization.Main.getText("config.CatalogFilter.description")); // NOI18N
     lblWikilang.setText(Localization.Main.getText("config.WikipediaLanguage.label")); // NOI18N
     lblWikilang.setToolTipText(Localization.Main.getText("config.WikipediaLanguage.description")); // NOI18N
 
@@ -1049,10 +1043,8 @@ public class Mainframe extends javax.swing.JFrame {
       popup = Localization.Main.getText("config.CatalogTitle.description");
     else if (label == lblSplittagson)
       popup = Localization.Main.getText("config.SplitTagsOn.description");
-    else if (label == lblTagstogenerate)
-      popup = Localization.Main.getText("config.TagsToGenerate.description");
-    else if (label == lblTagstoexclude)
-      popup = Localization.Main.getText("config.TagsToExclude.description");
+    else if (label == lblCatalogFilter)
+      popup = Localization.Main.getText("config.CatalogFilter.description");
     else if (label == lblWikilang)
       popup = Localization.Main.getText("config.WikipediaLanguage.description");
 
@@ -1301,10 +1293,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlSplitTagsOn = new javax.swing.JPanel();
         txtSplittagson = new javax.swing.JTextField();
         chkDontsplittags = new javax.swing.JCheckBox();
-        lblTagstogenerate = new javax.swing.JLabel();
-        txtTagstogenerate = new javax.swing.JTextField();
-        lblTagstoexclude = new javax.swing.JLabel();
-        txtTagstoexclude = new javax.swing.JTextField();
+        lblCatalogFilter = new javax.swing.JLabel();
+        txtCatalogFilter = new javax.swing.JTextField();
         lblWikilang = new javax.swing.JLabel();
         txtWikilang = new javax.swing.JTextField();
         chkCopyToDatabaseFolder = new javax.swing.JCheckBox();
@@ -1788,8 +1778,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         pnlMainOptions.add(pnlSplitTagsOn, gridBagConstraints);
 
-        lblTagstogenerate.setText(Localization.Main.getText("config.TagsToGenerate.label")); // NOI18N
-        lblTagstogenerate.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblCatalogFilter.setText(Localization.Main.getText("config.CatalogFilter.label")); // NOI18N
+        lblCatalogFilter.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -1799,9 +1789,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-        pnlMainOptions.add(lblTagstogenerate, gridBagConstraints);
+        pnlMainOptions.add(lblCatalogFilter, gridBagConstraints);
 
-        txtTagstogenerate.setText("txtTagstogenerate");
+        txtCatalogFilter.setText("txtCatalogFilter");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
@@ -1810,31 +1800,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-        pnlMainOptions.add(txtTagstogenerate, gridBagConstraints);
-
-        lblTagstoexclude.setText(Localization.Main.getText("config.TagsToExclude.label")); // NOI18N
-        lblTagstoexclude.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-        pnlMainOptions.add(lblTagstoexclude, gridBagConstraints);
-
-        txtTagstoexclude.setText("txtTagstoexclude");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-        pnlMainOptions.add(txtTagstoexclude, gridBagConstraints);
+        pnlMainOptions.add(txtCatalogFilter, gridBagConstraints);
 
         lblWikilang.setText(Localization.Main.getText("config.WikipediaLanguage.label")); // NOI18N
         lblWikilang.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -3875,6 +3841,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblBottom0;
     private javax.swing.JLabel lblBrowseByCover;
     private javax.swing.JLabel lblBrowseByCoverWithoutSplit;
+    private javax.swing.JLabel lblCatalogFilter;
     private javax.swing.JLabel lblCatalogFolder;
     private javax.swing.JLabel lblCatalogTitle;
     private javax.swing.JLabel lblCompatibilityTrick;
@@ -3939,8 +3906,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblSplittagson;
     private javax.swing.JLabel lblSupressRatings;
     private javax.swing.JLabel lblTagsToMakeDeep;
-    private javax.swing.JLabel lblTagstoexclude;
-    private javax.swing.JLabel lblTagstogenerate;
     private javax.swing.JLabel lblTargetFolder;
     private javax.swing.JLabel lblThumbnailheight;
     private javax.swing.JLabel lblUrlBase;
@@ -3974,6 +3939,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtAmazonIsbnUrl;
     private javax.swing.JTextField txtAmazonTitleUrl;
     private javax.swing.JTextField txtBooksinrecent;
+    private javax.swing.JTextField txtCatalogFilter;
     private javax.swing.JTextField txtCatalogFolder;
     private javax.swing.JTextField txtCatalogTitle;
     private javax.swing.JTextField txtCoverHeight;
@@ -3998,8 +3964,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtMinBooksToMakeDeepLevel;
     private javax.swing.JTextField txtSplittagson;
     private javax.swing.JTextField txtTagsToMakeDeep;
-    private javax.swing.JTextField txtTagstoexclude;
-    private javax.swing.JTextField txtTagstogenerate;
     private javax.swing.JTextField txtTargetFolder;
     private javax.swing.JTextField txtThumbnailheight;
     private javax.swing.JTextField txtUrlBase;

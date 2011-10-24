@@ -14,7 +14,7 @@ public interface CatalogCallbackInterface {
   // database
   public void startReadDatabase();
 
-  public void endReadDatabase(long milliseconds);
+  public void endReadDatabase(long milliseconds, String summary);
 
   // Tags
   public void startCreateTags(long nb);

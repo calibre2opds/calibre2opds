@@ -8,7 +8,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Author;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
@@ -236,8 +236,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_AUTHORS :
-              StanzaConstants.ICON_AUTHORS);
+              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_AUTHORS :
+              Icons.ICON_AUTHORS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -314,8 +314,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
               letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
               ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(letterFilename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_BOOKS :
-                  StanzaConstants.ICON_BOOKS).getFirstElement();
+                  getCatalogManager().getPathToCatalogRoot(letterFilename, weAreAlsoInSubFolder) + Icons.ICONFILE_BOOKS :
+                  Icons.ICON_BOOKS).getFirstElement();
         }
       }
 
@@ -413,8 +413,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_AUTHORS :
-            StanzaConstants.ICON_AUTHORS, firstElements).getFirstElement();
+            getCatalogManager().getPathToCatalogRoot(filename) + Icons.ICONFILE_AUTHORS :
+            Icons.ICON_AUTHORS, firstElements).getFirstElement();
     return result;
   }
 

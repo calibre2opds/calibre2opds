@@ -42,9 +42,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
   private final static String PROPERTY_NAME_EXTERNALICONS = "ExternalIcons";
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
-  private final static String PROPERTY_NAME_TAGSTOGENERATE = "TagsToGenerate";
+  private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
   private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TagsToMakeDeep";
-  private final static String PROPERTY_NAME_TAGSTOEXCLUDE = "TagsToExclude";
   private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
@@ -655,36 +654,20 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
   }
 
-  public boolean isTagsToGenerateReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_TAGSTOGENERATE);
+  public boolean isCatalogFilterReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CATALOGFILTER);
   }
 
-  public String getTagsToGenerate() {
-    String s = getProperty(PROPERTY_NAME_TAGSTOGENERATE);
+  public String getCatalogFilter() {
+    String s = getProperty(PROPERTY_NAME_CATALOGFILTER);
     if (s == null)
-      return defaults.getTagsToGenerate();
+      return defaults.getCatalogFilter();
     else
       return s;
   }
 
-  public void setTagsToGenerate(String value) {
-    setProperty(PROPERTY_NAME_TAGSTOGENERATE, value);
-  }
-
-  public boolean isTagsToExcludeReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_TAGSTOEXCLUDE);
-  }
-
-  public String getTagsToExclude() {
-    String s = getProperty(PROPERTY_NAME_TAGSTOEXCLUDE);
-    if (s == null)
-      return defaults.getTagsToExclude();
-    else
-      return s;
-  }
-
-  public void setTagsToExclude(String value) {
-    setProperty(PROPERTY_NAME_TAGSTOEXCLUDE, value);
+  public void setCatalogFilter(String value) {
+    setProperty(PROPERTY_NAME_CATALOGFILTER, value);
   }
 
   public boolean isMaxSummaryLengthReadOnly() {
