@@ -33,10 +33,21 @@ public enum Localization {
    */
   private ResourceBundle localizations;
 
+  /**
+   * english localizations
+   */
+  private ResourceBundle englishLocalizations;
+
   public ResourceBundle getBundle() {
     if (localizations == null)
       reloadLocalizations();
     return localizations;
+  }
+
+  public ResourceBundle getEnglishBundle() {
+    if (englishLocalizations == null)
+      reloadLocalizations();
+    return englishLocalizations;
   }
 
   public ResourceBundle getBundle(String language) {
@@ -107,6 +118,7 @@ public enum Localization {
     } else {
       localizations = getResourceBundle(localizationBundleName, new Locale(language));
     }
+    englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH);
     initialized = true;
   }
 
@@ -114,7 +126,12 @@ public enum Localization {
     try {
       return getBundle().getString(key);
     } catch (MissingResourceException e) {
-      return key;
+      // try english
+      try {
+      return getEnglishBundle().getString(key);
+      } catch (MissingResourceException ee) {
+        return key;
+      }
     }
   }
 
