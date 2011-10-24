@@ -32,7 +32,8 @@ tokens {
 	AND;
 	OR;
 	NOT;
-	TAG;
+	TAGIS;
+	TAGCONTAINS;
 	LANG;
 	RATING;
 }
@@ -68,7 +69,8 @@ atom
     ;
     
 condition
-    : TAG
+    : TAGIS
+    | TAGCONTAINS
     | LANG
     | RATING
     ;
