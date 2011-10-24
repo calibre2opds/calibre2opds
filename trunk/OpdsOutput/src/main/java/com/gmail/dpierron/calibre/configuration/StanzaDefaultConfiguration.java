@@ -117,12 +117,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.generateExternalLinks;
   }
 
-  public String getTagsToGenerate() {
-    return StanzaConstants.tagsToGenerate;
-  }
-
-  public String getTagsToExclude() {
-    return StanzaConstants.tagsToExclude;
+  public String getCatalogFilter() {
+    return StanzaConstants.CatalogFilter;
   }
 
   public int getMaxSummaryLength() {

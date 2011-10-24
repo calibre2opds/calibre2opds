@@ -60,9 +60,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getGenerateExternalLinks();
 
-  public String getTagsToGenerate();
-
-  public String getTagsToExclude();
+  public String getCatalogFilter();
 
   public int getMaxSummaryLength();
 

@@ -4,8 +4,8 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 
 public abstract class BooleanFilter implements BookFilter {
 
-  private BookFilter leftFilter;
-  private BookFilter rightFilter;
+  private BookFilter leftFilter = new PassthroughFilter();
+  private BookFilter rightFilter = new PassthroughFilter();
   private final boolean isOrFilter; // if true, the filter is an OR filter, else it's an AND filter
 
   BooleanFilter(boolean orFilter) {

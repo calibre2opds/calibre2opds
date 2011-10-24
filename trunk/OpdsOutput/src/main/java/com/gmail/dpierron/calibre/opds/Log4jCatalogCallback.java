@@ -90,8 +90,9 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.database"));
   }
 
-  public void endReadDatabase(long milliseconds) {
+  public void endReadDatabase(long milliseconds, String summary) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+    logger.info(Localization.Main.getText(summary));
   }
 
   public void startCreateTags(long nb) {

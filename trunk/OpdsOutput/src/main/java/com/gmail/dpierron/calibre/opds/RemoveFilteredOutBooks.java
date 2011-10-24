@@ -2,26 +2,30 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.filter.*;
+import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
+import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
+import com.gmail.dpierron.tools.Helper;
 
 public enum RemoveFilteredOutBooks {
   INSTANCE;
 
-  public void runOnDataModel() {
-    BooleanAndFilter level2BooleanAndFilter = new BooleanAndFilter();
+  public void runOnDataModel() throws CalibreSavedSearchInterpretException, CalibreSavedSearchNotFoundException {
+    BooleanAndFilter andFilter = new BooleanAndFilter();
 
     // remove all books that have no ebook format in the included list
-    level2BooleanAndFilter.setLeftFilter(new SelectedEbookFormatsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludedFormatsList(),
+    andFilter.setLeftFilter(new SelectedEbookFormatsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludedFormatsList(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeBooksWithNoFile()));
 
-    // remove all books that have no tag in the included list
-    level2BooleanAndFilter.setRightFilter(new RequiredTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToGenerate()));
+    // remove all books not selected by the CatalogFilter search
+    BookFilter mainCatalogFilter = null;
+    String mainCatalogFilterOption = ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFilter();
 
-    BooleanAndFilter level1BooleanAndFilter = new BooleanAndFilter();
+    if (Helper.isNotNullOrEmpty(mainCatalogFilterOption)) {
+      mainCatalogFilter = CalibreQueryInterpreter.interpret(mainCatalogFilterOption);
+    }
+    if (mainCatalogFilter != null)
+      andFilter.setRightFilter(mainCatalogFilter);
 
-    // remove all books that have a tag in the excluded list
-    level1BooleanAndFilter.setLeftFilter(level2BooleanAndFilter);
-    level1BooleanAndFilter.setRightFilter(new ForbiddenTagsFilter(ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToExclude()));
-
-    FilterDataModel.INSTANCE.runOnDataModel(level1BooleanAndFilter);
+    FilterDataModel.INSTANCE.runOnDataModel(andFilter);
   }
 }

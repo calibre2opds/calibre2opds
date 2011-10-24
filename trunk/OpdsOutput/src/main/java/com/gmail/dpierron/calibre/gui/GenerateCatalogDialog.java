@@ -143,10 +143,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     boldFont(lblDatabase, true);
   }
 
-  public void endReadDatabase(long milliseconds) {
+  public void endReadDatabase(long milliseconds, String summary) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
     chkDatabase.setSelected(true);
     boldFont(lblDatabase, false);
+    lblDatabase.setText(lblDatabase.getText() + " (" + summary + ")");
     setTimeNow(lblDatabaseTime);
   }
 

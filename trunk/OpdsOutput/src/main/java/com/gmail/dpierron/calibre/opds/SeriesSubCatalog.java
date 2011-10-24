@@ -8,7 +8,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
@@ -285,8 +285,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + StanzaConstants.ICONFILE_SERIES :
-              StanzaConstants.ICON_SERIES);
+              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_SERIES :
+              Icons.ICON_SERIES);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -400,8 +400,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename) + StanzaConstants.ICONFILE_SERIES :
-            StanzaConstants.ICON_SERIES, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
+            getCatalogManager().getPathToCatalogRoot(filename) + Icons.ICONFILE_SERIES :
+            Icons.ICON_SERIES, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
 
     return result;
   }

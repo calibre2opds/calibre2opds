@@ -5,7 +5,7 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
@@ -13,6 +13,8 @@ import com.gmail.dpierron.calibre.datamodel.EBookFile;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
+import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
+import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
@@ -352,7 +354,7 @@ public class Catalog {
     String url = "http://wiki.mobileread.com/wiki/Calibre2opds";
     String summary = Localization.Main.getText("about.summary");
     // #751211: Use external icons option
-    String icon = currentProfile.getExternalIcons() ? StanzaConstants.ICONFILE_ABOUT : StanzaConstants.ICON_ABOUT;
+    String icon = currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT;
     return FeedHelper.INSTANCE.getAboutEntry(title, urn, url, summary, icon);
   }
 
@@ -417,6 +419,12 @@ public class Catalog {
 
     String textYES = Localization.Main.getText("boolean.yes");
     String textNO = Localization.Main.getText("boolean.no");
+
+    /** where the catalog is eventually located */
+    String where = null;
+
+    /** if true, generation has been stopped by the user */
+    boolean generationStopped = false;
 
     try {
       // reinitialize caches (in case of multiple calls in the same session)
@@ -565,27 +573,17 @@ public class Catalog {
       callback.checkIfContinueGenerating();
 
       // first, prepare the search queries
-      BookFilter filter = null;
+      BookFilter customCatalogFilter = null;
       String customCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
       if (Helper.isNotNullOrEmpty(customCatalogSearch)) {
-        String calibreQuery = customCatalogSearch;
-        if (customCatalogSearch.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
-          customCatalogSearch = customCatalogSearch.substring(6);
-          calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(customCatalogSearch);
-          if (Helper.isNullOrEmpty(calibreQuery))
-            calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(customCatalogSearch.toUpperCase());
-        }
-        if (Helper.isNotNullOrEmpty(calibreQuery)) {
-          CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
-          try {
-            filter = interpreter.interpret();
-          } catch (CalibreQueryInterpreter.InterpretException e) {
-            callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", calibreQuery), e);
-          }
-        } else {
+        try {
+          customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
+        } catch (CalibreSavedSearchInterpretException e) {
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+        } catch (CalibreSavedSearchNotFoundException e) {
           callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", customCatalogSearch), null);
         }
-        if (filter == null) {
+        if (customCatalogFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
           if (n == 1) {
@@ -599,7 +597,13 @@ public class Catalog {
       callback.checkIfContinueGenerating();
 
       // filter the datamodel
-      RemoveFilteredOutBooks.INSTANCE.runOnDataModel();
+      try {
+        RemoveFilteredOutBooks.INSTANCE.runOnDataModel();
+      } catch (CalibreSavedSearchInterpretException e) {
+        callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+      } catch (CalibreSavedSearchNotFoundException e) {
+        callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", customCatalogSearch), null);
+      }
 
       List<Book> books = DataModel.INSTANCE.getListOfBooks();
       if (Helper.isNullOrEmpty(books)) {
@@ -611,7 +615,7 @@ public class Catalog {
       // check if we must continue
       callback.checkIfContinueGenerating();
 
-      callback.endReadDatabase(System.currentTimeMillis() - now);
+      callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));
 
       String filename = SecureFileManager.INSTANCE.encode("index.xml");
 
@@ -732,9 +736,9 @@ public class Catalog {
 
       /* Featured catalog */
       now = System.currentTimeMillis();
-      if (filter != null) {
+      if (customCatalogFilter != null) {
         logger.debug("STARTED: Generating Featured books catalog");
-        List<Book> featuredBooks = FilterHelper.filter(filter, books);
+        List<Book> featuredBooks = FilterHelper.filter(customCatalogFilter, books);
         callback.startCreateFeaturedBooks(featuredBooks.size());
         Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
         if (featuredCatalog != null) {
@@ -1045,8 +1049,6 @@ public class Catalog {
         logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));
 
       // Now work put where to tell uer result has been placed
-
-      String where = null;
       if (logger.isTraceEnabled())
         logger.trace("try to determine where the results have been put");
       if (currentProfile.getDeviceMode() == DeviceMode.Nook) {
@@ -1064,7 +1066,7 @@ public class Catalog {
 
       if (currentProfile.getCopyToDatabaseFolder()) {
         if (logger.isTraceEnabled())
-          logger.trace("CopyToDatabawseFolder set");
+          logger.trace("CopyToDatabaseFolder set");
         if (where != null) {
           if (logger.isTraceEnabled())
             logger.trace(where + " " + Localization.Main.getText("info.step.done.andYourDb"));
@@ -1084,11 +1086,8 @@ public class Catalog {
           logger.trace("outputfile.getParent=" + outputFile.getParent());
         where = outputFile.getParent();
       }
-
-      callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
     } catch (GenerationStoppedException gse) {
-      callback.errorOccured("user stopped the catalog generation", null);
-      return;
+      generationStopped = true;
     } finally {
       // make sure the temp files are deleted whatever happens
       if (destinationFolder != null) {
@@ -1097,7 +1096,10 @@ public class Catalog {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
         Helper.delete(destinationFolder);
         logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
+        callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
       }
+      if (generationStopped)
+        callback.errorOccured("user stopped the catalog generation", null);
     }
   }
 
