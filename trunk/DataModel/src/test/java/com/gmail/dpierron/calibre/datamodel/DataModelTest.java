@@ -21,7 +21,7 @@ public class DataModelTest {
   public void testDataModel() {
     ReadOnlyConfigurationInterface conf = new ReadOnlyConfigurationInterface() {
       public File getDatabaseFolder() {
-        String fileName = DataModelTest.class.getResource("metadata.db").getFile();
+        String fileName = DataModelTest.class.getResource("../metadata.db").getFile();
         File file = new File(fileName).getParentFile();
         System.out.println("DataModelTest.testDataModel using database folder : " + file);
         return file;

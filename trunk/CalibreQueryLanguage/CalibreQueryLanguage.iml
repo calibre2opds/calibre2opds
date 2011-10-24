@@ -7,8 +7,6 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/antlr3" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/.svn" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
