@@ -38,10 +38,11 @@ public class CalibreQueryInterpreter {
     }
     String template = node.getText();
     if (template.toLowerCase().startsWith(WORD_TAG)) {
-      String tag = template.substring(WORD_TAG.length() + 2, template.length() - 1); // skip the "= and the "
+      boolean isEqualsPresent = template.substring(WORD_TAG.length()+1, WORD_TAG.length()+2).equals("=");
+      String tag = template.substring(WORD_TAG.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
       if (logger.isDebugEnabled())
         logger.debug("found tag filter: "+tag);
-      return new TagFilter(tag);
+      return new TagFilter(tag, !isEqualsPresent);
     } else if (template.toLowerCase().startsWith(WORD_LANGUAGE)) {
       String lang = template.substring(WORD_LANGUAGE.length() + 2, template.length() - 1); // skip the "= and the "
       if (logger.isDebugEnabled())
