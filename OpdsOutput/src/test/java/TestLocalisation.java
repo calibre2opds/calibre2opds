@@ -36,6 +36,14 @@ public class TestLocalisation {
         assertTrue(language + "->" + descriptionKey, Helper.isNotNullOrEmpty(description) && !description.equals(descriptionKey));
       }
     }
+  }
+
+  @Test
+  public void testFallbackToEnglish() {
+    Localization.Main.reloadLocalizations("fr");
+    String key = "title.numberOfPages";
+    String value = Localization.Main.getText(key);
+    assertTrue(Helper.isNotNullOrEmpty(value));
 
   }
 }
