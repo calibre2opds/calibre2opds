@@ -923,36 +923,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     } else {
       // summary element (the shortened book comment)
-      // ITIMPI:  Should this be refactored to calculate this
-        //
       if (logger.isTraceEnabled())
         logger.trace("getBookEntry: short comment");
-      Element summary = JDOM.INSTANCE.element("summary");
-      Boolean hasContent = false;
-      Integer maxLength = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength();
-      // Check for series info to include
-      if (Helper.isNotNullOrEmpty(book.getSeries())) {
-        DecimalFormat df = new DecimalFormat("####.##");
-
-        // String seriesDetails = book.getSeries().getName() + "[" + df.format(book.getSerieIndex())+ ": ";
-        String seriesDetails = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName()) +": ";
-        seriesDetails = Helper.shorten(seriesDetails,maxLength);
-        summary.addContent(JDOM.INSTANCE.element("strong").addContent(seriesDetails)).addContent(JDOM.INSTANCE.element("br"));
-        maxLength -= seriesDetails.length();
-        hasContent = true;
-      }
-      // See if still space for comment info
-      if (maxLength > 0) {
-        String noHtml = Helper.removeHtmlElements(book.getComment());
-        // Is there actually any comment info?
-        if (Helper.isNotNullOrEmpty(noHtml)) {
-          summary.addContent(Helper.shorten(noHtml, maxLength));
-          hasContent = true;
-        }
-      }
+      String summary = book.getSummary(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength());
       // If we had anything for the summary then it needs to be added to the output.
-      if (hasContent)
-          entry.addContent(summary);
+      if (Helper.isNotNullOrEmpty(summary))
+          entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
     }
 
     // acquisition links

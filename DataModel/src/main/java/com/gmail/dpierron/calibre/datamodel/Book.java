@@ -25,7 +25,8 @@ public class Book implements SplitableByLetter {
   private String titleWithRating;
   private final String path;
   private String comment;
-  private String shortComment;
+  private String summary;
+  private Integer summaryMaxLength;
   private final Float serieIndex;
   private final Date timestamp;
   private final Date publicationDate;
@@ -175,32 +176,72 @@ public class Book implements SplitableByLetter {
   }
 
   /**
+   * Remove the word 'SUMMARY' from the start of the given string if it present
+   * TODO  Enhance this by looking beyond starting HTML tags?
+   * @param text
+   * @return Input if null or does not start with SUMMARY
+   */
+  private String removeSumamryText (String text) {
+    if (text != null) {
+      // Special Processing - remove SUMMARY from start of comment field (if present)
+      if (text.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY:"))
+        text = text.substring(8);
+      else if (text.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY"))
+        text = text.substring(6);
+    }
+    return text;
+  }
+  /**
    * Sets the comment value
    * If it starts with 'SUMMARY' then this is removed as superfluous
-   * TODO  Enhance this by looking beyond starting HTML tag?
+   * NOTE.  Comments are allowed to contain (X)HTML) tags
    * @param value the new comment
    */
   public void setComment(String value) {
-    shortComment = null;
-    if (value != null) {
-      // Special Processing - remove SUMMARY from start of comment field (if present)
-      if (value.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY:"))
-        comment = value.substring(8);
-      else if (value.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY"))
-        comment = value.substring(6);
-      else
-        comment = value;
-      // logger.info("Book " + id + ", Comment: " + Database.INSTANCE.stringToHex(comment));
-    } else
-      comment = null;
+    summary = null;
+    summaryMaxLength = -1;
+    value = removeSumamryText(value);
+    // The following log entry can be useful if trying to debug character encoding issues
+    // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
   }
 
-  public String getShortComment(int maxLength) {
-    if (shortComment == null) {
-      String noHtml = Helper.removeHtmlElements(getComment());
-      shortComment = Helper.shorten(noHtml, maxLength);
+  /**
+   * Sets the book summary
+   * This starts with any series information, and then as much of the book comment as
+   * will fit in the space allowed.  The word 'SUMMARY' is removed as superfluous at the
+   * start of the text part of the summary.
+   * NOTE.  Summary must be pure text (no (X)HTML tags) for OPDS compatibility
+   * @param maxLength   Maximum length of text allowed in summary
+   * @return
+   */
+  public String getSummary(int maxLength) {
+    if (summary == null  || maxLength != summaryMaxLength) {
+      summary = "";
+      summaryMaxLength = maxLength;
+      // Check for series info to include
+      if (Helper.isNotNullOrEmpty(getSeries())) {
+        float seriesIndexFloat = getSerieIndex();
+        int seriesIndexInt = (int)seriesIndexFloat;
+        String seriesIndexText;
+        // For the commonest case of integers we want to truncate off the fractional part
+        if (seriesIndexFloat == (float)seriesIndexInt)
+           seriesIndexText = String.format("%d", seriesIndexInt);
+        else {
+          // For fractions we want only 2 decimal places to match calibre
+          seriesIndexText = String.format("%.2f",seriesIndexFloat);
+        }
+        summary += Helper.shorten(getSeries().getName() + " [" + seriesIndexText + "]: ", maxLength);
+      }
+      // See if still space for comment info
+      if (maxLength > 0) {
+        String noHtml = removeSumamryText(Helper.removeHtmlElements(getComment()));
+        // Is there actually any comment info?
+        if (Helper.isNotNullOrEmpty(noHtml)) {
+          summary += Helper.shorten(noHtml, maxLength - summary.length());
+        }
+      }
     }
-    return shortComment;
+    return summary;
   }
 
   public Float getSerieIndex() {
