@@ -200,7 +200,7 @@ public class Book implements SplitableByLetter {
   public void setComment(String value) {
     summary = null;
     summaryMaxLength = -1;
-    value = removeSumamryText(value);
+    comment = removeSumamryText(value);
     // The following log entry can be useful if trying to debug character encoding issues
     // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
   }
@@ -231,13 +231,18 @@ public class Book implements SplitableByLetter {
           seriesIndexText = String.format("%.2f",seriesIndexFloat);
         }
         summary += Helper.shorten(getSeries().getName() + " [" + seriesIndexText + "]: ", maxLength);
+        maxLength -= summary.length();
       }
       // See if still space for comment info
       if (maxLength > 0) {
         String noHtml = removeSumamryText(Helper.removeHtmlElements(getComment()));
-        // Is there actually any comment info?
-        if (Helper.isNotNullOrEmpty(noHtml)) {
-          summary += Helper.shorten(noHtml, maxLength - summary.length());
+        if (noHtml != null) {
+          // Special Processing - remove PRODUCT DESCRIPTION from start of comment field (if present)
+          if (noHtml.toUpperCase(Locale.ENGLISH).startsWith("PRODUCT DESCRIPTION"))
+            noHtml = noHtml.substring(18);
+          // Is there actually any comment info?
+          if (Helper.isNotNullOrEmpty(noHtml))
+            summary += Helper.shorten(noHtml, maxLength - summary.length());
         }
       }
     }
