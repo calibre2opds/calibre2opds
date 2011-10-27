@@ -64,7 +64,7 @@ public class CreateThumbnail {
       BufferedImage bi = new BufferedImage(thumb.getIconWidth(), thumb.getIconHeight(), BufferedImage.TYPE_INT_RGB);
       Graphics g = bi.getGraphics();
       g.drawImage(thumb.getImage(), 0, 0, null);
-      int nbTries = 5;
+      int nbTries = 20;
       Exception exception = null;
       while (nbTries > 0) {
         boolean error = false;
