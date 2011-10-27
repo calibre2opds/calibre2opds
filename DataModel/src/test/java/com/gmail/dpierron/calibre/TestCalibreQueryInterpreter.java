@@ -38,6 +38,16 @@ public class TestCalibreQueryInterpreter {
 
   @Test
   public void testInterpret() throws Exception {
+    {
+      final String CALIBRE_QUERY = "tags:\"=efg\" and not(tags:\"abc\")";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      Assert.assertNotNull(bf);
+    }
+    {
+      final String CALIBRE_QUERY = "tags:\"=State:ToRead\" and not (tags:\"=Length:SHORT\")";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      Assert.assertNotNull(bf);
+    }
     ReadOnlyConfigurationInterface conf = new ReadOnlyConfigurationInterface() {
       public File getDatabaseFolder() {
         String fileName = TestCalibreQueryInterpreter.class.getResource("metadata.db").getFile();
@@ -47,6 +57,12 @@ public class TestCalibreQueryInterpreter {
       }
     };
     Configuration.setConfiguration(conf);
+    {
+      final String CALIBRE_QUERY = "tags:\"=State:ToRead\" and not (tags:\"=Length:SHORT\")";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(725, books.size());
+    }
     {
       final String CALIBRE_QUERY = "tags:\"=Temp:AddToDemoCatalog\" and rating:\">2\"";
       BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();

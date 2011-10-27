@@ -93,10 +93,12 @@ public class CalibreQueryInterpreter {
     CalibreQueryParser.expr_return result;
     try {
       result = parser.expr();
+      return getFilterForNode((Tree) result.getTree());
     } catch (RecognitionException e) {
       throw new CalibreSavedSearchInterpretException(calibreQuery, e);
+    } catch (CalibreSavedSearchInterpretException e) {
+      throw new CalibreSavedSearchInterpretException(calibreQuery, e);
     }
-    return getFilterForNode((Tree) result.getTree());
   }
 
   public static BookFilter interpret(String calibreSearchQueryOrName) throws CalibreSavedSearchInterpretException, CalibreSavedSearchNotFoundException {
