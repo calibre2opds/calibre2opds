@@ -28,8 +28,7 @@ OR : O R;
 NOT : N O T;
 
 // calibre specific constraints
-TAGIS : T A G S ':"='(options {greedy=false;}:.)*'"';
-TAGCONTAINS : T A G S ':"'(options {greedy=false;}:.)*'"';
+TAG : T A G S ':"' (options {greedy=false;}:.)*'"';
 LANG : L A N G U A G E S ':"='(options{greedy=false;}:.)*'"';
 RATING : R A T I N G ':"'('='|'>'|'<')('0'..'5')'"';
 
