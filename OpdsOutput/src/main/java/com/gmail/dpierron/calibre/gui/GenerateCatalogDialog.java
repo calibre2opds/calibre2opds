@@ -372,6 +372,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   private void actionStopGenerating() {
     int n = JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.stopGeneration.confirm"), "", JOptionPane.OK_CANCEL_OPTION);
     if (JOptionPane.OK_OPTION == n)  {
+      lblStoppingGeneration.setText(Localization.Main.getText("gui.prepareStopGeneration"));
       lblStoppingGeneration.setVisible(true);
       cmdStopGenerating.setVisible(false);
       continueGenerating = false;
@@ -379,8 +380,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void checkIfContinueGenerating() throws GenerationStoppedException {
-    if (!continueGenerating)
+    if (!continueGenerating) {
+      lblStoppingGeneration.setText(Localization.Main.getText("gui.stoppingGeneration"));
       throw new GenerationStoppedException();
+    }
   }
 
   /**
