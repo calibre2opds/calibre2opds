@@ -245,7 +245,7 @@ public enum JDOM {
     List<Element> result = null;
     // initializing tidy
     if (logger.isTraceEnabled())
-      logger.trace("initializing tidy");
+      logger.trace("tidyInputStream: initializing tidy");
     if (tidyForTidyInputStream == null) {
       tidyForTidyInputStream = new Tidy();
       tidyForTidyInputStream.setShowWarnings(false);
@@ -256,7 +256,7 @@ public enum JDOM {
     }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     if (logger.isTraceEnabled())
-      logger.trace("parsing with Tidy");
+      logger.trace("tidyInputStream: parsing with Tidy");
     try {
       tidyForTidyInputStream.parseDOM(in, out);
     } finally {
@@ -265,23 +265,31 @@ public enum JDOM {
     String text2 = new String(out.toByteArray());
     SAXBuilder sb = new SAXBuilder(false);
     if (logger.isTraceEnabled())
-      logger.trace("building doc");
+      logger.trace("tidyInputStream: building doc");
     Document doc = sb.build(new StringReader(text2));
     Element html = doc.getRootElement();
-    if (html.getName().equalsIgnoreCase("html")) {
+    if (! html.getName().equalsIgnoreCase("html")) {
       if (logger.isTraceEnabled())
-        logger.trace("found html");
+        logger.trace("tidyInputStream: no html tag found");
+    } else {
+      if (logger.isTraceEnabled())
+        logger.trace("tidyInputStream: found html tag");
       for (Object o : html.getChildren()) {
         if (o instanceof Element) {
           Element child = (Element) o;
-          if (child.getName().equalsIgnoreCase("body")) {
+          if (! child.getName().equalsIgnoreCase("body")) {
             if (logger.isTraceEnabled())
-              logger.trace("found body");
+              logger.trace("tidyInputStream: no body tag found");
+          } else {
+            if (logger.isTraceEnabled())
+              logger.trace("tidyInputStream: found body tag");
             (result = new ArrayList<Element>()).addAll(child.getChildren());
           }
         }
       }
     }
+    if (logger.isTraceEnabled())
+      logger.trace("tidyInputStream: completed tidy");
     return result;
   }
 
@@ -294,7 +302,7 @@ public enum JDOM {
       if (!text.startsWith("<")) {
         // plain text
         if (logger.isTraceEnabled())
-          logger.trace("plain text");
+          logger.trace("convertBookCommentToXhtml: plain text");
         StringBuffer sb = new StringBuffer();
         if (Helper.isNotNullOrEmpty(text)) {
           List<String> strings = Helper.tokenize(text, "\n", true);
@@ -313,16 +321,16 @@ public enum JDOM {
 
       // tidy the text
       if (logger.isTraceEnabled())
-        logger.trace("tidy the text");
+        logger.trace("convertBookCommentToXhtml: tidy the text");
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (Exception ee) {
-        logger.warn("caught exception in the tidy process", ee);
+        logger.warn("convertBookCommentToXhtml: caught exception in the tidy process", ee);
       }
 
       if (result != null) {
         if (logger.isTraceEnabled())
-          logger.trace("returning XHTML");
+          logger.trace("convertBookCommentToXhtml: returning XHTML");
       } else {
         // TODO  It would be nice to identify the book in the message
         // ITIMPI:  It appears that this can happen with empty text
