@@ -345,6 +345,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   public void errorOccured(String message, Throwable error) {
     String msg;
     String title;
+    Boolean b = cmdStopGenerating.isVisible();
+    cmdStopGenerating.setVisible(false);
     if (error != null) {
       title = message;
       if (Helper.isNullOrEmpty(title))
@@ -356,27 +358,33 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     }
     lblStoppingGeneration.setVisible(false);
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
+    cmdStopGenerating.setVisible(b);
     logger.error(message, error);
   }
 
   public int askUser(String message, String... possibleAnswers) {
+    Boolean b = cmdStopGenerating.isVisible();
+    cmdStopGenerating.setVisible(false);
     int nAnswer = JOptionPane
         .showOptionDialog(this, message, message, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleAnswers, possibleAnswers[0]);
     if (nAnswer > -1) {
       String logMessage = message + " (answered " + possibleAnswers[nAnswer] + ")";
       logger.info(logMessage);
     }
+    cmdStopGenerating.setVisible(b);
     return nAnswer;
   }
 
   private void actionStopGenerating() {
+    cmdStopGenerating.setVisible(false);
     int n = JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.stopGeneration.confirm"), "", JOptionPane.OK_CANCEL_OPTION);
     if (JOptionPane.OK_OPTION == n)  {
       lblStoppingGeneration.setText(Localization.Main.getText("gui.prepareStopGeneration"));
       lblStoppingGeneration.setVisible(true);
-      cmdStopGenerating.setVisible(false);
       continueGenerating = false;
     }
+    else
+      cmdStopGenerating.setVisible(true);
   }
 
   public void checkIfContinueGenerating() throws GenerationStoppedException {

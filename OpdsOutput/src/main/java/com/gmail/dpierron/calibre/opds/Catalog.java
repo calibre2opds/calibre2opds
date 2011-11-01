@@ -27,6 +27,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import java.io.*;
+import java.rmi.UnexpectedException;
 import java.util.*;
 
 // import com.sun.corba.se.impl.orbutil.concurrent.Sync;
@@ -425,6 +426,8 @@ public class Catalog {
 
     /** if true, generation has been stopped by the user */
     boolean generationStopped = false;
+    /** if true, then generation crashed unexpectedly; */
+    boolean generationCrashed = false;
 
     try {
       // reinitialize caches (in case of multiple calls in the same session)
@@ -1088,6 +1091,19 @@ public class Catalog {
       }
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
+    } catch (Throwable t) {
+      generationCrashed = true;
+      logger.error(" ");
+      logger.error ("*************************************************");
+      logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
+      logger.error(Localization.Main.getText("error.cause").toUpperCase() +  ": " + t.getCause());
+      logger.error(Localization.Main.getText("error.message").toUpperCase() +  ": " + t.getLocalizedMessage());
+      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() +  ": ");
+      StackTraceElement[] st = t.getStackTrace();
+      for (int i = 0; i <st.length; i++)
+        logger.error(st[i]);
+      logger.error ("*************************************************");
+      logger.error(" ");
     } finally {
       // make sure the temp files are deleted whatever happens
       if (destinationFolder != null) {
@@ -1099,7 +1115,9 @@ public class Catalog {
         callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
       }
       if (generationStopped)
-        callback.errorOccured("user stopped the catalog generation", null);
+        callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
+      if (generationCrashed)
+        callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
     }
   }
 
