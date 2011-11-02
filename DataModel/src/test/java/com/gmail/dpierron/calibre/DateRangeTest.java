@@ -32,25 +32,25 @@ public class DateRangeTest {
       fail("DateRange failed on FORTNIGHT");
 
     d = new GregorianCalendar();
-    d.add(Calendar.DAY_OF_MONTH, -30);
+    d.add(Calendar.DAY_OF_MONTH, -27); // sometimes a month can even be 28 days long
 
     if (DateRange.MONTH != DateRange.valueOf(d.getTime()))
       fail("DateRange failed on MONTH");
 
     d = new GregorianCalendar();
-    d.add(Calendar.DAY_OF_MONTH, -60);
+    d.add(Calendar.DAY_OF_MONTH, -57); // minimum is 28 + 30
 
     if (DateRange.TWOMONTHS != DateRange.valueOf(d.getTime()))
       fail("DateRange failed on TWOMONTHS");
 
     d = new GregorianCalendar();
-    d.add(Calendar.DAY_OF_MONTH, -90);
+    d.add(Calendar.DAY_OF_MONTH, -88); // minimum is 28 + 30 + 31
 
     if (DateRange.THREEMONTHS != DateRange.valueOf(d.getTime()))
       fail("DateRange failed on THREEMONTHS");
 
     d = new GregorianCalendar();
-    d.add(Calendar.DAY_OF_MONTH, -180);
+    d.add(Calendar.DAY_OF_MONTH, -179);  // minimum is 28 + 30 + 31 + 30 + 31 + 30
 
     if (DateRange.SIXMONTHS != DateRange.valueOf(d.getTime()))
       fail("DateRange failed on SIXMONTHS");
