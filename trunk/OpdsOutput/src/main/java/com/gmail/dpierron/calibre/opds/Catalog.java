@@ -714,6 +714,7 @@ public class Catalog {
       now = System.currentTimeMillis();
       entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
       if (entry != null)
+      if (entry != null)
         main.addContent(entry);
       callback.endCreateSeries(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Series catalog");
