@@ -5,7 +5,6 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
@@ -252,11 +251,7 @@ public abstract class SubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogLevel  Breadcrumbs=" + pBreadcrumbs.toString());
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    return FeedHelper.INSTANCE.getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary,
-        // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_TAGS :
-            Icons.ICON_TAGS);
+    return FeedHelper.INSTANCE.getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary, icon);
 
   }
 

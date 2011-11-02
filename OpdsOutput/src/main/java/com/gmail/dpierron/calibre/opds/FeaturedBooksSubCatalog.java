@@ -57,6 +57,6 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
             getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_FEATURED :
-            Icons.ICON_BOOKS);
+            Icons.ICON_FEATURED);
   }
 }
