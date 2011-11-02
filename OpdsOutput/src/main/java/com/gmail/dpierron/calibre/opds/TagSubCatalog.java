@@ -41,7 +41,12 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
     }
 
     if (Helper.isNotNullOrEmpty(tagsToRemove)) {
-      result = FilterHelper.filter(new RemoveSelectedTagsFilter(tagsToRemove), originalBooks);
+      // make a copy of the books because RemoveSelectedTagsFilter actually removes tags from the Book objects
+      result = new LinkedList<Book>();
+      for (Book originalBook : originalBooks) {
+        result.add(originalBook.copy());
+      }
+      result = FilterHelper.filter(new RemoveSelectedTagsFilter(tagsToRemove), result);
     }
     return result;
   }
