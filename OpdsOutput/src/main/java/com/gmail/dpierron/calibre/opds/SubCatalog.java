@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
+import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -143,7 +144,11 @@ public abstract class SubCatalog {
       Composite<Element, String> subCatalogEntry;
       Element entry;
 
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
       /* Tags */
+      logger.debug("SubCatalog - STARTED: Generating tags catalog");
       subCatalogEntry = TagSubCatalog.getTagSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (subCatalogEntry != null) {
         entry = subCatalogEntry.getFirstElement();
@@ -151,7 +156,11 @@ public abstract class SubCatalog {
           feed.addContent(entry);
       }
 
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
       /* Authors */
+      logger.debug("SubCatalog - STARTED: Generating Authors catalog");
       subCatalogEntry = new AuthorsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (subCatalogEntry != null) {
         entry = subCatalogEntry.getFirstElement();
@@ -159,7 +168,11 @@ public abstract class SubCatalog {
           feed.addContent(entry);
       }
 
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
       /* Series */
+      logger.debug("SubCatalog - STARTED: Generating Series catalog");
       subCatalogEntry = new SeriesSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
       if (subCatalogEntry != null) {
         entry = subCatalogEntry.getFirstElement();
@@ -167,35 +180,63 @@ public abstract class SubCatalog {
           feed.addContent(entry);
       }
 
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
       /* Recent books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent()) {
+        logger.debug("SubCatalog - STARTED: Generating Recent books catalog");
+        subCatalogEntry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {
-          subCatalogEntry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
           entry = subCatalogEntry.getFirstElement();
           if (entry != null)
             feed.addContent(entry);
         }
       }
+
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
       /* Rated books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings()) {
+        logger.debug("SubCatalog - STARTED: Generating Rated books catalog");
+        subCatalogEntry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {
-          subCatalogEntry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
           entry = subCatalogEntry.getFirstElement();
           if (entry != null)
             feed.addContent(entry);
         }
       }
 
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
+      /* Featured catalog */
+      if (CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter() != null) {
+        logger.debug("SubCatalog - STARTED: Generating Featured catalog");
+        List<Book> featuredBooks = FilterHelper.filter(CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter(), books);
+        Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
+        if (featuredCatalog != null) {
+          feed.addContent(featuredCatalog.getFirstElement());
+        }
+      }
+
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
       /* All books */
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
+        logger.debug("SubCatalog - STARTED: Generating All books catalog");
+        subCatalogEntry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {
-          subCatalogEntry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
           entry = subCatalogEntry.getFirstElement();
           if (entry != null)
             feed.addContent(entry);
         }
       }
+
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
       // write the element to the file
       document.addContent(feed);

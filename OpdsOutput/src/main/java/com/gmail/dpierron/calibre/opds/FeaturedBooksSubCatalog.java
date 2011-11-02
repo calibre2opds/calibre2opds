@@ -41,7 +41,7 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
       return null;
 
     String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_featuredbooks.xml");
-    String title = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle();
+    String title = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle();
     String urn = "calibre:featuredbooks";
 
     String summary = "";

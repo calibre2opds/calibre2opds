@@ -4,6 +4,7 @@ import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
   private File catalogFolder;
+  private BookFilter featuredBooksFilter;
   private List<CachedFile> listOfFilesToCopy = new LinkedList<CachedFile>();
   private List<String> listOfFilesPathsToCopy = new LinkedList<String>();
   private Map<String, Book> mapOfBookByPathToCopy = new HashMap<String, Book>();
@@ -86,8 +88,7 @@ public class CatalogManager {
       storeCatalogFileInSubfolder(catalogFileName);
       catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
     }
-    return (weAreAlsoInASubFolder ? "../" : "") + FeedHelper.INSTANCE.urlEncode(catalogFolderName) + "/" +
-        FeedHelper.INSTANCE.urlEncode(catalogFileName);
+    return (weAreAlsoInASubFolder ? "../" : "") + FeedHelper.INSTANCE.urlEncode(catalogFolderName) + "/" + FeedHelper.INSTANCE.urlEncode(catalogFileName);
   }
 
   /**
@@ -204,5 +205,13 @@ public class CatalogManager {
     bookEntriesFiles.add(bookEntry);
     return true;
 
+  }
+
+  public BookFilter getFeaturedBooksFilter() {
+    return featuredBooksFilter;
+  }
+
+  public void setFeaturedBooksFilter(BookFilter featuredBooksFilter) {
+    this.featuredBooksFilter = featuredBooksFilter;
   }
 }
