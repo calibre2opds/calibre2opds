@@ -4,7 +4,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
-import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
+import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
@@ -32,7 +32,8 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
 
   @Override
   List<Book> filterOutStuff(List<Book> originalBooks) {
-    List<Book> result = new LinkedList<Book>();
+    List<Book> result = originalBooks;
+
     Set<Tag> tagsToRemove = new TreeSet<Tag>();
     for (Object objectToFilterOut : stuffToFilterOut) {
       if (objectToFilterOut instanceof Tag)
@@ -40,23 +41,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
     }
 
     if (Helper.isNotNullOrEmpty(tagsToRemove)) {
-      // copy the books list, before filtering it (so we don't modify the original books in the DataModel)
-      List<Book> originalBooks2 = new LinkedList<Book>();
-      for (Book book : originalBooks) {
-        originalBooks2.add(book.copy());
-      }
-      originalBooks = originalBooks2;
-
-      // copy all to result (we browse one collection, and modify the other)
-      result.addAll(originalBooks);
-
-      // first, filter unwanted stuff
-      BookFilter filter = new RemoveSelectedTagsFilter(tagsToRemove);
-      for (Book book : originalBooks) {
-        if (!filter.didBookPassThroughFilter(book)) {
-          result.remove(book);
-        }
-      }
+      result = FilterHelper.filter(new RemoveSelectedTagsFilter(tagsToRemove), originalBooks);
     }
     return result;
   }

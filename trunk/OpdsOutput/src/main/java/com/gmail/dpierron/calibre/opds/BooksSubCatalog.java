@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -334,6 +333,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       } else {
         result = new LinkedList<Element>();
         for (int i = from; i < books.size(); i++) {
+          // check if we must continue
+          CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
           if ((i - from) >= maxBeforePaginate) {
             if (logger.isDebugEnabled())
               logger.debug("making a nextpage link");
@@ -928,7 +930,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String summary = book.getSummary(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength());
       // If we had anything for the summary then it needs to be added to the output.
       if (Helper.isNotNullOrEmpty(summary))
-          entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
+        entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
     }
 
     // acquisition links

@@ -16,5 +16,4 @@ public class Composite<T1, T2> {
   public T2 getSecondElement() {
     return secondElement;
   }
-
 }

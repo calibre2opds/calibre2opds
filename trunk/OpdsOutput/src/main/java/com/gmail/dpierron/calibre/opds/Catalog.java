@@ -27,7 +27,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import java.io.*;
-import java.rmi.UnexpectedException;
 import java.util.*;
 
 // import com.sun.corba.se.impl.orbutil.concurrent.Sync;
@@ -446,7 +445,6 @@ public class Catalog {
         return;
       }
 
-
       // Check that the catalog folder is actually set to something and not an empty string
       String catalogFolderName = currentProfile.getCatalogFolderName();
       if (catalogFolderName.length() == 0) {
@@ -575,23 +573,55 @@ public class Catalog {
       // check if we must continue
       callback.checkIfContinueGenerating();
 
-      // first, prepare the search queries
-      BookFilter customCatalogFilter = null;
-      String customCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogSavedSearchName();
-      if (Helper.isNotNullOrEmpty(customCatalogSearch)) {
-        try {
-          customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
-        } catch (CalibreSavedSearchInterpretException e) {
-          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
-        } catch (CalibreSavedSearchNotFoundException e) {
-          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", customCatalogSearch), null);
+      {
+        // Prepare the featured books search query
+        BookFilter featuredBookFilter = null;
+        String customCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
+        if (Helper.isNotNullOrEmpty(customCatalogSearch)) {
+          try {
+            featuredBookFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
+          } catch (CalibreSavedSearchInterpretException e) {
+            callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+          } catch (CalibreSavedSearchNotFoundException e) {
+            callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+          }
+          if (featuredBookFilter == null) {
+            // an error occured, let's ask the user if he wants to abort
+            int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
+            if (n == 1) {
+              callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+              return;
+            }
+          }
         }
-        if (customCatalogFilter == null) {
-          // an error occured, let's ask the user if he wants to abort
-          int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
-          if (n == 1) {
-            callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
-            return;
+        CatalogContext.INSTANCE.getCatalogManager().setFeaturedBooksFilter(featuredBookFilter);
+      }
+      // Prepare the Custom catalogs search query
+      List<Composite<String, BookFilter>> customCatalogsFilters = new LinkedList<Composite<String, BookFilter>>();
+      List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
+      if (Helper.isNotNullOrEmpty(customCatalogs)) {
+        for (Composite<String, String> customCatalog : customCatalogs) {
+          String customCatalogTitle = customCatalog.getFirstElement();
+          String customCatalogSearch = customCatalog.getSecondElement();
+          if (Helper.isNotNullOrEmpty(customCatalogTitle) && Helper.isNotNullOrEmpty(customCatalogSearch)) {
+            BookFilter customCatalogFilter = null;
+            try {
+              customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
+            } catch (CalibreSavedSearchInterpretException e) {
+              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+            } catch (CalibreSavedSearchNotFoundException e) {
+              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+            }
+            if (customCatalogFilter == null) {
+              // an error occured, let's ask the user if he wants to abort
+              int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
+              if (n == 1) {
+                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+                return;
+              }
+            } else {
+              customCatalogsFilters.add(new Composite<String, BookFilter>(customCatalogTitle, customCatalogFilter));
+            }
           }
         }
       }
@@ -605,7 +635,7 @@ public class Catalog {
       } catch (CalibreSavedSearchInterpretException e) {
         callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
       } catch (CalibreSavedSearchNotFoundException e) {
-        callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", customCatalogSearch), null);
+        callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
       }
 
       List<Book> books = DataModel.INSTANCE.getListOfBooks();
@@ -739,20 +769,46 @@ public class Catalog {
 
       /* Featured catalog */
       now = System.currentTimeMillis();
-      if (customCatalogFilter != null) {
+      if (CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter() != null) {
         logger.debug("STARTED: Generating Featured books catalog");
-        List<Book> featuredBooks = FilterHelper.filter(customCatalogFilter, books);
+        List<Book> featuredBooks = FilterHelper.filter(CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter(), books);
         callback.startCreateFeaturedBooks(featuredBooks.size());
         Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
         if (featuredCatalog != null) {
           // add a "featured" link - 6 places the link right wher we want it...
           main.addContent(6, FeedHelper.INSTANCE
-              .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogTitle()));
+              .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle()));
           // add the actual catalog
           main.addContent(featuredCatalog.getFirstElement());
         }
       }
       callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
+
+      // check if we must continue
+      callback.checkIfContinueGenerating();
+
+      /* Custom catalogs */
+      now = System.currentTimeMillis();
+      if (Helper.isNotNullOrEmpty(customCatalogsFilters)) {
+        logger.debug("STARTED: Generating custom catalogs");
+        callback.startCreateCustomCatalogs(customCatalogsFilters.size());
+        for (Composite<String, BookFilter> customCatalogFilter : customCatalogsFilters) {
+          String customCatalogTitle = customCatalogFilter.getFirstElement();
+          BookFilter customCatalogBookFilter = customCatalogFilter.getSecondElement();
+          if (Helper.isNotNullOrEmpty(customCatalogTitle) && customCatalogBookFilter != null) {
+            if (logger.isDebugEnabled())
+              logger.debug("STARTED: Generating custom catalog " + title);
+            List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, books);
+            Composite<Element, String> customCatalog = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
+            main.addContent(customCatalog.getFirstElement());
+            callback.incStepProgressIndicatorPosition();
+
+            // check if we must continue
+            callback.checkIfContinueGenerating();
+          }
+        }
+        callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
+      }
 
       // check if we must continue
       callback.checkIfContinueGenerating();
@@ -1094,15 +1150,15 @@ public class Catalog {
     } catch (Throwable t) {
       generationCrashed = true;
       logger.error(" ");
-      logger.error ("*************************************************");
+      logger.error("*************************************************");
       logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
-      logger.error(Localization.Main.getText("error.cause").toUpperCase() +  ": " + t.getCause());
-      logger.error(Localization.Main.getText("error.message").toUpperCase() +  ": " + t.getLocalizedMessage());
-      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() +  ": ");
+      logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t.getCause());
+      logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getLocalizedMessage());
+      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ": ");
       StackTraceElement[] st = t.getStackTrace();
-      for (int i = 0; i <st.length; i++)
+      for (int i = 0; i < st.length; i++)
         logger.error(st[i]);
-      logger.error ("*************************************************");
+      logger.error("*************************************************");
       logger.error(" ");
     } finally {
       // make sure the temp files are deleted whatever happens

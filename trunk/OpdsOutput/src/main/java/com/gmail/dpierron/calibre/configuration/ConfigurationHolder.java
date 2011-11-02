@@ -2,6 +2,7 @@ package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -9,13 +10,20 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfigurationHolder extends PropertiesBasedConfiguration implements StanzaConfigurationInterface {
 
   final static String PROPERTY_NAME_VERSIONCHIP = "VERSIONCHIP";
+  final static Pattern PATTERN_CUSTOMCATALOG = Pattern.compile("\\[customCatalog\\](.+?)\\[/customCatalog\\]");
+  final static Pattern PATTERN_CUSTOMCATALOG_TITLE = Pattern.compile("\\[title\\](.+?)\\[/title\\]");
+  final static Pattern PATTERN_CUSTOMCATALOG_SEARCH = Pattern.compile("\\[search\\](.+?)\\[/search\\]");
+
   private final static String PROPERTY_NAME_DATABASEFOLDER = "DatabaseFolder";
   private final static String PROPERTY_NAME_TARGETFOLDER = "TargetFolder";
   private final static String PROPERTY_NAME_LANGUAGE = "Language";
@@ -86,8 +94,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_MAXKEYWORDS = "MaxKeywords";
   private final static String PROPERTY_NAME_INDEXFILTERALGORITHM = "IndexFilterAlgorithm";
   private final static String PROPERTY_NAME_URLBASE = "UrlBase";
-  private final static String PROPERTY_NAME_CUSTOMCATALOGTITLE = "CustomCatalogTitle";
-  private final static String PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME = "CustomCatalogSavedSearchName";
+  private final static String PROPERTY_NAME_FEATUREDCATALOGTITLE = "FeaturedCatalogTitle";
+  private final static String PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME = "FeaturedCatalogSavedSearchName";
+  private final static String PROPERTY_NAME_CUSTOMCATALOGS = "CustomCatalogs";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -117,7 +126,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       String getterName = getter.getName();
       String setterName = "set" + getterName.substring(3);
       //try {
-        Class returnType = getter.getReturnType();
+      Class returnType = getter.getReturnType();
       Method setter = null;
       try {
         setter = this.getClass().getMethod(setterName, returnType);
@@ -690,17 +699,17 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH, value);
   }
 
-    public boolean isMaxBookSummaryLengthReadOnly() {
-      return isPropertyReadOnly(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
-    }
+  public boolean isMaxBookSummaryLengthReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
+  }
 
-    public int getMaxBookSummaryLength() {
-      Integer i = getInteger(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
-      if (i == null)
-        return defaults.getMaxBookSummaryLength();
-      else
-        return i.intValue();
-    }
+  public int getMaxBookSummaryLength() {
+    Integer i = getInteger(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
+    if (i == null)
+      return defaults.getMaxBookSummaryLength();
+    else
+      return i.intValue();
+  }
 
   public boolean isGenerateTagsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATETAGS);
@@ -1310,35 +1319,85 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_URLBASE, value);
   }
 
-  public boolean isCustomCatalogSavedSearchNameReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME);
+  public boolean isFeaturedCatalogSavedSearchNameReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME);
   }
 
-  public String getCustomCatalogSavedSearchName() {
-    String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME);
+  public String getFeaturedCatalogSavedSearchName() {
+    String s = getProperty(PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME);
     if (s == null)
-      return defaults.getCustomCatalogSavedSearchName();
+      return defaults.getFeaturedCatalogSavedSearchName();
     else
       return s;
   }
 
-  public void setCustomCatalogSavedSearchName(String value) {
-    setProperty(PROPERTY_NAME_CUSTOMCATALOGSAVEDSEARCHNAME, value);
+  public void setFeaturedCatalogSavedSearchName(String value) {
+    setProperty(PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME, value);
   }
 
-  public boolean isCustomCatalogTitleReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGTITLE);
+  public boolean isFeaturedCatalogTitleReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_FEATUREDCATALOGTITLE);
   }
 
-  public String getCustomCatalogTitle() {
-    String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGTITLE);
+  public String getFeaturedCatalogTitle() {
+    String s = getProperty(PROPERTY_NAME_FEATUREDCATALOGTITLE);
     if (s == null)
-      return defaults.getCustomCatalogTitle();
+      return defaults.getFeaturedCatalogTitle();
     else
       return s;
   }
 
-  public void setCustomCatalogTitle(String value) {
-    setProperty(PROPERTY_NAME_CUSTOMCATALOGTITLE, value);
+  public void setFeaturedCatalogTitle(String value) {
+    setProperty(PROPERTY_NAME_FEATUREDCATALOGTITLE, value);
+  }
+
+  public boolean isCustomCatalogsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGS);
+  }
+
+  public List<Composite<String, String>> getCustomCatalogs() {
+    List<Composite<String, String>> result = new LinkedList<Composite<String, String>>();
+    String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGS);
+    try {
+      if (Helper.isNotNullOrEmpty(s)) {
+        Matcher matcher = PATTERN_CUSTOMCATALOG.matcher(s);
+        while (matcher.find()) {
+          String string = matcher.group();
+          Matcher titleMatcher = PATTERN_CUSTOMCATALOG_TITLE.matcher(string);
+          String title = titleMatcher.find() ? titleMatcher.group() : null;
+          Matcher searchMatcher = PATTERN_CUSTOMCATALOG_SEARCH.matcher(string);
+          String search = searchMatcher.find() ? searchMatcher.group() : null;
+          if (Helper.isNotNullOrEmpty(title) && Helper.isNotNullOrEmpty(search)) {
+            title = title.substring(7, title.length() - 8);
+            search = search.substring(8, search.length() - 9);
+            result.add(new Composite<String, String>(title, search));
+          }
+        }
+      }
+    } catch (RuntimeException e) {
+      logger.warn("error while decoding custom catalogs : " + s, e);
+    }
+    return result;
+  }
+
+  public void setCustomCatalogs(List<Composite<String, String>> value) {
+    StringBuffer mainsb = new StringBuffer();
+    if (Helper.isNotNullOrEmpty(value)) {
+      for (Composite<String, String> composite : value) {
+        String s1 = composite.getFirstElement() == null ? "" : composite.getFirstElement().toString();
+        String s2 = composite.getSecondElement() == null ? "" : composite.getSecondElement().toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("[customCatalog]");
+        sb.append("[title]");
+        sb.append(s1);
+        sb.append("[/title]");
+        sb.append("[search]");
+        sb.append(s2);
+        sb.append("[/search]");
+        sb.append("[/customCatalog]");
+        mainsb.append(sb.toString());
+      }
+    }
+    setProperty(PROPERTY_NAME_CUSTOMCATALOGS, mainsb.toString());
   }
 }

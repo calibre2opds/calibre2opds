@@ -289,11 +289,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.UrlBase;
   }
 
-  public String getCustomCatalogTitle() {
-    return StanzaConstants.CustomCatalogTitle;
+  public String getFeaturedCatalogTitle() {
+    return StanzaConstants.FeaturedCatalogTitle;
   }
 
-  public String getCustomCatalogSavedSearchName() {
-    return StanzaConstants.CustomCatalogSavedSearchName;
+  public String getFeaturedCatalogSavedSearchName() {
+    return StanzaConstants.FeaturedCatalogSavedSearchName;
   }
 }
