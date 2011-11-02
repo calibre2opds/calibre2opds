@@ -428,6 +428,7 @@ public class Catalog {
     /** if true, then generation crashed unexpectedly; */
     boolean generationCrashed = false;
 
+    Throwable error = null;
     try {
       // reinitialize caches (in case of multiple calls in the same session)
       CachedFileManager.INSTANCE.initialize();
@@ -799,8 +800,10 @@ public class Catalog {
             if (logger.isDebugEnabled())
               logger.debug("STARTED: Generating custom catalog " + title);
             List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, books);
-            Composite<Element, String> customCatalog = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
-            main.addContent(customCatalog.getFirstElement());
+            if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
+              Composite<Element, String> customCatalog = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
+              main.addContent(customCatalog.getFirstElement());
+            }
             callback.incStepProgressIndicatorPosition();
 
             // check if we must continue
@@ -1148,6 +1151,7 @@ public class Catalog {
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
     } catch (Throwable t) {
+      error = t;
       generationCrashed = true;
       logger.error(" ");
       logger.error("*************************************************");
@@ -1155,9 +1159,8 @@ public class Catalog {
       logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t.getCause());
       logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getLocalizedMessage());
       logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ": ");
-      StackTraceElement[] st = t.getStackTrace();
-      for (int i = 0; i < st.length; i++)
-        logger.error(st[i]);
+      String stack = Helper.getStackTrace(t);
+      logger.error(stack);
       logger.error("*************************************************");
       logger.error(" ");
     } finally {
@@ -1173,7 +1176,7 @@ public class Catalog {
       if (generationStopped)
         callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
       if (generationCrashed)
-        callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
+        callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), error);
     }
   }
 
