@@ -66,7 +66,11 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setMaxSummaryLength(int value);
 
+  public void setGenerateAuthors(boolean value);
+
   public void setGenerateTags(boolean value);
+
+  public void setGenerateSeries(boolean value);
 
   public void setGenerateRecent(boolean value);
 
