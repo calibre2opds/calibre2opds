@@ -332,7 +332,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       if (letter.equals("_"))
         letterTitle = Localization.Main.getText("splitByLetter.series.other");
       else
-        letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("seriesword.title"), letter);
+        letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("seriesword.title"),
+                                                letter.length() > 1 ? letter : letter.substring(0,1) + letter.substring(1).toLowerCase());
       Element element = null;
       if (itemsCount > 0) {
         // try and list the items to make the summary

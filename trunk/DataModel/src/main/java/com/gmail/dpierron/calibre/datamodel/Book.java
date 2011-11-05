@@ -176,12 +176,58 @@ public class Book implements SplitableByLetter {
   }
 
   /**
+   * TODO  THis is still being worked on - not yet being used
+   * Remove leading text from the given XHTNL string.  This is
+   *        used to remove words such as SUMMARY that we add
+   *        ourselves in the catalog.   It is also used to remove
+   *        other common expressions from the Summary to try and
+   *        leave text that is more useful as a summary.
+   *
+   *        Special processing requirements:
+   *        - Any leading HTML tags or spaces are ignored
+   *        - Any trailing ':' or spaces are removed
+   *        - If after removing the desired text there are
+   *          HTML tags that were purely surrounding the text
+   *          that has been removed, they are also removed.
+   * @param text            Text that is being worked on
+   * @param LeadingText     String to be checked for (case ignored)
+   * @return                Result of removing text, or null if input was null
+   */
+  private String removeLeadingText (String text, String leadingText) {
+    // Check for fast exit conditions
+    if (text == null || leadingText == null || text.charAt(0) != '<')
+      return text;
+
+    int textLength = text.length();
+    int leadingLength = leadingText.length();
+    int startText = 0;
+    // skip over leading tags
+    while (text.charAt(startText) == '<' ) {
+        int tagEnd = text.indexOf('>');
+        if (tagEnd == -1)
+            return text;
+        else
+            startText = tagEnd + 1;
+    }
+    if (text.subSequence(startText,startText+leadingLength -1) != leadingText)
+      return text;
+    text.trim();
+    // Now try and get past any tags
+
+    // If there is no match on leading text, then give up and return result same as input
+
+    // After removing leading text, now remove any tags that are now empty of content
+
+    return text;
+  }
+
+  /**
    * Remove the word 'SUMMARY' from the start of the given string if it present
    * TODO  Enhance this by looking beyond starting HTML tags?
    * @param text
    * @return Input if null or does not start with SUMMARY
    */
-  private String removeSumamryText (String text) {
+  private String removeSummaryText (String text) {
     if (text != null) {
       // Special Processing - remove SUMMARY from start of comment field (if present)
       if (text.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY:"))
@@ -200,7 +246,7 @@ public class Book implements SplitableByLetter {
   public void setComment(String value) {
     summary = null;
     summaryMaxLength = -1;
-    comment = removeSumamryText(value);
+    comment = removeSummaryText(value);
     // The following log entry can be useful if trying to debug character encoding issues
     // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
   }
@@ -231,15 +277,14 @@ public class Book implements SplitableByLetter {
           seriesIndexText = String.format("%.2f",seriesIndexFloat);
         }
         summary += Helper.shorten(getSeries().getName() + " [" + seriesIndexText + "]: ", maxLength);
-        maxLength -= summary.length();
       }
       // See if still space for comment info
-      if (maxLength > 0) {
-        String noHtml = removeSumamryText(Helper.removeHtmlElements(getComment()));
+      if (maxLength > (summary.length() + 3)) {
+        String noHtml = removeSummaryText(Helper.removeHtmlElements(getComment()));
         if (noHtml != null) {
           // Special Processing - remove PRODUCT DESCRIPTION from start of comment field (if present)
           if (noHtml.toUpperCase(Locale.ENGLISH).startsWith("PRODUCT DESCRIPTION"))
-            noHtml = noHtml.substring(18);
+            noHtml = noHtml.substring(19);
           // Is there actually any comment info?
           if (Helper.isNotNullOrEmpty(noHtml))
             summary += Helper.shorten(noHtml, maxLength - summary.length());

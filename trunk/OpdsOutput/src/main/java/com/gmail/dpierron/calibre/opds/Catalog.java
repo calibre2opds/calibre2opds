@@ -602,6 +602,7 @@ public class Catalog {
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
         for (Composite<String, String> customCatalog : customCatalogs) {
+          callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
           if (Helper.isNotNullOrEmpty(customCatalogTitle) && Helper.isNotNullOrEmpty(customCatalogSearch)) {
@@ -795,6 +796,7 @@ public class Catalog {
         logger.debug("STARTED: Generating custom catalogs");
         callback.startCreateCustomCatalogs(customCatalogsFilters.size());
         for (Composite<String, BookFilter> customCatalogFilter : customCatalogsFilters) {
+          callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalogFilter.getFirstElement();
           BookFilter customCatalogBookFilter = customCatalogFilter.getSecondElement();
           if (Helper.isNotNullOrEmpty(customCatalogTitle) && customCatalogBookFilter != null) {
@@ -811,8 +813,8 @@ public class Catalog {
             callback.checkIfContinueGenerating();
           }
         }
-        callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
       }
+      callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
 
       // check if we must continue
       callback.checkIfContinueGenerating();
@@ -878,6 +880,7 @@ public class Catalog {
       countMetadata = 0;
       if (currentProfile.getReprocessEpubMetadata()) {
         for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+          callback.checkIfContinueGenerating();
           callback.incStepProgressIndicatorPosition();
           if (shouldReprocessEpubMetadata(book)) {
             // callback.showMessage(book.getTitle());
@@ -904,6 +907,7 @@ public class Catalog {
       // copy the resource files to the catalog folder
       logger.debug("STARTED: Copying Resource files");
       for (String resource : Constants.FILE_RESOURCES) {
+        callback.checkIfContinueGenerating();
         File resourceFile = new File(destinationFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/" + resource);
         InputStream resourceStream = JDOM.class.getResourceAsStream(resource);
         Helper.copy(resourceStream, resourceFile);
@@ -936,6 +940,7 @@ public class Catalog {
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
         for (String pathToCopy : CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy()) {
+          callback.checkIfContinueGenerating();
           CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
           File targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, pathToCopy);
           syncFiles(sourceFile, targetFile);
@@ -952,6 +957,7 @@ public class Catalog {
         Set<File> usefulTargetFiles = new TreeSet<File>();
         List<String> sourceFiles = new LinkedList<String>(CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy());
         for (String sourceFile : sourceFiles) {
+          callback.checkIfContinueGenerating();
           File targetFile = new File(targetFolder, sourceFile);
           while (targetFile != null) {
             usefulTargetFiles.add(targetFile);
@@ -971,6 +977,7 @@ public class Catalog {
 
         logger.debug("STARTING: Delete superfluous files from target");
         for (File existingTargetFile : existingTargetFiles) {
+          callback.checkIfContinueGenerating();
           if (!usefulTargetFiles.contains(existingTargetFile)) {
             if (!existingTargetFile.getAbsolutePath().startsWith(targetCatalogFolderPath)) // don't delete the catalog files
             {

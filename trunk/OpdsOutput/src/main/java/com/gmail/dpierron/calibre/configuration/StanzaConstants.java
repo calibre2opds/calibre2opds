@@ -32,7 +32,9 @@ public class StanzaConstants {
   public final static String CatalogFilter = "";
   public final static boolean generateExternalLinks = true;
   public final static boolean generateCrossLinks = true;
+  public final static boolean generateAuthors = true;
   public final static boolean generateTags = true;
+  public final static boolean generateSeries = true;
   public final static boolean generateRecent = true;
   public final static boolean generateRatings = true;
   public final static boolean generateAllbooks = true;

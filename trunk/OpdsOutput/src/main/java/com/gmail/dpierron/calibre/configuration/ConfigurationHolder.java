@@ -56,7 +56,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
   private final static String PROPERTY_NAME_MAXBOOKSUMMARYLENGTH = "MaxBookSummaryLength";
+  private final static String PROPERTY_NAME_GENERATEAUTHORS = "GenerateAuthors";
   private final static String PROPERTY_NAME_GENERATETAGS = "GenerateTags";
+  private final static String PROPERTY_NAME_GENERATESERIES = "GenerateSeries";
   private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
   private final static String PROPERTY_NAME_GENERATEALLBOOKS = "GenerateAllbooks";
@@ -711,6 +713,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       return i.intValue();
   }
 
+  public boolean isGenerateAuthorsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATEAUTHORS);
+  }
+
+  public boolean getGenerateAuthors() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATEAUTHORS);
+    if (b == null)
+      return defaults.getGenerateAuthors();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateAuthors(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATEAUTHORS, value);
+  }
+
   public boolean isGenerateTagsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATETAGS);
   }
@@ -725,6 +743,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setGenerateTags(boolean value) {
     setProperty(PROPERTY_NAME_GENERATETAGS, value);
+  }
+
+  public boolean isGenerateSeriesReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATESERIES);
+  }
+
+  public boolean getGenerateSeries() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATESERIES);
+    if (b == null)
+      return defaults.getGenerateSeries();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateSeries(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATESERIES, value);
   }
 
   public boolean isGenerateRecentReadOnly() {

@@ -743,7 +743,9 @@ public class Mainframe extends javax.swing.JFrame {
     i = getValue(txtMaxsummarylength);
     if (i > -1)
       ConfigurationManager.INSTANCE.getCurrentProfile().setMaxSummaryLength(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setMaxBookSummaryLength(i);
+    i = getValue(txtMaxBookSummaryLength);
+    if (i > -1)
+      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxBookSummaryLength(i);
     ConfigurationManager.INSTANCE.getCurrentProfile().setSplitTagsOn(txtSplittagson.getText());
     ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeBooksWithNoFile(chkIncludeemptybooks.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeOnlyOneFile(chkIncludeOnlyOneFile.isSelected());
