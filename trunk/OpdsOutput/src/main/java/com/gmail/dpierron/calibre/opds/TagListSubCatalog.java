@@ -187,7 +187,7 @@ public class TagListSubCatalog extends TagSubCatalog {
         letterTitle = Localization.Main.getText("splitByLetter.tag.other");
       else
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("tagword.title"),
-                                                    letter.length() > 1 ? letter : letter.substring(0,1) + letter.substring(1).toLowerCase());
+                                                    letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
 
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeTags(tagsInThisLetter);
