@@ -32,6 +32,22 @@ public class CalibreQueryInterpreter {
   private static final String WORD_RATING_TRUE = "rating:true";
   private static final String WORD_RATING_FALSE = "rating:false";
 
+  private static final String WORD_AUTHOR = "authors:";
+  private static final String WORD_AUTHOR_TRUE = "authors:true";
+  private static final String WORD_AUTHOR_FALSE = "authors:false";
+
+  private static final String WORD_SERIES = "series:";
+  private static final String WORD_SERIES_TRUE = "series:true";
+  private static final String WORD_SERIES_FALSE = "series:false";
+
+  private static final String WORD_FORMAT = "formats:";
+  private static final String WORD_FORMAT_TRUE = "formats:true";
+  private static final String WORD_FORMAT_FALSE = "formats:false";
+
+  private static final String WORD_PUBLISHER = "publisher:"; // there is no 's', it's correct
+  private static final String WORD_PUBLISHER_TRUE = "publisher:true";
+  private static final String WORD_PUBLISHER_FALSE = "publisher:false";
+
   // unary negation operator
   private static final String WORD_NOT = "not";
 
@@ -56,46 +72,45 @@ public class CalibreQueryInterpreter {
 
     /* Tags */
     if (template.toLowerCase().equals(WORD_TAG_TRUE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found tag present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found tag present filter");
       return new TagPresenceFilter(true);
     } else if (template.toLowerCase().equals(WORD_TAG_FALSE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found tag not present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found tag not present filter");
       return new TagPresenceFilter(false);
     } else if (template.toLowerCase().startsWith(WORD_TAG)) {
       boolean isEqualsPresent = template.substring(WORD_TAG.length() + 1, WORD_TAG.length() + 2).equals("=");
       String tag = template.substring(WORD_TAG.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
-      if (logger.isDebugEnabled())
-        logger.debug("found tag filter: " + tag);
+      if (logger.isTraceEnabled())
+        logger.trace("found tag filter: " + tag);
       return new TagFilter(tag, !isEqualsPresent);
     }
 
     /* Languages */
     else if (template.toLowerCase().equals(WORD_LANGUAGE_TRUE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found language present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found language present filter");
       return new LanguagePresenceFilter(true);
     } else if (template.toLowerCase().equals(WORD_LANGUAGE_FALSE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found language not present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found language not present filter");
       return new LanguagePresenceFilter(false);
     } else if (template.toLowerCase().startsWith(WORD_LANGUAGE)) {
       String lang = template.substring(WORD_LANGUAGE.length() + 2, template.length() - 1); // skip the "= and the "
-      if (logger.isDebugEnabled())
-        logger.debug("found language filter: " + lang);
+      if (logger.isTraceEnabled())
+        logger.trace("found language filter: " + lang);
       return new LanguageFilter(lang);
     }
 
     /* Ratings */
-    /* Languages */
     else if (template.toLowerCase().equals(WORD_RATING_TRUE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found rating present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found rating present filter");
       return new RatingPresenceFilter(true);
     } else if (template.toLowerCase().equals(WORD_RATING_FALSE)) {
-      if (logger.isDebugEnabled())
-        logger.debug("found rating not present filter");
+      if (logger.isTraceEnabled())
+        logger.trace("found rating not present filter");
       return new RatingPresenceFilter(false);
     } else if (template.toLowerCase().startsWith(WORD_RATING)) {
       /* optionally remove the quotes */
@@ -108,33 +123,100 @@ public class CalibreQueryInterpreter {
         rating = parameter.charAt(0);
         comparator = '=';
       }
-      if (logger.isDebugEnabled())
-        logger.debug("found rating filter: " + comparator + " " + rating);
+      if (logger.isTraceEnabled())
+        logger.trace("found rating filter: " + comparator + " " + rating);
       return new RatingFilter(comparator, rating);
+    }
+
+    /* Authors */
+    if (template.toLowerCase().equals(WORD_AUTHOR_TRUE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found author present filter");
+      return new AuthorPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_AUTHOR_FALSE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found author not present filter");
+      return new AuthorPresenceFilter(false);
+    } else if (template.toLowerCase().startsWith(WORD_AUTHOR)) {
+      boolean isEqualsPresent = template.substring(WORD_AUTHOR.length() + 1, WORD_AUTHOR.length() + 2).equals("=");
+      String tag = template.substring(WORD_AUTHOR.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
+      if (logger.isTraceEnabled())
+        logger.trace("found author filter: " + tag);
+      return new AuthorFilter(tag, !isEqualsPresent);
+    }
+
+    /* Series */
+    if (template.toLowerCase().equals(WORD_SERIES_TRUE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found series present filter");
+      return new SeriesPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_SERIES_FALSE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found series not present filter");
+      return new SeriesPresenceFilter(false);
+    } else if (template.toLowerCase().startsWith(WORD_SERIES)) {
+      boolean isEqualsPresent = template.substring(WORD_SERIES.length() + 1, WORD_SERIES.length() + 2).equals("=");
+      String tag = template.substring(WORD_SERIES.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
+      if (logger.isTraceEnabled())
+        logger.trace("found series filter: " + tag);
+      return new SeriesFilter(tag, !isEqualsPresent);
+    }
+
+    /* Formats */
+    if (template.toLowerCase().equals(WORD_FORMAT_TRUE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found format present filter");
+      return new FormatPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_FORMAT_FALSE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found format not present filter");
+      return new FormatPresenceFilter(false);
+    } else if (template.toLowerCase().startsWith(WORD_FORMAT)) {
+      boolean isEqualsPresent = template.substring(WORD_FORMAT.length() + 1, WORD_FORMAT.length() + 2).equals("=");
+      String tag = template.substring(WORD_FORMAT.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
+      if (logger.isTraceEnabled())
+        logger.trace("found format filter: " + tag);
+      return new FormatFilter(tag, !isEqualsPresent);
+    }
+
+    /* Publishers */
+    if (template.toLowerCase().equals(WORD_PUBLISHER_TRUE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found publisher present filter");
+      return new PublisherPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_PUBLISHER_FALSE)) {
+      if (logger.isTraceEnabled())
+        logger.trace("found publisher not present filter");
+      return new PublisherPresenceFilter(false);
+    } else if (template.toLowerCase().startsWith(WORD_PUBLISHER)) {
+      boolean isEqualsPresent = template.substring(WORD_PUBLISHER.length() + 1, WORD_PUBLISHER.length() + 2).equals("=");
+      String tag = template.substring(WORD_PUBLISHER.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
+      if (logger.isTraceEnabled())
+        logger.trace("found publisher filter: " + tag);
+      return new PublisherFilter(tag, !isEqualsPresent);
     }
 
     /* Boolean operators */
     else if (template.equalsIgnoreCase(WORD_NOT)) {
       // descend into the parsing with a negation filter
-      if (logger.isDebugEnabled())
-        logger.debug("found not filter!");
+      if (logger.isTraceEnabled())
+        logger.trace("found not filter!");
       return new NotFilter(getFilterForNode(node.getChild(0)));
     } else if (template.equalsIgnoreCase(WORD_OR)) {
       // descend into the parsing with a boolean OR filter
-      if (logger.isDebugEnabled())
-        logger.debug("found OR filter!");
+      if (logger.isTraceEnabled())
+        logger.trace("found OR filter!");
       return new BooleanOrFilter(getFilterForNode(node.getChild(0)), getFilterForNode(node.getChild(1)));
     } else if (template.equalsIgnoreCase(WORD_AND)) {
       // descend into the parsing with a boolean AND filter
-      if (logger.isDebugEnabled())
-        logger.debug("found AND filter!");
+      if (logger.isTraceEnabled())
+        logger.trace("found AND filter!");
       return new BooleanAndFilter(getFilterForNode(node.getChild(0)), getFilterForNode(node.getChild(1)));
     }
 
     /* Error ! */
     else {
-      if (logger.isDebugEnabled())
-        logger.debug("found unsupported filter! " + template);
+      logger.warn("found unsupported filter! " + template);
       return new PassthroughFilter();
     }
   }
@@ -170,16 +252,16 @@ public class CalibreQueryInterpreter {
   }
 
   public static BookFilter interpret(String calibreSearchQueryOrName) throws CalibreSavedSearchInterpretException, CalibreSavedSearchNotFoundException {
-    if (logger.isDebugEnabled())
-      logger.debug("CalibreQueryInterpreter.interpret:" + calibreSearchQueryOrName);
+    if (logger.isTraceEnabled())
+      logger.trace("CalibreQueryInterpreter.interpret:" + calibreSearchQueryOrName);
     BookFilter filter = null;
     String calibreQuery = calibreSearchQueryOrName;
     if (Helper.isNotNullOrEmpty(calibreSearchQueryOrName)) {
       String calibreSavedSearchName = null;
       if (calibreSearchQueryOrName.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
         calibreSavedSearchName = calibreSearchQueryOrName.substring(6);
-        if (logger.isDebugEnabled())
-          logger.debug("searching for saved search " + calibreSavedSearchName);
+        if (logger.isTraceEnabled())
+          logger.trace("searching for saved search " + calibreSavedSearchName);
         calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName);
         if (Helper.isNullOrEmpty(calibreQuery))
           calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName.toUpperCase());
@@ -188,7 +270,7 @@ public class CalibreQueryInterpreter {
         throw new CalibreSavedSearchNotFoundException(calibreSavedSearchName);
       else {
         if (logger.isDebugEnabled())
-          logger.debug("interpreting " + calibreQuery);
+          logger.trace("interpreting " + calibreQuery);
 
         CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
         filter = interpreter.interpret();
