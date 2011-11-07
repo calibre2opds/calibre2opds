@@ -526,6 +526,20 @@ public class Catalog {
         }
         catalogParentFolder = calibreLibraryFolder;
       }
+
+      // We are not allowed to suppress generation of all sub-catalogs
+      // (unless we have at least one external catalog specified)
+      if (!currentProfile.getGenerateAuthors()
+      &&  !currentProfile.getGenerateTags()
+      &&  !currentProfile.getGenerateSeries()
+      &&  !currentProfile.getGenerateRecent()
+      &&  !currentProfile.getGenerateRatings()
+      &&  !currentProfile.getGenerateAllbooks()) {
+        logger.warn(Localization.Main.getText("error.noSubcatalog", calibreLibraryFolder));
+        callback.errorOccured(Localization.Main.getText("error.noSubcatalog", calibreLibraryFolder), null);
+        return;
+      }
+
       logger.trace("Passed sanity checks, so proceed with generation");
 
       // Sanity checks OK - get on with generation

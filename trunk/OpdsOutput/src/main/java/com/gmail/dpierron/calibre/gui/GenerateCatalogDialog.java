@@ -86,6 +86,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   private void translateTexts() {
+    setTitle(Localization.Main.getText("gui.generateProgress"));
     lblStarted.setText(Localization.Main.getText("info.step.started")); // NOI18N
     lblDatabase.setText(Localization.Main.getText("info.step.database")); // NOI18N
     lblTags.setText(Localization.Main.getText("info.step.tags")); // NOI18N
