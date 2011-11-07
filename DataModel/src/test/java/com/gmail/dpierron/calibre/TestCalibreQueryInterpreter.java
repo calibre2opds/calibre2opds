@@ -7,6 +7,7 @@ import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
+import com.gmail.dpierron.calibre.datamodel.filter.PassthroughFilter;
 import junit.framework.Assert;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -53,6 +54,54 @@ public class TestCalibreQueryInterpreter {
 
   @Test
   public void testInterpret() throws Exception {
+    {
+      // Base test
+      BookFilter bf = new PassthroughFilter();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(945, books.size());
+    }
+    {
+      // test tags:true
+      final String CALIBRE_QUERY = "tags:true";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(945, books.size());
+    }
+    {
+      // test tags:false
+      final String CALIBRE_QUERY = "tags:false";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(0, books.size());
+    }
+    {
+      // test languages:true
+      final String CALIBRE_QUERY = "languages:true";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(937, books.size());
+    }
+    {
+      // test languages:false
+      final String CALIBRE_QUERY = "languages:false";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(8, books.size());
+    }
+    {
+      // test rating:true
+      final String CALIBRE_QUERY = "rating:true";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(127, books.size());
+    }
+    {
+      // test rating:false
+      final String CALIBRE_QUERY = "rating:false";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(818, books.size());
+    }
     {
       // test rating:4
       final String CALIBRE_QUERY = "rating:4";

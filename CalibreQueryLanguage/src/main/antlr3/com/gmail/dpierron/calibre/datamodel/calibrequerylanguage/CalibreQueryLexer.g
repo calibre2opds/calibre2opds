@@ -29,8 +29,16 @@ NOT : N O T;
 
 // calibre specific constraints
 TAG : T A G S ':"' (options {greedy=false;}:.)*'"';
+TAG_TRUE: T A G S ':' T R U E;
+TAG_FALSE: T A G S ':' F A L S E;
+
 LANG : L A N G U A G E S ':"' (options{greedy=false;}:.)*'"';
+LANG_TRUE: L A N G U A G E S ':' T R U E;
+LANG_FALSE: L A N G U A G E S ':' F A L S E;
+
 RATING : R A T I N G ':' ('"')? ('<'|'>'|'=')? ('0'..'5') ('"')?;
+RATING_TRUE: R A T I N G ':' T R U E;
+RATING_FALSE: R A T I N G ':' F A L S E;
 
 fragment A:('a'|'A');
 fragment B:('b'|'B');
