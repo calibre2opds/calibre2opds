@@ -43,6 +43,8 @@ public class CalibreQueryInterpreter {
       throw new CalibreSavedSearchInterpretException(node.toString(), ((CommonErrorNode) node).trappedException);
     }
     String template = node.getText();
+    if (logger.isTraceEnabled())
+      logger.trace("template="+template);
     if (template.toLowerCase().startsWith(WORD_TAG)) {
       boolean isEqualsPresent = template.substring(WORD_TAG.length() + 1, WORD_TAG.length() + 2).equals("=");
       String tag = template.substring(WORD_TAG.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
@@ -55,8 +57,16 @@ public class CalibreQueryInterpreter {
         logger.debug("found language filter: " + lang);
       return new LanguageFilter(lang);
     } else if (template.toLowerCase().startsWith(WORD_RATING)) {
-      char comparator = template.charAt(WORD_RATING.length() + 1);
-      char rating = template.charAt(WORD_RATING.length() + 2);
+      /* optionally remove the quotes */
+      String parameter = optionallyRemoveQuotes(template, WORD_RATING);
+      char comparator = parameter.charAt(0);
+      char rating;
+      if (comparator == '<' || comparator == '>' || comparator == '=')
+        rating = parameter.charAt(1);
+      else {
+        rating = parameter.charAt(0);
+        comparator = '=';
+      }
       if (logger.isDebugEnabled())
         logger.debug("found rating filter: " + comparator + " " + rating);
       return new RatingFilter(comparator, rating);
@@ -78,6 +88,15 @@ public class CalibreQueryInterpreter {
     } else if (logger.isDebugEnabled())
       logger.debug("found unsupported filter! " + template);
     return new PassthroughFilter();
+  }
+
+  private String optionallyRemoveQuotes(String template, String word) {
+    char quote = template.charAt(word.length());
+    if (quote == '"') {
+      return template.substring(word.length()+1, template.length()-1);
+    } else {
+      return template.substring(word.length());
+    }
   }
 
   /**
