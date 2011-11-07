@@ -2,10 +2,12 @@ var db = openDatabase('c2opds','1.0','Calibre2Opds DB, enabling search feature',
 var default_number_of_keywords = 100;
 
 function createAndPopulateDB(){
-cleanDb();
-createDb();
-populateDb();
+
+// Don't bother reloading the database if this one is considered as up to date
+needToReloadDb();
+
 }
+
 
 
 function createDb(){
@@ -23,9 +25,33 @@ db.transaction(function(tx){
 tx.executeSql('DROP TABLE BOOKS');
 tx.executeSql('DROP TABLE KEYWORDS');
 tx.executeSql('DROP TABLE CATALOG_ITEMS');
+tx.executeSql('DROP TABLE IDENTIFIER');
+});
+}
+
+
+function needToReloadDb(){
+db.readTransaction(function(tx){
+tx.executeSql("SELECT ID FROM IDENTIFIER",[],function(tx,results){
+if(results.rows.length >0 && results.rows.item(0).ID == getIdentifier()[0][0]){
+alert("DB OK !");
+}
+    else {
+    alert("Reloading Db");
+    cleanDb();
+    createDb();
+    populateDb();
+}
+},function(tx,error){
+    alert("Reloading Db");
+    cleanDb();
+    createDb();
+    populateDb();
+});
 });
 
 }
+
 
 function searchKeyWord(keyWord, element){
 cleanSearch();
