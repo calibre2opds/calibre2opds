@@ -29,15 +29,72 @@ public class TestCalibreQueryInterpreter {
 
       // The TTCC_CONVERSION_PATTERN contains more info than
       // the pattern we used for the root logger
-      Logger thisLogger = rootLogger.getLoggerRepository().getLogger(TestCalibreQueryInterpreter.class.getCanonicalName());
-      thisLogger.setLevel(Level.DEBUG);
-      thisLogger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
+      Logger logger = rootLogger.getLoggerRepository().getLogger(TestCalibreQueryInterpreter.class.getCanonicalName());
+      logger.setLevel(Level.TRACE);
+      logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
+
+      // The TTCC_CONVERSION_PATTERN contains more info than
+      // the pattern we used for the root logger
+      logger = rootLogger.getLoggerRepository().getLogger(CalibreQueryInterpreter.class.getCanonicalName());
+      logger.setLevel(Level.TRACE);
+      logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
     }
 
+    ReadOnlyConfigurationInterface conf = new ReadOnlyConfigurationInterface() {
+      public File getDatabaseFolder() {
+        String fileName = TestCalibreQueryInterpreter.class.getResource("metadata.db").getFile();
+        File file = new File(fileName).getParentFile();
+        System.out.println("DataModelTest.testDataModel using database folder : " + file);
+        return file;
+      }
+    };
+    Configuration.setConfiguration(conf);
   }
 
   @Test
   public void testInterpret() throws Exception {
+    {
+      // test rating:4
+      final String CALIBRE_QUERY = "rating:4";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(50, books.size());
+    }
+    {
+      // test rating:=4
+      final String CALIBRE_QUERY = "rating:=4";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(50, books.size());
+    }
+    {
+      // test rating:"=4"
+      final String CALIBRE_QUERY = "rating:\"=4\"";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(50, books.size());
+    }
+    {
+      // test rating:>4
+      final String CALIBRE_QUERY = "rating:>4";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(6, books.size());
+    }
+    {
+      // test rating:">4"
+      final String CALIBRE_QUERY = "rating:\">4\"";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(6, books.size());
+    }
+    {
+      // test rating:"<4"
+      final String CALIBRE_QUERY = "rating:\"<4\"";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(889, books.size());
+    }
     {
       final String CALIBRE_QUERY = "tags:\"=efg\" and not(tags:\"abc\")";
       BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
@@ -48,15 +105,6 @@ public class TestCalibreQueryInterpreter {
       BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
       Assert.assertNotNull(bf);
     }
-    ReadOnlyConfigurationInterface conf = new ReadOnlyConfigurationInterface() {
-      public File getDatabaseFolder() {
-        String fileName = TestCalibreQueryInterpreter.class.getResource("metadata.db").getFile();
-        File file = new File(fileName).getParentFile();
-        System.out.println("DataModelTest.testDataModel using database folder : " + file);
-        return file;
-      }
-    };
-    Configuration.setConfiguration(conf);
     {
       final String CALIBRE_QUERY = "tags:\"=State:ToRead\" and not (tags:\"=Length:SHORT\")";
       BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
@@ -65,6 +113,18 @@ public class TestCalibreQueryInterpreter {
     }
     {
       final String CALIBRE_QUERY = "tags:\"=Temp:AddToDemoCatalog\" and rating:\">2\"";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(5, books.size());
+    }
+    {
+      final String CALIBRE_QUERY = "rating:\">2\" and tags:\"=Temp:AddToDemoCatalog\"";
+      BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
+      List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
+      Assert.assertEquals(5, books.size());
+    }
+    {
+      final String CALIBRE_QUERY = "rating:>2 and tags:\"=Temp:AddToDemoCatalog\"";
       BookFilter bf = new CalibreQueryInterpreter(CALIBRE_QUERY).interpret();
       List<Book> books = FilterHelper.filter(bf, DataModel.INSTANCE.getListOfBooks());
       Assert.assertEquals(5, books.size());

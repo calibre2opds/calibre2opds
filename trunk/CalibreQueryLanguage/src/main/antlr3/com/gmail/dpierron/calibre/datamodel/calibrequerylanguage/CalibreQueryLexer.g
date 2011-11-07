@@ -29,8 +29,8 @@ NOT : N O T;
 
 // calibre specific constraints
 TAG : T A G S ':"' (options {greedy=false;}:.)*'"';
-LANG : L A N G U A G E S ':"='(options{greedy=false;}:.)*'"';
-RATING : R A T I N G ':"'('='|'>'|'<')('0'..'5')'"';
+LANG : L A N G U A G E S ':"' (options{greedy=false;}:.)*'"';
+RATING : R A T I N G ':' ('"')? ('<'|'>'|'=')? ('0'..'5') ('"')?;
 
 fragment A:('a'|'A');
 fragment B:('b'|'B');
