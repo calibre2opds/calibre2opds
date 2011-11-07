@@ -11,7 +11,10 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
     super();
     this.id = id;
     this.name = name;
-    this.sort = sort;
+    if (Helper.isNullOrEmpty(sort)) {
+      this.sort = name.replaceAll(" ", "").toUpperCase();
+    } else
+      this.sort = sort;
   }
 
   public String getId() {
@@ -22,7 +25,7 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
     return name;
   }
 
-  String getSort() {
+  public String getSort() {
     return sort;
   }
 

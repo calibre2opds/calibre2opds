@@ -76,4 +76,7 @@ public class EBookFormat implements Comparable<EBookFormat> {
     return name;
   }
 
+  public String getName() {
+    return name;
+  }
 }
