@@ -21,8 +21,16 @@ public class CalibreQueryInterpreter {
 
   // recognized lexical elements
   private static final String WORD_TAG = "tags:";
+  private static final String WORD_TAG_TRUE = "tags:true";
+  private static final String WORD_TAG_FALSE = "tags:false";
+
   private static final String WORD_LANGUAGE = "languages:";
+  private static final String WORD_LANGUAGE_TRUE = "languages:true";
+  private static final String WORD_LANGUAGE_FALSE = "languages:false";
+
   private static final String WORD_RATING = "rating:";
+  private static final String WORD_RATING_TRUE = "rating:true";
+  private static final String WORD_RATING_FALSE = "rating:false";
 
   // unary negation operator
   private static final String WORD_NOT = "not";
@@ -44,18 +52,51 @@ public class CalibreQueryInterpreter {
     }
     String template = node.getText();
     if (logger.isTraceEnabled())
-      logger.trace("template="+template);
-    if (template.toLowerCase().startsWith(WORD_TAG)) {
+      logger.trace("template=" + template);
+
+    /* Tags */
+    if (template.toLowerCase().equals(WORD_TAG_TRUE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found tag present filter");
+      return new TagPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_TAG_FALSE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found tag not present filter");
+      return new TagPresenceFilter(false);
+    } else if (template.toLowerCase().startsWith(WORD_TAG)) {
       boolean isEqualsPresent = template.substring(WORD_TAG.length() + 1, WORD_TAG.length() + 2).equals("=");
       String tag = template.substring(WORD_TAG.length() + (isEqualsPresent ? 2 : 1), template.length() - 1); // skip the "= and the "
       if (logger.isDebugEnabled())
         logger.debug("found tag filter: " + tag);
       return new TagFilter(tag, !isEqualsPresent);
+    }
+
+    /* Languages */
+    else if (template.toLowerCase().equals(WORD_LANGUAGE_TRUE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found language present filter");
+      return new LanguagePresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_LANGUAGE_FALSE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found language not present filter");
+      return new LanguagePresenceFilter(false);
     } else if (template.toLowerCase().startsWith(WORD_LANGUAGE)) {
       String lang = template.substring(WORD_LANGUAGE.length() + 2, template.length() - 1); // skip the "= and the "
       if (logger.isDebugEnabled())
         logger.debug("found language filter: " + lang);
       return new LanguageFilter(lang);
+    }
+
+    /* Ratings */
+    /* Languages */
+    else if (template.toLowerCase().equals(WORD_RATING_TRUE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found rating present filter");
+      return new RatingPresenceFilter(true);
+    } else if (template.toLowerCase().equals(WORD_RATING_FALSE)) {
+      if (logger.isDebugEnabled())
+        logger.debug("found rating not present filter");
+      return new RatingPresenceFilter(false);
     } else if (template.toLowerCase().startsWith(WORD_RATING)) {
       /* optionally remove the quotes */
       String parameter = optionallyRemoveQuotes(template, WORD_RATING);
@@ -70,7 +111,10 @@ public class CalibreQueryInterpreter {
       if (logger.isDebugEnabled())
         logger.debug("found rating filter: " + comparator + " " + rating);
       return new RatingFilter(comparator, rating);
-    } else if (template.equalsIgnoreCase(WORD_NOT)) {
+    }
+
+    /* Boolean operators */
+    else if (template.equalsIgnoreCase(WORD_NOT)) {
       // descend into the parsing with a negation filter
       if (logger.isDebugEnabled())
         logger.debug("found not filter!");
@@ -85,15 +129,20 @@ public class CalibreQueryInterpreter {
       if (logger.isDebugEnabled())
         logger.debug("found AND filter!");
       return new BooleanAndFilter(getFilterForNode(node.getChild(0)), getFilterForNode(node.getChild(1)));
-    } else if (logger.isDebugEnabled())
-      logger.debug("found unsupported filter! " + template);
-    return new PassthroughFilter();
+    }
+
+    /* Error ! */
+    else {
+      if (logger.isDebugEnabled())
+        logger.debug("found unsupported filter! " + template);
+      return new PassthroughFilter();
+    }
   }
 
   private String optionallyRemoveQuotes(String template, String word) {
     char quote = template.charAt(word.length());
     if (quote == '"') {
-      return template.substring(word.length()+1, template.length()-1);
+      return template.substring(word.length() + 1, template.length() - 1);
     } else {
       return template.substring(word.length());
     }
@@ -122,7 +171,7 @@ public class CalibreQueryInterpreter {
 
   public static BookFilter interpret(String calibreSearchQueryOrName) throws CalibreSavedSearchInterpretException, CalibreSavedSearchNotFoundException {
     if (logger.isDebugEnabled())
-      logger.debug("CalibreQueryInterpreter.interpret:"+calibreSearchQueryOrName);
+      logger.debug("CalibreQueryInterpreter.interpret:" + calibreSearchQueryOrName);
     BookFilter filter = null;
     String calibreQuery = calibreSearchQueryOrName;
     if (Helper.isNotNullOrEmpty(calibreSearchQueryOrName)) {
@@ -130,7 +179,7 @@ public class CalibreQueryInterpreter {
       if (calibreSearchQueryOrName.toUpperCase(Locale.ENGLISH).startsWith("SAVED:")) {
         calibreSavedSearchName = calibreSearchQueryOrName.substring(6);
         if (logger.isDebugEnabled())
-          logger.debug("searching for saved search "+calibreSavedSearchName);
+          logger.debug("searching for saved search " + calibreSavedSearchName);
         calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName);
         if (Helper.isNullOrEmpty(calibreQuery))
           calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName.toUpperCase());
@@ -139,7 +188,7 @@ public class CalibreQueryInterpreter {
         throw new CalibreSavedSearchNotFoundException(calibreSavedSearchName);
       else {
         if (logger.isDebugEnabled())
-          logger.debug("interpreting "+calibreQuery);
+          logger.debug("interpreting " + calibreQuery);
 
         CalibreQueryInterpreter interpreter = new CalibreQueryInterpreter(calibreQuery);
         filter = interpreter.interpret();

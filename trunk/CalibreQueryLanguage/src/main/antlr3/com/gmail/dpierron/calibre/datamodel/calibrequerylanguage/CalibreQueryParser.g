@@ -29,12 +29,22 @@ options {
 tokens {
 	LEFT_PAREN;
 	RIGHT_PAREN;
+
 	AND;
 	OR;
 	NOT;
+
 	TAG;
+	TAG_TRUE;
+	TAG_FALSE;
+
 	LANG;
+	LANG_TRUE;
+	LANG_FALSE;
+
 	RATING;
+	RATING_TRUE;
+	RATING_FALSE;
 }
 
 // What package should the generated source exist in?
@@ -68,8 +78,8 @@ atom
     ;
     
 condition
-    : TAG
-    | LANG
-    | RATING
+    : TAG | TAG_TRUE | TAG_FALSE
+    | LANG | LANG_TRUE | LANG_FALSE
+    | RATING | RATING_TRUE | RATING_FALSE
     ;
 
