@@ -22,8 +22,10 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
+import sun.misc.JavaIOAccess;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -318,8 +320,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
     try {
       if (logger.isTraceEnabled())
         logger.trace("getListOfBooks: fos=" + outputFile);
-      fos = new FileOutputStream(outputFile);
-
+      try {
+        fos = new FileOutputStream(outputFile);
+      } catch (Exception e) {
+        // ITIMPI:  This should not normally happen.   However it has been found that it can
+        // if the filename we are trying to use is invalid for the file system we are using.
+        // If it does occur we cannot continue with generation of the details for this book
+        logger.error("Failed to create feed file " +  outputFile + "\n" + e);
+        return null;
+      }
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
       // list the books (or split them)
