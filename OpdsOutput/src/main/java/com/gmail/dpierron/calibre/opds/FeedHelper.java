@@ -211,9 +211,9 @@ public enum FeedHelper {
     return result;
   }
 
-  public Element getCategoryElement(String label) {
+  public Element getCategoryElement(String term) {
     Element result = JDOM.INSTANCE.element("category");
-    result.setAttribute("label", label);
+    result.setAttribute("term", term);
     return result;
   }
 
