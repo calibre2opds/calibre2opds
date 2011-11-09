@@ -287,7 +287,7 @@ public enum FeedHelper {
 
     result.append(Helper.leftPad("" + c.get(Calendar.YEAR), '0', 4));
     result.append('-');
-    result.append(Helper.leftPad("" + c.get(Calendar.MONTH), '0', 2));
+    result.append(Helper.leftPad("" + (c.get(Calendar.MONTH)+1), '0', 2));
     result.append('-');
     result.append(Helper.leftPad("" + c.get(Calendar.DAY_OF_MONTH), '0', 2));
     result.append('T');
