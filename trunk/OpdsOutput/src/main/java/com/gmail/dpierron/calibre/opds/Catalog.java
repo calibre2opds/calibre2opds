@@ -695,6 +695,21 @@ public class Catalog {
       // check if we must continue
       callback.checkIfContinueGenerating();
 
+      /* All books */
+      logger.debug("STARTED: Generating All Books catalog");
+      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
+      now = System.currentTimeMillis();
+      if (currentProfile.getGenerateAllbooks()) {
+        entry = new AllBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
+        if (entry != null)
+          main.addContent(entry);
+      }
+      callback.endCreateAllbooks(System.currentTimeMillis() - now);
+      logger.debug("COMPLETED: Generating All Books catalog");
+
+      // check if we must continue
+      callback.checkIfContinueGenerating();
+
       /* Authors */
       logger.debug("STARTING: Generating Authors catalog");
       callback.startCreateAuthors(DataModel.INSTANCE.getListOfAuthors().size());
@@ -765,21 +780,6 @@ public class Catalog {
       }
       callback.endCreateRated(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Ratings catalog");
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
-
-      /* All books */
-      logger.debug("STARTED: Generating All Books catalog");
-      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateAllbooks()) {
-        entry = new AllBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          main.addContent(entry);
-      }
-      callback.endCreateAllbooks(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating All Books catalog");
 
       // check if we must continue
       callback.checkIfContinueGenerating();

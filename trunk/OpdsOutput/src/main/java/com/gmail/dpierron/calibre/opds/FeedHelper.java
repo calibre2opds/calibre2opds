@@ -107,37 +107,7 @@ public enum FeedHelper {
     Element updated = getUpdatedTag();
     feed.addContent(updated);
 
-    if (breadcrumbs != null) {
-      for (Breadcrumb breadcrumb : breadcrumbs) {
-        feed.addContent(getLinkElement(breadcrumb.url, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
-      }
-    }
-
-    String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBase();
-    // root catalog link
-    String startUrl;
-    if (Helper.isNullOrEmpty(baseUrl))
-      startUrl = "index.xml";
-    else
-      startUrl = baseUrl + "index.xml";
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "start", Localization.Main.getText("home.title")));
-
-    String selfUrl;
-    if (Helper.isNullOrEmpty(baseUrl) || Helper.isNullOrEmpty(urlExt))
-      selfUrl = urn;
-    else {
-      /*
-       little programming trick ; due to the way this method is called, urlExt is also used for the breadcrumbs and
-       therefore starts with ../
-        */
-      String s;
-      if (urlExt.startsWith("../"))
-        s = urlExt.substring(3);
-      else
-        s = urlExt;
-      selfUrl = baseUrl + s;
-    }
-    feed.addContent(getLinkElement(selfUrl, LINKTYPE_NAVIGATION, "self", pTitle));
+    decorateElementWithNavigationLinks(feed, breadcrumbs, pTitle, urlExt);
 
     return feed;
   }
@@ -197,6 +167,52 @@ public enum FeedHelper {
     return getLinkElement(url, LINKTYPE_NAVIGATION, RELATION_FEATURED, title);
   }
 
+  /**
+   * Decorate a root element (feed or entry, in the case of a full book entry) with the start and self links, and the breadcrumb navigation tree
+   *
+   * @param feed        the feed to decorate
+   * @param breadcrumbs the breadcrumbs retracing steps to the root
+   * @param title      the title of the page
+   * @param url      the url end of the page (baseURL + url = complete url)
+   */
+  public void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url) {
+    if (feed == null)
+      return;
+
+    // add a navigation link to every breadcrumb in the hierarchy
+    if (breadcrumbs != null) {
+      for (Breadcrumb breadcrumb : breadcrumbs) {
+        feed.addContent(getLinkElement(breadcrumb.url, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
+      }
+    }
+
+    // add a "start" link to the catalog main page
+    String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBase();
+    // root catalog link
+    String startUrl;
+    if (Helper.isNullOrEmpty(baseUrl))
+      startUrl = "index.xml";
+    else
+      startUrl = baseUrl + "index.xml";
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "start", Localization.Main.getText("home.title")));
+
+    String selfUrl = baseUrl;
+    if (url != null) {
+      /*
+       little programming trick ; due to the way this method is called, url is also used for the breadcrumbs and
+       therefore starts with ../
+        */
+      String s;
+      if (url.startsWith("../"))
+        s = url.substring(3);
+      else
+        s = url;
+      selfUrl = baseUrl + s;
+    }
+    
+    feed.addContent(getLinkElement(selfUrl, LINKTYPE_NAVIGATION, "self", title));
+
+  }
   /* ---------- METADATA ----------*/
 
   public Element getDublinCoreLanguageElement(String lang) {
@@ -282,12 +298,13 @@ public enum FeedHelper {
     return getDateAsIsoDate(c);
 
   }
+
   private String getDateAsIsoDate(Calendar c) {
     StringBuffer result = new StringBuffer();
 
     result.append(Helper.leftPad("" + c.get(Calendar.YEAR), '0', 4));
     result.append('-');
-    result.append(Helper.leftPad("" + (c.get(Calendar.MONTH)+1), '0', 2));
+    result.append(Helper.leftPad("" + (c.get(Calendar.MONTH) + 1), '0', 2));
     result.append('-');
     result.append(Helper.leftPad("" + c.get(Calendar.DAY_OF_MONTH), '0', 2));
     result.append('T');
