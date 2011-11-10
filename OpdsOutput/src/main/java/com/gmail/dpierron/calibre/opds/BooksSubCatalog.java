@@ -22,10 +22,8 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
-import sun.misc.JavaIOAccess;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -1002,41 +1000,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getBookEntry: checking book in the Catalog manager");
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    String trueFilename = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
+    String fullEntryUrl = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     if (getCatalogManager().addBookEntryFile(outputFile)) {
       if (logger.isTraceEnabled())
         logger.trace("getBookEntry: book was not yet done");
 
       // generate the book full entry
-      FileOutputStream fos = null;
-      Document document = new Document();
-      try {
-        fos = new FileOutputStream(outputFile);
-        Element entry = getBookFullEntry(book);
-
-        // write the element to the file
-        document.addContent(entry);
-        JDOM.INSTANCE.getOutputter().output(document, fos);
-
-      } catch (RuntimeException e) {
-        // Exceptions are not expected, but if one does occur as well
-        // as logging the details, also log the book that caused it
-        logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
-        throw e;
-        // Increment the warning count for advising the user to look at the log after the run
-      } finally {
-        if (fos != null)
-          fos.close();
-      }
-
-      // create the same file as html
-      getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
-
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
-        // index the book
-        logger.debug("getBookEntry: indexing book");
-        IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(trueFilename), getThumbnailManager().getImageUri(book));
-      }
+      generateBookFullEntryFile(pBreadcrumbs, book, outputFile, fullEntryUrl);
     }
 
     Element entry = FeedHelper.INSTANCE.getBookEntry(title, urn, book.getLatestFileModifiedDate());
@@ -1047,37 +1017,72 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // add a full entry link to the partial entry
     if (logger.isTraceEnabled())
       logger.trace("add a full entry link to the partial entry");
-    entry.addContent(FeedHelper.INSTANCE.getFullEntryLink(trueFilename));
+    entry.addContent(FeedHelper.INSTANCE.getFullEntryLink(fullEntryUrl));
 
     return entry;
   }
 
-  /**
-   * @param book
-   * @return
-   */
-  private Element getBookFullEntry(Book book) {
+  private void generateBookFullEntryFile(Breadcrumbs pBreadcrumbs, Book book, File outputFile, String fullEntryUrl) throws IOException {FileOutputStream fos = null;
     if (logger.isDebugEnabled())
-      logger.debug("getBookFullEntry: " + book);
-    Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
+      logger.debug("generateBookFullEntryFile: " + book);
 
-    String sTitle = book.getTitle();
-    Element title = JDOM.INSTANCE.element("title").addContent(sTitle);
-    entry.addContent(title);
+    Breadcrumbs breadcrumbs = pBreadcrumbs;
 
-    Element id = JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid());
-    entry.addContent(id);
+    // if the "all books" catalog never was generated, we'll end up with the first generated catalog's breadcrumbs ; that ain't good, I prefer linking only to main
+    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
+      // remove all but the first (main) entry
+      breadcrumbs = new Breadcrumbs();
+      breadcrumbs.add(pBreadcrumbs.get(0));
+    }
 
-    // updated element
-    if (logger.isTraceEnabled())
-      logger.trace("getBookFullEntry: updated element");
-    Element updated = FeedHelper.INSTANCE.getUpdatedTag(book.getLatestFileModifiedDate());
-    entry.addContent(updated);
+    Document document = new Document();
+    try {
+      fos = new FileOutputStream(outputFile);
 
-    // add the required data to the book entry
-    decorateBookEntry(entry, book, true);
+      Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
 
-    return entry;
+      String sTitle = book.getTitle();
+      Element title = JDOM.INSTANCE.element("title").addContent(sTitle);
+      entry.addContent(title);
+
+      Element id = JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid());
+      entry.addContent(id);
+
+      // updated element
+      if (logger.isTraceEnabled())
+        logger.trace("getBookFullEntry: updated element");
+      Element updated = FeedHelper.INSTANCE.getUpdatedTag(book.getLatestFileModifiedDate());
+      entry.addContent(updated);
+
+      // add the navigation links
+      FeedHelper.INSTANCE.decorateElementWithNavigationLinks(entry, breadcrumbs, sTitle, fullEntryUrl);
+
+      // add the required data to the book entry
+      decorateBookEntry(entry, book, true);
+
+      // write the element to the file
+      document.addContent(entry);
+      JDOM.INSTANCE.getOutputter().output(document, fos);
+
+    } catch (RuntimeException e) {
+      // Exceptions are not expected, but if one does occur as well
+      // as logging the details, also log the book that caused it
+      logger.error("... " + book.getAuthors() + ": " + book.getTitle(), e);
+      throw e;
+      // Increment the warning count for advising the user to look at the log after the run
+    } finally {
+      if (fos != null)
+        fos.close();
+    }
+
+    // create the same file as html
+    getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
+
+    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
+      // index the book
+      logger.debug("getBookEntry: indexing book");
+      IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(fullEntryUrl), getThumbnailManager().getImageUri(book));
+    }
   }
 
 }
