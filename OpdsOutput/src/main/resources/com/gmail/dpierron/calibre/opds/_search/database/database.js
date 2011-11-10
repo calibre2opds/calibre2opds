@@ -14,6 +14,7 @@ function createDb() {
         tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS(BK_ID PRIMARY KEY, BK_TITLE, BK_URL, BK_THUMBNAIL_URL)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS KEYWORDS (KW_ID PRIMARY KEY, KW_WORD, KW_WEIGHT INT)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS IDENTIFIER (ID, LABEL, DATE)');
     });
 }
 
@@ -74,6 +75,12 @@ function populateDb() {
             tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD,KW_WEIGHT) VALUES (?, ?, ?)',[keywords[i][0], keywords[i][1], keywords[i][2]]);
         }
         console.log("finish loading keywords");
+        
+        
+        console.log("populate identifier");
+        var identifier = getIdentifier();
+        tx.executeSql('INSERT INTO IDENTIFIER(ID, LABEL, DATE) VALUES (?, ?, ?)', [identifier[0][0],identifier[0][1],identifier[0][2]]);
+        console.log("finish loading identifier");        
     });
 }
 
