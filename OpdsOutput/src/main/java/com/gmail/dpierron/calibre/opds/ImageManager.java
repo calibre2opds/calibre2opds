@@ -29,7 +29,7 @@ public abstract class ImageManager {
 
   abstract String getImageHeightDat();
 
-  public final static ImageManager newThumbnailManager() {
+  public final static ThumbnailManager newThumbnailManager() {
     return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
   }
 

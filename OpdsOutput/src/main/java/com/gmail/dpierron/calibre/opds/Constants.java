@@ -25,6 +25,8 @@ public class Constants {
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
+  public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
+  public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
 
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
@@ -41,7 +43,7 @@ public class Constants {
       "bc_bg.png",
       "bc_separator.png",
       "home.png",
-      "default_thumbnail.png",
+      DEFAULT_THUMBNAIL_FILENAME,
       // External image files for catalog sections
       "allbooks.png",
       "authors.png",

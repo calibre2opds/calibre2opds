@@ -6,7 +6,7 @@ public enum CatalogContext {
 
   private CatalogManager catalogManager;
   private HtmlManager htmlManager;
-  ImageManager thumbnailManager;
+  ThumbnailManager thumbnailManager;
   ImageManager coverManager;
   private CatalogCallbackInterface callback;
 
@@ -47,11 +47,11 @@ public enum CatalogContext {
     this.htmlManager = htmlManager;
   }
 
-  public ImageManager getThumbnailManager() {
+  public ThumbnailManager getThumbnailManager() {
     return thumbnailManager;
   }
 
-  public void setThumbnailManager(ImageManager thumbnailManager) {
+  public void setThumbnailManager(ThumbnailManager thumbnailManager) {
     this.thumbnailManager = thumbnailManager;
   }
 

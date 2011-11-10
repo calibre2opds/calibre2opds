@@ -114,13 +114,13 @@ public class Index {
     }
   }
 
-  public void indexBook(Book book, String url, String coverUrl) {
+  public void indexBook(Book book, String url, String thumbnailUrl) {
     if (logger.isTraceEnabled())
-      logger.trace("indexBook: book=" + book + ", url=" + url + ", coverUrl=" + coverUrl);
+      logger.trace("indexBook: book=" + book + ", url=" + url + ", thumbnailUrl=" + thumbnailUrl);
     if (book == null)
       return;
 
-    BookEntry bookEntry = new BookEntry(book, url, coverUrl);
+    BookEntry bookEntry = new BookEntry(book, url, thumbnailUrl);
 
     // parse the book title
     indexMultipleKeywords(book.getTitle(), ItemType.BookTitle, bookEntry, false);
@@ -251,7 +251,7 @@ public class Index {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
               String bkUrl = bookEntry.url;
-              String bkCoverUrl = bookEntry.coverUrl;
+              String bkCoverUrl = bookEntry.thumbnailUrl;
               String sql =
                   "tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_COVER_URL) VALUES (?, ?, ?, ?)', ['" + bkId + "', '" + bkTitle + "', '" +
                       bkUrl + "','" + bkCoverUrl + "']);";
@@ -368,7 +368,7 @@ public class Index {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
               String bkUrl = bookEntry.url;
-              String bkCoverUrl = bookEntry.coverUrl;
+              String bkCoverUrl = bookEntry.thumbnailUrl;
               jsonBooks.add(bkId);
               jsonBooks.add(bkTitle);
               jsonBooks.add(bkUrl);
@@ -474,8 +474,8 @@ public class Index {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
               String bkUrl = bookEntry.url;
-              String bkCoverUrl = bookEntry.coverUrl;
-              jsBooks.add(new String[]{bkId, bkTitle, bkUrl, bkCoverUrl});
+              String bkThumbnailUrl = bookEntry.thumbnailUrl;
+              jsBooks.add(new String[]{bkId, bkTitle, bkUrl, bkThumbnailUrl});
             }
           }
           // add a line in the CATALOG_ITEMS table
@@ -491,7 +491,7 @@ public class Index {
         ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle(),
         SimpleDateFormat.getInstance().format(new Date())});
     writeJavascript(exportFolder, "identifier", jsIdentifier, Helper.listThis("id", "label", "date"));
-    writeJavascript(exportFolder, "books", jsBooks, Helper.listThis("bkId", "bkTitle", "bkUrl", "bkCoverUrl"));
+    writeJavascript(exportFolder, "books", jsBooks, Helper.listThis("bkId", "bkTitle", "bkUrl", "bkThumbnailUrl"));
     writeJavascript(exportFolder, "keywords", jsKeywords, Helper.listThis("kwId", "kwWord", "kwWeight"));
     writeJavascript(exportFolder, "catalogitems", jsCatalogItems, Helper.listThis("kwId", "bkId", "catType"));
   }

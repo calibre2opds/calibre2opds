@@ -232,3 +232,102 @@ a.button:active span {
 .popup_container_overlay ul{
 list-style-position: inside;
 }
+
+/* Search feature */
+.level1Tag{
+font-size: xx-small;
+color: #005EFF;
+}
+
+.level2Tag{
+font-size: x-small;
+color: #005EFF;
+}
+
+.level3Tag{
+font-size: small;
+
+color: #009DFF;
+}
+
+.level4Tag{
+font-size: medium;
+
+color: #009DFF;
+}
+
+.level5Tag{
+font-size: x-medium;
+color: #00B8FF;
+}
+
+.level6Tag{
+font-size: xx-medium;
+color: #00B8FF;
+}
+
+.level7Tag{
+font-size: large;
+
+color: #00D7FF;
+}
+
+
+.level8Tag{
+font-size: x-large;
+color: #00D7FF;
+}
+
+.level9Tag{
+font-size: xx-large;
+color: #00FBFF;
+}
+
+.level10Tag{
+font-size: xx-large;
+color: #00FBFF;
+}
+
+#searchbox{
+width : 150px;
+margin:auto;
+}
+
+#tag_cloud a{
+
+text-decoration: none;
+}
+
+#tag_cloud {
+width : 80%;
+margin : auto;
+border : 2px inset black;
+/*-webkit-border-radius: 20px;  */
+/*background-color : #FDFDFD;*/
+padding : auto;
+}
+
+#tag_cloud a:hover{
+/*font-weight: bold;*/
+color: red;
+}
+
+#searchResult{
+width: 80%;
+margin: auto;
+}
+
+#searchResult a {
+color : white;
+text-decoration: none;
+}
+
+
+input[type="search"], input[type="search"]:focus {
+  margin-top: 0px;
+  text-align: center;
+  -webkit-appearance: textfield;
+  -webkit-box-shadow: 1px 1px 10px #999;
+  -webkit-border-radius: 2px;  
+  outline: none;
+}

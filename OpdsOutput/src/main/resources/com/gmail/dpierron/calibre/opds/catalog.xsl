@@ -147,14 +147,11 @@
                                     <!-- thumbnail -->
                                     <div class="cover">
                                         <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
-                                            <xsl:choose>
-                                                <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
-                                                    <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" title="{$bookTitle}" />
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                    <img  width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds:title}" src="../default_thumbnail.png" title="{$bookTitle}" />
-                                                </xsl:otherwise>
-                                            </xsl:choose>
+                                          <xsl:choose>
+                                              <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
+                                                  <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
+                                              </xsl:when>
+                                          </xsl:choose>
                                         </a>
                                     </div>
 
