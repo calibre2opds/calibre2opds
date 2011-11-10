@@ -98,11 +98,11 @@ public abstract class SubCatalog {
     CatalogContext.INSTANCE.setCatalogManager(catalogManager);
   }
 
-  public ImageManager getThumbnailManager() {
+  public ThumbnailManager getThumbnailManager() {
     return CatalogContext.INSTANCE.getThumbnailManager();
   }
 
-  public void setThumbnailManager(ImageManager thumbnailManager) {
+  public void setThumbnailManager(ThumbnailManager thumbnailManager) {
     CatalogContext.INSTANCE.setThumbnailManager(thumbnailManager);
   }
 

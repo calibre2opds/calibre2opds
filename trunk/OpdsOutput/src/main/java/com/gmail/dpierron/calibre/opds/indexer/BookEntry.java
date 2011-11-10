@@ -8,11 +8,11 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 public class BookEntry {
   Book book;
   String url;
-  String coverUrl;
+  String thumbnailUrl;
 
-  public BookEntry(Book book, String url, String coverUrl) {
+  public BookEntry(Book book, String url, String thumbnailUrl) {
     this.book = book;
-    this.coverUrl = coverUrl;
+    this.thumbnailUrl = thumbnailUrl;
     this.url = url;
   }
 }

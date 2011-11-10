@@ -19,8 +19,8 @@ public enum IndexManager {
   private IndexManager() {
   }
 
-  public void indexBook(Book book, String url, String coverUrl) {
-    index.indexBook(book, url, coverUrl);
+  public void indexBook(Book book, String url, String thumbnailUrl) {
+    index.indexBook(book, url, thumbnailUrl);
   }
 
   public long size() {

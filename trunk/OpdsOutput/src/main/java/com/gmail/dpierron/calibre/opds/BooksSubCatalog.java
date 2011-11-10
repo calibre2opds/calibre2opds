@@ -569,116 +569,125 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled())
       logger.debug("addCoverLink for " + book.getTitle());
     CachedFile coverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), Constants.CALIBRE_COVER_FILENAME);
-    if (!coverFile.exists()) {
-      if (logger.isTraceEnabled())
-        logger.trace("addCoverLink: no cover in library for book: " + book.getTitle());
-      return;
-    }
+    if (coverFile.exists()) {
+      // add the cover
 
+      // prepare to copy the cover file
 
-    // add the cover
+      getCatalogManager().addFileToTheMapOfFilesToCopy(coverFile);
 
-    // prepare to copy the cover file
+      // Add the Cover link
 
-    getCatalogManager().addFileToTheMapOfFilesToCopy(coverFile);
+      String coverUri = getCoverManager().getImageUri(book);
 
-    // Add the Cover link
+      // get the generated cover filename
+      CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getCoverManager().getResultFilename(book));
 
-    String coverUri = getCoverManager().getImageUri(book);
+      // prepare to copy the thumbnail if we are using them file
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize()) {
+        getCatalogManager().addFileToTheMapOfFilesToCopy(resizedCoverFile);
 
-    // get the generated cover filename
-    CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getCoverManager().getResultFilename(book));
-
-    // prepare to copy the thumbnail if we are using them file
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize()) {
-      getCatalogManager().addFileToTheMapOfFilesToCopy(resizedCoverFile);
-
-      if (!resizedCoverFile.exists() || getCoverManager().hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
-        if (logger.isTraceEnabled()) {
-          if (!resizedCoverFile.exists())
-            logger.trace("addCoverLink: resizedCover set to be generated (not already existing)");
-          else if (getCoverManager().hasImageSizeChanged())
-            logger.trace("addCoverLink: resizedCover set to be generated (image size changed)");
-          else if (resizedCoverFile.lastModified() < coverFile.lastModified())
-            logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
-        }
-        getCoverManager().setImageToGenerate(resizedCoverFile, coverFile);
-      } else {
-        if (logger.isTraceEnabled())
-          logger.trace("addCoverLink: resizedCover not to be generated");
-      }
-    } else {
-      // Not using resized covers - use original cover.jpg
-
-      if (resizedCoverFile.exists()) {
-        // Safety check we never delete the Calibre cover
-        if (0 == resizedCoverFile.getName().compareTo(Constants.CALIBRE_COVER_FILENAME)) {
-          logger.warn("attempt to delete Calibre cover for book " + book.getTitle());
+        if (!resizedCoverFile.exists() || getCoverManager().hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
+          if (logger.isTraceEnabled()) {
+            if (!resizedCoverFile.exists())
+              logger.trace("addCoverLink: resizedCover set to be generated (not already existing)");
+            else if (getCoverManager().hasImageSizeChanged())
+              logger.trace("addCoverLink: resizedCover set to be generated (image size changed)");
+            else if (resizedCoverFile.lastModified() < coverFile.lastModified())
+              logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
+          }
+          getCoverManager().setImageToGenerate(resizedCoverFile, coverFile);
         } else {
           if (logger.isTraceEnabled())
-            logger.trace("addCoverLink: coverResize=false. Delete " + resizedCoverFile.getName());
+            logger.trace("addCoverLink: resizedCover not to be generated");
         }
-        resizedCoverFile.delete();
-        // Make sure it is no longer in the cache
-        CachedFileManager.INSTANCE.removeCachedFile(resizedCoverFile);
       } else {
-        if (logger.isTraceEnabled())
-          logger.trace("addCoverLink: coverResize=false. No resizedCover file for book " + book.getTitle());
+        // Not using resized covers - use original cover.jpg
+
+        if (resizedCoverFile.exists()) {
+          // Safety check we never delete the Calibre cover
+          if (0 == resizedCoverFile.getName().compareTo(Constants.CALIBRE_COVER_FILENAME)) {
+            logger.warn("attempt to delete Calibre cover for book " + book.getTitle());
+          } else {
+            if (logger.isTraceEnabled())
+              logger.trace("addCoverLink: coverResize=false. Delete " + resizedCoverFile.getName());
+          }
+          resizedCoverFile.delete();
+          // Make sure it is no longer in the cache
+          CachedFileManager.INSTANCE.removeCachedFile(resizedCoverFile);
+        } else {
+          if (logger.isTraceEnabled())
+            logger.trace("addCoverLink: coverResize=false. No resizedCover file for book " + book.getTitle());
+        }
+        // Change URI name to user cover.jpg
+        coverUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
       }
-      // Change URI name to user cover.jpg
-      coverUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
+      if (logger.isTraceEnabled())
+        logger.trace("addCoverLink: coverUri=" + coverUri);
+
+      entry.addContent(FeedHelper.INSTANCE.getCoverLink(coverUri));
     }
-    if (logger.isTraceEnabled())
-      logger.trace("addCoverLink: coverUri=" + coverUri);
-    entry.addContent(FeedHelper.INSTANCE.getCoverLink(coverUri));
 
     // add the thumbnail link
+    String thumbnailUri;
+    if (coverFile.exists()) {
+      thumbnailUri = getThumbnailManager().getImageUri(book);
+      CachedFile thumbnailFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getThumbnailManager().getResultFilename(book));
+      // Take into account whether thumbnail generation suppressed
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailGenerate()) {
+        // Using generated thumbnail files
 
-    String thumbnailUri = getThumbnailManager().getImageUri(book);
-    CachedFile thumbnailFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getThumbnailManager().getResultFilename(book));
-    // Take into account whether thumbnail generation suppressed
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailGenerate()) {
-      // Using generated thumbnail files
+        // prepare to copy the thumbnail file
+        getCatalogManager().addFileToTheMapOfFilesToCopy(thumbnailFile);
 
-      // prepare to copy the thumbnail file
-      getCatalogManager().addFileToTheMapOfFilesToCopy(thumbnailFile);
-
-      // generate the file if does not exist or size changed
-      if (!thumbnailFile.exists() || getThumbnailManager().hasImageSizeChanged() || thumbnailFile.lastModified() < coverFile.lastModified()) {
-        if (logger.isTraceEnabled()) {
-          if (!thumbnailFile.exists())
-            logger.trace("addCoverLink: thumbnail set to be generated (not already existing)");
-          else if (getThumbnailManager().hasImageSizeChanged())
-            logger.trace("addCoverLink: thumbnail set to be generated (image size changed)");
-          else if (thumbnailFile.lastModified() < coverFile.lastModified())
-            logger.trace("addCoverLink: thumbnail set to be generated (new cover)");
-        }
-        getThumbnailManager().setImageToGenerate(thumbnailFile, coverFile);
-      } else {
-        if (logger.isTraceEnabled())
-          logger.trace("addCoverLink: thumbnail not to be generated");
-      }
-    } else {
-      // Not generating thumbnails - using existing cover.jpg
-      if (thumbnailFile.exists()) {
-        if (thumbnailFile.getName().compareTo("cover.jpg") == 0) {
-          logger.warn("attempt to delete Calibre cover (for book " + book.getTitle());
+        // generate the file if does not exist or size changed
+        if (!thumbnailFile.exists() || getThumbnailManager().hasImageSizeChanged() || thumbnailFile.lastModified() < coverFile.lastModified()) {
+          if (logger.isTraceEnabled()) {
+            if (!thumbnailFile.exists())
+              logger.trace("addCoverLink: thumbnail set to be generated (not already existing)");
+            else if (getThumbnailManager().hasImageSizeChanged())
+              logger.trace("addCoverLink: thumbnail set to be generated (image size changed)");
+            else if (thumbnailFile.lastModified() < coverFile.lastModified())
+              logger.trace("addCoverLink: thumbnail set to be generated (new cover)");
+          }
+          getThumbnailManager().setImageToGenerate(thumbnailFile, coverFile);
         } else {
           if (logger.isTraceEnabled())
-            logger.trace("addCoverLink: Delete existing thumbnail file " + thumbnailFile.getName());
-          thumbnailFile.delete();
-          // Make sure it is no longer in the cache
-          CachedFileManager.INSTANCE.removeCachedFile(thumbnailFile);
+            logger.trace("addCoverLink: thumbnail not to be generated");
         }
+      } else {
+        // Not generating thumbnails - using existing cover.jpg
+        if (thumbnailFile.exists()) {
+          if (thumbnailFile.getName().compareTo("cover.jpg") == 0) {
+            logger.warn("attempt to delete Calibre cover (for book " + book.getTitle());
+          } else {
+            if (logger.isTraceEnabled())
+              logger.trace("addCoverLink: Delete existing thumbnail file " + thumbnailFile.getName());
+            thumbnailFile.delete();
+            // Make sure it is no longer in the cache
+            CachedFileManager.INSTANCE.removeCachedFile(thumbnailFile);
+          }
+        }
+        CachedFileManager.INSTANCE.removeCachedFile(thumbnailFile);
+        // Change URI name to user cover.jpg
+        thumbnailUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
       }
-      CachedFileManager.INSTANCE.removeCachedFile(thumbnailFile);
-      // Change URI name to user cover.jpg
-      thumbnailUri = FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + Constants.CALIBRE_COVER_FILENAME, true);
+    } else {
+      // resize the default thumbnail if needed
+      File resizedDefaultThumbnail = new File(getCatalogManager().getCatalogFolder(), Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME);
+      File defaultThumbnail = new File(getCatalogManager().getCatalogFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME);
+      if (!resizedDefaultThumbnail.exists() || getThumbnailManager().hasImageSizeChanged() || resizedDefaultThumbnail.lastModified() < defaultThumbnail.lastModified()) {
+        getThumbnailManager().setImageToGenerate(resizedDefaultThumbnail, defaultThumbnail);
+      }
 
-
+      // Change URI name to user default thumbnail
+      thumbnailUri = FeedHelper.INSTANCE.urlEncode("../" + Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME, true);
     }
+
     if (logger.isTraceEnabled())
       logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
+
+    getThumbnailManager().addBook(book, thumbnailUri);
     entry.addContent(FeedHelper.INSTANCE.getThumbnailLink(thumbnailUri));
   }
 
@@ -1081,7 +1090,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
       // index the book
       logger.debug("getBookEntry: indexing book");
-      IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(fullEntryUrl), getThumbnailManager().getImageUri(book));
+      IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(fullEntryUrl), getThumbnailManager().getThumbnailUrl(book));
     }
   }
 

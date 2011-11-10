@@ -850,12 +850,25 @@ public class Catalog {
       // check if we must continue
       callback.checkIfContinueGenerating();
 
+      // copy the resource files to the catalog folder
+      logger.debug("STARTED: Copying Resource files");
+      for (String resource : Constants.FILE_RESOURCES) {
+        callback.checkIfContinueGenerating();
+        File resourceFile = new File(destinationFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/" + resource);
+        InputStream resourceStream = JDOM.class.getResourceAsStream(resource);
+        Helper.copy(resourceStream, resourceFile);
+      }
+      logger.debug("COMPLETED: Copying Resource files");
+
+      // check if we must continue
+      callback.checkIfContinueGenerating();
+
       /* Thumbnails */
       logger.debug("STARTING: Generating Thumbnails");
       int nbThumbnails = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
       callback.startCreateThumbnails(nbThumbnails);
       now = System.currentTimeMillis();
-      countThumbnails = CatalogContext.INSTANCE.getThumbnailManager().generateImages();
+        countThumbnails = CatalogContext.INSTANCE.getThumbnailManager().generateImages();
       callback.endCreateThumbnails(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Thumbnails");
 
@@ -914,19 +927,6 @@ public class Catalog {
       logger.debug("STARTED: Generating HTML Files");
       CatalogContext.INSTANCE.getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.MainCatalog);
       logger.debug("COMPLETED: Generating HTML Files");
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
-
-      // copy the resource files to the catalog folder
-      logger.debug("STARTED: Copying Resource files");
-      for (String resource : Constants.FILE_RESOURCES) {
-        callback.checkIfContinueGenerating();
-        File resourceFile = new File(destinationFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/" + resource);
-        InputStream resourceStream = JDOM.class.getResourceAsStream(resource);
-        Helper.copy(resourceStream, resourceFile);
-      }
-      logger.debug("COMPLETED: Copying Resource files");
 
       // check if we must continue
       callback.checkIfContinueGenerating();
