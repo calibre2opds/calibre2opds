@@ -694,27 +694,34 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private void addNavigationLinks(Element entry, Book book) {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks()) {
       // add the series link
-      if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the series link");
-        entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-            getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
-            Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
+      // (but only if we generate a series catalog)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
+        if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
+          if (logger.isTraceEnabled())
+            logger.trace("getBookFullEntry: add the series link");
+          entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
+              Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
+        }
       }
 
       // add the author page link(s)
-      if (book.hasAuthor()) {
-        if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the author page link(s)");
-        for (Author author : book.getAuthors()) {
-          int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
-          entry.addContent(FeedHelper.INSTANCE
-              .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
-                  Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
+      // (but only if we generate an authors catalog)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
+        if (book.hasAuthor()) {
+          if (logger.isTraceEnabled())
+            logger.trace("getBookFullEntry: add the author page link(s)");
+          for (Author author : book.getAuthors()) {
+            int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
+            entry.addContent(FeedHelper.INSTANCE
+                .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
+                    Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
+          }
         }
       }
 
       // add the tags links
+      // (but only if we generate a tags catalog)
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags()) {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled())
@@ -731,9 +738,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // add the ratings links
-      if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the ratings links");
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
+        if (logger.isTraceEnabled())
+          logger.trace("getBookFullEntry: add the ratings links");
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
         if (nbBooks > 1) {
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(

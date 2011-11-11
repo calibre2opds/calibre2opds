@@ -742,10 +742,11 @@ public class Catalog {
       logger.debug("STARTING: Generating Series catalog");
       callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
       now = System.currentTimeMillis();
-      entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-      if (entry != null)
-      if (entry != null)
-        main.addContent(entry);
+      if (currentProfile.getGenerateSeries()) {
+        entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
+        if (entry != null)
+          main.addContent(entry);
+      }
       callback.endCreateSeries(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Series catalog");
 
