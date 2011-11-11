@@ -372,7 +372,11 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       stuffToFilterOutPlusAuthor.addAll(stuffToFilterOut);
     stuffToFilterOutPlusAuthor.add(author);
 
-    if (areThereSeries && ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog()) {
+    // We like to list series if we can before books not in series
+    // (unless the user has suppressed series generation).
+    if (areThereSeries
+    && ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()
+    && ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog()) {
       logger.debug("processing the series by " + author);
 
       // make a link to the series by this author catalog

@@ -121,6 +121,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     cmdStopGenerating.setVisible(true);
     lblStoppingGeneration.setVisible(false);
     progressStep.reset();
+    lblStartedTime.setText("");
     lblDatabaseTime.setText("");
     lblAuthorsTime.setText("");
     lblTagsTime.setText("");
@@ -137,6 +138,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblCopyLibraryTime.setText("");
     lblCopyCatalogTime.setText("");
     lblFinishedTime.setText("");
+    boldFont(lblStarted, true);
   }
 
   public void startReadDatabase() {
