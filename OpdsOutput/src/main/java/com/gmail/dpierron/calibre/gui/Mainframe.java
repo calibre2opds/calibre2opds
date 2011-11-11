@@ -29,6 +29,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -408,6 +409,64 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
+   *  We want the 'enabled's tate of the fields for specifying the URL's for
+   *  external links to be anbled/disabled according to whether we are
+   *  allowing the generation of this sort of link
+   */
+  private void setExternalLinksEnabledState() {
+    boolean enabledNoExternalLinks = chkNogenerateexternallinks.isSelected();
+    boolean derivedState;
+
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaUrlReadOnly());
+    txtWikipediaUrl.setEnabled(derivedState);
+    lblWikipediaUrl.setEnabled(derivedState);
+    cmdWikipediaUrlReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonAuthorUrlReadOnly());
+    txtAmazonAuthorUrl.setEnabled(derivedState);
+    lblAmazonAuthorUrl.setEnabled(derivedState);
+    cmdAmazonUrlReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonIsbnUrlReadOnly());
+    txtAmazonIsbnUrl.setEnabled(derivedState);
+    lblAmazonIsbnUrl.setEnabled(derivedState);
+    cmdAmazonIsbnReset.setEnabled(derivedState);
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonTitleUrlReadOnly());
+    txtAmazonTitleUrl.setEnabled(derivedState);
+    lblAmazonTitleUrl.setEnabled(derivedState);
+    cmdAmazonTitleReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadAuthorUrlReadOnly());
+    txtGoodreadAuthorUrl.setEnabled(derivedState);
+    lblGoodreadAuthorUrl.setEnabled(derivedState);
+    cmdGoodreadAuthorReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadIsbnUrlReadOnly());
+    txtGoodreadIsbnUrl.setEnabled(derivedState);
+    lblGoodreadIsbnUrl.setEnabled(derivedState);
+    cmdGoodreadIsbnReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadTitleUrlReadOnly());
+    txtGoodreadTitleUrl.setEnabled(derivedState);
+    lblGoodreadTitleUrl.setEnabled(derivedState);
+    cmdGoodreadTitleReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadReviewIsbnUrlReadOnly());
+    txtGoodreadReviewIsbnUrl.setEnabled(derivedState);
+    lblGoodreadReviewIsbnUrl.setEnabled(derivedState);
+    cmdGoodreadReviewReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isIsfdbAuthorUrlReadOnly());
+    txtIsfdbAuthorUrl.setEnabled(derivedState);
+    lblIsfdbAuthorUrl.setEnabled(derivedState);
+    cmdIsfdbAuthorReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingAuthorUrlReadOnly());
+    txtLibrarythingAuthorUrl.setEnabled(derivedState);
+    lblLibrarythingAuthorUrl.setEnabled(derivedState);
+    cmdLibrarythingAuthorReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingIsbnUrlReadOnly());
+    txtLibrarythingIsbnUrl.setEnabled(derivedState);
+    lblLibrarythingIsbnUrl.setEnabled(derivedState);
+    cmdLibrarythingIsbnReset.setEnabled((derivedState));
+    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
+    txtLibrarythingTitleUrl.setEnabled(derivedState);
+    lblLibrarythingTitleUrl.setEnabled(derivedState);
+    cmdLibrarythingTitleReset.setEnabled((derivedState));
+  }
+  /**
    * Load values for configuration into GUI
    * Also enable/disable any fields according to current values if required
    */
@@ -635,41 +694,18 @@ public class Mainframe extends javax.swing.JFrame {
 
     /* external links */
     txtWikipediaUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl());
-    txtWikipediaUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaUrlReadOnly());
-    lblWikipediaUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaUrlReadOnly());
     txtAmazonAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl());
-    txtAmazonAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonAuthorUrlReadOnly());
-    lblAmazonAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonAuthorUrlReadOnly());
     txtAmazonIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl());
-    txtAmazonIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonIsbnUrlReadOnly());
-    lblAmazonIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonIsbnUrlReadOnly());
     txtAmazonTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl());
-    txtAmazonTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonTitleUrlReadOnly());
-    lblAmazonTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonTitleUrlReadOnly());
     txtGoodreadAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl());
-    txtGoodreadAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadAuthorUrlReadOnly());
-    lblGoodreadAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadAuthorUrlReadOnly());
     txtGoodreadIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl());
-    txtGoodreadIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadIsbnUrlReadOnly());
-    lblGoodreadIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadIsbnUrlReadOnly());
     txtGoodreadTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl());
-    txtGoodreadTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadTitleUrlReadOnly());
-    lblGoodreadTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadTitleUrlReadOnly());
     txtGoodreadReviewIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadReviewIsbnUrl());
-    txtGoodreadReviewIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadReviewIsbnUrlReadOnly());
-    lblGoodreadReviewIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadReviewIsbnUrlReadOnly());
     txtIsfdbAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl());
-    txtIsfdbAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIsfdbAuthorUrlReadOnly());
-    lblIsfdbAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIsfdbAuthorUrlReadOnly());
     txtLibrarythingAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl());
-    txtLibrarythingAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingAuthorUrlReadOnly());
-    lblLibrarythingAuthorUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingAuthorUrlReadOnly());
     txtLibrarythingIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl());
-    txtLibrarythingIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingIsbnUrlReadOnly());
-    lblLibrarythingIsbnUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingIsbnUrlReadOnly());
     txtLibrarythingTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl());
-    txtLibrarythingTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
-    lblLibrarythingTitleUrl.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
+    setExternalLinksEnabledState();
 
     // custom catalogs
     customCatalogTableModel.setCustomCatalogs(ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs());
@@ -3846,7 +3882,7 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_cmdAddCustomCatalogActionPerformed
 
     private void chkNogenerateexternallinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNogenerateexternallinksStateChanged
-        // TODO add your handling code here:
+      setExternalLinksEnabledState();
     }//GEN-LAST:event_chkNogenerateexternallinksStateChanged
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
