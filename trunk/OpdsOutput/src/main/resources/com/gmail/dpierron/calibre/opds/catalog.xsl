@@ -147,15 +147,19 @@
                                     <!-- thumbnail -->
                                     <div class="cover">
                                         <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
-                                          <xsl:choose>
-                                              <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
-                                                  <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
-                                              </xsl:when>
-                                          </xsl:choose>
-                                        </a>
-                                    </div>
 
+                                            <xsl:choose>
+                                                <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
+                                                    <img src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds.title}" />
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <img src="../thumbnail.png" width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds.title}" />
+                                                </xsl:otherwise>
+                                              </xsl:choose>
+                                         </a>
+                                    </div>
                                     <xsl:if test="$browseByCover != 'true'">
+                                        <!-- summary -->
                                         <div class="details">
                                             <!-- title -->
                                             <div class="x_title">
