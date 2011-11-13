@@ -9,6 +9,18 @@ function createAndPopulateDB() {
 
 
 
+function loadDb() {
+    alert("Reloading Db");
+    cleanDb();
+    loadJs("database/books.js");
+    loadJs("database/keywords.js");
+    loadJs("database/catalogitems.js");
+    createDb();
+    populateDb();
+}
+
+
+
 function createDb() {
     db.transaction(function (tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS BOOKS(BK_ID PRIMARY KEY, BK_TITLE, BK_URL, BK_THUMBNAIL_URL)');
@@ -29,23 +41,24 @@ function cleanDb() {
 }
 
 
+function loadJs(relativePath) {
+  var script = document.createElement('SCRIPT');
+  script.setAttribute('src', relativePath);
+  document.getElementsByTagName('HEAD')[0].appendChild(script);
+}
+
+
 function needToReloadDb() {
     db.readTransaction(function (tx) {
         tx.executeSql("SELECT ID FROM IDENTIFIER",[], function (tx, results) {
             if (results.rows.length > 0 && results.rows.item(0).ID == getIdentifier()[0][0]) {
                 alert("DB OK !");
             } else {
-                alert("Reloading Db");
-                cleanDb();
-                createDb();
-                populateDb();
+                loadDb();
             }
         },
         function (tx, error) {
-            alert("Reloading Db");
-            cleanDb();
-            createDb();
-            populateDb();
+            loadDb();
         });
     });
 }
@@ -90,18 +103,18 @@ function searchByKeywordId(kw_id, element) {
     db.transaction(function (tx) {
         tx.executeSql("SELECT b.BK_TITLE,b.BK_URL, b.BK_THUMBNAIL_URL FROM KEYWORDS k INNER JOIN CATALOG_ITEMS c on k.KW_ID = c.KW_ID INNER JOIN BOOKS b on c.BK_ID = b.BK_ID  WHERE k.KW_ID = ? GROUP BY b.BK_TITLE,b.BK_URL",[kw_id], function (tx, results) {
             if (results.rows.length > 0) {
-                var html = "<div class='browseByCover'>";
+                var html = "";
                 for (var i = 0; i < results.rows.length; i++) {
                     var bookId = results.rows.item(i).BK_ID;
                     var bookUrl = results.rows.item(i).BK_URL;
                     var bookTitle = results.rows.item(i).BK_TITLE;
                     var bookThumbnailUrl = results.rows.item(i).BK_THUMBNAIL_URL;
-                    html += "<div class='x_container' id='calibre:book:" + bookId + "'>";
+                    /*html += "<div class='x_container' id='calibre:book:" + bookId + "'>";
                     html += "<div class='cover'>";
-                    html += "<a href='" + bookUrl + "' title=\"" + bookTitle + "\" target='_new'><img src='" + bookThumbnailUrl + "'></a>";
-                    html += "</div></div>";
-                }
-                html += "</div>";
+                    html += "</div></div>";*/
+                    html += "<a href='" + bookUrl + "' title=\"" + bookTitle + "\" target='_new'><img src='" + bookThumbnailUrl + "'></a> &nbsp;";
+                     }
+                //html += "</div>";
                 element.innerHTML = html;
             }
         });
