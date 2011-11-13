@@ -1,8 +1,10 @@
 var db = openDatabase('c2opds', '1.0', 'Calibre2Opds DB, enabling search feature', 2 * 1024 * 1024);
 var default_number_of_keywords = 100;
+var v_booksLoaded = false;
+var v_keywordsLoaded = false;
+var v_catalogItemsLoaded = false;
 
 function createAndPopulateDB() {
-    
     // Don't bother reloading the database if this one is considered as up to date
     needToReloadDb();
 }
@@ -10,13 +12,57 @@ function createAndPopulateDB() {
 
 
 function loadDb() {
-    alert("Reloading Db");
+    console.log("Reloading database");
     cleanDb();
-    loadJs("database/books.js");
-    loadJs("database/keywords.js");
-    loadJs("database/catalogitems.js");
     createDb();
-    populateDb();
+
+    loadJs("database/books.js",booksLoaded);
+    loadJs("database/keywords.js",keywordsLoaded);
+    loadJs("database/catalogitems.js", catalogItemsLoaded);
+
+    loadIdentifier();
+    loadWithTimer(1000,10);
+    
+
+
+}
+
+
+
+
+function booksLoaded(){
+    v_booksLoaded = true;
+}
+
+
+function keywordsLoaded(){
+    v_keywordsLoaded = true;
+}
+
+function catalogItemsLoaded(){
+    v_catalogItemsLoaded = true;
+}
+
+
+function loadWithTimer(timer,howManyTimes){
+
+    if(v_booksLoaded && v_keywordsLoaded && v_catalogItemsLoaded){
+        loadBooks();
+        loadCatalogItems();
+        loadKeywords();
+    }
+    else{
+        if (howManyTimes == 0){
+            alert("Could not execute load");
+            return;
+        }
+        else {
+         var value = howManyTimes - 1 ;
+        setTimeout("loadWithTimer('timer','value')");
+        }
+    }
+    
+
 }
 
 
@@ -41,10 +87,21 @@ function cleanDb() {
 }
 
 
-function loadJs(relativePath) {
+function loadJs(relativePath, callback ) {
   var script = document.createElement('SCRIPT');
   script.setAttribute('src', relativePath);
-  document.getElementsByTagName('HEAD')[0].appendChild(script);
+
+var oHead = document.getElementsByTagName('HEAD')[0];
+var oScript = document.createElement('script');
+oScript.type = 'text/javascript';
+oScript.src = relativePath;
+// most browsers
+oScript.onload = function(){
+    callback();
+}
+
+oHead.appendChild(oScript);
+
 }
 
 
@@ -52,7 +109,7 @@ function needToReloadDb() {
     db.readTransaction(function (tx) {
         tx.executeSql("SELECT ID FROM IDENTIFIER",[], function (tx, results) {
             if (results.rows.length > 0 && results.rows.item(0).ID == getIdentifier()[0][0]) {
-                alert("DB OK !");
+                console.log("DB does not need to be reloaded");
             } else {
                 loadDb();
             }
@@ -63,33 +120,42 @@ function needToReloadDb() {
     });
 }
 
-function populateDb() {
-    db.transaction(function (tx) {
-        
-        console.log("populate BOOKS table");
+function loadBooks(){
+db.transaction(function (tx) {
+console.log("populate BOOKS table");
         var books = getBooks();
         for (var i = 0; i < books.length; i++) {
             tx.executeSql('INSERT INTO BOOKS (BK_ID, BK_TITLE, BK_URL, BK_THUMBNAIL_URL) VALUES (?, ?, ?, ?)',[books[i][0], books[i][1], books[i][2], books[i][3]]);
         }
-        
-        console.log("finish loading books");
-        
-        console.log("populate catalogitems table");
-        var catalogitems = getCatalogitems();
-        for (var i = 0; i < catalogitems.length; i++) {
-            tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)',[catalogitems[i][0], catalogitems[i][1], catalogitems[i][2]]);
-        }
-        console.log("finish loading catalogitems table");
-        
-        
-        console.log("populate keywords");
+console.log("finish loading books");
+});
+}
+
+
+function loadKeywords(){
+db.transaction(function (tx) {
+console.log("populate keywords");
         var keywords = getKeywords();
         for (var i = 0; i < keywords.length; i++) {
             tx.executeSql('INSERT INTO KEYWORDS (KW_ID, KW_WORD,KW_WEIGHT) VALUES (?, ?, ?)',[keywords[i][0], keywords[i][1], keywords[i][2]]);
         }
-        console.log("finish loading keywords");
-        
-        
+console.log("finish loading keywords");
+});
+}
+
+function loadCatalogItems(){
+db.transaction(function (tx){
+console.log("populate catalogitems table");
+var catalogitems = getCatalogitems();
+for (var i = 0; i < catalogitems.length; i++) {
+  tx.executeSql('INSERT INTO CATALOG_ITEMS (KW_ID, BK_ID, CAT_TYPE) VALUES (?, ?, ?)',[catalogitems[i][0], catalogitems[i][1], catalogitems[i][2]]);
+   }
+console.log("finish loading catalogitems table");
+});
+}
+
+function loadIdentifier() {
+    db.transaction(function (tx) {
         console.log("populate identifier");
         var identifier = getIdentifier();
         tx.executeSql('INSERT INTO IDENTIFIER(ID, LABEL, DATE) VALUES (?, ?, ?)', [identifier[0][0],identifier[0][1],identifier[0][2]]);
