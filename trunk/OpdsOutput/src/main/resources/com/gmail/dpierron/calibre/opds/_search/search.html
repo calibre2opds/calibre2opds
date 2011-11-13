@@ -1,45 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <META content="text/html; charset=UTF-8" http-equiv="Content-Type"></META>
-        <meta content="yes" name="apple-mobile-web-app-capable" />
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-        <meta
-            content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no"
-            name="viewport" />
-        <meta content="IE=8" http-equiv="X-UA-Compatible" />
         <link href="../desktop.css" rel="stylesheet" type="text/css" />
         <link href="../mobile.css" media="only screen and (max-device-width: 480px)"
             rel="stylesheet" type="text/css" />
-        <script src="database/database.js"></script>
-        <script src="database/books.js"></script>
-        <script src="database/keywords.js"></script>
-        <script src="database/catalogitems.js"></script>
         <script src="database/identifier.js" ></script>
+        <script src="database/database.js" ></script>
         <link href="css/desktop.css" rel="stylesheet" type="text/css" />
         <script src="../functions.js" type="text/javascript"></script>
         <title>Calibre library - Demo - pure OPDS </title>
     </head>
-    <body onload="getKeywordsWithSize(document.getElementById('tag_cloud'),'')" style="">
-        <div id="topbar">
-            <div id="title">Calibre library - Demo - pure OPDS </div>
-            <div id="leftnav">
-                <a href="../index.html">
-                    <img alt="home" src="../homeIwebKit.png" />
-                </a>
-            </div>
-        </div>
-        <div class="desktop">
+    <body onload="createAndPopulateDB();getKeywordsWithSize(document.getElementById('tag_cloud'),'')" style="">
+
+        <header>
             <h1>Calibre library - Demo - pure OPDS </h1>
-        </div>
-        <iframe frameBorder="0" height="35" longdesc="headerInfo" scrolling="no"
-            src="../header.html"
-            >
-                            Browser not compatible.
-                        </iframe>
+        </header>
+    
 
 
-        <div class="desktop">
             <ul id="breadcrumb">
                 <li>
                     <a href="../index.html" title="Main catalog">Main catalog</a>
@@ -50,27 +28,25 @@
                     placeholder="Search KeyWords" type="search" />
                 </li>
             </ul>
-        </div>
+
         <div id="search">
             <p></p>
             <div id="searchBoxAndCloud">
                 <div id="searchbox">
                     
                 </div>
-                <p></p>
+                <HR>
                 <div id="tag_cloud"></div>
             </div>
+            <br/>
             <div id="Results">
                 <div id="searchResult"></div>
             </div>
-<!-- 
+
+        <HR>
         </div>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <hr />
-        <div class="thanks">
+
+        <footer>
             <small>
                 <br />calibre2opds v 3.0 beta 1 (rev. 82)<br />
                 <br />Generate OPDS and HTML catalogs from your Calibre ebooks database<br />The project''s wiki : &nbsp;<a
@@ -83,10 +59,6 @@
                     <li>Douglas Steele - programmer</li>
                 </ul>
                 <br />Special thanks to Kb Sriram, who not only programmed Trook, an excellent and OPDS compatible <br />library manager for the Nook, but also was kind enough to donate a Nook !</small>
-        </div>
-        <div id="footer">
-            <a class="noeffect" href="http://snippetspace.com">Powered by iWebKit</a>
-        </div>
--->
+        </footer>
     </body>
 </html>
