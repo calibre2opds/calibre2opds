@@ -339,6 +339,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         result = getListOfBooksSplitByLetter(breadcrumbs, mapOfBooksByLetter, title, urn, pFilename, SplitOption.SplitByLetter, icon, options);
       } else {
         result = new LinkedList<Element>();
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+        CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
         for (int i = from; i < books.size(); i++) {
           // check if we must continue
           CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
@@ -353,7 +355,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
             Book book = books.get(i);
             if (logger.isTraceEnabled())
               logger.trace("getListOfBooks: adding book to the list : " + book);
-            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
             try {
               logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
               Element entry = getBookEntry(breadcrumbs, book, options);
@@ -983,7 +984,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled())
       logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
 
-    CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
+    //CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString() + "/" + book.getTitle());
     if (!isInDeepLevel() && isBookTheStepUnit())
       CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
 
