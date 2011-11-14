@@ -79,8 +79,14 @@ public class CreateThumbnail {
         if (!error) {
           nbTries = 0;
           exception = null;
-        } else
+        } else {
           nbTries--;
+          try {
+            Thread.sleep(10); // wait 10ms
+          } catch (InterruptedException e) {
+            // I don't give a tiny rat's ass
+          }
+        }
       }
       if (exception != null)
         CatalogContext.INSTANCE.getCallback().errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()), exception);
