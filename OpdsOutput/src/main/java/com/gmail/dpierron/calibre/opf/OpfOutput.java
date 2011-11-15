@@ -10,9 +10,7 @@ import org.jdom.*;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -24,21 +22,27 @@ public class OpfOutput {
 
   private Book book;
   private boolean removeCss = false;
+  private boolean restoreCss = false;
   private File defaultCss = null;
 
-  public OpfOutput(Book book, boolean removeCss, File defaultCss) {
+  public OpfOutput(Book book, boolean removeCss, boolean restoreCss, File defaultCss) {
     this.book = book;
     if (defaultCss != null && defaultCss.exists())
       this.defaultCss = defaultCss;
     this.removeCss = (this.defaultCss != null) || removeCss; // copyDefaultCss forces removeCss
+    this.restoreCss = restoreCss;
   }
 
   public OpfOutput(Book book) {
-    this(book, false, null);
+    this(book, false, false, null);
   }
 
   public boolean isRemoveCss() {
     return removeCss;
+  }
+
+  public boolean isRestoreCss() {
+    return restoreCss;
   }
 
   public File getDefaultCss() {
@@ -204,10 +208,10 @@ public class OpfOutput {
     ZipOutputStream zos = null;
     try {
       try {
+        Map<String, ZipEntry> cssFilesBackupMap = new HashMap<String, ZipEntry>();
         zipInputFile = new ZipFile(inputFile);
         outputFile.getParentFile().mkdirs();
         zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
-
         Enumeration entries = zipInputFile.entries();
         while (entries.hasMoreElements()) {
           Object o = entries.nextElement();
@@ -240,62 +244,47 @@ public class OpfOutput {
               // copy the entry to the output file
               BufferedInputStream in = null;
               try {
-                // THIS COMMENTED-OUT CODE RENAMES THE .CSS_BAK FILES BACK TO .CSS
-                //                try {
-                //                  String filename = zipEntry.getName();
-                //                  if (isRemoveCss() && filename.toUpperCase().endsWith(".CSS_BAK")) {
-                //                    filename = filename.substring(0, filename.length() - 4);
-                //                  }
-                //                  ZipEntry newEntry = new ZipEntry(filename);
-                //                  newEntry.setMethod(zipEntry.getMethod());
-                //                  if (newEntry.getMethod() == ZipEntry.STORED) {
-                //                    newEntry.setSize(zipEntry.getSize());
-                //                    newEntry.setCrc(zipEntry.getCrc());
-                //                  }
-                //                  zos.putNextEntry(newEntry);
-                //                  byte[] data = new byte[1024];
-                //                  in = new BufferedInputStream(inputStream, 1024);
-                //                  int count;
-                //                  while ((count = in.read(data, 0, data.length)) != -1) {
-                //                    zos.write(data, 0, count);
-                //                  }
-                //                } finally {
-                //                  zos.closeEntry();
-                //                  if (in != null)
-                //                    in.close();
-                //                }
-
-                // check if we must remove the CSS files (rename them to .css_bak)
                 String filename = zipEntry.getName();
-                if (isRemoveCss() && filename.toUpperCase().endsWith(".CSS")) {
-                  // copy the default stylesheet if needed
-                  if (getDefaultCss() != null) {
-                    try {
-                      BufferedInputStream in2 = null;
-                      try {
-                        ZipEntry newEntry = new ZipEntry(filename);
-                        newEntry.setMethod(ZipEntry.DEFLATED);
-                        zos.putNextEntry(newEntry);
-                        byte[] data = new byte[1024];
-                        in2 = new BufferedInputStream(new FileInputStream(getDefaultCss()), 1024);
-                        int count;
-                        while ((count = in2.read(data, 0, data.length)) != -1) {
-                          zos.write(data, 0, count);
-                        }
-                      } finally {
-                        zos.closeEntry();
-                        if (in2 != null)
-                          in2.close();
-                      }
-                    } catch (IOException e) {
-                      logger.error(e);
-                      logger.error("... for book: " + book.getTitle() + " (cannot copy the default stylesheet)");
-                    }
+                if (isRestoreCss()) { // check if we must restore the CSS files (rename them from .css_bak to .css)
+                  if (filename.toUpperCase().endsWith(".CSS_BAK")) {
+                    filename = filename.substring(0, filename.length() - 4);
+                  } else if (filename.toUpperCase().endsWith(".CSS")) {
+                    if (zipInputFile.getEntry(filename+"_BAK") != null)
+                      filename = null; // skip it
                   }
-                  filename += "_BAK";
-                  // don't duplicate entries
-                  if (zipInputFile.getEntry(filename) != null)
-                    filename = null;
+                } else if (isRemoveCss()) {  // check if we must remove the CSS files (rename them to .css_bak)
+                  if (filename.toUpperCase().endsWith(".CSS_BAK")) {
+                    filename = null; // skip it
+                  } else if (filename.toUpperCase().endsWith(".CSS")) {
+                    // copy the default stylesheet if needed
+                    if (getDefaultCss() != null) {
+                      try {
+                        BufferedInputStream in2 = null;
+                        try {
+                          ZipEntry newEntry = new ZipEntry(filename);
+                          newEntry.setMethod(ZipEntry.DEFLATED);
+                          zos.putNextEntry(newEntry);
+                          byte[] data = new byte[1024];
+                          in2 = new BufferedInputStream(new FileInputStream(getDefaultCss()), 1024);
+                          int count;
+                          while ((count = in2.read(data, 0, data.length)) != -1) {
+                            zos.write(data, 0, count);
+                          }
+                        } finally {
+                          zos.closeEntry();
+                          if (in2 != null)
+                            in2.close();
+                        }
+                      } catch (IOException e) {
+                        logger.error(e);
+                        logger.error("... for book: " + book.getTitle() + " (cannot copy the default stylesheet)");
+                      }
+                    }
+                    filename += "_BAK";
+                    // don't duplicate entries
+                    if (zipInputFile.getEntry(filename) != null)
+                      filename = null;
+                  }
                 }
                 if (filename != null) {
                   try {

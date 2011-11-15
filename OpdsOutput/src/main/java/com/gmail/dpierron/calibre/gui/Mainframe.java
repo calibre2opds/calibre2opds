@@ -29,7 +29,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
-import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -92,35 +91,40 @@ public class Mainframe extends javax.swing.JFrame {
     String yes = Localization.Main.getText("boolean.yes");
     String cancel = Localization.Main.getText("boolean.no");
     boolean removeCss = false;
+    boolean restoreCss = false;
     File defaultCss = null;
     String onlyForTag = null;
     int result;
     if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
       String yesAndRemoveCss = Localization.Main.getText("gui.confirm.tools.removeCss");
+      String yesAndRestoreCss = Localization.Main.getText("gui.confirm.tools.restoreCss");
       result = JOptionPane
-          .showOptionDialog(this, message, "", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{yes, yesAndRemoveCss,
+          .showOptionDialog(this, message, "", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{yes, yesAndRemoveCss, yesAndRestoreCss,
               cancel},
               cancel);
-      if (result == JOptionPane.CANCEL_OPTION)
+      if (result == 3)
         return;
-      removeCss = (result == JOptionPane.NO_OPTION);
-      if (removeCss) {
-        onlyForTag = JOptionPane.showInputDialog("Only for tag (empty for all)");
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(new FileFilter() {
-          @Override
-          public boolean accept(File f) {
-            return (f != null && (!f.isFile() || f.getName().toUpperCase().endsWith(".CSS")));
-          }
+      removeCss = (result == 1);
+      restoreCss = (result == 2);
+      if (removeCss || restoreCss) {
+        onlyForTag = JOptionPane.showInputDialog(this, "Only for tag (empty for all)");
+        if (removeCss) {
+          JFileChooser chooser = new JFileChooser();
+          chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+              return (f != null && (!f.isFile() || f.getName().toUpperCase().endsWith(".CSS")));
+            }
 
-          @Override
-          public String getDescription() {
-            return "CSS stylesheets";
-          }
-        });
-        result = chooser.showOpenDialog(this);
-        if (result != JFileChooser.CANCEL_OPTION)
-          defaultCss = chooser.getSelectedFile();
+            @Override
+            public String getDescription() {
+              return "CSS stylesheets";
+            }
+          });
+          result = chooser.showOpenDialog(this);
+          if (result != JFileChooser.CANCEL_OPTION)
+            defaultCss = chooser.getSelectedFile();
+        }
       }
     } else {
       result =
@@ -134,7 +138,7 @@ public class Mainframe extends javax.swing.JFrame {
     result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
     if (result != JOptionPane.YES_OPTION)
       return;
-    new ReprocessEpubMetadataDialog(this, true, removeCss, defaultCss, onlyForTag).start();
+    new ReprocessEpubMetadataDialog(this, true, removeCss, restoreCss, defaultCss, onlyForTag).start();
   }
 
 
