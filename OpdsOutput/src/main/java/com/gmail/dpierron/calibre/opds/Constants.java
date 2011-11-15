@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.opds;
 
+import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.BufferedReader;
@@ -45,14 +46,16 @@ public class Constants {
       "home.png",
       DEFAULT_THUMBNAIL_FILENAME,
       // External image files for catalog sections
-      "allbooks.png",
-      "authors.png",
-      "c2o.png",
-      "ratings.png",
-      "recent.png",
-      "series.png",
-      "tags.png",
-      "featured.png",
+      Icons.ICONFILE_RECENT,
+      Icons.ICONFILE_AUTHORS,
+      Icons.ICONFILE_TAGS,
+      Icons.ICONFILE_SERIES,
+      Icons.ICONFILE_BOOKS,
+      Icons.ICONFILE_ABOUT,
+      Icons.ICONFILE_RATING,
+      Icons.ICONFILE_FEATURED,
+      Icons.ICONFILE_CUSTOM,
+      Icons.ICONFILE_SEARCH,
       "_search/search.html",
       "_search/css/desktop.css",
       "_search/database/database.js",
