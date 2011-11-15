@@ -26,17 +26,19 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   int position;
   boolean stopThread = false;
   boolean removeCss = false;
+  boolean restoreCss = false;
   File defaultStyleSheet = null;
   String onlyForTag = null;
 
   /**
    * Creates new form GenerateCatalogDialog
    */
-  public ReprocessEpubMetadataDialog(java.awt.Frame parent, boolean modal, boolean removeCss, File defaultStyleSheet, String onlyForTag) {
+  public ReprocessEpubMetadataDialog(java.awt.Frame parent, boolean modal, boolean removeCss, boolean restoreCss, File defaultStyleSheet, String onlyForTag) {
     super(parent, modal);
     setLocationRelativeTo(parent);
     initComponents();
     this.removeCss = removeCss;
+    this.restoreCss = restoreCss;
     this.defaultStyleSheet = defaultStyleSheet;
     this.onlyForTag = onlyForTag;
   }
@@ -78,7 +80,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
       if (stopThread)
         break;
       lblBookTitle.setText(book.getTitle());
-      OpfOutput opfOutput = new OpfOutput(book, removeCss, defaultStyleSheet);
+      OpfOutput opfOutput = new OpfOutput(book, removeCss, restoreCss, defaultStyleSheet);
       try {
         opfOutput.processEPubFile();
       } catch (IOException e) {
