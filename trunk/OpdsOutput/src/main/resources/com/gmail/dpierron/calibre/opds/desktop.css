@@ -147,7 +147,7 @@ width: 100%;
 }
 .x_menulisting .cover {
 	float:left;
-	width:20px;
+	/*width:20px;*/
 	margin:5px 10px 5px 10px
 }
 .x_menulisting .details {

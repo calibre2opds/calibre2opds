@@ -236,7 +236,7 @@
                         <!-- search link -->
                         <div class="x_menulisting" id="calibre:search">
                             <div class="cover">
-                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEWcZjTcViTMuqT8/vzcYjTkhhTkljT87tz03sRkZmS8mnT03tT89vTsvoTk1sz86uTkekzkjmzkwpT01rTsmnzsplTUwqz89uy0jmzsrmTknkT0zqT3X4fRAAAAbklEQVR4XnXOVw6FIBBAUafQsZfX9r/PB8JoTPT+QE4o01AtMoS8HkALcH8BGmGIAvaXLw0wCqxKz0Q9w1LBfFSiJBzljVerlbYhlBO4dZHM/F3llybncbIC6N+70Q7OlUm7DdO+gKs9gyRwdgd/LOcGXHzLN5gAAAAASUVORK5CYII="></img>
+                                <img src="search.png"></img>
                             </div>
                             <div class="details">
                                 <a href="_search/search.html" title="Search the books">Search the books</a>

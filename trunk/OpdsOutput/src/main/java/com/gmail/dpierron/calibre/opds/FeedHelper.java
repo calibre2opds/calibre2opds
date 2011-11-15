@@ -60,6 +60,16 @@ public enum FeedHelper {
   private final static String RELATION_RELATED = "related";
 
   /**
+   * A link to the same page (self-link)
+   */
+  private static final String RELATION_SELF = "self";
+
+  /**
+   * A link to the start page of the catalog
+   */
+  private static final String RELATION_START = "start";
+
+  /**
    * a graphical Resource associated to the OPDS Catalog Entry
    */
   private final static String RELATION_COVER = "http://opds-spec.org/image";
@@ -194,7 +204,7 @@ public enum FeedHelper {
       startUrl = "index.xml";
     else
       startUrl = baseUrl + "index.xml";
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "start", Localization.Main.getText("home.title")));
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, Localization.Main.getText("home.title")));
 
     String selfUrl = baseUrl;
     if (url != null) {
@@ -210,7 +220,7 @@ public enum FeedHelper {
       selfUrl = baseUrl + s;
     }
     
-    feed.addContent(getLinkElement(selfUrl, LINKTYPE_NAVIGATION, "self", title));
+    feed.addContent(getLinkElement(selfUrl, LINKTYPE_NAVIGATION, RELATION_SELF, title));
 
   }
   /* ---------- METADATA ----------*/
