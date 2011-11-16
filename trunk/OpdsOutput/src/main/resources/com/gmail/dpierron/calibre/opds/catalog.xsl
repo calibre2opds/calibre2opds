@@ -193,14 +193,21 @@
                                         </xsl:choose>
                                     </div>
                                     <xsl:variable name="url">
-                                        <xsl:choose>
-                                            <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']">
-                                                <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']/@href, '.xml'), '.html')"/>
-                                            </xsl:when>
-                                            <xsl:otherwise>
-                                                <xsl:value-of select="opds:link[@type='text/html']/@href"/>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
+                                      <xsl:choose>
+                                        <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
+                                          <xsl:value-of select="opds:link/@href" />
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                          <xsl:choose>
+                                              <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']">
+                                                  <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']/@href, '.xml'), '.html')"/>
+                                              </xsl:when>
+                                              <xsl:otherwise>
+                                                  <xsl:value-of select="opds:link[@type='text/html']/@href"/>
+                                              </xsl:otherwise>
+                                          </xsl:choose>
+                                        </xsl:otherwise>
+                                      </xsl:choose>
                                     </xsl:variable>
                                     <div class="details">
                                         <a href="{$url}" title="{opds:content}">

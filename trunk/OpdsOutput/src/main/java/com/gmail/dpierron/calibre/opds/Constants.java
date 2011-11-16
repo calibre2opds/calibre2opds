@@ -18,9 +18,9 @@ public class Constants {
   public final static String DSNNAME = "CALIBRE";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
-  public final static String FEED_URL = "http://wiki.mobileread.com/wiki/Calibre2opds";
+  public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
   public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
-  public final static String HELP_URL = "http://wiki.mobileread.com/wiki/Calibre2opds";
+  public final static String HELP_URL = "http://calibre2opds.com/read-the-documentation/";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
   public final static String TROOK_SEARCH_DATABASE_FILENAME = "calibre2opds_trook_search.db";
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
@@ -55,6 +55,7 @@ public class Constants {
       Icons.ICONFILE_RATING,
       Icons.ICONFILE_FEATURED,
       Icons.ICONFILE_CUSTOM,
+      Icons.ICONFILE_EXTERNAL,
       Icons.ICONFILE_SEARCH,
       "_search/search.html",
       "_search/css/desktop.css",

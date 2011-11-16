@@ -97,7 +97,7 @@ public enum FeedHelper {
   /**
    * a link to a jpeg image
    */
-  public static final String LINKTYPE_JPEG = "image/jpeg";
+  private static final String LINKTYPE_JPEG = "image/jpeg";
 
   /* ---------- ELEMENTS -----------*/
 
@@ -138,6 +138,19 @@ public enum FeedHelper {
 
   public Element getAboutEntry(String title, String urn, String url, String summary, String icon) {
     Element result = getAtomElement(false, "entry", title, urn, url, LINKTYPE_HTML, summary, true, icon);
+    // add updated
+    result.addContent(getUpdatedTag());
+    return result;
+  }
+
+  public Element getExternalLinkEntry(String title, String urn, String url, String icon) {
+    String linkType;
+    if (url.toUpperCase().endsWith(".XML") ||url.toUpperCase().startsWith("OPDS://"))
+      linkType = LINKTYPE_NAVIGATION;
+    else
+      linkType = LINKTYPE_HTML;
+
+    Element result = getAtomElement(false, "entry", title, urn, url, linkType, "", false, icon);
     // add updated
     result.addContent(getUpdatedTag());
     return result;
@@ -279,7 +292,7 @@ public enum FeedHelper {
   /* ---------- PRIVATE -----------*/
 
   private Element getFeedAuthorElement() {
-    return getFeedAuthorElement(Constants.AUTHORNAME, Constants.FEED_URL, Constants.AUTHOREMAIL);
+    return getFeedAuthorElement(Constants.AUTHORNAME, Constants.CALIBRE2OPDS_COM, Constants.AUTHOREMAIL);
   }
 
   private Element getFeedAuthorElement(String name, String uri, String email) {
