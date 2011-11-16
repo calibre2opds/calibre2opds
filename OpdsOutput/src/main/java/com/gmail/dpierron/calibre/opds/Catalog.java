@@ -346,19 +346,6 @@ public class Catalog {
   }
 
   /**
-   * @return
-   */
-  private Element getAboutEntry() {
-    String title = Localization.Main.getText("about.title", Constants.PROGTITLE);
-    String urn = "urn:calibre2opds:about";
-    String url = "http://wiki.mobileread.com/wiki/Calibre2opds";
-    String summary = Localization.Main.getText("about.summary");
-    // #751211: Use external icons option
-    String icon = currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT;
-    return FeedHelper.INSTANCE.getAboutEntry(title, urn, url, summary, icon);
-  }
-
-  /**
    * @param book
    * @return
    */
@@ -591,10 +578,10 @@ public class Catalog {
       {
         // Prepare the featured books search query
         BookFilter featuredBookFilter = null;
-        String customCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
-        if (Helper.isNotNullOrEmpty(customCatalogSearch)) {
+        String featuredCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
+        if (Helper.isNotNullOrEmpty(featuredCatalogSearch)) {
           try {
-            featuredBookFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
+            featuredBookFilter = CalibreQueryInterpreter.interpret(featuredCatalogSearch);
           } catch (CalibreSavedSearchInterpretException e) {
             callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
           } catch (CalibreSavedSearchNotFoundException e) {
@@ -612,7 +599,7 @@ public class Catalog {
         CatalogContext.INSTANCE.getCatalogManager().setFeaturedBooksFilter(featuredBookFilter);
       }
       // Prepare the Custom catalogs search query
-      List<Composite<String, BookFilter>> customCatalogsFilters = new LinkedList<Composite<String, BookFilter>>();
+      Map<String, BookFilter> customCatalogsFilters = new HashMap<String, BookFilter>();
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
         for (Composite<String, String> customCatalog : customCatalogs) {
@@ -620,6 +607,12 @@ public class Catalog {
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
           if (Helper.isNotNullOrEmpty(customCatalogTitle) && Helper.isNotNullOrEmpty(customCatalogSearch)) {
+            // skip http external catalogs (c2o-13)
+            if (customCatalogSearch.toUpperCase().startsWith("HTTP://")
+                || customCatalogSearch.toUpperCase().startsWith("HTTPS://")
+                ||customCatalogSearch.toUpperCase().startsWith("OPDS://"))
+              continue;
+            
             BookFilter customCatalogFilter = null;
             try {
               customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
@@ -636,7 +629,7 @@ public class Catalog {
                 return;
               }
             } else {
-              customCatalogsFilters.add(new Composite<String, BookFilter>(customCatalogTitle, customCatalogFilter));
+              customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
             }
           }
         }
@@ -687,7 +680,9 @@ public class Catalog {
 
       /* About entry */
       if (currentProfile.getIncludeAboutLink()) {
-        entry = getAboutEntry();
+        entry = FeedHelper.INSTANCE
+            .getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HELP_URL,
+                Localization.Main.getText("about.summary"), currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT);
         if (entry != null)
           main.addContent(entry);
       }
@@ -793,7 +788,7 @@ public class Catalog {
         callback.startCreateFeaturedBooks(featuredBooks.size());
         Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
         if (featuredCatalog != null) {
-          // add a "featured" link - 6 places the link right wher we want it...
+          // add a "featured" link - 6 places the link right where we want it...
           main.addContent(6, FeedHelper.INSTANCE
               .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle()));
           // add the actual catalog
@@ -807,26 +802,41 @@ public class Catalog {
 
       /* Custom catalogs */
       now = System.currentTimeMillis();
-      if (Helper.isNotNullOrEmpty(customCatalogsFilters)) {
+      if (Helper.isNotNullOrEmpty(customCatalogs)) {
+        int pos = 1;
         logger.debug("STARTED: Generating custom catalogs");
-        callback.startCreateCustomCatalogs(customCatalogsFilters.size());
-        for (Composite<String, BookFilter> customCatalogFilter : customCatalogsFilters) {
+        callback.startCreateCustomCatalogs(customCatalogs.size());
+        for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
-          String customCatalogTitle = customCatalogFilter.getFirstElement();
-          BookFilter customCatalogBookFilter = customCatalogFilter.getSecondElement();
-          if (Helper.isNotNullOrEmpty(customCatalogTitle) && customCatalogBookFilter != null) {
-            if (logger.isDebugEnabled())
-              logger.debug("STARTED: Generating custom catalog " + title);
-            List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, books);
-            if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
-              Composite<Element, String> customCatalog = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
-              main.addContent(customCatalog.getFirstElement());
-            }
-            callback.incStepProgressIndicatorPosition();
+          String customCatalogTitle = customCatalog.getFirstElement();
+          BookFilter customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
+          if (Helper.isNotNullOrEmpty(customCatalogTitle)) {
+            if (customCatalogBookFilter != null) {
+              // custom catalog
+              if (logger.isDebugEnabled())
+                logger.debug("STARTED: Generating custom catalog " + title);
 
-            // check if we must continue
-            callback.checkIfContinueGenerating();
+              List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, books);
+              if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
+                Composite<Element, String> customCatalogEntry = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
+                main.addContent(customCatalogEntry.getFirstElement());
+              }
+            } else {
+              // external catalog
+              if (logger.isDebugEnabled())
+                logger.debug("STARTED: Adding external link " + title);
+
+              String externalLinkUrl = customCatalog.getSecondElement();
+              entry = FeedHelper.INSTANCE.getExternalLinkEntry(customCatalogTitle, "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
+                  currentProfile.getExternalIcons() ? Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
+              if (entry != null)
+                main.addContent(entry);
+            }
           }
+          callback.incStepProgressIndicatorPosition();
+
+          // check if we must continue
+          callback.checkIfContinueGenerating();
         }
       }
       callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
