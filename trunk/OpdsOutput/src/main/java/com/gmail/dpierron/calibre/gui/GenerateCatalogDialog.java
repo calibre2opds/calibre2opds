@@ -369,7 +369,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       title = message;
       if (Helper.isNullOrEmpty(title))
         title = error.getClass().getName();
-      msg = error.getClass() + "\n" + Helper.getStackTrace(error);
+      msg = error.getMessage() + "\n" + error.getClass() + "\n" + Helper.getStackTrace(error);
     } else {
       msg = message;
       title = "";
