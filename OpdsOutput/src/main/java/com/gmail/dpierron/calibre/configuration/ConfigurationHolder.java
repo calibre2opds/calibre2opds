@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.configuration;
 
+import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Composite;
@@ -201,6 +202,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void setDatabaseFolder(File databaseFolder) {
+    DataModel.INSTANCE.reset(); // reset the datamodel when the database changes !
     setProperty(PROPERTY_NAME_DATABASEFOLDER, getUniversalPath(databaseFolder));
   }
 

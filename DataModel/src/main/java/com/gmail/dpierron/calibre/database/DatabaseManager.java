@@ -36,6 +36,16 @@ public enum DatabaseManager {
     initConnection(Configuration.instance().getDatabaseFolder());
   }
 
+  private void closeConnection() {
+    if (connection != null)
+      try {
+        connection.close();
+        connection = null;
+      } catch (SQLException e) {
+        logger.warn(e);
+      }
+  }
+
   void initConnection(File calibreLibrary) {
     try {
       Class.forName("org.sqlite.JDBC");
@@ -47,5 +57,11 @@ public enum DatabaseManager {
     } catch (SQLException e) {
       logger.error(e);
     }
+  }
+
+  public void reset() {
+    // reset the database prepared statements
+    DatabaseRequest.reset();
+    closeConnection();
   }
 }

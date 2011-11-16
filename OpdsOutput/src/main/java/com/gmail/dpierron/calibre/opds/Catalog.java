@@ -1180,7 +1180,7 @@ public class Catalog {
       logger.error("*************************************************");
       logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
       logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t.getCause());
-      logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getLocalizedMessage());
+      logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getMessage());
       logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ": ");
       String stack = Helper.getStackTrace(t);
       logger.error(stack);

@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.calibre.database.Database;
+import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -73,6 +74,9 @@ public enum DataModel {
     mapOfLanguagesById = null;
     mapOfLanguagesByIsoCode = null;
     mapOfSavedSearches = null;
+
+    // reset the database
+    DatabaseManager.INSTANCE.reset();
   }
 
   public void preloadDataModel() {

@@ -44,7 +44,11 @@ public enum DatabaseRequest {
     this.sql = sql;
   }
 
-  public PreparedStatement getStatement() {
+  public void resetStatement() {
+    preparedStatement = null;
+  }
+
+  public PreparedStatement getStatement() throws RuntimeException {
     if (preparedStatement == null) {
       try {
         Connection connection = DatabaseManager.INSTANCE.getConnection();
@@ -56,9 +60,15 @@ public enum DatabaseRequest {
         preparedStatement = connection.prepareStatement(sql);
       } catch (SQLException e) {
         logger.error(e);
+        throw new RuntimeException(e);
       }
     }
     return preparedStatement;
   }
 
+  public static void reset() {
+    for (DatabaseRequest databaseRequest : values()) {
+      databaseRequest.resetStatement();
+    }
+  }
 }
