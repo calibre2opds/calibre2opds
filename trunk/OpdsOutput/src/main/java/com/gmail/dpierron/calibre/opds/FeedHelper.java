@@ -117,7 +117,7 @@ public enum FeedHelper {
     Element updated = getUpdatedTag();
     feed.addContent(updated);
 
-    decorateElementWithNavigationLinks(feed, breadcrumbs, pTitle, urlExt);
+    decorateElementWithNavigationLinks(feed, breadcrumbs, pTitle, urlExt, false);
 
     return feed;
   }
@@ -184,8 +184,9 @@ public enum FeedHelper {
    * @param breadcrumbs the breadcrumbs retracing steps to the root
    * @param title      the title of the page
    * @param url      the url end of the page (baseURL + url = complete url)
+   * @param isEntry if true, the document is a full entry, if false, it's a catalog
    */
-  public void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url) {
+  public void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url, boolean isEntry) {
     if (feed == null)
       return;
 
@@ -220,7 +221,7 @@ public enum FeedHelper {
       selfUrl = baseUrl + s;
     }
     
-    feed.addContent(getLinkElement(selfUrl, LINKTYPE_NAVIGATION, RELATION_SELF, title));
+    feed.addContent(getLinkElement(selfUrl, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
 
   }
   /* ---------- METADATA ----------*/

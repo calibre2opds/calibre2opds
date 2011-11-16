@@ -208,12 +208,12 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     if (file == null)
       return null;
     String universalPath = file.getAbsolutePath();
-    if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
-      universalPath = file.toURI().getPath();
-      int pos = universalPath.indexOf(':');
-      if (pos >= 0 && pos + 1 < universalPath.length())
-        universalPath = universalPath.substring(pos + 1);
-    }
+    //if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
+    //  universalPath = file.toURI().getPath();
+    //  int pos = universalPath.indexOf(':');
+    //  if (pos >= 0 && pos + 1 < universalPath.length())
+    //    universalPath = universalPath.substring(pos + 1);
+    //}
     return universalPath;
   }
 

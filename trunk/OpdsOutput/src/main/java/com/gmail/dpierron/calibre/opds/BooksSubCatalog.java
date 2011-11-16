@@ -1072,7 +1072,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry.addContent(updated);
 
       // add the navigation links
-      FeedHelper.INSTANCE.decorateElementWithNavigationLinks(entry, breadcrumbs, sTitle, fullEntryUrl);
+      FeedHelper.INSTANCE.decorateElementWithNavigationLinks(entry, breadcrumbs, sTitle, fullEntryUrl, true);
 
       // add the required data to the book entry
       decorateBookEntry(entry, book, true);
