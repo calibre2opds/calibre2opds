@@ -11,8 +11,10 @@ package com.gmail.dpierron.calibre.configuration;
  */
 
 import com.gmail.dpierron.calibre.opds.indexer.Index;
+import com.gmail.dpierron.tools.Composite;
 
 import java.io.File;
+import java.util.List;
 
 public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurationInterface {
 
@@ -156,4 +158,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public String getFeaturedCatalogTitle();
 
   public String getFeaturedCatalogSavedSearchName();
+
+  public List<Composite<String, String>> getCustomCatalogs();
 }
