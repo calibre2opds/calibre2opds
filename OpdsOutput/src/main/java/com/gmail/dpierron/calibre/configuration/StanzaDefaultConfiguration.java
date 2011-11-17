@@ -2,9 +2,12 @@ package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
+import com.gmail.dpierron.tools.Composite;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 public class StanzaDefaultConfiguration extends DefaultConfiguration implements ReadOnlyStanzaConfigurationInterface {
 
@@ -303,5 +306,9 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public String getFeaturedCatalogSavedSearchName() {
     return StanzaConstants.FeaturedCatalogSavedSearchName;
+  }
+
+  public List<Composite<String, String>> getCustomCatalogs() {
+    return new Vector<Composite<String, String>>();
   }
 }

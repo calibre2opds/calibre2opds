@@ -1417,6 +1417,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void setCustomCatalogs(List<Composite<String, String>> value) {
+    String s;
     StringBuffer mainsb = new StringBuffer();
     if (Helper.isNotNullOrEmpty(value)) {
       for (Composite<String, String> composite : value) {
@@ -1433,7 +1434,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
         sb.append("[/customCatalog]");
         mainsb.append(sb.toString());
       }
-    }
-    setProperty(PROPERTY_NAME_CUSTOMCATALOGS, mainsb.toString());
+      s = mainsb.toString();
+    } else s="";
+    setProperty(PROPERTY_NAME_CUSTOMCATALOGS, s);
   }
 }

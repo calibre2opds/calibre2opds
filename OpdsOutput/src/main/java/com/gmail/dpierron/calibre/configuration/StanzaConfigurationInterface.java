@@ -10,7 +10,10 @@ package com.gmail.dpierron.calibre.configuration;
  * ITIMPI:  Not sure what the purpose is of defining this interface?
  */
 
+import com.gmail.dpierron.tools.Composite;
+
 import java.io.File;
+import java.util.List;
 
 public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfigurationInterface {
 
@@ -146,4 +149,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void setFeaturedCatalogTitle(String value);
 
   public void setFeaturedCatalogSavedSearchName(String value);
+
+  public void setCustomCatalogs(List<Composite<String, String>> value);
 }
