@@ -107,8 +107,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setIncludeOnlyOneFile(boolean value);
 
-  public void setCompatibilityTrick(CompatibilityTrick value);
-
   public void setZipTrookCatalog(boolean value);
 
   public void setReprocessEpubMetadata(boolean value);

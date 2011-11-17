@@ -51,7 +51,6 @@ public class StanzaConstants {
   public final static boolean COVER_RESIZE = true;
   public static final int CoverHeight = 550;
   public final static boolean IncludeOnlyOneFile = false;
-  public final static CompatibilityTrick COMPATIBILITYTRICK = CompatibilityTrick.OPDS;
   public final static boolean ZipTrookCatalog = false;
   public final static boolean ReprocessEpubMetadata = false;
   public final static boolean OrderAllBooksBySeries = true;

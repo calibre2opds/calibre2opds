@@ -25,6 +25,9 @@ import java.util.Locale;
 public enum JDOM {
   INSTANCE;
   private final static Logger logger = Logger.getLogger(JDOM.class);
+  private static final String CATALOG_XSL = "catalog.xsl";
+  private static final String HEADER_XSL = "header.xsl";
+  private static final String FULLENTRY_XSL = "fullentry.xsl";
 
   private JDOMFactory factory;
   private XMLOutputter outputter;
@@ -39,7 +42,7 @@ public enum JDOM {
   public Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
-        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("header.xsl")));
+        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
         headerTransformer.setParameter("programName", Constants.PROGNAME);
         headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
@@ -116,7 +119,7 @@ public enum JDOM {
   public Transformer getCatalogTransformer() {
     if (catalogTransformer == null) {
       try {
-        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(getXsltFilename())));
+        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(catalogTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e);
@@ -128,7 +131,7 @@ public enum JDOM {
   public Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream("fullentry.xsl")));
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(FULLENTRY_XSL)));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
@@ -137,19 +140,10 @@ public enum JDOM {
     return bookFullEntryTransformer;
   }
 
-  private String getXsltFilename() {
-    switch (ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick()) {
-      case TROOK:
-        return "catalog-TROOK.xsl";
-      default:
-        return "catalog.xsl";
-    }
-  }
-
   public Transformer getMainCatalogTransformer() {
     if (mainTransformer == null) {
       try {
-        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(getXsltFilename())));
+        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(mainTransformer);
         mainTransformer.setParameter("programName", Constants.PROGNAME);
         mainTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);

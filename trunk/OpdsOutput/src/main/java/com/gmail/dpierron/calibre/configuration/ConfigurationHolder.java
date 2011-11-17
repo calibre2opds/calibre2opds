@@ -74,7 +74,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_COVERRESIZE = "CoverResize";
   private final static String PROPERTY_NAME_COVERHEIGHT = "CoverHeight";
   private final static String PROPERTY_NAME_INCLUDEONLYONEFILE = "IncludeOnlyOneFile";
-  private final static String PROPERTY_NAME_COMPATIBILITYTRICK = "CompatibilityTrick";
   private final static String PROPERTY_NAME_ZIPTROOKCATALOG = "ZipTrookCatalog";
   private final static String PROPERTY_NAME_REPROCESSEPUBMETADATA = "ReprocessEpubMetadata";
   private final static String PROPERTY_NAME_ORDERALLBOOKSBYSERIES = "OrderAllBooksBySeries";
@@ -1045,22 +1044,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setOrderAllBooksBySeries(boolean value) {
     setProperty(PROPERTY_NAME_ORDERALLBOOKSBYSERIES, value);
-  }
-
-  public boolean isCompatibilityTrickReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_COMPATIBILITYTRICK);
-  }
-
-  public CompatibilityTrick getCompatibilityTrick() {
-    String s = getProperty(PROPERTY_NAME_COMPATIBILITYTRICK);
-    if (s == null)
-      return defaults.getCompatibilityTrick();
-    else
-      return CompatibilityTrick.fromString(s);
-  }
-
-  public void setCompatibilityTrick(CompatibilityTrick value) {
-    setProperty(PROPERTY_NAME_COMPATIBILITYTRICK, value.toString());
   }
 
   public boolean isSplitInAuthorBooksReadOnly() {

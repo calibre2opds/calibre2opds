@@ -759,7 +759,7 @@
     <option name="links">
       <list>
         <IssueNavigationLink>
-          <option name="issueRegexp" value="[A-Z]+\-\d+" />
+          <option name="issueRegexp" value="c2o-\d+" />
           <option name="linkRegexp" value="http://calibre2opds.myjetbrains.com/youtrack/issue/$0" />
         </IssueNavigationLink>
       </list>

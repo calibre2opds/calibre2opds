@@ -110,8 +110,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeOnlyOneFile();
 
-  public CompatibilityTrick getCompatibilityTrick();
-
   public boolean getZipTrookCatalog();
 
   public boolean getReprocessEpubMetadata();
