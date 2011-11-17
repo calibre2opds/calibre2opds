@@ -208,10 +208,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.IncludeOnlyOneFile;
   }
 
-  public CompatibilityTrick getCompatibilityTrick() {
-    return StanzaConstants.COMPATIBILITYTRICK;
-  }
-
   public boolean getZipTrookCatalog() {
     return StanzaConstants.ZipTrookCatalog;
   }

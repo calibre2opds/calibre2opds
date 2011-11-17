@@ -7,7 +7,6 @@ package com.gmail.dpierron.calibre.gui;
  * and maintained using the Netbeans IDE tool for form design.
  */
 
-import com.gmail.dpierron.calibre.configuration.CompatibilityTrick;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.configuration.StanzaConstants;
@@ -681,8 +680,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblMaxMobileResolution.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxMobileResolutionReadOnly());
     txtMaxMobileResolution.setVisible(false);   // Not currently being used
     lblMaxMobileResolution.setVisible(false);   // Not currently being used
-    cboCompatibilityTrick.setModel(new DefaultComboBoxModel(CompatibilityTrick.values()));
-    cboCompatibilityTrick.setSelectedItem(ConfigurationManager.INSTANCE.getCurrentProfile().getCompatibilityTrick());
     chkNoSplitInAuthorBooks.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInAuthorBooks());
     chkNoSplitInAuthorBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitInAuthorBooksReadOnly());
     lblNoSplitInAuthorBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitInAuthorBooksReadOnly());
@@ -752,7 +749,6 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void storeValues() {
     ConfigurationManager.INSTANCE.getCurrentProfile().setLanguage("" + cboLang.getSelectedItem());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCompatibilityTrick(CompatibilityTrick.valueOf("" + cboCompatibilityTrick.getSelectedItem()));
     File f = new File(txtDatabaseFolder.getText());
     if (f.exists())
       ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(f);
@@ -886,8 +882,6 @@ public class Mainframe extends javax.swing.JFrame {
     // main options
     lblLang.setText(Localization.Main.getText("config.Language.label")); // NOI18N
     lblLang.setToolTipText(Localization.Main.getText("config.Language.description")); // NOI18N
-    lblCompatibilityTrick.setText(Localization.Main.getText("config.CompatibilityTrick.label")); // NOI18N
-    lblCompatibilityTrick.setToolTipText(Localization.Main.getText("config.CompatibilityTrick.description")); // NOI18N
     lblDatabaseFolder.setText(Localization.Main.getText("config.DatabaseFolder.label")); // NOI18N
     lblDatabaseFolder.setToolTipText(Localization.Main.getText("config.DatabaseFolder.description")); // NOI18N
     lblTargetFolder.setText(Localization.Main.getText("config.TargetFolder.label")); // NOI18N
@@ -1111,8 +1105,6 @@ public class Mainframe extends javax.swing.JFrame {
       popup = Localization.Main.getText("config.Language.description");
     else if (label == lblCurrentProfile)
       popup = Localization.Main.getText("config.Profile.description");
-    else if (label == lblCompatibilityTrick)
-      popup = Localization.Main.getText("config.CompatibilityTrick.description");
     else if (label == lblDatabaseFolder)
       popup = Localization.Main.getText("config.DatabaseFolder.description");
     else if (label == lblTargetFolder)
@@ -1397,8 +1389,6 @@ public class Mainframe extends javax.swing.JFrame {
         txtWikilang = new javax.swing.JTextField();
         chkCopyToDatabaseFolder = new javax.swing.JCheckBox();
         lblCopyToDatabaseFolder = new javax.swing.JLabel();
-        lblCompatibilityTrick = new javax.swing.JLabel();
-        cboCompatibilityTrick = new javax.swing.JComboBox();
         chkReprocessEpubMetadata = new javax.swing.JCheckBox();
         lblReprocessEpubMetadata = new javax.swing.JLabel();
         lblZipTrookCatalog = new javax.swing.JLabel();
@@ -1953,31 +1943,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblCopyToDatabaseFolder, gridBagConstraints);
-
-        lblCompatibilityTrick.setText(Localization.Main.getText("config.CompatibilityTrick.label")); // NOI18N
-        lblCompatibilityTrick.setToolTipText(Localization.Main.getText("config.CompatibilityTrick.description")); // NOI18N
-        lblCompatibilityTrick.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-        pnlMainOptions.add(lblCompatibilityTrick, gridBagConstraints);
-
-        cboCompatibilityTrick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cboCompatibilityTrick.setPreferredSize(new java.awt.Dimension(100, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-        pnlMainOptions.add(cboCompatibilityTrick, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -2007,13 +1972,13 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblZipTrookCatalog, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 13;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -3967,7 +3932,6 @@ public class Mainframe extends javax.swing.JFrame {
   }// GEN-LAST:event_cmdSetDatabaseFolderActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox cboCompatibilityTrick;
     private javax.swing.JComboBox cboIndexFilterAlgorithm;
     private javax.swing.JComboBox cboLang;
     private javax.swing.JCheckBox chkBrowseByCover;
@@ -4036,7 +4000,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblCatalogFilter;
     private javax.swing.JLabel lblCatalogFolder;
     private javax.swing.JLabel lblCatalogTitle;
-    private javax.swing.JLabel lblCompatibilityTrick;
     private javax.swing.JLabel lblCopyToDatabaseFolder;
     private javax.swing.JLabel lblCoverHeight;
     private javax.swing.JLabel lblCryptFilenames;
