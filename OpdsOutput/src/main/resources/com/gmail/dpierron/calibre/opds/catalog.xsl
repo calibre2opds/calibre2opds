@@ -150,10 +150,10 @@
 
                                             <xsl:choose>
                                                 <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
-                                                    <img src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds.title}" />
+                                                    <img src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" width="{$thumbWidth}" height="{$thumbHeight}" />
                                                 </xsl:when>
                                                 <xsl:otherwise>
-                                                    <img src="../thumbnail.png" width="{$thumbWidth}" height="{$thumbHeight}" alt="{opds.title}" />
+                                                    <img src="../thumbnail.png" width="{$thumbWidth}" height="{$thumbHeight}" />
                                                 </xsl:otherwise>
                                               </xsl:choose>
                                          </a>
@@ -163,7 +163,9 @@
                                         <div class="details">
                                             <!-- title -->
                                             <div class="x_title">
+                                                <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="opds:title">
                                                 <xsl:value-of select="opds:title"/>
+                                                </a>
                                                 <xsl:if test="string-length(opds:author/opds:name) > 1">
                                                     <br/>
                                                     <small>
@@ -184,33 +186,35 @@
                                 </div>
                             </xsl:when>
                             <xsl:otherwise>
+                                <xsl:variable name="url">
+                                  <xsl:choose>
+                                    <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
+                                      <xsl:value-of select="opds:link/@href" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                      <xsl:choose>
+                                          <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']">
+                                              <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']/@href, '.xml'), '.html')"/>
+                                          </xsl:when>
+                                          <xsl:otherwise>
+                                              <xsl:value-of select="opds:link[@type='text/html']/@href"/>
+                                          </xsl:otherwise>
+                                      </xsl:choose>
+                                    </xsl:otherwise>
+                                  </xsl:choose>
+                                </xsl:variable>
                                 <div class="x_menulisting" id="{opds:id}">
                                     <div class="cover">
                                         <xsl:choose>
                                             <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
-                                                <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
+                                                <a href="{$url}" title="{opds:title}">
+                                                <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" border="0" />
+                                                </a>
                                             </xsl:when>
                                         </xsl:choose>
                                     </div>
-                                    <xsl:variable name="url">
-                                      <xsl:choose>
-                                        <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
-                                          <xsl:value-of select="opds:link/@href" />
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                          <xsl:choose>
-                                              <xsl:when test="opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']">
-                                                  <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml;profile=opds-catalog;kind=navigation']/@href, '.xml'), '.html')"/>
-                                              </xsl:when>
-                                              <xsl:otherwise>
-                                                  <xsl:value-of select="opds:link[@type='text/html']/@href"/>
-                                              </xsl:otherwise>
-                                          </xsl:choose>
-                                        </xsl:otherwise>
-                                      </xsl:choose>
-                                    </xsl:variable>
                                     <div class="details">
-                                        <a href="{$url}" title="{opds:content}">
+                                        <a href="{$url}">
                                             <xsl:value-of select="opds:title"/>
                                         </a>
                                         <br/>
