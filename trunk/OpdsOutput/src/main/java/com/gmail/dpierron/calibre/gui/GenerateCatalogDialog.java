@@ -145,6 +145,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     logger.info(Localization.Main.getText("info.step.database"));
     chkStarted.setSelected(true);
     setTimeNow(lblStartedTime);
+    boldFont(lblStarted, false);
     boldFont(lblDatabase, true);
   }
 

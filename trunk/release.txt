@@ -33,12 +33,14 @@ Known Issues
  - #716914  Series not sorted correctly by Series Index when more than 1 digit
  - #729859  Internal links not working in XML catalogs
             (may not be fixable)
-                                                                                                   d
+ - #c2o-15  Filenames generated can exceed system limits
+            (this is particularly likely to happen in the larger catalog sections on very large
+            libraries, or if many sub-levels based on tags are specified)
+                                                   #                                                d
 Planned Enhancements
 ~~~~~~~~~~~~~~~~~~~~
 The following items are planned for future releases:
-    - New: #751211: Allow use of External icons for catalog sections
-                    (this is currently only partially implemented so should not be used yet)
+    Support for linking to external catalogs and/or  html pages from catalog top level
 
 Release History
 ---------------
@@ -47,14 +49,25 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in Launchpad.
 
 v3.0 beta 1
+    - New: OPDS 1.1 compatibility
     - New: Experimental support for creating and using a search index in HTML catalogs
     - New: support for Featured Books sub-catalog
+    - New: Support for custom catalog sections (based on Calibre searches)
     - New: Current profile now displayed on main screen
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
     - New: Support for external icon files instead of embedded binary images
-    - New: A catalog generation run that ahs started can be cancelled
+    - New: Support for suppressing the generation of the Authors sub-catalog.
+    - New: Support for suppressing the generation of the Series sub-catalog.
+    - New: Support for suppressing the generation of the Recent Books sub-catalog.
+    - New: A catalog generation run that has started can be cancelled
     = New: Maximum length of books summary can now be specified
+    - New: Split by letter now splits to further levels if relevant limits reached.
+    - New: #751211: Allow use of External icons for catalog sections
+    - New: Reset options added for URL's used for book external links
+    - New: #c20-49: Improve navigation consistency in HTML catalogs
+    - Change: Internal logging improved.  This should help with diagnosing faults
     - Change: Series name/number is now at start of Books summary
+    - Change: Icons used are now higher resolution and this look better on high quality screens
     - Fix: #836797 Null pointer exception trying to run calibre2opds in commandline mode.
     - Fix: #840830 Command line not working in Windows
     - Fix: #831976 Accented characters not displaying correctly in comments
