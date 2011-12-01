@@ -28,6 +28,9 @@ public class TestLocalisation {
         // skip DeviceMode
         if ("DeviceMode".equals(optionName))
           continue;
+        // skip CustomCatalogs
+        if ("CustomCatalogs".equals(optionName))
+          continue;
         String labelKey = "config." + optionName + ".label";
         String label = Localization.Main.getText(labelKey);
         assertTrue(language + "->" + labelKey, Helper.isNotNullOrEmpty(label) && !label.equals(labelKey));
