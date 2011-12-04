@@ -333,10 +333,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       List<Element> result;
       if (willSplitByDate) {
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        result = getListOfBooksSplitByDate(breadcrumbs, mapOfBooksByDate, title, urn, pFilename, icon, options);
+        result = getListOfBooksSplitByDate(breadcrumbs, mapOfBooksByDate, title, urn, pFilename, "../" + icon, options);
       } else if (willSplitByLetter) {
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        result = getListOfBooksSplitByLetter(breadcrumbs, mapOfBooksByLetter, title, urn, pFilename, SplitOption.SplitByLetter, icon, options);
+        result = getListOfBooksSplitByLetter(breadcrumbs, mapOfBooksByLetter, title, urn, pFilename, SplitOption.SplitByLetter, "../" + icon, options);
       } else {
         result = new LinkedList<Element>();
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);

@@ -56,7 +56,7 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
     return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_FEATURED :
+            (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_FEATURED :
             Icons.ICON_FEATURED);
   }
 }
