@@ -57,7 +57,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
     Element result = getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, SplitOption.SplitByDate,
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_RECENT :
+            (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_RECENT :
             Icons.ICON_RECENT, Option.INCLUDE_TIMESTAMP).getFirstElement();
     return new Composite<Element, String>(result, urlInItsSubfolder);
   }

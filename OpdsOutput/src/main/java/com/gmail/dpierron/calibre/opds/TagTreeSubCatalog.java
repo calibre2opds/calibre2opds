@@ -113,7 +113,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons
           () ?
-          getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_TAGS :
+          (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);

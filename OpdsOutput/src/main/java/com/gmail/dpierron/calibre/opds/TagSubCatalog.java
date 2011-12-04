@@ -150,7 +150,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
       return getSubCatalogLevel(pBreadcrumbs, books, getStuffToFilterOutAnd(tag), title, summary, urn, filename, null,
           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_TAGS :
+              (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
               Icons.ICON_TAGS);
     } else {
       // try and list the items to make the summary
@@ -160,7 +160,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
       return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-          getCatalogManager().getPathToCatalogRoot(filename, true) + Icons.ICONFILE_TAGS :
+          (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS).getFirstElement();
     }
   }

@@ -236,8 +236,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
           ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              getCatalogManager().getPathToCatalogRoot(filename, weAreAlsoInSubFolder) + Icons.ICONFILE_AUTHORS :
-              Icons.ICON_AUTHORS);
+              (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -315,7 +314,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
               letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
               ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  getCatalogManager().getPathToCatalogRoot(letterFilename, weAreAlsoInSubFolder) + Icons.ICONFILE_BOOKS :
+                  (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS :
                   Icons.ICON_BOOKS).getFirstElement();
         }
       }
@@ -418,8 +417,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
         // #751211: Use external icons option
         ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            getCatalogManager().getPathToCatalogRoot(filename) + Icons.ICONFILE_AUTHORS :
-            Icons.ICON_AUTHORS, firstElements).getFirstElement();
+            (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
     return result;
   }
 
