@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static DateFormat PUBLICATIONDATE_FORMAT =
@@ -334,11 +336,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (willSplitByDate) {
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         result = getListOfBooksSplitByDate(breadcrumbs, mapOfBooksByDate, title, urn, pFilename,
-                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ? "../" : "")  + icon, options);
+                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() && ! icon.startsWith("../") ? "../" : "")  + icon, options);
       } else if (willSplitByLetter) {
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         result = getListOfBooksSplitByLetter(breadcrumbs, mapOfBooksByLetter, title, urn, pFilename, SplitOption.SplitByLetter,
-                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ? "../" : "") + icon, options);
+                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() && ! icon.startsWith("../")? "../" : "") + icon, options);
       } else {
         result = new LinkedList<Element>();
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
