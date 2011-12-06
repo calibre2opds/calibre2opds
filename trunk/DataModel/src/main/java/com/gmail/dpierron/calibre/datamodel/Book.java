@@ -176,7 +176,6 @@ public class Book implements SplitableByLetter {
   }
 
   /**
-   * TODO  THis is still being worked on - not yet being used
    * Remove leading text from the given XHTNL string.  This is
    *        used to remove words such as SUMMARY that we add
    *        ourselves in the catalog.   It is also used to remove
@@ -190,53 +189,103 @@ public class Book implements SplitableByLetter {
    *          HTML tags that were purely surrounding the text
    *          that has been removed, they are also removed.
    * @param text            Text that is being worked on
-   * @param LeadingText     String to be checked for (case ignored)
+   * @param leadingText     String to be checked for (case ignored)
    * @return                Result of removing text, or null if input was null
    */
   private String removeLeadingText (String text, String leadingText) {
     // Check for fast exit conditions
-    if (text == null || leadingText == null || text.charAt(0) != '<')
+    if (text == null || leadingText == null )
       return text;
-
     int textLength = text.length();
     int leadingLength = leadingText.length();
-    int startText = 0;
-    // skip over leading tags
-    while (text.charAt(startText) == '<' ) {
-        int tagEnd = text.indexOf('>');
-        if (tagEnd == -1)
-            return text;
-        else
-            startText = tagEnd + 1;
-    }
-    if (text.subSequence(startText,startText+leadingLength -1) != leadingText)
+    if (textLength == 0 || leadingLength == 0 )
       return text;
-    text.trim();
-    // Now try and get past any tags
 
-    // If there is no match on leading text, then give up and return result same as input
+    int cutStart = 0;          // Start scanning from beginning of string
+    int cutStartMax = textLength - leadingLength - 1 ;
+
+    // skip over leading tags and spaces
+    boolean scanning = true;
+    while (scanning) {
+      // Give up no room left to match text
+      if (cutStart > cutStartMax)
+        return text;
+      // Look for special characters
+      switch (text.charAt(cutStart)) {
+        case ' ':
+                cutStart++;
+                break;
+        case '<':
+                // Look for end of tag
+                int tagEnd = text.indexOf('>',cutStart);
+                // If not found then give up But should this really occur)
+                if (tagEnd == -1)
+                  return text;
+                else
+                  cutStart = tagEnd + 1;
+                break;
+        default:
+                scanning = false;
+                break;
+      }
+    }
+
+   // Exit if text does not match
+    if (! text.substring(cutStart).toUpperCase(Locale.ENGLISH).startsWith(leadingText.toUpperCase(Locale.ENGLISH)))
+      return text;
+    // Set end of text to remove
+    int cutEnd = cutStart + leadingLength;
 
     // After removing leading text, now remove any tags that are now empty of content
+    // TODO - complete the logic here.  Currently does not remove such empty tags
+    scanning=true;
+    while (scanning) {
+      if (cutEnd >= textLength)  {
+        scanning = false;
+      }
+      else {
+        switch (text.charAt(cutEnd)) {
+            case ' ':
+            case ':':
+                cutEnd++;
+                break;
+            case '<':
+                if (text.charAt(cutEnd+1) != '/'){
+                  // Handle case of BR tag following removed text
+                  if (text.substring(cutEnd).startsWith("<BR")) {
+                      int tagEnd = text.indexOf('>');
+                      if (tagEnd != -1)  {
+                        cutEnd = tagEnd + 1;
+                        break;
+                      }
+                  }
+                  scanning = false;
+                  break;
+                }
+                else {
+                  int tagEnd = text.indexOf('>');
+                  if (tagEnd == -1)  {
+                    scanning = false;
+                    break;
+                  }
+                  else {
+                      cutEnd = tagEnd + 1;
+                  }
+                }
+                break;
+            default:
+                scanning = false;
+                break;
+        } // End of switch
+      }
+    }   // End of while
 
-    return text;
+    if (cutStart > 0)
+      return (text.substring(0, cutStart)+text.substring(cutEnd)).trim();
+    else
+      return text.substring(cutEnd).trim();
   }
 
-  /**
-   * Remove the word 'SUMMARY' from the start of the given string if it present
-   * TODO  Enhance this by looking beyond starting HTML tags?
-   * @param text
-   * @return Input if null or does not start with SUMMARY
-   */
-  private String removeSummaryText (String text) {
-    if (text != null) {
-      // Special Processing - remove SUMMARY from start of comment field (if present)
-      if (text.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY:"))
-        text = text.substring(8);
-      else if (text.toUpperCase(Locale.ENGLISH).startsWith("SUMMARY"))
-        text = text.substring(6);
-    }
-    return text;
-  }
   /**
    * Sets the comment value
    * If it starts with 'SUMMARY' then this is removed as superfluous
@@ -246,19 +295,23 @@ public class Book implements SplitableByLetter {
   public void setComment(String value) {
     summary = null;
     summaryMaxLength = -1;
-    comment = removeSummaryText(value);
+    comment = removeLeadingText(value, "SUMMARY");
     // The following log entry can be useful if trying to debug character encoding issues
     // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
   }
 
   /**
-   * Sets the book summary
+   * Get the book summary
    * This starts with any series information, and then as much of the book comment as
-   * will fit in the space allowed.  The word 'SUMMARY' is removed as superfluous at the
-   * start of the text part of the summary.
+   * will fit in the space allowed.
+   *
+   * Special processing Requirements
+   * - The word 'SUMMARY' is removed as superfluous at the start of the comment text
+   * - The words 'PRODUCT DESCRIPTION' are removed as superfluous at the start of the comment text
+   * - The calculated value is stored for later re-use (which is very likely to happen).
    * NOTE.  Summary must be pure text (no (X)HTML tags) for OPDS compatibility
    * @param maxLength   Maximum length of text allowed in summary
-   * @return
+   * @return The value of the calculated summary field
    */
   public String getSummary(int maxLength) {
     if (summary == null  || maxLength != summaryMaxLength) {
@@ -280,14 +333,11 @@ public class Book implements SplitableByLetter {
       }
       // See if still space for comment info
       if (maxLength > (summary.length() + 3)) {
-        String noHtml = removeSummaryText(Helper.removeHtmlElements(getComment()));
+        String noHtml = Helper.removeHtmlElements(getComment());
         if (noHtml != null) {
-          // Special Processing - remove PRODUCT DESCRIPTION from start of comment field (if present)
-          if (noHtml.toUpperCase(Locale.ENGLISH).startsWith("PRODUCT DESCRIPTION"))
-            noHtml = noHtml.substring(19);
-          // Is there actually any comment info?
-          if (Helper.isNotNullOrEmpty(noHtml))
-            summary += Helper.shorten(noHtml, maxLength - summary.length());
+          noHtml = removeLeadingText(noHtml, "SUMMARY");
+          noHtml = removeLeadingText(noHtml, "PRODUCT DESCRIPTION");
+          summary += Helper.shorten(noHtml, maxLength - summary.length());
         }
       }
     }
