@@ -145,9 +145,12 @@ public enum FeedHelper {
 
   public Element getExternalLinkEntry(String title, String urn, String url, String icon) {
     String linkType;
-    if (url.toUpperCase().endsWith(".XML") ||url.toUpperCase().startsWith("OPDS://"))
+    if (url.toUpperCase().endsWith(".XML") ||url.toUpperCase().startsWith("OPDS://")) {
       linkType = LINKTYPE_NAVIGATION;
-    else
+      // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
+      if (url.toUpperCase().startsWith("OPDS://HTTP"))
+        url = url.substring(7);
+    } else
       linkType = LINKTYPE_HTML;
 
     Element result = getAtomElement(false, "entry", title, urn, url, linkType, "", false, icon);
