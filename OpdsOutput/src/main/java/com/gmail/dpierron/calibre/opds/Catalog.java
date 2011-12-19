@@ -341,6 +341,8 @@ public class Catalog {
         if (syncFilesDetail && logger.isDebugEnabled())
           logger.debug("Copying file " + cf_src.getName());
         Helper.copy(cf_src, cf_dst);
+        // Set target CRC to be same as source CRC
+        cf_dst.setCrc(cf_src.getCrc());
       }
     }  // End of File Handling section
   }
