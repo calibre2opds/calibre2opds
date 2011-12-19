@@ -32,7 +32,7 @@ public class CachedFile extends File {
   private long crc;                     // A -ve value indicates invalid CRC;
   private boolean crcCalced;
   private boolean targetFile;           // Set to true if file/directory is only on target
-  private boolean cachedFile;           // Set to true if data is from cache and nor filing system
+  private boolean cachedFile;           // Set to true if data is from cache and not filing system
 
   // Constructors mirror those for the File class
 
@@ -185,7 +185,7 @@ public class CachedFile extends File {
    *
    * @param value Value to set as CRC
    */
-  private void setCrc(long value) {
+  public void setCrc(long value) {
     crc = value;
     crcCalced = true;
     if (logger.isTraceEnabled())
