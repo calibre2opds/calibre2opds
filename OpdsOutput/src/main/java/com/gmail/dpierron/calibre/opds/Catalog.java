@@ -538,21 +538,6 @@ public class Catalog {
       callback.startCreateMainCatalog();
 
       long now = System.currentTimeMillis();
-      CachedFileManager.INSTANCE.setCacheFolder(catalogFolder);
-      if (checkCRC) {
-        if (logger.isTraceEnabled())
-          logger.trace("Loading Cache");
-        callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
-        CachedFileManager.INSTANCE.loadCache();
-      } else {
-        if (logger.isTraceEnabled())
-          logger.trace("Deleting Cache");
-        CachedFileManager.INSTANCE.deleteCache();
-      }
-      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
 
       //  Initialise temporary area for generating a catalog files
       File temp = File.createTempFile("calibre2opds", "");
@@ -573,33 +558,31 @@ public class Catalog {
 
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.preloadDataModel();
+      callback.checkIfContinueGenerating();      // check if we must continue
 
-      // check if we must continue
-      callback.checkIfContinueGenerating();
-
-      {
-        // Prepare the featured books search query
-        BookFilter featuredBookFilter = null;
-        String featuredCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
-        if (Helper.isNotNullOrEmpty(featuredCatalogSearch)) {
-          try {
-            featuredBookFilter = CalibreQueryInterpreter.interpret(featuredCatalogSearch);
-          } catch (CalibreSavedSearchInterpretException e) {
-            callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
-          } catch (CalibreSavedSearchNotFoundException e) {
-            callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
-          }
-          if (featuredBookFilter == null) {
-            // an error occured, let's ask the user if he wants to abort
-            int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
-            if (n == 1) {
-              callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
-              return;
-            }
-          }
+      // Prepare the feature books search query
+      BookFilter featuredBookFilter = null;
+      String featuredCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
+      if (Helper.isNotNullOrEmpty(featuredCatalogSearch)) {
+        try {
+          featuredBookFilter = CalibreQueryInterpreter.interpret(featuredCatalogSearch);
+        } catch (CalibreSavedSearchInterpretException e) {
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+        } catch (CalibreSavedSearchNotFoundException e) {
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
         }
-        CatalogContext.INSTANCE.getCatalogManager().setFeaturedBooksFilter(featuredBookFilter);
+        if (featuredBookFilter == null) {
+          // an error occured, let's ask the user if he wants to abort
+          int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
+          if (n == 1) {
+            callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+          return;
+            }
+        }
       }
+      CatalogContext.INSTANCE.getCatalogManager().setFeaturedBooksFilter(featuredBookFilter);
+      callback.checkIfContinueGenerating();      // check if we must continue
+
       // Prepare the Custom catalogs search query
       Map<String, BookFilter> customCatalogsFilters = new HashMap<String, BookFilter>();
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
@@ -660,6 +643,24 @@ public class Catalog {
       callback.checkIfContinueGenerating();
 
       callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));
+
+      // Load up the File Cache if it exists
+      now = System.currentTimeMillis();
+      CachedFileManager.INSTANCE.setCacheFolder(catalogFolder);
+      if (checkCRC) {
+        if (logger.isTraceEnabled())
+          logger.trace("Loading Cache");
+        callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
+        CachedFileManager.INSTANCE.loadCache();
+      } else {
+        if (logger.isTraceEnabled())
+          logger.trace("Deleting Cache");
+        CachedFileManager.INSTANCE.deleteCache();
+      }
+      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
+
+      // check if we must continue
+      callback.checkIfContinueGenerating();
 
       String filename = SecureFileManager.INSTANCE.encode("index.xml");
 

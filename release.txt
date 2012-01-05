@@ -36,11 +36,11 @@ Known Issues
  - #c2o-15  Filenames generated can exceed system limits
             (this is particularly likely to happen in the larger catalog sections on very large
             libraries, or if many sub-levels based on tags are specified)
-                                                   #                                                d
+                                                                                                  d
 Planned Enhancements
 ~~~~~~~~~~~~~~~~~~~~
 The following items are planned for future releases:
-    Support for linking to external catalogs and/or  html pages from catalog top level
+    - Nothing is definitely committed or planned beyond general enhancements
 
 Release History
 ---------------
@@ -65,9 +65,12 @@ v3.0 beta 1
     - New: #751211: Allow use of External icons for catalog sections
     - New: Reset options added for URL's used for book external links
     - New: #c20-49: Improve navigation consistency in HTML catalogs
+    - New: German Localization
     - Change: Internal logging improved.  This should help with diagnosing faults
     - Change: Series name/number is now at start of Books summary
     - Change: Icons used are now higher resolution and this look better on high quality screens
+    - Change: Special compatibility modes removed.  Stanza which was main driver for this feature 
+              is now effectively a defunct product (and the 3.2 release works with OPDS comaptibility).
     - Fix: #836797 Null pointer exception trying to run calibre2opds in commandline mode.
     - Fix: #840830 Command line not working in Windows
     - Fix: #831976 Accented characters not displaying correctly in comments
