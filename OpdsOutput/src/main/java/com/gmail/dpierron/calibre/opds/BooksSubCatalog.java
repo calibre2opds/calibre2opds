@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,7 +30,6 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static DateFormat PUBLICATIONDATE_FORMAT =
@@ -884,8 +882,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
     if (book.hasAuthor()) {
       for (Author author : book.getAuthors()) {
-        Element authorElement = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(book.getListOfAuthors()))
-            .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + book.getMainAuthor().getId() + ".xml"));
+        Element authorElement = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(author.getName()))
+            .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + author.getId() + ".xml"));
         entry.addContent(authorElement);
       }
     }

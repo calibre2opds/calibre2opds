@@ -960,11 +960,6 @@
           </value>
         </option>
         <option name="RIGHT_MARGIN" value="160" />
-        <option name="XML_KEEP_WHITESPACES" value="true" />
-        <option name="XML_ATTRIBUTE_WRAP" value="0" />
-        <option name="XML_TEXT_WRAP" value="0" />
-        <option name="XML_ALIGN_ATTRIBUTES" value="false" />
-        <option name="XML_KEEP_WHITE_SPACES_INSIDE_CDATA" value="true" />
         <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
         <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
         <option name="KEEP_LINE_BREAKS" value="false" />
@@ -991,6 +986,14 @@
         <option name="ASSERT_STATEMENT_COLON_ON_NEXT_LINE" value="true" />
         <option name="WRAP_LONG_LINES" value="true" />
         <option name="CLASS_ANNOTATION_WRAP" value="0" />
+        <XML>
+          <option name="XML_KEEP_WHITESPACES" value="true" />
+          <option name="XML_ATTRIBUTE_WRAP" value="0" />
+          <option name="XML_TEXT_WRAP" value="0" />
+          <option name="XML_ALIGN_ATTRIBUTES" value="false" />
+          <option name="XML_KEEP_WHITE_SPACES_INSIDE_CDATA" value="true" />
+          <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+        </XML>
         <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
           <option name="INDENT_SIZE" value="2" />
         </ADDITIONAL_INDENT_OPTIONS>
@@ -1002,11 +1005,6 @@
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="sass">
           <option name="INDENT_SIZE" value="2" />
-        </ADDITIONAL_INDENT_OPTIONS>
-        <ADDITIONAL_INDENT_OPTIONS fileType="xml">
-          <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="4" />
-          <option name="TAB_SIZE" value="2" />
         </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="yml">
           <option name="INDENT_SIZE" value="2" />
@@ -1244,6 +1242,13 @@
           <option name="CLASS_ANNOTATION_WRAP" value="0" />
           <option name="PARENT_SETTINGS_INSTALLED" value="true" />
         </codeStyleSettings>
+        <codeStyleSettings language="XML">
+          <indentOptions>
+            <option name="INDENT_SIZE" value="2" />
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
+            <option name="TAB_SIZE" value="2" />
+          </indentOptions>
+        </codeStyleSettings>
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
@@ -1273,25 +1278,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://calibre2opds.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/wiki">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://calibre2opds.googlecode.com/svn/branches" />
@@ -1306,25 +1292,6 @@
         <entry key="$PROJECT_DIR$/CalibreQueryLanguage">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://calibre2opds.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/wiki">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://calibre2opds.googlecode.com/svn/branches" />
@@ -1339,25 +1306,6 @@
         <entry key="$PROJECT_DIR$/DataModel">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://calibre2opds.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/wiki">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://calibre2opds.googlecode.com/svn/branches" />
@@ -1372,25 +1320,6 @@
         <entry key="$PROJECT_DIR$/OpdsOutput">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://calibre2opds.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://calibre2opds.googlecode.com/svn/wiki">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://calibre2opds.googlecode.com/svn/branches" />
