@@ -24,6 +24,7 @@ public enum Database {
 
   private static final Logger logger = Logger.getLogger(Database.class);
   private static final DateFormat SQLITE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private static int sqlException = 0;    // Set to bit dependent value to allow for multiple different exception points
 
   public List<Tag> listTags() {
     List<Tag> result = new LinkedList<Tag>();
@@ -34,7 +35,8 @@ public enum Database {
         result.add(new Tag(set.getString("id"), set.getString("name")));
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("ListTag: " + e);
+      sqlException += 1;
     }
     return result;
   }
@@ -45,6 +47,10 @@ public enum Database {
       statement.executeQuery();
       return true;
     } catch (Exception e) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("test: " + e);
+        sqlException +=2;
+      }
       return false;
     }
   }
@@ -67,7 +73,8 @@ public enum Database {
         }
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("getMapsOfLanguages: " + e);
+      sqlException += 4;
     }
     return new Composite<Map<String, Language>, Map<String, Language>>(mapOfLanguagesById, mapOfLanguagesByIsoCode);
   }
@@ -89,12 +96,16 @@ public enum Database {
         try {
           timestamp = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_timestamp"));
         } catch (ParseException e) {
+          if (logger.isDebugEnabled())
+            logger.debug("listBooks (timestamp): " + e);
           // we don't care
         }
         Date publicationDate = null;
         try {
           publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
         } catch (ParseException e) {
+          if (logger.isDebugEnabled())
+            logger.debug("listBooks (publicationDate): " + e);
           // we don't care
         }
         // add a new book
@@ -158,7 +169,8 @@ public enum Database {
         result.add(book);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listBooks: " + e);
+      sqlException += 8;
     }
     return result;
   }
@@ -177,7 +189,8 @@ public enum Database {
         }
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listAuthors: " + e);
+      sqlException += 16;
     }
     return result;
   }
@@ -196,7 +209,8 @@ public enum Database {
         }
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listPublishers: " + e);
+      sqlException += 32;
     }
     return result;
   }
@@ -215,7 +229,8 @@ public enum Database {
         }
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listSeries: " + e);
+      sqlException += 64;
     }
     return result;
   }
@@ -237,7 +252,8 @@ public enum Database {
         files.add(new EBookFile(format, name));
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listFilesByBook: " + e);
+      sqlException += 128;
     }
     return result;
   }
@@ -262,7 +278,8 @@ public enum Database {
           logger.warn("cannot find author #" + authorId);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listAuthorsByBook: " + e);
+      sqlException += 256;
     }
     return result;
   }
@@ -287,7 +304,8 @@ public enum Database {
           logger.warn("cannot find publisher #" + publisherId);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listPublishersByBook: " + e);
+      sqlException += 512;
     }
     return result;
   }
@@ -312,7 +330,8 @@ public enum Database {
           logger.warn("cannot find tag #" + tagId);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listTagsByBookId: " + e);
+      sqlException += 1024;
     }
     return result;
   }
@@ -337,7 +356,8 @@ public enum Database {
           logger.warn("cannot find serie #" + serieId);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listSeriesByBookId: " + e);
+      sqlException += 2048;
     }
     return result;
   }
@@ -358,7 +378,8 @@ public enum Database {
         comments.add(text);
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("listCommentsByBookId: " + e);
+      sqlException += 4096;
     }
     return result;
   }
@@ -393,8 +414,19 @@ public enum Database {
         }
       }
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("getMapOfSavedSearches: " + e);
+      sqlException += 8192;
     }
     return result;
+  }
+
+  /**
+   * Determine if an SQL Exception occurred trying to load the database.
+   *
+   * @return  0 = no error
+   *          other = value with bit field deterining exception points encountered
+   */
+  public int wasSqlEsception() {
+    return sqlException;
   }
 }
