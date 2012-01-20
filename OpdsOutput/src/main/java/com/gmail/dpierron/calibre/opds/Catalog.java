@@ -6,6 +6,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.configuration.Icons;
+import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
@@ -634,9 +635,14 @@ public class Catalog {
 
       List<Book> books = DataModel.INSTANCE.getListOfBooks();
       if (Helper.isNullOrEmpty(books)) {
-        callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
+        if (Database.INSTANCE.wasSqlEsception() == 0 )
+          callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
+        else
+          callback.errorOccured("Error accessing database: code=" + Database.INSTANCE.wasSqlEsception(), null);
         logger.info(Localization.Main.getText("error.nobooks"));
         return;
+      } else {
+        logger.info("Database loaded: " + books.size() + " books (SQLExcption code=" + Database.INSTANCE.wasSqlEsception() + ")");
       }
 
       // check if we must continue
