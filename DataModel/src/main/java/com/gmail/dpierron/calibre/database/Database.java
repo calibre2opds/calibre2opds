@@ -47,10 +47,9 @@ public enum Database {
       statement.executeQuery();
       return true;
     } catch (Exception e) {
-      if (logger.isDebugEnabled()) {
+      if (logger.isDebugEnabled())
         logger.debug("test: " + e);
-        sqlException +=2;
-      }
+      sqlException +=2;
       return false;
     }
   }
@@ -83,18 +82,30 @@ public enum Database {
     List<Book> result = new LinkedList<Book>();
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
     PreparedStatement stmtBooksLanguagesLink = DatabaseRequest.BOOKS_LANGUAGES.getStatement();
+    String bookId = null;
+    int step = 0;
     try {
-      ResultSet set = statement.executeQuery();
+      ResultSet set = null;
+      try {
+        set = statement.executeQuery();
+      } catch (SQLException e) {
+        logger.error("listBooks: statement=" + statement + "\n" + e);
+        sqlException += 8;
+      }
       // if (logger.isTraceEnabled())
       //     logger.trace("Processing Query results");
       while (set.next()) {
-        String bookId = set.getString("book_id");
+        step = 1;
+        bookId = set.getString("book_id");
         // if (logger.isTraceEnabled())
         //     logger.trace("Processing bookId " + bookId);
+        step = 2;
         String uuid = set.getString("uuid");
+        step = 3;
         Date timestamp = null;
         try {
           timestamp = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_timestamp"));
+          step = 4;
         } catch (ParseException e) {
           if (logger.isDebugEnabled())
             logger.debug("listBooks (timestamp): " + e);
@@ -103,6 +114,7 @@ public enum Database {
         Date publicationDate = null;
         try {
           publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
+          step = 5;
         } catch (ParseException e) {
           if (logger.isDebugEnabled())
             logger.debug("listBooks (publicationDate): " + e);
@@ -110,17 +122,30 @@ public enum Database {
         }
         // add a new book
         String title = set.getString("book_title");
+        step = 6;
         String path = set.getString("book_path");
+        step = 7;
         float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
+        step = 8;
         String isbn = set.getString("isbn");
+        step = 9;
         String authorSort = set.getString("author_sort");
+        step = 10;
         int iRating = set.getInt("rating");
+        step = 11;
         BookRating rating = BookRating.fromValue(iRating);
         Book book = new Book(bookId, uuid, title, path, index, timestamp, publicationDate, isbn, authorSort, rating);
 
         // fetch its languages
         stmtBooksLanguagesLink.setString(1, book.getId());
-        ResultSet setLanguages = stmtBooksLanguagesLink.executeQuery();
+        step = 12;
+        ResultSet setLanguages = null;
+        try {
+          setLanguages = stmtBooksLanguagesLink.executeQuery();
+        } catch (SQLException e) {
+          logger.error("listBooks: bookId=" + bookId + "\nstmtBooksLanguageLink=" + stmtBooksLanguagesLink + "\n" + e);
+          sqlException += 16;
+        }
         while (setLanguages.next()) {
           String languageId = setLanguages.getString("lang_code");
           book.addBookLanguage(DataModel.INSTANCE.getMapOfLanguagesById().get(languageId));
@@ -167,10 +192,11 @@ public enum Database {
           }
         }
         result.add(book);
+        step = 0;
       }
     } catch (SQLException e) {
-      logger.error("listBooks: " + e);
-      sqlException += 8;
+      logger.error("listBooks: step=" + step + "\n" + e);
+      sqlException += 32;
     }
     return result;
   }
@@ -190,7 +216,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listAuthors: " + e);
-      sqlException += 16;
+      sqlException += 64;
     }
     return result;
   }
@@ -210,7 +236,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listPublishers: " + e);
-      sqlException += 32;
+      sqlException += 128;
     }
     return result;
   }
@@ -230,7 +256,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listSeries: " + e);
-      sqlException += 64;
+      sqlException += 6256;
     }
     return result;
   }
@@ -253,7 +279,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listFilesByBook: " + e);
-      sqlException += 128;
+      sqlException += 512;
     }
     return result;
   }
@@ -279,7 +305,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listAuthorsByBook: " + e);
-      sqlException += 256;
+      sqlException += 1024;
     }
     return result;
   }
@@ -305,7 +331,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listPublishersByBook: " + e);
-      sqlException += 512;
+      sqlException += 2048;
     }
     return result;
   }
@@ -331,7 +357,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listTagsByBookId: " + e);
-      sqlException += 1024;
+      sqlException += 4096;
     }
     return result;
   }
@@ -357,7 +383,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listSeriesByBookId: " + e);
-      sqlException += 2048;
+      sqlException += 8192;
     }
     return result;
   }
@@ -379,7 +405,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listCommentsByBookId: " + e);
-      sqlException += 4096;
+      sqlException += 16384;
     }
     return result;
   }
@@ -415,7 +441,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("getMapOfSavedSearches: " + e);
-      sqlException += 8192;
+      sqlException += 32768;
     }
     return result;
   }

@@ -635,11 +635,11 @@ public class Catalog {
 
       List<Book> books = DataModel.INSTANCE.getListOfBooks();
       if (Helper.isNullOrEmpty(books)) {
-        if (Database.INSTANCE.wasSqlEsception() == 0 )
+        if (Database.INSTANCE.wasSqlEsception() == 0 ) {
           callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
-        else
+          logger.info(Localization.Main.getText("error.nobooks"));
+        } else
           callback.errorOccured("Error accessing database: code=" + Database.INSTANCE.wasSqlEsception(), null);
-        logger.info(Localization.Main.getText("error.nobooks"));
         return;
       } else {
         logger.info("Database loaded: " + books.size() + " books (SQLExcption code=" + Database.INSTANCE.wasSqlEsception() + ")");

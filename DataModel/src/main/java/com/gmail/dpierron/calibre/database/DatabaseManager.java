@@ -24,11 +24,16 @@ public enum DatabaseManager {
   }
 
   public boolean databaseExists() {
+    Boolean reply;
     File database = new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
-    if (!database.exists())
-      return false;
-    // check for BOOKS table
-    return Database.INSTANCE.test();
+    reply = database.exists();
+    logger.info("Database existence check: " + reply);
+    if (reply) {
+      // check for BOOKS table
+      reply=Database.INSTANCE.test();
+      logger.info("Database access check: " + reply);
+    }
+    return reply;
   }
 
 
@@ -42,7 +47,7 @@ public enum DatabaseManager {
         connection.close();
         connection = null;
       } catch (SQLException e) {
-        logger.warn(e);
+        logger.warn("closeConnection: " + e);
       }
   }
 
@@ -55,7 +60,7 @@ public enum DatabaseManager {
     } catch (ClassNotFoundException e) {
       logger.error(e);
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error("initConnection: " + e);
     }
   }
 
