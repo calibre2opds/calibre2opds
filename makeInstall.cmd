@@ -7,10 +7,21 @@ REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
 call setenv.cmd
 
-SET VERSION=calibre2opds-3.0-beta1
+for /f "delims=" %%a in ('svnversion') do @set SVNVERSION=%%a
+
+SET BASEVERSION=calibre2opds-3.0-alpha
+SET VERSION=%BASEVERSION%-%SVNVERSION%
+
 SET ZIPFILE=%cd%\%VERSION%.zip
 
-del /q %cd%\%VERSION%.*
+del /q %cd%\%BASEVERSION%.*
+
+echo '
+echo -------------------------------
+echo Preparing %VERSION%
+echo -------------------------------
+echo '
+
 echo '
 echo -------------------------------
 echo Building ZIP Install package
