@@ -83,7 +83,7 @@ public enum Database {
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
     PreparedStatement stmtBooksLanguagesLink = DatabaseRequest.BOOKS_LANGUAGES.getStatement();
     String bookId = null;
-    int step = 0;
+    int step = 0;     // Brute force way used to help diagnose whichs tement fails (if any) without lots of try/catch statements
     try {
       ResultSet set = null;
       try {
@@ -91,21 +91,18 @@ public enum Database {
       } catch (SQLException e) {
         logger.error("listBooks: statement=" + statement + "\n" + e);
         sqlException += 8;
+        return result;
       }
       // if (logger.isTraceEnabled())
       //     logger.trace("Processing Query results");
       while (set.next()) {
-        step = 1;
-        bookId = set.getString("book_id");
+        step=2 ; bookId = set.getString("book_id");
         // if (logger.isTraceEnabled())
         //     logger.trace("Processing bookId " + bookId);
-        step = 2;
-        String uuid = set.getString("uuid");
-        step = 3;
+        step = 3; String uuid = set.getString("uuid");
         Date timestamp = null;
         try {
-          timestamp = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_timestamp"));
-          step = 4;
+          step= 4; timestamp = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_timestamp"));
         } catch (ParseException e) {
           if (logger.isDebugEnabled())
             logger.debug("listBooks (timestamp): " + e);
@@ -113,42 +110,37 @@ public enum Database {
         }
         Date publicationDate = null;
         try {
-          publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
-          step = 5;
+          step=5; publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
         } catch (ParseException e) {
           if (logger.isDebugEnabled())
             logger.debug("listBooks (publicationDate): " + e);
           // we don't care
         }
         // add a new book
-        String title = set.getString("book_title");
-        step = 6;
-        String path = set.getString("book_path");
-        step = 7;
-        float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
-        step = 8;
-        String isbn = set.getString("isbn");
-        step = 9;
-        String authorSort = set.getString("author_sort");
-        step = 10;
-        int iRating = set.getInt("rating");
-        step = 11;
+        step=6 ; String title = set.getString("book_title");
+        step=7 ; String path = set.getString("book_path");
+        step=8 ; float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
+        step=9 ; String isbn = set.getString("isbn");
+        step=10 ; String authorSort = set.getString("author_sort");
+        step=11 ; int iRating = set.getInt("rating");
         BookRating rating = BookRating.fromValue(iRating);
         Book book = new Book(bookId, uuid, title, path, index, timestamp, publicationDate, isbn, authorSort, rating);
 
         // fetch its languages
-        stmtBooksLanguagesLink.setString(1, book.getId());
-        step = 12;
+        step=12 ; stmtBooksLanguagesLink.setString(1, book.getId());
         ResultSet setLanguages = null;
         try {
           setLanguages = stmtBooksLanguagesLink.executeQuery();
         } catch (SQLException e) {
           logger.error("listBooks: bookId=" + bookId + "\nstmtBooksLanguageLink=" + stmtBooksLanguagesLink + "\n" + e);
           sqlException += 16;
+          return result;
         }
+        step=13;
         while (setLanguages.next()) {
-          String languageId = setLanguages.getString("lang_code");
+          step=14 ; String languageId = setLanguages.getString("lang_code");
           book.addBookLanguage(DataModel.INSTANCE.getMapOfLanguagesById().get(languageId));
+          step=15;
         }
 
         // fetch its author
@@ -192,7 +184,7 @@ public enum Database {
           }
         }
         result.add(book);
-        step = 0;
+        step = 1;
       }
     } catch (SQLException e) {
       logger.error("listBooks: step=" + step + "\n" + e);
