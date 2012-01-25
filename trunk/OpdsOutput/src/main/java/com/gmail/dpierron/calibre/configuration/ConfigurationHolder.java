@@ -322,6 +322,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Integer i = getInteger(PROPERTY_NAME_MAXBEFORESPLIT);
     if (i == null)
       return defaults.getMaxBeforeSplit();
+    if (i == 0)
+      return 1; // 0 is invalid, now that the split algorithm is recursive
     else
       return i.intValue();
   }
