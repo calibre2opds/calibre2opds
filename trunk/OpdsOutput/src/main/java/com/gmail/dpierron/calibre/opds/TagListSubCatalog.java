@@ -56,7 +56,8 @@ public class TagListSubCatalog extends TagSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    boolean willSplit = splitOption != SplitOption.Paginate && (tags.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxBeforeSplit != 0) && (tags.size() > maxBeforeSplit);
     if (willSplit) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
       catalogSize = 0;

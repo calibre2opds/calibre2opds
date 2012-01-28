@@ -143,7 +143,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
-    boolean willSplit = (splitOption != SplitOption.Paginate) && ((authors.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit()));
+    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxBeforeSplit != 0) && (authors.size() > maxBeforeSplit);
     if (willSplit) {
       mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(authors);
       catalogSize = 0;
