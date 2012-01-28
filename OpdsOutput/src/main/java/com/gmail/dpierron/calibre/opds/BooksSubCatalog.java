@@ -272,8 +272,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         break;
     }
     // See if SplitByLetter conditions actually apply?
+    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
     if (willSplitByLetter) {
-      if (catalogSize <= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit()) {
+      if ((maxBeforeSplit == 0) || (catalogSize <= maxBeforeSplit)) {
         willSplitByLetter = false;
       } else if ((ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()) &&
           (ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCoverWithoutSplit())) {

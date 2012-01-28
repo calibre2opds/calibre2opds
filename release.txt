@@ -62,6 +62,8 @@ v3.0 beta 1
     - New: A catalog generation run that has started can be cancelled
     = New: Maximum length of books summary can now be specified
     - New: Split by letter now splits to further levels if relevant limits reached.
+    - New: Specifying 0 for number of elements before split will suppress splitting by letter.
+    - New: Specifying 1-9 for number of elenents before split will split up to a max of that many levels.
     - New: #751211: Allow use of External icons for catalog sections
     - New: Reset options added for URL's used for book external links
     - New: #c20-49: Improve navigation consistency in HTML catalogs

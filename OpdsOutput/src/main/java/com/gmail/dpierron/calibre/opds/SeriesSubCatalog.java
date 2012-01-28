@@ -150,7 +150,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("getContentOfListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
               ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
-        willSplitByLetter = series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+        int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+        willSplitByLetter = (maxBeforeSplit != 0) &&  (series.size() > maxBeforeSplit);
         break;
     }
     if (logger.isTraceEnabled())
@@ -225,7 +226,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       SplitOption splitOption,
       boolean addTheSeriesWordToTheTitle) throws IOException {
     int catalogSize;
-    boolean willSplit = splitOption != SplitOption.Paginate && (series.size() > ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    int maxBeforeSplt = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxBeforeSplt != 0) && (series.size() > maxBeforeSplt);
     if (willSplit) {
       catalogSize = 0;
     } else
