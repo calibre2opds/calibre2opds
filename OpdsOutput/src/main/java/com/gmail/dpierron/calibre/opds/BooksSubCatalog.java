@@ -1096,8 +1096,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
 
     // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
-
+    try {
+      getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
+    } catch (Exception e) {
+      logger.error("Unable to create HTML for book id=" + book.getId() + "Title=" + book.getTitle() + " \noutputFile: " + outputFile + "\nException: " + e);
+    }
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
       // index the book
       logger.debug("getBookEntry: indexing book");
