@@ -338,10 +338,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                                                 letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
       Element element = null;
       if (itemsCount > 0) {
+        SplitOption splitOption = SplitOption.SplitByLetter;
+        int maxBeforeSplit=0;
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter,
+        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, splitOption,
             addTheSeriesWordToTheTitle).getFirstElement();
       }
 

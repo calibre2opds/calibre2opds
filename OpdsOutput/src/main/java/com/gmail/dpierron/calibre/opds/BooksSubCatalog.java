@@ -945,6 +945,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
           content.addContent(p.detach());
         }
         hasContent = true;
+      }  else {
+        if (Helper.isNotNullOrEmpty(book.getComment())) {
+          logger.warn(Localization.Main.getText("error.badComment" , book.getTitle(), book.getId()));
+        }
       }
       if (hasContent) {
         if (logger.isTraceEnabled())
@@ -1099,7 +1103,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
     try {
       getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.BookFullEntry);
     } catch (Exception e) {
-      logger.error("Unable to create HTML for book id=" + book.getId() + "Title=" + book.getTitle() + " \noutputFile: " + outputFile + "\nException: " + e);
+      logger.warn("Unable to create HTML for book id=" + book.getId() + "Title=" + book.getTitle() + " \noutputFile: " + outputFile + "\nException:\n" + e);
+    } catch (Throwable t) {
+      logger.warn("Unexpected error trying to create HTML for book id=" + book.getId() + "Title=" + book.getTitle() + " \noutputFile: " + outputFile + "\n" + t);
     }
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
       // index the book

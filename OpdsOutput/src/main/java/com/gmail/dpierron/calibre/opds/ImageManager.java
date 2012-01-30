@@ -118,6 +118,8 @@ public abstract class ImageManager {
       } catch (Exception e) {
         CatalogContext.INSTANCE.getCallback()
             .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
+      } catch (Throwable t) {
+           logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );
       }
       timeInImages += (System.currentTimeMillis() - now);
     }

@@ -418,7 +418,10 @@ public class Catalog {
     /** if true, then generation crashed unexpectedly; */
     boolean generationCrashed = false;
 
-    Throwable error = null;
+    logger.info(Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName()));
+    callback.dumpOptions();
+
+    // Throwable error = null;
     try {
       // reinitialize caches (in case of multiple calls in the same session)
       CachedFileManager.INSTANCE.initialize();
@@ -533,8 +536,6 @@ public class Catalog {
       logger.trace("Passed sanity checks, so proceed with generation");
 
       // Sanity checks OK - get on with generation
-
-      callback.dumpOptions();
 
       callback.startCreateMainCatalog();
 
@@ -1193,16 +1194,16 @@ public class Catalog {
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
     } catch (Throwable t) {
-      error = t;
+      // error = t;
       generationCrashed = true;
       logger.error(" ");
       logger.error("*************************************************");
       logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
       logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t.getCause());
       logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getMessage());
-      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ": ");
-      String stack = Helper.getStackTrace(t);
-      logger.error(stack);
+      //logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ":\n" + Helper.getStackTrace(t));
+      // ITIMPI: Need to check following line prints good stack trace - if not re-instate above line
+      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ":\n" + t);
       logger.error("*************************************************");
       logger.error(" ");
     } finally {
@@ -1218,7 +1219,7 @@ public class Catalog {
       if (generationStopped)
         callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
       if (generationCrashed)
-        callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), error);
+        callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
     }
   }
 

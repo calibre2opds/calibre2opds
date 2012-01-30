@@ -298,8 +298,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          *  It'll be useful in cross references
          */
         logger.debug("calling getListOfAuthors for the letter " + letter);
+        SplitOption splitOption = SplitOption.SplitByLetter;
+
         element =
-            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter).getFirstElement();
+            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, splitOption).getFirstElement();
 
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
