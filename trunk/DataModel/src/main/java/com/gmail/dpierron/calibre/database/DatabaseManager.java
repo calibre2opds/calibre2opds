@@ -27,11 +27,11 @@ public enum DatabaseManager {
     Boolean reply;
     File database = new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
     reply = database.exists();
-    logger.info("Database existence check: " + reply);
+    logger.debug("Database existence check: " + reply);
     if (reply) {
       // check for BOOKS table
       reply=Database.INSTANCE.test();
-      logger.info("Database access check: " + reply);
+      logger.debug("Database access check: " + reply);
     }
     return reply;
   }

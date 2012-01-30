@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.*;
+import org.jdom.input.JDOMParseException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -318,18 +319,24 @@ public enum JDOM {
         logger.trace("convertBookCommentToXhtml: tidy the text");
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
+      } catch (JDOMParseException j) {
+        if (logger.isDebugEnabled())
+          logger.trace("convertBookCommentToXhtml: caught JDOMParseException in the tidy process");
+        if (logger.isTraceEnabled())
+          logger.trace( "" + j);
       } catch (Exception ee) {
-        logger.warn("convertBookCommentToXhtml: caught exception in the tidy process", ee);
+        if (logger.isDebugEnabled())
+          logger.debug("convertBookCommentToXhtml: caught exception in the tidy process", ee);
+      } catch (Throwable t) {
+        logger.error("convertBookCommentToXhtml: caught throwable in the tidy process", t);
       }
 
       if (result != null) {
         if (logger.isTraceEnabled())
           logger.trace("convertBookCommentToXhtml: returning XHTML");
       } else {
-        // TODO  It would be nice to identify the book in the message
-        // ITIMPI:  It appears that this can happen with empty text
-        //          (added quotes around text to check)
-        logger.warn("convertBookCommentToXhtml: Cannot convert text : '" + text + "'");
+        if (Helper.isNotNullOrEmpty(text))
+          logger.debug("convertBookCommentToXhtml: Cannot convert comment text\n" + text);
       }
     }
     return result;
