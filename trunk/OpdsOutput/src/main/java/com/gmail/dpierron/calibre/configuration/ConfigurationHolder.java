@@ -32,6 +32,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_CATALOGTITLE = "CatalogTitle";
   private final static String PROPERTY_NAME_MAXBEFOREPAGINATE = "MaxBeforePaginate";
   private final static String PROPERTY_NAME_MAXBEFORESPLIT = "MaxBeforeSplit";
+  private final static String PROPERTY_NAME_MAXSPLITLEVELS = "MaxSplitLevels";
   private final static String PROPERTY_NAME_BOOKSINRECENTADDITIONS = "BooksInRecentAdditions";
   private final static String PROPERTY_NAME_WIKIPEDIALANGUAGE = "WikipediaLanguage";
   private final static String PROPERTY_NAME_INCLUDEDFORMATSLIST = "IncludedFormatsList";
@@ -63,6 +64,10 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
   private final static String PROPERTY_NAME_GENERATEALLBOOKS = "GenerateAllbooks";
+  private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS = "IncludePublisherInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
   private final static String PROPERTY_NAME_GENERATEINDEX = "GenerateIndex";
   private final static String PROPERTY_NAME_DEVICEMODE = "DeviceMode";
   private final static String PROPERTY_NAME_COPYTODATABASEFOLDER = "CopyToDatabaseFolder";
@@ -323,11 +328,30 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     if (i == null)
       return defaults.getMaxBeforeSplit();
     else
+    if (i < 1)        // Ensure value is never less than 1
+      return 1;
+    else
       return i.intValue();
   }
 
   public void setMaxBeforeSplit(int maxBeforeSplit) {
     setProperty(PROPERTY_NAME_MAXBEFORESPLIT, maxBeforeSplit);
+  }
+
+  public boolean isMaxSplitLevelsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_MAXSPLITLEVELS);
+  }
+
+  public int getMaxSplitLevels() {
+    Integer i = getInteger(PROPERTY_NAME_MAXSPLITLEVELS);
+    if (i == null)
+      return defaults.getMaxSplitLevels();
+    else
+      return i.intValue();
+  }
+
+  public void setMaxSplitLevels(int maxSplitLevels) {
+    setProperty(PROPERTY_NAME_MAXSPLITLEVELS, maxSplitLevels);
   }
 
   public boolean isMaxMobileResolutionReadOnly() {
@@ -808,6 +832,70 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setGenerateAllbooks(boolean value) {
     setProperty(PROPERTY_NAME_GENERATEALLBOOKS, value);
+  }
+
+  public void setIncludeSeriesInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludeSeriesInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+  }
+
+  public boolean getIncludeSeriesInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludeSeriesInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeTagsInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludeTagsInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+  }
+
+  public boolean getIncludeTagsInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludeTagsInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludePublisherInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludePublisherInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+  }
+
+  public boolean getIncludePublisherInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludePublisherInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludePublishedInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludePublishedInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+  }
+
+  public boolean getIncludePublishedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludePublishedInBookDetails();
+    else
+      return b.booleanValue();
   }
 
   public boolean isGenerateIndexReadOnly() {

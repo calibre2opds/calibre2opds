@@ -273,8 +273,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     // See if SplitByLetter conditions actually apply?
     int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
     if (willSplitByLetter) {
-      if ((maxBeforeSplit == 0) || (catalogSize <= maxBeforeSplit)) {
+      if ((maxSplitLevels == 0) || (catalogSize <= maxBeforeSplit)) {
         willSplitByLetter = false;
       } else if ((ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()) &&
           (ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCoverWithoutSplit())) {
@@ -915,7 +916,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         entry.addContent(categoryElement);
       }
       // series
-      if (Helper.isNotNullOrEmpty(book.getSeries())) {
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(book.getSeries().getName());
         entry.addContent(categoryElement);
       }
@@ -930,9 +931,22 @@ public abstract class BooksSubCatalog extends SubCatalog {
       boolean hasContent = false;
       if (logger.isTraceEnabled())
         logger.trace("getBookFullEntry: computing comments");
-      if (Helper.isNotNullOrEmpty(book.getSeries())) {
+      // Series (if presnt and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
         content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series") + " ")).addContent(data)
+            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+        hasContent = true;
+      }
+      // Tags (if presnt and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails() && Helper.isNotNullOrEmpty(book.getTags())) {
+        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.tags") + " ")).addContent(book.getTags().toString())
+            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+        hasContent = true;
+      }
+      // Publisher (if presnt and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublisherInBookDetails() && Helper.isNotNullOrEmpty(book.getPublisher())) {
+        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.publisher") + " ")).addContent(book.getPublisher().getName())
             .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
         hasContent = true;
       }

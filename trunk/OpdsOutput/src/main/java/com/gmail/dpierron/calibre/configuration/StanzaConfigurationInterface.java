@@ -53,6 +53,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setMaxBeforeSplit(int value);
 
+  public void setMaxSplitLevels(int value);
+
   public void setSplitTagsOn(String value);
 
   public void setIncludeBooksWithNoFile(boolean value);
@@ -80,6 +82,14 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void setGenerateRatings(boolean value);
 
   public void setGenerateAllbooks(boolean value);
+
+  public void setIncludeSeriesInBookDetails(boolean value);
+
+  public void setIncludeTagsInBookDetails(boolean value);
+
+  public void setIncludePublisherInBookDetails(boolean value);
+
+  public void setIncludePublishedInBookDetails(boolean value);
 
   public void setGenerateIndex(boolean value);
 

@@ -32,6 +32,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public int getMaxBeforePaginate();
 
+  public int getMaxSplitLevels();
+
   public int getBooksInRecentAdditions();
 
   public String getWikipediaLanguage();
@@ -79,6 +81,14 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public boolean getGenerateRatings();
 
   public boolean getGenerateAllbooks();
+
+  public boolean getIncludeSeriesInBookDetails();
+
+  public boolean getIncludeTagsInBookDetails();
+
+  public boolean getIncludePublisherInBookDetails();
+
+  public boolean getIncludePublishedInBookDetails();
 
   public boolean getGenerateIndex();
 
