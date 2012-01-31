@@ -14,7 +14,7 @@ SET VERSION=%BASEVERSION%-%SVNVERSION%
 
 SET ZIPFILE=%cd%\%VERSION%.zip
 
-del /q %cd%\%BASEVERSION%.*
+del /q %cd%\%BASEVERSION%-*
 
 echo '
 echo -------------------------------

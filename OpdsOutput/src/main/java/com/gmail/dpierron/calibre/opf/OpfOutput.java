@@ -184,18 +184,20 @@ public class OpfOutput {
     }
   }
 
-  public void processEPubFile() throws IOException {
+  public void processEPubFile() {
     if (book == null || book.getEpubFile() == null)
       return;
-    File outputFile = File.createTempFile("calibre-epub-opfoutput", ".epub");
     try {
-      processEPubFile(outputFile);
-      Helper.copy(outputFile, book.getEpubFile().getFile());
-    } catch (IOException e) {
+      File outputFile = File.createTempFile("calibre-epub-opfoutput", ".epub");
+      try {
+        processEPubFile(outputFile);
+        Helper.copy(outputFile, book.getEpubFile().getFile());
+      } finally {
+        outputFile.delete();
+      }
+    } catch (Exception e) {
       logger.error(e);
       logger.error("... for book: " + book.getTitle() + " (file " + book.getEpubFile().getFile() + ")");
-    } finally {
-      outputFile.delete();
     }
   }
 
