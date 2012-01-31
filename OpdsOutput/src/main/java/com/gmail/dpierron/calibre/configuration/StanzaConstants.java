@@ -8,6 +8,7 @@ public class StanzaConstants {
   // options default values
   public final static int MAX_BEFORE_PAGINATE = 25;
   public final static int MAX_BEFORE_SPLIT = 3 * MAX_BEFORE_PAGINATE;
+  public final static int MAX_SPLIT_LEVELS = 1;
   public final static int MAX_RECENT_ADDITIONS = 99999;
   public final static String CATALOGFOLDER = "_catalog";
   public final static String CATALOGTITLE = "Calibre library";
@@ -38,6 +39,10 @@ public class StanzaConstants {
   public final static boolean generateRecent = true;
   public final static boolean generateRatings = true;
   public final static boolean generateAllbooks = true;
+  public final static boolean includeSeriesInBookDetails = true;
+  public final static boolean includeTagsInBookDetails = false;
+  public final static boolean includePublisherInBookDetails = false;
+  public final static boolean includePublishedInBookDetails = false;
   public final static boolean suppressRatingsInTitles = false;
   public final static String targetFolder = ".";
   public final static boolean COPYTODATABASEFOLDER = true;

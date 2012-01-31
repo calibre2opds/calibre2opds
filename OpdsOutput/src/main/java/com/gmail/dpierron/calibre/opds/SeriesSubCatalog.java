@@ -135,6 +135,10 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getContentOfListOfSeries: title=" + title);
     boolean willSplitByLetter;
+
+    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
+
     if (null == splitOption)
       splitOption = SplitOption.SplitByLetter;
     switch (splitOption) {
@@ -150,8 +154,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("getContentOfListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
               ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
-        int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-        willSplitByLetter = (maxBeforeSplit != 0) &&  (series.size() > maxBeforeSplit);
+        willSplitByLetter = (maxSplitLevels != 0) &&  (series.size() > maxBeforeSplit);
         break;
     }
     if (logger.isTraceEnabled())

@@ -96,6 +96,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.MAX_BEFORE_SPLIT;
   }
 
+  public int getMaxSplitLevels() {
+    return StanzaConstants.MAX_SPLIT_LEVELS;
+  }
+
   public String getSplitTagsOn() {
     return StanzaConstants.SPLITTAGSON;
   }
@@ -154,6 +158,22 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public boolean getGenerateAllbooks() {
     return StanzaConstants.generateAllbooks;
+  }
+
+  public boolean getIncludeSeriesInBookDetails() {
+    return StanzaConstants.includeSeriesInBookDetails;
+  }
+
+  public boolean getIncludeTagsInBookDetails() {
+    return StanzaConstants.includeTagsInBookDetails;
+  }
+
+  public boolean getIncludePublisherInBookDetails() {
+    return StanzaConstants.includePublisherInBookDetails;
+  }
+
+  public boolean getIncludePublishedInBookDetails() {
+    return StanzaConstants.includePublishedInBookDetails;
   }
 
   public File getTargetFolder() {

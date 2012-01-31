@@ -55,15 +55,16 @@ v3.0 beta 1
     - New: Support for custom catalog sections (based on Calibre searches)
     - New: Current profile now displayed on main screen
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
-    - New: Support for external icon files instead of embedded binary images
     - New: Support for suppressing the generation of the Authors sub-catalog.
     - New: Support for suppressing the generation of the Series sub-catalog.
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
+    - New: Support for controlling whether Series information shown in Book Details
+    - New: Support for controlling whether Tag information shown in Book Details
+    - New: Support for controlling whether Publisher information shown in Book Details
     - New: A catalog generation run that has started can be cancelled
     = New: Maximum length of books summary can now be specified
-    - New: Split by letter now splits to further levels if relevant limits reached.
-    - New: Specifying 0 for number of elements before split will suppress splitting by letter.
-    - New: Specifying 1-9 for number of elenents before split will split up to a max of that many levels.
+    - New: Split by letter now splits to further levels.
+    - New: Option to Control maximum number of levels for Split By letter
     - New: #751211: Allow use of External icons for catalog sections
     - New: Reset options added for URL's used for book external links
     - New: #c20-49: Improve navigation consistency in HTML catalogs
