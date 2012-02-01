@@ -931,9 +931,13 @@ public class Catalog {
           callback.checkIfContinueGenerating();
           callback.incStepProgressIndicatorPosition();
           if (shouldReprocessEpubMetadata(book)) {
-            // callback.showMessage(book.getTitle());
-            callback.showMessage(book.getAuthors() + ": " + book.getTitle());
-            new OpfOutput(book).processEPubFile();
+            try {
+              callback.showMessage(book.getAuthors() + ": " + book.getTitle());
+              new OpfOutput(book).processEPubFile();
+            } catch (IOException e) {
+              String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getTitle(), e.getMessage());
+              logger.error(message, e);
+            }
             countMetadata++;
           }
         }
