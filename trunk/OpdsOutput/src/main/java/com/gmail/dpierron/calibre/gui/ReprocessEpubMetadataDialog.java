@@ -83,10 +83,9 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
       OpfOutput opfOutput = new OpfOutput(book, removeCss, restoreCss, defaultStyleSheet);
       try {
         opfOutput.processEPubFile();
-      // ITIMPI:  Changed to use generic Exception as IOException causes comiple error as now caught inside called function
-      } catch (Exception e) {
-        logger.error(e);
+      } catch (IOException e) {
         String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getTitle(), e.getMessage());
+        logger.error(message, e);
         JOptionPane.showMessageDialog(this, message);
         message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks2");
          int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
