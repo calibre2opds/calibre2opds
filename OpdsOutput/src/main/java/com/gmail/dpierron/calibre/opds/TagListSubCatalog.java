@@ -56,8 +56,6 @@ public class TagListSubCatalog extends TagSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
     boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (tags.size() > maxBeforeSplit);
     if (willSplit) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
@@ -102,7 +100,7 @@ public class TagListSubCatalog extends TagSubCatalog {
         logger.debug("no split by letter");
         result = new LinkedList<Element>();
         for (int i = from; i < tags.size(); i++) {
-          if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+          if ((i - from) >= maxBeforePaginate) {
             Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename, splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
@@ -149,8 +147,8 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());
 
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons
-          () ?
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+          useExternalIcons ?
           (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS);
     }
@@ -198,7 +196,8 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (tagsInThisLetter.size() > 0) {
         logger.debug("calling getListOfTags for the letter " + letter);
         element =
-            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter).getFirstElement();
+            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, 
+                letter.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
       }
 
       if (element != null)

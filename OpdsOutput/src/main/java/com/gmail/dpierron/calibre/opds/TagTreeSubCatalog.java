@@ -72,7 +72,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
       for (int i = from; i < itemsCount; i++) {
-        if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+        if ((i - from) >= maxBeforePaginate) {
           Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i).getFirstElement();
           result.add(0, nextLink);
           break;
@@ -111,8 +111,8 @@ public class TagTreeSubCatalog extends TagSubCatalog {
       entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
     } else {
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons
-          () ?
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+          useExternalIcons ?
           (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS);
     }

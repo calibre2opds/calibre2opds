@@ -22,18 +22,18 @@ import java.util.List;
 public class AllBooksSubCatalog extends BooksSubCatalog {
   private final static org.apache.log4j.Logger logger = Logger.getLogger(AllBooksSubCatalog.class);
 
-  private SplitOption splitOption;
+  // private SplitOption splitOption;
 
   public AllBooksSubCatalog(List<Book> books) {
     super(books);
     sortBooks();
   }
 
-  public AllBooksSubCatalog(List<Book> books, SplitOption splitOption) {
-    super(books);
-    this.splitOption = splitOption;
-    sortBooks();
-  }
+//  public AllBooksSubCatalog(List<Book> books, SplitOption splitOption) {
+//    super(books);
+//    this.splitOption = splitOption;
+//    sortBooks();
+//  }
 
   public AllBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
@@ -71,9 +71,10 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
+//    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
+    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.DontSplit,
         // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+        useExternalIcons ?
             (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS :
             Icons.ICON_BOOKS);
   }

@@ -45,7 +45,7 @@ public class CustomSubCatalog extends BooksSubCatalog {
       logger.debug("making a deep level");
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
     Element entry = getSubCatalogLevel(pBreadcrumbs, getBooks(), getStuffToFilterOut(), title, summary, urn, filename, null,
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+        useExternalIcons ?
             (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_CUSTOM :
             Icons.ICON_CUSTOM);
     String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);

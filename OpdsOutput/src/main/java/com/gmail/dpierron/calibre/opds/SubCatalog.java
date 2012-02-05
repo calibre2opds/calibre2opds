@@ -1,7 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
 /**
- * Abstract class containing functions common to all catalog types
+ * Abstract class containing functions and variables common to all catalog types
  */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
@@ -23,6 +23,11 @@ import java.util.List;
 public abstract class SubCatalog {
 
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
+  // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
+  protected final int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
+  protected final int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
+  protected final int maxBeforePaginate = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate();
+  protected final boolean useExternalIcons = ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons();
 
   private List<Book> books;
   List<Object> stuffToFilterOut;

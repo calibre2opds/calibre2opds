@@ -143,8 +143,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
-    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
     boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (authors.size() > maxBeforeSplit);
     if (willSplit) {
       mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(authors);
@@ -187,7 +185,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         logger.debug("NOT splitting by letter");
         result = new LinkedList<Element>();
         for (int i = from; i < authors.size(); i++) {
-          if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+          if ((i - from) >= maxBeforePaginate) {
             Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename, splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
@@ -237,8 +235,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     } else {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
-          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
+          useExternalIcons ? (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -299,10 +296,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          *  It'll be useful in cross references
          */
         logger.debug("calling getListOfAuthors for the letter " + letter);
-        SplitOption splitOption = SplitOption.SplitByLetter;
 
         element =
-            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, splitOption).getFirstElement();
+            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
+                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
 
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
@@ -317,9 +314,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           element = getListOfBooks(pBreadcrumbs, books, 0,                       // Starting from start
               letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
-              ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-                  (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS :
-                  Icons.ICON_BOOKS).getFirstElement();
+              useExternalIcons ? (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS).getFirstElement();
         }
       }
 
@@ -420,8 +415,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     Element result = getListOfBooks(pBreadcrumbs, books, 0,              // from
         title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
         // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-            (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
+        useExternalIcons ? (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
     return result;
   }
 
