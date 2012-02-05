@@ -228,7 +228,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // Fixes #716917 when applied to author books list
     boolean willSplitByLetter;
     boolean willSplitByDate;
-    int maxBeforePaginate = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate();
     if (splitOption == null) {
       // ITIMPI: Null seems to be equivalent to SplitByLetter !
       //         Might be better to replace calls by explicit value?
@@ -243,23 +242,26 @@ public abstract class BooksSubCatalog extends SubCatalog {
         break;
       case DontSplitNorPaginate:
         logger.debug("getListOfBooks:splitOption=DontSplitNorPaginate");
-        maxBeforePaginate = Integer.MAX_VALUE; // don't paginate !
+        assert from == 0 : "getListBooks: DontSplitNorPaginate, from=" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
       case DontSplit:
         // Bug #716917 Do not split on letter (used in Author and Series book lists)
         logger.debug("getListOfBooks:splitOption=DontSplit");
+        assert from == 0 : "getListBooks: DontSplit, from=" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
       case SplitByDate:
         logger.debug("getListOfBooks:splitOption=SplitByDate");
+        assert from == 0 : "getListBooks: splitByDate, from=" + from;
         willSplitByLetter = true;
         willSplitByDate = true;
         break;
       case SplitByLetter:
         logger.debug("getListOfBooks:splitOption=SplitByLetter");
+        assert from == 0 : "getListBooks: splitByLetter, from" + from;
         willSplitByLetter = true;
         willSplitByDate = false;
         break;
@@ -267,13 +269,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // ITIMPI:  Not sure that this case can ever arise
         //          Just added as a safety check
         logger.debug("getListOfBooks:splitOption=" + splitOption);
+        assert from == 0 : "getListBooks: unknown splitOption, from" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
     }
     // See if SplitByLetter conditions actually apply?
-    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
     if (willSplitByLetter) {
       if ((maxSplitLevels == 0) || (catalogSize <= maxBeforeSplit)) {
         willSplitByLetter = false;
@@ -334,14 +335,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // list the books (or split them)
       List<Element> result;
       if (willSplitByDate) {
+        // Split by date listing
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         result = getListOfBooksSplitByDate(breadcrumbs, mapOfBooksByDate, title, urn, pFilename,
-                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() && ! icon.startsWith("../") ? "../" : "")  + icon, options);
+                                (useExternalIcons && ! icon.startsWith("../") ? "../" : "")  + icon, options);
       } else if (willSplitByLetter) {
+        // Split by letter listing
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         result = getListOfBooksSplitByLetter(breadcrumbs, mapOfBooksByLetter, title, urn, pFilename, SplitOption.SplitByLetter,
-                                (ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() && ! icon.startsWith("../")? "../" : "") + icon, options);
+                                (useExternalIcons && ! icon.startsWith("../")? "../" : "") + icon, options);
       } else {
+        // Paginated listing
         result = new LinkedList<Element>();
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
@@ -349,7 +353,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           // check if we must continue
           CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
-          if ((i - from) >= maxBeforePaginate) {
+          if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
             if (logger.isDebugEnabled())
               logger.debug("making a nextpage link");
             Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, splitOption, icon, options).getFirstElement();
@@ -409,6 +413,146 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Get a list of books that is paginated
+   * 
+   * They will all share the same base URL with just the page number part incrementing
+   *
+   * @param pBreadcrumbs
+   * @param books
+   * @param title
+   * @param summary
+   * @param urn
+   * @param pFilename
+   * @param icon
+   * @param firstElements
+   * @param options
+   * @return
+   * @throws IOException
+   */
+ /*
+  Composite<Element, String> getListOfBooksPaginated(Breadcrumbs pBreadcrumbs,
+      List<Book> books,
+      String title,
+      String summary,
+      String urn,
+      String pFilename,
+      String icon,
+      List<Element> firstElements,
+      Option... options) throws IOException {
+    logger.debug("getListOfBooks: START");
+    int catalogSize = books.size();
+    logger.debug("getListOfBooks:catalogSize=" + catalogSize);
+
+    // TODO This routine ius currently a 'work-inprogress'
+
+    int maxBeforePaginate = MaxBeforePaginate;
+    int pageNumber = 1;
+    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
+    List<Element> result;
+
+    // generate the book list file
+    String filename = SecureFileManager.INSTANCE.decode(pFilename);
+
+    for (int i = 0; i < books.size(); i++) {
+      // Page leadin
+      if (from % maxBeforePaginate == 0) {
+        if (from > 0) {
+          int pos = filename.lastIndexOf(".xml");
+          if (pos >= 0)
+            filename = filename.substring(0, pos);
+          filename = filename + "_" + pageNumber;
+        }
+        if (!filename.endsWith(".xml"))
+          filename = filename + ".xml";
+        filename = SecureFileManager.INSTANCE.encode(filename);
+        File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
+        FileOutputStream fos = null;
+        Document document = new Document();
+        String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
+        try {
+          if (logger.isTraceEnabled())
+            logger.trace("getListOfBooks: fos=" + outputFile);
+          try {
+            fos = new FileOutputStream(outputFile);
+          } catch (Exception e) {
+            // ITIMPI:  This should not normally happen.   However it has been found that it can
+            // if the filename we are trying to use is invalid for the file system we are using.
+            // If it does occur we cannot continue with generation of the details for this book
+            logger.error("Failed to create feed file " +  outputFile + "\n" + e);
+            return null;
+          }
+          Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+
+          // list the books (or split them)
+          // Paginated listing
+          result = new LinkedList<Element>();
+          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+          CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
+        } finally {
+          if (fos != null)
+            fos.close();
+        }
+      }
+      // Individual book entries
+      // check if we must continue
+      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
+
+      if ((i - from) >= maxBeforePaginate) {
+        if (logger.isDebugEnabled())
+          logger.debug("making a nextpage link");
+        Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, SplitOption.Paginate, icon, options).getFirstElement();
+        result.add(0, nextLink);
+        break;
+      } else {
+        Book book = books.get(i);
+        if (logger.isTraceEnabled())
+          logger.trace("getListOfBooks: adding book to the list : " + book);
+        try {
+          logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
+          Element entry = getBookEntry(breadcrumbs, book, options);
+          if (entry != null) {
+            logger.trace("getListOfBooks: entry=" + entry);
+            result.add(entry);
+            TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
+          }
+        } catch (RuntimeException e) {
+          logger.error("getListOfBooks: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
+          throw e;
+        }
+      }
+      // Page leadout
+      if (from % maxBeforePaginate == 0) {
+        // if needed, add the first elements to the feed
+        if (Helper.isNotNullOrEmpty(firstElements))
+          feed.addContent(firstElements);
+
+        // add the book entries to the feed
+        feed.addContent(result);
+
+        // write the element to the file
+        document.addContent(feed);
+        JDOM.INSTANCE.getOutputter().output(document, fos);
+      }
+
+      // create the same file as html
+      getHtmlManager().generateHtmlFromXml(document, outputFile);
+      Element entry;
+      String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
+      if (from > 0) {
+        String titleNext;
+        if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
+          titleNext = Localization.Main.getText("title.lastpage");
+        }
+
+        entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+      } else {
+        entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
+      }
+    }
+    return new Composite<Element, String>(entry, urlInItsSubfolder);
+  }
+  */
+  /**
    * @param pBreadcrumbs
    * @param mapOfBooksByLetter
    * @param baseTitle
@@ -461,7 +605,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisLetter.size() > 0) {
-        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, SplitOption.SplitByLetter, icon, options)
+        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, 
+             (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate, icon, options)
             .getFirstElement();
       }
 

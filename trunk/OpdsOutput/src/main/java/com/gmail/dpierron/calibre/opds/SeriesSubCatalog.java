@@ -136,9 +136,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       logger.trace("getContentOfListOfSeries: title=" + title);
     boolean willSplitByLetter;
 
-    int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-    int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
-
     if (null == splitOption)
       splitOption = SplitOption.SplitByLetter;
     switch (splitOption) {
@@ -153,7 +150,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       default:
         if (logger.isTraceEnabled())
           logger.trace("getContentOfListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
-              ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+              maxBeforeSplit);
         willSplitByLetter = (maxSplitLevels != 0) &&  (series.size() > maxBeforeSplit);
         break;
     }
@@ -186,7 +183,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       // list the series list
       result = new LinkedList<Element>();
       for (int i = from; i < series.size(); i++) {
-        if ((i - from) >= ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate()) {
+        if ((i - from) >= maxBeforePaginate) {
           Element nextLink =
               getListOfSeries(pBreadcrumbs, series, i, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle).getFirstElement();
           result.add(0, nextLink);
@@ -229,8 +226,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       SplitOption splitOption,
       boolean addTheSeriesWordToTheTitle) throws IOException {
     int catalogSize;
-    int maxBeforeSplt = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxBeforeSplt != 0) && (series.size() > maxBeforeSplt);
+    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (series.size() > maxBeforeSplit);
     if (willSplit) {
       catalogSize = 0;
     } else
@@ -289,9 +285,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     } else {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
-          ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
-              (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_SERIES :
-              Icons.ICON_SERIES);
+          useExternalIcons ? (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_SERIES : Icons.ICON_SERIES);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -341,12 +335,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                                                 letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
       Element element = null;
       if (itemsCount > 0) {
-        SplitOption splitOption = SplitOption.SplitByLetter;
         int maxBeforeSplit=0;
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, splitOption,
+        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, 
+            letter.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate,
             addTheSeriesWordToTheTitle).getFirstElement();
       }
 
@@ -407,7 +401,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         // Bug #716917 Split on letter in series according to user option
         ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit,
         // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+        useExternalIcons ?
             (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_SERIES :
             Icons.ICON_SERIES, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
 

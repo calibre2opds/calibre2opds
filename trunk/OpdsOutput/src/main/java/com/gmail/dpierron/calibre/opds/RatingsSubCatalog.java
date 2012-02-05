@@ -94,7 +94,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
     Element result = getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null,
         // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+        useExternalIcons ?
             (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_RATING :
             Icons.ICON_RATING, Option.DONOTINCLUDE_RATING).getFirstElement();
     return result;
@@ -146,7 +146,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     Element result = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
         // #751211: Use external icons option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons() ?
+        useExternalIcons ?
             (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_RATING :
             Icons.ICON_RATING);
     return new Composite<Element, String>(result, urlInItsSubfolder);
