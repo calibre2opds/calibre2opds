@@ -32,7 +32,13 @@ REM not found so hope on search path
 if "%_JAVACMD%" == "" set _JAVACMD=javaw.exe
 
 :run_c2o
-START "Calibre2Opds" "%_JAVACMD%" -cp OpdsOutput-3.0-SNAPSHOT.jar Gui
+REM  We set stack limits explicitly here to get consistency across systems
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+REM If these options are omitted then defaults are chosen depending on system configuration
+START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.0-SNAPSHOT.jar Gui
 goto end
 
 :end

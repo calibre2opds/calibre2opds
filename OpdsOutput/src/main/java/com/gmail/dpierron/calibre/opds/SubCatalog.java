@@ -10,6 +10,7 @@ import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
+// import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -260,6 +261,7 @@ public abstract class SubCatalog {
 
   }
 
+
   String getFilenamePrefix(Breadcrumbs pBreadcrumbs) {
     if (isInDeepLevel())
       return pBreadcrumbs.getFilename() + "_";
@@ -274,4 +276,82 @@ public abstract class SubCatalog {
   public void setMainStep(boolean mainStep) {
     isMainStep = mainStep;
   }
+
+  /*
+    // TODO The following is commented out as it is till a 'work-in-progress'
+    FileOutputStream getCatalogLeadin(String pFilename) {
+      if (from > 0) {
+        int pos = filename.lastIndexOf(".xml");
+        if (pos >= 0)
+          filename = filename.substring(0, pos);
+        filename = filename + "_" + pageNumber;
+      }
+      if (!filename.endsWith(".xml"))
+        filename = filename + ".xml";
+      filename = SecureFileManager.INSTANCE.encode(filename);
+      File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
+      FileOutputStream fos = null;
+      Document document = new Document();
+      String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
+      try {
+        if (logger.isTraceEnabled())
+          logger.trace("getListOfBooks: fos=" + outputFile);
+        try {
+          fos = new FileOutputStream(outputFile);
+        } catch (Exception e) {
+          // ITIMPI:  This should not normally happen.   However it has been found that it can
+          // if the filename we are trying to use is invalid for the file system we are using.
+          // If it does occur we cannot continue with generation of the details for this book
+          logger.error("Failed to create feed file " +  outputFile + "\n" + e);
+          return null;
+        }
+        Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+
+        // list the books (or split them)
+        // Paginated listing
+        result = new LinkedList<Element>();
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+        CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
+      } finally {
+        if (fos != null)
+          fos.close();
+      }
+
+    }
+  */
+  /**
+   * Add the catalog leadout to anexisting filestream
+   * @return
+   */
+  /*
+/*
+  // TODO The following is commented out as it is till a 'work-in-progress'
+  boolean getCatalogLeadout(FileOutputStream fos) {
+    if (fos != null)  { 
+      try {
+      fos.close();
+      } catch (Exception e) {
+      }
+        // We do not expect an error here in rality
+        return false;
+      }
+
+    // create the same file as html
+    getHtmlManager().generateHtmlFromXml(document, outputFile);
+    Element entry;
+    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
+    if (from > 0) {
+      String titleNext;
+      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
+        titleNext = Localization.Main.getText("title.lastpage");
+      }
+
+      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+    } else {
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
+    }
+
+    return true;
+  }
+  */
 }

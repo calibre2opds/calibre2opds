@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.*;
 
 public class Book implements SplitableByLetter {
   private final static DateFormat TIMESTAMP_INTITLE_FORMAT = new SimpleDateFormat("dd/MM");
@@ -50,6 +51,7 @@ public class Book implements SplitableByLetter {
   private boolean flag;
 
   private static Date ZERO;
+  private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
   static {
     Calendar c = Calendar.getInstance();
     c.setTimeInMillis(0);
@@ -298,6 +300,11 @@ public class Book implements SplitableByLetter {
     comment = removeLeadingText(value, "SUMMARY");
     // The following log entry can be useful if trying to debug character encoding issues
     // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
+  
+    if (comment.matches("(?i)\\<br\\>")) {
+      logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
+      comment.replaceAll("(?i)\\<br\\>", "<br />");
+    }
   }
 
   /**

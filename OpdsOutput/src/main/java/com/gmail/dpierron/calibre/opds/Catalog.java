@@ -872,12 +872,17 @@ public class Catalog {
       callback.checkIfContinueGenerating();
 
       // copy the resource files to the catalog folder
+      // We check in the following order:
+      //  - Configuration folder
+      //  - Install folder
+      //  - built-in resource
       logger.debug("STARTED: Copying Resource files");
       for (String resource : Constants.FILE_RESOURCES) {
         callback.checkIfContinueGenerating();
+        InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
         File resourceFile = new File(destinationFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/" + resource);
-        InputStream resourceStream = JDOM.class.getResourceAsStream(resource);
         Helper.copy(resourceStream, resourceFile);
+        logger.trace("Copying Resource " + resource);
       }
       logger.debug("COMPLETED: Copying Resource files");
 

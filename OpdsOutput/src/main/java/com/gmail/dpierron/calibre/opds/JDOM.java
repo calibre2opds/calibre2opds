@@ -43,7 +43,7 @@ public enum JDOM {
   public Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
-        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(HEADER_XSL)));
+        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
         headerTransformer.setParameter("programName", Constants.PROGNAME);
         headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
@@ -85,6 +85,10 @@ public enum JDOM {
     }
   }
 
+  /**
+   * Set parameters that are common to all the transformers we use.
+   * @param catalogTransformer
+   */
   private void setParametersOnCatalog(Transformer catalogTransformer) {
     double dh = ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight();
     double dw = 2f / 3f * dh;
@@ -120,10 +124,11 @@ public enum JDOM {
   public Transformer getCatalogTransformer() {
     if (catalogTransformer == null) {
       try {
-        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(CATALOG_XSL)));
+        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(catalogTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e);
+
       }
     }
     return catalogTransformer;
@@ -132,10 +137,11 @@ public enum JDOM {
   public Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(FULLENTRY_XSL)));
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(FULLENTRY_XSL)));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
+        bookFullEntryTransformer = null;
       }
     }
     return bookFullEntryTransformer;
@@ -144,7 +150,7 @@ public enum JDOM {
   public Transformer getMainCatalogTransformer() {
     if (mainTransformer == null) {
       try {
-        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(getClass().getResourceAsStream(CATALOG_XSL)));
+        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(mainTransformer);
         mainTransformer.setParameter("programName", Constants.PROGNAME);
         mainTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
@@ -161,6 +167,7 @@ public enum JDOM {
         mainTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
       } catch (TransformerConfigurationException e) {
         logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e);
+        mainTransformer = null;
       }
     }
     return mainTransformer;
@@ -226,7 +233,8 @@ public enum JDOM {
     return element("p", Namespace.Atom);
   }
 
-  static Tidy tidyForTidyInputStream = null;
+  static Tidy
+      tidyForTidyInputStream = null;
 
   /**
    * Routine to tidy up the HTML in the Summary field
@@ -327,8 +335,10 @@ public enum JDOM {
       } catch (Exception ee) {
         if (logger.isDebugEnabled())
           logger.debug("convertBookCommentToXhtml: caught exception in the tidy process", ee);
+        tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       } catch (Throwable t) {
         logger.error("convertBookCommentToXhtml: caught throwable in the tidy process", t);
+        tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       }
 
       if (result != null) {

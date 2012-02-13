@@ -445,7 +445,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // TODO This routine ius currently a 'work-inprogress'
 
-    int maxBeforePaginate = MaxBeforePaginate;
     int pageNumber = 1;
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
     List<Element> result;
@@ -1106,7 +1105,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         hasContent = true;
       }  else {
         if (Helper.isNotNullOrEmpty(book.getComment())) {
-          logger.warn(Localization.Main.getText("error.badComment" , book.getTitle(), book.getId()));
+          logger.warn(Localization.Main.getText("error.badComment", book.getId() , book.getTitle()));
+          logger.warn(book.getComment());
+          book.setComment("");
         }
       }
       if (hasContent) {

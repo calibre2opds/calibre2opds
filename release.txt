@@ -69,6 +69,7 @@ v3.0 beta 1
     - New: Reset options added for URL's used for book external links
     - New: #c20-49: Improve navigation consistency in HTML catalogs
     - New: German Localization
+    - New: User supplied Resource files for HTML catalog can be used.
     - Change: Internal logging improved.  This should help with diagnosing faults
     - Change: Series name/number is now at start of Books summary
     - Change: Icons used are now higher resolution and this look better on high quality screens

@@ -1,4 +1,3 @@
-
 @echo OFF
 REM  batch file for running the Calibre2Opds program in CLI mode.
 REM
@@ -33,8 +32,12 @@ REM not found so hope on search path
 if "%_JAVACMD%" == "" set _JAVACMD=java.exe
 
 :run_c2o
-
-"%_JAVACMD%" -cp OpdsOutput-3.0-SNAPSHOT.jar Cli %*
+REM  We set stack limits explicitly here to get consistency across systems
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+"%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.0-SNAPSHOT.jar Cli %*
 goto end
 
 :end

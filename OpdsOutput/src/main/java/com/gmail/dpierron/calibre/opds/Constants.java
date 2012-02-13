@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class Constants {
   public final static String PROGNAME = "calibre2opds";
-  public final static String PROGVERSION = "3.0 beta 1";
+  public final static String PROGVERSION = "3.0";
   public final static String BZR_VERSION = getBzrVersion();
   public final static String PROGTITLE = PROGNAME + " " + PROGVERSION;
   public final static String LOGFILE_FOLDER = "log";
@@ -31,7 +31,8 @@ public class Constants {
 
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
-  public final static String[] FILE_RESOURCES = {".skip",
+  public final static String[] FILE_RESOURCES = {
+      // ".skip",
       "desktop.css",
       "mobile.css",
       "homeIwebKit.png",
