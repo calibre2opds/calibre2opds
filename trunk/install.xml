@@ -3,7 +3,7 @@
 <installation version="1.0">
     <info>
         <appname>Calibre2Opds</appname>
-        <appversion>2.5 beta</appversion>
+        <appversion>3.0</appversion>
         <authors>
             <author name="David Pierron" email="dpierron@gmail.com"/>
             <author name="Dave Walker" email="itimpi@ntlworld.com"/>
@@ -74,7 +74,7 @@
             <file src="Install/target/dependency/OpdsOutput-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/DataModel-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/Tools-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-			<file src="Install/target/dependency/CalibreQueryLanguage-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+			      <file src="Install/target/dependency/CalibreQueryLanguage-3.0-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
                         
             <file src="Install/target/dependency/jdom-1.1.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-2.7.7.jar" targetdir="$INSTALL_PATH"/>
@@ -85,8 +85,7 @@
             <file src="Install/target/dependency/log4j-1.2.12.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/sqlite-jdbc-3.6.17.1.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/stringtemplate-3.2.jar" targetdir="$INSTALL_PATH"/>
-            
-            
+
             <file src="brand/calibre2opds-icon-small_32.ico" targetdir="$INSTALL_PATH"/>
             <file src="brand/calibre2opds-text-icon.ico" targetdir="$INSTALL_PATH"/>
             <file src="brand/uninstall-icon_32.ico" targetdir="$INSTALL_PATH"/>
@@ -96,6 +95,7 @@
             <file src="brand/calibre2opds-icon_64.png" targetdir="$INSTALL_PATH"/>
             <file src="brand/calibre2opds-text-icon_64.png" targetdir="$INSTALL_PATH"/>
             <file src="brand/uninstall-icon_64.png" targetdir="$INSTALL_PATH"/>
+
         </pack>
     </packs>
 

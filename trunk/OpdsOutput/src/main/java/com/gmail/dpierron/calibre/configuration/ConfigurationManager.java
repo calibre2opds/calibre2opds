@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.configuration;
 
+import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -20,7 +21,8 @@ public enum ConfigurationManager {
 
   private final static Logger logger = Logger.getLogger(ConfigurationManager.class);
 
-  private File configurationDirectory;
+  private static File installDirectory;
+  private static File configurationDirectory;
   private ConfigurationHolder currentProfile;
   private PropertiesBasedConfiguration defaultConfiguration;
 
@@ -102,6 +104,15 @@ public enum ConfigurationManager {
     return result;
   }
 
+  public static File getInstallDirectory() {
+    if (installDirectory == null) {
+      URL mySource = ConfigurationHolder.class.getProtectionDomain().getCodeSource().getLocation();
+      File sourceFile = new File(mySource.getPath());
+      installDirectory = sourceFile.getParentFile();
+    }
+    return installDirectory;
+  }
+  
   public File getConfigurationDirectory() {
     if (configurationDirectory == null) {
       //            logger.trace("getConfigurationDirectory - configurationDirectory not set");
@@ -150,9 +161,7 @@ public enum ConfigurationManager {
 
     if (configurationFolder == null || !configurationFolder.exists()) {
       // hopeless, try and find out where the JAR was stored
-      URL mySource = ConfigurationHolder.class.getProtectionDomain().getCodeSource().getLocation();
-      File sourceFile = new File(mySource.getPath());
-      configurationFolder = sourceFile.getParentFile();
+      configurationFolder = getInstallDirectory();
       logger.trace("Default Configuration folder - trying .jar location: " + configurationFolder);
     }
 
@@ -192,6 +201,32 @@ public enum ConfigurationManager {
     return configurationFolder;
   }
 
+  /**
+   * Special variant of this that checks several locations for the file before
+   * resorting to using the built-in resource file.  The purpose is to allow
+   * the user to over-ride the built-in resource files if so required.
+   * @param filename
+   * @return
+   */
+  public InputStream getResourceAsStream(String filename) {
+    InputStream ins = null;
+    try {
+        // Try user configuration folder
+        ins = new FileInputStream(getConfigurationDirectory() + "/" + filename);
+        logger.info("Resource '" + filename + "' loaded from Configuration folder");
+    } catch (FileNotFoundException e) {
+      try {
+          // If that fails, try install folder
+          ins = new FileInputStream (getInstallDirectory() + "/" + filename);
+          logger.info("Resource '" + filename + "' loaded from Install folder");
+      } catch (FileNotFoundException f) {
+          // If still not found then use built-in resource
+        ins = JDOM.class.getResourceAsStream(filename);
+      }
+    }
+    return ins;
+  }
+  
   // ITIMPI:  Method does not appear to be used anywhere!
   public File getConfigurationFile() {
     File configurationFolder = getConfigurationDirectory();

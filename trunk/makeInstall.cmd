@@ -9,7 +9,7 @@ call setenv.cmd
 
 for /f "delims=" %%a in ('svnversion') do @set SVNVERSION=%%a
 
-SET BASEVERSION=calibre2opds-3.0-alpha
+SET BASEVERSION=calibre2opds-3.0
 SET VERSION=%BASEVERSION%-%SVNVERSION%
 
 SET ZIPFILE=%cd%\%VERSION%.zip
