@@ -16,7 +16,7 @@ import java.io.InputStream;
 
 public class Runner {
   private static boolean introDone = false;
-  private boolean testMode = false;
+  private boolean testMode = false;     // Set this to true to generate a test datamodel
   private final static Logger logger = Logger.getLogger(Runner.class);
 
   public void run(boolean startGui) throws IOException {
