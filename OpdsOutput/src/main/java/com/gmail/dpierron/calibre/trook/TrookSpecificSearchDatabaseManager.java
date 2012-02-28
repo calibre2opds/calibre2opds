@@ -48,6 +48,16 @@ public enum TrookSpecificSearchDatabaseManager {
     return connection;
   }
 
+  public void closeConnection() {
+    if (connection != null) {
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        // Ignore any exception
+      }
+    }
+  }
+
   public boolean databaseExists() {
     if (databaseFile == null)
       return false;
@@ -91,6 +101,8 @@ public enum TrookSpecificSearchDatabaseManager {
       logger.error(e);
     }
   }
+
+
 
   private long addResult(String opdsEntry, ResultType type) throws SQLException {
     PreparedStatement ps = getConnection().prepareStatement("INSERT INTO results(result_id, result_type, result_entry) values (?, ?, ?);");
