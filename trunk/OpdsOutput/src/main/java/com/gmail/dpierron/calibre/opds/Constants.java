@@ -32,7 +32,7 @@ public class Constants {
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
   public final static String[] FILE_RESOURCES = {
-      // ".skip",
+      ".skip",                // Special dummy file for Nook catalogs
       "desktop.css",
       "mobile.css",
       "homeIwebKit.png",

@@ -27,22 +27,35 @@ public class CatalogManager {
     super();
   }
 
-  public void setDestinationFolder(File destinationFolder) {
-    // make the folders
-    catalogFolder = new File(destinationFolder, getCatalogFolderName());
-    if (!catalogFolder.exists())
-      catalogFolder.mkdirs();
-  }
-
+  /**
+   * Get the current catalog folder
+   * @return
+   */
   public File getCatalogFolder() {
     return catalogFolder;
   }
 
+  /**
+   * Set the catalog folder given the parth to the parent
+   * The name takes into account teh configuration settings and mode
+   * @param parentfolder
+   */
+  public void setCatalogFolder(File parentfolder) {
+    catalogFolder = new File(parentfolder, getCatalogFolderName());
+    if (!catalogFolder.exists())
+      catalogFolder.mkdirs();
+  }
+
+  /**
+   * Get the name of the catalog folder.
+   * It will take into account the current mode if relevant
+   * @return
+   */
   public String getCatalogFolderName() {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook)
       return Constants.NOOK_CATALOG_FOLDERNAME;
     else
-      return ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName();
+      return  ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName();
   }
 
   public List<String> getListOfFilesPathsToCopy() {

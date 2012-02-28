@@ -278,7 +278,7 @@ public abstract class SubCatalog {
   }
 
   /*
-    // TODO The following is commented out as it is till a 'work-in-progress'
+    // TODO The following is commented out as it is still a 'work-in-progress'
     FileOutputStream getCatalogLeadin(String pFilename) {
       if (from > 0) {
         int pos = filename.lastIndexOf(".xml");
@@ -325,7 +325,7 @@ public abstract class SubCatalog {
    */
   /*
 /*
-  // TODO The following is commented out as it is till a 'work-in-progress'
+  // TODO The following is commented out as it is still a 'work-in-progress'
   boolean getCatalogLeadout(FileOutputStream fos) {
     if (fos != null)  { 
       try {
