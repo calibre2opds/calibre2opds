@@ -23,6 +23,7 @@ public enum ConfigurationManager {
 
   private static File installDirectory;
   private static File configurationDirectory;
+  private static File configurationFolder = null;
   private ConfigurationHolder currentProfile;
   private PropertiesBasedConfiguration defaultConfiguration;
 
@@ -126,55 +127,24 @@ public enum ConfigurationManager {
     return getDefaultConfigurationDirectory(null);
   }
 
+  /**
+   * Work out where the configuration folder is located.
+   * Note that at this poin t log4j will not have been initiaised
+   * so send any messages to system.out.
+   * @param redirectToNewHome
+   * @return
+   */
   private static File getDefaultConfigurationDirectory(File redirectToNewHome) {
-    File configurationFolder = null;
+
 
     // redirect is set, try the new home folder
     if (Helper.isNotNullOrEmpty(redirectToNewHome)) {
       configurationFolder = redirectToNewHome;
-      logger.info("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
-    }
-
-    // try the CALIBRE2OPDS_CONFIG environment variable
-    if (configurationFolder == null || !configurationFolder.exists()) {
-      String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
-      if (Helper.isNotNullOrEmpty(configDirectory)) {
-        configurationFolder = new File(configDirectory);
-        logger.info("CALIBRE2OPDS_CONFIG=" + configurationFolder);
-      }
-    }
-
-    // try with user.home
-    if (configurationFolder == null || !configurationFolder.exists()) {
-      String userHomePath = System.getProperty("user.home");
-      if (Helper.isNotNullOrEmpty(userHomePath)) {
-        configurationFolder = new File(userHomePath);
-        logger.info("Default Configuration folder set to user home: " + configurationFolder);
-      }
-    }
-
-    if (configurationFolder == null || !configurationFolder.exists()) {
-      // try with tilde
-      configurationFolder = new File("~");
-      logger.trace("Default Configuration folder - add tilde: " + configurationFolder);
-    }
-
-    if (configurationFolder == null || !configurationFolder.exists()) {
-      // hopeless, try and find out where the JAR was stored
-      configurationFolder = getInstallDirectory();
-      logger.trace("Default Configuration folder - trying .jar location: " + configurationFolder);
-    }
-
-    if (configurationFolder != null) {
-      configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
-      if (!configurationFolder.exists()) {
-        configurationFolder.mkdirs();
-        logger.trace("Default Configuration folder created: " + configurationFolder.getPath());
-      }
+      System.out.println("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
     }
 
     // now check for redirect
-    if (redirectToNewHome == null && configurationFolder != null && configurationFolder.exists()) {
+    if (configurationFolder != null && configurationFolder.exists()) {
       File redirect = new File(configurationFolder, ".redirect");
       if (redirect.exists()) {
         try {
@@ -196,9 +166,48 @@ public enum ConfigurationManager {
           // do nothing
         }
       }
+      return configurationFolder;
     }
 
-    return configurationFolder;
+    //  NOw all the standard locations if we do not already have an answer
+
+    // try the CALIBRE2OPDS_CONFIG environment variable
+    String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
+    if (Helper.isNotNullOrEmpty(configDirectory)) {
+      configurationFolder = new File(configDirectory);
+      System.out.println("CALIBRE2OPDS_CONFIG=" + configurationFolder);
+    }
+
+    // try with user.home
+    if (configurationFolder == null || !configurationFolder.exists()) {
+      String userHomePath = System.getProperty("user.home");
+      if (Helper.isNotNullOrEmpty(userHomePath)) {
+        configurationFolder = new File(userHomePath);
+        System.out.println("Try Configuration folder set to user home: " + configurationFolder);
+      }
+    }
+
+    if (configurationFolder == null || !configurationFolder.exists()) {
+      // try with tilde
+      configurationFolder = new File("~");
+      System.out.println("Try Configuration folder - try tilde: " + configurationFolder);
+    }
+
+    if (configurationFolder == null || !configurationFolder.exists()) {
+      // hopeless, try and find out where the JAR was stored
+      configurationFolder = getInstallDirectory();
+      System.out.println("Try Configuration folder - trying .jar location: " + configurationFolder);
+    }
+
+    if (configurationFolder != null) {
+      configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
+      if (!configurationFolder.exists()) {
+        configurationFolder.mkdirs();
+        System.out.println("Default Configuration folder created: " + configurationFolder.getPath());
+      }
+    }
+
+    return getDefaultConfigurationDirectory();
   }
 
   /**
