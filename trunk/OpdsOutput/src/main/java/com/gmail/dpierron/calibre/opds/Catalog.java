@@ -410,9 +410,9 @@ public class Catalog {
 
     // The following are used to simplify code and to avoid continually referring to the profile
     File generateFolder = null;     // Location where catalog is generated
-    File targetFolder;              // Location where final catalog will be copied to (if reuired)
+    File targetFolder = null;       // Location where final catalog will be copied to (if reuired)
                                     // In Nook mode this should be the same as the generateFolder
-    File libraryFolder;             // Folder holding the Calibre library
+    File libraryFolder = null;      // Folder holding the Calibre library
 
     /** where the catalog is eventually located */
     String where = null;
@@ -485,7 +485,7 @@ public class Catalog {
         callback.errorOccured(Localization.Main.getText("error.targetnotset"), null);
         return;
       case Dropbox:
-        targetFolder = new File (libraryFolder, currentProfile.getCatalogFolderName());
+        assert currentProfile.getCopyToDatabaseFolder(): "Copy to database folder MUST be set in Default mode";
         break;
       default:
         assert false : "Unknown DeviceMode " + currentProfile.getDeviceMode();
@@ -558,15 +558,15 @@ public class Catalog {
 
     // If copying catalog back to database folder check it is safe to overwrite
     if (true == currentProfile.getCopyToDatabaseFolder()) {
-      targetFolder = currentProfile.getDatabaseFolder();
-      if ((DeviceMode.Dropbox != currentProfile.getDeviceMode()) && (!checkCatalogExistence(targetFolder, true))) {
+      File databaseFolder = currentProfile.getDatabaseFolder();
+      if ( !checkCatalogExistence(databaseFolder, true)) {
         int n = callback
-            .askUser(Localization.Main.getText("gui.confirm.clear", targetFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
+            .askUser(Localization.Main.getText("gui.confirm.clear", databaseFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
         if (1 == n) {
           return;
         }
       }
-      catalogParentFolder = libraryFolder;
+      // catalogParentFolder = null;    // We are finished with this, so clear for future reference as still in scope
     }
 
     logger.trace("Passed sanity checks, so proceed with generation");
@@ -1092,8 +1092,10 @@ public class Catalog {
       case Nook:
         // when publishing to the Nook, don't forget to copy the search database (if it exists)
         if (TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile() != null) {
+          TrookSpecificSearchDatabaseManager.INSTANCE.closeConnection();
           File destinationFile = new File(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
           // Helper.copy(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
+
           syncFiles(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
         }
         // Also need to make sure catalog.xml exists for Trook use
@@ -1112,27 +1114,31 @@ public class Catalog {
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
           Helper.recursivelyZipFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), true, targetCatalogZipFile);
+          // Now ensure that there is no unzipped catalog left behinf!
+          File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+          Helper.delete(targetCatalogFolder);
           break;
         }
         // FALLTHRU Sync catalog files if not using ZIP mode
-      default:
+      case Nas:
         File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
         syncFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), targetCatalogFolder);
         break;
+      case Dropbox:
+        // Do nothing.   In this mode we sync the catalog using the code for copying back to the library
+        break;
       }
-        logger.debug("COMPLETED: syncFiles Catalog Folder");
+      logger.debug("COMPLETED: syncFiles Catalog Folder");
 
       // check if we must continue
       callback.checkIfContinueGenerating();
 
+      // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-        // File targetFolder = currentProfile.getDatabaseFolder();
-        File libraryCatalogFolder = new File(libraryFolder, currentProfile.getCatalogFolderName());
-        if (logger.isTraceEnabled())
-          logger.trace("syncfiles (" + CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder() + ", " + libraryCatalogFolder);
-        // syncFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), libraryCatalogFolder);
-        syncFiles(generateFolder, libraryCatalogFolder);
+        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());;
+        syncFiles(generateCatalogFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
       }
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
@@ -1199,41 +1205,27 @@ public class Catalog {
       // Now work put where to tell uer result has been placed
       if (logger.isTraceEnabled())
         logger.trace("try to determine where the results have been put");
-      if (currentProfile.getDeviceMode() == DeviceMode.Nook) {
-        if (logger.isTraceEnabled())
-          logger.trace("Nook mode: set to " + Localization.Main.getText("info.step.done.nook"));
-        where = Localization.Main.getText("info.step.done.nook");
-      } else if (currentProfile.getTargetFolder() != null) {
-        if (logger.isTraceEnabled())
-          logger.trace("TargetFolder: " + currentProfile.getTargetFolder().getAbsolutePath());
-        where = currentProfile.getTargetFolder().getAbsolutePath();
+      switch (currentProfile.getDeviceMode()) {
+        case Nook:
+          where = Localization.Main.getText("info.step.done.nook");
+          break;
+        case Nas:
+          where = currentProfile.getTargetFolder().getPath();
+          break;
+        case Dropbox:
+          File libraryCatalogFolder = new File(libraryFolder, currentProfile.getCatalogFolderName());
+          where = libraryCatalogFolder.getPath();
+          break;
       }
+      if (targetFolder != null &&  currentProfile.getCopyToDatabaseFolder()) {
+        where = where + " " + Localization.Main.getText("info.step.done.andYourDb");
+      }
+      if (logger.isTraceEnabled())
+        logger.trace("where=" + where);
 
       // check if we must continue
       callback.checkIfContinueGenerating();
 
-      if (currentProfile.getCopyToDatabaseFolder()) {
-        if (logger.isTraceEnabled())
-          logger.trace("CopyToDatabaseFolder set");
-        if (where != null) {
-          if (logger.isTraceEnabled())
-            logger.trace(where + " " + Localization.Main.getText("info.step.done.andYourDb"));
-          where = where + " " + Localization.Main.getText("info.step.done.andYourDb");
-        } else {
-          if (logger.isTraceEnabled())
-            logger.trace("DatabaseFolder=" + currentProfile.getDatabaseFolder().getAbsolutePath());
-          where = currentProfile.getDatabaseFolder().getAbsolutePath();
-        }
-      }
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
-
-      if (where == null) {
-        if (logger.isTraceEnabled())
-          logger.trace("outputfile.getParent=" + outputFile.getParent());
-        where = outputFile.getParent();
-      }
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
     } catch (Throwable t) {
@@ -1250,17 +1242,18 @@ public class Catalog {
     } finally {
       // make sure the temp files are deleted whatever happens
       long now = System.currentTimeMillis();
-      logger.info(Localization.Main.getText("info.step.deleteingfiles"));
+      logger.info(Localization.Main.getText("info.step.deletingfiles"));
       if (generateFolder != null ) {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
         Helper.delete(generateFolder);
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
-      callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
       if (generationStopped)
         callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
-      if (generationCrashed)
+      else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
+      else
+        callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
     }
   }
 
