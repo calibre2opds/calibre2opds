@@ -356,7 +356,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
             if (logger.isDebugEnabled())
               logger.debug("making a nextpage link");
-            Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, splitOption, icon, options).getFirstElement();
+            Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, splitOption == SplitOption.DontSplit ? SplitOption.Paginate : splitOption, icon, options).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {

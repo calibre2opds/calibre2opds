@@ -132,7 +132,7 @@ public enum ConfigurationManager {
     // redirect is set, try the new home folder
     if (Helper.isNotNullOrEmpty(redirectToNewHome)) {
       configurationFolder = redirectToNewHome;
-      logger.trace("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
+      logger.info("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
     }
 
     // try the CALIBRE2OPDS_CONFIG environment variable
@@ -140,7 +140,7 @@ public enum ConfigurationManager {
       String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
       if (Helper.isNotNullOrEmpty(configDirectory)) {
         configurationFolder = new File(configDirectory);
-        logger.trace("CALIBRE2OPDS_CONFIG=" + configurationFolder);
+        logger.info("CALIBRE2OPDS_CONFIG=" + configurationFolder);
       }
     }
 
@@ -149,7 +149,7 @@ public enum ConfigurationManager {
       String userHomePath = System.getProperty("user.home");
       if (Helper.isNotNullOrEmpty(userHomePath)) {
         configurationFolder = new File(userHomePath);
-        logger.trace("Default Configuration folder set to user home: " + configurationFolder);
+        logger.info("Default Configuration folder set to user home: " + configurationFolder);
       }
     }
 

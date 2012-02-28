@@ -10,5 +10,5 @@ cd Install\target\dependency
 # If not set the default for this user is used.
 # set CALIBRE2OPDS_CONFIG=c:\data\dropbox\Calibre2opds\
 echo Starting Calibre2Opds
-..\..\..\script\rungui.sh
+..\..\..\script\rungui.sh -enableassertions
 cd ../../../

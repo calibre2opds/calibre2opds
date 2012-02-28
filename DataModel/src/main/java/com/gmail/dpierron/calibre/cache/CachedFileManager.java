@@ -22,7 +22,6 @@ public enum CachedFileManager {
   INSTANCE;
   private final static Logger logger = Logger.getLogger(CachedFileManager.class);
   private Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
-  private File cacheFolder = null;
   private File cacheFile = null;
 
   public void initialize() {
@@ -135,9 +134,9 @@ public enum CachedFileManager {
    *           This is normally the catalog sub-folder of the target folder
    */
   public void setCacheFolder(File cf) {
-    cacheFolder = cf;
-    cacheFile = new File(cacheFolder.getAbsolutePath(), "calibre2opds.cache");
-    logger.debug("CRC Cache file set to " + cacheFile.getPath());
+    assert cf != null;    // cf must not be null
+    cacheFile = new File(cf, "calibre2opds.cache");
+    logger.info("CRC Cache file set to " + cacheFile.getPath());
   }
 
   /**
@@ -148,9 +147,9 @@ public enum CachedFileManager {
   public void saveCache() {
 
     // Check Cache folder has been set
-    if (cacheFolder == null) {
+    if (cacheFile == null) {
       if (logger.isDebugEnabled())
-        logger.debug("Aborting saveCache() as cache folder not set");
+        logger.debug("Aborting saveCache() as cacheFile not set");
       return;
     }
 
@@ -161,9 +160,12 @@ public enum CachedFileManager {
     FileOutputStream fs = null;
     try {
       try {
+        assert cacheFile != null : "saveCache: cacheFile should never be null at this point";
         logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
         fs = new FileOutputStream(cacheFile);
+        assert fs != null: "saveCahce: fs should never be nulla t this point";
         os = new ObjectOutputStream(fs);
+        assert os != null : "saveCache: os should never be null at this point";
 
         // Write out the cache entries
         for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
@@ -200,11 +202,12 @@ public enum CachedFileManager {
         }
       } finally {
         try {
-          os.close();
-          fs.close();
+          if (os != null) os.close();
+          if (fs != null) fs.close();
         } catch (IOException e) {
           // Do nothing - we ignore an error at this point
-          // Having said that, an error here is a bit unexpected
+          // Having said that, an error here is a bit unexpected so lets log it when testing
+          logger.debug("saveCache: Unexpected error\n" + e);
         }
       }
     } catch (IOException e) {
@@ -224,7 +227,7 @@ public enum CachedFileManager {
   public void loadCache() {
 
     // Check cache folder has been specified
-    if (cacheFolder == null) {
+    if (cacheFile == null) {
       if (logger.isTraceEnabled())
         logger.trace("Aborting loadCache() as cache folder not set");
       return;
@@ -277,8 +280,8 @@ public enum CachedFileManager {
         }
       } finally {
         // Close cache file
-        os.close();
-        fs.close();
+        if (os != null) os.close();
+        if (fs != null) fs.close();
       }
     } catch (java.io.EOFException io) {
       logger.trace("End of Cache file encountered");
@@ -301,7 +304,7 @@ public enum CachedFileManager {
    * Delete any existing cache file
    */
   public void deleteCache() {
-    if (cacheFolder == null) {
+    if (cacheFile == null) {
       if (logger.isDebugEnabled())
         logger.debug("Aborting deleteCache() as cache folder not set");
       return;
