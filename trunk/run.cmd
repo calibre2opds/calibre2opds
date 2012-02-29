@@ -1,4 +1,4 @@
-REM echo OFF
+echo OFF
 
 REM  Batch file to start a Calibre2Opds that has just been built
 REM  (avoids having to build installer or deploy calibre2odps)
