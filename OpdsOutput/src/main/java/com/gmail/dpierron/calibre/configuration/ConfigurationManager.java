@@ -4,9 +4,11 @@ import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
+import org.junit.runner.Runner;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public enum ConfigurationManager {
   private final static String PROPERTY_NAME_CURRENTCONFIGURATION = "CurrentConfiguration";
 
   private final static Logger logger = Logger.getLogger(ConfigurationManager.class);
+  private static List<String> startupLogMessages;
 
   private static File installDirectory;
   private static File configurationDirectory;
@@ -140,14 +143,14 @@ public enum ConfigurationManager {
     // redirect is set, try the new home folder
     if (Helper.isNotNullOrEmpty(redirectToNewHome)) {
       configurationFolder = redirectToNewHome;
-      System.out.println("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
+      addStartupLogMessage("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
     }
 
     // now check for redirect
     if (configurationFolder != null && configurationFolder.exists()) {
       File redirect = new File(configurationFolder, ".redirect");
       if (redirect.exists()) {
-        System.out.println(".redirect file found in " + configurationFolder.getPath());
+        addStartupLogMessage(".redirect file found in " + configurationFolder.getPath());
         try {
           BufferedReader fr = null;
           try {
@@ -155,22 +158,25 @@ public enum ConfigurationManager {
             String newHomeFileName = fr.readLine();
             File newHome = new File(newHomeFileName);
             if (! newHome.exists()) {
-              System.out.println("... unable to find redirect folder " + newHome.getPath());
-              System.out.println("... so redirect abandoned");
+              addStartupLogMessage("... unable to find redirect folder " + newHome.getPath());
+              addStartupLogMessage("... so redirect abandoned");
             } else {
               // log4j is not yet initialized
-              System.out.println("redirecting home folder to " + newHome.getAbsolutePath());
+              addStartupLogMessage("redirecting home folder to " + newHome.getAbsolutePath());
               configurationFolder = getDefaultConfigurationDirectory(newHome);
+              return configurationFolder = getDefaultConfigurationDirectory();
             }
           } finally {
             if (fr != null)
               fr.close();
           }
         } catch (IOException e) {
-          System.out.println("... failure reading .redirect file ");
-          System.out.println("... so redirect abandoned");
+          addStartupLogMessage("... failure reading .redirect file ");
+          addStartupLogMessage("... so redirect abandoned");
         }
       }
+      if (redirectToNewHome == null)
+        addStartupLogMessage("Using Configuration folder: " + configurationFolder);
       return configurationFolder;
     }
 
@@ -180,9 +186,9 @@ public enum ConfigurationManager {
     String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
     if (Helper.isNotNullOrEmpty(configDirectory)) {
       configurationFolder = new File(configDirectory);
-      System.out.println("CALIBRE2OPDS_CONFIG=" + configurationFolder);
+      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=" + configurationFolder);
       if (! configurationFolder.exists()) {
-        System.out.println("... but specified folder dows not exist");
+        ConfigurationManager.addStartupLogMessage("... but specified folder dows not exist");
         configurationFolder = null;  
       }
     }
@@ -192,9 +198,9 @@ public enum ConfigurationManager {
       String userHomePath = System.getProperty("user.home");
       if (Helper.isNotNullOrEmpty(userHomePath)) {
         configurationFolder = new File(userHomePath);
-        System.out.println("Try Configuration folder set to user home: " + configurationFolder);
+        ConfigurationManager.addStartupLogMessage("Try Configuration folder fromuser home: " + configurationFolder);
         if (! configurationFolder.exists()) {
-          System.out.println("... but specified folder does not exist");
+          ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
           configurationFolder = null;
         }
       }
@@ -203,9 +209,9 @@ public enum ConfigurationManager {
     if (configurationFolder == null || !configurationFolder.exists()) {
       // try with tilde
       configurationFolder = new File("~");
-      System.out.println("Try Configuration folder set to tilde: " + configurationFolder);
+      ConfigurationManager.addStartupLogMessage("Try Configuration folder from tilde: " + configurationFolder);
       if (! configurationFolder.exists()) {
-        System.out.println("... but specified folder does not exist");
+        ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
         configurationFolder = null;
       }
     }
@@ -213,22 +219,23 @@ public enum ConfigurationManager {
     if (configurationFolder == null || !configurationFolder.exists()) {
       // hopeless, try and find out where the JAR was stored
       configurationFolder = getInstallDirectory();
-      System.out.println("Try Configuration folder set to  .jar location: " + configurationFolder);
+      ConfigurationManager.addStartupLogMessage("Try Configuration folder from .jar location: " + configurationFolder);
       if (! configurationFolder.exists()) {
-        System.out.println("... but specified folder dowes not exist");
+        // ITIMPI:   Is this condition really possible!
+        ConfigurationManager.addStartupLogMessage("... but specified folder dowes not exist");
         configurationFolder = null;
       }
     }
 
     if (configurationFolder == null) {
-      System.out.println("ERROR: failed to find a suitable configuration folder");
-      System.out.println("Exit(-1)");
+      ConfigurationManager.addStartupLogMessage("ERROR: failed to find a suitable configuration folder");
+      ConfigurationManager.addStartupLogMessage("Exit(-1)");
       System.exit(-1);
     } else {
       configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
       if (!configurationFolder.exists()) {
         configurationFolder.mkdirs();
-        System.out.println("Default Configuration folder created: " + configurationFolder.getPath());
+        ConfigurationManager.addStartupLogMessage("Default Configuration folder created: " + configurationFolder.getPath());
       }
     }
 
@@ -276,5 +283,27 @@ public enum ConfigurationManager {
 
   public boolean isHacksEnabled() {
     return Helper.isNotNullOrEmpty(System.getenv("CALIBRE2OPDS_HACKSENABLED"));
+  }
+
+
+  /**
+   * Add a log message to the array of those to be kept for recoding to
+   * the log after log4j has been initialised
+   *
+   * @param message
+   */
+  public static void addStartupLogMessage (String message) {
+    System.out.println(message);
+    if (startupLogMessages == null)
+      startupLogMessages = new ArrayList<String>();
+    startupLogMessages.add(message);
+  }
+
+  /**
+   *
+   * @return
+   */
+  public List<String> getStartupLogMessages() {
+    return startupLogMessages;
   }
 }

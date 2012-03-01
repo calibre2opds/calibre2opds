@@ -12,12 +12,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Runner {
   private static boolean introDone = false;
   private boolean testMode = false;     // Set this to true to generate a test datamodel
   private final static Logger logger = Logger.getLogger(Runner.class);
+
 
   public void run(boolean startGui) throws IOException {
     intro();
@@ -36,7 +39,6 @@ public class Runner {
 
   private static void intro() {
     if (!introDone) {
-      logger.info(Constants.PROGTITLE + Constants.BZR_VERSION);
       logger.info("");
       logger.info(Localization.Main.getText("intro.goal"));
       logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
@@ -88,7 +90,7 @@ public class Runner {
           try {
             is = this.getClass().getResourceAsStream(inFileName);
             if (is == null) {
-              logger.info("Cannot find " + inFileName + " in the resources");
+              ConfigurationManager.addStartupLogMessage("Cannot find " + inFileName + " in the resources");
             }
             os = new FileOutputStream(log4jConfig);
             byte buffer[] = new byte[1024];
@@ -110,13 +112,25 @@ public class Runner {
         }
       }
     }
+    ConfigurationManager.addStartupLogMessage("Log4J configuration file is " + log4jConfig.getAbsolutePath());
 
     // Configure and watch
     PropertyConfigurator.configureAndWatch(log4jConfig.getAbsolutePath(), 3000);
-    logger.info("Log4J configuration file is " + log4jConfig.getAbsolutePath());
+    List<String> startupLogMessages = ConfigurationManager.INSTANCE.getStartupLogMessages();
+    if (startupLogMessages != null) {
+      for ( String s : startupLogMessages) {
+        logger.info(s);
+      }
+      startupLogMessages.clear();
+      startupLogMessages = null;
+    }
   }
 
   public static void run(String[] args, boolean startGui) {
+    ConfigurationManager.addStartupLogMessage("");
+    ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
+    ConfigurationManager.addStartupLogMessage("");
+
     Runner runner = new Runner();
     runner.initLog4J();
     try {
