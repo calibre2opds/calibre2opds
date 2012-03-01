@@ -65,32 +65,53 @@ public class Author implements SplitableByLetter, Comparable<Author> {
     return sort;
   }
 
+  /**
+   * Derive the value we are going to use for sorting by Author
+   * @return
+   */
   private String computeSort() {
     // first, let's try and find a book by this author (alone) which has a author_sort field
+    // If so we use that value as the most likely one
     List<Book> books = DataModel.INSTANCE.getMapOfBooksByAuthor().get(this);
     if (books != null)
       for (Book book : books) {
         if (book.hasSingleAuthor()) {
           String authorSort = book.getAuthorSort();
+          // ITIMPI:   Perhaps we should also consider a value with no comma and no space as a valid author sort?
           if (Helper.isNotNullOrEmpty(authorSort) && authorSort.contains(","))
             return authorSort;
         }
       }
 
-    // Check if there is a comma
+    // We could not dind an acceptable author sort value so we need to do something further
+
+    // Check if there is a comma   in the name field
+    // If so assume what follows is the author sort surname
+
     int posOfSpace = name.indexOf(',');
     if (posOfSpace >= 0) {
       guessedLastName = name.substring(0, posOfSpace);
       return name;
     }
 
-    // then, reverse the name
+    // then split the author on space seaparator
     List<String> words = Helper.tokenize(name, " ");
-    if (words.size() == 1)
-      return words.get(0);
-    guessedLastName = words.get(words.size() - 1);
-    words.remove(words.size() - 1);
-    return guessedLastName + ", " + Helper.concatenateList(" ", words);
+    switch (words.size()) {
+      case 1:
+        // If there is only a single word then it must be the author sort
+        guessedLastName = name;
+        return name;
+      case 0:
+          guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + name + ")";
+          return guessedLastName;
+      default:
+        // Grab the last word as the surname
+        guessedLastName = words.get(words.size() - 1);
+        // Remove from the array the word we have assumed is the surname
+        words.remove(words.size() - 1);
+        // Now construct the sort nsme we are going to use
+        return guessedLastName + ", " + Helper.concatenateList(" ", words);
+    }
   }
 
   public String toString() {

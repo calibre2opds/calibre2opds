@@ -443,7 +443,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     int catalogSize = books.size();
     logger.debug("getListOfBooks:catalogSize=" + catalogSize);
 
-    // TODO This routine ius currently a 'work-inprogress'
+    // TODO This routine is currently a 'work-inprogress'
 
     int pageNumber = 1;
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
