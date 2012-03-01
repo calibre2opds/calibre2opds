@@ -828,13 +828,17 @@ public class Helper {
     return "";
   }
 
+  /**
+   * Convert the stack trace into a string suitable for logging
+   * @param t
+   * @return
+   */
   public static String getStackTrace(Throwable t) {
-    if (t == null)
-      return null;
-    StringBuffer sb = new StringBuffer();
-    for (StackTraceElement element : t.getStackTrace()) {
-      sb.append(element.toString());
-      sb.append('\n');
+    StringBuilder sb = new StringBuilder("");
+    if (t != null) {
+      for (StackTraceElement element : t.getStackTrace()) {
+        sb.append(element.toString() + '\n');
+      }
     }
     return sb.toString();
   }

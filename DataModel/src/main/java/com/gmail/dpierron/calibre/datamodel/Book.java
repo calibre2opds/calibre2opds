@@ -196,12 +196,10 @@ public class Book implements SplitableByLetter {
    */
   private String removeLeadingText (String text, String leadingText) {
     // Check for fast exit conditions
-    if (text == null || leadingText == null )
+    if (Helper.isNullOrEmpty(text) || Helper.isNullOrEmpty(leadingText) )
       return text;
     int textLength = text.length();
     int leadingLength = leadingText.length();
-    if (textLength == 0 || leadingLength == 0 )
-      return text;
 
     int cutStart = 0;          // Start scanning from beginning of string
     int cutStartMax = textLength - leadingLength - 1 ;
@@ -283,7 +281,7 @@ public class Book implements SplitableByLetter {
     }   // End of while
 
     if (cutStart > 0)
-      return (text.substring(0, cutStart)+text.substring(cutEnd)).trim();
+      return (text.substring(0, cutStart) + text.substring(cutEnd)).trim();
     else
       return text.substring(cutEnd).trim();
   }
@@ -297,13 +295,15 @@ public class Book implements SplitableByLetter {
   public void setComment(String value) {
     summary = null;
     summaryMaxLength = -1;
-    comment = removeLeadingText(value, "SUMMARY");
-    // The following log entry can be useful if trying to debug character encoding issues
-    // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
-  
-    if (comment.matches("(?i)\\<br\\>")) {
-      logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
-      comment.replaceAll("(?i)\\<br\\>", "<br />");
+    if (Helper.isNotNullOrEmpty(comment)) {
+      comment = removeLeadingText(value, "SUMMARY");
+      // The following log entry can be useful if trying to debug character encoding issues
+      // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
+    
+      if (comment != null && comment.matches("(?i)\\<br\\>")) {
+        logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
+        comment.replaceAll("(?i)\\<br\\>", "<br />");
+      }
     }
   }
 
@@ -377,7 +377,7 @@ public class Book implements SplitableByLetter {
   }
 
   public boolean hasSingleAuthor() {
-    return (Helper.isNotNullOrEmpty(getAuthors()) && getAuthors().size() == 1);
+    return (Helper.isNotNullOrEmpty(authors) && authors.size() == 1);
   }
 
   public List<Author> getAuthors() {
