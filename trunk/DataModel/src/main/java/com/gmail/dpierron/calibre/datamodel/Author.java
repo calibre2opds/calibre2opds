@@ -1,10 +1,12 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 public class Author implements SplitableByLetter, Comparable<Author> {
+  private final static Logger logger = Logger.getLogger(Author.class);
   private final String id;
   private String name;
   private String sort;
@@ -102,8 +104,9 @@ public class Author implements SplitableByLetter, Comparable<Author> {
         guessedLastName = name;
         return name;
       case 0:
-          guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + name + ")";
-          return guessedLastName;
+        logger.warn("Problem computing Author sort for author: " + name);
+        guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + name + ")";
+        return guessedLastName;
       default:
         // Grab the last word as the surname
         guessedLastName = words.get(words.size() - 1);
