@@ -11,6 +11,7 @@
     <xsl:param name="thumbHeight">125</xsl:param>
     <xsl:param name="generateDownloads">true</xsl:param>
     <xsl:param name="browseByCover">false</xsl:param>
+    <xsl:param name="i18n.and"/>
     <xsl:param name="i18n.dateGenerated"/>
     <xsl:param name="i18n.backToMain"/>
     <xsl:param name="i18n.summarysection"/>

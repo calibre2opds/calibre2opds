@@ -1,4 +1,8 @@
 <xsl:stylesheet exclude-result-prefixes="opds" version="1.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!--
+  fullentry.xsl:    This is the transformation applied to the book details files to produce the HTML version
+                    In OPDS terms these are the files that are of type "entry"
+-->
     <xsl:output method="html" version="4.01"/>
     <xsl:output doctype-public="-//W3c//DTD html 4.01//EN"/>
     <xsl:output doctype-system="http://www.w3c.org/tr/html4/strict.dtd"/>
@@ -13,6 +17,7 @@
     <xsl:param name="generateDownloads">true</xsl:param>
     <xsl:param name="generateIndex">false</xsl:param>
     <xsl:param name="browseByCover">false</xsl:param>
+    <xsl:param name="i18n.and"/>
     <xsl:param name="i18n.dateGenerated"/>
     <xsl:param name="i18n.backToMain"/>
     <xsl:param name="i18n.summarysection"/>
@@ -108,17 +113,23 @@
                                 <h1>
                                     <xsl:value-of select="opds:title"/>
                                     <br/>
-                                    <small>
-                                        <em>
-                                            <xsl:if test="string-length(opds:author/opds:name) > 0">
-                                                <small>
-                                                    <em>
-                                                        <xsl:value-of select="opds:author/opds:name"/>
-                                                    </em>
-                                                </small>
+                                    <small><em><small><em>
+                                        <xsl:for-each select="opds:author/opds:name">
+                                            <xsl:if test="string-length(.) > 0">
+                                                <xsl:choose>
+                                                    <xsl:when test="position() = 1">
+                                                        <xsl:value-of select="."/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <small>
+                                                          <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
+                                                        </small>
+                                                        <xsl:value-of select="."/>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </xsl:if>
-                                        </em>
-                                    </small>
+                                        </xsl:for-each>
+                                    </em></small></em></small>
                                 </h1>
                             </div>
 
@@ -231,5 +242,5 @@
 
             </body>
         </html>
-    </xsl:template>
+    </xsl:template>   <!-- entry -->
 </xsl:stylesheet>

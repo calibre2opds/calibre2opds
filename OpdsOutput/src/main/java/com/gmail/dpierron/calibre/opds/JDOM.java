@@ -105,6 +105,7 @@ public enum JDOM {
     catalogTransformer
         .setParameter("generateDownloads", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
     catalogTransformer.setParameter("libraryTitle", ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle());
+    catalogTransformer.setParameter("i18n.and", Localization.Main.getText("i18n.and"));
     catalogTransformer.setParameter("i18n.backToMain", Localization.Main.getText("i18n.backToMain"));
     catalogTransformer.setParameter("i18n.downloads", Localization.Main.getText("i18n.downloads"));
     catalogTransformer.setParameter("i18n.links", Localization.Main.getText("i18n.links"));
