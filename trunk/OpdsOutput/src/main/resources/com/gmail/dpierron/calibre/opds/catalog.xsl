@@ -1,4 +1,8 @@
 <xsl:stylesheet exclude-result-prefixes="opds" version="1.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!--
+  catalog.xsl:    This is the transformation applied to the catalog files to produce the HTML version
+                  In OPDS terms these are the files that are of type "feed2"
+-->
     <xsl:output method="html" version="4.01"/>
     <xsl:output doctype-public="-//W3c//DTD html 4.01//EN"/>
     <xsl:output doctype-system="http://www.w3c.org/tr/html4/strict.dtd"/>
@@ -13,6 +17,7 @@
     <xsl:param name="generateDownloads">true</xsl:param>
     <xsl:param name="generateIndex">false</xsl:param>
     <xsl:param name="browseByCover">false</xsl:param>
+    <xsl:param name="i18n.and"/>
     <xsl:param name="i18n.dateGenerated"/>
     <xsl:param name="i18n.backToMain"/>
     <xsl:param name="i18n.summarysection"/>
@@ -142,7 +147,21 @@
                                 <!-- partial entry -->
                                 <div class="x_container" id="{$bookId}">
 
-                                    <xsl:variable name="bookTitle"><xsl:value-of select="concat(opds:author/opds:name, ' - ', opds:title)"/></xsl:variable>
+                                    <xsl:variable name="authorlist">
+                                        <xsl:for-each select="opds:author/opds:name">
+                                            <xsl:if test="string-length(.) > 0">
+                                                <xsl:choose>
+                                                    <xsl:when test="position() = 1">
+                                                        <xsl:value-of select="."/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:value-of select="concat(' ',$i18n.and,' ',.)"/>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </xsl:if>
+                                        </xsl:for-each>
+                                    </xsl:variable>
+                                    <xsl:variable name="bookTitle"><xsl:value-of select="concat($authorlist, ' - ', opds:title)"/></xsl:variable>
 
                                     <!-- thumbnail -->
                                     <div class="cover">
@@ -166,11 +185,11 @@
                                                 <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="opds:title">
                                                 <xsl:value-of select="opds:title"/>
                                                 </a>
-                                                <xsl:if test="string-length(opds:author/opds:name) > 1">
+                                                <xsl:if test="string-length($authorlist) > 1">
                                                     <br/>
                                                     <small>
                                                         <em>
-                                                            <xsl:value-of select="opds:author/opds:name"/>
+                                                            <xsl:value-of select="$authorlist"/>
                                                         </em>
                                                     </small>
                                                 </xsl:if>

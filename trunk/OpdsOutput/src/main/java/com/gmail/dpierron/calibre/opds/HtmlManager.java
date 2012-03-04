@@ -60,8 +60,14 @@ public class HtmlManager {
             case BookFullEntry:
               transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
               break;
+            default:
+              assert false : "generateHtmlFromXml: Unknown feed type " + feedType;
           }
-          transformer.transform(source, streamResult);
+          if (transformer == null) {
+            logger.fatal("Failed to get transformer: tProbably means XSL file invalid and failed to compile!" );
+          } else {
+            transformer.transform(source, streamResult);
+          }
         } catch (TransformerException e) {
           logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
         }

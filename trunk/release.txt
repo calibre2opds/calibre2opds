@@ -49,11 +49,12 @@ The following shows the Calibre2Opds releases in reverse chronological order (so
 is at the top) showing main changes and bug fixes.  The bug number references are to those
 that have been recorded in Launchpad.
 
-v3.0 beta 1
+v3.0
     - New: OPDS 1.1 compatibility
     - New: Experimental support for creating and using a search index in HTML catalogs
     - New: support for Featured Books sub-catalog
     - New: Support for custom catalog sections (based on Calibre searches)
+    - New: Support for including links to external catalogs
     - New: Current profile now displayed on main screen
     - New: Support for suppressing the generation of the Recent Books sub-catalog.
     - New: Support for suppressing the generation of the Authors sub-catalog.
@@ -63,7 +64,8 @@ v3.0 beta 1
     - New: Support for controlling whether Tag information shown in Book Details
     - New: Support for controlling whether Publisher information shown in Book Details
     - New: A catalog generation run that has started can be cancelled
-    = New: Maximum length of books summary can now be specified
+    - New: Use Calibre style searches in a number of places.
+    - New: Maximum length of books summary can now be specified
     - New: Split by letter now splits to further levels.
     - New: Option to Control maximum number of levels for Split By letter
     - New: #751211: Allow use of External icons for catalog sections
@@ -76,12 +78,17 @@ v3.0 beta 1
     - Change: Icons used are now higher resolution and this look better on high quality screens
     - Change: Special compatibility modes removed.  Stanza which was main driver for this feature 
               is now effectively a defunct product (and the 3.2 release works with OPDS comaptibility).
+    - Change: Replace the settings for the tags to be included with the new Calibre filter feature.
+    - Change: Improvements to home folder redirection.  Detail now logged when used.
+    - Fix: #806869 Russian text in comments field not displayed correctly
+    - Fix: #831976 Accented characters not displaying correctly in comments
     - Fix: #836797 Null pointer exception trying to run calibre2opds in commandline mode.
     - Fix: #840830 Command line not working in Windows
-    - Fix: #831976 Accented characters not displaying correctly in comments
-    - Fix: #806869 Russian text in comments field not displayed correctly
+    - Fix: #c20-56 Fix handling of multiple authors in OPDS catalogs
     - Fix: Missing catalog.xml file in Nook/Trook mode
     - Fix: Books summaries were not being displayed in book lists in HTML catalogs
+    - Fix: Ensure temporary files deleted even if fatal error during generation.
+    - Fix: Many other small bug fixes.  In particular ones that caused fatal errors during generation
 
 v2.5 beta 1   (NOTE:  it has now been decided to label the next release as 3.0 and not 2.5)
     - New: #826209: Allow suppression of resized cover generation - use calibre cover directly
