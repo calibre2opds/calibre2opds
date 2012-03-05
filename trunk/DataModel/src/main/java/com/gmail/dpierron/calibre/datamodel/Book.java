@@ -295,7 +295,7 @@ public class Book implements SplitableByLetter {
   public void setComment(String value) {
     summary = null;
     summaryMaxLength = -1;
-    if (Helper.isNotNullOrEmpty(comment)) {
+    if (Helper.isNotNullOrEmpty(value)) {
       comment = removeLeadingText(value, "SUMMARY");
       // The following log entry can be useful if trying to debug character encoding issues
       // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
