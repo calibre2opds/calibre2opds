@@ -173,13 +173,16 @@ of this site : http://answers.launchpad.net/calibre2opds/+addquestion
      6/ Additional information
 **************************************
 
-The Launchpad project website (http://launchpad.net/calibre2opds) holds a lot of information, FAQs, 
-questions and answers, etc. You can also drop by to ask questions, report bugs, ask for features, etc.
+Calibre2opds has its own dedicated home site at http:///www.calibre2opds.com.   Here you will 
+find all the documentation and pointers to other resources for supporting calibre2opds.
+
+You can ask questions on the calibre2opds forum at https://getsatisfaction.com/calibre2opds
+
+If you think that you ahve found a bug, or would like to raise a feature request then this can be done 
+via the calibre2opds Issue tracking system at http://calibre2opds.myjetbrains.com/youtrack/
 
 Please contact me (dpierron+calibre2opds@gmail.com) if you need more information. 
-
-Bear in mind that this is beta quality software, and that we write it on our personal free time : so 
-there will be bugs, but we'll be happy to be informed of them.
+ugs, but we'll be happy to be informed of them.
 
 If you have too much money, you can always donate some : 
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU

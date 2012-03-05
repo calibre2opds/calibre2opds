@@ -4,12 +4,11 @@
 Documentation
 ~~~~~~~~~~~~~
 Online documentation for Calibre2Opds can now be found at:
-  http://wiki.mobileread.com/Calibre2opds
+  http://calibre2opds.com/read-the-documentation/
 There is a link to this from the main Calibre2Opds GUI via the Help
 button.  It is also included in the Calibre2Opds catalogs at the top
-level.  This documentation is in wiki format, so all users are
-encouraged to consider enhancing it to reflect their experience of using
-Calibre2Opds.
+level.  User areencouraged to pass back suggestions for enhancing it 
+to reflect their experience of using Calibre2Opds.
 
 The #number type references in these notes refer to the bug number
 entries for calibre2opds in the launchpad bug tracking system.
@@ -23,25 +22,30 @@ correct localization text.  This is not a task that requires
 programming skills, so users are encouraged to contribute their
 expertise in this area.  The details on how to go about this can be
 found at:
-http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop#Calibre2opds_Localization
+  http://calibre2opds.com/read-the-documentation/development/localization/
 
 Known Issues
 ~~~~~~~~~~~~
 
  - #627926  Publish mode limiting formats allowed   
- - #640145  Series under author reports wrong number of books
- - #716914  Series not sorted correctly by Series Index when more than 1 digit
  - #729859  Internal links not working in XML catalogs
             (may not be fixable)
  - #c2o-15  Filenames generated can exceed system limits
             (this is particularly likely to happen in the larger catalog sections on very large
             libraries, or if many sub-levels based on tags are specified).  The avoidance actio is
             to ensure that the Maximum Number of Split Levels option is set to a small value (e.g. 3)
-                                                                                                  d
+ - Localization: The current localizations now have significant gaps until users can provide the 
+            required translation strings for the large number of new messages introduced in v3.0.
+
+If you think that you have found abug, or would simply like to raise a feature request for a
+new capability this can be done via the calibre2opds Issue tracking system at
+http://calibre2opds.myjetbrains.com/youtrack/
+
 Planned Enhancements
 ~~~~~~~~~~~~~~~~~~~~
 The following items are planned for future releases:
-    - Nothing is definitely committed or planned beyond general enhancements
+    - Improve localizations.  
+    - Nothing else is definitely committed or planned beyond general enhancements
 
 Release History
 ---------------
@@ -50,6 +54,7 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in Launchpad.
 
 v3.0
+    This is a major new release as is reflected by the list of changes shown below
     - New: OPDS 1.1 compatibility
     - New: Experimental support for creating and using a search index in HTML catalogs
     - New: support for Featured Books sub-catalog
@@ -72,7 +77,8 @@ v3.0
     - New: Reset options added for URL's used for book external links
     - New: #c20-49: Improve navigation consistency in HTML catalogs
     - New: German Localization
-    - New: User supplied Resource files for HTML catalog can be used.
+    - New: User supplied Resource files can be used.   In particular this will allow for 
+           customization of the look-and-feel aspects of the HTML catalogs.
     - Change: Internal logging improved.  This should help with diagnosing faults
     - Change: Series name/number is now at start of Books summary
     - Change: Icons used are now higher resolution and this look better on high quality screens
@@ -88,7 +94,9 @@ v3.0
     - Fix: Missing catalog.xml file in Nook/Trook mode
     - Fix: Books summaries were not being displayed in book lists in HTML catalogs
     - Fix: Ensure temporary files deleted even if fatal error during generation.
-    - Fix: Many other small bug fixes.  In particular ones that caused fatal errors during generation
+    - Fix: Many other small bug fixes.  In particular ones that caused fatal errors during 
+           generation are now trapped wherever possible and the run allowed to continue
+           after logging details about the issue.
 
 v2.5 beta 1   (NOTE:  it has now been decided to label the next release as 3.0 and not 2.5)
     - New: #826209: Allow suppression of resized cover generation - use calibre cover directly
