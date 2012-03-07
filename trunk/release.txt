@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.0
+                    RELEASE NOTES for Calibre2Opds v3.1
                     -----------------------------------
 
 Documentation
@@ -52,6 +52,10 @@ Release History
 The following shows the Calibre2Opds releases in reverse chronological order (so that the most recent
 is at the top) showing main changes and bug fixes.  The bug number references are to those
 that have been recorded in Launchpad.
+
+v3.1
+    - Fix: #c2o-78: Windows 7 64-bit systems do not set up Java location
+    - Fix: #c2o-81: Generation fails if no books in the library have their series values set
 
 v3.0
     This is a major new release as is reflected by the list of changes shown below

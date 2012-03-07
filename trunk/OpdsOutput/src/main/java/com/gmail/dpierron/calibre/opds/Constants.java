@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class Constants {
   public final static String PROGNAME = "calibre2opds";
-  public final static String PROGVERSION = "3.0";
+  public final static String PROGVERSION = "3.1 beta";
   public final static String BZR_VERSION = getBzrVersion();
   public final static String PROGTITLE = PROGNAME + " " + PROGVERSION;
   public final static String LOGFILE_FOLDER = "log";
