@@ -80,7 +80,7 @@ if "%1"=="-enableassertions" (
   echo " Calibre2Opds STARTED "
   echo "----------------------"
   echo '
-  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp OpdsOutput-3.0-SNAPSHOT.jar Gui
+  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp OpdsOutput-3.1-SNAPSHOT.jar Gui
   echo '
   echo "-----------------------"
   echo " Calibre2Opds FINISHED "
@@ -88,7 +88,7 @@ if "%1"=="-enableassertions" (
 
 
 )  else (
-  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.0-SNAPSHOT.jar Gui
+  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Gui
 )
 
 

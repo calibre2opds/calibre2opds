@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
-<plist version="0.9">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
-	<key>CFBundleName</key>
-	<string>calibre2opds</string>
-	<key>CFBundleIdentifier</key>
-	<string>Gui</string>
-	<key>CFBundleVersion</key>
-	<string>2.3.0</string>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<string>true</string>
-	<key>CFBundleExecutable</key>
-	<string>JavaApplicationStub</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaApplicationStub</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Calibre2Opds v3.1</string>
+	<key>CFBundleIconFile</key>
+	<string>icon.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>Gui</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Calibre2Opds</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleGetInfoString</key>
-	<string>calibre2opds 2.3.0</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleIconFile</key>
-	<string>icon.icns</string>
+	<key>CFBundleVersion</key>
+	<string>3.1</string>
 	<key>Java</key>
 	<dict>
-		<key>MainClass</key>
-		<string>Gui</string>
-		<key>JVMVersion</key>
-		<string>1.5+</string>
 		<key>ClassPath</key>
-			<array>
-			<string>$JAVAROOT/OpdsOutput-2.3-SNAPSHOT.jar</string>
-			<string>$JAVAROOT/DataModel-2.3-SNAPSHOT.jar</string>
+		<array>
+			<string>$JAVAROOT/OpdsOutput-3.1-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/CalibreQueryLanguage-3.1-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/DataModel-3.1-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/Tools-3.1-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/antlr-2.7.7.jar</string>
+			<string>$JAVAROOT/antlr-runtime-3.1.3.jar</string>
 			<string>$JAVAROOT/jdom-1.1.jar</string>
+			<string>$JAVAROOT/jtidy-r938.jar</string>
 			<string>$JAVAROOT/junit-4.7.jar</string>
 			<string>$JAVAROOT/log4j-1.2.12.jar</string>
 			<string>$JAVAROOT/sqlite-jdbc-3.6.17.1.jar</string>
-			<string>$JAVAROOT/Tools-2.2-SNAPSHOT.jar</string>
-			</array>
+			<string>$JAVAROOT/stringtemplate-3.2.jar</string>
+		</array>
+		<key>JVMVersion</key>
+		<string>1.5+</string>
+		<key>MainClass</key>
+		<string>Gui</string>
 		<key>Properties</key>
 		<dict>
 			<key>apple.laf.useScreenMenuBar</key>
 			<string>true</string>
 		</dict>
+		<key>VMOptions</key>
+		<string>-Xms128m -Xmx512m</string>
 	</dict>
 </dict>
 </plist>

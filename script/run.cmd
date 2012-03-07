@@ -73,7 +73,7 @@ REM -Xms<value> define starting size
 REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
-"%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.0-SNAPSHOT.jar Cli %*
+"%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
 
 set _JAVACMD=
 set _JAVAPROG=
