@@ -144,9 +144,10 @@ public enum ConfigurationManager {
     if (Helper.isNotNullOrEmpty(redirectToNewHome)) {
       configurationFolder = redirectToNewHome;
       addStartupLogMessage("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
+      // addStartupLogMessage(Localization.Main.getText("startup.newhome", redirectToNewHome.getPath()));
     }
 
-    // now check for redirect
+        // now check for redirect
     if (configurationFolder != null && configurationFolder.exists()) {
       File redirect = new File(configurationFolder, ".redirect");
       if (redirect.exists()) {
@@ -188,7 +189,7 @@ public enum ConfigurationManager {
       configurationFolder = new File(configDirectory);
       ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=" + configurationFolder);
       if (! configurationFolder.exists()) {
-        ConfigurationManager.addStartupLogMessage("... but specified folder dows not exist");
+        ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
         configurationFolder = null;  
       }
     }
@@ -198,7 +199,7 @@ public enum ConfigurationManager {
       String userHomePath = System.getProperty("user.home");
       if (Helper.isNotNullOrEmpty(userHomePath)) {
         configurationFolder = new File(userHomePath);
-        ConfigurationManager.addStartupLogMessage("Try Configuration folder fromuser home: " + configurationFolder);
+        ConfigurationManager.addStartupLogMessage("Try Configuration folder from user home: " + configurationFolder);
         if (! configurationFolder.exists()) {
           ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
           configurationFolder = null;
@@ -300,7 +301,7 @@ public enum ConfigurationManager {
   }
 
   /**
-   *
+   * Get the list of startup messages that have been built up
    * @return
    */
   public List<String> getStartupLogMessages() {

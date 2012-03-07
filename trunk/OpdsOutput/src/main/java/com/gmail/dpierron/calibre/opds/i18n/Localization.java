@@ -38,6 +38,11 @@ public enum Localization {
    */
   private ResourceBundle englishLocalizations;
 
+  /**
+   * The name of the last loaded locale
+   */
+  private String lastLocalLanguage = null;
+  
   public ResourceBundle getBundle() {
     if (localizations == null)
       reloadLocalizations();
@@ -52,7 +57,7 @@ public enum Localization {
 
   public ResourceBundle getBundle(String language) {
     if (localizations == null)
-      reloadLocalizations();
+      reloadLocalizations(language);
     return localizations;
   }
 
@@ -113,12 +118,23 @@ public enum Localization {
    * @throws IOException
    */
   public void reloadLocalizations(String language) {
-    if (Helper.isNullOrEmpty(language)) {
-      localizations = getResourceBundle(localizationBundleName);
-    } else {
-      localizations = getResourceBundle(localizationBundleName, new Locale(language));
+    // We always want the English localizations loaded
+    if (englishLocalizations == null)    {
+      englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH);
+      lastLocalLanguage = "en";
     }
-    englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH);
+    // No need to load english localizations twice!
+    if (language.equals("en") && englishLocalizations != null)
+      localizations = englishLocalizations;
+    else {
+      if (Helper.isNullOrEmpty(language)) {
+        localizations = getResourceBundle(localizationBundleName);
+      } else {
+        localizations = getResourceBundle(localizationBundleName, new Locale(language));
+        lastLocalLanguage = language;
+      }
+    }
+
     initialized = true;
   }
 

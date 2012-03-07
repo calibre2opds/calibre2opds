@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.Log4jCatalogCallback;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Vector;
 
 
 public class Runner {
@@ -127,9 +130,17 @@ public class Runner {
   }
 
   public static void run(String[] args, boolean startGui) {
+    // Start by setting lcoal to be the same as the system local (or english if it is not one we support)
+    Locale lc = Locale.getDefault();
+    System.out.println("System language: " + lc.getISO3Language());
+    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
+    Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
+    Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
+
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
     ConfigurationManager.addStartupLogMessage("");
+
 
     Runner runner = new Runner();
     runner.initLog4J();
