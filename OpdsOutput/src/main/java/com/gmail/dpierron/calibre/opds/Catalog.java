@@ -789,9 +789,13 @@ public class Catalog {
       callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
       now = System.currentTimeMillis();
       if (currentProfile.getGenerateSeries()) {
-        entry = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          main.addContent(entry);
+        // bug c20-81  Need to allow for (perhaps unlikely) case where no books in library have a series entry set
+        Composite<Element, String>  subcat = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs);
+        if (subcat != null) {
+          entry = subcat.getFirstElement();
+          if (entry != null)
+            main.addContent(entry);
+        }
       }
       callback.endCreateSeries(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Series catalog");

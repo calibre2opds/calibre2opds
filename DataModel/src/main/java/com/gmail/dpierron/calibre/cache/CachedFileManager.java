@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.prefs.BackingStoreException;
 
 public enum CachedFileManager {
   INSTANCE;
@@ -157,15 +158,18 @@ public enum CachedFileManager {
     long ignoredCount = 0;
     // Open cache file
     ObjectOutputStream os = null;
+    BufferedOutputStream bs = null;
     FileOutputStream fs = null;
     try {
       try {
         assert cacheFile != null : "saveCache: cacheFile should never be null at this point";
         logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
-        fs = new FileOutputStream(cacheFile);
-        assert fs != null: "saveCahce: fs should never be nulla t this point";
-        os = new ObjectOutputStream(fs);
-        assert os != null : "saveCache: os should never be null at this point";
+        fs = new FileOutputStream(cacheFile);       // Open File
+        assert fs != null: "saveCache: fs should never be null at this point";
+        bs = new BufferedOutputStream(fs);          // Add buffering
+        assert bs != null: "saveCache: bs should never be null at this point";
+        os = new ObjectOutputStream(bs);            // Add object handling
+        assert os != null: "saveCache: os should never be null at this point";
 
         // Write out the cache entries
         for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
@@ -203,6 +207,7 @@ public enum CachedFileManager {
       } finally {
         try {
           if (os != null) os.close();
+          if (bs != null) bs.close();
           if (fs != null) fs.close();
         } catch (IOException e) {
           // Do nothing - we ignore an error at this point
@@ -241,11 +246,13 @@ public enum CachedFileManager {
     // Open Cache file
     ObjectInputStream os;
     FileInputStream fs;
+    BufferedInputStream bs;
     long loadedCount = 0;
     try {
       logger.info("STARTED Loading CRC cache from file " + cacheFile.getPath());
-      fs = new FileInputStream(cacheFile);
-      os = new ObjectInputStream(fs);
+      fs = new FileInputStream(cacheFile);   // Open file
+      bs = new BufferedInputStream(fs);      // Add buffering
+      os = new ObjectInputStream(bs);        // And now object handling
     } catch (IOException e) {
       logger.warn("Aborting loadCache() as cache file failed to open");
       // Abort any cache loading
@@ -281,6 +288,7 @@ public enum CachedFileManager {
       } finally {
         // Close cache file
         if (os != null) os.close();
+        if (bs != null) bs.close();
         if (fs != null) fs.close();
       }
     } catch (java.io.EOFException io) {
