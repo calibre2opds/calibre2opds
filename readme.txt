@@ -3,10 +3,9 @@
 
 Generate OPDS and HTML catalogs from your Calibre ebooks database
 
-The project's wiki site (http://wiki.mobileread.com/wiki/Calibre2opds) is the main source for 
+The project's home site (http://calibre2opds.org) is the main source for 
 documentation.
 
-The project's wiki : http://wiki.mobileread.com/wiki/Calibre2opds
 The Calibre2Opds team :
     * David Pierron - main programmer
     * Dave Walker - guru, features manager and tester extraordinaire
@@ -85,8 +84,8 @@ NOTE : for advanced users, the configuration is stored in a hidden file named ".
 the user home folder. It is a XML file that you can manually edit, although it is not officially 
 supported.
 
-If you need more info, if this FAQ is not clear enough, please ask a question in the Questions section 
-: http://answers.launchpad.net/calibre2opds/+addquestion
+If you need more info, if this FAQ is not clear enough, please ask a question in the Forum: 
+  https://getsatisfaction.com/calibre2opds/
 
 
 ******************************************************
@@ -118,12 +117,12 @@ capacity). By the way, Dropbox is free for the first two gigabytes only ; for so
 lot of books, this may not be enough... Time to shell out some cash ;)
 
 Then, download and install the calibre2opds tool, and use it to generate the catalogs as it is 
-explained here : http://answers.launchpad.net/calibre2opds/+faq/878
+explained here : http://calibre2opds.com/read-the-documentation/download-and-install/
 
 Again, wait until Dropbox has uploaded all the catalogs and thumbnails.
 
 Configure your ebook reader (Stanza, Aldiko, another OPDS reader, or a simple browser) to access your 
-published catalog as explained here : http://answers.launchpad.net/calibre2opds/+faq/879
+published catalog as explained here : http://calibre2opds.com/read-the-documentation/use-catalogs/
 
 You're done !
 

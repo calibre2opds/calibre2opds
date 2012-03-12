@@ -355,8 +355,8 @@ public class Mainframe extends javax.swing.JFrame {
     loadValues();
   }
 
-  private void saveNewProfile() {
-    String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new"));
+  public void saveNewProfile() {
+    String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new.msg"));
     if ("default".equalsIgnoreCase(newProfileName))
       return;
     ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
