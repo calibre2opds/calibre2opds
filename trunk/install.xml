@@ -2,28 +2,36 @@
 
 <installation version="1.0">
     <info>
-        <appname>Calibre2Opds</appname>
+        <appname>Calibre2opds</appname>
         <appversion>3.1</appversion>
         <authors>
             <author name="David Pierron" email="dpierron@gmail.com"/>
             <author name="Dave Walker" email="itimpi@ntlworld.com"/>
         </authors>
-        <url>http://wiki.mobileread.com/wiki/Calibre2opds</url>
+        <url>http://calibre2opds.com</url>
     </info>
 
     <!-- 
         The gui preferences indication.
         Sets the installer window to 640x480. It will not be able to change the size.
     -->
-    <guiprefs width="800" height="600" resizable="yes"/>
+    <guiprefs 
+    	width="800"
+    	height="600"
+    	resizable="yes"
+        langDisplayType="native"/>
 
     <!-- 
         The locale section.
-        Asks here to include the English and French langpacks.
+        Asks here to include the langpacks for the languages we have localization for.
     -->
     <locale>
         <langpack iso3="eng"/>
         <langpack iso3="fra"/>
+        <langpack iso3="deu"/>
+        <langpack iso3="ita"/>
+        <langpack iso3="spa"/>
+        <langpack iso3="rus"/>
     </locale>
 
     <!-- 
@@ -32,12 +40,15 @@
     -->
     <resources>
     	<res id="logo" src="brand/calibre2opds-icon.png"/>
+    	<res id="installer.langsel.img" src="brand/calibre2opds-icon_192.png"/>
         <res id="LicencePanel.licence" src="licence.txt"/>
         <res id="HTMLHelloPanel.info" src="hello.html"/>
         <res id="InfoPanel.info" src="readme.txt"/>
         <res id="XInfoPanel.info" src="release.txt"/>
     	<res id="Win_shortcutSpec.xml" src="shortcutSpec.xml"/>
     	<res id="Unix_shortcutSpec.xml" src="Unix_shortcutSpec.xml"/>
+    	<res id="Installer.image" src="brand\calibre2opds-icon-small_64.png"/>
+    	<res id="Installer.image.7" src="brand\calibre2opds-icon.png"/>
     </resources>
 
 	<native type="izpack" name="ShellLink.dll"/>
