@@ -23,7 +23,7 @@
      encoding="UTF-8"
      terminal="false"
      KdeSubstUID="false"
-     initialState="normal">
+     initialState="minimized">
      <createForPack name="Base"/>
    </shortcut>
 
@@ -44,7 +44,7 @@
      encoding="UTF-8"
      terminal="true"
      KdeSubstUID="false"
-     initialState="normal">
+     initialState="minimized">
      <createForPack name="Base"/>
    </shortcut>
 
