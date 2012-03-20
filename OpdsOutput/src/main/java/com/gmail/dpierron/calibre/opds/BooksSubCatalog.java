@@ -71,8 +71,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String title1 = (o1 == null ? "" : o1.getTitleForSort());
-        String title2 = (o2 == null ? "" : o2.getTitleForSort());
+        // ITIMPI:  I would have thought that neither o1 or o2 can be null?
+        //          If so then following tests for null can be removed to improve efficiency
+        assert (o1 != null) && (o2 != null);
+        String title1 = (o1 == null ? "" : o1.getTitleForSort().toUpperCase());
+        String title2 = (o2 == null ? "" : o2.getTitleForSort().toUpperCase());
         return title1.compareTo(title2);
       }
     });
@@ -90,6 +93,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
+
+        // ITIMPI:  I would have thought that neither o1 or o2 can be null?
+        //          If so then following tests for null can be removed to improve efficiency
+        assert (o1 != null) && (o2 != null);
+
         if (o1 == null) {
           if (o2 == null)
             return 0;
@@ -107,34 +115,27 @@ public abstract class BooksSubCatalog extends SubCatalog {
         Series series1 = o1.getSeries();
         Series series2 = o2.getSeries();
 
-        if (series1 == null && series2 == null) {
-          // both series are null, we need to compare the book titles (as always...)
-
-          String title1 = (o1 == null ? "" : o1.getTitleForSort());
-          String title2 = (o2 == null ? "" : o2.getTitleForSort());
-          return title1.compareTo(title2);
-
-        }
-
         if (series1 == null) {
-          // ITIMPI:  Surely we have already tested for both being null?
-          if (series2 == null)
-            return 0;
-          else
+          if (series2 == null) {
+            // both series are null, we need to compare the book titles (as always...)
+            String title1 = (o1 == null ? "" : o1.getTitleForSort().toUpperCase());
+            String title2 = (o2 == null ? "" : o2.getTitleForSort().toUpperCase());
+            return title1.compareTo(title2);
+          } else {
+            // only series2 set  so assume series2 sorts greater than series1
             return 1;
+          }
+        } else if (series2 == null){
+          // only series1 set  so assume series2 sorts less than series2
+          return -1;
         }
 
-        if (series2 == null) {
-          // ITIMPI:  Surely we have already tested for both being null?
-          if (series1 == null)
-            return 0;
-          else
-            return -1;
-        }
-
+        // Both series set if we get to here
+        assert (series1 != null) || (series2 != null);
         if (series1.getId().equals(series2.getId())) {
           // same series, we need to compare the index
           if (o1.getSerieIndex() == o2.getSerieIndex())
+            // series index the same, so we need to sort on the book title
             return 0;
           else if (o1.getSerieIndex() > o2.getSerieIndex())
             return 1;
@@ -142,11 +143,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
             return -1;
         } else {
           // different series, we need to compare the series title
-          return series1.getName().compareTo(series2.getName());
+          return series1.getName().toUpperCase().compareTo(series2.getName().toUpperCase());
         }
       }
     });
   }
+
 
   void sortBooksByTimestamp(List<Book> books) {
     // sort the books by timestamp

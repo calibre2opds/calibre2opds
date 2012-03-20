@@ -244,6 +244,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.splitInAuthorBooks;
   }
 
+  public boolean getSplitInAuthorSeries() {
+    return StanzaConstants.splitInAuthorSeries;
+  }
+
   public boolean getSplitInSeriesBooks() {
     return StanzaConstants.splitInSeriesBooks;
   }

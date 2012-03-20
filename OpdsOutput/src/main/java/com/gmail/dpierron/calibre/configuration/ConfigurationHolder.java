@@ -84,6 +84,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_ORDERALLBOOKSBYSERIES = "OrderAllBooksBySeries";
   private final static String PROPERTY_NAME_MAXMOBILERESOLUTION = "MaxMobileResolution";
   private final static String PROPERTY_NAME_SPLITINAUTHORBOOKS = "SplitInAuthorBooks";
+  private final static String PROPERTY_NAME_SPLITINAUTHORSERIES = "SplitInAuthorSeries";
   private final static String PROPERTY_NAME_SPLITINSERIESBOOKS = "SplitInSeriesBooks";
   private final static String PROPERTY_NAME_WIKIPEDIAURL = "WikipediaUrl";
   private final static String PROPERTY_NAME_AMAZONAUTHORURL = "AmazonAuthorUrl";
@@ -1148,6 +1149,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setSplitInAuthorBooks(boolean value) {
     setProperty(PROPERTY_NAME_SPLITINAUTHORBOOKS, value);
+  }
+
+  public boolean isSplitInAuthorSeriesReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SPLITINAUTHORSERIES);
+  }
+
+  public boolean getSplitInAuthorSeries() {
+    Boolean b = getBoolean(PROPERTY_NAME_SPLITINAUTHORSERIES);
+    if (b == null)
+      return defaults.getSplitInAuthorSeries();
+    else
+      return b.booleanValue();
+  }
+
+  public void setSplitInAuthorSeries(boolean value) {
+    setProperty(PROPERTY_NAME_SPLITINAUTHORSERIES, value);
   }
 
   public boolean isSplitInSeriesBooksReadOnly() {

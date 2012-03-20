@@ -62,6 +62,7 @@ public class StanzaConstants {
   public final static int MAX_MOBILE_RESOLUTION = 960;
   public final static boolean splitInSeriesBooks = false;
   public final static boolean splitInAuthorBooks = false;
+  public final static boolean splitInAuthorSeries = false;
   public final static String GOODREAD_ISBN_URL = "http://www.goodreads.com/book/isbn/{0}";
   public final static String GOODREAD_REVIEW_ISBN_URL = "http://www.goodreads.com/review/isbn/{0}";
   public final static String GOODREAD_TITLE_URL = "http://www.goodreads.com/book/title/{0}";
