@@ -2,15 +2,14 @@ package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.junit.runner.Runner;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public enum ConfigurationManager {
   INSTANCE;
@@ -29,6 +28,7 @@ public enum ConfigurationManager {
   private static File configurationFolder = null;
   private ConfigurationHolder currentProfile;
   private PropertiesBasedConfiguration defaultConfiguration;
+  private static Locale configLocale = null;
 
   PropertiesBasedConfiguration getDefaultConfiguration() {
     if (defaultConfiguration == null) {
@@ -306,5 +306,43 @@ public enum ConfigurationManager {
    */
   public List<String> getStartupLogMessages() {
     return startupLogMessages;
+  }
+
+  /**
+   * Set the lcoal that we are using for this generation
+   * If the one requested is not one we support we set it to English
+   * @param lc
+   */
+  public void setLocale (Locale lc){
+    if (lc == null) {
+      lc = Locale.getDefault();
+      logger.debug("setLocale: lc==null.  Trying to set to Default Locale: " + lc.getISO3Language());
+    }
+    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
+    if (avail.contains(lc.getISO3Language())) {
+      configLocale = lc;
+    } else {
+      configLocale = Locale.getDefault();
+      logger.trace("setLocale: Requested locale " + lc.getISO3Language() + " is not supported");
+      if (avail.contains(configLocale.getISO3Language())) {
+        logger.trace("setLocale: Locale set");
+      } else {
+        logger.trace("setLocale: set to fallback of English (EN)");
+        lc = new Locale("EN");
+      }
+    }
+    logger.trace("setLocale: Locale set to " + lc.getISO3Language());
+  }
+
+  /**
+   * Get the locale that is to be used for this configuration
+   * @return
+   */
+  public Locale getLocale () {
+    if (configLocale == null) {
+      logger.trace("getLocale: Not set, so try to set to default");
+      setLocale(Locale.getDefault());
+    }
+    return configLocale;
   }
 }

@@ -1,5 +1,8 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import com.gmail.dpierron.tools.Helper;
+
+import java.io.FileInputStream;
 
 public class EBookFormat implements Comparable<EBookFormat> {
   public final static EBookFormat EPUB = new EBookFormat("EPUB", "application/epub+zip");
@@ -10,7 +13,7 @@ public class EBookFormat implements Comparable<EBookFormat> {
   private final static EBookFormat MOBI = new EBookFormat("MOBI", "application/x-mobipocket-ebook");
   private final static EBookFormat LRF = new EBookFormat("LRF", "application/x-sony-bbeb");
   private final static EBookFormat LRX = new EBookFormat("LRX", "application/x-bbeb-book");
-  private final static EBookFormat FB2 = new EBookFormat("FB2", "text/xml");
+  private final static EBookFormat FB2 = new EBookFormat("FB2", "text/fb2");
   private final static EBookFormat RAR = new EBookFormat("RAR", "application/rar");
   private final static EBookFormat PDF = new EBookFormat("PDF", "application/pdf");
   private final static EBookFormat RTF = new EBookFormat("RTF", "text/rtf");
@@ -29,12 +32,22 @@ public class EBookFormat implements Comparable<EBookFormat> {
   private EBookFormat(String name, String mime) {
     this(name);
     this.mime = mime;
+    setupFormats();
   }
 
   private EBookFormat(String name) {
     this.name = name;
+    setupFormats();
   }
 
+  /**
+   * Initialise format list and associated mime types from resource
+   */
+  private void setupFormats() {
+    if (values== null) {
+      FileInputStream is;
+    }
+  }
   private int priority = -1;
 
   public int getPriority() {
