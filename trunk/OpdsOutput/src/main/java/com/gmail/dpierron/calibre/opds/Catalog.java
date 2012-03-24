@@ -718,13 +718,12 @@ public class Catalog {
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
 
-
-      String title = Localization.Main.getText("home.title");
+      // c2o-87 - Title should use value from settings
+      String title = currentProfile.getCatalogTitle();
       String urn = "calibre:catalog";
 
       String urlExt = "../" + filename;
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(title, urlExt);
-
       Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, urn, urlExt);
 
       Element entry;

@@ -221,7 +221,8 @@ public enum FeedHelper {
       startUrl = "index.xml";
     else
       startUrl = baseUrl + "index.xml";
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, Localization.Main.getText("home.title")));
+    // c2o-87 - Title should use value from settings
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, title));
 
     String selfUrl = baseUrl;
     if (url != null) {
