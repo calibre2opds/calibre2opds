@@ -280,14 +280,15 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       Collections.sort(authorsInThisLetter);
 
       String letterTitle;
-      int itemsCount = authorsInThisLetter.size();
       if (letter.equals("_"))
         letterTitle = Localization.Main.getText("splitByLetter.author.other");
       else
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("authorword.title"),
                                                 letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
       Element element = null;
-      if (itemsCount > 0) {
+      // ITIMPI:  Not sure that the following check is needed if there cannot be a case of 0, so assert added to find out!
+      assert (authorsInThisLetter.size() > 0) : "No authors for letter sequence '" + letter + "'";
+      if (authorsInThisLetter.size() > 0) {
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeAuthors(authorsInThisLetter);
 
@@ -299,6 +300,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
         element =
             getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
+//                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
                 (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
 
         if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
@@ -388,8 +390,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
       logger.debug("processing the other books by " + author);
-      // Do we need a way to suppress split by letter on next call?
-      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author)).getSubCatalogEntry(breadcrumbs).getFirstElement
+      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author)).getSubCatalogEntry(breadcrumbs, SplitOption.Paginate).getFirstElement
           ();
       if (entry != null)
         firstElements.add(0, entry);

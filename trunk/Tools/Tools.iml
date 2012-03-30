@@ -10,11 +10,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Unnamed" level="project" />
-    <orderEntry type="library" exported="" name="Maven: log4j:log4j:1.2.12" level="project" />
-    <orderEntry type="library" exported="" name="Maven: junit:junit:4.7" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.12" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.7" level="project" />
   </component>
 </module>
 

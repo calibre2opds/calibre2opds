@@ -4,6 +4,7 @@ package com.gmail.dpierron.calibre.opds;
  * Abstract class containing functions and variables common to all catalog types
  */
 
+import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
@@ -25,10 +26,11 @@ public abstract class SubCatalog {
 
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
   // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
-  protected final int maxBeforeSplit = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit();
-  protected final int maxSplitLevels = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels();
-  protected final int maxBeforePaginate = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate();
-  protected final boolean useExternalIcons = ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons();
+  protected static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  protected static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
+  protected static int maxSplitLevels = currentProfile.getMaxSplitLevels();
+  protected static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
+  protected static boolean useExternalIcons = currentProfile.getExternalIcons();
 
   private List<Book> books;
   List<Object> stuffToFilterOut;
@@ -189,7 +191,7 @@ public abstract class SubCatalog {
       CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
       /* Recent books */
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent()) {
+      if (currentProfile.getGenerateRecent()) {
         logger.debug("SubCatalog - STARTED: Generating Recent books catalog");
         subCatalogEntry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {
@@ -203,7 +205,7 @@ public abstract class SubCatalog {
       CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
       /* Rated books */
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings()) {
+      if (currentProfile.getGenerateRatings()) {
         logger.debug("SubCatalog - STARTED: Generating Rated books catalog");
         subCatalogEntry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {
@@ -230,7 +232,7 @@ public abstract class SubCatalog {
       CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
       /* All books */
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
+      if (currentProfile.getGenerateAllbooks()) {
         logger.debug("SubCatalog - STARTED: Generating All books catalog");
         subCatalogEntry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
         if (subCatalogEntry != null) {

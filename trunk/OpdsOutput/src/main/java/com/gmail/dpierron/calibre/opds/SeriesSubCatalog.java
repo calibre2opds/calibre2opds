@@ -392,14 +392,10 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
 
-    if (logger.isTraceEnabled())
-      logger.trace("getSeries: splitOption=" +
-          (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit));
-
     Element result = getListOfBooks(pBreadcrumbs, books, 0,              // Starting at 0
         title, summary, urn, filename,
-        // Bug #716917 Split on letter in series according to user option
-        ConfigurationManager.INSTANCE.getCurrentProfile().getSplitInSeriesBooks() ? SplitOption.SplitByLetter : SplitOption.DontSplit,
+        // Do not split on letter in Series - it does not really make sense
+        SplitOption.Paginate,
         // #751211: Use external icons option
         useExternalIcons ?
             (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_SERIES :

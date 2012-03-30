@@ -16,14 +16,29 @@ public class CustomCatalogTableModel implements TableModel {
   java.util.List<Composite<String, String>> customCatalogs = new Vector<Composite<String, String>>();
   List<TableModelListener> listeners = new Vector<TableModelListener>();
 
+  /**
+   * Get the Custom catalogs String representation
+   * (used to load the GUI control values)
+   * TODO:  Look at whether a XML format could be used for the string (c2o-90)
+   * @return
+   */
   public List<Composite<String, String>> getCustomCatalogs() {
     return customCatalogs;
   }
 
+  /**
+   * Set the Custom Catalog values from their string representation
+   * (used to store the GUI control values)
+   * TODO:  Look at whether a XML format could be used for the string (c2o-90)
+   * @param customCatalogs
+   */
   public void setCustomCatalogs(List<Composite<String, String>> customCatalogs) {
     this.customCatalogs = customCatalogs;
   }
 
+  /**
+   * Add a new line to the Custom catalog table
+   */
   public void addCustomCatalog() {
     customCatalogs.add(new Composite<String, String>("", "")); // add a new line
     fireTableChangedEvent(new TableModelEvent(this));
@@ -35,6 +50,10 @@ public class CustomCatalogTableModel implements TableModel {
     }
   }
 
+  /**
+   * Remove a line from the Custom catalog table
+   * @param index
+   */
   public void deleteCustomCatalog(int index) {
     if (index < customCatalogs.size()) {
       customCatalogs.remove(index);

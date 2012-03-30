@@ -55,7 +55,11 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
   }
 
   public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
-    if (Helper.isNullOrEmpty(getBooks()))
+   return getSubCatalogEntry(pBreadcrumbs, SplitOption.SplitByLetter);
+  }
+
+  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs, SplitOption splitOption) throws IOException {
+      if (Helper.isNullOrEmpty(getBooks()))
       return null;
 
     String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_books.xml");
@@ -71,8 +75,8 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
     boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-//    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
-    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.DontSplit,
+    // return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
+    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, maxSplitLevels > 0 ? splitOption : SplitOption.DontSplit,
         // #751211: Use external icons option
         useExternalIcons ?
             (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS :

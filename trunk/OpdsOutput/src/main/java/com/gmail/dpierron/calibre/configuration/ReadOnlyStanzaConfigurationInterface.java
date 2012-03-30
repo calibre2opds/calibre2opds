@@ -126,10 +126,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public int getMaxMobileResolution();
 
-  public boolean getSplitInAuthorBooks();
-
-  public boolean getSplitInSeriesBooks();
-
   public String getUrlBase();
 
   /* external links */

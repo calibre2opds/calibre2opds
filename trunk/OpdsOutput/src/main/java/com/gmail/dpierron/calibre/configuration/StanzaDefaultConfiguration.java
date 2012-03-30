@@ -240,18 +240,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.OrderAllBooksBySeries;
   }
 
-  public boolean getSplitInAuthorBooks() {
-    return StanzaConstants.splitInAuthorBooks;
-  }
-
-  public boolean getSplitInAuthorSeries() {
-    return StanzaConstants.splitInAuthorSeries;
-  }
-
-  public boolean getSplitInSeriesBooks() {
-    return StanzaConstants.splitInSeriesBooks;
-  }
-
   public String getAmazonAuthorUrl() {
     return StanzaConstants.AMAZON_AUTHOR_URL;
   }
