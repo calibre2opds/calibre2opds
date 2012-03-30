@@ -123,12 +123,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setMaxMobileResolution(int value);
 
-  public void setSplitInAuthorBooks(boolean value);
-
-  public void setSplitInAuthorSeries(boolean value);
-
-  public void setSplitInSeriesBooks(boolean value);
-
   public void setUrlBase(String value);
 
   /* external links */

@@ -259,6 +259,7 @@
                                 </a>
                             </div>
                         </td>
+                        <td>Page</td>
                     </tr>
                 </xsl:if>
                 <xsl:if test="string-length($programName) > 0">

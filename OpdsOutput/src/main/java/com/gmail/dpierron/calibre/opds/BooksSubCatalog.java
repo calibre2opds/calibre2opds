@@ -605,6 +605,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String summary = Summarizer.INSTANCE.summarizeBooks(booksInThisLetter);
 
       Element element = null;
+      // ITIMPI:  Asert to check if the logic can ever let this be zero!
+      assert (booksInThisLetter.size() > 0) : "booksInThisLetter=" + booksInThisLetter.size() + " for letter '" + letter + "'";
       if (booksInThisLetter.size() > 0) {
         element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, 
              (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate, icon, options)
