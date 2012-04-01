@@ -382,7 +382,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       // make a link to the series by this author catalog
       logger.debug("make a link to the series by this author catalog");
       firstElements = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author))
-          .getContentOfListOfSeries(pBreadcrumbs, title, summary, urn, filename);
+          .getContentOfListOfSeries(pBreadcrumbs, title, summary, urn, filename, SplitOption.Paginate);
 
       books = getMapOfBooksNotInSeriesByAuthor().get(author);
       if (books == null)

@@ -92,6 +92,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   }
 
   /**
+   * Get an Series sub-catalog with the split option defined by configuration parameters
    * @param pBreadcrumbs
    * @param title
    * @param summary
@@ -104,6 +105,23 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (Helper.isNullOrEmpty(getSeries()))
       return null;
     return getContentOfListOfSeries(pBreadcrumbs, getSeries(), 0, title, summary, urn, pFilename, null, true);
+  }
+
+
+  /**
+   * Get a Series sub-catalog with the slitOption explicitly defined
+   * @param pBreadcrumbs
+   * @param title
+   * @param summary
+   * @param urn
+   * @param pFilename
+   * @return
+   * @throws IOException
+   */
+  public List<Element> getContentOfListOfSeries(Breadcrumbs pBreadcrumbs, String title, String summary, String urn, String pFilename, SplitOption splitOption) throws IOException {
+    if (Helper.isNullOrEmpty(getSeries()))
+      return null;
+    return getContentOfListOfSeries(pBreadcrumbs, getSeries(), 0, title, summary, urn, pFilename, splitOption, true);
   }
 
   /**
