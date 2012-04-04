@@ -219,10 +219,26 @@ public class OpfOutput {
               // process the XML in the file
               try {
                 Document doc = JDOM.INSTANCE.getSaxBuilder().build(inputStream);
-                doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
-                doc.getRootElement().addNamespaceDeclaration(Namespace.Dc.getJdomNamespace());
-                doc.getRootElement().addNamespaceDeclaration(Namespace.DcTerms.getJdomNamespace());
-                doc.getRootElement().addNamespaceDeclaration(Namespace.Calibre.getJdomNamespace());
+                try {
+                  doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
+                } catch (org.jdom.IllegalAddException e) {
+                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                }
+                try {
+                  doc.getRootElement().addNamespaceDeclaration(Namespace.Dc.getJdomNamespace());
+                } catch (org.jdom.IllegalAddException e) {
+                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                }
+                try {
+                  doc.getRootElement().addNamespaceDeclaration(Namespace.DcTerms.getJdomNamespace());
+                } catch (org.jdom.IllegalAddException e) {
+                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                }
+                try {
+                  doc.getRootElement().addNamespaceDeclaration(Namespace.Calibre.getJdomNamespace());
+                } catch (org.jdom.IllegalAddException e) {
+                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                }
                 Element metadata = doc.getRootElement().getChild("metadata", Namespace.Opf.getJdomNamespace());
                 if (metadata != null)
                   processMetadataElement(metadata);
@@ -233,8 +249,8 @@ public class OpfOutput {
                 } finally {
                   zos.closeEntry();
                 }
-              } catch (IOException e) {
-                logger.error(e);
+              } catch (IOException io) {
+                logger.error(io);
                 logger.error("... for book: " + book.getTitle() + " (file " + inputFile + ")");
               }
             } else {
@@ -319,8 +335,13 @@ public class OpfOutput {
           zipInputFile.close();
 
       }
-    } catch (JDOMException e) {
-      logger.error("", e);
+    } catch (JDOMException je) {
+        logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getTitle() + " (file " + inputFile + ")");
+        logger.warn(je);
+        throw new IOException(je);
+    } catch (Exception e) {
+      logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getTitle() + " (file " + inputFile + ")");
+      logger.warn(e);
       throw new IOException(e);
     }
   }
