@@ -249,19 +249,41 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void debugShowLogFile() {
     File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER + "/" + Constants.LOGFILE_NAME);
-    logger.info(Localization.Main.getText("gui.menu.help.logFile") + ": " + f.getPath());
+    logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + f.getPath());
     debugShowFile(f);
+  }
+
+  /**
+   * Remove any existing log files.
+   * This will include any of the following that are present:
+   * calibre2opds.log
+   * calibre2opds.log.*
+   * synclog.log
+   * TODO:  There appears to be an issue deleting the current active log file - not sure how to resolve this!
+   */
+  private void debugClearLogFile() {
+    File logFolder = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
+    File fileList[] = logFolder.listFiles();
+    for (File f : fileList) {
+      if (f.getName().contains(".log")) {
+        f.delete();
+        logger.trace("Deleted: " + f);
+      }
+    }
+    String msg = Localization.Main.getText("gui.menu.tools.logCleared");
+    logger.info(msg);
+    JOptionPane.showMessageDialog(this, msg, "", JOptionPane.INFORMATION_MESSAGE);
   }
 
   private void debugShowLogFolder() {
     File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
-    logger.info(Localization.Main.getText("gui.menu.help.logFolder") + ": " + f.getPath());
+    logger.info(Localization.Main.getText("gui.menu.tools.logFolder") + ": " + f.getPath());
     debugShowFile(f);
   }
 
   private void debugShowSupportFolder() {
     File f = ConfigurationManager.INSTANCE.getConfigurationDirectory();
-    logger.info(Localization.Main.getText("gui.menu.help.supportFolder") + ": " + f.getPath());
+    logger.info(Localization.Main.getText("gui.menu.tools.configFolder") + ": " + f.getPath());
     debugShowFolder(f);
   }
 
@@ -1157,8 +1179,9 @@ public class Mainframe extends javax.swing.JFrame {
     mnuHelpDevelopersGuide.setText(Localization.Main.getText("gui.menu.help.developerGuide")); // NOI18N
     mnuHelpOpenIssues.setText(Localization.Main.getText("gui.menu.help.issueRegister")); // NOI18N
     mnuHelpOpenForum.setText(Localization.Main.getText("gui.menu.help.supportForum")); // NOI18N
-    mnuHelpOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
-    mnuHelpOpenSupport.setText(Localization.Main.getText("gui.menu.help.supportFolder")); // NOI18N
+    mnuToolsOpenLog.setText(Localization.Main.getText("gui.menu.tools.logFile")); // NOI18N
+    mnuToolsClearLog.setText(Localization.Main.getText("gui.menu.tools.logClear")); // NOI18N
+    mnuToolsOpenConfig.setText(Localization.Main.getText("gui.menu.tools.configFolder")); // NOI18N
   }
 
   /**
@@ -1626,13 +1649,14 @@ public class Mainframe extends javax.swing.JFrame {
         mnuProfiles = new javax.swing.JMenu();
         mnuTools = new javax.swing.JMenu();
         mnuToolsprocessEpubMetadataOfAllBooks = new javax.swing.JMenuItem();
+        mnuToolsOpenLog = new javax.swing.JMenuItem();
+        mnuToolsClearLog = new javax.swing.JMenuItem();
+        mnuToolsOpenConfig = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpDonate = new javax.swing.JMenuItem();
         mnuHelpHome = new javax.swing.JMenuItem();
         mnuHelpUserGuide = new javax.swing.JMenuItem();
         mnuHelpDevelopersGuide = new javax.swing.JMenuItem();
-        mnuHelpOpenLog = new javax.swing.JMenuItem();
-        mnuHelpOpenSupport = new javax.swing.JMenuItem();
         mnuHelpOpenIssues = new javax.swing.JMenuItem();
         mnuHelpOpenForum = new javax.swing.JMenuItem();
         mnuHelpAbout = new javax.swing.JMenuItem();
@@ -3799,6 +3823,30 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsprocessEpubMetadataOfAllBooks);
 
+        mnuToolsOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
+        mnuToolsOpenLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsOpenLogActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsOpenLog);
+
+        mnuToolsClearLog.setText("mnuToolsClearLog");
+        mnuToolsClearLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsClearLogActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsClearLog);
+
+        mnuToolsOpenConfig.setText(Localization.Main.getText("gui.menu.help.supportFolder")); // NOI18N
+        mnuToolsOpenConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsOpenConfigActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsOpenConfig);
+
         jMenuBar1.add(mnuTools);
 
         mnuHelp.setText(Localization.Main.getText("gui.menu.help")); // NOI18N
@@ -3811,7 +3859,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpDonate);
 
-        mnuHelpHome.setText(Localization.Main.getText("gui.menu.help.home")); // NOI18N
+        mnuHelpHome.setText(Localization.Main.getText("gui.menu.help.wiki")); // NOI18N
         mnuHelpHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuHelpHomeActionPerformed(evt);
@@ -3834,22 +3882,6 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         mnuHelp.add(mnuHelpDevelopersGuide);
-
-        mnuHelpOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
-        mnuHelpOpenLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuHelpOpenLogActionPerformed(evt);
-            }
-        });
-        mnuHelp.add(mnuHelpOpenLog);
-
-        mnuHelpOpenSupport.setText(Localization.Main.getText("gui.menu.help.supportFolder")); // NOI18N
-        mnuHelpOpenSupport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuHelpOpenSupportActionPerformed(evt);
-            }
-        });
-        mnuHelp.add(mnuHelpOpenSupport);
 
         mnuHelpOpenIssues.setText("mnuHelpOpenIssues");
         mnuHelpOpenIssues.addActionListener(new java.awt.event.ActionListener() {
@@ -3897,14 +3929,6 @@ public class Mainframe extends javax.swing.JFrame {
   private void txtTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTargetFolderActionPerformed
     setTargetFolder(txtTargetFolder.getText());
   }//GEN-LAST:event_txtTargetFolderActionPerformed
-
-  private void mnuHelpOpenSupportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenSupportActionPerformed
-    debugShowSupportFolder();
-  }//GEN-LAST:event_mnuHelpOpenSupportActionPerformed
-
-  private void mnuHelpOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenLogActionPerformed
-    debugShowLogFile();
-  }//GEN-LAST:event_mnuHelpOpenLogActionPerformed
 
   private void mnuToolsprocessEpubMetadataOfAllBooksActionPerformed(java.awt.event.ActionEvent evt)
   {//GEN-FIRST:event_mnuToolsprocessEpubMetadataOfAllBooksActionPerformed
@@ -4006,30 +4030,42 @@ public class Mainframe extends javax.swing.JFrame {
     setExternalLinksEnabledState();
   }//GEN-LAST:event_chkNogenerateexternallinksStateChanged
 
-  private void mnuHelpHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpHomeActionPerformed
-    logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
-    BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
-  }//GEN-LAST:event_mnuHelpHomeActionPerformed
+    private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
+      debugClearLogFile();
+    }//GEN-LAST:event_mnuToolsClearLogActionPerformed
 
-  private void mnuHelpOpenIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenIssuesActionPerformed
-    logger.info(Localization.Main.getText("gui.menu.issueRegister") + ": " + Constants.ISSUES_URL);
-    BareBonesBrowserLaunch.openURL(Constants.ISSUES_URL);
-  }//GEN-LAST:event_mnuHelpOpenIssuesActionPerformed
+    private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
+     debugShowLogFile();
+    }//GEN-LAST:event_mnuToolsOpenLogActionPerformed
 
-  private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
-    logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
-    BareBonesBrowserLaunch.openURL(Constants.FORUM_URL);
-  }//GEN-LAST:event_mnuHelpOpenForumActionPerformed
+    private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenConfigActionPerformed
+    debugShowSupportFolder();
+    }//GEN-LAST:event_mnuToolsOpenConfigActionPerformed
 
-  private void mnuHelpUserGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpUserGuideActionPerformed
-    logger.info(Localization.Main.getText("gui.menu.userGuide") + ": " + Constants.USERGUIDE_URL);
-    BareBonesBrowserLaunch.openURL(Constants.USERGUIDE_URL);
-  }//GEN-LAST:event_mnuHelpUserGuideActionPerformed
+    private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
+        logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
+        BareBonesBrowserLaunch.openURL(Constants.FORUM_URL);
+    }//GEN-LAST:event_mnuHelpOpenForumActionPerformed
 
-  private void mnuHelpDevelopersGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpDevelopersGuideActionPerformed
-    logger.info(Localization.Main.getText("gui.menu.developerGuide") + ": " + Constants.DEVELOPERGUIDE_URL);
-    BareBonesBrowserLaunch.openURL(Constants.DEVELOPERGUIDE_URL);
-  }//GEN-LAST:event_mnuHelpDevelopersGuideActionPerformed
+    private void mnuHelpOpenIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenIssuesActionPerformed
+        logger.info(Localization.Main.getText("gui.menu.issueRegister") + ": " + Constants.ISSUES_URL);
+        BareBonesBrowserLaunch.openURL(Constants.ISSUES_URL);
+    }//GEN-LAST:event_mnuHelpOpenIssuesActionPerformed
+
+    private void mnuHelpDevelopersGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpDevelopersGuideActionPerformed
+        logger.info(Localization.Main.getText("gui.menu.developerGuide") + ": " + Constants.DEVELOPERGUIDE_URL);
+        BareBonesBrowserLaunch.openURL(Constants.DEVELOPERGUIDE_URL);
+    }//GEN-LAST:event_mnuHelpDevelopersGuideActionPerformed
+
+    private void mnuHelpUserGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpUserGuideActionPerformed
+        logger.info(Localization.Main.getText("gui.menu.userGuide") + ": " + Constants.USERGUIDE_URL);
+        BareBonesBrowserLaunch.openURL(Constants.USERGUIDE_URL);
+    }//GEN-LAST:event_mnuHelpUserGuideActionPerformed
+
+    private void mnuHelpHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpHomeActionPerformed
+        logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
+        BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
+    }//GEN-LAST:event_mnuHelpHomeActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4256,11 +4292,12 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuHelpHome;
     private javax.swing.JMenuItem mnuHelpOpenForum;
     private javax.swing.JMenuItem mnuHelpOpenIssues;
-    private javax.swing.JMenuItem mnuHelpOpenLog;
-    private javax.swing.JMenuItem mnuHelpOpenSupport;
     private javax.swing.JMenuItem mnuHelpUserGuide;
     private javax.swing.JMenu mnuProfiles;
     private javax.swing.JMenu mnuTools;
+    private javax.swing.JMenuItem mnuToolsClearLog;
+    private javax.swing.JMenuItem mnuToolsOpenConfig;
+    private javax.swing.JMenuItem mnuToolsOpenLog;
     private javax.swing.JMenuItem mnuToolsprocessEpubMetadataOfAllBooks;
     private javax.swing.JPanel pnlAdvancedOptions;
     private javax.swing.JPanel pnlBottom;

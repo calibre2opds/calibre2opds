@@ -55,14 +55,21 @@ that have been recorded in the Issue tracker.
 
 v3.1
     - New: #c2o-79: All Input fields in GUI now have tooltips associated with them
-    - New: Manage Profiles dialog now supports adding a new profile as well as rename and delete
+    - New: #c2o-80: Manage Profiles dialog now supports adding a new profile as well as rename and delete
+    - New: #c2o-98: Link to Issue Register added Help menu
+    - New: #c2o-99: Link to support forum added to Help menmu
+    - New: #c2o-101: Link to User Guide and Developer Guide added to Help Menu
+    - New: #c2o-95: Option clear log files added to Tools menu
+    - New: #c2o-95: Option to Clear log files on Tools menu
     - Fix: #c20-77: It was possible to set the Destination folder field on new installations in default mode
     - Fix: #c2o-78: Windows 7 64-bit systems do not set up Java location
     - Fix: #c2o-81: Generation fails if no books in the library have their series values set
+    - Fix: #c2o-88: Disable any split-by-letter for Series within an author
     - Change: Removed some split-by-letter options that did not really make sense:
              Books within a Series (we now never split these by letter)
              Books within an author  (we now never split these by letter)
              Series within an Author  (we now never split these by letter)
+    - Change: Moved options for open log file and config folder to Tools menu
 
 v3.0
     This is a major new release as is reflected by the list of changes shown below
