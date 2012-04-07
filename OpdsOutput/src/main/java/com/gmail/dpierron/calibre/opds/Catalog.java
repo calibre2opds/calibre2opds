@@ -731,7 +731,7 @@ public class Catalog {
       /* About entry */
       if (currentProfile.getIncludeAboutLink()) {
         entry = FeedHelper.INSTANCE
-            .getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HELP_URL,
+            .getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HOME_URL,
                 Localization.Main.getText("about.summary"), currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT);
         if (entry != null)
           main.addContent(entry);

@@ -222,22 +222,22 @@ public class OpfOutput {
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
                 } catch (org.jdom.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Opf + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Dc.getJdomNamespace());
                 } catch (org.jdom.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Dc + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.DcTerms.getJdomNamespace());
                 } catch (org.jdom.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.DcTerms + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Calibre.getJdomNamespace());
                 } catch (org.jdom.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration " + " for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Calibre + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
                 }
                 Element metadata = doc.getRootElement().getChild("metadata", Namespace.Opf.getJdomNamespace());
                 if (metadata != null)
@@ -331,9 +331,9 @@ public class OpfOutput {
         if (zos != null) {
           zos.close();
         }
-        if (zipInputFile != null)
+        if (zipInputFile != null) {
           zipInputFile.close();
-
+        }
       }
     } catch (JDOMException je) {
         logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getTitle() + " (file " + inputFile + ")");

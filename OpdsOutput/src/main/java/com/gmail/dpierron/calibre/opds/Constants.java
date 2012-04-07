@@ -20,7 +20,11 @@ public class Constants {
   public final static String AUTHORNAME = "David Pierron";
   public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
   public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
-  public final static String HELP_URL = "http://calibre2opds.com/read-the-documentation/";
+  public final static String HOME_URL = "http://calibre2opds.com/";
+  public final static String USERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/overview/";
+  public final static String DEVELOPERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/";
+  public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
+  public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
   public final static String TROOK_SEARCH_DATABASE_FILENAME = "calibre2opds_trook_search.db";
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";

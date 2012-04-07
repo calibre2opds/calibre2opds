@@ -292,11 +292,6 @@ public class Mainframe extends javax.swing.JFrame {
     BareBonesBrowserLaunch.openURL(Constants.PAYPAL_DONATION);
   }
 
-  private void help() {
-    logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HELP_URL);
-    BareBonesBrowserLaunch.openURL(Constants.HELP_URL);
-  }
-
   private void generateCatalog() {
 
     storeValues();
@@ -1157,7 +1152,11 @@ public class Mainframe extends javax.swing.JFrame {
     mnuHelp.setText(Localization.Main.getText("gui.menu.help")); // NOI18N
     mnuHelpDonate.setText(Localization.Main.getText("gui.menu.help.donate")); // NOI18N
     mnuHelpAbout.setText(Localization.Main.getText("gui.menu.help.about")); // NOI18N
-    mnuHelpWiki.setText(Localization.Main.getText("gui.menu.help.wiki")); // NOI18N
+    mnuHelpHome.setText(Localization.Main.getText("gui.menu.help.home")); // NOI18N
+    mnuHelpUserGuide.setText(Localization.Main.getText("gui.menu.help.userGuide")); // NOI18N
+    mnuHelpDevelopersGuide.setText(Localization.Main.getText("gui.menu.help.developerGuide")); // NOI18N
+    mnuHelpOpenIssues.setText(Localization.Main.getText("gui.menu.help.issueRegister")); // NOI18N
+    mnuHelpOpenForum.setText(Localization.Main.getText("gui.menu.help.supportForum")); // NOI18N
     mnuHelpOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
     mnuHelpOpenSupport.setText(Localization.Main.getText("gui.menu.help.supportFolder")); // NOI18N
   }
@@ -1629,9 +1628,13 @@ public class Mainframe extends javax.swing.JFrame {
         mnuToolsprocessEpubMetadataOfAllBooks = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpDonate = new javax.swing.JMenuItem();
-        mnuHelpWiki = new javax.swing.JMenuItem();
+        mnuHelpHome = new javax.swing.JMenuItem();
+        mnuHelpUserGuide = new javax.swing.JMenuItem();
+        mnuHelpDevelopersGuide = new javax.swing.JMenuItem();
         mnuHelpOpenLog = new javax.swing.JMenuItem();
         mnuHelpOpenSupport = new javax.swing.JMenuItem();
+        mnuHelpOpenIssues = new javax.swing.JMenuItem();
+        mnuHelpOpenForum = new javax.swing.JMenuItem();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -2421,7 +2424,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlGenerationOptions.add(lblNoShowSeries, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -3809,13 +3811,29 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpDonate);
 
-        mnuHelpWiki.setText(Localization.Main.getText("gui.menu.help.wiki")); // NOI18N
-        mnuHelpWiki.addActionListener(new java.awt.event.ActionListener() {
+        mnuHelpHome.setText(Localization.Main.getText("gui.menu.help.home")); // NOI18N
+        mnuHelpHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuHelpWikiActionPerformed(evt);
+                mnuHelpHomeActionPerformed(evt);
             }
         });
-        mnuHelp.add(mnuHelpWiki);
+        mnuHelp.add(mnuHelpHome);
+
+        mnuHelpUserGuide.setText("mnuHelpUserGuide");
+        mnuHelpUserGuide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpUserGuideActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpUserGuide);
+
+        mnuHelpDevelopersGuide.setText("mnuHelpDevelopersGuide");
+        mnuHelpDevelopersGuide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpDevelopersGuideActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpDevelopersGuide);
 
         mnuHelpOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
         mnuHelpOpenLog.addActionListener(new java.awt.event.ActionListener() {
@@ -3832,6 +3850,22 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         mnuHelp.add(mnuHelpOpenSupport);
+
+        mnuHelpOpenIssues.setText("mnuHelpOpenIssues");
+        mnuHelpOpenIssues.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpOpenIssuesActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpOpenIssues);
+
+        mnuHelpOpenForum.setText("mnuHelpOpenForum");
+        mnuHelpOpenForum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpOpenForumActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpOpenForum);
 
         mnuHelpAbout.setText(Localization.Main.getText("gui.menu.help.about")); // NOI18N
         mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -3968,9 +4002,34 @@ public class Mainframe extends javax.swing.JFrame {
     addCustomCatalog();
   }//GEN-LAST:event_cmdAddCustomCatalogActionPerformed
 
-    private void chkNogenerateexternallinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNogenerateexternallinksStateChanged
-      setExternalLinksEnabledState();
-    }//GEN-LAST:event_chkNogenerateexternallinksStateChanged
+  private void chkNogenerateexternallinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNogenerateexternallinksStateChanged
+    setExternalLinksEnabledState();
+  }//GEN-LAST:event_chkNogenerateexternallinksStateChanged
+
+  private void mnuHelpHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpHomeActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
+    BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
+  }//GEN-LAST:event_mnuHelpHomeActionPerformed
+
+  private void mnuHelpOpenIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenIssuesActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.issueRegister") + ": " + Constants.ISSUES_URL);
+    BareBonesBrowserLaunch.openURL(Constants.ISSUES_URL);
+  }//GEN-LAST:event_mnuHelpOpenIssuesActionPerformed
+
+  private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
+    BareBonesBrowserLaunch.openURL(Constants.FORUM_URL);
+  }//GEN-LAST:event_mnuHelpOpenForumActionPerformed
+
+  private void mnuHelpUserGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpUserGuideActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.userGuide") + ": " + Constants.USERGUIDE_URL);
+    BareBonesBrowserLaunch.openURL(Constants.USERGUIDE_URL);
+  }//GEN-LAST:event_mnuHelpUserGuideActionPerformed
+
+  private void mnuHelpDevelopersGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpDevelopersGuideActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.developerGuide") + ": " + Constants.DEVELOPERGUIDE_URL);
+    BareBonesBrowserLaunch.openURL(Constants.DEVELOPERGUIDE_URL);
+  }//GEN-LAST:event_mnuHelpDevelopersGuideActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -3995,10 +4054,6 @@ public class Mainframe extends javax.swing.JFrame {
   private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuHelpAboutActionPerformed
     about();
   }// GEN-LAST:event_mnuHelpAboutActionPerformed
-
-  private void mnuHelpWikiActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuHelpWikiActionPerformed
-    help();
-  }// GEN-LAST:event_mnuHelpWikiActionPerformed
 
   private void mnuHelpDonateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuHelpDonateActionPerformed
     donate();
@@ -4196,10 +4251,14 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuFileSave;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
+    private javax.swing.JMenuItem mnuHelpDevelopersGuide;
     private javax.swing.JMenuItem mnuHelpDonate;
+    private javax.swing.JMenuItem mnuHelpHome;
+    private javax.swing.JMenuItem mnuHelpOpenForum;
+    private javax.swing.JMenuItem mnuHelpOpenIssues;
     private javax.swing.JMenuItem mnuHelpOpenLog;
     private javax.swing.JMenuItem mnuHelpOpenSupport;
-    private javax.swing.JMenuItem mnuHelpWiki;
+    private javax.swing.JMenuItem mnuHelpUserGuide;
     private javax.swing.JMenu mnuProfiles;
     private javax.swing.JMenu mnuTools;
     private javax.swing.JMenuItem mnuToolsprocessEpubMetadataOfAllBooks;
