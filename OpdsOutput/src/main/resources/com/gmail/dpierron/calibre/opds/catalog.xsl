@@ -65,8 +65,6 @@
                 <title>
                     <xsl:value-of select="$libraryTitle"/>
                 </title>
-                <script type="text/javascript">function showHide(id, btn) { var e = document.getElementById(id); if (e.style.display == 'none') { e.style.display = 'block'; } else { e.style.display = 'none'; } } </script>
-                <script type="text/javascript">function getBaseURL() {var url = location.href;var baseURL = url.substring(0, url.lastIndexOf('/'));if (baseURL.indexOf('http://localhost') != -1) {var url = location.href;var pathname = location.pathname;var index1 = url.indexOf(pathname);var index2 = url.indexOf("/", index1 + 1);var baseLocalUrl = url.substr(0, index2);return baseLocalUrl + "/";} else {return baseURL + "/";}}</script>
             </head>
             <body style="">
 
@@ -259,7 +257,9 @@
                                 </a>
                             </div>
                         </td>
+                        <!-- Lets add some new code here for 'go to page'
                         <td>Page</td>
+                        -->
                     </tr>
                 </xsl:if>
                 <xsl:if test="string-length($programName) > 0">

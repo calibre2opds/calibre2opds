@@ -160,6 +160,8 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
       return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null, useExternalIcons ?
+      // ITIMPI:  Using the following isntead of the above line would dsiable split-by letter within a tag if that was ever required!
+      // return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, SplitOption.Paginate, useExternalIcons ?
           (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS).getFirstElement();
     }
