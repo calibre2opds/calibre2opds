@@ -218,11 +218,12 @@ public enum FeedHelper {
     // root catalog link
     String startUrl;
     if (Helper.isNullOrEmpty(baseUrl))
-      startUrl = "index.xml";
+      // c2o-104 - index.xml should not point to current folder expcept at top level
+      startUrl =  ((breadcrumbs != null && breadcrumbs.size() > 0) ? "../" : "") + "index.xml";
     else
       startUrl = baseUrl + "index.xml";
     // c2o-87 - Title should use value from settings
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, title));
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
 
     String selfUrl = baseUrl;
     if (url != null) {
@@ -237,7 +238,15 @@ public enum FeedHelper {
         s = url;
       selfUrl = baseUrl + s;
     }
-    
+
+    // Self URL's mean we are already in the correct folder, so do not need a leading folder name (c2o-104)
+    int x = selfUrl.indexOf('/');
+    if (x != -1) {
+      String folderName = selfUrl.substring(0,x);
+      if (selfUrl.substring(x+1).startsWith(folderName+"_")) {
+        selfUrl=selfUrl.substring(x+1);
+      }
+    }
     feed.addContent(getLinkElement(selfUrl, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
 
   }
