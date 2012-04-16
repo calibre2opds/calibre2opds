@@ -242,8 +242,7 @@ public enum FeedHelper {
     // Self URL's mean we are already in the correct folder, so do not need a leading folder name (c2o-104)
     int x = selfUrl.indexOf('/');
     if (x != -1) {
-      String folderName = selfUrl.substring(0,x);
-      if (selfUrl.substring(x+1).startsWith(folderName+"_")) {
+      if (selfUrl.substring(x+1).startsWith(selfUrl.substring(0,x) + "_")) {
         selfUrl=selfUrl.substring(x+1);
       }
     }
@@ -371,6 +370,15 @@ public enum FeedHelper {
 
   private Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element("link");
+    if (urlType != null & urlRelation != null & urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
+      // Next URL's mean we are already in the correct folder, so do not need a leading folder name (c2o-104)
+      int x = url.indexOf('/');
+      if (x != -1) {
+        if (url.substring(x+1).startsWith(url.substring(0,x) + "_")) {
+          url = url.substring(x+1);
+        }
+      }
+    }
 
     link.setAttribute("href", url);
 
