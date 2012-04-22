@@ -239,13 +239,11 @@ public enum FeedHelper {
       selfUrl = baseUrl + s;
     }
 
-    // Self URL's mean we are already in the correct folder, so do not need a leading folder name (c2o-104)
-    int x = selfUrl.indexOf('/');
-    if (x != -1) {
-      if (selfUrl.substring(x+1).startsWith(selfUrl.substring(0,x) + "_")) {
-        selfUrl=selfUrl.substring(x+1);
-      }
-    }
+    // Self URL's mean we are already in a  folder, so do need to add in @../@ at start  (c2o-104)
+    // ITIMPI:  How does thes the above test for removing "../" interact (at all) with this?
+    if (selfUrl.indexOf('/') != -1)
+        selfUrl="../" + selfUrl;
+
     feed.addContent(getLinkElement(selfUrl, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
 
   }
@@ -371,13 +369,9 @@ public enum FeedHelper {
   private Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element("link");
     if (urlType != null & urlRelation != null & urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
-      // Next URL's mean we are already in the correct folder, so do not need a leading folder name (c2o-104)
-      int x = url.indexOf('/');
-      if (x != -1) {
-        if (url.substring(x+1).startsWith(url.substring(0,x) + "_")) {
-          url = url.substring(x+1);
-        }
-      }
+      // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)
+      if (! url.startsWith("../"))
+          url = "../" + url;
     }
 
     link.setAttribute("href", url);

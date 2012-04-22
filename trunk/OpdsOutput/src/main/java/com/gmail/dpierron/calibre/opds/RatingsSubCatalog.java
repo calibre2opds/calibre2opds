@@ -92,7 +92,8 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
-    Element result = getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null,
+    SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
+    Element result = getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, splitOption,
         // #751211: Use external icons option
         useExternalIcons ?
             (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_RATING :

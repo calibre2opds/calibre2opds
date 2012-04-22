@@ -1239,7 +1239,9 @@ public class Catalog {
       logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
       logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t + ": " + t.getCause());
       logger.error(Localization.Main.getText("error.message").toUpperCase() + ": " + t.getMessage());
-      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ":\n" + Helper.getStackTrace(t));
+      logger.error(Localization.Main.getText("error.stackTrace").toUpperCase() + ":");
+      for (StackTraceElement element : t.getStackTrace())
+        logger.error(element.toString());
       logger.error("*************************************************");
       logger.error(" ");
     } finally {
@@ -1249,6 +1251,8 @@ public class Catalog {
       if (generateFolder != null ) {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
         Helper.delete(generateFolder);
+        // ITIMPI:  TODO  Check if we can delete the folder using the statement below as being faster then doing the individual files?
+        // generateFolder.deleteOnExit();
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
       if (generationStopped)
@@ -1302,7 +1306,7 @@ public class Catalog {
         }
     
         if (logger.isTraceEnabled())
-          logger.trace("checkCatalogExistence: Check for catalog at " + catalogFolder.getPath());
+          logger.trace("checkCatalogExistence: Check for catalog at " + catalogFolder.    getPath());
         if (!catalogFolder.exists()) {
           if (logger.isTraceEnabled())
             logger.trace("checkCatalogExistence: false (catalog folder does not exist)");
