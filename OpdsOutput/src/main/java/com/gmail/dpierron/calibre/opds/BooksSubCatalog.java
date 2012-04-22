@@ -263,7 +263,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         break;
       case SplitByLetter:
         logger.debug("getListOfBooks:splitOption=SplitByLetter");
-        assert from == 0 : "getListBooks: splitByLetter, from" + from;
+        assert from == 0 : "getListBooks: splitByLetter, from=" + from;
         willSplitByLetter = true;
         willSplitByDate = false;
         break;
@@ -271,7 +271,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // ITIMPI:  Not sure that this case can ever arise
         //          Just added as a safety check
         logger.debug("getListOfBooks:splitOption=" + splitOption);
-        assert from == 0 : "getListBooks: unknown splitOption, from" + from;
+        assert from == 0 : "getListBooks: unknown splitOption, from=" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;

@@ -139,6 +139,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       logger.debug("sorting " + books.size() + " books");
     sortBooksByTitle(books);
 
+    SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
     // check if we need to make this tag deep
     if (makeTagDeep(tag, books)) {
       // specify that this is a deep level
@@ -148,7 +149,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       if (logger.isDebugEnabled())
         logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      return getSubCatalogLevel(pBreadcrumbs, books, getStuffToFilterOutAnd(tag), title, summary, urn, filename, null,
+      return getSubCatalogLevel(pBreadcrumbs, books, getStuffToFilterOutAnd(tag), title, summary, urn, filename, splitOption,
           useExternalIcons ?
               (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
               Icons.ICON_TAGS);
@@ -159,9 +160,7 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
         logger.debug("making a simple book list");
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
       boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, null, useExternalIcons ?
-      // ITIMPI:  Using the following isntead of the above line would dsiable split-by letter within a tag if that was ever required!
-      // return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, SplitOption.Paginate, useExternalIcons ?
+      return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, splitOption, useExternalIcons ?
           (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
           Icons.ICON_TAGS).getFirstElement();
     }

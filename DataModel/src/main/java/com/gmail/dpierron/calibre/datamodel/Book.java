@@ -48,6 +48,7 @@ public class Book implements SplitableByLetter {
   private long latestFileModifiedDate = -1;
   private final BookRating rating;
   private List<Language> bookLanguages = new LinkedList<Language>();
+  private boolean changed = false;
   private boolean flag;
 
   private static Date ZERO;
@@ -585,6 +586,23 @@ public class Book implements SplitableByLetter {
 
   public void clearFlag() {
     flag = false;
+  }
+
+  /**
+   * Return whether we believe book has been changed since last run
+   * @return
+   */
+  public boolean isChanged() {
+    return changed;
+  }
+
+  /**
+   * Set the changed status to be true
+   * (default is false, so should only need to set to true.
+   * If neccesary could change to pass in required state).
+   */
+  public void setChanged() {
+    changed = true;
   }
 
 }

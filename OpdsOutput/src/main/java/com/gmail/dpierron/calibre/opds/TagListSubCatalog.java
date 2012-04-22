@@ -56,7 +56,12 @@ public class TagListSubCatalog extends TagSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (tags.size() > maxBeforeSplit);
+    if (splitOption == null) {
+      splitOption = ((maxSplitLevels > 0) && (from == 0)) ? SplitOption.SplitByLetter : SplitOption.Paginate;
+      if (logger.isTraceEnabled())
+        logger.trace("getListOfTags: splitOption was null - set to " + splitOption);
+    }
+    boolean willSplit = (splitOption == SplitOption.SplitByLetter) && (maxSplitLevels > 0) && (tags.size() > maxBeforeSplit);
     if (willSplit) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
       catalogSize = 0;
