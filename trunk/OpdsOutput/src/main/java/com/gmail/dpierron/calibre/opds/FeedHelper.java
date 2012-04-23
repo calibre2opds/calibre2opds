@@ -368,7 +368,7 @@ public enum FeedHelper {
 
   private Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element("link");
-    if (urlType != null & urlRelation != null & urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
+    if (urlType != null && urlRelation != null && urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
       // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)
       if (! url.startsWith("../"))
           url = "../" + url;
