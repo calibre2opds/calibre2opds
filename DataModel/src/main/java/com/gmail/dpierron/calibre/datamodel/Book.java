@@ -598,7 +598,7 @@ public class Book implements SplitableByLetter {
 
   /**
    * Set the changed status to be true
-   * (default is false, so should only need to set to true.
+   * (default is false, -so should only need to set to true.
    * If neccesary could change to pass in required state).
    */
   public void setChanged() {
