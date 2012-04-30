@@ -7,11 +7,12 @@ Online documentation for Calibre2Opds can now be found at:
   http://calibre2opds.com/read-the-documentation/
 There is a link to this from the main Calibre2Opds GUI via the Help
 button.  It is also included in the Calibre2Opds catalogs at the top
-level.  User areencouraged to pass back suggestions for enhancing it 
+level.  User areencouraged to pass back suggestions for enhancments
 to reflect their experience of using Calibre2Opds.
 
 The #number type references in these notes refer to the bug number
-entries for calibre2opds in the launchpad bug tracking system.
+entries for calibre2opds in the calibre2opds Issue register that is at:
+   http://calibre2opds.myjetbrains.com/youtrack/
 
 Localizations
 ~~~~~~~~~~~~~
@@ -26,14 +27,20 @@ found at:
 
 Known Issues
 ~~~~~~~~~~~~
-
- - #627926  Publish mode limiting formats allowed   
+The following issues are known to be outstanding in this release.  More detail can be found by
+looking at the calibre2opds issue register (http://calibre2opds.myjetbrains.com/youtrack/)
+ - #627926  Publish mode limiting formats allowed (will be fixed by #c2o-93)
  - #729859  Internal links not working in XML catalogs
-            (may not be fixable)
+            (may not be fixable as it tends to be a limitation of the OPDS clients)
  - #c2o-15  Filenames generated can exceed system limits
             (this is particularly likely to happen in the larger catalog sections on very large
             libraries, or if many sub-levels based on tags are specified).  The avoidance actio is
             to ensure that the Maximum Number of Split Levels option is set to a small value (e.g. 3)
+ - #c2o-91: Setting catalog folder to root (/) is not treated as an error
+ - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
+ - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
+ - #c2o-100: Uninstall does not work under Windows 7
+
  - Localization: The current localizations now have significant gaps until users can provide the 
             required translation strings for the large number of new messages introduced in v3.0.
 
@@ -41,11 +48,37 @@ If you think that you have found abug, or would simply like to raise a feature r
 new capability this can be done via the calibre2opds Issue tracking system at
 http://calibre2opds.myjetbrains.com/youtrack/
 
-Planned Enhancements
-~~~~~~~~~~~~~~~~~~~~
-The following items are planned for future releases:
-    - Improve localizations.  
-    - Nothing else is definitely committed or planned beyond general enhancements
+Outstanding Feature Requests
+~~~~~~~~~~~~~~~~~~~~--------
+The items listed below are under consideration for future releases.
+Nore detail can be found in many cases on the calibre2opds Issue register
+(http://calibre2opds.myjetbrains.com/youtrack/).    Note that the fact a feature is listed
+here is not a committment that it will appear, but merely that it is under consideration.
+User are encouraged to add comments to the relevant issues in the Issue Register on their views.
+   - Improve localizations.
+   -  #c2o-18: Re-organise GUI fields amongst the various tabs
+   -  #c2o-26: Introduce a carousel mode for the book pages
+   -  #c2o-29: Generate a recent books RSS-compatible catalog
+   -  #c2o-38: Is it possible to generate a flat display for catalogues
+    - #c2o-48: Generate the full-text search HTML page dynamically
+    - #c2o-59: Use Calibre library_sort field when sorting books
+    - #c2o-62: Unfriendly error message when problem with Search in custom catalogs
+    - #c2o-63: Allow for authors to be displayed like in Calibre
+    - #c2o-66: Custom catalog tab not correctly reset on switching profiles
+    - #c2o-74: Goto Page option in HTML catalogs
+    - #c2o-76: Add context sensitive links to help (documentation)
+    - #c2o-82: Test option for Saved Searches/ Custom Catalogs
+    - #c2o-90: Make Custom Catalogs setting easier to edit manually in XML
+    - #c2o-93: Make supported formats and Mime type extendable by users
+    - #c2o-96: Add some runtime stats on Search database
+    - #c2o-97: Contect sensitive help on tabs
+    - #c2o-102: Advise user when Log file contains errors or warnings
+    - #c2o-103: Goodreads URL (by Goodreads ID when available)
+    - #c2o-105: Add a download link to the 'group' pages
+    - #c2o-108: Omit download section for books with no available download
+    - #c2o-107: Speed up All Books phase of catalog generation
+Any requests for new features should be made by adding them to the Issue Register,
+but please look through the list above first to avoid unecessary duplication.
 
 Release History
 ---------------
@@ -54,18 +87,19 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 v3.1
-    - New: #c2o-79: All Input fields in GUI now have tooltips associated with them
-    - New: #c2o-80: Manage Profiles dialog now supports adding a new profile as well as rename and delete
-    - New: #c2o-98: Link to Issue Register added Help menu
-    - New: #c2o-99: Link to support forum added to Help menmu
+    - Fix: #c2o-51:  Crash while generating covers if image file bad
+    - Fix: #c20-77:  It was possible to set the Destination folder field on new installations in default mode
+    - Fix: #c2o-78:  Windows 7 64-bit systems do not set up Java location
+    - New: #c2o-79:  All Input fields in GUI now have tooltips associated with them
+    - New: #c2o-80:  Manage Profiles dialog now supports adding a new profile as well as rename and delete
+    - Fix: #c2o-81:  Generation fails if no books in the library have their series values set
+    - Fix: #c2o-88:  Disable any split-by-letter for Series within an author
+    - Fix: #c2o-87:  XML catalog title should be the "Catalog Title" as set in the settings
+    - New: #c2o-95:  Option clear log files added to Tools menu
+    - New: #c2o-98:  Link to Issue Register added Help menu
+    - New: #c2o-99:  Link to support forum added to Help menmu
     - New: #c2o-101: Link to User Guide and Developer Guide added to Help Menu
-    - New: #c2o-95: Option clear log files added to Tools menu
-    - New: #c2o-95: Option to Clear log files on Tools menu
-    - Fix: #c20-77: It was possible to set the Destination folder field on new installations in default mode
-    - Fix: #c2o-78: Windows 7 64-bit systems do not set up Java location
-    - Fix: #c2o-81: Generation fails if no books in the library have their series values set
-    - Fix: #c2o-88: Disable any split-by-letter for Series within an author
-    - Fix: #c2o-104: Problems with Self and Next links when pagination active.
+    - Fix: #c2o-104: Problems with Self and Next links when pagination active. Also pagination links can be brolen.
     - Change: Removed some split-by-letter options that did not really make sense:
              Books within a Series (we now never split these by letter)
              Books within an author  (we now never split these by letter)
