@@ -18,7 +18,7 @@ zip "$ZIPFILE" calibre2opds-icon_192.png      calibre2opds-icon-small_32.ico  ca
 zip "$ZIPFILE" calibre2opds-text-icon_64.png
 cd ..
 cd Install/target/Dependency
-zip "%ZIPFILE%"  OpdsOutput-3.1-SNAPSHOT.jar  DataModel-3.1-SNAPSHOT.jar    Tools-3.1-SNAPSHOT.jar   CalibreQueryLanguage-3.1-SNAPSHOT.jar
+zip "%ZIPFILE%"  OpdsOutput-3.2-SNAPSHOT.jar  DataModel-3.2-SNAPSHOT.jar    Tools-3.2-SNAPSHOT.jar   CalibreQueryLanguage-3.2-SNAPSHOT.jar
 zip "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar jdom-1.1.jar jtidy-r938.jar junit-4.7.jar log4j-1.2.12.jar sqlite-jdbc-3.6.17.1.jar stringtemplate-3.2.jar
 
 cd ../../..

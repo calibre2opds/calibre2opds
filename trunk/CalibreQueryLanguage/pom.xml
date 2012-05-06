@@ -4,7 +4,7 @@
   <parent>
     <artifactId>calibre2opds</artifactId>
     <groupId>com.gmail.dpierron.calibre</groupId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.2-SNAPSHOT</version>
   </parent>
 
   <groupId>com.gmail.dpierron.calibre</groupId>
@@ -12,7 +12,7 @@
   <name>Calibre Query Language parser</name>
 
   <!-- This is the version of YOUR project -->
-  <version>3.1-SNAPSHOT</version>
+  <version>3.2-SNAPSHOT</version>
 
   <packaging>jar</packaging>
   <url>http://antlr.org</url>

@@ -16,7 +16,7 @@ echo '
 echo [INFO]  Trying to locate Java on this system
 echo [INFO]  ====================================
 
-set _C2O=OpdsOutput-3.1-SNAPSHOT.jar
+set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 
 if "%1"=="-enableassertions" (
   set _JAVAPROG=JAVA.EXE
