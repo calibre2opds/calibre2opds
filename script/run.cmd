@@ -15,7 +15,7 @@ echo '
 echo [INFO]  Trying to locate Java on this system
 echo [INFO]  ====================================
 
-set _C2O=OpdsOutput-3.1-SNAPSHOT.jar
+set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 
 set _JAVAPROG=JAVA.EXE
 
@@ -149,8 +149,8 @@ REM -Xms<value> define starting size
 REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
-echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
-"%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
+echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
+"%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "

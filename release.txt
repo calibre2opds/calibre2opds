@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.1
+                    RELEASE NOTES for Calibre2Opds v3.2
                     -----------------------------------
 
 Documentation
@@ -85,6 +85,8 @@ Release History
 The following shows the Calibre2Opds releases in reverse chronological order (so that the most recent
 is at the top) showing main changes and bug fixes.  The bug number references are to those
 that have been recorded in the Issue tracker.
+
+v3.2
 
 v3.1
     - Fix: #c2o-51:  Crash while generating covers if image file bad
