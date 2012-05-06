@@ -413,6 +413,7 @@ public class Catalog {
     File targetFolder = null;       // Location where final catalog will be copied to (if reuired)
                                     // In Nook mode this should be the same as the generateFolder
     File libraryFolder = null;      // Folder holding the Calibre library
+    String catalogFolderName = null;//Name of the catalog folder (not including path)
 
     /** where the catalog is eventually located */
     String where = null;
@@ -469,8 +470,17 @@ public class Catalog {
     }
 
     // Check that the catalog folder is actually set to something and not an empty string
-    if (Helper.isNullOrEmpty(currentProfile.getCatalogFolderName())) {
+    catalogFolderName = currentProfile.getCatalogFolderName();
+    if (Helper.isNullOrEmpty(catalogFolderName)) {
       callback.errorOccured(Localization.Main.getText("error.nocatalog"), null);
+      return;
+    }
+    // THere we aso add some checks against unusual values in the catalog value  )c2o-91)
+    if (catalogFolderName.startsWith("/")
+    ||  catalogFolderName.startsWith("\\")
+    ||  catalogFolderName.startsWith("../")
+    ||  catalogFolderName.startsWith("..\\")) {
+      callback.errorOccured(Localization.Main.getText("error.badcatalog"), null);
       return;
     }
 

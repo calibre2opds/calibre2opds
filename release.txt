@@ -36,7 +36,6 @@ looking at the calibre2opds issue register (http://calibre2opds.myjetbrains.com/
             (this is particularly likely to happen in the larger catalog sections on very large
             libraries, or if many sub-levels based on tags are specified).  The avoidance actio is
             to ensure that the Maximum Number of Split Levels option is set to a small value (e.g. 3)
- - #c2o-91: Setting catalog folder to root (/) is not treated as an error
  - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
  - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
  - #c2o-100: Uninstall does not work under Windows 7
@@ -87,6 +86,7 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 v3.2
+    - Fix: #c2o-91:  Setting catalog folder to root (/) is not treated as an error
 
 v3.1
     - Fix: #c2o-51:  Crash while generating covers if image file bad
