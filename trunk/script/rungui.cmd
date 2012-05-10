@@ -5,9 +5,10 @@ REM  The checks for Java have been adapted from those used to
 REM  start up the IzPack package builder and then extended.
 REM  Hopefully this means that calibre2opds Java may run on 
 REM  some of those systems that do not have Java on the search 
-REM  path but do have the JAVA_HOME environment variable set;
-REM  or have the expected registry keys set; or have installed 
-REM  to default location.
+REM  path but do have the one of the following conditions met:
+REM  - JAVA_HOME environment variable set
+REM  - have installed to default location.
+REM  - have the expected registry keys set
 
 cls
 echo Calibre2opds startup
@@ -26,46 +27,50 @@ if "%1"=="-enableassertions" (
 
 REM See if JAVA_HOME specifies location of Java (prefered method)
 
-if not "%JAVA_HOME%" == "" (
-  if exist "%JAVA_HOME%\bin\%_JAVAPROG%"  (
-    set _JAVACMD=%JAVA_HOME%\bin\%_JAVAPROG%
-    echo [INFO] Java found via JAVA_HOME evironment variable [%JAVA_HOME%]
-    goto run_c2o
-  )
-)
+if "%JAVA_HOME%" == "" goto not_javahome
+if not exist "%JAVA_HOME%\bin\%_JAVAPROG%" goto not_javahome
+set _JAVACMD=%JAVA_HOME%\bin\%_JAVAPROG%
+echo [INFO] Java found via JAVA_HOME evironment variable [%JAVA_HOME%]
+goto run_c2o
+:not_javahome
 echo [INFO] Java location not found via JAVA_HOME environment variable
 
-REM Check default install locations
 
-if exist "%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%" (
-  set _JAVACMD=%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%
-  echo [INFO] Java found via default 32-bit JRE6 location
-  echo [INFO] Java located at %ProgramFiles%\Java\jre6
-  goto run_c2o
-)
-echo [INFO] Java not found in default 32-bit JRE6 location
-if exist "%ProgramFiles%\Java\jre7\bin\%JAVAPROG%" (
-  set _JAVACMD=%ProgramFiles%\Java\jre7\bin\%JAVAPROG%
-  echo [INFO] Java found at 32-bit JRE7 location [%ProgramFiles%\Java\jre7]
-  goto run_c2o
-)
-echo [INFO] Java not found in default 32-bit JRE7 location
-if exist "%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%" (
-  set _JAVACMD="%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%"
-  echo [INFO] Java found at default 64-bit JRE6 location [%ProgramFiles% ^(x86^)\Java\jre6]
-  goto run_c2o
-)
-echo [INFO] Java not found in default 64-bit JRE6 location
-if exist "%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%" (
-  set _JAVACMD="%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%"
-  echo [INFO] Java found at default 64-bit JRE7 location [%ProgramFiles% ^(x86^)\Java\jre7]
-  goto run_c2o
-)
-echo [INFO] Java not found in default 64-bit JRE7 location
+REM Check default install locations
+REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+if not exist "%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%" goto not_jre6
+set _JAVACMD=%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%
+echo [INFO] Java found via default 32-bit JRE6 location
+echo [INFO] Java located at %ProgramFiles%\Java\jre6
+goto run_c2o
+:not_jre6
+echo [INFO] Java not found in default JRE6 location [%ProgramFiles%\Java\jre6]
+
+if not exist "%ProgramFiles%\Java\jre7\bin\%_JAVAPROG%" goto not_jre7
+set _JAVACMD=%ProgramFiles%\Java\jre7\bin\%_JAVAPROG%
+echo [INFO] Java found at 32-bit JRE7 location [%ProgramFiles%\Java\jre7]
+goto run_c2o
+:not_jre7
+echo [INFO] Java not found in default JRE7 location [%ProgramFiles%\Java\jre7]
+
+if not exist "%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%" goto not_jre6_64
+set _JAVACMD=%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%
+echo [INFO] Java found at default 32-bit Java on 64-bit Windows JRE6 location [%ProgramFiles% ^(x86^)\Java\jre6]
+goto run_c2o
+:not_jre6_64
+echo [INFO] Java not found in default 32-bit Java on 64-bit Windows JRE6 location [%ProgramFiles% (x86)\Java\jre6]
+
+if not exist "%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%" goto not_jre7_64
+set _JAVACMD=%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%
+echo [INFO] Java found at default 32-bit Java on 64-bit Windows JRE7 location [%ProgramFiles% ^(x86^)\Java\jre7]
+goto run_c2o
+:not_jre7_64
+echo [INFO] Java not found in default 32-bit Java on 64-bit Windows JRE7 location [%ProgramFiles% (x86)\Java\jre7]
 
 
 REM This next section is about trying to find Java home via the registry
-
+REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 set _MYKEY=HKLM\Software\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
@@ -147,24 +152,25 @@ echo "-----------------------"
 echo " Calibre2Opds STARTING "
 echo "-----------------------"
 echo '
-if "%1"=="-enableassertions" (
-  echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
-  echo '
-  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
-) else (
-  echo '
-  echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui  
-  echo '
-  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui
-)
+if not "%1"=="-enableassertions" goto no_assertions
+echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
+echo '
+"%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
 echo "-----------------------"
 echo '
+goto end
+
+:no_assertions
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui  
+echo '
+START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui
 
 :end
 REM Clear down all the environment variables we (might have) used
+REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 set _JAVACMD=
 set _JAVAPROG=
 set _C2O=
