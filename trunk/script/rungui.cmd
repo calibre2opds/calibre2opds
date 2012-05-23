@@ -13,9 +13,6 @@ REM  - have the expected registry keys set
 cls
 echo Calibre2opds startup
 echo ====================
-echo '
-echo [INFO]  Trying to locate Java on this system
-echo [INFO]  ====================================
 
 set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 
@@ -24,6 +21,10 @@ if "%1"=="-enableassertions" (
 )  else (
   set _JAVAPROG=JAVAW.EXE
 )
+
+echo '
+echo [INFO]  Trying to locate Java on this system
+echo [INFO]  ====================================
 
 REM See if JAVA_HOME specifies location of Java (prefered method)
 
@@ -153,6 +154,7 @@ echo " Calibre2Opds STARTING "
 echo "-----------------------"
 echo '
 if not "%1"=="-enableassertions" goto no_assertions
+REM Start the GUI leaving this batch file running for progress/debug messages
 echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
 echo '
 "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
@@ -164,6 +166,7 @@ echo '
 goto end
 
 :no_assertions
+REM Start the GUI in normal mode as a separate process and close this batch file
 echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui  
 echo '
 START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui

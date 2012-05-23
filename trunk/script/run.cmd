@@ -14,14 +14,14 @@ REM  - have the expected registry keys set
 cls
 echo Calibre2opds startup
 echo ====================
-echo '
-echo [INFO]  Trying to locate Java on this system
-echo [INFO]  ====================================
 
 set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 
 set _JAVAPROG=JAVA.EXE
 
+echo '
+echo [INFO]  Trying to locate Java on this system
+echo [INFO]  ====================================
 
 REM See if JAVA_HOME specifies location of Java (prefered method)
 
