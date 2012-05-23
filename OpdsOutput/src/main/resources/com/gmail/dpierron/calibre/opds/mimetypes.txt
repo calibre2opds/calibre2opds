@@ -1,0 +1,18 @@
+EPUB, application/epub+zip
+TXT, text/plain
+ZIP, application/zip
+PRC, text/prc+xml
+PDB, application/pdb
+MOBI,application/x-mobipocket-ebook
+LRF, application/x-sony-bbeb
+LRX, application/x-bbeb-book
+FB2, text/fb2
+RAR, application/rar
+PDF, application/pdf
+RTF, text/rtf
+LIT, application/x-ms-reader
+DOC, application/msword
+CBR, application/x-cbr
+CBZ, application/x-cbz
+CHM, application/x-chm
+AZW, application/octet-stream

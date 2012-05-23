@@ -74,8 +74,13 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-102: Advise user when Log file contains errors or warnings
     - #c2o-103: Goodreads URL (by Goodreads ID when available)
     - #c2o-105: Add a download link to the 'group' pages
-    - #c2o-108: Omit download section for books with no available download
     - #c2o-107: Speed up All Books phase of catalog generation
+    - #c2o-108: Omit download section for books with no available download
+    - #c2o-109: Improve navigation links in pages
+    - #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
+    - #c2o-111: The "All Books" section within an author not sorted alphabetically
+    - #c2o-112: Do not delete .htaccess files from generated catalog
+
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.
 
@@ -87,6 +92,7 @@ that have been recorded in the Issue tracker.
 
 v3.2
     - Fix: #c2o-91:  Setting catalog folder to root (/) is not treated as an error
+    - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1
     - Fix: #c2o-51:  Crash while generating covers if image file bad

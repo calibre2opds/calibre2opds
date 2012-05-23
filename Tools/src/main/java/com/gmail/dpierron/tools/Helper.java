@@ -951,8 +951,18 @@ public class Helper {
     }
   }
 
+  private final static String[] FilesToKeep = new String[] { ".htaccess" };
+
   static public void delete(File path) {
     if (path.exists()) {
+      // Allo for list of Delete file xceptions (#c2o-112)
+      for (String f : FilesToKeep) {
+        if (path.getName().toLowerCase().endsWith(f)) {
+          if (logger.isTraceEnabled())
+            logger.trace("File not deleted (on exception list): " + path);
+          return;
+        }
+      }
       if (path.isDirectory()) {
         File[] files = path.listFiles();
         if (files != null)
