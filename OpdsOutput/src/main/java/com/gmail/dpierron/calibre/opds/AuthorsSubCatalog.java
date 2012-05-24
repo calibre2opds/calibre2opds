@@ -344,6 +344,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     List<Element> firstElements = null;
     List<Book> books = null;
     List<Book> booksByThisAuthor = getMapOfBooksByAuthor().get(author);
+    // sort  by title
+    logger.debug("sort 'booksByThisAuthor' by title");
+    sortBooksByTitle(booksByThisAuthor);
 
     if (Helper.isNullOrEmpty(booksByThisAuthor))
       return null;
@@ -357,7 +360,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     String urn = baseurn + ":" + author.getId();
 
     // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(getMapOfBooksByAuthor().get(author));
+    String summary = Summarizer.INSTANCE.summarizeBooks(booksByThisAuthor);
     boolean areThereSeries = false;
     for (Book book : booksByThisAuthor) {
       if (book.getSeries() != null) {
@@ -381,7 +384,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
       // make a link to the series by this author catalog
       logger.debug("make a link to the series by this author catalog");
-      firstElements = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author))
+      firstElements = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor)
           .getContentOfListOfSeries(pBreadcrumbs, title, summary, urn, filename, SplitOption.Paginate);
 
       books = getMapOfBooksNotInSeriesByAuthor().get(author);
@@ -390,14 +393,13 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
       logger.debug("processing the other books by " + author);
-      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, getMapOfBooksByAuthor().get(author)).getSubCatalogEntry(breadcrumbs, SplitOption.Paginate).getFirstElement
-          ();
+      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor, true).getSubCatalogEntry(breadcrumbs, SplitOption.Paginate).getFirstElement();
       if (entry != null)
         firstElements.add(0, entry);
 
     } else {
       logger.debug("there are no series by " + author + ", processing all his books");
-      books = getMapOfBooksByAuthor().get(author);
+      books = booksByThisAuthor;
       if (Helper.isNullOrEmpty(books))
         return null;
 
@@ -406,7 +408,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       summary = Summarizer.INSTANCE.summarizeBooks(books);
     }
 
-    // sort books by title
+    // sort 'books' by title
     logger.debug("sort books by title");
     sortBooksByTitle(books);
 

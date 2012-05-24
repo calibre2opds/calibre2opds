@@ -22,19 +22,30 @@ import java.util.List;
 public class AllBooksSubCatalog extends BooksSubCatalog {
   private final static org.apache.log4j.Logger logger = Logger.getLogger(AllBooksSubCatalog.class);
 
-  // private SplitOption splitOption;
-
   public AllBooksSubCatalog(List<Book> books) {
     super(books);
     sortBooks();
   }
 
-//  public AllBooksSubCatalog(List<Book> books, SplitOption splitOption) {
-//    super(books);
-//    this.splitOption = splitOption;
-//    sortBooks();
-//  }
+  /**
+   * Version of catalog constructor where we can force sort by Title if wanted
+   * @param stuffToFilterOut
+   * @param books
+   * @param sortByTitle
+   */
+  public AllBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books, Boolean sortByTitle) {
+    super(stuffToFilterOut, books);
+    if (sortByTitle)
+      sortBooksByTitle(getBooks());
+    else
+      sortBooks();
+ }
 
+  /**
+   * Version of catalog constructor when we may want items filetered out
+   * @param stuffToFilterOut
+   * @param books
+   */
   public AllBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
     sortBooks();
