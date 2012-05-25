@@ -1087,9 +1087,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
         hasContent = true;
       }
       // Tags (if presnt and wanted)
+      // If the user has requested tags we output this section even if the list is empty.
+      // The assumption is that the user in this case wants to see that no tags have been assigned
+      // If we get feedback that this is not  a valid addumption then we could omit it when the list is empty
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails() && Helper.isNotNullOrEmpty(book.getTags())) {
-        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.tags") + " ")).addContent(book.getTags().toString())
-            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+        String tags = book.getTags().toString();
+        if (tags != null  && tags.startsWith("["))
+          // Remove braces added by java around a list
+          tags = tags.substring(1, tags.length()-1);
+        else
+          // If no tags then we need an empty string (is this possible)
+          tags = "";
+        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.tags") + " ")).addContent(tags)
+          .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
         hasContent = true;
       }
       // Publisher (if presnt and wanted)
