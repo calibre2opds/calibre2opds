@@ -92,6 +92,7 @@ v3.2
     - Fix: #c2o-91:  Setting catalog folder to root (/) is not treated as an error
     - Fix: #c2o-111: The "All Books" section within an author not sorted alphabetically
     - New: #c2o-112: Do not delete .htaccess files from generated catalog
+    - Fix: #c2o-113: Tags have square brackets added in Book Details
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1
