@@ -24,7 +24,11 @@ public class Runner {
   private boolean testMode = false;     // Set this to true to generate a test datamodel
   private final static Logger logger = Logger.getLogger(Runner.class);
 
-
+  /**
+   * Constructor
+   * @param startGui
+   * @throws IOException
+   */
   public void run(boolean startGui) throws IOException {
     intro();
     if (testMode) {
@@ -40,6 +44,47 @@ public class Runner {
     }
   }
 
+  /**
+   * Start of run initialisation
+   * @param args
+   * @param startGui
+   */
+  public static void run(String[] args, boolean startGui) {
+    // Start by setting locale to be the same as the system locale (or english if it is not one we support)
+    Locale lc = Locale.getDefault();
+    System.out.println("System language: " + lc.getISO3Language());
+    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
+    Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
+    Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
+
+    ConfigurationManager.addStartupLogMessage("");
+    ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
+    ConfigurationManager.addStartupLogMessage("");
+
+    Runner runner = new Runner();
+    runner.initLog4J();
+    // log4j now intialised so we can start using it.
+    try {
+      if (args.length == 1) {
+        String profileName = args[0];
+        if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))  {
+          logger.info("Switching to profile: " + profileName);
+          ConfigurationManager.INSTANCE.changeProfile(profileName);
+        } else {
+          logger.info("Cannot find profile: " + profileName);
+        }
+      }
+      runner.run(startGui);
+    } catch (IOException e) {
+      logger.info(Localization.Main.getText("error.generic", Constants.AUTHOREMAIL));
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Display project team information
+   * (protected so only displayed once if called recursively)
+   */
   private static void intro() {
     if (!introDone) {
       logger.info("");
@@ -63,6 +108,9 @@ public class Runner {
     }
   }
 
+  /**
+   * log4j initialisation
+   */
   private void initLog4J() {
     String[] levels = new String[]{".info", ".debug", ".trace", ".trace.noCachedFileTracing", "STANDARD"};
     String standardLevel = ".info";
@@ -126,34 +174,6 @@ public class Runner {
       }
       startupLogMessages.clear();
       startupLogMessages = null;
-    }
-  }
-
-  public static void run(String[] args, boolean startGui) {
-    // Start by setting lcoal to be the same as the system local (or english if it is not one we support)
-    Locale lc = Locale.getDefault();
-    System.out.println("System language: " + lc.getISO3Language());
-    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
-    Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
-    Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
-
-    ConfigurationManager.addStartupLogMessage("");
-    ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
-    ConfigurationManager.addStartupLogMessage("");
-
-
-    Runner runner = new Runner();
-    runner.initLog4J();
-    try {
-      if (args.length == 1) {
-        String profileName = args[0];
-        if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))
-          ConfigurationManager.INSTANCE.changeProfile(profileName);
-      }
-      runner.run(startGui);
-    } catch (IOException e) {
-      logger.info(Localization.Main.getText("error.generic", Constants.AUTHOREMAIL));
-      e.printStackTrace();
     }
   }
 }
