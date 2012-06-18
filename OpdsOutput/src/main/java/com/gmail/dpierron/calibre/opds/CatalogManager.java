@@ -58,18 +58,36 @@ public class CatalogManager {
       return  ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName();
   }
 
+  /**
+   *
+   * @return
+   */
   public List<String> getListOfFilesPathsToCopy() {
     return listOfFilesPathsToCopy;
   }
 
+  /**
+   *
+   * @param pathToCopy
+   * @return
+   */
   public Book getBookByPathToCopy(String pathToCopy) {
     return mapOfBookByPathToCopy.get(pathToCopy);
   }
 
+  /**
+   *
+   * @param file
+   */
   void addFileToTheMapOfFilesToCopy(CachedFile file) {
     addFileToTheMapOfFilesToCopy(file, null);
   }
 
+  /**
+   *
+   * @param file
+   * @param book
+   */
   void addFileToTheMapOfFilesToCopy(CachedFile file, Book book) {
     final String databasePath = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
     final int databasePathLength = databasePath.length() + 1;
@@ -91,10 +109,21 @@ public class CatalogManager {
     listOfFilesToCopy.add(file);
   }
 
+  /**
+   *
+   * @param catalogFileName
+   * @return
+   */
   public String getCatalogFileUrlInItsSubfolder(String catalogFileName) {
     return getCatalogFileUrlInItsSubfolder(catalogFileName, true);
   }
 
+  /**
+   *
+   * @param catalogFileName
+   * @param weAreAlsoInASubFolder
+   * @return
+   */
   public String getCatalogFileUrlInItsSubfolder(String catalogFileName, boolean weAreAlsoInASubFolder) {
     String catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
     if (Helper.isNullOrEmpty(catalogFolderName)) {
@@ -220,10 +249,18 @@ public class CatalogManager {
 
   }
 
+  /**
+   *
+   * @return
+   */
   public BookFilter getFeaturedBooksFilter() {
     return featuredBooksFilter;
   }
 
+  /**
+   *
+   * @param featuredBooksFilter
+   */
   public void setFeaturedBooksFilter(BookFilter featuredBooksFilter) {
     this.featuredBooksFilter = featuredBooksFilter;
   }
