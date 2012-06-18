@@ -405,6 +405,9 @@ public class Catalog {
     long countThumbnails;   // Count of thumbnail files that are generated/updated
     long countCovers;       // Count of image files that are generated/updated
 
+    Localization.Main.reloadLocalizations();
+    Localization.Enum.reloadLocalizations();
+
     String textYES = Localization.Main.getText("boolean.yes");
     String textNO = Localization.Main.getText("boolean.no");
 

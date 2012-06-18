@@ -43,7 +43,7 @@ looking at the calibre2opds issue register (http://calibre2opds.myjetbrains.com/
  - Localization: The current localizations now have significant gaps until users can provide the 
             required translation strings for the large number of new messages introduced in v3.0.
 
-If you think that you have found abug, or would simply like to raise a feature request for a
+If you think that you have found a bug, or would simply like to raise a feature request for a
 new capability this can be done via the calibre2opds Issue tracking system at
 http://calibre2opds.myjetbrains.com/youtrack/
 
@@ -54,7 +54,7 @@ Nore detail can be found in many cases on the calibre2opds Issue register
 (http://calibre2opds.myjetbrains.com/youtrack/).    Note that the fact a feature is listed
 here is not a committment that it will appear, but merely that it is under consideration.
 User are encouraged to add comments to the relevant issues in the Issue Register on their views.
-   - Improve localizations.
+   -  Improve/Extend localizations.
    -  #c2o-18: Re-organise GUI fields amongst the various tabs
    -  #c2o-26: Introduce a carousel mode for the book pages
    -  #c2o-29: Generate a recent books RSS-compatible catalog
@@ -78,6 +78,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-108: Omit download section for books with no available download
     - #c2o-109: Improve navigation links in pages
     - #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
+    = #c2o-115: Send to Readmill Library
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.
@@ -93,6 +94,8 @@ v3.2
     - Fix: #c2o-111: The "All Books" section within an author not sorted alphabetically
     - New: #c2o-112: Do not delete .htaccess files from generated catalog
     - Fix: #c2o-113: Tags have square brackets added in Book Details
+    - Fix: #c2o-114: Language is ignored when running on command line (cli)
+    - Fix: #c20-116: Improvements to German localization (thanks to Venia.Legendi)
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1

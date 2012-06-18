@@ -218,6 +218,9 @@ public class Mainframe extends javax.swing.JFrame {
     loadValues();
   }
 
+  /**
+   *  Change the localization to match the language set in the GUI option
+   */
   private void changeLanguage() {
     String newLanguage = (String) cboLang.getSelectedItem();
     if (Helper.checkedCompare(language, newLanguage) != 0) {
