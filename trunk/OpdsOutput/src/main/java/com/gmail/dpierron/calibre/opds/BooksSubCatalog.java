@@ -32,9 +32,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public abstract class BooksSubCatalog extends SubCatalog {
-  private final static DateFormat PUBLICATIONDATE_FORMAT =
-      ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : new SimpleDateFormat("dd/MM/yyyy");
   private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
+
+  // This is the date format used within the book details.
+  // At the moment it is either a fulld ate or jsut the year
+  // If users ask for more flexibility the coniguration options can be re-visited.
+  private final static DateFormat PUBLICATIONDATE_FORMAT =
+      ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
+
+  // This is the date format that is to be used in the titles for the Recent Books sub-catalog section
+  // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
+  // desireable then it could be come a configurable option
+  private final static DateFormat TIMESTAMP_INTITLE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
 
   /**
    * @return
@@ -1186,7 +1195,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         title = book.getTitle();
       }
     else if (Option.contains(options, Option.INCLUDE_TIMESTAMP))
-      title = book.getTitleWithTimestamp();
+      title = "[" + TIMESTAMP_INTITLE_FORMAT.format(book.getTimestamp()) + "] " + book.getTitle();
     else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles())
       title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
     else

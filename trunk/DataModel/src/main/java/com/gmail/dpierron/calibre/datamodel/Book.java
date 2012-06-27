@@ -5,7 +5,6 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -13,7 +12,6 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Book implements SplitableByLetter {
-  private final static DateFormat TIMESTAMP_INTITLE_FORMAT = new SimpleDateFormat("dd/MM");
   private final static Logger logger = Logger.getLogger(Book.class);
 
   private File bookFolder;
@@ -147,16 +145,6 @@ public class Book implements SplitableByLetter {
       titleWithSerieNumber = df.format(getSerieIndex()) + " - " + title;
     }
     return titleWithSerieNumber;
-  }
-
-  public String getTitleWithTimestamp() {
-    if (titleWithTimestamp == null) {
-      if (getTimestamp() != null)
-        titleWithTimestamp = TIMESTAMP_INTITLE_FORMAT.format(getTimestamp()) + " - " + title;
-      else
-        titleWithTimestamp = title;
-    }
-    return titleWithTimestamp;
   }
 
   public String getTitleWithRating(String message, String ratingText) {

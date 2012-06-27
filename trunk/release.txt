@@ -96,6 +96,7 @@ v3.2
     - Fix: #c2o-113: Tags have square brackets added in Book Details
     - Fix: #c2o-114: Language is ignored when running on command line (cli)
     - Fix: #c20-116: Improvements to German localization (thanks to Venia.Legendi)
+    - New: #c2o-117: Include year in Recent sub-catalog entries
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1
