@@ -118,16 +118,17 @@ public enum Database {
         }
         // add a new book
         step=6 ; String title = set.getString("book_title");
-        step=7 ; String path = set.getString("book_path");
-        step=8 ; float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
-        step=9 ; String isbn = set.getString("isbn");
-        step=10 ; String authorSort = set.getString("author_sort");
-        step=11 ; int iRating = set.getInt("rating");
+        step=7 ; String title_sort = set.getString(("book_title_sort"));
+        step=8 ; String path = set.getString("book_path");
+        step=9 ; float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
+        step=10 ; String isbn = set.getString("isbn");
+        step=11 ; String authorSort = set.getString("author_sort");
+        step=12 ; int iRating = set.getInt("rating");
         BookRating rating = BookRating.fromValue(iRating);
-        Book book = new Book(bookId, uuid, title, path, index, timestamp, publicationDate, isbn, authorSort, rating);
+        Book book = new Book(bookId, uuid, title, title_sort, path, index, timestamp, publicationDate, isbn, authorSort, rating);
 
         // fetch its languages
-        step=12 ; stmtBooksLanguagesLink.setString(1, book.getId());
+        step=20 ; stmtBooksLanguagesLink.setString(1, book.getId());
         ResultSet setLanguages = null;
         try {
           setLanguages = stmtBooksLanguagesLink.executeQuery();
@@ -136,11 +137,11 @@ public enum Database {
           sqlException += 16;
           return result;
         }
-        step=13;
+        step=21;
         while (setLanguages.next()) {
           step=14 ; String languageId = setLanguages.getString("lang_code");
           book.addBookLanguage(DataModel.INSTANCE.getMapOfLanguagesById().get(languageId));
-          step=15;
+          step=22;
         }
 
         // fetch its author

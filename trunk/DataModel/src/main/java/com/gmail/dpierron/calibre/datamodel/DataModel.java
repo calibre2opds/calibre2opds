@@ -349,8 +349,8 @@ public enum DataModel {
     Comparator<Book> comparator = new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String title1 = (o1 == null ? "" : o1.getTitleForSort());
-        String title2 = (o2 == null ? "" : o2.getTitleForSort());
+        String title1 = (o1 == null ? "" : o1.getTitle_Sort());
+        String title2 = (o2 == null ? "" : o2.getTitle_Sort());
         return title1.compareTo(title2);
       }
     };
