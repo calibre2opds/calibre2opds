@@ -908,6 +908,8 @@ public class Mainframe extends javax.swing.JFrame {
     tabOptionsTabs.setTitleAt(1, Localization.Main.getText("gui.tab2"));
     tabOptionsTabs.setTitleAt(2, Localization.Main.getText("gui.tab3"));
     tabOptionsTabs.setTitleAt(3, Localization.Main.getText("gui.tab4"));
+    tabOptionsTabs.setTitleAt(4, Localization.Main.getText("gui.tab5"));
+    tabOptionsTabs.setTitleAt(5, Localization.Main.getText("gui.tab6"));
     lblDeviceDropbox.setToolTipText(
         Localization.Main.getText("config.DeviceMode.dropbox.description1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.description2"));
     lblDeviceNAS.setToolTipText(
@@ -973,18 +975,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblNogenerateopdsfiles.setText(Localization.Main.getText("config.GenerateOpdsDownloads.label")); // NOI18N
     lblNogenerateopdsfiles.setToolTipText(Localization.Main.getText("config.GenerateOpdsDownloads.description")); // NOI18N
     chkNogenerateopdsfiles.setToolTipText(lblNogenerateopdsfiles.getToolTipText()); // NOI18N
-    lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
-    lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
-    chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
-    lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
-    lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
-    chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
     lblNobandwidthoptimize.setText(Localization.Main.getText("config.SaveBandwidth.label")); // NOI18N
     lblNobandwidthoptimize.setToolTipText(Localization.Main.getText("config.SaveBandwidth.description")); // NOI18N
     chkNobandwidthoptimize.setToolTipText(lblNobandwidthoptimize.getToolTipText()); // NOI18N
-    lblPublishedDateAsYear.setText(Localization.Main.getText("config.PublishedDateAsYear.label")); // NOI18N
-    lblPublishedDateAsYear.setToolTipText(Localization.Main.getText("config.PublishedDateAsYear.description")); // NOI18N
-    chkPublishedDateAsYear.setToolTipText(lblPublishedDateAsYear.getToolTipText()); // NOI18N
     lblExternalIcons.setText(Localization.Main.getText("config.ExternalIcons.label")); // NOI18N
     lblExternalIcons.setToolTipText(Localization.Main.getText("config.ExternalIcons.description")); // NOI18N
     chkExternalIcons.setToolTipText(lblExternalIcons.getToolTipText()); // NOI18N
@@ -1009,6 +1002,26 @@ public class Mainframe extends javax.swing.JFrame {
     lblNogenerateallbooks.setText(Localization.Main.getText("config.GenerateAllbooks.label")); // NOI18N
     lblNogenerateallbooks.setToolTipText(Localization.Main.getText("config.GenerateAllbooks.description")); // NOI18N
     chkNogenerateallbooks.setToolTipText(lblNogenerateallbooks.getToolTipText()); // NOI18N
+    lblDisplayAuthorSortInAuthorLists.setText(Localization.Main.getText("config.DisplayAuthorSortInAuthorLists.label")); // NOI18N
+    lblDisplayAuthorSortInAuthorLists.setToolTipText(Localization.Main.getText("config.DisplayAuthorSortInAuthorLists.description")); // NOI18N
+    chkDisplayAuthorSortInAuthorLists.setToolTipText(lblDisplayAuthorSortInAuthorLists.getToolTipText()); // NOI18N
+    lblDisplayTitleSortInBookLists.setText(Localization.Main.getText("config.DisplayTitleSortInBookLists.label")); // NOI18N
+    lblDisplayTitleSortInBookLists.setToolTipText(Localization.Main.getText("config.DisplayTitleSortInBookLists.description")); // NOI18N
+    chkDisplayTitleSortInBookLists.setToolTipText(lblDisplayTitleSortInBookLists.getToolTipText()); // NOI18N
+    lblSortUsingAuthorSort.setText(Localization.Main.getText("config.SortUsingAuthorSort.label")); // NOI18N
+    lblSortUsingAuthorSort.setToolTipText(Localization.Main.getText("config.SortUsingAuthorSort.description")); // NOI18N
+    chkSortUsingAuthorSort.setToolTipText(lblSortUsingAuthorSort.getToolTipText()); // NOI18N
+    lblSortUsingTitleSort.setText(Localization.Main.getText("config.SortUsingTitleSort.label")); // NOI18N
+    lblSortUsingTitleSort.setToolTipText(Localization.Main.getText("config.SortUsingTitleSort.description")); // NOI18N
+    chkSortUsingTitleSort.setToolTipText(lblSortUsingTitleSort.getToolTipText()); // NOI18N
+
+    // Book Details Options
+    lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
+    lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
+    chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
+    lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
+    lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
+    chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
     lblIncludeSeriesInBookDetails.setText(Localization.Main.getText("config.IncludeSeriesInBookDetails.label")); // NOI18N
     lblIncludeSeriesInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeSeriesInBookDetails.description")); // NOI18N
     chkIncludeSeriesInBookDetails.setToolTipText(lblIncludeSeriesInBookDetails.getToolTipText()); // NOI18N
@@ -1017,7 +1030,22 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeTagsInBookDetails.setToolTipText(lblIncludeTagsInBookDetails.getToolTipText()); // NOI18N
     lblIncludePublisherInBookDetails.setText(Localization.Main.getText("config.IncludePublisherInBookDetails.label")); // NOI18N
     lblIncludePublisherInBookDetails.setToolTipText(Localization.Main.getText("config.IncludePublisherInBookDetails.description")); // NOI18N
-    chkIncludePublisherInBookDetails.setToolTipText(lblIncludePublisherInBookDetails.getToolTipText()); // NOI18N
+    chkIncludePublisherInBookDetails.setToolTipText(lblIncludePublishedInBookDetails.getToolTipText()); // NOI18N
+    lblIncludePublishedInBookDetails.setText(Localization.Main.getText("config.IncludePublishedInBookDetails.label")); // NOI18N
+    lblIncludePublishedInBookDetails.setToolTipText(Localization.Main.getText("config.IncludePublishedInBookDetails.description")); // NOI18N
+    chkIncludePublishedInBookDetails.setToolTipText(lblIncludePublishedInBookDetails.getToolTipText()); // NOI18N
+    lblIncludeModifiedInBookDetails1.setText(Localization.Main.getText("config.IncludeModifiedInBookDetails.label")); // NOI18N
+    lblIncludeModifiedInBookDetails1.setToolTipText(Localization.Main.getText("config.IncludeModifiedInBookDetails.description")); // NOI18N
+    chkIncludeModifiedInBookDetails.setToolTipText(lblIncludeModifiedInBookDetails1.getToolTipText()); // NOI18N
+    lblPublishedDateAsYear.setText(Localization.Main.getText("config.PublishedDateAsYear.label")); // NOI18N
+    lblPublishedDateAsYear.setToolTipText(Localization.Main.getText("config.PublishedDateAsYear.description")); // NOI18N
+    chkPublishedDateAsYear.setToolTipText(lblPublishedDateAsYear.getToolTipText()); // NOI18N
+    lblDisplayAuthorSortInBookDetails.setText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.label")); // NOI18N
+    lblDisplayAuthorSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.description")); // NOI18N
+    chkDisplayAuthorSortInBookDetails.setToolTipText(lblDisplayAuthorSortInBookDetails.getToolTipText()); // NOI18N
+    lblDisplayTitleSortInBookDetails.setText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.label")); // NOI18N
+    lblDisplayTitleSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.description")); // NOI18N
+    chkDisplayTitleSortInBookDetails.setToolTipText(lblDisplayTitleSortInBookDetails.getToolTipText()); // NOI18N
 
     // advanced customization options
     lblIncludeformat.setText(Localization.Main.getText("config.IncludedFormatsList.label")); // NOI18N
@@ -1165,6 +1193,9 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm.setToolTipText(lblIndexFilterAlgorithm.getToolTipText()); // NOI18N
     cmdLibrarythingTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
     cmdLibrarythingTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
+    // Custom catalogs
+    cmdAdd.setText(Localization.Main.getText("gui.add")); // NOI18N
+
 
     // menus
     mnuFile.setText(Localization.Main.getText("gui.menu.file")); // NOI18N
@@ -1194,256 +1225,100 @@ public class Mainframe extends javax.swing.JFrame {
    * @param label
    */
   private void popupExplanation(JLabel label) {
-    String popup = null;
-    // main options
-    if (label == lblLang)
-      popup = Localization.Main.getText("config.Language.description");
-    else if (label == lblCurrentProfile)
-      popup = Localization.Main.getText("config.Profile.description");
-    else if (label == lblDatabaseFolder)
-      popup = Localization.Main.getText("config.DatabaseFolder.description");
-    else if (label == lblTargetFolder)
-      popup = Localization.Main.getText("config.TargetFolder.description");
-    else if (label == lblCopyToDatabaseFolder)
-      popup = Localization.Main.getText("config.CopyToDatabaseFolder.description");
-    else if (label == lblReprocessEpubMetadata)
-      popup = Localization.Main.getText("config.ReprocessEpubMetadata.description");
-    else if (label == lblCatalogFolder)
-      popup = Localization.Main.getText("config.CatalogFolderName.description");
-    else if (label == lblUrlBase)
-      popup = Localization.Main.getText("config.UrlBase.description");
-    else if (label == lblCatalogTitle)
-      popup = Localization.Main.getText("config.CatalogTitle.description");
-    else if (label == lblSplittagson)
-      popup = Localization.Main.getText("config.SplitTagsOn.description");
-    else if (label == lblCatalogFilter)
-      popup = Localization.Main.getText("config.CatalogFilter.description");
-    else if (label == lblWikilang)
-      popup = Localization.Main.getText("config.WikipediaLanguage.description");
-
-      // catalog generation options
-    else if (label == lblNogenerateopds)
-      popup = Localization.Main.getText("config.GenerateOpds.description");
-    else if (label == lblNogeneratehtml)
-      popup = Localization.Main.getText("config.GenerateHtml.description");
-    else if (label == lblIncludeAboutLink)
-      popup = Localization.Main.getText("config.IncludeAboutLink.description");
-    else if (label == lblSupressRatings)
-      popup = Localization.Main.getText("config.SuppressRatingsInTitles.description");
-    else if (label == lblNoGenerateAuthors)
-      popup = Localization.Main.getText("config.GenerateAuthors.description");
-    else if (label == lblNoGenerateTags)
-      popup = Localization.Main.getText("config.GenerateTags.description");
-    else if (label == lblNoGenerateSeries)
-      popup = Localization.Main.getText("config.GenerateSeries.description");
-    else if (label == lblNogeneraterecent)
-      popup = Localization.Main.getText("config.GenerateRecent.description");
-    else if (label == lblNogenerateratings)
-      popup = Localization.Main.getText("config.GenerateRatings.description");
-    else if (label == lblNogenerateallbooks)
-      popup = Localization.Main.getText("config.GenerateAllbooks.description");
-    else if (label == lblNogenerateexternallinks)
-      popup = Localization.Main.getText("config.GenerateExternalLinks.description");
-    else if (label == lblNogeneratecrosslinks)
-      popup = Localization.Main.getText("config.GenerateCrossLinks.description");
-    else if (label == lblNogenerateopdsfiles)
-      popup = Localization.Main.getText("config.GenerateOpdsDownloads.description");
-    else if (label == lblNogeneratehtmlfiles)
-      popup = Localization.Main.getText("config.GenerateHtmlDownloads.description");
-    else if (label == lblIncludeSeriesInBookDetails)
-      popup = Localization.Main.getText("config.IncludeSeriesInBookDetails.description");
-    else if (label == lblIncludeTagsInBookDetails)
-      popup = Localization.Main.getText("config.IncludeTagsInBookDetails.description");
-    else if (label == lblIncludePublisherInBookDetails)
-      popup = Localization.Main.getText("config.IncludePublisherInBookDetails.description");
-    else if (label == lblBrowseByCover)
-      popup = Localization.Main.getText("config.BrowseByCover.description");
-    else if (label == lblPublishedDateAsYear)
-      popup = Localization.Main.getText("config.PublishedDateAsYear.description");
-    else if (label == lblBrowseByCoverWithoutSplit)
-      popup = Localization.Main.getText("config.BrowseByCoverWithoutSplit.description");
-    else if (label == lblExternalIcons)
-      popup = Localization.Main.getText("config.ExternalIcons.description");
-    else if (label == lblNobandwidthoptimize)
-      popup = Localization.Main.getText("config.SaveBandwidth.description");
-    else if (label == lblMinimizeChangedFiles)
-      popup = Localization.Main.getText("config.MinimizeChangedFiles.description");
-    else if (label == lblCryptFilenames)
-      popup = Localization.Main.getText("config.CryptFilenames.description");
-    else if (label == lblOrderAllBooksBySeries)
-      popup = Localization.Main.getText("config.OrderAllBooksBySeries.description");
-      // advanced customization options
-    else if (label == lblIncludeformat)
-      popup = Localization.Main.getText("config.IncludedFormatsList.description");
-    else if (label == lblMaxbeforepaginate)
-      popup = Localization.Main.getText("config.MaxBeforePaginate.description");
-    else if (label == lblMaxbeforesplit)
-      popup = Localization.Main.getText("config.MaxBeforeSplit.description");
-    else if (label == lblMaxSplitLevels)
-      popup = Localization.Main.getText("config.MaxSplitLevels.description");
-    else if (label == lblBooksinrecent)
-      popup = Localization.Main.getText("config.BooksInRecentAdditions.description");
-    else if (label == lblMaxsummarylength)
-      popup = Localization.Main.getText("config.MaxSummaryLength.description");
-    else if (label == lblMaxBookSummaryLength)
-      popup = Localization.Main.getText("config.MaxBookSummaryLength.description");
-    else if (label == lblIncludeemptybooks)
-      popup = Localization.Main.getText("config.IncludeBooksWithNoFile.description");
-    else if (label == lblIncludeOnlyOneFile)
-      popup = Localization.Main.getText("config.IncludeOnlyOneFile.description");
-    else if (label == lblZipTrookCatalog)
-      popup = Localization.Main.getText("config.ZipTrookCatalog.description");
-    else if (label == lblNoShowSeries)
-      popup = Localization.Main.getText("config.ShowSeriesInAuthorCatalog.description");
-    else if (label == lblSplitByAuthorInitialGoToBooks)
-      popup = Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.description");
-    else if (label == lblNoThumbnailGenerate)
-      popup = Localization.Main.getText("config.ThumbnailGenerate.description");
-    else if (label == lblThumbnailheight)
-      popup = Localization.Main.getText("config.ThumbnailHeight.description");
-    else if (label == lblNoCoverResize)
-      popup = Localization.Main.getText("config.CoverResize.description");
-    else if (label == lblCoverHeight)
-      popup = Localization.Main.getText("config.CoverHeight.description");
-    else if (label == lblTagsToMakeDeep)
-      popup = Localization.Main.getText("config.TagsToMakeDeep.description");
-    else if (label == lblMinBooksToMakeDeepLevel)
-      popup = Localization.Main.getText("config.MinBooksToMakeDeepLevel.description");
-    else if (label == lblMaxMobileResolution)
-      popup = Localization.Main.getText("config.MaxMobileResolution.description");
-    else if (label == lblGenerateIndex)
-      popup = Localization.Main.getText("config.GenerateIndex.description");
-    else if (label == lblMaxKeywords)
-      popup = Localization.Main.getText("config.MaxKeywords.description");
-    else if (label == lblIndexComments)
-      popup = Localization.Main.getText("config.IndexComments.description");
-    else if (label == lblIndexFilterAlgorithm)
-      popup = Localization.Main.getText("config.IndexFilterAlgorithm.description");
-    else if (label == lblFeaturedCatalogTitle)
-      popup = Localization.Main.getText("config.FeaturedCatalogTitle.description");
-    else if (label == lblFeaturedCatalogSavedSearchName)
-      popup = Localization.Main.getText("config.FeaturedCatalogSavedSearchName.description");
-
-      // external links
-    else if (label == lblWikipediaUrl)
-      popup = Localization.Main.getText("config.WikipediaUrl.description");
-    else if (label == lblAmazonAuthorUrl)
-      popup = Localization.Main.getText("config.AmazonAuthorUrl.description");
-    else if (label == lblAmazonIsbnUrl)
-      popup = Localization.Main.getText("config.AmazonIsbnUrl.description");
-    else if (label == lblAmazonTitleUrl)
-      popup = Localization.Main.getText("config.AmazonTitleUrl.description");
-    else if (label == lblGoodreadAuthorUrl)
-      popup = Localization.Main.getText("config.GoodreadAuthorUrl.description");
-    else if (label == lblGoodreadIsbnUrl)
-      popup = Localization.Main.getText("config.GoodreadIsbnUrl.description");
-    else if (label == lblGoodreadTitleUrl)
-      popup = Localization.Main.getText("config.GoodreadTitleUrl.description");
-    else if (label == lblGoodreadReviewIsbnUrl)
-      popup = Localization.Main.getText("config.GoodreadReviewIsbnUrl.description");
-    else if (label == lblIsfdbAuthorUrl)
-      popup = Localization.Main.getText("config.IsfdbAuthorUrl.description");
-    else if (label == lblLibrarythingAuthorUrl)
-      popup = Localization.Main.getText("config.LibrarythingAuthorUrl.description");
-    else if (label == lblLibrarythingIsbnUrl)
-      popup = Localization.Main.getText("config.LibrarythingIsbnUrl.description");
-    else if (label == lblLibrarythingTitleUrl)
-      popup = Localization.Main.getText("config.LibrarythingTitleUrl.description");
-
-    if (Helper.isNotNullOrEmpty(popup))
-      JOptionPane.showMessageDialog(this, popup, Localization.Main.getText("gui.description"), JOptionPane.INFORMATION_MESSAGE);
+    if (Helper.isNotNullOrEmpty(label.getToolTipText()))
+      JOptionPane.showMessageDialog(this, label.getToolTipText(), Localization.Main.getText("gui.description"), JOptionPane.INFORMATION_MESSAGE);
   }
 
-  private void showSetDatabaseFolderDialog() {
-    JDirectoryChooser chooser = new JDirectoryChooser();
-    chooser.setShowingCreateDirectory(false);
-    File f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
-    if (f != null && f.exists())
-      chooser.setCurrentDirectory(f);
-    int result = chooser.showOpenDialog(this);
-    if (result == JFileChooser.CANCEL_OPTION)
-      return;
-    f = chooser.getSelectedFile();
-    if (setDatabaseFolder(f.getAbsolutePath()))
-      txtDatabaseFolder.setText(f.getAbsolutePath());
-  }
+   private void showSetDatabaseFolderDialog() {
+     JDirectoryChooser chooser = new JDirectoryChooser();
+     chooser.setShowingCreateDirectory(false);
+     File f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+     if (f != null && f.exists())
+       chooser.setCurrentDirectory(f);
+     int result = chooser.showOpenDialog(this);
+     if (result == JFileChooser.CANCEL_OPTION)
+       return;
+     f = chooser.getSelectedFile();
+     if (setDatabaseFolder(f.getAbsolutePath()))
+       txtDatabaseFolder.setText(f.getAbsolutePath());
+   }
 
-  private boolean setDatabaseFolder(String targetFolder) {
-    File newFolder = new File(targetFolder);
-    if (newFolder.exists()) {
-      File oldFolder = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
-      ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(newFolder);
-      if (DatabaseManager.INSTANCE.databaseExists()) {
-        JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
-        return true;
-      } else
-        ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(oldFolder);
-    }
-    JOptionPane.showMessageDialog(this, Localization.Main.getText("error.nodatabase", targetFolder), null, JOptionPane.ERROR_MESSAGE);
-    return false;
-  }
+   private boolean setDatabaseFolder(String targetFolder) {
+     File newFolder = new File(targetFolder);
+     if (newFolder.exists()) {
+       File oldFolder = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+       ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(newFolder);
+       if (DatabaseManager.INSTANCE.databaseExists()) {
+         JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
+         return true;
+       } else
+         ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(oldFolder);
+     }
+     JOptionPane.showMessageDialog(this, Localization.Main.getText("error.nodatabase", targetFolder), null, JOptionPane.ERROR_MESSAGE);
+     return false;
+   }
 
-  private void showSetTargetFolderDialog() {
-    JDirectoryChooser chooser = new JDirectoryChooser();
-    chooser.setShowingCreateDirectory(true);
-    File f = ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder();
-    if (f != null && f.exists())
-      chooser.setCurrentDirectory(f);
-    else {
-      f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
-      if (f != null && f.exists())
-        chooser.setCurrentDirectory(f);
-    }
-    int result = chooser.showOpenDialog(this);
-    if (result == JFileChooser.CANCEL_OPTION)
-      return;
-    f = chooser.getSelectedFile();
-    if (setTargetFolder(f.getAbsolutePath()))
-      txtTargetFolder.setText(f.getAbsolutePath());
-  }
+   private void showSetTargetFolderDialog() {
+     JDirectoryChooser chooser = new JDirectoryChooser();
+     chooser.setShowingCreateDirectory(true);
+     File f = ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder();
+     if (f != null && f.exists())
+       chooser.setCurrentDirectory(f);
+     else {
+       f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+       if (f != null && f.exists())
+         chooser.setCurrentDirectory(f);
+     }
+     int result = chooser.showOpenDialog(this);
+     if (result == JFileChooser.CANCEL_OPTION)
+       return;
+     f = chooser.getSelectedFile();
+     if (setTargetFolder(f.getAbsolutePath()))
+       txtTargetFolder.setText(f.getAbsolutePath());
+   }
 
-  private boolean setTargetFolder(String targetFolder) {
-    File newFolder = new File(targetFolder);
-    if (!newFolder.exists()) {
-      String message = Localization.Main.getText("error.targetdoesnotexist", targetFolder);
-      int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-      if (result != JOptionPane.YES_OPTION)
-        return false;
-      newFolder.mkdirs();
-    }
-    JOptionPane.showMessageDialog(this, Localization.Main.getText("info.targetfolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
-    return true;
-  }
+   private boolean setTargetFolder(String targetFolder) {
+     File newFolder = new File(targetFolder);
+     if (!newFolder.exists()) {
+       String message = Localization.Main.getText("error.targetdoesnotexist", targetFolder);
+       int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+       if (result != JOptionPane.YES_OPTION)
+         return false;
+       newFolder.mkdirs();
+     }
+     JOptionPane.showMessageDialog(this, Localization.Main.getText("info.targetfolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
+     return true;
+   }
 
-  private void openLogFolder() {
-    // Do nothing yet
-  }
+   private void openLogFolder() {
+     // Do nothing yet
+   }
 
-  private void saveConfiguration() {
-    storeValues();
-    String message = Localization.Main.getText("gui.info.saved");
-    int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-    if (result != JOptionPane.YES_OPTION)
-      return;
-    System.exit(0);
-  }
+   private void saveConfiguration() {
+     storeValues();
+     String message = Localization.Main.getText("gui.info.saved");
+     int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+     if (result != JOptionPane.YES_OPTION)
+       return;
+     System.exit(0);
+   }
 
-  private void exitProgram() {
-    System.exit(0);
-  }
+   private void exitProgram() {
+     System.exit(0);
+   }
 
-  private TableModel getTblCustomCatalogsModel() {
-    return customCatalogTableModel;
-  }
+   private TableModel getTblCustomCatalogsModel() {
+     return customCatalogTableModel;
+   }
 
-  private void addCustomCatalog() {
-    customCatalogTableModel.addCustomCatalog();
-  }
+   private void addCustomCatalog() {
+     customCatalogTableModel.addCustomCatalog();
+   }
 
-  /**
-   * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this
-   * method is always regenerated by the Form Editor.
-   */
+   /**
+    * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this
+    * method is always regenerated by the Form Editor.
+    */
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed"
   // <editor-fold defaultstate="collapsed"
@@ -1493,7 +1368,7 @@ public class Mainframe extends javax.swing.JFrame {
         lblReprocessEpubMetadata = new javax.swing.JLabel();
         lblZipTrookCatalog = new javax.swing.JLabel();
         chkZipTrookCatalog = new javax.swing.JCheckBox();
-        pnlGenerationOptions = new javax.swing.JPanel();
+        pnlCatalogStructure = new javax.swing.JPanel();
         lblNogeneratehtml = new javax.swing.JLabel();
         chkNogeneratehtml = new javax.swing.JCheckBox();
         lblNogeneratehtmlfiles = new javax.swing.JLabel();
@@ -1514,8 +1389,6 @@ public class Mainframe extends javax.swing.JFrame {
         chkNogeneratehtmlfiles = new javax.swing.JCheckBox();
         chkNogenerateopds = new javax.swing.JCheckBox();
         lblNogenerateopds = new javax.swing.JLabel();
-        chkPublishedDateAsYear = new javax.swing.JCheckBox();
-        lblPublishedDateAsYear = new javax.swing.JLabel();
         chkNoGenerateAuthors = new javax.swing.JCheckBox();
         lblNoGenerateSeries = new javax.swing.JLabel();
         lblNogeneraterecent = new javax.swing.JLabel();
@@ -1528,14 +1401,37 @@ public class Mainframe extends javax.swing.JFrame {
         chkNoShowSeries = new javax.swing.JCheckBox();
         lblOrderAllBooksBySeries = new javax.swing.JLabel();
         chkOrderAllBooksBySeries = new javax.swing.JCheckBox();
+        lblSplitByAuthorInitialGoToBooks = new javax.swing.JLabel();
+        chkSplitByAuthorInitialGoToBooks = new javax.swing.JCheckBox();
+        lblDisplayAuthorSortInAuthorLists = new javax.swing.JLabel();
+        lblDisplayTitleSortInBookLists = new javax.swing.JLabel();
+        lblSortUsingAuthorSort = new javax.swing.JLabel();
+        lblSortUsingTitleSort = new javax.swing.JLabel();
+        chkDisplayAuthorSortInAuthorLists = new javax.swing.JCheckBox();
+        chkDisplayTitleSortInBookLists = new javax.swing.JCheckBox();
+        chkSortUsingAuthorSort = new javax.swing.JCheckBox();
+        chkSortUsingTitleSort = new javax.swing.JCheckBox();
+        javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
         chkIncludeSeriesInBookDetails = new javax.swing.JCheckBox();
         lblIncludePublisherInBookDetails = new javax.swing.JLabel();
         lblIncludeSeriesInBookDetails = new javax.swing.JLabel();
         chkIncludePublisherInBookDetails = new javax.swing.JCheckBox();
-        lblSplitByAuthorInitialGoToBooks = new javax.swing.JLabel();
-        chkSplitByAuthorInitialGoToBooks = new javax.swing.JCheckBox();
+        lblIncludePublishedInBookDetails = new javax.swing.JLabel();
+        lblIncludeModifiedInBookDetails1 = new javax.swing.JLabel();
+        chkIncludeModifiedInBookDetails = new javax.swing.JCheckBox();
+        chkIncludePublishedInBookDetails = new javax.swing.JCheckBox();
+        lblDisplayAuthorSortInBookDetails = new javax.swing.JLabel();
+        lblDisplayTitleSortInBookDetails = new javax.swing.JLabel();
+        chkDisplayAuthorSortInBookDetails = new javax.swing.JCheckBox();
+        chkDisplayTitleSortInBookDetails = new javax.swing.JCheckBox();
+        lblNogeneratecrosslinks = new javax.swing.JLabel();
+        chkNogeneratecrosslinks = new javax.swing.JCheckBox();
+        lblNogenerateexternallinks = new javax.swing.JLabel();
+        chkNogenerateexternallinks = new javax.swing.JCheckBox();
+        chkPublishedDateAsYear = new javax.swing.JCheckBox();
+        lblPublishedDateAsYear = new javax.swing.JLabel();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -1626,10 +1522,6 @@ public class Mainframe extends javax.swing.JFrame {
         cmdLibrarythingAuthorReset = new javax.swing.JButton();
         cmdLibrarythingIsbnReset = new javax.swing.JButton();
         cmdLibrarythingTitleReset = new javax.swing.JButton();
-        lblNogeneratecrosslinks = new javax.swing.JLabel();
-        chkNogeneratecrosslinks = new javax.swing.JCheckBox();
-        lblNogenerateexternallinks = new javax.swing.JLabel();
-        chkNogenerateexternallinks = new javax.swing.JCheckBox();
         pnlCustomCatalogs = new javax.swing.JPanel();
         scrCustomCatalogs = new javax.swing.JScrollPane();
         tblCustomCatalogs = new javax.swing.JTable();
@@ -1708,7 +1600,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMain.add(lblDeviceNook, gridBagConstraints);
 
         lblDeviceMode1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDeviceMode1.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
+        lblDeviceMode1.setText("lblDeviceMode1");
         lblDeviceMode1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lblDeviceMode1.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1721,7 +1613,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMain.add(lblDeviceMode1, gridBagConstraints);
 
         lblDeviceMode2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDeviceMode2.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
+        lblDeviceMode2.setText("lblDeviceMode2");
         lblDeviceMode2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1747,8 +1639,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         pnlMainOptions.setLayout(new java.awt.GridBagLayout());
 
-        lblLang.setText(Localization.Main.getText("config.Language.label")); // NOI18N
-        lblLang.setToolTipText(Localization.Main.getText("config.Language.description")); // NOI18N
+        lblLang.setText("lblLang");
         lblLang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1782,7 +1673,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(cboLang, gridBagConstraints);
 
-        lblDatabaseFolder.setText(Localization.Main.getText("config.DatabaseFolder.label")); // NOI18N
+        lblDatabaseFolder.setText("lblDatabaseFolder");
         lblDatabaseFolder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1825,7 +1716,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(cmdSetDatabaseFolder, gridBagConstraints);
 
-        lblTargetFolder.setText(Localization.Main.getText("config.TargetFolder.label")); // NOI18N
+        lblTargetFolder.setText("lblDatabaseFolder");
         lblTargetFolder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1868,7 +1759,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(cmdSetTargetFolder, gridBagConstraints);
 
-        lblUrlBase.setText(Localization.Main.getText("config.UrlBase.label")); // NOI18N
+        lblUrlBase.setText("lblUrlBase");
         lblUrlBase.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1893,7 +1784,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtUrlBase, gridBagConstraints);
 
-        lblCatalogFolder.setText(Localization.Main.getText("config.CatalogFolderName.label")); // NOI18N
+        lblCatalogFolder.setText("lblCatalogFolder");
         lblCatalogFolder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1916,7 +1807,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtCatalogFolder, gridBagConstraints);
 
-        lblCatalogTitle.setText(Localization.Main.getText("config.CatalogTitle.label")); // NOI18N
+        lblCatalogTitle.setText("lblCatalogTitle");
         lblCatalogTitle.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1940,7 +1831,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtCatalogTitle, gridBagConstraints);
 
-        lblSplittagson.setText(Localization.Main.getText("config.SplitTagsOn.label")); // NOI18N
+        lblSplittagson.setText("lblSplittagson");
         lblSplittagson.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -1964,7 +1855,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlSplitTagsOn.add(txtSplittagson, gridBagConstraints);
 
-        chkDontsplittags.setText(Localization.Main.getText("config.SplitTagsOn.splitbyletter")); // NOI18N
+        chkDontsplittags.setText("chkDontsplittags");
         chkDontsplittags.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkDontsplittagsActionPerformed(evt);
@@ -1985,7 +1876,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         pnlMainOptions.add(pnlSplitTagsOn, gridBagConstraints);
 
-        lblCatalogFilter.setText(Localization.Main.getText("config.CatalogFilter.label")); // NOI18N
+        lblCatalogFilter.setText("lblCatalogFilter");
         lblCatalogFilter.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2009,7 +1900,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtCatalogFilter, gridBagConstraints);
 
-        lblWikilang.setText(Localization.Main.getText("config.WikipediaLanguage.label")); // NOI18N
+        lblWikilang.setText("lblWikilang");
         lblWikilang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2041,7 +1932,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkCopyToDatabaseFolder, gridBagConstraints);
 
-        lblCopyToDatabaseFolder.setText(Localization.Main.getText("config.CopyToDatabaseFolder.label")); // NOI18N
+        lblCopyToDatabaseFolder.setText("lblCopyToDatabaseFolder");
         lblCopyToDatabaseFolder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2062,7 +1953,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkReprocessEpubMetadata, gridBagConstraints);
 
-        lblReprocessEpubMetadata.setText(Localization.Main.getText("config.ReprocessEpubMetadata.label")); // NOI18N
+        lblReprocessEpubMetadata.setText("lblReprocessEpubMetadata");
         lblReprocessEpubMetadata.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2075,7 +1966,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblReprocessEpubMetadata, gridBagConstraints);
 
-        lblZipTrookCatalog.setText(Localization.Main.getText("config.ZipTrookCatalog.label")); // NOI18N
+        lblZipTrookCatalog.setText("lblZipTrookCatalog");
         lblZipTrookCatalog.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2096,16 +1987,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkZipTrookCatalog, gridBagConstraints);
 
-        tabOptionsTabs.addTab(Localization.Main.getText("gui.tab1"), pnlMainOptions); // NOI18N
+        tabOptionsTabs.addTab("pnlMainOptions", pnlMainOptions);
+        pnlMainOptions.getAccessibleContext().setAccessibleName("Main Option");
 
-        pnlGenerationOptions.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        pnlGenerationOptions.setLayout(new java.awt.GridBagLayout());
+        pnlCatalogStructure.setLayout(new java.awt.GridBagLayout());
 
-        lblNogeneratehtml.setText(Localization.Main.getText("config.GenerateHtml.label")); // NOI18N
+        lblNogeneratehtml.setText("lblNogeneratehtml");
         lblNogeneratehtml.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2116,7 +2003,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogeneratehtml, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogeneratehtml, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -2124,9 +2011,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogeneratehtml, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogeneratehtml, gridBagConstraints);
 
-        lblNogeneratehtmlfiles.setText(Localization.Main.getText("config.GenerateHtmlDownloads.label")); // NOI18N
+        lblNogeneratehtmlfiles.setText("lblNogeneratehtmlfiles");
         lblNogeneratehtmlfiles.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2137,9 +2024,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogeneratehtmlfiles, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogeneratehtmlfiles, gridBagConstraints);
 
-        lblBrowseByCover.setText(Localization.Main.getText("config.BrowseByCover.label")); // NOI18N
+        lblBrowseByCover.setText("lblBrowseByCover");
         lblBrowseByCover.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2150,7 +2037,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblBrowseByCover, gridBagConstraints);
+        pnlCatalogStructure.add(lblBrowseByCover, gridBagConstraints);
 
         chkBrowseByCover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2164,9 +2051,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkBrowseByCover, gridBagConstraints);
+        pnlCatalogStructure.add(chkBrowseByCover, gridBagConstraints);
 
-        lblBrowseByCoverWithoutSplit.setText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.label")); // NOI18N
+        lblBrowseByCoverWithoutSplit.setText("lblBrowseByCoverWithoutSplit");
         lblBrowseByCoverWithoutSplit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2177,7 +2064,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblBrowseByCoverWithoutSplit, gridBagConstraints);
+        pnlCatalogStructure.add(lblBrowseByCoverWithoutSplit, gridBagConstraints);
         lblBrowseByCoverWithoutSplit.getAccessibleContext().setAccessibleName("Do not split by letter in \"Browse by Cover\" mode");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2187,9 +2074,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkBrowseByCoverWithoutSplit, gridBagConstraints);
+        pnlCatalogStructure.add(chkBrowseByCoverWithoutSplit, gridBagConstraints);
 
-        lblIncludeAboutLink.setText(Localization.Main.getText("config.IncludeAboutLink.label")); // NOI18N
+        lblIncludeAboutLink.setText("lblIncludeAboutLink");
         lblIncludeAboutLink.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2200,7 +2087,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblIncludeAboutLink, gridBagConstraints);
+        pnlCatalogStructure.add(lblIncludeAboutLink, gridBagConstraints);
         lblIncludeAboutLink.getAccessibleContext().setAccessibleName("Include the \"About calibre2opds\" link");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2210,9 +2097,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkIncludeAboutLink, gridBagConstraints);
+        pnlCatalogStructure.add(chkIncludeAboutLink, gridBagConstraints);
 
-        lblNogenerateopdsfiles.setText(Localization.Main.getText("config.GenerateDownloads.label")); // NOI18N
+        lblNogenerateopdsfiles.setText("lblNogenerateopdsfiles");
         lblNogenerateopdsfiles.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2228,7 +2115,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogenerateopdsfiles, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogenerateopdsfiles, gridBagConstraints);
         lblNogenerateopdsfiles.getAccessibleContext().setAccessibleName("Do not generate OPDS downloads");
 
         chkNogenerateopdsfiles.addActionListener(new java.awt.event.ActionListener() {
@@ -2243,9 +2130,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogenerateopdsfiles, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogenerateopdsfiles, gridBagConstraints);
 
-        lblNogenerateratings.setText(Localization.Main.getText("config.GenerateRatings.label")); // NOI18N
+        lblNogenerateratings.setText("lblNogenerateratings");
         lblNogenerateratings.setRequestFocusEnabled(false);
         lblNogenerateratings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -2257,7 +2144,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogenerateratings, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogenerateratings, gridBagConstraints);
         lblNogenerateratings.getAccessibleContext().setAccessibleName("Do not generate the \"Ratings\" catalog ");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2267,9 +2154,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogenerateratings, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogenerateratings, gridBagConstraints);
 
-        lblNogenerateallbooks.setText(Localization.Main.getText("config.GenerateAllbooks.label")); // NOI18N
+        lblNogenerateallbooks.setText("lblNogenerateallbooks");
         lblNogenerateallbooks.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2280,9 +2167,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogenerateallbooks, gridBagConstraints);
-        lblNogenerateallbooks.getAccessibleContext().setAccessibleName("Do not generate the \"All books\" catalog ");
-
+        pnlCatalogStructure.add(lblNogenerateallbooks, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
@@ -2290,9 +2175,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogenerateallbooks, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogenerateallbooks, gridBagConstraints);
 
-        lblSupressRatings.setText(Localization.Main.getText("config.SuppressRatingsInTitles.label")); // NOI18N
+        lblSupressRatings.setText("lblSupressRatings");
         lblSupressRatings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2303,7 +2188,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblSupressRatings, gridBagConstraints);
+        pnlCatalogStructure.add(lblSupressRatings, gridBagConstraints);
         lblSupressRatings.getAccessibleContext().setAccessibleName("Suppress ratings in the books titles ");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2313,21 +2198,21 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkSupressRatings, gridBagConstraints);
+        pnlCatalogStructure.add(chkSupressRatings, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogeneratehtmlfiles, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogeneratehtmlfiles, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogenerateopds, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogenerateopds, gridBagConstraints);
 
         lblNogenerateopds.setText("lblNogenerateopds");
         lblNogenerateopds.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -2340,36 +2225,17 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogenerateopds, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogenerateopds, gridBagConstraints);
         lblNogenerateopds.getAccessibleContext().setAccessibleName("Di Not generate OPDS catalogs");
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkPublishedDateAsYear, gridBagConstraints);
-
-        lblPublishedDateAsYear.setText("lblPublishedDateAsYear");
-        lblPublishedDateAsYear.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblPublishedDateAsYear, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNoGenerateAuthors, gridBagConstraints);
+        pnlCatalogStructure.add(chkNoGenerateAuthors, gridBagConstraints);
 
-        lblNoGenerateSeries.setText("Do not generate the \"Series\" catalog");
+        lblNoGenerateSeries.setText("lblNoGenerateSeries");
         lblNoGenerateSeries.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2380,9 +2246,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNoGenerateSeries, gridBagConstraints);
+        pnlCatalogStructure.add(lblNoGenerateSeries, gridBagConstraints);
 
-        lblNogeneraterecent.setText("Do not generate the \"Recent\" catalog");
+        lblNogeneraterecent.setText("lblNogeneraterecent");
         lblNogeneraterecent.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2393,15 +2259,15 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNogeneraterecent, gridBagConstraints);
+        pnlCatalogStructure.add(lblNogeneraterecent, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNogeneraterecent, gridBagConstraints);
+        pnlCatalogStructure.add(chkNogeneraterecent, gridBagConstraints);
 
-        lblNoGenerateTags.setText("Do not generate the \"Tags\" catalog");
+        lblNoGenerateTags.setText("lblNoGenerateTags");
         lblNoGenerateTags.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2412,9 +2278,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNoGenerateTags, gridBagConstraints);
+        pnlCatalogStructure.add(lblNoGenerateTags, gridBagConstraints);
 
-        lblNoGenerateAuthors.setText("Do not generate the \"Authors\" catalog");
+        lblNoGenerateAuthors.setText("lblNoGenerateAuthors");
         lblNoGenerateAuthors.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2425,21 +2291,21 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNoGenerateAuthors, gridBagConstraints);
+        pnlCatalogStructure.add(lblNoGenerateAuthors, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNoGenerateTags, gridBagConstraints);
+        pnlCatalogStructure.add(chkNoGenerateTags, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNoGenerateSeries, gridBagConstraints);
+        pnlCatalogStructure.add(chkNoGenerateSeries, gridBagConstraints);
 
-        lblNoShowSeries.setText(Localization.Main.getText("config.ShowSeriesInAuthorCatalog.label")); // NOI18N
+        lblNoShowSeries.setText("lblNoShowSeries");
         lblNoShowSeries.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2450,7 +2316,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblNoShowSeries, gridBagConstraints);
+        pnlCatalogStructure.add(lblNoShowSeries, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -2458,9 +2324,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkNoShowSeries, gridBagConstraints);
+        pnlCatalogStructure.add(chkNoShowSeries, gridBagConstraints);
 
-        lblOrderAllBooksBySeries.setText(Localization.Main.getText("config.OrderAllBooksBySeries.label")); // NOI18N
+        lblOrderAllBooksBySeries.setText("lblOrderAllBooksBySeries");
         lblOrderAllBooksBySeries.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2471,7 +2337,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblOrderAllBooksBySeries, gridBagConstraints);
+        pnlCatalogStructure.add(lblOrderAllBooksBySeries, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 8;
@@ -2479,66 +2345,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkOrderAllBooksBySeries, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkIncludeTagsInBookDetails, gridBagConstraints);
+        pnlCatalogStructure.add(chkOrderAllBooksBySeries, gridBagConstraints);
 
-        lblIncludeTagsInBookDetails.setText("lblIncludeTagsInBookDetails");
-        lblIncludeTagsInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblIncludeTagsInBookDetails, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkIncludeSeriesInBookDetails, gridBagConstraints);
-
-        lblIncludePublisherInBookDetails.setText("lblIncludePublisherInBookDetails");
-        lblIncludePublisherInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblIncludePublisherInBookDetails, gridBagConstraints);
-
-        lblIncludeSeriesInBookDetails.setText("lblIncludeSeriesInBookDetails");
-        lblIncludeSeriesInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblIncludeSeriesInBookDetails, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkIncludePublisherInBookDetails, gridBagConstraints);
-
-        lblSplitByAuthorInitialGoToBooks.setText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.label")); // NOI18N
+        lblSplitByAuthorInitialGoToBooks.setText("lblSplitByAuthorInitialGoToBooks");
         lblSplitByAuthorInitialGoToBooks.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2549,7 +2358,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(lblSplitByAuthorInitialGoToBooks, gridBagConstraints);
+        pnlCatalogStructure.add(lblSplitByAuthorInitialGoToBooks, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 6;
@@ -2557,13 +2366,303 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlGenerationOptions.add(chkSplitByAuthorInitialGoToBooks, gridBagConstraints);
+        pnlCatalogStructure.add(chkSplitByAuthorInitialGoToBooks, gridBagConstraints);
 
-        tabOptionsTabs.addTab(Localization.Main.getText("gui.tab2"), pnlGenerationOptions); // NOI18N
+        lblDisplayAuthorSortInAuthorLists.setText("lblDisplayAuthorSortInBookDetails");
+        lblDisplayAuthorSortInAuthorLists.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblDisplayAuthorSortInAuthorLists, gridBagConstraints);
+
+        lblDisplayTitleSortInBookLists.setText("lblDisplayTitleSortInBookLists");
+        lblDisplayTitleSortInBookLists.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblDisplayTitleSortInBookLists, gridBagConstraints);
+
+        lblSortUsingAuthorSort.setText("lblSortUsingAuthorSort");
+        lblSortUsingAuthorSort.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblSortUsingAuthorSort, gridBagConstraints);
+
+        lblSortUsingTitleSort.setText("lblSortUsingTitleSort");
+        lblSortUsingTitleSort.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblSortUsingTitleSort, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkDisplayAuthorSortInAuthorLists, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkDisplayTitleSortInBookLists, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkSortUsingAuthorSort, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkSortUsingTitleSort, gridBagConstraints);
+
+        tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
+
+        pnlBookDetails.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeTagsInBookDetails, gridBagConstraints);
+
+        lblIncludeTagsInBookDetails.setText("lblIncludeTagsInBookDetails");
+        lblIncludeTagsInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeTagsInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeSeriesInBookDetails, gridBagConstraints);
+
+        lblIncludePublisherInBookDetails.setText("lblIncludePublisherInBookDetails");
+        lblIncludePublisherInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludePublisherInBookDetails, gridBagConstraints);
+
+        lblIncludeSeriesInBookDetails.setText("lblIncludeSeriesInBookDetails");
+        lblIncludeSeriesInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeSeriesInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludePublisherInBookDetails, gridBagConstraints);
+
+        lblIncludePublishedInBookDetails.setText("lblIncludePublishedInBookDetails");
+        lblIncludePublishedInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludePublishedInBookDetails, gridBagConstraints);
+
+        lblIncludeModifiedInBookDetails1.setText("lblIncludeModifiedInBookDetails");
+        lblIncludeModifiedInBookDetails1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeModifiedInBookDetails1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeModifiedInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludePublishedInBookDetails, gridBagConstraints);
+
+        lblDisplayAuthorSortInBookDetails.setText("lblDisplayAuthorSortInBookDetails");
+        lblDisplayAuthorSortInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblDisplayAuthorSortInBookDetails, gridBagConstraints);
+        lblDisplayAuthorSortInBookDetails.getAccessibleContext().setAccessibleName("");
+
+        lblDisplayTitleSortInBookDetails.setText("lblDisplayTitleSortInBookDetails");
+        lblDisplayTitleSortInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblDisplayTitleSortInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkDisplayAuthorSortInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkDisplayTitleSortInBookDetails, gridBagConstraints);
+
+        lblNogeneratecrosslinks.setText("lblNogeneratecrosslinks");
+        lblNogeneratecrosslinks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblNogeneratecrosslinks, gridBagConstraints);
+        lblNogeneratecrosslinks.getAccessibleContext().setAccessibleName("Do not generate cross-reference links ");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkNogeneratecrosslinks, gridBagConstraints);
+
+        lblNogenerateexternallinks.setText("lblNogenerateexternallinks");
+        lblNogenerateexternallinks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblNogenerateexternallinks, gridBagConstraints);
+
+        chkNogenerateexternallinks.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                chkNogenerateexternallinksStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkPublishedDateAsYear, gridBagConstraints);
+
+        lblPublishedDateAsYear.setText("lblPublishedDateAsYear");
+        lblPublishedDateAsYear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblPublishedDateAsYear, gridBagConstraints);
+
+        tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
         pnlAdvancedOptions.setLayout(new java.awt.GridBagLayout());
 
-        lblIncludeformat.setText(Localization.Main.getText("config.IncludedFormatsList.label")); // NOI18N
+        lblIncludeformat.setText("lblIncludeformat");
         lblIncludeformat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2587,7 +2686,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtIncludeformat, gridBagConstraints);
 
-        lblMaxbeforepaginate.setText(Localization.Main.getText("config.MaxBeforePaginate.label")); // NOI18N
+        lblMaxbeforepaginate.setText("lblMaxbeforepaginate");
         lblMaxbeforepaginate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2612,7 +2711,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxbeforepaginate, gridBagConstraints);
 
-        lblMaxbeforesplit.setText(Localization.Main.getText("config.MaxBeforeSplit.label")); // NOI18N
+        lblMaxbeforesplit.setText("lblMaxbeforesplit");
         lblMaxbeforesplit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2636,7 +2735,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxbeforesplit, gridBagConstraints);
 
-        lblBooksinrecent.setText(Localization.Main.getText("config.BooksInRecentAdditions.label")); // NOI18N
+        lblBooksinrecent.setText("lblBooksinrecent");
         lblBooksinrecent.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2660,7 +2759,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtBooksinrecent, gridBagConstraints);
 
-        lblMaxsummarylength.setText(Localization.Main.getText("config.MaxSummaryLength.label")); // NOI18N
+        lblMaxsummarylength.setText("lblMaxsummarylength");
         lblMaxsummarylength.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2684,7 +2783,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxsummarylength, gridBagConstraints);
 
-        lblIncludeemptybooks.setText(Localization.Main.getText("config.IncludeBooksWithNoFile.label")); // NOI18N
+        lblIncludeemptybooks.setText("lblIncludeemptybooks");
         lblIncludeemptybooks.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2705,7 +2804,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkIncludeemptybooks, gridBagConstraints);
 
-        lblThumbnailheight.setText(Localization.Main.getText("config.ThumbnailHeight.label")); // NOI18N
+        lblThumbnailheight.setText("lblThumbnailheight");
         lblThumbnailheight.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2729,7 +2828,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtThumbnailheight, gridBagConstraints);
 
-        lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
+        lblTagsToMakeDeep.setText("lblTagsToMakeDeep");
         lblTagsToMakeDeep.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2753,7 +2852,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtTagsToMakeDeep, gridBagConstraints);
 
-        lblMinBooksToMakeDeepLevel.setText(Localization.Main.getText("config.MinBooksToMakeDeepLevel.label")); // NOI18N
+        lblMinBooksToMakeDeepLevel.setText("lblMinBooksToMakeDeepLevel");
         lblMinBooksToMakeDeepLevel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2788,7 +2887,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtCoverHeight, gridBagConstraints);
 
-        lblCoverHeight.setText(Localization.Main.getText("config.CoverHeight.label")); // NOI18N
+        lblCoverHeight.setText("lblCoverHeight");
         lblCoverHeight.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2801,7 +2900,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(lblCoverHeight, gridBagConstraints);
 
-        lblIncludeOnlyOneFile.setText(Localization.Main.getText("config.IncludeOnlyOneFile.label")); // NOI18N
+        lblIncludeOnlyOneFile.setText("lblIncludeOnlyOneFile");
         lblIncludeOnlyOneFile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2906,7 +3005,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         pnlAdvancedOptions.add(txtMaxKeywords, gridBagConstraints);
 
-        lblMaxKeywords.setText(Localization.Main.getText("config.MaxKeywords.label")); // NOI18N
+        lblMaxKeywords.setText("lblMaxKeywords");
         lblMaxKeywords.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2919,7 +3018,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(lblMaxKeywords, gridBagConstraints);
 
-        lblIndexComments.setText(Localization.Main.getText("config.IndexComments.label")); // NOI18N
+        lblIndexComments.setText("lblIndexComments");
         lblIndexComments.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2940,8 +3039,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkIndexComments, gridBagConstraints);
 
-        lblIndexFilterAlgorithm.setText(Localization.Main.getText("config.IndexFilterAlgorithm.label")); // NOI18N
-        lblIndexFilterAlgorithm.setToolTipText(Localization.Main.getText("config.CompatibilityTrick.description")); // NOI18N
+        lblIndexFilterAlgorithm.setText("lblIndexFilterAlgorithm");
         lblIndexFilterAlgorithm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -2989,7 +3087,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkGenerateIndex, gridBagConstraints);
 
-        lblFeaturedCatalogSavedSearchName.setText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.label")); // NOI18N
+        lblFeaturedCatalogSavedSearchName.setText("lblFeaturedCatalogSavedSearchName");
         lblFeaturedCatalogSavedSearchName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3013,7 +3111,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtFeaturedCatalogSavedSearchName, gridBagConstraints);
 
-        lblFeaturedCatalogTitle.setText(Localization.Main.getText("config.FeaturedCatalogTitle.label")); // NOI18N
+        lblFeaturedCatalogTitle.setText("lblFeaturedCatalogTitle");
         lblFeaturedCatalogTitle.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3037,7 +3135,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtFeaturedCatalogTitle, gridBagConstraints);
 
-        lblMaxBookSummaryLength.setText(Localization.Main.getText("config.MaxBookSummaryLength.label")); // NOI18N
+        lblMaxBookSummaryLength.setText("lblMaxBookSummaryLength");
         lblMaxBookSummaryLength.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3129,7 +3227,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxSplitLevels, gridBagConstraints);
 
-        lblCryptFilenames.setText(Localization.Main.getText("config.CryptFilenames.label")); // NOI18N
+        lblCryptFilenames.setText("lblCryptFilenames");
         lblCryptFilenames.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3160,7 +3258,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkNobandwidthoptimize, gridBagConstraints);
 
-        lblNobandwidthoptimize.setText(Localization.Main.getText("config.SaveBandwith.label")); // NOI18N
+        lblNobandwidthoptimize.setText("lblNobandwidthoptimize");
         lblNobandwidthoptimize.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3174,11 +3272,11 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblNobandwidthoptimize, gridBagConstraints);
         lblNobandwidthoptimize.getAccessibleContext().setAccessibleName("Regenerate all thumbnail images ");
 
-        tabOptionsTabs.addTab(Localization.Main.getText("gui.tab3"), pnlAdvancedOptions); // NOI18N
+        tabOptionsTabs.addTab("pnlAdvancedOptions", pnlAdvancedOptions);
 
         pnlExternalUrlsOptions.setLayout(new java.awt.GridBagLayout());
 
-        lblWikipediaUrl.setText(Localization.Main.getText("config.WikipediaUrl.label")); // NOI18N
+        lblWikipediaUrl.setText("lblWikipediaUrl");
         lblWikipediaUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3202,7 +3300,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtWikipediaUrl, gridBagConstraints);
 
-        lblAmazonAuthorUrl.setText(Localization.Main.getText("config.AmazonAuthorUrl.label")); // NOI18N
+        lblAmazonAuthorUrl.setText("lblAmazonAuthorUrl");
         lblAmazonAuthorUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3226,7 +3324,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtAmazonAuthorUrl, gridBagConstraints);
 
-        lblAmazonIsbnUrl.setText(Localization.Main.getText("config.AmazonIsbnUrl.label")); // NOI18N
+        lblAmazonIsbnUrl.setText("lblAmazonIsbnUrl");
         lblAmazonIsbnUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3250,7 +3348,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtAmazonIsbnUrl, gridBagConstraints);
 
-        lblAmazonTitleUrl.setText(Localization.Main.getText("config.AmazonTitleUrl.label")); // NOI18N
+        lblAmazonTitleUrl.setText("lblAmazonTitleUrl");
         lblAmazonTitleUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3274,7 +3372,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtAmazonTitleUrl, gridBagConstraints);
 
-        lblGoodreadAuthorUrl.setText(Localization.Main.getText("config.GoodreadAuthorUrl.label")); // NOI18N
+        lblGoodreadAuthorUrl.setText("lblGoodreadAuthorUrl");
         lblGoodreadAuthorUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3298,7 +3396,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtGoodreadAuthorUrl, gridBagConstraints);
 
-        lblGoodreadIsbnUrl.setText(Localization.Main.getText("config.GoodreadIsbnUrl.label")); // NOI18N
+        lblGoodreadIsbnUrl.setText("lblGoodreadIsbnUrl");
         lblGoodreadIsbnUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3322,7 +3420,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtGoodreadIsbnUrl, gridBagConstraints);
 
-        lblGoodreadTitleUrl.setText(Localization.Main.getText("config.GoodreadTitleUrl.label")); // NOI18N
+        lblGoodreadTitleUrl.setText("lblGoodreadTitleUrl");
         lblGoodreadTitleUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3346,7 +3444,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtGoodreadTitleUrl, gridBagConstraints);
 
-        lblGoodreadReviewIsbnUrl.setText(Localization.Main.getText("config.GoodreadReviewIsbnUrl.label")); // NOI18N
+        lblGoodreadReviewIsbnUrl.setText("lblGoodreadReviewIsbnUrl");
         lblGoodreadReviewIsbnUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3370,7 +3468,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtGoodreadReviewIsbnUrl, gridBagConstraints);
 
-        lblIsfdbAuthorUrl.setText(Localization.Main.getText("config.IsfdbAuthorUrl.label")); // NOI18N
+        lblIsfdbAuthorUrl.setText("lblIsfdbAuthorUrl");
         lblIsfdbAuthorUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3394,7 +3492,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtIsfdbAuthorUrl, gridBagConstraints);
 
-        lblLibrarythingAuthorUrl.setText(Localization.Main.getText("config.LibrarythingAuthorUrl.label")); // NOI18N
+        lblLibrarythingAuthorUrl.setText("lblLibrarythingAuthorUrl");
         lblLibrarythingAuthorUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3418,7 +3516,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtLibrarythingAuthorUrl, gridBagConstraints);
 
-        lblLibrarythingIsbnUrl.setText(Localization.Main.getText("config.LibrarythingIsbnUrl.label")); // NOI18N
+        lblLibrarythingIsbnUrl.setText("lblLibrarythingIsbnUrl");
         lblLibrarythingIsbnUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3442,7 +3540,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(txtLibrarythingIsbnUrl, gridBagConstraints);
 
-        lblLibrarythingTitleUrl.setText(Localization.Main.getText("config.LibrarythingTitleUrl.label")); // NOI18N
+        lblLibrarythingTitleUrl.setText("lblLibrarythingTitleUrl");
         lblLibrarythingTitleUrl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3617,56 +3715,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlExternalUrlsOptions.add(cmdLibrarythingTitleReset, gridBagConstraints);
 
-        lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
-        lblNogeneratecrosslinks.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(lblNogeneratecrosslinks, gridBagConstraints);
-        lblNogeneratecrosslinks.getAccessibleContext().setAccessibleName("Do not generate cross-reference links ");
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(chkNogeneratecrosslinks, gridBagConstraints);
-
-        lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
-        lblNogenerateexternallinks.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(lblNogenerateexternallinks, gridBagConstraints);
-        lblNogenerateexternallinks.getAccessibleContext().setAccessibleName("Do not generate external links ");
-
-        chkNogenerateexternallinks.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                chkNogenerateexternallinksStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(chkNogenerateexternallinks, gridBagConstraints);
-
-        tabOptionsTabs.addTab(Localization.Main.getText("gui.tab4"), pnlExternalUrlsOptions); // NOI18N
+        tabOptionsTabs.addTab("pnlExternalUrlsOptions", pnlExternalUrlsOptions);
 
         pnlCustomCatalogs.setLayout(new java.awt.GridBagLayout());
 
@@ -3682,7 +3731,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         pnlCustomCatalogs.add(scrCustomCatalogs, gridBagConstraints);
 
-        cmdAdd.setText(Localization.Main.getText("gui.addCustomCatalog")); // NOI18N
+        cmdAdd.setText("cmdAdd");
         cmdAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdAddCustomCatalogActionPerformed(evt);
@@ -3695,7 +3744,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         pnlCustomCatalogs.add(pnlCustomCatalogsTableButtons, gridBagConstraints);
 
-        tabOptionsTabs.addTab(Localization.Main.getText("gui.tab5"), pnlCustomCatalogs); // NOI18N
+        tabOptionsTabs.addTab("pnlBookDetails", pnlCustomCatalogs);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -3705,13 +3754,13 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         pnlMain.add(tabOptionsTabs, gridBagConstraints);
-        tabOptionsTabs.getAccessibleContext().setAccessibleName("Book Links");
+        tabOptionsTabs.getAccessibleContext().setAccessibleName("Catalog Structure");
 
         pnlBottom.setLayout(new java.awt.GridBagLayout());
 
         lblBottom0.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblBottom0.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblBottom0.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
+        lblBottom0.setText("lblBottom0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -3720,7 +3769,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBottom.add(lblBottom0, gridBagConstraints);
 
-        cmdCancel.setText(Localization.Main.getText("gui.close")); // NOI18N
+        cmdCancel.setText("cmdCancel");
         cmdCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdCancelActionPerformed(evt);
@@ -3728,7 +3777,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         pnlButtons.add(cmdCancel);
 
-        cmdReset.setText(Localization.Main.getText("gui.reset")); // NOI18N
+        cmdReset.setText("cmdReset");
         cmdReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdResetActionPerformed(evt);
@@ -3736,7 +3785,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         pnlButtons.add(cmdReset);
 
-        cmdSave.setText(Localization.Main.getText("gui.save")); // NOI18N
+        cmdSave.setText("cmdSave");
         cmdSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdSaveActionPerformed(evt);
@@ -3744,7 +3793,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         pnlButtons.add(cmdSave);
 
-        cmdGenerate.setText(Localization.Main.getText("gui.generate")); // NOI18N
+        cmdGenerate.setText("cmdGenerate");
         cmdGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdGenerateActionPerformed(evt);
@@ -3776,7 +3825,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMain.add(pnlTitle, gridBagConstraints);
 
         lblCurrentProfile.setText("lblCurrentProfile");
-        lblCurrentProfile.setToolTipText("Cuurent Active Profile");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
@@ -3785,9 +3833,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
-        mnuFile.setText(Localization.Main.getText("gui.menu.file")); // NOI18N
+        mnuFile.setText("mnuFile");
 
-        mnuFileSave.setText(Localization.Main.getText("gui.save")); // NOI18N
+        mnuFileSave.setText("mnuFileSave");
         mnuFileSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuFileSaveActionPerformed(evt);
@@ -3795,7 +3843,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuFile.add(mnuFileSave);
 
-        mnuFileGenerateCatalogs.setText(Localization.Main.getText("gui.generate")); // NOI18N
+        mnuFileGenerateCatalogs.setText("mnuFileGenerateCatalogs");
         mnuFileGenerateCatalogs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuFileGenerateCatalogsActionPerformed(evt);
@@ -3803,7 +3851,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuFile.add(mnuFileGenerateCatalogs);
 
-        mnuFileExit.setText(Localization.Main.getText("gui.close")); // NOI18N
+        mnuFileExit.setText("mnuFileExit");
         mnuFileExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuFileExitActionPerformed(evt);
@@ -3813,12 +3861,12 @@ public class Mainframe extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuFile);
 
-        mnuProfiles.setText(Localization.Main.getText("gui.menu.profiles")); // NOI18N
+        mnuProfiles.setText("mnuProfiles");
         jMenuBar1.add(mnuProfiles);
 
-        mnuTools.setText(Localization.Main.getText("gui.menu.tools")); // NOI18N
+        mnuTools.setText("mnuTools");
 
-        mnuToolsprocessEpubMetadataOfAllBooks.setText(Localization.Main.getText("gui.menu.tools.processEpubMetadataOfAllBooks")); // NOI18N
+        mnuToolsprocessEpubMetadataOfAllBooks.setText("mnuToolsprocessEpubMetadataOfAllBooks");
         mnuToolsprocessEpubMetadataOfAllBooks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuToolsprocessEpubMetadataOfAllBooksActionPerformed(evt);
@@ -3826,7 +3874,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsprocessEpubMetadataOfAllBooks);
 
-        mnuToolsOpenLog.setText(Localization.Main.getText("gui.menu.help.logFile")); // NOI18N
+        mnuToolsOpenLog.setText("mnuToolsOpenLog");
         mnuToolsOpenLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuToolsOpenLogActionPerformed(evt);
@@ -3842,7 +3890,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsClearLog);
 
-        mnuToolsOpenConfig.setText(Localization.Main.getText("gui.menu.help.supportFolder")); // NOI18N
+        mnuToolsOpenConfig.setText("mnuToolsOpenConfig");
         mnuToolsOpenConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuToolsOpenConfigActionPerformed(evt);
@@ -3852,9 +3900,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuTools);
 
-        mnuHelp.setText(Localization.Main.getText("gui.menu.help")); // NOI18N
+        mnuHelp.setText("mnuHelp");
 
-        mnuHelpDonate.setText(Localization.Main.getText("gui.menu.help.donate")); // NOI18N
+        mnuHelpDonate.setText("mnuHelpDonate");
         mnuHelpDonate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuHelpDonateActionPerformed(evt);
@@ -3862,7 +3910,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpDonate);
 
-        mnuHelpHome.setText(Localization.Main.getText("gui.menu.help.wiki")); // NOI18N
+        mnuHelpHome.setText("mnuHelpHome");
         mnuHelpHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuHelpHomeActionPerformed(evt);
@@ -3902,7 +3950,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpOpenForum);
 
-        mnuHelpAbout.setText(Localization.Main.getText("gui.menu.help.about")); // NOI18N
+        mnuHelpAbout.setText("mnuHelpAbout");
         mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuHelpAboutActionPerformed(evt);
@@ -4070,6 +4118,26 @@ public class Mainframe extends javax.swing.JFrame {
         BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
     }//GEN-LAST:event_mnuHelpHomeActionPerformed
 
+    private void pnlBookDetailshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBookDetailshandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pnlBookDetailshandleMouseClickOnLabel
+
+    private void lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel
+
+    private void lblDisplayTitleSortInBookListshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDisplayTitleSortInBookListshandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblDisplayTitleSortInBookListshandleMouseClickOnLabel
+
+    private void lblSortUsingAuthorSorthandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortUsingAuthorSorthandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSortUsingAuthorSorthandleMouseClickOnLabel
+
+    private void lblSortUsingTitleSorthandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortUsingTitleSorthandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSortUsingTitleSorthandleMouseClickOnLabel
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -4150,11 +4218,17 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkBrowseByCoverWithoutSplit;
     private javax.swing.JCheckBox chkCopyToDatabaseFolder;
     private javax.swing.JCheckBox chkCryptFilenames;
+    private javax.swing.JCheckBox chkDisplayAuthorSortInAuthorLists;
+    private javax.swing.JCheckBox chkDisplayAuthorSortInBookDetails;
+    private javax.swing.JCheckBox chkDisplayTitleSortInBookDetails;
+    private javax.swing.JCheckBox chkDisplayTitleSortInBookLists;
     private javax.swing.JCheckBox chkDontsplittags;
     private javax.swing.JCheckBox chkExternalIcons;
     private javax.swing.JCheckBox chkGenerateIndex;
     private javax.swing.JCheckBox chkIncludeAboutLink;
+    private javax.swing.JCheckBox chkIncludeModifiedInBookDetails;
     private javax.swing.JCheckBox chkIncludeOnlyOneFile;
+    private javax.swing.JCheckBox chkIncludePublishedInBookDetails;
     private javax.swing.JCheckBox chkIncludePublisherInBookDetails;
     private javax.swing.JCheckBox chkIncludeSeriesInBookDetails;
     private javax.swing.JCheckBox chkIncludeTagsInBookDetails;
@@ -4180,6 +4254,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkOrderAllBooksBySeries;
     private javax.swing.JCheckBox chkPublishedDateAsYear;
     private javax.swing.JCheckBox chkReprocessEpubMetadata;
+    private javax.swing.JCheckBox chkSortUsingAuthorSort;
+    private javax.swing.JCheckBox chkSortUsingTitleSort;
     private javax.swing.JCheckBox chkSplitByAuthorInitialGoToBooks;
     private javax.swing.JCheckBox chkSupressRatings;
     private javax.swing.JCheckBox chkZipTrookCatalog;
@@ -4223,6 +4299,10 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblDeviceMode2;
     private javax.swing.JLabel lblDeviceNAS;
     private javax.swing.JLabel lblDeviceNook;
+    private javax.swing.JLabel lblDisplayAuthorSortInAuthorLists;
+    private javax.swing.JLabel lblDisplayAuthorSortInBookDetails;
+    private javax.swing.JLabel lblDisplayTitleSortInBookDetails;
+    private javax.swing.JLabel lblDisplayTitleSortInBookLists;
     private javax.swing.JLabel lblDonate;
     private javax.swing.JLabel lblExternalIcons;
     private javax.swing.JLabel lblFeaturedCatalogSavedSearchName;
@@ -4233,7 +4313,9 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblGoodreadReviewIsbnUrl;
     private javax.swing.JLabel lblGoodreadTitleUrl;
     private javax.swing.JLabel lblIncludeAboutLink;
+    private javax.swing.JLabel lblIncludeModifiedInBookDetails1;
     private javax.swing.JLabel lblIncludeOnlyOneFile;
+    private javax.swing.JLabel lblIncludePublishedInBookDetails;
     private javax.swing.JLabel lblIncludePublisherInBookDetails;
     private javax.swing.JLabel lblIncludeSeriesInBookDetails;
     private javax.swing.JLabel lblIncludeTagsInBookDetails;
@@ -4274,6 +4356,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblOrderAllBooksBySeries;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;
+    private javax.swing.JLabel lblSortUsingAuthorSort;
+    private javax.swing.JLabel lblSortUsingTitleSort;
     private javax.swing.JLabel lblSplitByAuthorInitialGoToBooks;
     private javax.swing.JLabel lblSplittagson;
     private javax.swing.JLabel lblSupressRatings;
@@ -4305,10 +4389,10 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JPanel pnlAdvancedOptions;
     private javax.swing.JPanel pnlBottom;
     private javax.swing.JPanel pnlButtons;
+    private javax.swing.JPanel pnlCatalogStructure;
     private javax.swing.JPanel pnlCustomCatalogs;
     private javax.swing.JPanel pnlCustomCatalogsTableButtons;
     private javax.swing.JPanel pnlExternalUrlsOptions;
-    private javax.swing.JPanel pnlGenerationOptions;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlMainOptions;
     private javax.swing.JPanel pnlSplitTagsOn;

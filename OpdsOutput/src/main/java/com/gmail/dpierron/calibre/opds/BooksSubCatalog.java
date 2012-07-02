@@ -83,8 +83,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // ITIMPI:  I would have thought that neither o1 or o2 can be null?
         //          If so then following tests for null can be removed to improve efficiency
         assert (o1 != null) && (o2 != null);
-        String title1 = (o1 == null ? "" : o1.getTitleForSort().toUpperCase());
-        String title2 = (o2 == null ? "" : o2.getTitleForSort().toUpperCase());
+        String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
+        String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
         return title1.compareTo(title2);
       }
     });
@@ -127,8 +127,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (series1 == null) {
           if (series2 == null) {
             // both series are null, we need to compare the book titles (as always...)
-            String title1 = (o1 == null ? "" : o1.getTitleForSort().toUpperCase());
-            String title2 = (o2 == null ? "" : o2.getTitleForSort().toUpperCase());
+            String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
+            String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
             return title1.compareTo(title2);
           } else {
             // only series2 set  so assume series2 sorts greater than series1
@@ -860,7 +860,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())
-            logger.trace("getBookFullEntry: add the series link");
+            logger.trace("addNavigationLinks: add the series link");
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
               getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
@@ -872,7 +872,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
         if (book.hasAuthor()) {
           if (logger.isTraceEnabled())
-            logger.trace("getBookFullEntry: add the author page link(s)");
+            logger.trace("addNavigationLinks: add the author page link(s)");
           for (Author author : book.getAuthors()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
             entry.addContent(FeedHelper.INSTANCE
@@ -887,7 +887,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags()) {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled())
-            logger.trace("getBookFullEntry: add the tags links");
+            logger.trace("addNavigationLinks: add the tags links");
           for (Tag tag : book.getTags()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
             if (nbBooks > 1) {
@@ -902,7 +902,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // add the ratings links
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the ratings links");
+          logger.trace("addNavigationLinks: add the ratings links");
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
         if (nbBooks > 1) {
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
@@ -919,7 +919,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String url;
       // add the GoodReads book link
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the GoodReads book link");
+        logger.trace("addExternalLinks: add the GoodReads book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
@@ -940,7 +940,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // add the Wikipedia book link
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: add the Wikipedia book link");
+        logger.trace("addExternalLinks: add the Wikipedia book link");
       url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
       if (Helper.isNotNullOrEmpty(url))
         entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
@@ -950,7 +950,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // Add Librarything book link
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: Add Librarything book link");
+        logger.trace("addExternalLinks: Add Librarything book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
@@ -966,7 +966,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // Add Amazon book link
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: Add Amazon book link");
+        logger.trace("addExternalLinks: Add Amazon book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
         url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
@@ -983,7 +983,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (book.hasAuthor()) {
         // add the GoodReads author link
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the GoodReads author link");
+          logger.trace("addExternalLinksy: add the GoodReads author link");
         for (Author author : book.getAuthors()) {
           url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
@@ -993,7 +993,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
         // add the Wikipedia author link
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the Wikipedia author link");
+          logger.trace("addExternalLinks: add the Wikipedia author link");
         for (Author author : book.getAuthors()) {
           url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
           if (Helper.isNotNullOrEmpty(url))
@@ -1004,7 +1004,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
         // add the LibraryThing author link
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the LibraryThing author link");
+          logger.trace("addExternalLinks: add the LibraryThing author link");
         for (Author author : book.getAuthors()) {
           url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
@@ -1017,7 +1017,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
         // add the Amazon author link
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the Amazon author link");
+          logger.trace("addExternalLinks: add the Amazon author link");
         for (Author author : book.getAuthors()) {
           url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
@@ -1027,7 +1027,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
         // add the ISFDB author link
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: add the ISFDB author link");
+          logger.trace("addExternalLinks: add the ISFDB author link");
         for (Author author : book.getAuthors()) {
           url = ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
@@ -1048,7 +1048,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
 
     // published element
-    if (logger.isTraceEnabled()) {logger.trace("getBookFullEntry: published element");}
+    if (logger.isTraceEnabled()) {logger.trace("decorateBookEntry: published element");}
     Element published = FeedHelper.INSTANCE.getPublishedTag(book.getPublicationDate());
     entry.addContent(published);
 
@@ -1083,11 +1083,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (isFullEntry) {
       // content element
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: content element");
+        logger.trace("decorateBookEntry: content element");
       Element content = JDOM.INSTANCE.element("content").setAttribute("type", "text/html");
       boolean hasContent = false;
       if (logger.isTraceEnabled())
-        logger.trace("getBookFullEntry: computing comments");
+        logger.trace("decorateBookEntry: computing comments");
       // Series (if presnt and wanted)
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
@@ -1120,7 +1120,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       List<Element> comments = JDOM.INSTANCE.convertBookCommentToXhtml(book.getComment());
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: got comments");
+          logger.trace("decorateBookEntry: got comments");
         content.addContent(JDOM.INSTANCE.newParagraph().addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.summary"))));
         for (Element p : comments) {
           content.addContent(p.detach());
@@ -1135,7 +1135,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
       if (hasContent) {
         if (logger.isTraceEnabled())
-          logger.trace("getBookFullEntry: had content");
+          logger.trace("decorateBookEntry: had content");
         entry.addContent(content);
       }
     } else {
@@ -1229,6 +1229,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
     return entry;
   }
 
+  /**
+   * Generate the Book Details
+   *
+   * @param pBreadcrumbs
+   * @param book
+   * @param outputFile
+   * @param fullEntryUrl
+   * @throws IOException
+   */
   private void generateBookFullEntryFile(Breadcrumbs pBreadcrumbs, Book book, File outputFile, String fullEntryUrl) throws IOException {FileOutputStream fos = null;
     if (logger.isDebugEnabled())
       logger.debug("generateBookFullEntryFile: " + book);

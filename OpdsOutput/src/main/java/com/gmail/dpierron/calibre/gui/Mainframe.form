@@ -6,16 +6,12 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="mnuFile">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.menu.file" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="mnuFile"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuFileSave">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.save" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuFileSave"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFileSaveActionPerformed"/>
@@ -23,9 +19,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuFileGenerateCatalogs">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.generate" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuFileGenerateCatalogs"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFileGenerateCatalogsActionPerformed"/>
@@ -33,9 +27,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuFileExit">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.close" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuFileExit"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuFileExitActionPerformed"/>
@@ -45,23 +37,17 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuProfiles">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.menu.profiles" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="mnuProfiles"/>
           </Properties>
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuTools">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.menu.tools" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="mnuTools"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsprocessEpubMetadataOfAllBooks">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.tools.processEpubMetadataOfAllBooks" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuToolsprocessEpubMetadataOfAllBooks"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsprocessEpubMetadataOfAllBooksActionPerformed"/>
@@ -69,9 +55,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenLog">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.help.logFile" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuToolsOpenLog"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenLogActionPerformed"/>
@@ -87,9 +71,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenConfig">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.help.supportFolder" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuToolsOpenConfig"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenConfigActionPerformed"/>
@@ -99,16 +81,12 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="mnuHelp">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.menu.help" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="mnuHelp"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuHelpDonate">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.help.donate" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuHelpDonate"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuHelpDonateActionPerformed"/>
@@ -116,9 +94,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuHelpHome">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.help.wiki" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuHelpHome"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuHelpHomeActionPerformed"/>
@@ -158,9 +134,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuHelpAbout">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.menu.help.about" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="mnuHelpAbout"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuHelpAboutActionPerformed"/>
@@ -173,9 +147,6 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <ResourceString bundle="Localization_en.properties" key="gui.title" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
@@ -259,9 +230,7 @@
         <Component class="javax.swing.JLabel" name="lblDeviceMode1">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="2"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.label.clickToDescribe" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="lblDeviceMode1"/>
             <Property name="verticalAlignment" type="int" value="1"/>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
@@ -274,9 +243,7 @@
         <Component class="javax.swing.JLabel" name="lblDeviceMode2">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="2"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="Localization_en.properties" key="gui.label.clickToDescribe" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="lblDeviceMode2"/>
             <Property name="verticalAlignment" type="int" value="1"/>
           </Properties>
           <Constraints>
@@ -302,7 +269,7 @@
         </Component>
         <Container class="javax.swing.JTabbedPane" name="tabOptionsTabs">
           <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Book Links"/>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Catalog Structure"/>
           </AccessibilityProperties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -313,12 +280,13 @@
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
           <SubComponents>
             <Container class="javax.swing.JPanel" name="pnlMainOptions">
+              <AccessibilityProperties>
+                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Main Option"/>
+              </AccessibilityProperties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Main options">
-                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.tab1" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                  <JTabbedPaneConstraints tabName="pnlMainOptions">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlMainOptions"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -327,12 +295,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblLang">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.Language.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.Language.description" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblLang"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -369,9 +332,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblDatabaseFolder">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.DatabaseFolder.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblDatabaseFolder"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -413,9 +374,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTargetFolder">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.TargetFolder.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblDatabaseFolder"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -457,9 +416,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblUrlBase">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.UrlBase.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblUrlBase"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -485,9 +442,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCatalogFolder">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CatalogFolderName.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCatalogFolder"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -513,9 +468,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCatalogTitle">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CatalogTitle.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCatalogTitle"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -538,9 +491,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblSplittagson">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.SplitTagsOn.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblSplittagson"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -575,9 +526,7 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="chkDontsplittags">
                       <Properties>
-                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="Localization_en.properties" key="config.SplitTagsOn.splitbyletter" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                        </Property>
+                        <Property name="text" type="java.lang.String" value="chkDontsplittags"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkDontsplittagsActionPerformed"/>
@@ -592,9 +541,7 @@
                 </Container>
                 <Component class="javax.swing.JLabel" name="lblCatalogFilter">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CatalogFilter.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCatalogFilter"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -617,9 +564,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblWikilang">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.WikipediaLanguage.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblWikilang"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -652,9 +597,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCopyToDatabaseFolder">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CopyToDatabaseFolder.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCopyToDatabaseFolder"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -674,9 +617,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblReprocessEpubMetadata">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.ReprocessEpubMetadata.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblReprocessEpubMetadata"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -689,9 +630,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblZipTrookCatalog">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.ZipTrookCatalog.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblZipTrookCatalog"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -711,16 +650,11 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="pnlGenerationOptions">
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-              </Events>
+            <Container class="javax.swing.JPanel" name="pnlCatalogStructure">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Catalog generation options">
-                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.tab2" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                  <JTabbedPaneConstraints tabName="pnlCatalogStructure">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlCatalogStructure"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -729,9 +663,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblNogeneratehtml">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateHtml.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNogeneratehtml"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -751,9 +683,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNogeneratehtmlfiles">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateHtmlDownloads.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNogeneratehtmlfiles"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -766,9 +696,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblBrowseByCover">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.BrowseByCover.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblBrowseByCover"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -791,9 +719,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblBrowseByCoverWithoutSplit">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.BrowseByCoverWithoutSplit.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblBrowseByCoverWithoutSplit"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not split by letter in &quot;Browse by Cover&quot; mode"/>
@@ -816,9 +742,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIncludeAboutLink">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IncludeAboutLink.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIncludeAboutLink"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Include the &quot;About calibre2opds&quot; link"/>
@@ -841,9 +765,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNogenerateopdsfiles">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateDownloads.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNogenerateopdsfiles"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate OPDS downloads"/>
@@ -870,9 +792,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNogenerateratings">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateRatings.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNogenerateratings"/>
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
                   </Properties>
                   <AccessibilityProperties>
@@ -896,16 +816,14 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNogenerateallbooks">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateAllbooks.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNogenerateallbooks"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate the &quot;All books&quot; catalog "/>
-                  </AccessibilityProperties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="Mainframe_lblNogenerateallbooks"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="0" gridY="8" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
@@ -921,9 +839,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblSupressRatings">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.SuppressRatingsInTitles.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblSupressRatings"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Suppress ratings in the books titles "/>
@@ -974,26 +890,6 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="chkPublishedDateAsYear">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="3" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblPublishedDateAsYear">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="lblPublishedDateAsYear"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="2" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
                 <Component class="javax.swing.JCheckBox" name="chkNoGenerateAuthors">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -1003,7 +899,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNoGenerateSeries">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Do not generate the &quot;Series&quot; catalog"/>
+                    <Property name="text" type="java.lang.String" value="lblNoGenerateSeries"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1016,7 +912,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNogeneraterecent">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Do not generate the &quot;Recent&quot; catalog"/>
+                    <Property name="text" type="java.lang.String" value="lblNogeneraterecent"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1036,7 +932,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNoGenerateTags">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Do not generate the &quot;Tags&quot; catalog"/>
+                    <Property name="text" type="java.lang.String" value="lblNoGenerateTags"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1049,7 +945,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNoGenerateAuthors">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Do not generate the &quot;Authors&quot; catalog"/>
+                    <Property name="text" type="java.lang.String" value="lblNoGenerateAuthors"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1076,9 +972,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNoShowSeries">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.ShowSeriesInAuthorCatalog.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNoShowSeries"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1098,9 +992,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblOrderAllBooksBySeries">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.OrderAllBooksBySeries.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblOrderAllBooksBySeries"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1118,71 +1010,9 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="chkIncludeTagsInBookDetails">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="1" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblIncludeTagsInBookDetails">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="lblIncludeTagsInBookDetails"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="chkIncludeSeriesInBookDetails">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="1" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblIncludePublisherInBookDetails">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="lblIncludePublisherInBookDetails"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="2" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblIncludeSeriesInBookDetails">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="lblIncludeSeriesInBookDetails"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="0" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="chkIncludePublisherInBookDetails">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="3" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
                 <Component class="javax.swing.JLabel" name="lblSplitByAuthorInitialGoToBooks">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.SplitByAuthorInitialGoToBooks.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblSplitByAuthorInitialGoToBooks"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1200,15 +1030,319 @@
                     </Constraint>
                   </Constraints>
                 </Component>
+                <Component class="javax.swing.JLabel" name="lblDisplayAuthorSortInAuthorLists">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblDisplayAuthorSortInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblDisplayTitleSortInBookLists">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblDisplayTitleSortInBookLists"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblSortUsingAuthorSort">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblSortUsingAuthorSort"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="2" gridY="9" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblSortUsingTitleSort">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblSortUsingTitleSort"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="2" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkDisplayAuthorSortInAuthorLists">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="9" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkDisplayTitleSortInBookLists">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="10" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkSortUsingAuthorSort">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="3" gridY="9" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkSortUsingTitleSort">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="3" gridY="10" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="pnlBookDetails">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+              </AuxValues>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="pnlBookDetails">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlBookDetails"/>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JCheckBox" name="chkIncludeTagsInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblIncludeTagsInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblIncludeTagsInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkIncludeSeriesInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblIncludePublisherInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblIncludePublisherInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblIncludeSeriesInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblIncludeSeriesInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkIncludePublisherInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblIncludePublishedInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblIncludePublishedInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblIncludeModifiedInBookDetails1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblIncludeModifiedInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="6" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkIncludeModifiedInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="6" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkIncludePublishedInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblDisplayAuthorSortInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblDisplayAuthorSortInBookDetails"/>
+                  </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
+                  </AccessibilityProperties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblDisplayTitleSortInBookDetails">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblDisplayTitleSortInBookDetails"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkDisplayAuthorSortInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkDisplayTitleSortInBookDetails">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblNogeneratecrosslinks">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblNogeneratecrosslinks"/>
+                  </Properties>
+                  <AccessibilityProperties>
+                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate cross-reference links "/>
+                  </AccessibilityProperties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkNogeneratecrosslinks">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblNogenerateexternallinks">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblNogenerateexternallinks"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="11" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkNogenerateexternallinks">
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chkNogenerateexternallinksStateChanged"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="1" gridY="11" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkPublishedDateAsYear">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="3" gridY="5" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblPublishedDateAsYear">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="lblPublishedDateAsYear"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
+                  </Events>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="2" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pnlAdvancedOptions">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Advanced customization options">
-                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.tab3" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                  <JTabbedPaneConstraints tabName="pnlAdvancedOptions">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlAdvancedOptions"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -1217,9 +1351,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblIncludeformat">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IncludedFormatsList.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIncludeformat"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1242,9 +1374,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMaxbeforepaginate">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MaxBeforePaginate.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMaxbeforepaginate"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1273,9 +1403,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMaxbeforesplit">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MaxBeforeSplit.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMaxbeforesplit"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1301,9 +1429,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblBooksinrecent">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.BooksInRecentAdditions.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblBooksinrecent"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1329,9 +1455,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMaxsummarylength">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MaxSummaryLength.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMaxsummarylength"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1357,9 +1481,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIncludeemptybooks">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IncludeBooksWithNoFile.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIncludeemptybooks"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1379,9 +1501,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblThumbnailheight">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.ThumbnailHeight.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblThumbnailheight"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1407,9 +1527,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTagsToMakeDeep">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.TagsToMakeDeep.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblTagsToMakeDeep"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1432,9 +1550,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMinBooksToMakeDeepLevel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MinBooksToMakeDeepLevel.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMinBooksToMakeDeepLevel"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1473,9 +1589,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCoverHeight">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CoverHeight.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCoverHeight"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1488,9 +1602,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIncludeOnlyOneFile">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IncludeOnlyOneFile.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIncludeOnlyOneFile"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1595,9 +1707,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMaxKeywords">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MaxKeywords.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMaxKeywords"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1610,9 +1720,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIndexComments">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IndexComments.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIndexComments"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1632,12 +1740,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIndexFilterAlgorithm">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IndexFilterAlgorithm.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
-                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CompatibilityTrick.description" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIndexFilterAlgorithm"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1696,9 +1799,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblFeaturedCatalogSavedSearchName">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.FeaturedCatalogSavedSearchName.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblFeaturedCatalogSavedSearchName"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1721,9 +1822,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblFeaturedCatalogTitle">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.FeaturedCatalogTitle.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblFeaturedCatalogTitle"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1746,9 +1845,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMaxBookSummaryLength">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.MaxBookSummaryLength.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblMaxBookSummaryLength"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1854,9 +1951,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblCryptFilenames">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.CryptFilenames.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblCryptFilenames"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Encrypt the filenames "/>
@@ -1886,9 +1981,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblNobandwidthoptimize">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.SaveBandwith.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblNobandwidthoptimize"/>
                   </Properties>
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Regenerate all thumbnail images "/>
@@ -1907,10 +2000,8 @@
             <Container class="javax.swing.JPanel" name="pnlExternalUrlsOptions">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Book reference links">
-                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.tab4" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                  <JTabbedPaneConstraints tabName="pnlExternalUrlsOptions">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlExternalUrlsOptions"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -1919,9 +2010,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lblWikipediaUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.WikipediaUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblWikipediaUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1944,9 +2033,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblAmazonAuthorUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.AmazonAuthorUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblAmazonAuthorUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1969,9 +2056,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblAmazonIsbnUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.AmazonIsbnUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblAmazonIsbnUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -1994,9 +2079,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblAmazonTitleUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.AmazonTitleUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblAmazonTitleUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2019,9 +2102,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblGoodreadAuthorUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GoodreadAuthorUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblGoodreadAuthorUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2044,9 +2125,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblGoodreadIsbnUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GoodreadIsbnUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblGoodreadIsbnUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2069,9 +2148,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblGoodreadTitleUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GoodreadTitleUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblGoodreadTitleUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2094,9 +2171,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblGoodreadReviewIsbnUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GoodreadReviewIsbnUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblGoodreadReviewIsbnUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2119,9 +2194,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblIsfdbAuthorUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.IsfdbAuthorUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblIsfdbAuthorUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2144,9 +2217,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblLibrarythingAuthorUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.LibrarythingAuthorUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblLibrarythingAuthorUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2169,9 +2240,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblLibrarythingIsbnUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.LibrarythingIsbnUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblLibrarythingIsbnUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2194,9 +2263,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblLibrarythingTitleUrl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.LibrarythingTitleUrl.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="lblLibrarythingTitleUrl"/>
                   </Properties>
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
@@ -2373,68 +2440,13 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblNogeneratecrosslinks">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateCrossLinks.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
-                  </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate cross-reference links "/>
-                  </AccessibilityProperties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="chkNogeneratecrosslinks">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="1.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblNogenerateexternallinks">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="config.GenerateExternalLinks.label" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
-                  </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate external links "/>
-                  </AccessibilityProperties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="chkNogenerateexternallinks">
-                  <Events>
-                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chkNogenerateexternallinksStateChanged"/>
-                  </Events>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="1" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="17" weightX="0.0" weightY="0.0"/>
-                    </Constraint>
-                  </Constraints>
-                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="pnlCustomCatalogs">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Custom catalogs/External Links">
-                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.tab5" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                  <JTabbedPaneConstraints tabName="pnlBookDetails">
+                    <Property name="tabTitle" type="java.lang.String" value="pnlBookDetails"/>
                   </JTabbedPaneConstraints>
                 </Constraint>
               </Constraints>
@@ -2482,9 +2494,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JButton" name="cmdAdd">
                       <Properties>
-                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="Localization_en.properties" key="gui.addCustomCatalog" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                        </Property>
+                        <Property name="text" type="java.lang.String" value="cmdAdd"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdAddCustomCatalogActionPerformed"/>
@@ -2514,9 +2524,7 @@
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="Localization_en.properties" key="gui.label.clickToDescribe" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="lblBottom0"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -2535,9 +2543,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="cmdCancel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.close" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="cmdCancel"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdCancelActionPerformed"/>
@@ -2545,9 +2551,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="cmdReset">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.reset" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="cmdReset"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdResetActionPerformed"/>
@@ -2555,9 +2559,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="cmdSave">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.save" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="cmdSave"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdSaveActionPerformed"/>
@@ -2565,9 +2567,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="cmdGenerate">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="Localization_en.properties" key="gui.generate" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-                    </Property>
+                    <Property name="text" type="java.lang.String" value="cmdGenerate"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdGenerateActionPerformed"/>
@@ -2589,7 +2589,6 @@
         <Component class="javax.swing.JLabel" name="lblCurrentProfile">
           <Properties>
             <Property name="text" type="java.lang.String" value="lblCurrentProfile"/>
-            <Property name="toolTipText" type="java.lang.String" value="Cuurent Active Profile"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

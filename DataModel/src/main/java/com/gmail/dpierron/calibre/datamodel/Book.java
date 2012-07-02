@@ -18,9 +18,8 @@ public class Book implements SplitableByLetter {
   private final String id;
   private final String uuid;
   private String title;
-  private String titleForSort;
+  private String Title_Sort;
   private String titleWithSerieNumber;
-  private String titleWithTimestamp;
   private String titleWithRating;
   private final String path;
   private String comment;
@@ -60,6 +59,7 @@ public class Book implements SplitableByLetter {
   public Book(String id,
       String uuid,
       String title,
+      String title_sort, 
       String path,
       Float serieIndex,
       Date timestamp,
@@ -92,10 +92,8 @@ public class Book implements SplitableByLetter {
   }
 
   private void setTitle(String value) {
-    titleForSort = null;
     titleWithRating = null;
     titleWithSerieNumber = null;
-    titleWithTimestamp = null;
     title = value;
     // clean up
     if (Helper.isNotNullOrEmpty(title)) {
@@ -108,10 +106,10 @@ public class Book implements SplitableByLetter {
     return title;
   }
 
-  public String getTitleForSort() {
-    if (titleForSort == null)
-      titleForSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
-    return titleForSort;
+  public String getTitle_Sort() {
+    if (Helper.isNullOrEmpty(Title_Sort))
+      Title_Sort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
+    return Title_Sort;
   }
 
   public Language getBookLanguage() {
@@ -548,11 +546,11 @@ public class Book implements SplitableByLetter {
   }
 
   public String getTitleToSplitByLetter() {
-    return getTitleForSort();
+    return getTitle_Sort();
   }
 
   public Book copy() {
-    Book result = new Book(id, uuid, title, path, serieIndex, timestamp, publicationDate, isbn, authorSort, rating);
+    Book result = new Book(id, uuid, title, Title_Sort, path, serieIndex, timestamp, publicationDate, isbn, authorSort, rating);
     result.setComment(this.getComment());
     result.setSeries(this.getSeries());
     result.setPublisher(this.getPublisher());

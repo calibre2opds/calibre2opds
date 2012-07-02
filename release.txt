@@ -78,7 +78,9 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-108: Omit download section for books with no available download
     - #c2o-109: Improve navigation links in pages
     - #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
-    = #c2o-115: Send to Readmill Library
+    - #c2o-115: Send to Readmill Library
+    - #c2o-118: Provide more control over display and sorting of Authors
+    - #c2o-119: Provide more control over display and sorting of Series
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.
