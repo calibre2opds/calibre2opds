@@ -70,14 +70,12 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-90: Make Custom Catalogs setting easier to edit manually in XML
     - #c2o-93: Make supported formats and Mime type extendable by users
     - #c2o-96: Add some runtime stats on Search database
-    - #c2o-97: Contect sensitive help on tabs
     - #c2o-102: Advise user when Log file contains errors or warnings
     - #c2o-103: Goodreads URL (by Goodreads ID when available)
     - #c2o-105: Add a download link to the 'group' pages
     - #c2o-107: Speed up All Books phase of catalog generation
     - #c2o-108: Omit download section for books with no available download
     - #c2o-109: Improve navigation links in pages
-    - #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
     - #c2o-115: Send to Readmill Library
     - #c2o-118: Provide more control over display and sorting of Authors
     - #c2o-119: Provide more control over display and sorting of Series
@@ -93,11 +91,13 @@ that have been recorded in the Issue tracker.
 
 v3.2
     - Fix: #c2o-91:  Setting catalog folder to root (/) is not treated as an error
+    - Fix: #c2o-97:  Context sensitive help on configuration tabs
+    - Fix: #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
     - Fix: #c2o-111: The "All Books" section within an author not sorted alphabetically
     - New: #c2o-112: Do not delete .htaccess files from generated catalog
     - Fix: #c2o-113: Tags have square brackets added in Book Details
     - Fix: #c2o-114: Language is ignored when running on command line (cli)
-    - Fix: #c20-116: Improvements to German localization (thanks to Venia.Legendi)
+    - Fix: #c20-116: Improvement                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              s to German localization (thanks to Venia.Legendi)
     - New: #c2o-117: Include year in Recent sub-catalog entries
     - New: #c2o-120: Remove option to Exit from the confirm dialog displayed after pressing Save
     - New: #c20-121: Add links to Localization and customization guides to Help menu
@@ -114,7 +114,7 @@ v3.1
     - Fix: #c2o-87:  XML catalog title should be the "Catalog Title" as set in the settings
     - New: #c2o-95:  Option clear log files added to Tools menu
     - New: #c2o-98:  Link to Issue Register added Help menu
-    - New: #c2o-99:  Link to support forum added to Help menmu
+    - New: #c2o-99:  Link to support forum added to Help menu
     - New: #c2o-101: Link to User Guide and Developer Guide added to Help Menu
     - Fix: #c2o-104: Problems with Self and Next links when pagination active. Also pagination links can be brolen.
     - Change: Removed some split-by-letter options that did not really make sense:
