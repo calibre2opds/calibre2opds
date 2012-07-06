@@ -1314,10 +1314,7 @@ public class Mainframe extends javax.swing.JFrame {
    private void saveConfiguration() {
      storeValues();
      String message = Localization.Main.getText("gui.info.saved");
-     int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
-     if (result != JOptionPane.YES_OPTION)
-       return;
-     System.exit(0);
+     JOptionPane.showMessageDialog(this, message, "", JOptionPane.OK_OPTION);
    }
 
    private void exitProgram() {
