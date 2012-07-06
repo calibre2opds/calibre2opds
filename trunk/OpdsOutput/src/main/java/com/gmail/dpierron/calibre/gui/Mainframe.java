@@ -3860,11 +3860,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlButtons.add(cmdGenerate);
 
         cmdHelp.setText("cmdHelp");
-        cmdHelp.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cmdHelpMouseClicked(evt);
-            }
-        });
         cmdHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdHelpActionPerformed(evt);
@@ -4192,15 +4187,10 @@ public class Mainframe extends javax.swing.JFrame {
         BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
     }//GEN-LAST:event_mnuHelpHomeActionPerformed
 
-  private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerforme
-    logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
-    BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
-  }//GEN-LAST:event_cmdHelpActionPerforme
-
-    private void cmdHelpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdHelpMouseClicked
-      logger.info(Localization.Main.getText("gui.help") + ": " + tabHelpUrl);
+    private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerforme
+      logger.info(Localization.Main.getText("gui.menu.help") + ": " + tabHelpUrl);
       BareBonesBrowserLaunch.openURL(tabHelpUrl);
-    }//GEN-LAST:event_cmdHelpMouseClicked
+    }//GEN-LAST:event_cmdHelpActionPerforme
 
     private void pnlMainOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlMainOptionsComponentShown
       tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
