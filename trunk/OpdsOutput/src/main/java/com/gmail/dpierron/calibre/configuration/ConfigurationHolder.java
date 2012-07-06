@@ -45,7 +45,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATEHTMLDOWNLOADS = "GenerateHtmlDownloads";
   private final static String PROPERTY_NAME_SUPRESSRATINGSINTITLES = "SuppressRatingsInTitles";
   private final static String PROPERTY_NAME_GENERATEDOWNLOADS = "GenerateDownloads";
-  private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
   private final static String PROPERTY_NAME_SPLITTAGSON = "SplitTagsOn";
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
@@ -54,8 +53,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
   private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
   private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TagsToMakeDeep";
-  private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
-  private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
   private final static String PROPERTY_NAME_MAXBOOKSUMMARYLENGTH = "MaxBookSummaryLength";
   private final static String PROPERTY_NAME_GENERATEAUTHORS = "GenerateAuthors";
@@ -64,10 +61,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATERECENT = "GenerateRecent";
   private final static String PROPERTY_NAME_GENERATERATINGS = "GenerateRatings";
   private final static String PROPERTY_NAME_GENERATEALLBOOKS = "GenerateAllbooks";
-  private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
-  private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
-  private final static String PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS = "IncludePublisherInBookDetails";
-  private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
   private final static String PROPERTY_NAME_GENERATEINDEX = "GenerateIndex";
   private final static String PROPERTY_NAME_DEVICEMODE = "DeviceMode";
   private final static String PROPERTY_NAME_COPYTODATABASEFOLDER = "CopyToDatabaseFolder";
@@ -102,6 +95,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_FEATUREDCATALOGTITLE = "FeaturedCatalogTitle";
   private final static String PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME = "FeaturedCatalogSavedSearchName";
   private final static String PROPERTY_NAME_CUSTOMCATALOGS = "CustomCatalogs";
+  /* Catalog Structure */
+  private final static String PROPERTY_NAME_DisplayAuthorSortInAuthorLists = "DisplayAuthorSortInAuthorLists";
+  private final static String PROPERTY_NAME_DisplayTitleSortInBookLists = "DisplayTitleSortInBookLists";
+  private final static String PROPERTY_NAME_SortUsingAuthorSort = "SortUsingAuthorSort";
+  private final static String PROPERTY_NAME_SortUsingTitleSort = "SortUsingTitleSort";
+  /* Book Details */
+  private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
+  private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
+  private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS = "IncludePublisherInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
+  private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
+  private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
+  private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
+  private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -656,38 +665,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG, value);
   }
 
-  public boolean isGenerateExternalLinksReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATEEXTERNALLINKS);
-  }
-
-  public boolean getGenerateExternalLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GENERATEEXTERNALLINKS);
-    if (b == null)
-      return defaults.getGenerateExternalLinks();
-    else
-      return b.booleanValue();
-  }
-
-  public void setGenerateExternalLinks(boolean value) {
-    setProperty(PROPERTY_NAME_GENERATEEXTERNALLINKS, value);
-  }
-
-  public boolean isGenerateCrossLinksReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATECROSSLINKS);
-  }
-
-  public boolean getGenerateCrossLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GENERATECROSSLINKS);
-    if (b == null)
-      return defaults.getGenerateCrossLinks();
-    else
-      return b.booleanValue();
-  }
-
-  public void setGenerateCrossLinks(boolean value) {
-    setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
-  }
-
   public boolean isCatalogFilterReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGFILTER);
   }
@@ -831,71 +808,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setGenerateAllbooks(boolean value) {
     setProperty(PROPERTY_NAME_GENERATEALLBOOKS, value);
   }
-
-  public void setIncludeSeriesInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS, value);
-  }
-
-  public boolean isIncludeSeriesInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
-  }
-
-  public boolean getIncludeSeriesInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludeSeriesInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludeTagsInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS, value);
-  }
-
-  public boolean isIncludeTagsInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
-  }
-
-  public boolean getIncludeTagsInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludeTagsInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludePublisherInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS, value);
-  }
-
-  public boolean isIncludePublisherInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
-  }
-
-  public boolean getIncludePublisherInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludePublisherInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludePublishedInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS, value);
-  }
-
-  public boolean isIncludePublishedInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
-  }
-
-  public boolean getIncludePublishedInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludePublishedInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
   public boolean isGenerateIndexReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEALLBOOKS);
   }
@@ -1474,5 +1386,220 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       s = mainsb.toString();
     } else s="";
     setProperty(PROPERTY_NAME_CUSTOMCATALOGS, s);
+  }
+
+  /*
+    Catalog Structure
+   */
+
+  public boolean isGenerateExternalLinksReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATEEXTERNALLINKS);
+  }
+
+  public boolean getGenerateExternalLinks() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATEEXTERNALLINKS);
+    if (b == null)
+      return defaults.getGenerateExternalLinks();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateExternalLinks(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATEEXTERNALLINKS, value);
+  }
+
+  public boolean isGenerateCrossLinksReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATECROSSLINKS);
+  }
+
+  public boolean getGenerateCrossLinks() {
+    Boolean b = getBoolean(PROPERTY_NAME_GENERATECROSSLINKS);
+    if (b == null)
+      return defaults.getGenerateCrossLinks();
+    else
+      return b.booleanValue();
+  }
+
+  public void setGenerateCrossLinks(boolean value) {
+    setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
+  }
+
+  public boolean isDisplayAuthorSortInAuthorListsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSortInAuthorLists);
+  }
+
+  public boolean getDisplayAuthorSortInAuthorLists() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSortInAuthorLists);
+    if (b == null)
+      return defaults.getDisplayAuthorSortInAuthorLists();
+    else
+      return b.booleanValue();
+  }
+
+  public void setDisplayAuthorSortInAuthorLists(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayAuthorSortInAuthorLists, value);
+  }
+
+  public boolean isDisplayTitleSortInBookListsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSortInBookLists);
+  }
+
+  public boolean getDisplayTitleSortInBookLists() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSortInBookLists);
+    if (b == null)
+      return defaults.getDisplayTitleSortInBookLists();
+    else
+      return b.booleanValue();
+  }
+
+  public void setDisplayTitleSortInBookListss(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayTitleSortInBookLists, value);
+  }
+
+  public boolean isSortUsingAuthorSortReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthorSort);
+  }
+
+  public boolean getSortUsingAuthorSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortUsingAuthorSort);
+    if (b == null)
+      return defaults.getSortUsingAuthorSort();
+    else
+      return b.booleanValue();
+  }
+
+  public void setSortUsingAuthorSort(boolean value) {
+    setProperty(PROPERTY_NAME_SortUsingAuthorSort, value);
+  }
+
+  public boolean isSortUsingTitleSortReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitleSort);
+  }
+
+  public boolean getSortUsingTitleSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortUsingTitleSort);
+    if (b == null)
+      return defaults.getSortUsingTitleSort();
+    else
+      return b.booleanValue();
+  }
+
+  public void setSortUsingTitleSort(boolean value) {
+    setProperty(PROPERTY_NAME_SortUsingTitleSort, value);
+  }
+  /*
+   Book Details
+  */
+
+  public void setIncludeSeriesInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludeSeriesInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+  }
+
+  public boolean getIncludeSeriesInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludeSeriesInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeTagsInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludeTagsInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+  }
+
+  public boolean getIncludeTagsInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludeTagsInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludePublisherInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludePublisherInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+  }
+
+  public boolean getIncludePublisherInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludePublisherInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludePublishedInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludePublishedInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+  }
+
+  public boolean getIncludePublishedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludePublishedInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeModifiedInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_IncludeModifiedInBookDetailst, value);
+  }
+
+  public boolean isIncludeModifiedInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_IncludeModifiedInBookDetailst);
+  }
+
+  public boolean getIncludeModifiedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeModifiedInBookDetailst);
+    if (b == null)
+      return defaults.getIncludeModifiedInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public boolean isDisplayAuthorSortInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSortInBookDetails);
+  }
+
+  public boolean getDisplayAuthorSortInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSortInBookDetails);
+    if (b == null)
+      return defaults.getDisplayAuthorSortInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setDisplayAuthorSortInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayAuthorSortInBookDetails, value);
+  }
+
+  public boolean isDisplayTitleSortInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSortInBookDetails);
+  }
+
+  public boolean getDisplayTitleSortInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSortInBookDetails);
+    if (b == null)
+      return defaults.getDisplayTitleSortInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setDisplayTitleSortInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayTitleSortInBookDetails, value);
   }
 }

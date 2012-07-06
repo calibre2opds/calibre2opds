@@ -81,6 +81,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-115: Send to Readmill Library
     - #c2o-118: Provide more control over display and sorting of Authors
     - #c2o-119: Provide more control over display and sorting of Series
+    - #c2o-120: Remove option to Exit from the confirm dialog displayed after pressing Save
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.
@@ -99,6 +100,7 @@ v3.2
     - Fix: #c2o-114: Language is ignored when running on command line (cli)
     - Fix: #c20-116: Improvements to German localization (thanks to Venia.Legendi)
     - New: #c2o-117: Include year in Recent sub-catalog entries
+    - New: #c20-121: Add links to Localization and customization guides to Help menu
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1

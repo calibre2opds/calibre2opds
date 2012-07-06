@@ -60,10 +60,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeAboutLink();
 
-  public boolean getGenerateCrossLinks();
-
-  public boolean getGenerateExternalLinks();
-
   public String getCatalogFilter();
 
   public int getMaxSummaryLength();
@@ -82,14 +78,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getGenerateAllbooks();
 
-  public boolean getIncludeSeriesInBookDetails();
-
-  public boolean getIncludeTagsInBookDetails();
-
-  public boolean getIncludePublisherInBookDetails();
-
-  public boolean getIncludePublishedInBookDetails();
-
   public boolean getGenerateIndex();
 
   public boolean getGenerateOpds();
@@ -99,8 +87,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public boolean getGenerateOpdsDownloads();
 
   public boolean getGenerateHtmlDownloads();
-
-  public boolean getPublishedDateAsYear();
 
   public boolean getBrowseByCover();
 
@@ -128,7 +114,40 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getUrlBase();
 
+  /* Catalog Structure */
+
+  public boolean getDisplayAuthorSortInAuthorLists();
+
+  public boolean getDisplayTitleSortInBookLists();
+
+  public boolean getSortUsingAuthorSort();
+
+  public boolean getSortUsingTitleSort();
+
+  /* Book Details */
+
+  public boolean getGenerateCrossLinks();
+
+  public boolean getGenerateExternalLinks();
+
+  public boolean getIncludeSeriesInBookDetails();
+
+  public boolean getIncludeTagsInBookDetails();
+
+  public boolean getIncludePublisherInBookDetails();
+
+  public boolean getDisplayAuthorSortInBookDetails();
+
+  public boolean getDisplayTitleSortInBookDetails();
+
+  public boolean getIncludePublishedInBookDetails();
+
+  public boolean getPublishedDateAsYear();
+
+  public boolean getIncludeModifiedInBookDetails();
+
   /* external links */
+
   public String getWikipediaUrl();
 
   public String getAmazonAuthorUrl();

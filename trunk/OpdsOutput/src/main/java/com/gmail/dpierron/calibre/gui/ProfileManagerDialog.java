@@ -112,7 +112,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(scrProfiles, gridBagConstraints);
 
-        cmdNew.setText(Localization.Main.getText("gui.profile.new")); // NOI18N
+        cmdNew.setText("cmdNew");
         cmdNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdNewActionPerformed(evt);
@@ -120,7 +120,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
         });
         pnlButtons.add(cmdNew);
 
-        cmdRename.setText(Localization.Main.getText("gui.profile.rename")); // NOI18N
+        cmdRename.setText("cmdRename");
         cmdRename.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRenameActionPerformed(evt);
@@ -128,13 +128,14 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
         });
         pnlButtons.add(cmdRename);
 
-        cmdDelete.setText(Localization.Main.getText("gui.profile.delete")); // NOI18N
+        cmdDelete.setText("cmdDelete");
         cmdDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdDeleteActionPerformed(evt);
             }
         });
         pnlButtons.add(cmdDelete);
+        cmdDelete.getAccessibleContext().setAccessibleName("null");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;

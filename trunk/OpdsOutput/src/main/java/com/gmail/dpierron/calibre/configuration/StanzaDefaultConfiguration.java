@@ -160,22 +160,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.generateAllbooks;
   }
 
-  public boolean getIncludeSeriesInBookDetails() {
-    return StanzaConstants.includeSeriesInBookDetails;
-  }
-
-  public boolean getIncludeTagsInBookDetails() {
-    return StanzaConstants.includeTagsInBookDetails;
-  }
-
-  public boolean getIncludePublisherInBookDetails() {
-    return StanzaConstants.includePublisherInBookDetails;
-  }
-
-  public boolean getIncludePublishedInBookDetails() {
-    return StanzaConstants.includePublishedInBookDetails;
-  }
-
   public File getTargetFolder() {
     return new File(StanzaConstants.targetFolder);
   }
@@ -318,5 +302,53 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public List<Composite<String, String>> getCustomCatalogs() {
     return new Vector<Composite<String, String>>();
+  }
+
+  /* Catalog Structure */
+
+  public boolean getDisplayAuthorSortInAuthorLists() {
+    return StanzaConstants.DisplayAuthorSortInBookDetails;
+  }
+
+  public boolean getDisplayTitleSortInBookLists() {
+    return StanzaConstants.DisplayTitleSortInBookLists;
+  }
+
+  public boolean getSortUsingAuthorSort() {
+    return StanzaConstants.SortUsingAuthorSort;
+  }
+
+  public boolean getSortUsingTitleSort() {
+    return StanzaConstants.SortUsingTitleSort;
+  }
+
+  /* Book Details */
+
+  public boolean getIncludeSeriesInBookDetails() {
+    return StanzaConstants.includeSeriesInBookDetails;
+  }
+
+  public boolean getIncludeTagsInBookDetails() {
+    return StanzaConstants.includeTagsInBookDetails;
+  }
+
+  public boolean getIncludePublisherInBookDetails() {
+    return StanzaConstants.includePublisherInBookDetails;
+  }
+
+  public boolean getIncludePublishedInBookDetails() {
+    return StanzaConstants.includePublishedInBookDetails;
+  }
+
+  public boolean getIncludeModifiedInBookDetails() {
+    return StanzaConstants.IncludeModifiedInBookDetails;
+  }
+
+  public boolean getDisplayAuthorSortInBookDetails() {
+    return StanzaConstants.DisplayAuthorSortInBookDetails;
+  }
+
+  public boolean getDisplayTitleSortInBookDetails() {
+    return StanzaConstants.DisplayTitleSortInBookDetails;
   }
 }

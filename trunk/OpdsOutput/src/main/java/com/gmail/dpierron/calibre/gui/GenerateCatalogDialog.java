@@ -494,7 +494,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 15, 5);
         getContentPane().add(jProgressStep, gridBagConstraints);
 
-        cmdStopGenerating.setText(Localization.Main.getText("gui.stopGeneration")); // NOI18N
+        cmdStopGenerating.setText("cmdStopGenerating");
         cmdStopGenerating.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cmdStopGeneratingMouseClicked(evt);
@@ -519,7 +519,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkStarted, gridBagConstraints);
 
-        lblStarted.setText(Localization.Main.getText("info.step.started")); // NOI18N
+        lblStarted.setText("lblStarted");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -544,7 +544,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkDatabase, gridBagConstraints);
 
-        lblDatabase.setText(Localization.Main.getText("info.step.database")); // NOI18N
+        lblDatabase.setText("lblDatabase");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -569,7 +569,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkAuthors, gridBagConstraints);
 
-        lblAuthors.setText(Localization.Main.getText("info.step.authors")); // NOI18N
+        lblAuthors.setText("lblAuthors");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -594,7 +594,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkTags, gridBagConstraints);
 
-        lblTags.setText(Localization.Main.getText("info.step.tags")); // NOI18N
+        lblTags.setText("lblTags");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -619,7 +619,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkSeries, gridBagConstraints);
 
-        lblSeries.setText(Localization.Main.getText("info.step.series")); // NOI18N
+        lblSeries.setText("lblSeries");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
@@ -644,7 +644,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkRecent, gridBagConstraints);
 
-        lblRecent.setText(Localization.Main.getText("info.step.recent")); // NOI18N
+        lblRecent.setText("lblRecent");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
@@ -669,7 +669,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkRated, gridBagConstraints);
 
-        lblRated.setText(Localization.Main.getText("info.step.rated")); // NOI18N
+        lblRated.setText("lblRated");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
@@ -694,7 +694,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkAllbooks, gridBagConstraints);
 
-        lblAllbooks.setText(Localization.Main.getText("info.step.allbooks")); // NOI18N
+        lblAllbooks.setText("lblAllbooks");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -719,7 +719,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkFeaturedBooks, gridBagConstraints);
 
-        lblFeaturedBooks.setText(Localization.Main.getText("info.step.featuredbooks")); // NOI18N
+        lblFeaturedBooks.setText("lblFeaturedBooks");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
@@ -744,7 +744,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkCustomCatalogs, gridBagConstraints);
 
-        lblCustomCatalogs.setText(Localization.Main.getText("info.step.customcatalogs")); // NOI18N
+        lblCustomCatalogs.setText("lblCustomCatalogs");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 11;
@@ -769,7 +769,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkThumbnails, gridBagConstraints);
 
-        lblThmbnails.setText(Localization.Main.getText("info.step.thumbnails")); // NOI18N
+        lblThmbnails.setText("lblThmbnails");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 12;
@@ -794,8 +794,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkCovers, gridBagConstraints);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Localization_en"); // NOI18N
-        lblCovers.setText(bundle.getString("info.step.covers")); // NOI18N
+        lblCovers.setText("lblCovers");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 13;
@@ -820,7 +819,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkReprocessingEpubMetadata, gridBagConstraints);
 
-        lblReprocessingEpubMetadata.setText(bundle.getString("info.step.reprocessingEpubMetadata")); // NOI18N
+        lblReprocessingEpubMetadata.setText("lblReprocessingEpubMetadata");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 15;
@@ -845,7 +844,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkIndex, gridBagConstraints);
 
-        lblIndex.setText(bundle.getString("info.step.index")); // NOI18N
+        lblIndex.setText("lblIndex");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 14;
@@ -870,7 +869,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkCopyLibToTarget, gridBagConstraints);
 
-        lblCopyLibToTarget.setText(Localization.Main.getText("info.step.copylib")); // NOI18N
+        lblCopyLibToTarget.setText("lblCopyLibToTarget");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 16;
@@ -895,7 +894,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkCopyCatToTarget, gridBagConstraints);
 
-        lblCopyCatToTarget.setText(Localization.Main.getText("info.step.copycat")); // NOI18N
+        lblCopyCatToTarget.setText("lblCopyCatToTarget");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 17;
@@ -920,7 +919,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkFinished, gridBagConstraints);
 
-        lblFinished.setText(Localization.Main.getText("info.step.done.gui")); // NOI18N
+        lblFinished.setText("lblFinished");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 18;
@@ -928,6 +927,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(lblFinished, gridBagConstraints);
+        lblFinished.getAccessibleContext().setAccessibleName("null");
 
         lblFinishedTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -950,7 +950,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(15, 5, 5, 5);
         getContentPane().add(lblStepMessage, gridBagConstraints);
 
-        lblStoppingGeneration.setText("Stopping Catalog Generation...");
+        lblStoppingGeneration.setText("lblStoppingGeneration");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 21;

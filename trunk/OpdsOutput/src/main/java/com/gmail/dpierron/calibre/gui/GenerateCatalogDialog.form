@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
@@ -38,9 +38,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="cmdStopGenerating">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="gui.stopGeneration" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="cmdStopGenerating"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmdStopGeneratingMouseClicked"/>
@@ -64,9 +62,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblStarted">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.started" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblStarted"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -96,9 +92,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblDatabase">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.database" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblDatabase"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -128,9 +122,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblAuthors">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.authors" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblAuthors"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -160,9 +152,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblTags">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.tags" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblTags"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -192,9 +182,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblSeries">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.series" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblSeries"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -224,9 +212,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblRecent">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.recent" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblRecent"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -256,9 +242,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblRated">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.rated" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblRated"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -288,9 +272,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblAllbooks">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.allbooks" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblAllbooks"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -320,9 +302,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblFeaturedBooks">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.featuredbooks" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblFeaturedBooks"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -352,9 +332,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCustomCatalogs">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.customcatalogs" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblCustomCatalogs"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -384,9 +362,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblThmbnails">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.thumbnails" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblThmbnails"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -416,9 +392,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCovers">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.covers" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblCovers"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -448,9 +422,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblReprocessingEpubMetadata">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.reprocessingEpubMetadata" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblReprocessingEpubMetadata"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -480,9 +452,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblIndex">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.index" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblIndex"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -512,9 +482,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCopyLibToTarget">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.copylib" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblCopyLibToTarget"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -544,9 +512,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCopyCatToTarget">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.copycat" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblCopyCatToTarget"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -576,10 +542,11 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblFinished">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="Localization_en.properties" key="info.step.done.gui" replaceFormat="Localization.Main.getText(&quot;{key}&quot;)"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="lblFinished"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="null"/>
+      </AccessibilityProperties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="1" gridY="18" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="5" insetsBottom="0" insetsRight="5" anchor="17" weightX="0.0" weightY="0.0"/>
@@ -622,7 +589,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblStoppingGeneration">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Stopping Catalog Generation..."/>
+        <Property name="text" type="java.lang.String" value="lblStoppingGeneration"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

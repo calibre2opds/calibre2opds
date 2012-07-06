@@ -41,6 +41,7 @@ public class Mainframe extends javax.swing.JFrame {
   GenerateCatalogDialog catalogDialog;
   String language;
   CustomCatalogTableModel customCatalogTableModel = new CustomCatalogTableModel();
+  private String tabHelpUrl;
 
   /**
    * Creates new form Mainframe
@@ -63,6 +64,7 @@ public class Mainframe extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
     initComponents();
+    tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
     loadValues();
     translateTexts();
   }
@@ -631,9 +633,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkBrowseByCoverWithoutSplit.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCoverWithoutSplit());
     chkBrowseByCoverWithoutSplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverWithoutSplitReadOnly());
     lblBrowseByCoverWithoutSplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverWithoutSplitReadOnly());
-    chkIncludeAboutLink.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeAboutLink());
-    chkIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
-    lblIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
+    chkNoIncludeAboutLink.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeAboutLink());
+    chkNoIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
+    lblNoIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
     chkZipTrookCatalog.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getZipTrookCatalog());
     chkZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
     lblZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
@@ -839,7 +841,7 @@ public class Mainframe extends javax.swing.JFrame {
     ConfigurationManager.INSTANCE.getCurrentProfile().setBrowseByCover(chkBrowseByCover.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setBrowseByCoverWithoutSplit(chkBrowseByCoverWithoutSplit.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeAboutLink(chkIncludeAboutLink.isSelected());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateDownloads(!chkNogenerateopdsfiles.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setCryptFilenames(chkCryptFilenames.isSelected());
     ConfigurationManager.INSTANCE.getCurrentProfile().setShowSeriesInAuthorCatalog(!chkNoShowSeries.isSelected());
@@ -901,9 +903,15 @@ public class Mainframe extends javax.swing.JFrame {
     lblBottom0.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
     lblBottom0.setFont(lblBottom0.getFont().deriveFont(Font.BOLD));
     cmdCancel.setText(Localization.Main.getText("gui.close")); // NOI18N
+    cmdCancel.setToolTipText(Localization.Main.getText("gui.close.description")); // NOI18N
     cmdSave.setText(Localization.Main.getText("gui.save")); // NOI18N
+    cmdSave.setToolTipText(Localization.Main.getText("gui.save.description")); // NOI18N
     cmdGenerate.setText(Localization.Main.getText("gui.generate")); // NOI18N
+    cmdGenerate.setToolTipText(Localization.Main.getText("gui.generate.description")); // NOI18N
     cmdReset.setText(Localization.Main.getText("gui.reset"));
+    cmdReset.setToolTipText(Localization.Main.getText("gui.reset.description"));
+    cmdHelp.setText(Localization.Main.getText("gui.help"));
+    cmdHelp.setToolTipText(Localization.Main.getText("gui.help.description"));
     tabOptionsTabs.setTitleAt(0, Localization.Main.getText("gui.tab1"));
     tabOptionsTabs.setTitleAt(1, Localization.Main.getText("gui.tab2"));
     tabOptionsTabs.setTitleAt(2, Localization.Main.getText("gui.tab3"));
@@ -919,6 +927,7 @@ public class Mainframe extends javax.swing.JFrame {
     adaptInterfaceToDeviceSpecificMode(ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode());
 
     // main options
+
     lblLang.setText(Localization.Main.getText("config.Language.label")); // NOI18N
     lblLang.setToolTipText(Localization.Main.getText("config.Language.description")); // NOI18N
     cboLang.setToolTipText(lblLang.getToolTipText()); // NOI18N
@@ -953,7 +962,8 @@ public class Mainframe extends javax.swing.JFrame {
     lblWikilang.setToolTipText(Localization.Main.getText("config.WikipediaLanguage.description")); // NOI18N
     txtWikilang.setToolTipText(lblWikilang.getToolTipText()); // NOI18N
 
-    // catalog generation options
+    // catalog structure options
+
     lblNogenerateopds.setText(Localization.Main.getText("config.GenerateOpds.label")); // NOI18N
     lblNogenerateopds.setToolTipText(Localization.Main.getText("config.GenerateOpds.description")); // NOI18N
     chkNogenerateopds.setToolTipText(lblNogenerateopds.getToolTipText()); // NOI18N
@@ -969,9 +979,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblBrowseByCoverWithoutSplit.setText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.label")); // NOI18N
     lblBrowseByCoverWithoutSplit.setToolTipText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.description")); // NOI18N
     chkBrowseByCoverWithoutSplit.setToolTipText(lblBrowseByCoverWithoutSplit.getToolTipText()); // NOI18N
-    lblIncludeAboutLink.setText(Localization.Main.getText("config.IncludeAboutLink.label")); // NOI18N
-    lblIncludeAboutLink.setToolTipText(Localization.Main.getText("config.IncludeAboutLink.description")); // NOI18N
-    chkIncludeAboutLink.setToolTipText(lblIncludeAboutLink.getToolTipText()); // NOI18N
+    lblNoIncludeAboutLink.setText(Localization.Main.getText("config.IncludeAboutLink.label")); // NOI18N
+    lblNoIncludeAboutLink.setToolTipText(Localization.Main.getText("config.IncludeAboutLink.description")); // NOI18N
+    chkNoIncludeAboutLink.setToolTipText(lblNoIncludeAboutLink.getToolTipText()); // NOI18N
     lblNogenerateopdsfiles.setText(Localization.Main.getText("config.GenerateOpdsDownloads.label")); // NOI18N
     lblNogenerateopdsfiles.setToolTipText(Localization.Main.getText("config.GenerateOpdsDownloads.description")); // NOI18N
     chkNogenerateopdsfiles.setToolTipText(lblNogenerateopdsfiles.getToolTipText()); // NOI18N
@@ -1016,6 +1026,7 @@ public class Mainframe extends javax.swing.JFrame {
     chkSortUsingTitleSort.setToolTipText(lblSortUsingTitleSort.getToolTipText()); // NOI18N
 
     // Book Details Options
+
     lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
     lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
     chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
@@ -1048,6 +1059,7 @@ public class Mainframe extends javax.swing.JFrame {
     chkDisplayTitleSortInBookDetails.setToolTipText(lblDisplayTitleSortInBookDetails.getToolTipText()); // NOI18N
 
     // advanced customization options
+
     lblIncludeformat.setText(Localization.Main.getText("config.IncludedFormatsList.label")); // NOI18N
     lblIncludeformat.setToolTipText(Localization.Main.getText("config.IncludedFormatsList.description")); // NOI18N
     txtIncludeformat.setToolTipText(lblIncludeformat.getToolTipText()); // NOI18N
@@ -1125,6 +1137,7 @@ public class Mainframe extends javax.swing.JFrame {
     txtFeaturedCatalogSavedSearchName.setToolTipText(lblFeaturedCatalogSavedSearchName.getToolTipText()); // NOI18N
 
     // external links
+
     lblWikipediaUrl.setText(Localization.Main.getText("config.WikipediaUrl.label")); // NOI18N
     lblWikipediaUrl.setToolTipText(Localization.Main.getText("config.WikipediaUrl.description")); // NOI18N
     txtWikipediaUrl.setToolTipText(lblWikipediaUrl.getToolTipText()); // NOI18N
@@ -1193,7 +1206,9 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm.setToolTipText(lblIndexFilterAlgorithm.getToolTipText()); // NOI18N
     cmdLibrarythingTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
     cmdLibrarythingTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
+
     // Custom catalogs
+
     cmdAdd.setText(Localization.Main.getText("gui.add")); // NOI18N
 
 
@@ -1213,6 +1228,8 @@ public class Mainframe extends javax.swing.JFrame {
     mnuHelpDevelopersGuide.setText(Localization.Main.getText("gui.menu.help.developerGuide")); // NOI18N
     mnuHelpOpenIssues.setText(Localization.Main.getText("gui.menu.help.issueRegister")); // NOI18N
     mnuHelpOpenForum.setText(Localization.Main.getText("gui.menu.help.supportForum")); // NOI18N
+    mnuHelpOpenLocalize.setText(Localization.Main.getText("gui.menu.help.localize")); // NOI18N
+    mnuHelpOpenCustomize.setText(Localization.Main.getText("gui.menu.help.customize")); // NOI18N
     mnuToolsOpenLog.setText(Localization.Main.getText("gui.menu.tools.logFile")); // NOI18N
     mnuToolsClearLog.setText(Localization.Main.getText("gui.menu.tools.logClear")); // NOI18N
     mnuToolsOpenConfig.setText(Localization.Main.getText("gui.menu.tools.configFolder")); // NOI18N
@@ -1376,8 +1393,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkBrowseByCover = new javax.swing.JCheckBox();
         lblBrowseByCoverWithoutSplit = new javax.swing.JLabel();
         chkBrowseByCoverWithoutSplit = new javax.swing.JCheckBox();
-        lblIncludeAboutLink = new javax.swing.JLabel();
-        chkIncludeAboutLink = new javax.swing.JCheckBox();
+        lblNoIncludeAboutLink = new javax.swing.JLabel();
+        chkNoIncludeAboutLink = new javax.swing.JCheckBox();
         lblNogenerateopdsfiles = new javax.swing.JLabel();
         chkNogenerateopdsfiles = new javax.swing.JCheckBox();
         lblNogenerateratings = new javax.swing.JLabel();
@@ -1534,6 +1551,7 @@ public class Mainframe extends javax.swing.JFrame {
         cmdReset = new javax.swing.JButton();
         cmdSave = new javax.swing.JButton();
         cmdGenerate = new javax.swing.JButton();
+        cmdHelp = new javax.swing.JButton();
         pnlTitle = new javax.swing.JPanel();
         lblCurrentProfile = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -1550,14 +1568,15 @@ public class Mainframe extends javax.swing.JFrame {
         mnuHelp = new javax.swing.JMenu();
         mnuHelpDonate = new javax.swing.JMenuItem();
         mnuHelpHome = new javax.swing.JMenuItem();
+        mnuHelpOpenForum = new javax.swing.JMenuItem();
+        mnuHelpOpenIssues = new javax.swing.JMenuItem();
         mnuHelpUserGuide = new javax.swing.JMenuItem();
         mnuHelpDevelopersGuide = new javax.swing.JMenuItem();
-        mnuHelpOpenIssues = new javax.swing.JMenuItem();
-        mnuHelpOpenForum = new javax.swing.JMenuItem();
+        mnuHelpOpenLocalize = new javax.swing.JMenuItem();
+        mnuHelpOpenCustomize = new javax.swing.JMenuItem();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(Localization.Main.getText("gui.title")); // NOI18N
 
         pnlMain.setLayout(new java.awt.GridBagLayout());
 
@@ -1637,6 +1656,11 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         pnlMain.add(lblDonate, gridBagConstraints);
 
+        pnlMainOptions.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlMainOptionsComponentShown(evt);
+            }
+        });
         pnlMainOptions.setLayout(new java.awt.GridBagLayout());
 
         lblLang.setText("lblLang");
@@ -1990,6 +2014,11 @@ public class Mainframe extends javax.swing.JFrame {
         tabOptionsTabs.addTab("pnlMainOptions", pnlMainOptions);
         pnlMainOptions.getAccessibleContext().setAccessibleName("Main Option");
 
+        pnlCatalogStructure.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlCatalogStructureComponentShown(evt);
+            }
+        });
         pnlCatalogStructure.setLayout(new java.awt.GridBagLayout());
 
         lblNogeneratehtml.setText("lblNogeneratehtml");
@@ -2076,8 +2105,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkBrowseByCoverWithoutSplit, gridBagConstraints);
 
-        lblIncludeAboutLink.setText("lblIncludeAboutLink");
-        lblIncludeAboutLink.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblNoIncludeAboutLink.setText("lblNoIncludeAboutLink");
+        lblNoIncludeAboutLink.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -2087,8 +2116,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(lblIncludeAboutLink, gridBagConstraints);
-        lblIncludeAboutLink.getAccessibleContext().setAccessibleName("Include the \"About calibre2opds\" link");
+        pnlCatalogStructure.add(lblNoIncludeAboutLink, gridBagConstraints);
+        lblNoIncludeAboutLink.getAccessibleContext().setAccessibleName("Include the \"About calibre2opds\" link");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -2097,7 +2126,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(chkIncludeAboutLink, gridBagConstraints);
+        pnlCatalogStructure.add(chkNoIncludeAboutLink, gridBagConstraints);
 
         lblNogenerateopdsfiles.setText("lblNogenerateopdsfiles");
         lblNogenerateopdsfiles.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -2376,7 +2405,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayAuthorSortInAuthorLists, gridBagConstraints);
@@ -2389,7 +2418,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayTitleSortInBookLists, gridBagConstraints);
@@ -2402,7 +2431,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingAuthorSort, gridBagConstraints);
@@ -2415,13 +2444,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingTitleSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2429,7 +2458,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayAuthorSortInAuthorLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2437,7 +2466,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayTitleSortInBookLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2445,7 +2474,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkSortUsingAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2454,6 +2483,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
+        pnlBookDetails.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlBookDetailsComponentShown(evt);
+            }
+        });
         pnlBookDetails.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -2660,6 +2694,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
+        pnlAdvancedOptions.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlAdvancedOptionsComponentShown(evt);
+            }
+        });
         pnlAdvancedOptions.setLayout(new java.awt.GridBagLayout());
 
         lblIncludeformat.setText("lblIncludeformat");
@@ -3274,6 +3313,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         tabOptionsTabs.addTab("pnlAdvancedOptions", pnlAdvancedOptions);
 
+        pnlExternalUrlsOptions.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlExternalUrlsOptionsComponentShown(evt);
+            }
+        });
         pnlExternalUrlsOptions.setLayout(new java.awt.GridBagLayout());
 
         lblWikipediaUrl.setText("lblWikipediaUrl");
@@ -3717,6 +3761,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         tabOptionsTabs.addTab("pnlExternalUrlsOptions", pnlExternalUrlsOptions);
 
+        pnlCustomCatalogs.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                pnlCustomCatalogsComponentShown(evt);
+            }
+        });
         pnlCustomCatalogs.setLayout(new java.awt.GridBagLayout());
 
         tblCustomCatalogs.setModel(getTblCustomCatalogsModel());
@@ -3800,6 +3849,19 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         pnlButtons.add(cmdGenerate);
+
+        cmdHelp.setText("cmdHelp");
+        cmdHelp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cmdHelpMouseClicked(evt);
+            }
+        });
+        cmdHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdHelpActionPerformed(evt);
+            }
+        });
+        pnlButtons.add(cmdHelp);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -3918,6 +3980,22 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpHome);
 
+        mnuHelpOpenForum.setText("mnuHelpOpenForum");
+        mnuHelpOpenForum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpOpenForumActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpOpenForum);
+
+        mnuHelpOpenIssues.setText("mnuHelpOpenIssues");
+        mnuHelpOpenIssues.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpOpenIssuesActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpOpenIssues);
+
         mnuHelpUserGuide.setText("mnuHelpUserGuide");
         mnuHelpUserGuide.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3934,21 +4012,21 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpDevelopersGuide);
 
-        mnuHelpOpenIssues.setText("mnuHelpOpenIssues");
-        mnuHelpOpenIssues.addActionListener(new java.awt.event.ActionListener() {
+        mnuHelpOpenLocalize.setText("mnuHelpOpenLocalize");
+        mnuHelpOpenLocalize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuHelpOpenIssuesActionPerformed(evt);
+                mnuHelpOpenLocalizeActionPerformed(evt);
             }
         });
-        mnuHelp.add(mnuHelpOpenIssues);
+        mnuHelp.add(mnuHelpOpenLocalize);
 
-        mnuHelpOpenForum.setText("mnuHelpOpenForum");
-        mnuHelpOpenForum.addActionListener(new java.awt.event.ActionListener() {
+        mnuHelpOpenCustomize.setText("mnuHelpOpenCustomize");
+        mnuHelpOpenCustomize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuHelpOpenForumActionPerformed(evt);
+                mnuHelpOpenCustomizeActionPerformed(evt);
             }
         });
-        mnuHelp.add(mnuHelpOpenForum);
+        mnuHelp.add(mnuHelpOpenCustomize);
 
         mnuHelpAbout.setText("mnuHelpAbout");
         mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
@@ -4118,25 +4196,49 @@ public class Mainframe extends javax.swing.JFrame {
         BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
     }//GEN-LAST:event_mnuHelpHomeActionPerformed
 
-    private void pnlBookDetailshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBookDetailshandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pnlBookDetailshandleMouseClickOnLabel
+  private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerforme
+    logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
+    BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
+  }//GEN-LAST:event_cmdHelpActionPerforme
 
-    private void lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblDisplayAuthorSortInAuthorListshandleMouseClickOnLabel
+    private void cmdHelpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdHelpMouseClicked
+      logger.info(Localization.Main.getText("gui.help") + ": " + tabHelpUrl);
+      BareBonesBrowserLaunch.openURL(tabHelpUrl);
+    }//GEN-LAST:event_cmdHelpMouseClicked
 
-    private void lblDisplayTitleSortInBookListshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblDisplayTitleSortInBookListshandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblDisplayTitleSortInBookListshandleMouseClickOnLabel
+    private void pnlMainOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlMainOptionsComponentShown
+      tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
+    }//GEN-LAST:event_pnlMainOptionsComponentShown
 
-    private void lblSortUsingAuthorSorthandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortUsingAuthorSorthandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblSortUsingAuthorSorthandleMouseClickOnLabel
+    private void pnlCatalogStructureComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCatalogStructureComponentShown
+      tabHelpUrl = Constants.HELP_URL_CATALOGSTRUCTURE;
+    }//GEN-LAST:event_pnlCatalogStructureComponentShown
 
-    private void lblSortUsingTitleSorthandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortUsingTitleSorthandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblSortUsingTitleSorthandleMouseClickOnLabel
+    private void pnlBookDetailsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlBookDetailsComponentShown
+      tabHelpUrl = Constants.HELP_URL_BOOKDETAILS;
+    }//GEN-LAST:event_pnlBookDetailsComponentShown
+
+    private void pnlAdvancedOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAdvancedOptionsComponentShown
+      tabHelpUrl = Constants.HELP_URL_ADVANCED;
+    }//GEN-LAST:event_pnlAdvancedOptionsComponentShown
+
+    private void pnlExternalUrlsOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlExternalUrlsOptionsComponentShown
+      tabHelpUrl = Constants.HELP_URL_EXTERNALLINKS;
+    }//GEN-LAST:event_pnlExternalUrlsOptionsComponentShown
+
+    private void pnlCustomCatalogsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCustomCatalogsComponentShown
+      tabHelpUrl = Constants.HELP_URL_CUSTOMCATALOGS;
+    }//GEN-LAST:event_pnlCustomCatalogsComponentShown
+
+    private void mnuHelpOpenLocalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenLocalizeActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.help.localize") + ": " + Constants.LOCALIZE_URL);
+      BareBonesBrowserLaunch.openURL(Constants.LOCALIZE_URL);
+    }//GEN-LAST:event_mnuHelpOpenLocalizeActionPerformed
+
+    private void mnuHelpOpenCustomizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenCustomizeActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.help.customize") + ": " + Constants.CUSTOMIZE_URL);
+      BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
+    }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4225,7 +4327,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkDontsplittags;
     private javax.swing.JCheckBox chkExternalIcons;
     private javax.swing.JCheckBox chkGenerateIndex;
-    private javax.swing.JCheckBox chkIncludeAboutLink;
     private javax.swing.JCheckBox chkIncludeModifiedInBookDetails;
     private javax.swing.JCheckBox chkIncludeOnlyOneFile;
     private javax.swing.JCheckBox chkIncludePublishedInBookDetails;
@@ -4239,6 +4340,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkNoGenerateAuthors;
     private javax.swing.JCheckBox chkNoGenerateSeries;
     private javax.swing.JCheckBox chkNoGenerateTags;
+    private javax.swing.JCheckBox chkNoIncludeAboutLink;
     private javax.swing.JCheckBox chkNoShowSeries;
     private javax.swing.JCheckBox chkNoThumbnailGenerate;
     private javax.swing.JCheckBox chkNobandwidthoptimize;
@@ -4269,6 +4371,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JButton cmdGoodreadIsbnReset;
     private javax.swing.JButton cmdGoodreadReviewReset;
     private javax.swing.JButton cmdGoodreadTitleReset;
+    private javax.swing.JButton cmdHelp;
     private javax.swing.JButton cmdIsfdbAuthorReset;
     private javax.swing.JButton cmdLibrarythingAuthorReset;
     private javax.swing.JButton cmdLibrarythingIsbnReset;
@@ -4312,7 +4415,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblGoodreadIsbnUrl;
     private javax.swing.JLabel lblGoodreadReviewIsbnUrl;
     private javax.swing.JLabel lblGoodreadTitleUrl;
-    private javax.swing.JLabel lblIncludeAboutLink;
     private javax.swing.JLabel lblIncludeModifiedInBookDetails1;
     private javax.swing.JLabel lblIncludeOnlyOneFile;
     private javax.swing.JLabel lblIncludePublishedInBookDetails;
@@ -4341,6 +4443,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblNoGenerateAuthors;
     private javax.swing.JLabel lblNoGenerateSeries;
     private javax.swing.JLabel lblNoGenerateTags;
+    private javax.swing.JLabel lblNoIncludeAboutLink;
     private javax.swing.JLabel lblNoShowSeries;
     private javax.swing.JLabel lblNoThumbnailGenerate;
     private javax.swing.JLabel lblNobandwidthoptimize;
@@ -4377,8 +4480,10 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuHelpDevelopersGuide;
     private javax.swing.JMenuItem mnuHelpDonate;
     private javax.swing.JMenuItem mnuHelpHome;
+    private javax.swing.JMenuItem mnuHelpOpenCustomize;
     private javax.swing.JMenuItem mnuHelpOpenForum;
     private javax.swing.JMenuItem mnuHelpOpenIssues;
+    private javax.swing.JMenuItem mnuHelpOpenLocalize;
     private javax.swing.JMenuItem mnuHelpUserGuide;
     private javax.swing.JMenu mnuProfiles;
     private javax.swing.JMenu mnuTools;
