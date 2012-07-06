@@ -31,23 +31,16 @@ public class StanzaConstants {
   public final static int MAX_SUMMARY_LENGTH = 30;
   public final static int MAX_BOOK_SUMMARY_LENGTH = 250;
   public final static String CatalogFilter = "";
-  public final static boolean generateExternalLinks = true;
-  public final static boolean generateCrossLinks = true;
   public final static boolean generateAuthors = true;
   public final static boolean generateTags = true;
   public final static boolean generateSeries = true;
   public final static boolean generateRecent = true;
   public final static boolean generateRatings = true;
   public final static boolean generateAllbooks = true;
-  public final static boolean includeSeriesInBookDetails = true;
-  public final static boolean includeTagsInBookDetails = false;
-  public final static boolean includePublisherInBookDetails = false;
-  public final static boolean includePublishedInBookDetails = false;
   public final static boolean suppressRatingsInTitles = false;
   public final static String targetFolder = ".";
   public final static boolean COPYTODATABASEFOLDER = true;
   public final static boolean browseByCover = false;
-  public final static boolean publishedDateAsYear = false;
   public final static boolean splitByAuthorInitialGoToBooks = false;
   public final static boolean includeAboutLink = true;
   public final static String tagsToMakeDeep = "";
@@ -60,6 +53,30 @@ public class StanzaConstants {
   public final static boolean ReprocessEpubMetadata = false;
   public final static boolean OrderAllBooksBySeries = true;
   public final static int MAX_MOBILE_RESOLUTION = 960;
+  public final static boolean GenerateIndex = false;
+  public final static boolean IndexComments = true;
+  public final static int MaxKeywords = -1; // don't filter
+  public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
+  public final static String UrlBase = null;
+  public final static String FeaturedCatalogTitle = "Featured books";
+  public final static String FeaturedCatalogSavedSearchName = "";
+  /* Catalog Structure */
+  public final static boolean DisplayAuthorSortInAuthorLists = true;
+  public final static boolean DisplayTitleSortInBookLists = true;
+  public final static boolean SortUsingAuthorSort = true;
+  public final static boolean SortUsingTitleSort = true;
+  /* Book Details */
+  public final static boolean generateExternalLinks = true;
+  public final static boolean generateCrossLinks = true;
+  public final static boolean includeSeriesInBookDetails = true;
+  public final static boolean includeTagsInBookDetails = true;
+  public final static boolean includePublisherInBookDetails = false;
+  public final static boolean includePublishedInBookDetails = false;
+  public final static boolean publishedDateAsYear = false;
+  public final static boolean IncludeModifiedInBookDetails = false;
+  public final static boolean DisplayAuthorSortInBookDetails = false;
+  public final static boolean DisplayTitleSortInBookDetails = false;
+  /* Book Links */
   public final static String GOODREAD_ISBN_URL = "http://www.goodreads.com/book/isbn/{0}";
   public final static String GOODREAD_REVIEW_ISBN_URL = "http://www.goodreads.com/review/isbn/{0}";
   public final static String GOODREAD_TITLE_URL = "http://www.goodreads.com/book/title/{0}";
@@ -75,11 +92,4 @@ public class StanzaConstants {
       "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-author={0}";
   public final static String ISFDB_AUTHOR_URL = "http://www.isfdb.org/cgi-bin/ea.cgi?{0}";
   public final static String WIKIPEDIA_URL = "http://{0}.wikipedia.org/wiki/{1}";
-  public final static boolean GenerateIndex = false;
-  public final static boolean IndexComments = true;
-  public final static int MaxKeywords = -1; // don't filter
-  public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
-  public final static String UrlBase = null;
-  public final static String FeaturedCatalogTitle = "Featured books";
-  public final static String FeaturedCatalogSavedSearchName = "";
 }

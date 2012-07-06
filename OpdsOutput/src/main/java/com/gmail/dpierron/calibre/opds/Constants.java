@@ -23,6 +23,8 @@ public class Constants {
   public final static String HOME_URL = "http://calibre2opds.com/";
   public final static String USERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/overview/";
   public final static String DEVELOPERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/";
+  public final static String LOCALIZE_URL = "http://calibre2opds.com/read-the-documentation/development/localization/";
+  public final static String CUSTOMIZE_URL = "http://calibre2opds.com/read-the-documentation/development/customization/";
   public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
   public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
@@ -32,6 +34,12 @@ public class Constants {
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
   public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
+  public final static String HELP_URL_MAIN_OPTIONS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_MAIN";
+  public final static String HELP_URL_CATALOGSTRUCTURE = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_CATALOGSTRUCTURE";
+  public final static String HELP_URL_BOOKDETAILS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_BOOKDETAILS";
+  public final static String HELP_URL_ADVANCED = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_ADVANCED";
+  public final static String HELP_URL_EXTERNALLINKS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_EXTERNALLINKS";
+  public final static String HELP_URL_CUSTOMCATALOGS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_CUSTOMCATALOGS";
 
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files

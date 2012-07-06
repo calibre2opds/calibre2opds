@@ -155,54 +155,55 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed"
   // <editor-fold defaultstate="collapsed"
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-  private void initComponents() {
-    java.awt.GridBagConstraints gridBagConstraints;
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-    jProgress = new javax.swing.JProgressBar();
-    cmdCancel = new javax.swing.JButton();
-    lblBookTitle = new javax.swing.JLabel();
+        jProgress = new javax.swing.JProgressBar();
+        cmdCancel = new javax.swing.JButton();
+        lblBookTitle = new javax.swing.JLabel();
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-    setTitle(Localization.Main.getText("gui.tools.processEpubMetadataOfAllBooks")); // NOI18N
-    getContentPane().setLayout(new java.awt.GridBagLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle(Localization.Main.getText("gui.tools.processEpubMetadataOfAllBooks")); // NOI18N
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-    jProgress.setMaximum(61);
-    jProgress.setPreferredSize(new java.awt.Dimension(300, 19));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(jProgress, gridBagConstraints);
+        jProgress.setMaximum(61);
+        jProgress.setPreferredSize(new java.awt.Dimension(300, 19));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(jProgress, gridBagConstraints);
 
-    cmdCancel.setText(Localization.Main.getText("gui.cancel")); // NOI18N
-    cmdCancel.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        cmdCancelActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    getContentPane().add(cmdCancel, gridBagConstraints);
+        cmdCancel.setText("cmdCancel");
+        cmdCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdCancelActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        getContentPane().add(cmdCancel, gridBagConstraints);
 
-    lblBookTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    lblBookTitle.setText("jLabel1");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(lblBookTitle, gridBagConstraints);
+        lblBookTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblBookTitle.setText("lblBookTitle");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(lblBookTitle, gridBagConstraints);
+        lblBookTitle.getAccessibleContext().setAccessibleName("null");
 
-    pack();
-  }// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
   private void cmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelActionPerformed
     stopThread = true;
   }//GEN-LAST:event_cmdCancelActionPerformed
 
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton cmdCancel;
-  private javax.swing.JProgressBar jProgress;
-  private javax.swing.JLabel lblBookTitle;
-  // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdCancel;
+    private javax.swing.JProgressBar jProgress;
+    private javax.swing.JLabel lblBookTitle;
+    // End of variables declaration//GEN-END:variables
 
 }
