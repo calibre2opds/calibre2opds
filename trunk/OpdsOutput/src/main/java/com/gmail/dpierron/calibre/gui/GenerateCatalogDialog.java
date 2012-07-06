@@ -87,6 +87,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   private void translateTexts() {
     setTitle(Localization.Main.getText("gui.generateProgress"));
+    lblStoppingGeneration.setVisible(false);
+    lblStoppingGeneration.repaint();
+    lblStoppingGeneration.setText(Localization.Main.getText("gui.stoppingGeneration")); // NOI18N
     lblStarted.setText(Localization.Main.getText("info.step.started")); // NOI18N
     lblDatabase.setText(Localization.Main.getText("info.step.database")); // NOI18N
     lblTags.setText(Localization.Main.getText("info.step.tags")); // NOI18N
@@ -101,7 +104,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblCopyLibToTarget.setText(Localization.Main.getText("info.step.copylib")); // NOI18N
     lblCopyCatToTarget.setText(Localization.Main.getText("info.step.copycat")); // NOI18N
     lblFinished.setText(Localization.Main.getText("info.step.done.gui")); // NOI18N
-    lblStoppingGeneration.setText(Localization.Main.getText("gui.stoppingGeneration")); // NOI18N
+    cmdStopGenerating.setText(Localization.Main.getText("gui.stopGeneration")); // NOI18N
   }
 
   public void dumpOptions() {
@@ -119,7 +122,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   public void startCreateMainCatalog() {
     logger.info(Localization.Main.getText("info.step.started"));
     cmdStopGenerating.setVisible(true);
+    cmdStopGenerating.repaint();
     lblStoppingGeneration.setVisible(false);
+    lblStoppingGeneration.repaint();
     progressStep.reset();
     lblStartedTime.setText("");
     lblDatabaseTime.setText("");
@@ -366,6 +371,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     String title;
     Boolean b = cmdStopGenerating.isVisible();
     cmdStopGenerating.setVisible(false);
+    cmdStopGenerating.repaint();
     if (error != null) {
       title = message;
       if (Helper.isNullOrEmpty(title))
@@ -378,12 +384,14 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblStoppingGeneration.setVisible(false);
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
     cmdStopGenerating.setVisible(b);
+    cmdStopGenerating.repaint();
     logger.error(message, error);
   }
 
   public int askUser(String message, String... possibleAnswers) {
     Boolean b = cmdStopGenerating.isVisible();
     cmdStopGenerating.setVisible(false);
+    cmdStopGenerating.repaint();
     int nAnswer = JOptionPane
         .showOptionDialog(this, message, message, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleAnswers, possibleAnswers[0]);
     if (nAnswer > -1) {
@@ -391,18 +399,22 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       logger.info(logMessage);
     }
     cmdStopGenerating.setVisible(b);
+    cmdStopGenerating.repaint();
     return nAnswer;
   }
 
   private void actionStopGenerating() {
     cmdStopGenerating.setVisible(false);
+    cmdStopGenerating.repaint();
     int n = JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.stopGeneration.confirm"), "", JOptionPane.OK_CANCEL_OPTION);
     if (JOptionPane.OK_OPTION == n) {
       lblStoppingGeneration.setText(Localization.Main.getText("gui.prepareStopGeneration"));
       lblStoppingGeneration.setVisible(true);
+      lblStoppingGeneration.repaint();
       continueGenerating = false;
     } else
       cmdStopGenerating.setVisible(true);
+    cmdStopGenerating.repaint();
   }
 
   public void checkIfContinueGenerating() throws GenerationStoppedException {
