@@ -149,6 +149,21 @@ public class Mainframe extends javax.swing.JFrame {
     lblBrowseByCoverWithoutSplit.setVisible(visible);
   }
 
+  /**
+   * We do not allow HTML Downloads if OPDS Downloads are suppressed
+   */
+  private void checkHtmlDownloads() {
+    if (chkNogenerateopdsfiles.isSelected() == true) {
+      chkNogeneratehtmlfiles.setSelected(true);
+      chkNogeneratehtmlfiles.setEnabled(false);
+    } else {
+      if (chkNogeneratehtmlfiles.isEnabled() == false) {
+        chkNogeneratehtmlfiles.setEnabled(true);
+        chkNogeneratehtmlfiles.setSelected(false);
+      }
+    }
+  }
+
   private void actOnDontsplittagsActionPerformed() {
     actOnDontsplittagsActionPerformed(chkDontsplittags.isSelected());
   }
@@ -762,6 +777,8 @@ public class Mainframe extends javax.swing.JFrame {
     changeLanguage();
     loadProfiles();
 
+    checkHtmlDownloads();   // Fix for backwards compatibility
+
     pack();
   }
 
@@ -1211,8 +1228,8 @@ public class Mainframe extends javax.swing.JFrame {
 
     cmdAdd.setText(Localization.Main.getText("gui.add")); // NOI18N
 
-
     // menus
+
     mnuFile.setText(Localization.Main.getText("gui.menu.file")); // NOI18N
     mnuFileSave.setText(Localization.Main.getText("gui.save")); // NOI18N
     mnuFileGenerateCatalogs.setText(Localization.Main.getText("gui.generate")); // NOI18N
@@ -2129,11 +2146,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblNogenerateopdsfiles.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
-            }
-        });
-        lblNogenerateopdsfiles.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                lblNoenerateOpdsfile(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4127,21 +4139,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtLibrarythingTitleUrl.setText(StanzaConstants.LIBRARYTHING_TITLE_URL);
   }//GEN-LAST:event_cmdLibrarythingTitleResetActionPerformed
 
-  private void lblNoenerateOpdsfile(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_lblNoenerateOpdsfile
-    // TODO add your handling code here:
-  }//GEN-LAST:event_lblNoenerateOpdsfile
-
   private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
-    // We do not allow HTML Downloads if OPDS Downloads are suppressed
-    if (chkNogenerateopdsfiles.isSelected() == true) {
-      chkNogeneratehtmlfiles.setSelected(true);
-      chkNogeneratehtmlfiles.setEnabled(false);
-    } else {
-      if (chkNogeneratehtmlfiles.isEnabled() == false) {
-        chkNogeneratehtmlfiles.setEnabled(true);
-        chkNogeneratehtmlfiles.setSelected(false);
-      }
-    }
+    checkHtmlDownloads();;
   }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
 
   private void chkGenerateIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGenerateIndexActionPerformed

@@ -792,10 +792,6 @@
                   <AccessibilityProperties>
                     <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Do not generate OPDS downloads"/>
                   </AccessibilityProperties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="handleMouseClickOnLabel"/>
-                    <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="lblNoenerateOpdsfile"/>
-                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="2" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="3" insetsBottom="3" insetsRight="3" anchor="13" weightX="0.0" weightY="0.0"/>
