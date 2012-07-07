@@ -43,7 +43,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   // This is the date format that is to be used in the titles for the Recent Books sub-catalog section
   // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
   // desireable then it could be come a configurable option
-  private final static DateFormat TIMESTAMP_INTITLE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
+  private final static DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
 
   /**
    * @return
@@ -1041,7 +1041,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
     if (book.hasAuthor()) {
       for (Author author : book.getAuthors()) {
-        Element authorElement = JDOM.INSTANCE.element("author").addContent(JDOM.INSTANCE.element("name").addContent(author.getName()))
+        Element authorElement = JDOM.INSTANCE.element("author")
+            .addContent(JDOM.INSTANCE.element("name")
+            .addContent(author.getName()))
             .addContent(JDOM.INSTANCE.element("uri").addContent("author_" + author.getId() + ".xml"));
         entry.addContent(authorElement);
       }
@@ -1088,40 +1090,81 @@ public abstract class BooksSubCatalog extends SubCatalog {
       boolean hasContent = false;
       if (logger.isTraceEnabled())
         logger.trace("decorateBookEntry: computing comments");
-      // Series (if presnt and wanted)
+      // Series (if present and wanted)
       if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
-        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.series") + " ")).addContent(data)
-            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
+        content.addContent(JDOM.INSTANCE.element("strong")
+               .addContent(Localization.Main.getText("content.series") + " "))
+               .addContent(data)
+               .addContent(JDOM.INSTANCE.element("br"))
+               .addContent(JDOM.INSTANCE.element("br"));
         hasContent = true;
       }
-      // Tags (if presnt and wanted)
+      // Tags (if present and wanted)
       // If the user has requested tags we output this section even if the list is empty.
       // The assumption is that the user in this case wants to see that no tags have been assigned
       // If we get feedback that this is not  a valid addumption then we could omit it when the list is empty
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails() && Helper.isNotNullOrEmpty(book.getTags())) {
-        String tags = book.getTags().toString();
-        if (tags != null  && tags.startsWith("["))
-          // Remove braces added by java around a list
-          tags = tags.substring(1, tags.length()-1);
-        else
-          // If no tags then we need an empty string (is this possible)
-          tags = "";
-        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.tags") + " ")).addContent(tags)
-          .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
-        hasContent = true;
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails()) {
+        if (Helper.isNotNullOrEmpty(book.getTags())) {
+          String tags = book.getTags().toString();
+          if (tags != null  && tags.startsWith("["))
+            // Remove braces added by java around a list
+            tags = tags.substring(1, tags.length()-1);
+          else
+            // If no tags then we need an empty string (is this possible)
+            tags = "";
+          content.addContent(JDOM.INSTANCE.element("strong")
+                 .addContent(Localization.Main.getText("content.tags") + " "))
+                 .addContent(tags)
+                 .addContent(JDOM.INSTANCE.element("br"))
+                 .addContent(JDOM.INSTANCE.element("br"));
+          hasContent = true;
+        }
       }
-      // Publisher (if presnt and wanted)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublisherInBookDetails() && Helper.isNotNullOrEmpty(book.getPublisher())) {
-        content.addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.publisher") + " ")).addContent(book.getPublisher().getName())
-            .addContent(JDOM.INSTANCE.element("br")).addContent(JDOM.INSTANCE.element("br"));
-        hasContent = true;
+      // Publisher (if present and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublisherInBookDetails()) {
+        if (Helper.isNotNullOrEmpty(book.getPublisher())) {
+          content.addContent(JDOM.INSTANCE.element("strong")
+                  .addContent(Localization.Main.getText("content.publisher") + " "))
+                  .addContent(book.getPublisher().getName())
+                  .addContent(JDOM.INSTANCE.element("br"))
+                  .addContent(JDOM.INSTANCE.element("br"));
+          hasContent = true;
+        }
       }
+      // Published date (if present and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublishedInBookDetails()) {
+        Date pubtmp = book.getPublicationDate();
+        if (Helper.isNotNullOrEmpty(pubtmp)) {
+          if (ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear()) {
+            content.addContent(JDOM.INSTANCE.element("strong")
+                .addContent(Localization.Main.getText("content.published") + " "))
+                .addContent(PUBLICATIONDATE_FORMAT.format(book.getPublicationDate()))
+                .addContent(JDOM.INSTANCE.element("br"))
+                .addContent(JDOM.INSTANCE.element("br"));
+          }
+        }
+      }
+
+      // Modified date (if present and wanted)
+      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeModifiedInBookDetails()) {
+        Date modtmp = book.getTimestamp();
+        if (Helper.isNotNullOrEmpty(modtmp)) {
+          content.addContent(JDOM.INSTANCE.element("strong")
+              .addContent(Localization.Main.getText("content.modified") + " "))
+              .addContent(DATE_FORMAT.format(book.getTimestamp()))
+              .addContent(JDOM.INSTANCE.element("br"))
+              .addContent(JDOM.INSTANCE.element("br"));
+        }
+      }
+
       List<Element> comments = JDOM.INSTANCE.convertBookCommentToXhtml(book.getComment());
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())
           logger.trace("decorateBookEntry: got comments");
-        content.addContent(JDOM.INSTANCE.newParagraph().addContent(JDOM.INSTANCE.element("strong").addContent(Localization.Main.getText("content.summary"))));
+        content.addContent(JDOM.INSTANCE.newParagraph()
+               .addContent(JDOM.INSTANCE.element("strong")
+               .addContent(Localization.Main.getText("content.summary"))));
         for (Element p : comments) {
           content.addContent(p.detach());
         }
@@ -1195,7 +1238,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         title = book.getTitle();
       }
     else if (Option.contains(options, Option.INCLUDE_TIMESTAMP))
-      title = "[" + TIMESTAMP_INTITLE_FORMAT.format(book.getTimestamp()) + "] " + book.getTitle();
+      title = book.getTitle() + " [" + DATE_FORMAT.format(book.getTimestamp()) + "]";
     else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles())
       title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
     else
