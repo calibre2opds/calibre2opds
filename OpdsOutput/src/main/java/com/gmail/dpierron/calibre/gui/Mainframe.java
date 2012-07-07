@@ -7,6 +7,7 @@ package com.gmail.dpierron.calibre.gui;
  * and maintained using the Netbeans IDE tool for form design.
  */
 
+import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.configuration.StanzaConstants;
@@ -41,7 +42,12 @@ public class Mainframe extends javax.swing.JFrame {
   GenerateCatalogDialog catalogDialog;
   String language;
   CustomCatalogTableModel customCatalogTableModel = new CustomCatalogTableModel();
-  private String tabHelpUrl;
+  private final Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+  private final Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+  private String tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
+  // Store this as we use it a lot and it should improve effeciency
+  private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+
 
   /**
    * Creates new form Mainframe
@@ -58,8 +64,8 @@ public class Mainframe extends javax.swing.JFrame {
     } catch (UnsupportedLookAndFeelException e) {
       // do nothing
     }
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().isObsolete()) {
-      ConfigurationManager.INSTANCE.getCurrentProfile().reset();
+    if (currentProfile.isObsolete()) {
+      currentProfile.reset();
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
@@ -230,7 +236,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void setDeviceSpecificMode(DeviceMode mode) {
-    ConfigurationManager.INSTANCE.getCurrentProfile().setDeviceMode(mode);
+    currentProfile.setDeviceMode(mode);
     adaptInterfaceToDeviceSpecificMode(mode);
     loadValues();
   }
@@ -241,7 +247,7 @@ public class Mainframe extends javax.swing.JFrame {
   private void changeLanguage() {
     String newLanguage = (String) cboLang.getSelectedItem();
     if (Helper.checkedCompare(language, newLanguage) != 0) {
-      ConfigurationManager.INSTANCE.getCurrentProfile().setLanguage(newLanguage);
+      currentProfile.setLanguage(newLanguage);
       language = newLanguage;
       Localization.Main.reloadLocalizations();
       Localization.Enum.reloadLocalizations();
@@ -334,6 +340,10 @@ public class Mainframe extends javax.swing.JFrame {
     BareBonesBrowserLaunch.openURL(Constants.PAYPAL_DONATION);
   }
 
+  /**
+   * Control the generation of the catalog
+   * displaying the progress as it goes
+   */
   private void generateCatalog() {
 
     storeValues();
@@ -362,6 +372,11 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }
 
+  /**
+   * Catalog generation completed so close down generation dialog
+   * If necessary display the reason
+   * @param e
+   */
   synchronized void catalogEnded(final Exception e) {
     if (catalogDialog == null)
       return;
@@ -382,10 +397,14 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }
 
+  /**
+   * Set a new profile
+   * @param profileName
+   */
   private void setProfile(String profileName) {
     ConfigurationManager.INSTANCE.changeProfile(profileName);
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().isObsolete()) {
-      ConfigurationManager.INSTANCE.getCurrentProfile().reset();
+    if (currentProfile.isObsolete()) {
+      currentProfile.reset();
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
@@ -457,51 +476,51 @@ public class Mainframe extends javax.swing.JFrame {
     boolean enabledNoExternalLinks = chkNogenerateexternallinks.isSelected();
     boolean derivedState;
 
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isWikipediaUrlReadOnly());
     txtWikipediaUrl.setEnabled(derivedState);
     lblWikipediaUrl.setEnabled(derivedState);
     cmdWikipediaUrlReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonAuthorUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isAmazonAuthorUrlReadOnly());
     txtAmazonAuthorUrl.setEnabled(derivedState);
     lblAmazonAuthorUrl.setEnabled(derivedState);
     cmdAmazonUrlReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonIsbnUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isAmazonIsbnUrlReadOnly());
     txtAmazonIsbnUrl.setEnabled(derivedState);
     lblAmazonIsbnUrl.setEnabled(derivedState);
     cmdAmazonIsbnReset.setEnabled(derivedState);
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isAmazonTitleUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isAmazonTitleUrlReadOnly());
     txtAmazonTitleUrl.setEnabled(derivedState);
     lblAmazonTitleUrl.setEnabled(derivedState);
     cmdAmazonTitleReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadAuthorUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isGoodreadAuthorUrlReadOnly());
     txtGoodreadAuthorUrl.setEnabled(derivedState);
     lblGoodreadAuthorUrl.setEnabled(derivedState);
     cmdGoodreadAuthorReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadIsbnUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isGoodreadIsbnUrlReadOnly());
     txtGoodreadIsbnUrl.setEnabled(derivedState);
     lblGoodreadIsbnUrl.setEnabled(derivedState);
     cmdGoodreadIsbnReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadTitleUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isGoodreadTitleUrlReadOnly());
     txtGoodreadTitleUrl.setEnabled(derivedState);
     lblGoodreadTitleUrl.setEnabled(derivedState);
     cmdGoodreadTitleReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isGoodreadReviewIsbnUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isGoodreadReviewIsbnUrlReadOnly());
     txtGoodreadReviewIsbnUrl.setEnabled(derivedState);
     lblGoodreadReviewIsbnUrl.setEnabled(derivedState);
     cmdGoodreadReviewReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isIsfdbAuthorUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isIsfdbAuthorUrlReadOnly());
     txtIsfdbAuthorUrl.setEnabled(derivedState);
     lblIsfdbAuthorUrl.setEnabled(derivedState);
     cmdIsfdbAuthorReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingAuthorUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isLibrarythingAuthorUrlReadOnly());
     txtLibrarythingAuthorUrl.setEnabled(derivedState);
     lblLibrarythingAuthorUrl.setEnabled(derivedState);
     cmdLibrarythingAuthorReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingIsbnUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isLibrarythingIsbnUrlReadOnly());
     txtLibrarythingIsbnUrl.setEnabled(derivedState);
     lblLibrarythingIsbnUrl.setEnabled(derivedState);
     cmdLibrarythingIsbnReset.setEnabled((derivedState));
-    derivedState = ! (enabledNoExternalLinks || ConfigurationManager.INSTANCE.getCurrentProfile().isLibrarythingTitleUrlReadOnly());
+    derivedState = ! (enabledNoExternalLinks || currentProfile.isLibrarythingTitleUrlReadOnly());
     txtLibrarythingTitleUrl.setEnabled(derivedState);
     lblLibrarythingTitleUrl.setEnabled(derivedState);
     cmdLibrarythingTitleReset.setEnabled((derivedState));
@@ -527,248 +546,279 @@ public class Mainframe extends javax.swing.JFrame {
     };
 
     cboLang.setModel(new DefaultComboBoxModel(LocalizationHelper.INSTANCE.getAvailableLocalizations()));
-    cboLang.setSelectedItem(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage());
+    cboLang.setSelectedItem(currentProfile.getLanguage());
     lblCurrentProfile.setText(Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName() + "       "));
     lblCurrentProfile.setFont(lblCurrentProfile.getFont().deriveFont(Font.BOLD));
 
     lblCurrentProfile.setToolTipText(Localization.Main.getText("config.profile.description"));
-    File f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+    File f = currentProfile.getDatabaseFolder();
     if (f == null || !f.exists())
       f = new File(".");
     txtDatabaseFolder.setText(f.getAbsolutePath());
-    cmdSetDatabaseFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isDatabaseFolderReadOnly());
-    txtDatabaseFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isDatabaseFolderReadOnly());
-    lblDatabaseFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isDatabaseFolderReadOnly());
+    cmdSetDatabaseFolder.setEnabled(!currentProfile.isDatabaseFolderReadOnly());
+    txtDatabaseFolder.setEnabled(!currentProfile.isDatabaseFolderReadOnly());
+    lblDatabaseFolder.setEnabled(!currentProfile.isDatabaseFolderReadOnly());
 
-    f = ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder();
+    f = currentProfile.getTargetFolder();
     if (f == null || !f.exists())
       txtTargetFolder.setText("");
     else
       txtTargetFolder.setText(f.getAbsolutePath());
-    cmdSetTargetFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTargetFolderReadOnly());
-    txtTargetFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTargetFolderReadOnly());
-    lblTargetFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTargetFolderReadOnly());
+    cmdSetTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
+    txtTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
+    lblTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
     // c2o-77 Ensure that Target Folder cannot be entered in default mode
-    txtTargetFolder.setEnabled(ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() != DeviceMode.Dropbox);
-    chkCopyToDatabaseFolder.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getCopyToDatabaseFolder());
-    chkCopyToDatabaseFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCopyToDatabaseFolderReadOnly());
-    lblCopyToDatabaseFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCopyToDatabaseFolderReadOnly());
-    chkReprocessEpubMetadata.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getReprocessEpubMetadata());
-    chkReprocessEpubMetadata.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isReprocessEpubMetadataReadOnly());
-    lblReprocessEpubMetadata.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isReprocessEpubMetadataReadOnly());
-    txtWikilang.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage());
-    txtWikilang.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaLanguageReadOnly());
-    lblWikilang.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isWikipediaLanguageReadOnly());
-    txtCatalogFolder.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName());
-    txtCatalogFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFolderNameReadOnly());
-    lblCatalogFolder.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFolderNameReadOnly());
-    txtUrlBase.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBase());
+    txtTargetFolder.setEnabled(currentProfile.getDeviceMode() != DeviceMode.Dropbox);
+    chkCopyToDatabaseFolder.setSelected(currentProfile.getCopyToDatabaseFolder());
+    chkCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
+    lblCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
+    chkReprocessEpubMetadata.setSelected(currentProfile.getReprocessEpubMetadata());
+    chkReprocessEpubMetadata.setEnabled(!currentProfile.isReprocessEpubMetadataReadOnly());
+    lblReprocessEpubMetadata.setEnabled(!currentProfile.isReprocessEpubMetadataReadOnly());
+    txtWikilang.setText(currentProfile.getWikipediaLanguage());
+    txtWikilang.setEnabled(!currentProfile.isWikipediaLanguageReadOnly());
+    lblWikilang.setEnabled(!currentProfile.isWikipediaLanguageReadOnly());
+    txtCatalogFolder.setText(currentProfile.getCatalogFolderName());
+    txtCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
+    lblCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
+    txtUrlBase.setText(currentProfile.getUrlBase());
     // Temporary until we actually make use of this field
     txtUrlBase.setEnabled(false);
     lblUrlBase.setEnabled(false);
-    //txtUrlBase.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isUrlBaseReadOnly());
-    //lblUrlBase.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isUrlBaseReadOnly());
-    txtCatalogTitle.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle());
-    txtCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogTitleReadOnly());
-    lblCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogTitleReadOnly());
-    chkNoThumbnailGenerate.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailGenerate());
-    chkNoThumbnailGenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isThumbnailGenerateReadOnly());
-    lblNoThumbnailGenerate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isThumbnailGenerateReadOnly());
-    txtThumbnailheight.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
+    //txtUrlBase.setEnabled(!currentProfile.isUrlBaseReadOnly());
+    //lblUrlBase.setEnabled(!currentProfile.isUrlBaseReadOnly());
+    txtCatalogTitle.setText(currentProfile.getCatalogTitle());
+    txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    chkNoThumbnailGenerate.setSelected(!currentProfile.getThumbnailGenerate());
+    chkNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
+    lblNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
+    txtThumbnailheight.setText("" + currentProfile.getThumbnailHeight());
     txtThumbnailheight.setInputVerifier(iv);
-    txtThumbnailheight.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isThumbnailHeightReadOnly());
-    lblThumbnailheight.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isThumbnailHeightReadOnly());
-    chkNoCoverResize.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize());
-    chkNoCoverResize.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCoverResizeReadOnly());
-    lblNoCoverResize.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCoverResizeReadOnly());
-    txtCoverHeight.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
+    txtThumbnailheight.setEnabled(!currentProfile.isThumbnailHeightReadOnly());
+    lblThumbnailheight.setEnabled(!currentProfile.isThumbnailHeightReadOnly());
+    chkNoCoverResize.setSelected(!currentProfile.getCoverResize());
+    chkNoCoverResize.setEnabled(!currentProfile.isCoverResizeReadOnly());
+    lblNoCoverResize.setEnabled(!currentProfile.isCoverResizeReadOnly());
+    txtCoverHeight.setText("" + currentProfile.getCoverHeight());
     txtCoverHeight.setInputVerifier(iv);
-    txtCoverHeight.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCoverHeightReadOnly());
-    lblCoverHeight.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCoverHeightReadOnly());
-    txtIncludeformat.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludedFormatsList());
-    txtIncludeformat.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludedFormatsListReadOnly());
-    lblIncludeformat.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludedFormatsListReadOnly());
-    txtMaxbeforepaginate.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate());
+    txtCoverHeight.setEnabled(!currentProfile.isCoverHeightReadOnly());
+    lblCoverHeight.setEnabled(!currentProfile.isCoverHeightReadOnly());
+    txtIncludeformat.setText(currentProfile.getIncludedFormatsList());
+    txtIncludeformat.setEnabled(!currentProfile.isIncludedFormatsListReadOnly());
+    lblIncludeformat.setEnabled(!currentProfile.isIncludedFormatsListReadOnly());
+    txtMaxbeforepaginate.setText("" + currentProfile.getMaxBeforePaginate());
     txtMaxbeforepaginate.setInputVerifier(iv);
-    txtMaxbeforepaginate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBeforePaginateReadOnly());
-    lblMaxbeforepaginate.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBeforePaginateReadOnly());
-    txtMaxbeforesplit.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforeSplit());
+    txtMaxbeforepaginate.setEnabled(!currentProfile.isMaxBeforePaginateReadOnly());
+    lblMaxbeforepaginate.setEnabled(!currentProfile.isMaxBeforePaginateReadOnly());
+    txtMaxbeforesplit.setText("" + currentProfile.getMaxBeforeSplit());
     txtMaxbeforesplit.setInputVerifier(iv);
-    txtMaxbeforesplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBeforeSplitReadOnly());
-    lblMaxbeforesplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBeforeSplitReadOnly());
-    txtMaxSplitLevels.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSplitLevels());
+    txtMaxbeforesplit.setEnabled(!currentProfile.isMaxBeforeSplitReadOnly());
+    lblMaxbeforesplit.setEnabled(!currentProfile.isMaxBeforeSplitReadOnly());
+    txtMaxSplitLevels.setText("" + currentProfile.getMaxSplitLevels());
     txtMaxSplitLevels.setInputVerifier(iv);
-    txtMaxSplitLevels.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxSplitLevelsReadOnly());
-    lblMaxSplitLevels.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxSplitLevelsReadOnly());
-    txtBooksinrecent.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions());
+    txtMaxSplitLevels.setEnabled(!currentProfile.isMaxSplitLevelsReadOnly());
+    lblMaxSplitLevels.setEnabled(!currentProfile.isMaxSplitLevelsReadOnly());
+    txtBooksinrecent.setText("" + currentProfile.getBooksInRecentAdditions());
     txtBooksinrecent.setInputVerifier(iv);
-    txtBooksinrecent.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBooksInRecentAdditionsReadOnly());
-    lblBooksinrecent.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBooksInRecentAdditionsReadOnly());
-    txtMaxsummarylength.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSummaryLength());
+    txtBooksinrecent.setEnabled(!currentProfile.isBooksInRecentAdditionsReadOnly());
+    lblBooksinrecent.setEnabled(!currentProfile.isBooksInRecentAdditionsReadOnly());
+    txtMaxsummarylength.setText("" + currentProfile.getMaxSummaryLength());
     txtMaxsummarylength.setInputVerifier(iv);
-    txtMaxsummarylength.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxSummaryLengthReadOnly());
-    lblMaxBookSummaryLength.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBookSummaryLengthReadOnly());
-    txtMaxBookSummaryLength.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength());
+    txtMaxsummarylength.setEnabled(!currentProfile.isMaxSummaryLengthReadOnly());
+    lblMaxBookSummaryLength.setEnabled(!currentProfile.isMaxBookSummaryLengthReadOnly());
+    txtMaxBookSummaryLength.setText("" + currentProfile.getMaxBookSummaryLength());
     txtMaxBookSummaryLength.setInputVerifier(iv);
-    txtMaxBookSummaryLength.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBookSummaryLengthReadOnly());
-    lblMaxBookSummaryLength.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxBookSummaryLengthReadOnly());
-    txtSplittagson.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn());
-    txtSplittagson.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitTagsOnReadOnly());
-    lblSplittagson.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitTagsOnReadOnly());
-    chkDontsplittags.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitTagsOnReadOnly());
-    actOnDontsplittagsActionPerformed(Helper.isNullOrEmpty(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn()));
-    chkIncludeemptybooks.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeBooksWithNoFile());
-    chkIncludeemptybooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeBooksWithNoFileReadOnly());
-    lblIncludeemptybooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeBooksWithNoFileReadOnly());
-    chkIncludeOnlyOneFile.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeOnlyOneFile());
-    chkIncludeOnlyOneFile.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeOnlyOneFileReadOnly());
-    lblIncludeOnlyOneFile.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeOnlyOneFileReadOnly());
-    chkNobandwidthoptimize.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth());
-    chkNobandwidthoptimize.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSaveBandwidthReadOnly());
-    lblNobandwidthoptimize.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSaveBandwidthReadOnly());
-    chkNogenerateopds.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateOpds());
-    chkNogenerateopds.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateOpdsReadOnly());
-    lblNogenerateopds.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateOpdsReadOnly());
-    chkNogeneratehtml.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml());
-    chkNogeneratehtml.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateHtmlReadOnly());
-    lblNogeneratehtml.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateHtmlReadOnly());
-    chkMinimizeChangedFiles.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getMinimizeChangedFiles());
-    chkMinimizeChangedFiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMinimizeChangedFilesReadOnly());
-    lblMinimizeChangedFiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMinimizeChangedFilesReadOnly());
-    chkExternalIcons.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getExternalIcons());
-    chkExternalIcons.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isExternalIconsReadOnly());
-    lblExternalIcons.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isExternalIconsReadOnly());
-    lblNogeneratehtmlfiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateHtmlDownloadsReadOnly());
-    chkSupressRatings.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles());
-    chkSupressRatings.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSupressRatingsInTitlesReadyOnly());
-    lblSupressRatings.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSupressRatingsInTitlesReadyOnly());
-    chkBrowseByCover.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover());
-    chkBrowseByCover.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverReadOnly());
-    lblBrowseByCover.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverReadOnly());
-    chkBrowseByCoverWithoutSplit.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCoverWithoutSplit());
-    chkBrowseByCoverWithoutSplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverWithoutSplitReadOnly());
-    lblBrowseByCoverWithoutSplit.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isBrowseByCoverWithoutSplitReadOnly());
-    chkNoIncludeAboutLink.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeAboutLink());
-    chkNoIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
-    lblNoIncludeAboutLink.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeAboutLinkReadOnly());
-    chkZipTrookCatalog.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getZipTrookCatalog());
-    chkZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
-    lblZipTrookCatalog.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isZipTrookCatalogReadOnly());
+    txtMaxBookSummaryLength.setEnabled(!currentProfile.isMaxBookSummaryLengthReadOnly());
+    lblMaxBookSummaryLength.setEnabled(!currentProfile.isMaxBookSummaryLengthReadOnly());
+    txtSplittagson.setText(currentProfile.getSplitTagsOn());
+    txtSplittagson.setEnabled(!currentProfile.isSplitTagsOnReadOnly());
+    lblSplittagson.setEnabled(!currentProfile.isSplitTagsOnReadOnly());
+    chkDontsplittags.setEnabled(!currentProfile.isSplitTagsOnReadOnly());
+    actOnDontsplittagsActionPerformed(Helper.isNullOrEmpty(currentProfile.getSplitTagsOn()));
+    chkIncludeemptybooks.setSelected(currentProfile.getIncludeBooksWithNoFile());
+    chkIncludeemptybooks.setEnabled(!currentProfile.isIncludeBooksWithNoFileReadOnly());
+    lblIncludeemptybooks.setEnabled(!currentProfile.isIncludeBooksWithNoFileReadOnly());
+    chkIncludeOnlyOneFile.setSelected(currentProfile.getIncludeOnlyOneFile());
+    chkIncludeOnlyOneFile.setEnabled(!currentProfile.isIncludeOnlyOneFileReadOnly());
+    lblIncludeOnlyOneFile.setEnabled(!currentProfile.isIncludeOnlyOneFileReadOnly());
+    chkNobandwidthoptimize.setSelected(!currentProfile.getSaveBandwidth());
+    chkNobandwidthoptimize.setEnabled(!currentProfile.isSaveBandwidthReadOnly());
+    lblNobandwidthoptimize.setEnabled(!currentProfile.isSaveBandwidthReadOnly());
+    chkNogenerateopds.setSelected(!currentProfile.getGenerateOpds());
+    chkNogenerateopds.setEnabled(!currentProfile.isGenerateOpdsReadOnly());
+    lblNogenerateopds.setEnabled(!currentProfile.isGenerateOpdsReadOnly());
+    chkNogeneratehtml.setSelected(!currentProfile.getGenerateHtml());
+    chkNogeneratehtml.setEnabled(!currentProfile.isGenerateHtmlReadOnly());
+    lblNogeneratehtml.setEnabled(!currentProfile.isGenerateHtmlReadOnly());
+    chkMinimizeChangedFiles.setSelected(currentProfile.getMinimizeChangedFiles());
+    chkMinimizeChangedFiles.setEnabled(!currentProfile.isMinimizeChangedFilesReadOnly());
+    lblMinimizeChangedFiles.setEnabled(!currentProfile.isMinimizeChangedFilesReadOnly());
+    chkExternalIcons.setSelected(currentProfile.getExternalIcons());
+    chkExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
+    lblExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
+    lblNogeneratehtmlfiles.setEnabled(!currentProfile.isGenerateHtmlDownloadsReadOnly());
+    chkSupressRatings.setSelected(currentProfile.getSuppressRatingsInTitles());
+    chkSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
+    lblSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
+    chkBrowseByCover.setSelected(currentProfile.getBrowseByCover());
+    chkBrowseByCover.setEnabled(!currentProfile.isBrowseByCoverReadOnly());
+    lblBrowseByCover.setEnabled(!currentProfile.isBrowseByCoverReadOnly());
+    chkBrowseByCoverWithoutSplit.setSelected(currentProfile.getBrowseByCoverWithoutSplit());
+    chkBrowseByCoverWithoutSplit.setEnabled(!currentProfile.isBrowseByCoverWithoutSplitReadOnly());
+    lblBrowseByCoverWithoutSplit.setEnabled(!currentProfile.isBrowseByCoverWithoutSplitReadOnly());
+    chkNoIncludeAboutLink.setSelected(!currentProfile.getIncludeAboutLink());
+    chkNoIncludeAboutLink.setEnabled(!currentProfile.isIncludeAboutLinkReadOnly());
+    lblNoIncludeAboutLink.setEnabled(!currentProfile.isIncludeAboutLinkReadOnly());
+    chkZipTrookCatalog.setSelected(currentProfile.getZipTrookCatalog());
+    chkZipTrookCatalog.setEnabled(!currentProfile.isZipTrookCatalogReadOnly());
+    lblZipTrookCatalog.setEnabled(!currentProfile.isZipTrookCatalogReadOnly());
 
-    chkIndexComments.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIndexComments());
-    chkIndexComments.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexCommentsReadOnly());
-    lblIndexComments.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexCommentsReadOnly());
-    txtMaxKeywords.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords());
-    txtMaxKeywords.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxKeywordsReadOnly());
-    lblMaxKeywords.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxKeywordsReadOnly());
+    chkIndexComments.setSelected(currentProfile.getIndexComments());
+    chkIndexComments.setEnabled(!currentProfile.isIndexCommentsReadOnly());
+    lblIndexComments.setEnabled(!currentProfile.isIndexCommentsReadOnly());
+    txtMaxKeywords.setText("" + currentProfile.getMaxKeywords());
+    txtMaxKeywords.setEnabled(!currentProfile.isMaxKeywordsReadOnly());
+    lblMaxKeywords.setEnabled(!currentProfile.isMaxKeywordsReadOnly());
     cboIndexFilterAlgorithm.setModel(new DefaultComboBoxModel(Index.FilterHintType.values()));
-    cboIndexFilterAlgorithm.setSelectedItem(ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    cboIndexFilterAlgorithm.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexFilterAlgorithmReadOnly());
-    lblIndexFilterAlgorithm.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIndexFilterAlgorithmReadOnly());
-    chkGenerateIndex.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex());
-    chkGenerateIndex.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateIndexReadOnly());
-    lblGenerateIndex.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateIndexReadOnly());
+    cboIndexFilterAlgorithm.setSelectedItem(currentProfile.getIndexFilterAlgorithm());
+    cboIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
+    lblIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
+    chkGenerateIndex.setSelected(currentProfile.getGenerateIndex());
+    chkGenerateIndex.setEnabled(!currentProfile.isGenerateIndexReadOnly());
+    lblGenerateIndex.setEnabled(!currentProfile.isGenerateIndexReadOnly());
     actOnGenerateIndexActionPerformed();
 
-    chkNogenerateopdsfiles.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateDownloads());
-    chkNogenerateopdsfiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateDownloadsReadOnly());
-    lblNogenerateopdsfiles.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateDownloadsReadOnly());
-    chkCryptFilenames.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getCryptFilenames());
-    chkCryptFilenames.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCryptFilenamesReadOnly());
-    lblCryptFilenames.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCryptFilenamesReadOnly());
-    chkNoShowSeries.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog());
-    chkNoShowSeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isShowSeriesInAuthorCatalogReadOnly());
-    lblNoShowSeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isShowSeriesInAuthorCatalogReadOnly());
-    chkOrderAllBooksBySeries.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getOrderAllBooksBySeries());
-    chkOrderAllBooksBySeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isOrderAllBooksBySeriesReadOnly());
-    lblOrderAllBooksBySeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isOrderAllBooksBySeriesReadOnly());
-    chkSplitByAuthorInitialGoToBooks.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks());
-    chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
-    chkSplitByAuthorInitialGoToBooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isSplitByAuthorInitialGoToBooksReadOnly());
-    txtCatalogFilter.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFilter());
-    txtCatalogFilter.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFilterReadOnly());
-    lblCatalogFilter.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCatalogFilterReadOnly());
-    chkPublishedDateAsYear.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear());
-    chkPublishedDateAsYear.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isPublishedDateAsYearReadOnly());
-    lblPublishedDateAsYear.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isPublishedDateAsYearReadOnly());
-    chkNogeneratecrosslinks.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks());
-    chkNogeneratecrosslinks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateCrossLinksReadOnly());
-    lblNogeneratecrosslinks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateCrossLinksReadOnly());
-    chkNogenerateexternallinks.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateExternalLinks());
-    chkNogenerateexternallinks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateExternalLinksReadOnly());
-    lblNogenerateexternallinks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateExternalLinksReadOnly());
-    chkNoGenerateAuthors.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAuthors());
-    chkNoGenerateAuthors.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateAuthorsReadOnly());
-    lblNoGenerateAuthors.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateAuthorsReadOnly());
-    chkNoGenerateTags.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags());
-    chkNoGenerateTags.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateTagsReadOnly());
-    lblNoGenerateTags.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateTagsReadOnly());
-    chkNoGenerateSeries.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries());
-    chkNoGenerateSeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateSeriesReadOnly());
-    lblNoGenerateSeries.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateSeriesReadOnly());
-    chkNogeneraterecent.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRecent());
-    chkNogeneraterecent.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateRecentReadOnly());
-    lblNogeneraterecent.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateRecentReadOnly());
-    chkNogenerateratings.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings());
-    chkNogenerateratings.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateRatingsReadOnly());
-    lblNogenerateratings.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateRatingsReadOnly());
-    chkNogenerateallbooks.setSelected(!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks());
-    chkNogenerateallbooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateAllbooksReadOnly());
-    lblNogenerateallbooks.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isGenerateAllbooksReadOnly());
-    chkIncludeSeriesInBookDetails.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails());
-    chkIncludeSeriesInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeSeriesInBookDetailsReadOnly());
-    lblIncludeSeriesInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeSeriesInBookDetailsReadOnly());
-    chkIncludeTagsInBookDetails.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails());
-    chkIncludeTagsInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeTagsInBookDetailsReadOnly());
-    lblIncludeTagsInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludeTagsInBookDetailsReadOnly());
-    chkIncludePublisherInBookDetails.setSelected(ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublisherInBookDetails());
-    chkIncludePublisherInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludePublisherInBookDetailsReadOnly());
-    lblIncludePublisherInBookDetails.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isIncludePublisherInBookDetailsReadOnly());
-    txtTagsToMakeDeep.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getTagsToMakeDeep());
-    txtTagsToMakeDeep.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToMakeDeepReadOnly());
-    lblTagsToMakeDeep.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isTagsToMakeDeepReadOnly());
-    txtMinBooksToMakeDeepLevel.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMinBooksToMakeDeepLevel());
+    chkNogenerateopdsfiles.setSelected(!currentProfile.getGenerateDownloads());
+    chkNogenerateopdsfiles.setEnabled(!currentProfile.isGenerateDownloadsReadOnly());
+    lblNogenerateopdsfiles.setEnabled(!currentProfile.isGenerateDownloadsReadOnly());
+    chkCryptFilenames.setSelected(currentProfile.getCryptFilenames());
+    chkCryptFilenames.setEnabled(!currentProfile.isCryptFilenamesReadOnly());
+    lblCryptFilenames.setEnabled(!currentProfile.isCryptFilenamesReadOnly());
+    chkNoShowSeries.setSelected(!currentProfile.getShowSeriesInAuthorCatalog());
+    chkNoShowSeries.setEnabled(!currentProfile.isShowSeriesInAuthorCatalogReadOnly());
+    lblNoShowSeries.setEnabled(!currentProfile.isShowSeriesInAuthorCatalogReadOnly());
+    chkOrderAllBooksBySeries.setSelected(currentProfile.getOrderAllBooksBySeries());
+    chkOrderAllBooksBySeries.setEnabled(!currentProfile.isOrderAllBooksBySeriesReadOnly());
+    lblOrderAllBooksBySeries.setEnabled(!currentProfile.isOrderAllBooksBySeriesReadOnly());
+    chkSplitByAuthorInitialGoToBooks.setSelected(currentProfile.getSplitByAuthorInitialGoToBooks());
+    chkSplitByAuthorInitialGoToBooks.setEnabled(!currentProfile.isSplitByAuthorInitialGoToBooksReadOnly());
+    chkSplitByAuthorInitialGoToBooks.setEnabled(!currentProfile.isSplitByAuthorInitialGoToBooksReadOnly());
+    txtCatalogFilter.setText("" + currentProfile.getCatalogFilter());
+    txtCatalogFilter.setEnabled(!currentProfile.isCatalogFilterReadOnly());
+    lblCatalogFilter.setEnabled(!currentProfile.isCatalogFilterReadOnly());
+    chkNoGenerateAuthors.setSelected(!currentProfile.getGenerateAuthors());
+    chkNoGenerateAuthors.setEnabled(!currentProfile.isGenerateAuthorsReadOnly());
+    lblNoGenerateAuthors.setEnabled(!currentProfile.isGenerateAuthorsReadOnly());
+    chkNoGenerateTags.setSelected(!currentProfile.getGenerateTags());
+    chkNoGenerateTags.setEnabled(!currentProfile.isGenerateTagsReadOnly());
+    lblNoGenerateTags.setEnabled(!currentProfile.isGenerateTagsReadOnly());
+    chkNoGenerateSeries.setSelected(!currentProfile.getGenerateSeries());
+    chkNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
+    lblNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
+    chkNogeneraterecent.setSelected(!currentProfile.getGenerateRecent());
+    chkNogeneraterecent.setEnabled(!currentProfile.isGenerateRecentReadOnly());
+    lblNogeneraterecent.setEnabled(!currentProfile.isGenerateRecentReadOnly());
+    chkNogenerateratings.setSelected(!currentProfile.getGenerateRatings());
+    chkNogenerateratings.setEnabled(!currentProfile.isGenerateRatingsReadOnly());
+    lblNogenerateratings.setEnabled(!currentProfile.isGenerateRatingsReadOnly());
+    chkNogenerateallbooks.setSelected(!currentProfile.getGenerateAllbooks());
+    chkNogenerateallbooks.setEnabled(!currentProfile.isGenerateAllbooksReadOnly());
+    lblNogenerateallbooks.setEnabled(!currentProfile.isGenerateAllbooksReadOnly());
+    chkDisplayAuthorSortInAuthorLists.setSelected(currentProfile.getDisplayAuthorSortInAuthorLists());
+    chkDisplayAuthorSortInAuthorLists.setEnabled(!currentProfile.isDisplayAuthorSortInAuthorListsReadOnly());
+    lblDisplayAuthorSortInAuthorLists.setEnabled(!currentProfile.isDisplayAuthorSortInAuthorListsReadOnly());
+    chkDisplayTitleSortInBookLists.setSelected(currentProfile.getDisplayTitleSortInBookLists());
+    chkDisplayTitleSortInBookLists.setEnabled(!currentProfile.isDisplayTitleSortInBookListsReadOnly());
+    lblDisplayTitleSortInBookLists.setEnabled(!currentProfile.isDisplayTitleSortInBookListsReadOnly());
+    chkSortUsingAuthorSort.setSelected(currentProfile.getSortUsingAuthorSort());
+    chkSortUsingAuthorSort.setEnabled(!currentProfile.isSortUsingAuthorSortReadOnly());
+    lblSortUsingAuthorSort.setEnabled(!currentProfile.isSortUsingAuthorSortReadOnly());
+    chkSortUsingTitleSort.setSelected(currentProfile.getSortUsingTitleSort());
+    chkSortUsingTitleSort.setEnabled(!currentProfile.isSortUsingTitleSortReadOnly());
+    lblSortUsingTitleSort.setEnabled(!currentProfile.isSortUsingTitleSortReadOnly());
+
+    // Book Details
+
+    chkIncludeSeriesInBookDetails.setSelected(currentProfile.getIncludeSeriesInBookDetails());
+    chkIncludeSeriesInBookDetails.setEnabled(!currentProfile.isIncludeSeriesInBookDetailsReadOnly());
+    lblIncludeSeriesInBookDetails.setEnabled(!currentProfile.isIncludeSeriesInBookDetailsReadOnly());
+    chkIncludeTagsInBookDetails.setSelected(currentProfile.getIncludeTagsInBookDetails());
+    chkIncludeTagsInBookDetails.setEnabled(!currentProfile.isIncludeTagsInBookDetailsReadOnly());
+    lblIncludeTagsInBookDetails.setEnabled(!currentProfile.isIncludeTagsInBookDetailsReadOnly());
+    chkIncludePublisherInBookDetails.setSelected(currentProfile.getIncludePublisherInBookDetails());
+    chkIncludePublisherInBookDetails.setEnabled(!currentProfile.isIncludePublisherInBookDetailsReadOnly());
+    lblIncludePublisherInBookDetails.setEnabled(!currentProfile.isIncludePublisherInBookDetailsReadOnly());
+    chkIncludePublishedInBookDetails.setSelected(currentProfile.getIncludePublishedInBookDetails());
+    chkIncludePublishedInBookDetails.setEnabled(!currentProfile.isIncludePublishedInBookDetailsReadOnly());
+    lblIncludePublishedInBookDetails.setEnabled(!currentProfile.isIncludePublishedInBookDetailsReadOnly());
+    chkPublishedDateAsYear.setSelected(currentProfile.getPublishedDateAsYear());
+    chkPublishedDateAsYear.setEnabled(!currentProfile.isPublishedDateAsYearReadOnly());
+    lblPublishedDateAsYear.setEnabled(!currentProfile.isPublishedDateAsYearReadOnly());
+    chkIncludeModifiedInBookDetails.setSelected(currentProfile.getIncludeModifiedInBookDetails());
+    chkIncludeModifiedInBookDetails.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
+    lblIncludeModifiedInBookDetails1.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
+    chkDisplayAuthorSortInBookDetails.setSelected(currentProfile.getDisplayAuthorSortInBookDetails());
+    chkDisplayAuthorSortInBookDetails.setEnabled(!currentProfile.isDisplayAuthorSortInBookDetailsReadOnly());
+    lblDisplayAuthorSortInBookDetails.setEnabled(!currentProfile.isDisplayAuthorSortInBookDetailsReadOnly());
+    chkDisplayTitleSortInBookDetails.setSelected(currentProfile.getDisplayTitleSortInBookDetails());
+    chkDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
+    lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
+    chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
+    chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
+    lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
+    chkNogenerateexternallinks.setSelected(!currentProfile.getGenerateExternalLinks());
+    chkNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
+    lblNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
+
+    // Advanced
+
+    txtTagsToMakeDeep.setText("" + currentProfile.getTagsToMakeDeep());
+    txtTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
+    lblTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
+    txtMinBooksToMakeDeepLevel.setText("" + currentProfile.getMinBooksToMakeDeepLevel());
     txtMinBooksToMakeDeepLevel.setInputVerifier(iv);
-    txtMinBooksToMakeDeepLevel.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMinBooksToMakeDeepLevelReadOnly());
-    lblMinBooksToMakeDeepLevel.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMinBooksToMakeDeepLevelReadOnly());
-    txtMaxMobileResolution.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getMaxMobileResolution());
-    txtMaxMobileResolution.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxMobileResolutionReadOnly());
-    lblMaxMobileResolution.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isMaxMobileResolutionReadOnly());
+    txtMinBooksToMakeDeepLevel.setEnabled(!currentProfile.isMinBooksToMakeDeepLevelReadOnly());
+    lblMinBooksToMakeDeepLevel.setEnabled(!currentProfile.isMinBooksToMakeDeepLevelReadOnly());
+    txtMaxMobileResolution.setText("" + currentProfile.getMaxMobileResolution());
+    txtMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
+    lblMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
     txtMaxMobileResolution.setVisible(false);   // Not currently being used
     lblMaxMobileResolution.setVisible(false);   // Not currently being used
-    txtFeaturedCatalogTitle.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle());
-    txtFeaturedCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isFeaturedCatalogTitleReadOnly());
-    lblFeaturedCatalogTitle.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isFeaturedCatalogTitleReadOnly());
-    txtFeaturedCatalogSavedSearchName.setText("" + ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName());
-    txtFeaturedCatalogSavedSearchName.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isFeaturedCatalogSavedSearchNameReadOnly());
-    lblFeaturedCatalogSavedSearchName.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isFeaturedCatalogSavedSearchNameReadOnly());
 
     /* external links */
-    txtWikipediaUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl());
-    txtAmazonAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl());
-    txtAmazonIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl());
-    txtAmazonTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl());
-    txtGoodreadAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl());
-    txtGoodreadIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl());
-    txtGoodreadTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl());
-    txtGoodreadReviewIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadReviewIsbnUrl());
-    txtIsfdbAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl());
-    txtLibrarythingAuthorUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl());
-    txtLibrarythingIsbnUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl());
-    txtLibrarythingTitleUrl.setText(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl());
+    txtWikipediaUrl.setText(currentProfile.getWikipediaUrl());
+    txtAmazonAuthorUrl.setText(currentProfile.getAmazonAuthorUrl());
+    txtAmazonIsbnUrl.setText(currentProfile.getAmazonIsbnUrl());
+    txtAmazonTitleUrl.setText(currentProfile.getAmazonTitleUrl());
+    txtGoodreadAuthorUrl.setText(currentProfile.getGoodreadAuthorUrl());
+    txtGoodreadIsbnUrl.setText(currentProfile.getGoodreadIsbnUrl());
+    txtGoodreadTitleUrl.setText(currentProfile.getGoodreadTitleUrl());
+    txtGoodreadReviewIsbnUrl.setText(currentProfile.getGoodreadReviewIsbnUrl());
+    txtIsfdbAuthorUrl.setText(currentProfile.getIsfdbAuthorUrl());
+    txtLibrarythingAuthorUrl.setText(currentProfile.getLibrarythingAuthorUrl());
+    txtLibrarythingIsbnUrl.setText(currentProfile.getLibrarythingIsbnUrl());
+    txtLibrarythingTitleUrl.setText(currentProfile.getLibrarythingTitleUrl());
     setExternalLinksEnabledState();
 
     // custom catalogs
-    customCatalogTableModel.setCustomCatalogs(ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs());
-    tblCustomCatalogs.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogsReadOnly());
-    pnlCustomCatalogsTableButtons.setEnabled(!ConfigurationManager.INSTANCE.getCurrentProfile().isCustomCatalogsReadOnly());
 
-    DeviceMode mode = ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode();
+    txtFeaturedCatalogTitle.setText("" + currentProfile.getFeaturedCatalogTitle());
+    txtFeaturedCatalogTitle.setEnabled(!currentProfile.isFeaturedCatalogTitleReadOnly());
+    lblFeaturedCatalogTitle.setEnabled(!currentProfile.isFeaturedCatalogTitleReadOnly());
+    txtFeaturedCatalogSavedSearchName.setText("" + currentProfile.getFeaturedCatalogSavedSearchName());
+    txtFeaturedCatalogSavedSearchName.setEnabled(!currentProfile.isFeaturedCatalogSavedSearchNameReadOnly());
+    lblFeaturedCatalogSavedSearchName.setEnabled(!currentProfile.isFeaturedCatalogSavedSearchNameReadOnly());
+    customCatalogTableModel.setCustomCatalogs(currentProfile.getCustomCatalogs());
+    tblCustomCatalogs.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
+    pnlCustomCatalogsTableButtons.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
+
+    DeviceMode mode = currentProfile.getDeviceMode();
     // Ensuer we have a Device Mode actually set
     if (Helper.isNullOrEmpty(mode)) {
       if (logger.isTraceEnabled())
         logger.trace("Device mode was not set - setting to " + DeviceMode.Dropbox);
-      ConfigurationManager.INSTANCE.getCurrentProfile().setDeviceMode(DeviceMode.Dropbox);
+      currentProfile.setDeviceMode(DeviceMode.Dropbox);
     }
     // Set interface to match the mode
     adaptInterfaceToDeviceSpecificMode(mode);
@@ -792,121 +842,145 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void resetValues() {
-    String lang = ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage();
-    ConfigurationManager.INSTANCE.getCurrentProfile().reset();
+    String lang = currentProfile.getLanguage();
+    currentProfile.reset();
     loadValues();
-    ConfigurationManager.INSTANCE.getCurrentProfile().setLanguage(lang);
+    currentProfile.setLanguage(lang);
     changeLanguage();
   }
 
   private void storeValues() {
-    ConfigurationManager.INSTANCE.getCurrentProfile().setLanguage("" + cboLang.getSelectedItem());
+    setCursor(hourglassCursor);
+    currentProfile.setLanguage("" + cboLang.getSelectedItem());
     File f = new File(txtDatabaseFolder.getText());
     if (f.exists())
-      ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(f);
+      currentProfile.setDatabaseFolder(f);
     String s = txtTargetFolder.getText();
     if (Helper.isNotNullOrEmpty(s)) {
       f = new File(s);
       if (f.exists())
-        ConfigurationManager.INSTANCE.getCurrentProfile().setTargetFolder(f);
+        currentProfile.setTargetFolder(f);
     } else
-      ConfigurationManager.INSTANCE.getCurrentProfile().setTargetFolder(null);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCopyToDatabaseFolder(chkCopyToDatabaseFolder.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setReprocessEpubMetadata(chkReprocessEpubMetadata.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setWikipediaLanguage(txtWikilang.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCatalogFolderName(txtCatalogFolder.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setUrlBase(txtUrlBase.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCatalogTitle(txtCatalogTitle.getText());
+      currentProfile.setTargetFolder(null);
+    currentProfile.setCopyToDatabaseFolder(chkCopyToDatabaseFolder.isSelected());
+    currentProfile.setReprocessEpubMetadata(chkReprocessEpubMetadata.isSelected());
+    currentProfile.setWikipediaLanguage(txtWikilang.getText());
+    currentProfile.setCatalogFolderName(txtCatalogFolder.getText());
+    currentProfile.setUrlBase(txtUrlBase.getText());
+    currentProfile.setCatalogTitle(txtCatalogTitle.getText());
     int i;
     i = getValue(txtThumbnailheight);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setThumbnailHeight(i);
+      currentProfile.setThumbnailHeight(i);
     i = getValue(txtCoverHeight);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setCoverHeight(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludedFormatsList(txtIncludeformat.getText());
+      currentProfile.setCoverHeight(i);
+    currentProfile.setIncludedFormatsList(txtIncludeformat.getText());
     i = getValue(txtMaxbeforepaginate);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxBeforePaginate(i);
+      currentProfile.setMaxBeforePaginate(i);
     i = getValue(txtMaxbeforesplit);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxBeforeSplit(i);
+      currentProfile.setMaxBeforeSplit(i);
     i = getValue(txtMaxSplitLevels);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxSplitLevels(i);
+      currentProfile.setMaxSplitLevels(i);
     i = getValue(txtBooksinrecent);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setBooksInRecentAdditions(i);
+      currentProfile.setBooksInRecentAdditions(i);
     i = getValue(txtMaxsummarylength);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxSummaryLength(i);
+      currentProfile.setMaxSummaryLength(i);
     i = getValue(txtMaxBookSummaryLength);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxBookSummaryLength(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setSplitTagsOn(txtSplittagson.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeBooksWithNoFile(chkIncludeemptybooks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeOnlyOneFile(chkIncludeOnlyOneFile.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setZipTrookCatalog(chkZipTrookCatalog.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setMinimizeChangedFiles(chkMinimizeChangedFiles.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setExternalIcons(chkExternalIcons.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setSaveBandwidth(!chkNobandwidthoptimize.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateOpds(!chkNogenerateopds.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateHtml(!chkNogeneratehtml.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateHtmlDownloads(!chkNogeneratehtmlfiles.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateOpdsDownloads(!chkNogenerateopdsfiles.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setSuppressRatingsInTitles(chkSupressRatings.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setBrowseByCover(chkBrowseByCover.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setBrowseByCoverWithoutSplit(chkBrowseByCoverWithoutSplit.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateDownloads(!chkNogenerateopdsfiles.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCryptFilenames(chkCryptFilenames.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setShowSeriesInAuthorCatalog(!chkNoShowSeries.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setOrderAllBooksBySeries(chkOrderAllBooksBySeries.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setSplitByAuthorInitialGoToBooks(chkSplitByAuthorInitialGoToBooks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCatalogFilter(txtCatalogFilter.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateAuthors(!chkNoGenerateAuthors.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateTags(!chkNoGenerateTags.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateSeries(!chkNoGenerateSeries.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRecent(!chkNogeneraterecent.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateRatings(!chkNogenerateratings.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeSeriesInBookDetails(chkIncludeSeriesInBookDetails.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludeTagsInBookDetails(chkIncludeTagsInBookDetails.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIncludePublisherInBookDetails(chkIncludePublisherInBookDetails.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setTagsToMakeDeep(txtTagsToMakeDeep.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCoverResize(!chkNoCoverResize.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setThumbnailGenerate(!chkNoThumbnailGenerate.isSelected());
+      currentProfile.setMaxBookSummaryLength(i);
+    currentProfile.setSplitTagsOn(txtSplittagson.getText());
+    currentProfile.setIncludeBooksWithNoFile(chkIncludeemptybooks.isSelected());
+    currentProfile.setIncludeOnlyOneFile(chkIncludeOnlyOneFile.isSelected());
+    currentProfile.setZipTrookCatalog(chkZipTrookCatalog.isSelected());
+    currentProfile.setMinimizeChangedFiles(chkMinimizeChangedFiles.isSelected());
+    currentProfile.setExternalIcons(chkExternalIcons.isSelected());
+    currentProfile.setSaveBandwidth(!chkNobandwidthoptimize.isSelected());
+    currentProfile.setSuppressRatingsInTitles(chkSupressRatings.isSelected());
+    currentProfile.setBrowseByCover(chkBrowseByCover.isSelected());
+    currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
+    currentProfile.setBrowseByCoverWithoutSplit(chkBrowseByCoverWithoutSplit.isSelected());
+    currentProfile.setGenerateDownloads(!chkNogenerateopdsfiles.isSelected());
+    currentProfile.setCryptFilenames(chkCryptFilenames.isSelected());
+    currentProfile.setShowSeriesInAuthorCatalog(!chkNoShowSeries.isSelected());
+    currentProfile.setOrderAllBooksBySeries(chkOrderAllBooksBySeries.isSelected());
+    currentProfile.setSplitByAuthorInitialGoToBooks(chkSplitByAuthorInitialGoToBooks.isSelected());
+    currentProfile.setCatalogFilter(txtCatalogFilter.getText());
+    
+    // Catalog Structure
+
+    currentProfile.setGenerateOpds(!chkNogenerateopds.isSelected());
+    currentProfile.setGenerateHtml(!chkNogeneratehtml.isSelected());
+    currentProfile.setGenerateHtmlDownloads(!chkNogeneratehtmlfiles.isSelected());
+    currentProfile.setGenerateOpdsDownloads(!chkNogenerateopdsfiles.isSelected());
+    currentProfile.setGenerateAuthors(!chkNoGenerateAuthors.isSelected());
+    currentProfile.setGenerateTags(!chkNoGenerateTags.isSelected());
+    currentProfile.setGenerateSeries(!chkNoGenerateSeries.isSelected());
+    currentProfile.setGenerateRecent(!chkNogeneraterecent.isSelected());
+    currentProfile.setGenerateRatings(!chkNogenerateratings.isSelected());
+    currentProfile.setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
+    currentProfile.setDisplayAuthorSortInAuthorLists(chkDisplayAuthorSortInAuthorLists.isSelected());
+    currentProfile.setDisplayTitleSortInBookListss(chkDisplayTitleSortInBookLists.isSelected());
+    currentProfile.setSortUsingAuthorSort(chkSortUsingAuthorSort.isSelected());
+    currentProfile.setSortUsingTitleSort(chkSortUsingTitleSort.isSelected());
+
+    // Book Details
+
+    currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
+    currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
+    currentProfile.setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
+    currentProfile.setIncludeSeriesInBookDetails(chkIncludeSeriesInBookDetails.isSelected());
+    currentProfile.setIncludeTagsInBookDetails(chkIncludeTagsInBookDetails.isSelected());
+    currentProfile.setIncludePublisherInBookDetails(chkIncludePublisherInBookDetails.isSelected());
+    currentProfile.setIncludePublishedInBookDetails(chkIncludePublishedInBookDetails.isSelected());
+    currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
+    currentProfile.setIncludeModifiedInBookDetails(chkIncludeModifiedInBookDetails.isSelected());
+    currentProfile.setDisplayAuthorSortInBookDetails(chkDisplayAuthorSortInBookDetails.isSelected());
+    currentProfile.setDisplayTitleSortInBookDetails(chkDisplayTitleSortInBookDetails.isSelected());
+
+    // Advanced
+    
+    currentProfile.setTagsToMakeDeep(txtTagsToMakeDeep.getText());
+    currentProfile.setCoverResize(!chkNoCoverResize.isSelected());
+    currentProfile.setThumbnailGenerate(!chkNoThumbnailGenerate.isSelected());
     i = getValue(txtMinBooksToMakeDeepLevel);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMinBooksToMakeDeepLevel(i);
+      currentProfile.setMinBooksToMakeDeepLevel(i);
     i = getValue(txtMaxMobileResolution);
     if (i > -1)
-      ConfigurationManager.INSTANCE.getCurrentProfile().setMaxMobileResolution(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setWikipediaUrl(txtWikipediaUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setAmazonAuthorUrl(txtAmazonAuthorUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setAmazonIsbnUrl(txtAmazonIsbnUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setAmazonTitleUrl(txtAmazonTitleUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGoodreadAuthorUrl(txtGoodreadAuthorUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGoodreadIsbnUrl(txtGoodreadIsbnUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGoodreadTitleUrl(txtGoodreadTitleUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGoodreadReviewIsbnUrl(txtGoodreadReviewIsbnUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIsfdbAuthorUrl(txtIsfdbAuthorUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingAuthorUrl(txtLibrarythingAuthorUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingIsbnUrl(txtLibrarythingIsbnUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setLibrarythingTitleUrl(txtLibrarythingTitleUrl.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setGenerateIndex(chkGenerateIndex.isSelected());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIndexComments(chkIndexComments.isSelected());
+      currentProfile.setMaxMobileResolution(i);
+    currentProfile.setGenerateIndex(chkGenerateIndex.isSelected());
+    currentProfile.setIndexComments(chkIndexComments.isSelected());
     i = getValue(txtMaxKeywords);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setMaxKeywords(i);
-    ConfigurationManager.INSTANCE.getCurrentProfile().setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
-    ConfigurationManager.INSTANCE.getCurrentProfile().setFeaturedCatalogTitle(txtFeaturedCatalogTitle.getText());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setFeaturedCatalogSavedSearchName(txtFeaturedCatalogSavedSearchName.getText());
+    currentProfile.setMaxKeywords(i);
+    currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
+
+    // External Links
+    
+    currentProfile.setWikipediaUrl(txtWikipediaUrl.getText());
+    currentProfile.setAmazonAuthorUrl(txtAmazonAuthorUrl.getText());
+    currentProfile.setAmazonIsbnUrl(txtAmazonIsbnUrl.getText());
+    currentProfile.setAmazonTitleUrl(txtAmazonTitleUrl.getText());
+    currentProfile.setGoodreadAuthorUrl(txtGoodreadAuthorUrl.getText());
+    currentProfile.setGoodreadIsbnUrl(txtGoodreadIsbnUrl.getText());
+    currentProfile.setGoodreadTitleUrl(txtGoodreadTitleUrl.getText());
+    currentProfile.setGoodreadReviewIsbnUrl(txtGoodreadReviewIsbnUrl.getText());
+    currentProfile.setIsfdbAuthorUrl(txtIsfdbAuthorUrl.getText());
+    currentProfile.setLibrarythingAuthorUrl(txtLibrarythingAuthorUrl.getText());
+    currentProfile.setLibrarythingIsbnUrl(txtLibrarythingIsbnUrl.getText());
+    currentProfile.setLibrarythingTitleUrl(txtLibrarythingTitleUrl.getText());
 
     // custom catalogs
-    ConfigurationManager.INSTANCE.getCurrentProfile().setCustomCatalogs(customCatalogTableModel.getCustomCatalogs());
+
+    currentProfile.setFeaturedCatalogTitle(txtFeaturedCatalogTitle.getText());
+    currentProfile.setFeaturedCatalogSavedSearchName(txtFeaturedCatalogSavedSearchName.getText());
+    currentProfile.setCustomCatalogs(customCatalogTableModel.getCustomCatalogs());
+    setCursor(normalCursor);
   }
 
   /**
@@ -941,7 +1015,7 @@ public class Mainframe extends javax.swing.JFrame {
         Localization.Main.getText("config.DeviceMode.nas.description1") + " " + Localization.Main.getText("config.DeviceMode.nas.description2"));
     lblDeviceNook.setToolTipText(
         Localization.Main.getText("config.DeviceMode.nook.description1") + " " + Localization.Main.getText("config.DeviceMode.nook.description2"));
-    adaptInterfaceToDeviceSpecificMode(ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode());
+    adaptInterfaceToDeviceSpecificMode(currentProfile.getDeviceMode());
 
     // main options
 
@@ -1062,12 +1136,12 @@ public class Mainframe extends javax.swing.JFrame {
     lblIncludePublishedInBookDetails.setText(Localization.Main.getText("config.IncludePublishedInBookDetails.label")); // NOI18N
     lblIncludePublishedInBookDetails.setToolTipText(Localization.Main.getText("config.IncludePublishedInBookDetails.description")); // NOI18N
     chkIncludePublishedInBookDetails.setToolTipText(lblIncludePublishedInBookDetails.getToolTipText()); // NOI18N
-    lblIncludeModifiedInBookDetails1.setText(Localization.Main.getText("config.IncludeModifiedInBookDetails.label")); // NOI18N
-    lblIncludeModifiedInBookDetails1.setToolTipText(Localization.Main.getText("config.IncludeModifiedInBookDetails.description")); // NOI18N
-    chkIncludeModifiedInBookDetails.setToolTipText(lblIncludeModifiedInBookDetails1.getToolTipText()); // NOI18N
     lblPublishedDateAsYear.setText(Localization.Main.getText("config.PublishedDateAsYear.label")); // NOI18N
     lblPublishedDateAsYear.setToolTipText(Localization.Main.getText("config.PublishedDateAsYear.description")); // NOI18N
     chkPublishedDateAsYear.setToolTipText(lblPublishedDateAsYear.getToolTipText()); // NOI18N
+    lblIncludeModifiedInBookDetails1.setText(Localization.Main.getText("config.IncludeModifiedInBookDetails.label")); // NOI18N
+    lblIncludeModifiedInBookDetails1.setToolTipText(Localization.Main.getText("config.IncludeModifiedInBookDetails.description")); // NOI18N
+    chkIncludeModifiedInBookDetails.setToolTipText(lblIncludeModifiedInBookDetails1.getToolTipText()); // NOI18N
     lblDisplayAuthorSortInBookDetails.setText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.label")); // NOI18N
     lblDisplayAuthorSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.description")); // NOI18N
     chkDisplayAuthorSortInBookDetails.setToolTipText(lblDisplayAuthorSortInBookDetails.getToolTipText()); // NOI18N
@@ -1266,7 +1340,7 @@ public class Mainframe extends javax.swing.JFrame {
    private void showSetDatabaseFolderDialog() {
      JDirectoryChooser chooser = new JDirectoryChooser();
      chooser.setShowingCreateDirectory(false);
-     File f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+     File f = currentProfile.getDatabaseFolder();
      if (f != null && f.exists())
        chooser.setCurrentDirectory(f);
      int result = chooser.showOpenDialog(this);
@@ -1280,13 +1354,13 @@ public class Mainframe extends javax.swing.JFrame {
    private boolean setDatabaseFolder(String targetFolder) {
      File newFolder = new File(targetFolder);
      if (newFolder.exists()) {
-       File oldFolder = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
-       ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(newFolder);
+       File oldFolder = currentProfile.getDatabaseFolder();
+       currentProfile.setDatabaseFolder(newFolder);
        if (DatabaseManager.INSTANCE.databaseExists()) {
          JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
          return true;
        } else
-         ConfigurationManager.INSTANCE.getCurrentProfile().setDatabaseFolder(oldFolder);
+         currentProfile.setDatabaseFolder(oldFolder);
      }
      JOptionPane.showMessageDialog(this, Localization.Main.getText("error.nodatabase", targetFolder), null, JOptionPane.ERROR_MESSAGE);
      return false;
@@ -1295,11 +1369,11 @@ public class Mainframe extends javax.swing.JFrame {
    private void showSetTargetFolderDialog() {
      JDirectoryChooser chooser = new JDirectoryChooser();
      chooser.setShowingCreateDirectory(true);
-     File f = ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder();
+     File f = currentProfile.getTargetFolder();
      if (f != null && f.exists())
        chooser.setCurrentDirectory(f);
      else {
-       f = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
+       f = currentProfile.getDatabaseFolder();
        if (f != null && f.exists())
          chooser.setCurrentDirectory(f);
      }
