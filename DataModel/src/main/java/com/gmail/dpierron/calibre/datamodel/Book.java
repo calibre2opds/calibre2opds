@@ -27,6 +27,7 @@ public class Book implements SplitableByLetter {
   private Integer summaryMaxLength;
   private final Float serieIndex;
   private final Date timestamp;
+  private final Date modified;
   private final Date publicationDate;
   private final String isbn;
   private List<Author> authors;
@@ -63,6 +64,7 @@ public class Book implements SplitableByLetter {
       String path,
       Float serieIndex,
       Date timestamp,
+      Date modified,
       Date publicationDate,
       String isbn,
       String authorSort,
@@ -74,6 +76,7 @@ public class Book implements SplitableByLetter {
     this.path = path;
     this.serieIndex = serieIndex;
     this.timestamp = timestamp;
+    this.modified = modified;
     this.publicationDate = publicationDate;
     this.tags = new LinkedList<Tag>();
     this.files = new LinkedList<EBookFile>();
@@ -550,7 +553,7 @@ public class Book implements SplitableByLetter {
   }
 
   public Book copy() {
-    Book result = new Book(id, uuid, title, Title_Sort, path, serieIndex, timestamp, publicationDate, isbn, authorSort, rating);
+    Book result = new Book(id, uuid, title, Title_Sort, path, serieIndex, timestamp, modified, publicationDate, isbn, authorSort, rating);
     result.setComment(this.getComment());
     result.setSeries(this.getSeries());
     result.setPublisher(this.getPublisher());

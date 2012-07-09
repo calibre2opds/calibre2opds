@@ -15,9 +15,10 @@ public enum DatabaseRequest {
   TEST("SELECT COUNT(*) FROM books"),
   ALL_TAGS("SELECT DISTINCT  id, name " + " FROM tags " + " ORDER BY name "),
 
-  ALL_BOOKS("SELECT  DISTINCT   " + "b.id AS book_id,   " + "b.title AS book_title,   "  + "b.sort as book_title_sort,  "
-                            + "b.series_index AS series_index,   " + "b.path AS book_path,   "
-                            + "b.timestamp AS book_timestamp, " + "b.pubdate AS book_pubdate, "
+  ALL_BOOKS("SELECT  DISTINCT   " + "b.id AS book_id,   " + "b.title AS book_title,   "
+                            + "b.sort as book_title_sort,  "  + "b.series_index AS series_index,   "
+                            + "b.path AS book_path,   " + "b.pubdate AS book_pubdate, "
+                            + "b.timestamp AS book_timestamp,  " + "b.last_modified AS book_modified, "
                             + "b.isbn AS isbn, " + "b.uuid AS uuid, " + "b.author_sort AS author_sort, "
                             + "r.rating AS rating "
                             + "FROM books b " + "LEFT OUTER JOIN books_ratings_link brl ON brl.book=b.id "

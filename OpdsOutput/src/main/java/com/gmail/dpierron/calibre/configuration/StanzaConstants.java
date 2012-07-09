@@ -63,8 +63,8 @@ public class StanzaConstants {
   /* Catalog Structure */
   public final static boolean DisplayAuthorSortInAuthorLists = true;
   public final static boolean DisplayTitleSortInBookLists = true;
-  public final static boolean SortUsingAuthorSort = true;
-  public final static boolean SortUsingTitleSort = true;
+  public final static boolean SortUsingAuthor = false;
+  public final static boolean SortUsingTitle = false;
   /* Book Details */
   public final static boolean generateExternalLinks = true;
   public final static boolean generateCrossLinks = true;
@@ -73,6 +73,7 @@ public class StanzaConstants {
   public final static boolean includePublisherInBookDetails = false;
   public final static boolean includePublishedInBookDetails = false;
   public final static boolean publishedDateAsYear = false;
+  public final static boolean IncludeAddedInBookDetails = false;
   public final static boolean IncludeModifiedInBookDetails = false;
   public final static boolean DisplayAuthorSortInBookDetails = false;
   public final static boolean DisplayTitleSortInBookDetails = false;

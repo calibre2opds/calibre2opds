@@ -120,9 +120,9 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getDisplayTitleSortInBookLists();
 
-  public boolean getSortUsingAuthorSort();
+  public boolean getSortUsingAuthor();
 
-  public boolean getSortUsingTitleSort();
+  public boolean getSortUsingTitle();
 
   /* Book Details */
 
@@ -143,6 +143,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public boolean getIncludePublishedInBookDetails();
 
   public boolean getPublishedDateAsYear();
+
+  public boolean getIncludeAddedInBookDetails();
 
   public boolean getIncludeModifiedInBookDetails();
 

@@ -6,7 +6,6 @@ package com.gmail.dpierron.calibre.opds;
  *     -> SubCatalog
  */
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
@@ -56,7 +55,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
   }
 
   private void sortBooks() {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getOrderAllBooksBySeries()) {
+    if (currentProfile.getOrderAllBooksBySeries()) {
       // sort the books by series
       sortBooksBySeries(getBooks());
     } else {

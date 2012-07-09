@@ -85,7 +85,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
         }
       }
 
-    // We could not dind an acceptable author sort value so we need to do something further
+    // We could not find an acceptable author sort value so we need to do something further
 
     // Check if there is a comma   in the name field
     // If so assume what follows is the author sort surname

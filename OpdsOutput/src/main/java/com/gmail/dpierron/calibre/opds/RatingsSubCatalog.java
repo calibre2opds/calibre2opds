@@ -1,6 +1,5 @@
 package com.gmail.dpierron.calibre.opds;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.BookRating;

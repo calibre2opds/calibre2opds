@@ -1,6 +1,5 @@
 package com.gmail.dpierron.calibre.opds;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
@@ -97,11 +96,11 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       return false;
     if (Helper.isNullOrEmpty(tag.getName()))
       return false;
-    if (books.size() < ConfigurationManager.INSTANCE.getCurrentProfile().getMinBooksToMakeDeepLevel())
+    if (books.size() < currentProfile.getMinBooksToMakeDeepLevel())
       return false;
 
     String name = tag.getName().toUpperCase(Locale.ENGLISH);
-    for (String tagToMakeDeep : ConfigurationManager.INSTANCE.getCurrentProfile().getTokenizedTagsToMakeDeep()) {
+    for (String tagToMakeDeep : currentProfile.getTokenizedTagsToMakeDeep()) {
       if (tagToMakeDeep.contains("*")) {
         tagToMakeDeep = tagToMakeDeep.substring(0, tagToMakeDeep.indexOf('*'));
         if (name.startsWith(tagToMakeDeep))
@@ -177,14 +176,14 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
   }
 
   public static SubCatalog getTagSubCatalog(List<Book> books) {
-    if (Helper.isNotNullOrEmpty(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn()))
+    if (Helper.isNotNullOrEmpty(currentProfile.getSplitTagsOn()))
       return new TagTreeSubCatalog(books);
     else
       return new TagListSubCatalog(books);
   }
 
   public static SubCatalog getTagSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
-    if (Helper.isNotNullOrEmpty(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn()))
+    if (Helper.isNotNullOrEmpty(currentProfile.getSplitTagsOn()))
       return new TagTreeSubCatalog(stuffToFilterOut, books);
     else
       return new TagListSubCatalog(stuffToFilterOut, books);
