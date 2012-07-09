@@ -7,7 +7,6 @@ package com.gmail.dpierron.calibre.opds;
  *     -> SubCatalog
  */
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Author;
 import com.gmail.dpierron.calibre.datamodel.Book;
@@ -52,14 +51,26 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         }
       }
       // sort the authors by name
+      // We can use configuration parameters to sort by either auth_sort or author
+      if (currentProfile.getSortUsingAuthor()) {
       Collections.sort(authors, new Comparator<Author>() {
 
         public int compare(Author o1, Author o2) {
-          String name1 = (o1 == null ? "" : o1.getNameForSort());
-          String name2 = (o2 == null ? "" : o2.getNameForSort());
-          return name1.compareTo(name2);
+          String name1 = (o1 == null ? "" : o1.getName());
+          String name2 = (o2 == null ? "" : o2.getName());
+          return name1.compareToIgnoreCase(name2);
         }
       });
+      } else {
+        Collections.sort(authors, new Comparator<Author>() {
+
+          public int compare(Author o1, Author o2) {
+            String name1 = (o1 == null ? "" : o1.getNameForSort());
+            String name2 = (o2 == null ? "" : o2.getNameForSort());
+            return name1.compareToIgnoreCase(name2);
+          }
+        });
+      }
 
     }
     return authors;
@@ -303,7 +314,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 //                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
                 (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
 
-        if (ConfigurationManager.INSTANCE.getCurrentProfile().getSplitByAuthorInitialGoToBooks()) {
+        if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
           List<Book> books = new LinkedList<Book>();
           for (Author author : authorsInThisLetter) {
@@ -378,8 +389,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     // We like to list series if we can before books not in series
     // (unless the user has suppressed series generation).
     if (areThereSeries
-    && ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()
-    && ConfigurationManager.INSTANCE.getCurrentProfile().getShowSeriesInAuthorCatalog()) {
+    && currentProfile.getGenerateSeries()
+    && currentProfile.getShowSeriesInAuthorCatalog()) {
       logger.debug("processing the series by " + author);
 
       // make a link to the series by this author catalog

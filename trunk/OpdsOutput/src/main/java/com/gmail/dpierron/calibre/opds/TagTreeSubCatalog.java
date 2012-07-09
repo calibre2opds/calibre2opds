@@ -1,6 +1,5 @@
 package com.gmail.dpierron.calibre.opds;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
@@ -147,7 +146,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     logger.debug("compute the tree of tags");
     TreeNode root = new RootTreeNode();
     for (Tag tag : tags) {
-      String[] partsOfTag = tag.getPartsOfTag(ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn());
+      String[] partsOfTag = tag.getPartsOfTag(currentProfile.getSplitTagsOn());
       TreeNode currentPositionInTree = root;
       for (int i = 0; i < partsOfTag.length; i++) {
         String partOfTag = partsOfTag[i];
@@ -170,7 +169,7 @@ public class TagTreeSubCatalog extends TagSubCatalog {
 
   private TreeNode removeUnNeededLevelsInTree(TreeNode node, TreeNode removedParent) {
     if (removedParent != null)
-      node.setId(removedParent.getId() + ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn() + node.getId());
+      node.setId(removedParent.getId() + currentProfile.getSplitTagsOn() + node.getId());
 
     if (node.getData() != null) {
       // this is a leaf

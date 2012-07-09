@@ -1,6 +1,5 @@
 package com.gmail.dpierron.calibre.opds;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
@@ -41,7 +40,7 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
       return null;
 
     String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_featuredbooks.xml");
-    String title = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle();
+    String title = currentProfile.getFeaturedCatalogTitle();
     String urn = "calibre:featuredbooks";
 
     String summary = "";

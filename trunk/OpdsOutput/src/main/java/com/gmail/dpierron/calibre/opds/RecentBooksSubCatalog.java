@@ -1,6 +1,5 @@
 package com.gmail.dpierron.calibre.opds;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
@@ -33,7 +32,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
   private void sortBooks() {
     sortBooksByTimestamp(getBooks());
-    setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), ConfigurationManager.INSTANCE.getCurrentProfile().getBooksInRecentAdditions()));
+    setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), currentProfile.getBooksInRecentAdditions()));
   }
 
   public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {

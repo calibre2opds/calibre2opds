@@ -7,7 +7,6 @@ package com.gmail.dpierron.calibre.opds;
  *     -> SubCatalog
  */
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;

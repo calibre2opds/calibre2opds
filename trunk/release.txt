@@ -90,7 +90,8 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 v3.2
-    - Fix: #c2o-91:  Setting catalog folder to root (/) is not treated as an error
+    - Fix: #c2o-85:  Sorting in the All Books catalog should ignore case
+    - Fix: #c2o-91:  Setting catalog folder to  root (/) is not treated as an error
     - Fix: #c2o-97:  Context sensitive help on configuration tabs
     - Fix: #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
     - Fix: #c2o-111: The "All Books" section within an author not sorted alphabetically

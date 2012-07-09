@@ -91,6 +91,10 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setIncludePublishedInBookDetails(boolean value);
 
+  public void setIncludeAddedInBookDetails(boolean value);
+
+  public void setIncludeModifiedInBookDetails(boolean value);
+
   public void setGenerateIndex(boolean value);
 
   public void setTargetFolder(File value);

@@ -1,16 +1,16 @@
 package com.gmail.dpierron.calibre.opds;
 
 /**
- * Abstract class that provides the facilities for listing the books in a catalog
+ * Class that provides the facilities for listing the books in a catalog
  * The type specific catalogs will extend this class to inherit its functionality
  * Inherits from:
  *   -> SubCatalog
-
+ *
+ *   This class also handles the Book Details pages for specific books
  */
 
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
@@ -38,12 +38,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
   // At the moment it is either a fulld ate or jsut the year
   // If users ask for more flexibility the coniguration options can be re-visited.
   private final static DateFormat PUBLICATIONDATE_FORMAT =
-      ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
+      currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
 
   // This is the date format that is to be used in the titles for the Recent Books sub-catalog section
   // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
   // desireable then it could be come a configurable option
-  private final static DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()));
+  private final static DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
 
   /**
    * @return
@@ -73,21 +73,37 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
   /**
    * Sort the list of books alphabetically
+   * We allow the field that is to be used for sorting
+   * titles to be set as a configuration parameter
    *
    * @param books
    */
   void sortBooksByTitle(List<Book> books) {
-    Collections.sort(books, new Comparator<Book>() {
+    if (currentProfile.getSortUsingTitle())
+    {
+      Collections.sort(books, new Comparator<Book>() {
 
-      public int compare(Book o1, Book o2) {
         // ITIMPI:  I would have thought that neither o1 or o2 can be null?
         //          If so then following tests for null can be removed to improve efficiency
-        assert (o1 != null) && (o2 != null);
-        String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
-        String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
-        return title1.compareTo(title2);
-      }
-    });
+        public int compare(Book o1, Book o2) {
+          assert (o1 != null) && (o2 != null);
+          String title1 = (o1 == null ? "" : o1.getTitle_Sort());
+          String title2 = (o2 == null ? "" : o2.getTitle_Sort());
+          return title1.compareTo(title2);
+        }
+      });
+    } else {
+      Collections.sort(books, new Comparator<Book>() {
+
+        public int compare(Book o1, Book o2) {
+          assert (o1 != null) && (o2 != null);
+          String title1 = (o1 == null ? "" : o1.getTitle());
+          String title2 = (o2 == null ? "" : o2.getTitle());
+          return title1.compareToIgnoreCase(title2);
+        }
+      });
+
+    }
   }
 
   /**
@@ -104,7 +120,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       public int compare(Book o1, Book o2) {
 
         // ITIMPI:  I would have thought that neither o1 or o2 can be null?
-        //          If so then following tests for null can be removed to improve efficiency
+        //          If so then following tests for null can be removed to slightly improve efficiency
         assert (o1 != null) && (o2 != null);
 
         if (o1 == null) {
@@ -127,9 +143,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (series1 == null) {
           if (series2 == null) {
             // both series are null, we need to compare the book titles (as always...)
-            String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
-            String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
-            return title1.compareTo(title2);
+            if (currentProfile.getSortUsingTitle()) {
+              String title1 = (o1 == null ? "" : o1.getTitle());
+              String title2 = (o2 == null ? "" : o2.getTitle());
+              return title1.compareTo(title2);
+            } else {
+              String title1 = (o1 == null ? "" : o1.getTitle_Sort());
+              String title2 = (o2 == null ? "" : o2.getTitle_Sort());
+              return title1.compareToIgnoreCase(title2);
+            }
           } else {
             // only series2 set  so assume series2 sorts greater than series1
             return 1;
@@ -158,7 +180,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     });
   }
 
-
+  /**
+   * Function to sort books by timestamp (last modified)
+   *
+   * @param books
+   */
   void sortBooksByTimestamp(List<Book> books) {
     // sort the books by timestamp
     Collections.sort(books, new Comparator<Book>() {
@@ -204,6 +230,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
   /**
    * Get a list of books starting from a specific point
    *
+   * ITIMPI:  At the moment this function can be called recursively with the 'from'
+   *          parameter being incremented.   It is likely to be much more efficient
+   *          in both cpu load and memory usage to flatten the loop by rewriteing the
+   *          function to elimiate recursion.
+   *
    * @param pBreadcrumbs
    * @param books
    * @param from
@@ -211,7 +242,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param summary
    * @param urn
    * @param pFilename
-   * @param splitOption
+   * @param splitOption     This option how a list should be split if it exceeds size limits
    * @param icon
    * @param firstElements
    * @param options
@@ -289,8 +320,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (willSplitByLetter) {
       if ((maxSplitLevels == 0) || (catalogSize <= maxBeforeSplit)) {
         willSplitByLetter = false;
-      } else if ((ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()) &&
-          (ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCoverWithoutSplit())) {
+      } else if ((currentProfile.getBrowseByCover()) &&
+          (currentProfile.getBrowseByCoverWithoutSplit())) {
         willSplitByLetter = false;
       }
     }
@@ -563,6 +594,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
   */
   /**
+   * Get a list of books split by letter
+   * It is invoked when a list of books is to be further sub-divided by letter.
+   *
    * @param pBreadcrumbs
    * @param mapOfBooksByLetter
    * @param baseTitle
@@ -629,6 +663,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Get a list of books split by date
+   *
+   * These lists are used in the Recent Books catalog sub-section.
+   *
    * @param pBreadcrumbs
    * @param mapOfBooksByDate
    * @param baseTitle
@@ -685,11 +723,16 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Add the aquistion links
+   *
+   * These are used to specify where a book can be downloaded from.
+   * They will not be needed if generation of download links is suppressed.
+   *
    * @param book
    * @param entry
    */
   private void addAcquisitionLinks(Book book, Element entry) {
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateDownloads()) {
+    if (!currentProfile.getGenerateDownloads()) {
       if (logger.isTraceEnabled())
         logger.trace("addAcquisitionLinks: exit: download links suppressed");
       return;
@@ -714,7 +757,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           Localization.Main.getText("bookentry.download", file.getFormat())));
 
       // if the IncludeOnlyOneFile option is set, break to avoid publishing other files
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeOnlyOneFile()) {
+      if (currentProfile.getIncludeOnlyOneFile()) {
         if (logger.isTraceEnabled())
           logger.trace("addAcquisitionLinks: break to avoid publishing other files");
         break;
@@ -723,6 +766,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Add cover links
+   *
+   * Handles adding both the cover link and the thumbnail links
+   *
+   * Works out what images to use and whether new one optimized for calibre2opds
+   * usage need to be generated and saves results of test for later use
+   *
    * @param book
    * @param entry
    */
@@ -746,7 +796,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getCoverManager().getResultFilename(book));
 
       // prepare to copy the thumbnail if we are using them file
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getCoverResize()) {
+      if (currentProfile.getCoverResize()) {
         getCatalogManager().addFileToTheMapOfFilesToCopy(resizedCoverFile);
 
         if (!resizedCoverFile.exists() || getCoverManager().hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
@@ -796,7 +846,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       thumbnailUri = getThumbnailManager().getImageUri(book);
       CachedFile thumbnailFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), getThumbnailManager().getResultFilename(book));
       // Take into account whether thumbnail generation suppressed
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailGenerate()) {
+      if (currentProfile.getThumbnailGenerate()) {
         // Using generated thumbnail files
 
         // prepare to copy the thumbnail file
@@ -853,11 +903,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
     entry.addContent(FeedHelper.INSTANCE.getThumbnailLink(thumbnailUri));
   }
 
+  /**
+   * Add book cross reference links
+   *
+   * Used when constructing book details entries
+   *
+   * @param entry
+   * @param book
+   */
   private void addNavigationLinks(Element entry, Book book) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateCrossLinks()) {
+    if (currentProfile.getGenerateCrossLinks()) {
       // add the series link
       // (but only if we generate a series catalog)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
+      if (currentProfile.getGenerateSeries()) {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())
             logger.trace("addNavigationLinks: add the series link");
@@ -869,7 +927,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // add the author page link(s)
       // (but only if we generate an authors catalog)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateSeries()) {
+      if (currentProfile.getGenerateSeries()) {
         if (book.hasAuthor()) {
           if (logger.isTraceEnabled())
             logger.trace("addNavigationLinks: add the author page link(s)");
@@ -884,7 +942,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // add the tags links
       // (but only if we generate a tags catalog)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateTags()) {
+      if (currentProfile.getGenerateTags()) {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled())
             logger.trace("addNavigationLinks: add the tags links");
@@ -900,7 +958,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // add the ratings links
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
+      if (currentProfile.getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
         if (logger.isTraceEnabled())
           logger.trace("addNavigationLinks: add the ratings links");
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
@@ -914,24 +972,32 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
+  /**
+   * Add links for further information about a book
+   *
+   * Used when constructing the Book Details pages
+   *
+   * @param entry
+   * @param book
+   */
   private void addExternalLinks(Element entry, Book book) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateExternalLinks()) {
+    if (currentProfile.getGenerateExternalLinks()) {
       String url;
       // add the GoodReads book link
       if (logger.isTraceEnabled())
         logger.trace("addExternalLinks: add the GoodReads book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadIsbnUrl();
+        url = currentProfile.getGoodreadIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
           ));
 
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadReviewIsbnUrl();
+        url = currentProfile.getGoodreadReviewIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(
               FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
       } else {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadTitleUrl();
+        url = currentProfile.getGoodreadTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE
               .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
@@ -941,10 +1007,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // add the Wikipedia book link
       if (logger.isTraceEnabled())
         logger.trace("addExternalLinks: add the Wikipedia book link");
-      url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
+      url = currentProfile.getWikipediaUrl();
       if (Helper.isNotNullOrEmpty(url))
         entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-            MessageFormat.format(url, ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(book.getTitle()
+            MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(book.getTitle()
             )),
             Localization.Main.getText("bookentry.wikipedia")));
 
@@ -952,12 +1018,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())
         logger.trace("addExternalLinks: Add Librarything book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingIsbnUrl();
+        url = currentProfile.getLibrarythingIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(
               FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
       } else if (Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingTitleUrl();
+        url = currentProfile.getLibrarythingTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
               MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
@@ -968,11 +1034,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())
         logger.trace("addExternalLinks: Add Amazon book link");
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonIsbnUrl();
+        url = currentProfile.getAmazonIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
       } else if (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonTitleUrl();
+        url = currentProfile.getAmazonTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
               MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
@@ -985,7 +1051,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("addExternalLinksy: add the GoodReads author link");
         for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getGoodreadAuthorUrl();
+          url = currentProfile.getGoodreadAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
             entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.goodreads.author", author.getName())));
@@ -995,10 +1061,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("addExternalLinks: add the Wikipedia author link");
         for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl();
+          url = currentProfile.getWikipediaUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaUrl(),
-                ConfigurationManager.INSTANCE.getCurrentProfile().getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(author.getName())),
+            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(currentProfile.getWikipediaUrl(),
+                currentProfile.getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.wikipedia.author", author.getName())));
         }
 
@@ -1006,11 +1072,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("addExternalLinks: add the LibraryThing author link");
         for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl();
+          url = currentProfile.getLibrarythingAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
             entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
                 // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
-                MessageFormat.format(ConfigurationManager.INSTANCE.getCurrentProfile().getLibrarythingAuthorUrl(),
+                MessageFormat.format(currentProfile.getLibrarythingAuthorUrl(),
                     FeedHelper.INSTANCE.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
                 Localization.Main.getText("bookentry.librarything.author", author.getName())));
         }
@@ -1019,7 +1085,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("addExternalLinks: add the Amazon author link");
         for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getAmazonAuthorUrl();
+          url = currentProfile.getAmazonAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
             entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.amazon.author", author.getName())));
@@ -1029,7 +1095,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("addExternalLinks: add the ISFDB author link");
         for (Author author : book.getAuthors()) {
-          url = ConfigurationManager.INSTANCE.getCurrentProfile().getIsfdbAuthorUrl();
+          url = currentProfile.getIsfdbAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
             entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.isfdb.author", author.getName())));
@@ -1038,6 +1104,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
+  /**
+   * Generate a book enty in a catalog
+   *
+   * The amount of detail added depends on whether we are generating
+   * a partial book entry (for a list of books) or a full entry (for book details)
+   *
+   * We use a common function as some of the data must be the same in both
+   * the full and partial entries for a book.
+   *
+   * @param entry
+   * @param book
+   * @param isFullEntry
+   */
   private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
     if (book.hasAuthor()) {
       for (Author author : book.getAuthors()) {
@@ -1075,7 +1154,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         entry.addContent(categoryElement);
       }
       // series
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
+      if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(book.getSeries().getName());
         entry.addContent(categoryElement);
       }
@@ -1091,7 +1170,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())
         logger.trace("decorateBookEntry: computing comments");
       // Series (if present and wanted)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
+      if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
         content.addContent(JDOM.INSTANCE.element("strong")
                .addContent(Localization.Main.getText("content.series") + " "))
@@ -1104,7 +1183,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // If the user has requested tags we output this section even if the list is empty.
       // The assumption is that the user in this case wants to see that no tags have been assigned
       // If we get feedback that this is not  a valid addumption then we could omit it when the list is empty
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeTagsInBookDetails()) {
+      if (currentProfile.getIncludeTagsInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           String tags = book.getTags().toString();
           if (tags != null  && tags.startsWith("["))
@@ -1122,7 +1201,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
       // Publisher (if present and wanted)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublisherInBookDetails()) {
+      if (currentProfile.getIncludePublisherInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getPublisher())) {
           content.addContent(JDOM.INSTANCE.element("strong")
                   .addContent(Localization.Main.getText("content.publisher") + " "))
@@ -1133,10 +1212,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
       // Published date (if present and wanted)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludePublishedInBookDetails()) {
+      if (currentProfile.getIncludePublishedInBookDetails()) {
         Date pubtmp = book.getPublicationDate();
         if (Helper.isNotNullOrEmpty(pubtmp)) {
-          if (ConfigurationManager.INSTANCE.getCurrentProfile().getPublishedDateAsYear()) {
+          if (currentProfile.getPublishedDateAsYear()) {
             content.addContent(JDOM.INSTANCE.element("strong")
                 .addContent(Localization.Main.getText("content.published") + " "))
                 .addContent(PUBLICATIONDATE_FORMAT.format(book.getPublicationDate()))
@@ -1146,8 +1225,21 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
 
+      // Added date (if present and wanted)
+      if (currentProfile.getIncludeAddedInBookDetails()) {
+        Date addtmp = book.getTimestamp();
+        if (Helper.isNotNullOrEmpty(addtmp)) {
+          content.addContent(JDOM.INSTANCE.element("strong")
+              .addContent(Localization.Main.getText("content.added") + " "))
+              .addContent(DATE_FORMAT.format(book.getTimestamp()))
+              .addContent(JDOM.INSTANCE.element("br"))
+              .addContent(JDOM.INSTANCE.element("br"));
+        }
+      }
+
+
       // Modified date (if present and wanted)
-      if (ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeModifiedInBookDetails()) {
+      if (currentProfile.getIncludeModifiedInBookDetails()) {
         Date modtmp = book.getTimestamp();
         if (Helper.isNotNullOrEmpty(modtmp)) {
           content.addContent(JDOM.INSTANCE.element("strong")
@@ -1185,7 +1277,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // summary element (the shortened book comment)
       if (logger.isTraceEnabled())
         logger.trace("getBookEntry: short comment");
-      String summary = book.getSummary(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBookSummaryLength());
+      String summary = book.getSummary(currentProfile.getMaxBookSummaryLength());
       // If we had anything for the summary then it needs to be added to the output.
       if (Helper.isNotNullOrEmpty(summary))
         entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
@@ -1207,6 +1299,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Control generating a book Full Details entry
+   *
    * @param pBreadcrumbs
    * @param book
    * @param options
@@ -1239,7 +1333,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     else if (Option.contains(options, Option.INCLUDE_TIMESTAMP))
       title = book.getTitle() + " [" + DATE_FORMAT.format(book.getTimestamp()) + "]";
-    else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !ConfigurationManager.INSTANCE.getCurrentProfile().getSuppressRatingsInTitles())
+    else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles())
       title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
     else
       title = book.getTitle();
@@ -1288,7 +1382,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Breadcrumbs breadcrumbs = pBreadcrumbs;
 
     // if the "all books" catalog never was generated, we'll end up with the first generated catalog's breadcrumbs ; that ain't good, I prefer linking only to main
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks()) {
+    if (!currentProfile.getGenerateAllbooks()) {
       // remove all but the first (main) entry
       breadcrumbs = new Breadcrumbs();
       breadcrumbs.add(pBreadcrumbs.get(0));
@@ -1342,7 +1436,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     } catch (Throwable t) {
       logger.warn("Unexpected error trying to create HTML for book id=" + book.getId() + "Title=" + book.getTitle() + " \noutputFile: " + outputFile + "\n" + t);
     }
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()) {
+    if (currentProfile.getGenerateIndex()) {
       // index the book
       logger.debug("getBookEntry: indexing book");
       IndexManager.INSTANCE.indexBook(book, getHtmlManager().getHtmlFilenameFromXmlFilename(fullEntryUrl), getThumbnailManager().getThumbnailUrl(book));

@@ -314,12 +314,12 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.DisplayTitleSortInBookLists;
   }
 
-  public boolean getSortUsingAuthorSort() {
-    return StanzaConstants.SortUsingAuthorSort;
+  public boolean getSortUsingAuthor() {
+    return StanzaConstants.SortUsingAuthor;
   }
 
-  public boolean getSortUsingTitleSort() {
-    return StanzaConstants.SortUsingTitleSort;
+  public boolean getSortUsingTitle() {
+    return StanzaConstants.SortUsingTitle;
   }
 
   /* Book Details */
@@ -338,6 +338,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public boolean getIncludePublishedInBookDetails() {
     return StanzaConstants.includePublishedInBookDetails;
+  }
+
+  public boolean getIncludeAddedInBookDetails() {
+    return StanzaConstants.IncludeAddedInBookDetails;
   }
 
   public boolean getIncludeModifiedInBookDetails() {

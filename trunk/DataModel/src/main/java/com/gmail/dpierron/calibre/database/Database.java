@@ -108,24 +108,32 @@ public enum Database {
             logger.debug("listBooks (timestamp): " + e);
           // we don't care
         }
+        Date modified = null;
+        try {
+          step= 5; modified = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_modified"));
+        } catch (ParseException e) {
+          if (logger.isDebugEnabled())
+            logger.debug("listBooks (modified): " + e);
+          // we don't care
+        }
         Date publicationDate = null;
         try {
-          step=5; publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
+          step=6; publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
         } catch (ParseException e) {
           if (logger.isDebugEnabled())
             logger.debug("listBooks (publicationDate): " + e);
           // we don't care
         }
         // add a new book
-        step=6 ; String title = set.getString("book_title");
-        step=7 ; String title_sort = set.getString(("book_title_sort"));
-        step=8 ; String path = set.getString("book_path");
-        step=9 ; float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
-        step=10 ; String isbn = set.getString("isbn");
-        step=11 ; String authorSort = set.getString("author_sort");
-        step=12 ; int iRating = set.getInt("rating");
+        step=10 ; String title = set.getString("book_title");
+        step=11 ; String title_sort = set.getString(("book_title_sort"));
+        step=12 ; String path = set.getString("book_path");
+        step=13 ; float index = set.getFloat("series_index");   // Bug 716914 Get series index correctly
+        step=14 ; String isbn = set.getString("isbn");
+        step=15 ; String authorSort = set.getString("author_sort");
+        step=16 ; int iRating = set.getInt("rating");
         BookRating rating = BookRating.fromValue(iRating);
-        Book book = new Book(bookId, uuid, title, title_sort, path, index, timestamp, publicationDate, isbn, authorSort, rating);
+        Book book = new Book(bookId, uuid, title, title_sort, path, index, timestamp, modified, publicationDate, isbn, authorSort, rating);
 
         // fetch its languages
         step=20 ; stmtBooksLanguagesLink.setString(1, book.getId());

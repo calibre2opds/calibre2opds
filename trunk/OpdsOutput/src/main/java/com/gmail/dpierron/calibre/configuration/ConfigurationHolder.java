@@ -98,8 +98,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   /* Catalog Structure */
   private final static String PROPERTY_NAME_DisplayAuthorSortInAuthorLists = "DisplayAuthorSortInAuthorLists";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookLists = "DisplayTitleSortInBookLists";
-  private final static String PROPERTY_NAME_SortUsingAuthorSort = "SortUsingAuthorSort";
-  private final static String PROPERTY_NAME_SortUsingTitleSort = "SortUsingTitleSort";
+  private final static String PROPERTY_NAME_SortUsingAuthor = "SortUsingAuthor";
+  private final static String PROPERTY_NAME_SortUsingTitle = "SortUsingTitle";
   /* Book Details */
   private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
@@ -108,6 +108,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS = "IncludePublisherInBookDetails";
   private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
   private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
+  private final static String PROPERTY_NAME_IncludeAddedInBookDetailst = "IncludeAddedInBookDetailst";
   private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
@@ -1456,36 +1457,36 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_DisplayTitleSortInBookLists, value);
   }
 
-  public boolean isSortUsingAuthorSortReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthorSort);
+  public boolean isSortUsingAuthorReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthor);
   }
 
-  public boolean getSortUsingAuthorSort() {
-    Boolean b = getBoolean(PROPERTY_NAME_SortUsingAuthorSort);
+  public boolean getSortUsingAuthor() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortUsingAuthor);
     if (b == null)
-      return defaults.getSortUsingAuthorSort();
+      return defaults.getSortUsingAuthor();
     else
       return b.booleanValue();
   }
 
-  public void setSortUsingAuthorSort(boolean value) {
-    setProperty(PROPERTY_NAME_SortUsingAuthorSort, value);
+  public void setSortUsingAuthor(boolean value) {
+    setProperty(PROPERTY_NAME_SortUsingAuthor, value);
   }
 
-  public boolean isSortUsingTitleSortReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitleSort);
+  public boolean isSortUsingTitleReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
   }
 
-  public boolean getSortUsingTitleSort() {
-    Boolean b = getBoolean(PROPERTY_NAME_SortUsingTitleSort);
+  public boolean getSortUsingTitle() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortUsingTitle);
     if (b == null)
-      return defaults.getSortUsingTitleSort();
+      return defaults.getSortUsingTitle();
     else
       return b.booleanValue();
   }
 
-  public void setSortUsingTitleSort(boolean value) {
-    setProperty(PROPERTY_NAME_SortUsingTitleSort, value);
+  public void setSortUsingTitle(boolean value) {
+    setProperty(PROPERTY_NAME_SortUsingTitle, value);
   }
   /*
    Book Details
@@ -1551,6 +1552,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
     if (b == null)
       return defaults.getIncludePublishedInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeAddedInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_IncludeAddedInBookDetailst, value);
+  }
+
+  public boolean isIncludeAddedInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_IncludeAddedInBookDetailst);
+  }
+
+  public boolean getIncludeAddedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeAddedInBookDetailst);
+    if (b == null)
+      return defaults.getIncludeAddedInBookDetails();
     else
       return b.booleanValue();
   }
