@@ -39,6 +39,7 @@ looking at the calibre2opds issue register (http://calibre2opds.myjetbrains.com/
  - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
  - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
  - #c2o-100: Uninstall does not work under Windows 7
+ - #c2o-123: Not handling missing file
 
  - Localization: The current localizations now have significant gaps until users can provide the 
             required translation strings for the large number of new messages introduced in v3.0.
@@ -79,6 +80,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-115: Send to Readmill Library
     - #c2o-118: Provide more control over display and sorting of Authors
     - #c2o-119: Provide more control over display and sorting of Series
+    - #c20-125: Add Publishers section to generated catalog
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.

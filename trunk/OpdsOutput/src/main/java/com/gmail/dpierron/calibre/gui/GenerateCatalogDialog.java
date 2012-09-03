@@ -97,8 +97,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblSeries.setText(Localization.Main.getText("info.step.series")); // NOI18N
     lblRecent.setText(Localization.Main.getText("info.step.recent")); // NOI18N
     lblAllbooks.setText(Localization.Main.getText("info.step.allbooks")); // NOI18N
+    lblRated.setText(Localization.Main.getText("info.step.rated")); // NOI18N
     lblFeaturedBooks.setText(Localization.Main.getText("info.step.featuredbooks")); // NOI18N
     lblCustomCatalogs.setText(Localization.Main.getText("info.step.customcatalogs")); // NOI18N
+    lblIndex.setText(Localization.Main.getText("info.step.index")); // NOI18N
+    lblReprocessingEpubMetadata.setText(Localization.Main.getText("info.step.reprocessingEpubMetadata")); // NOI18N
     lblThmbnails.setText(Localization.Main.getText("info.step.thumbnails")); // NOI18N
     lblCovers.setText(Localization.Main.getText("info.step.covers")); // NOI18N
     lblCopyLibToTarget.setText(Localization.Main.getText("info.step.copylib")); // NOI18N

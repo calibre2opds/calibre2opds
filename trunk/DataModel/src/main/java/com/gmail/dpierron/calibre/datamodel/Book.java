@@ -348,10 +348,19 @@ public class Book implements SplitableByLetter {
   public Date getTimestamp() {
     // ITIMPI:  Return 'now' if timestamp not set - would 0 be better?
     if (timestamp == null) {
-      logger.warn("Date Added not set for book '" + title + "'");
+      logger.warn("Date/Time Added not set for book '" + title + "'");
       return new Date();
     }
     return timestamp;
+  }
+
+  public Date getModified() {
+    // ITIMPI:  Return 'now' if modified not set - would 0 be better?
+    if (modified == null) {
+      logger.warn("Date/Time Modified not set for book '" + title + "'");
+      return new Date();
+    }
+    return modified;
   }
 
   public Date getPublicationDate() {

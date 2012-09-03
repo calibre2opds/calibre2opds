@@ -52,7 +52,9 @@ public class Runner {
   public static void run(String[] args, boolean startGui) {
     // Start by setting locale to be the same as the system locale (or english if it is not one we support)
     Locale lc = Locale.getDefault();
-    System.out.println("System language: " + lc.getISO3Language());
+    // System.out.println("System language: " + lc.getISO3Language());
+    ConfigurationManager.addStartupLogMessage("\n\n\n");
+    ConfigurationManager.addStartupLogMessage("System language: " + lc.getISO3Language());
     Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
     Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
     Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");

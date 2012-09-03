@@ -1231,7 +1231,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(addtmp)) {
           content.addContent(JDOM.INSTANCE.element("strong")
               .addContent(Localization.Main.getText("content.added") + " "))
-              .addContent(DATE_FORMAT.format(book.getTimestamp()))
+              .addContent(DATE_FORMAT.format(addtmp))
               .addContent(JDOM.INSTANCE.element("br"))
               .addContent(JDOM.INSTANCE.element("br"));
         }
@@ -1240,11 +1240,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // Modified date (if present and wanted)
       if (currentProfile.getIncludeModifiedInBookDetails()) {
-        Date modtmp = book.getTimestamp();
+        Date modtmp = book.getModified();
         if (Helper.isNotNullOrEmpty(modtmp)) {
           content.addContent(JDOM.INSTANCE.element("strong")
               .addContent(Localization.Main.getText("content.modified") + " "))
-              .addContent(DATE_FORMAT.format(book.getTimestamp()))
+              .addContent(DATE_FORMAT.format(modtmp))
               .addContent(JDOM.INSTANCE.element("br"))
               .addContent(JDOM.INSTANCE.element("br"));
         }

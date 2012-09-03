@@ -39,7 +39,7 @@ REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if not exist "%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%" goto not_jre6
 set _JAVACMD=%ProgramFiles%\Java\jre6\bin\%_JAVAPROG%
-echo [INFO] Java found via default 32-bit JRE6 location
+echo [INFO] Java found via default JRE6 location
 echo [INFO] Java located at %ProgramFiles%\Java\jre6
 goto run_c2o
 :not_jre6
@@ -47,7 +47,7 @@ echo [INFO] Java not found in default JRE6 location [%ProgramFiles%\Java\jre6]
 
 if not exist "%ProgramFiles%\Java\jre7\bin\%_JAVAPROG%" goto not_jre7
 set _JAVACMD=%ProgramFiles%\Java\jre7\bin\%_JAVAPROG%
-echo [INFO] Java found at 32-bit JRE7 location [%ProgramFiles%\Java\jre7]
+echo [INFO] Java found at default JRE7 location [%ProgramFiles%\Java\jre7]
 goto run_c2o
 :not_jre7
 echo [INFO] Java not found in default JRE7 location [%ProgramFiles%\Java\jre7]
