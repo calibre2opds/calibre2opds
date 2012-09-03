@@ -670,10 +670,10 @@ public class Catalog {
         }
       }
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       // filter the datamodel
+
       try {
         RemoveFilteredOutBooks.INSTANCE.runOnDataModel();
       } catch (CalibreSavedSearchInterpretException e) {
@@ -693,12 +693,12 @@ public class Catalog {
         logger.info("Database loaded: " + books.size() + " books");
       }
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));
 
       // Load up the File Cache if it exists
+
       now = System.currentTimeMillis();
       switch (currentProfile.getDeviceMode()) {
         case Nook:
@@ -720,13 +720,13 @@ public class Catalog {
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       String filename = SecureFileManager.INSTANCE.encode("index.xml");
 
+      // prepare the Trook specific search database
+
       if (currentProfile.getDeviceMode() == DeviceMode.Nook) {
-        // prepare the Trook specific search database
         TrookSpecificSearchDatabaseManager.INSTANCE.setDatabaseFile(new File(generateFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME));
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
@@ -742,6 +742,7 @@ public class Catalog {
       Element entry;
 
       /* About entry */
+
       if (currentProfile.getIncludeAboutLink()) {
         entry = FeedHelper.INSTANCE
             .getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HOME_URL,
@@ -750,10 +751,10 @@ public class Catalog {
           main.addContent(entry);
       }
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* All books */
+
       logger.debug("STARTED: Generating All Books catalog");
       callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
       now = System.currentTimeMillis();
@@ -765,10 +766,10 @@ public class Catalog {
       callback.endCreateAllbooks(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating All Books catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Authors */
+
       logger.debug("STARTING: Generating Authors catalog");
       callback.startCreateAuthors(DataModel.INSTANCE.getListOfAuthors().size());
       now = System.currentTimeMillis();
@@ -778,10 +779,10 @@ public class Catalog {
       callback.endCreateAuthors(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Authors catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Tags */
+
       logger.debug("STARTING: Generating Tags catalog");
       callback.startCreateTags(DataModel.INSTANCE.getListOfTags().size());
       now = System.currentTimeMillis();
@@ -793,10 +794,10 @@ public class Catalog {
       callback.endCreateTags(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Tags catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Series */
+
       logger.debug("STARTING: Generating Series catalog");
       callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
       now = System.currentTimeMillis();
@@ -812,10 +813,10 @@ public class Catalog {
       callback.endCreateSeries(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Series catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Recent books */
+
       logger.debug("STARTING: Generating Recent catalog");
       int nbRecentBooks = Math.min(currentProfile.getBooksInRecentAdditions(), DataModel.INSTANCE.getListOfBooks().size());
       callback.startCreateRecent(nbRecentBooks);
@@ -829,10 +830,10 @@ public class Catalog {
       callback.endCreateRecent(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Recent catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Rated books */
+
       logger.debug("STARTING: Generating Ratings catalog");
       callback.startCreateRated(DataModel.INSTANCE.getListOfBooks().size());
       now = System.currentTimeMillis();
@@ -844,10 +845,10 @@ public class Catalog {
       callback.endCreateRated(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Ratings catalog");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Featured catalog */
+
       now = System.currentTimeMillis();
       if (CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter() != null) {
         logger.debug("STARTED: Generating Featured books catalog");
@@ -864,10 +865,10 @@ public class Catalog {
       }
       callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Custom catalogs */
+
       now = System.currentTimeMillis();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
         int pos = 1;
@@ -902,13 +903,11 @@ public class Catalog {
           }
           callback.incStepProgressIndicatorPosition();
 
-          // check if we must continue
           callback.checkIfContinueGenerating();
         }
       }
       callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
@@ -925,7 +924,6 @@ public class Catalog {
           fos.close();
       }
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       // copy the resource files to the catalog folder
@@ -943,10 +941,10 @@ public class Catalog {
       }
       logger.debug("COMPLETED: Copying Resource files");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Thumbnails */
+
       logger.debug("STARTING: Generating Thumbnails");
       int nbThumbnails = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
       callback.startCreateThumbnails(nbThumbnails);
@@ -955,10 +953,10 @@ public class Catalog {
       callback.endCreateThumbnails(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Thumbnails");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Reduced Covers */
+
       logger.debug("STARTING: Generating Reduced Covers");
       int nbCovers = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
       callback.startCreateCovers(nbCovers);
@@ -967,10 +965,10 @@ public class Catalog {
       callback.endCreateCovers(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Reduced Covers");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
-      /* Javascript database */
+      /* Javascript search database */
+
       logger.debug("STARTING: Generating Javascript database");
       long nbKeywords = IndexManager.INSTANCE.size();
       callback.startCreateJavascriptDatabase(nbKeywords);
@@ -980,10 +978,10 @@ public class Catalog {
       callback.endCreateJavascriptDatabase(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Javascript database");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       /* Epub metadata reprocessing */
+
       logger.debug("STARTING: Processing ePub Metadata");
       callback.startReprocessingEpubMetadata(DataModel.INSTANCE.getListOfBooks().size());
       now = System.currentTimeMillis();
@@ -1007,25 +1005,27 @@ public class Catalog {
       callback.endReprocessingEpubMetadata(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Processing ePub Metadata");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       // create the same file as html
+
       logger.debug("STARTED: Generating HTML Files");
       CatalogContext.INSTANCE.getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.MainCatalog);
       logger.debug("COMPLETED: Generating HTML Files");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       if (syncLog)
         syncLogFile =
             new PrintWriter(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
 
-      /* copy the catalogs (and books, if the target folder is set) to the destination folder */
-
       // reset stats fields for this run
+
       copyExistHits = copyLengthHits = copyCrcUnchecked = copyCrcHits = copyCrcMisses = copyDateMisses = copyCrcUnchecked = 0;
+
+      // copy the catalogs
+      // (and books, if the target folder is set) to the destination folder
+
       // if the target folder is set, copy/syncFiles the library there
       int nbFilesToCopyToTarget = CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
@@ -1042,7 +1042,6 @@ public class Catalog {
         }
         logger.debug("COMPLETED: syncFiles eBook files to target");
 
-        // check if we must continue
         callback.checkIfContinueGenerating();
 
         callback.showMessage(Localization.Main.getText("info.step.tidyingtarget"));
@@ -1061,7 +1060,6 @@ public class Catalog {
         }
         logger.debug("COMPLETED: Build list of files to delete from target");
 
-        // check if we must continue
         callback.checkIfContinueGenerating();
 
         logger.debug("STARTED: Creating list of files on target");
@@ -1094,7 +1092,6 @@ public class Catalog {
       }
       callback.endCopyLibToTarget(System.currentTimeMillis() - now);
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder());
@@ -1146,7 +1143,6 @@ public class Catalog {
       }
       logger.debug("COMPLETED: syncFiles Catalog Folder");
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       // NOTE.   This is how we sync the catalog in Default mode
@@ -1159,7 +1155,6 @@ public class Catalog {
       }
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       if (syncLog) {
@@ -1173,15 +1168,11 @@ public class Catalog {
       CachedFileManager.INSTANCE.saveCache();
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
 
-      // check if we must continue
       callback.checkIfContinueGenerating();
 
       // save the SecureFileManager data
       callback.showMessage("Saving Cache data");
       SecureFileManager.INSTANCE.save();
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
 
       if (syncLog) {
         syncLogFile.println();
@@ -1218,7 +1209,7 @@ public class Catalog {
       if (copyToSelf != 0)
         logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));
 
-      // Now work put where to tell uer result has been placed
+      // Now work put where to tell user result has been placed
       if (logger.isTraceEnabled())
         logger.trace("try to determine where the results have been put");
       switch (currentProfile.getDeviceMode()) {
@@ -1238,10 +1229,6 @@ public class Catalog {
       }
       if (logger.isTraceEnabled())
         logger.trace("where=" + where);
-
-      // check if we must continue
-      callback.checkIfContinueGenerating();
-
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
     } catch (Throwable t) {

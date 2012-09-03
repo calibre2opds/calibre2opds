@@ -1,5 +1,9 @@
 package com.gmail.dpierron.calibre.configuration;
 
+/**
+ * Calss that hold the methods for storing and retrieving the
+ * configuration settings for a calibre2opds profile.
+ */
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
