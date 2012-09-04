@@ -569,6 +569,7 @@ public class Mainframe extends javax.swing.JFrame {
     lblTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
     // c2o-77 Ensure that Target Folder cannot be entered in default mode
     txtTargetFolder.setEnabled(currentProfile.getDeviceMode() != DeviceMode.Dropbox);
+    cmdSetTargetFolder.setEnabled(txtTargetFolder.isEnabled());
     chkCopyToDatabaseFolder.setSelected(currentProfile.getCopyToDatabaseFolder());
     chkCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
     lblCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
