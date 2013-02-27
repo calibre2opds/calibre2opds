@@ -15,16 +15,17 @@ public class Constants {
   public final static String LOGFILE_NAME = "calibre2opds.log";
   public final static String SYNCFILE_NAME = "synclog.log";
   public final static String CONFIGURATION_COMPATIBILITY_VERSIONCHIP = "02030101";
-  public final static String DSNNAME = "CALIBRE";
+  // ITIMPI:  Not sure what was the intended use of this constant?
+  // public final static String DSNNAME = "CALIBRE";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
   public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
   public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
   public final static String HOME_URL = "http://calibre2opds.com/";
-  public final static String USERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/overview/";
-  public final static String DEVELOPERGUIDE_URL = "http://calibre2opds.com/read-the-documentation/development/";
-  public final static String LOCALIZE_URL = "http://calibre2opds.com/read-the-documentation/development/localization/";
-  public final static String CUSTOMIZE_URL = "http://calibre2opds.com/read-the-documentation/development/customization/";
+  public final static String USERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2Opds_Index";
+  public final static String DEVELOPERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop";
+  public final static String LOCALIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize";
+  public final static String CUSTOMIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize";
   public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
   public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
@@ -34,12 +35,12 @@ public class Constants {
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
   public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
-  public final static String HELP_URL_MAIN_OPTIONS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_MAIN";
-  public final static String HELP_URL_CATALOGSTRUCTURE = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_CATALOGSTRUCTURE";
-  public final static String HELP_URL_BOOKDETAILS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_BOOKDETAILS";
-  public final static String HELP_URL_ADVANCED = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_ADVANCED";
-  public final static String HELP_URL_EXTERNALLINKS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_EXTERNALLINKS";
-  public final static String HELP_URL_CUSTOMCATALOGS = "http://calibre2opds.com/read-the-documentation/generate-catalogs/#CONFIGURING_CUSTOMCATALOGS";
+  public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";
+  public final static String HELP_URL_CATALOGSTRUCTURE = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Catalog_Structure_Tab";
+  public final static String HELP_URL_BOOKDETAILS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Details_Tab";
+  public final static String HELP_URL_ADVANCED = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Advanced_Tab";
+  public final static String HELP_URL_EXTERNALLINKS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Links_tab";
+  public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
 
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
@@ -91,7 +92,7 @@ public class Constants {
       "_search/media/js/jquery.dataTables.min.js",
       "_search/media/js/jquery.js",};
 
-  public final static String getBzrVersion() {
+  public static String getBzrVersion() {
     String vcsVersion = "";
     BufferedReader reader = null;
     try {
