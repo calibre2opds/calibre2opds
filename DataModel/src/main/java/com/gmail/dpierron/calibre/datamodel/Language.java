@@ -952,7 +952,7 @@ public class Language {
     put("cat", "Valencian");
     put("ven", "Venda");
     put("vie", "Vietnamese");
-    put("vol", "Volapük");
+    put("vol", "VolapÃ¼k");
     put("vot", "Votic");
     put("wln", "Walloon");
     put("war", "Waray");
