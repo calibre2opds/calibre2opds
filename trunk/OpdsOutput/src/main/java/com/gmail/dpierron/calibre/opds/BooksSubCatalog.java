@@ -230,7 +230,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   /**
    * Get a list of books starting from a specific point
    *
-   * ITIMPI:  At the moment this function can be called recursively with the 'from'
+   * ITIMPI:  At the moment this function can call itself recursively with the 'from'
    *          parameter being incremented.   It is likely to be much more efficient
    *          in both cpu load and memory usage to flatten the loop by rewriteing the
    *          function to elimiate recursion.
@@ -346,13 +346,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
     // generate the book list file
-    String filename = SecureFileManager.INSTANCE.decode(pFilename);
-    if (from > 0) {
-      int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0)
-        filename = filename.substring(0, pos);
-      filename = filename + "_" + pageNumber;
-    }
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
     if (!filename.endsWith(".xml"))
       filename = filename + ".xml";
     filename = SecureFileManager.INSTANCE.encode(filename);
@@ -395,13 +389,16 @@ public abstract class BooksSubCatalog extends SubCatalog {
           // check if we must continue
           CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
+          // See if we need to do the next page
           if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+            // ... YES - so go for next page
             if (logger.isDebugEnabled())
               logger.debug("making a nextpage link");
             Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, splitOption == SplitOption.DontSplit ? SplitOption.Paginate : splitOption, icon, options).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {
+            // ... NO - so add book to this page
             Book book = books.get(i);
             if (logger.isTraceEnabled())
               logger.trace("getListOfBooks: adding book to the list : " + book);
@@ -459,6 +456,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * 
    * They will all share the same base URL with just the page number part incrementing
    *
+   * NOTE:  The original implementation used a recursion technique.  This seems to be
+   *        relatively expensive in resource (stack) usage, so this implementation
+   *        changes the algorithm to use a technique of iterating through the pages.
+   *
    * @param pBreadcrumbs
    * @param books
    * @param title
@@ -468,10 +469,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param icon
    * @param firstElements
    * @param options
-   * @return
+   * @return The link that is to be added to the calling page
    * @throws IOException
    */
- /*
+  /*
   Composite<Element, String> getListOfBooksPaginated(Breadcrumbs pBreadcrumbs,
       List<Book> books,
       String title,
@@ -481,30 +482,41 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String icon,
       List<Element> firstElements,
       Option... options) throws IOException {
+
     logger.debug("getListOfBooks: START");
     int catalogSize = books.size();
     logger.debug("getListOfBooks:catalogSize=" + catalogSize);
 
     // TODO This routine is currently a 'work-inprogress'
 
-    int pageNumber = 1;
+    int pageNumber = 0;
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
     List<Element> result;
+
+    Element feed;
+
+    // Variables
+
 
     // generate the book list file
     String filename = SecureFileManager.INSTANCE.decode(pFilename);
 
-    for (int i = 0; i < books.size(); i++) {
-      // Page leadin
-      if (from % maxBeforePaginate == 0) {
-        if (from > 0) {
+    for (int currentBook = 0; currentBook < catalogSize; currentBook++) {
+      // See if we aer about to start a new page?
+      if (currentBook % maxBeforePaginate == 0) {
+        pageNumber++;     //Increment page number
+        if (!filename.endsWith(".xml"))
+          filename = filename + ".xml";
+        if (pageNumber > 1) {
+          // ITIMPI:  At the moment the page number is only added for 2nd and
+          //          subsequent pages.  Should we always add it for consistency?
+          //          Seems a good idea but need to check for ramifications wleswhere.
           int pos = filename.lastIndexOf(".xml");
           if (pos >= 0)
+
             filename = filename.substring(0, pos);
           filename = filename + "_" + pageNumber;
         }
-        if (!filename.endsWith(".xml"))
-          filename = filename + ".xml";
         filename = SecureFileManager.INSTANCE.encode(filename);
         File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
         FileOutputStream fos = null;
@@ -533,12 +545,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (fos != null)
             fos.close();
         }
-      }
-      // Individual book entries
+      }  // End of start-of page
+
       // check if we must continue
       CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
 
-      if ((i - from) >= maxBeforePaginate) {
+      // Individual book entries
+
+      if ((currentBook % maxBeforePaginate) != 0 ) {
         if (logger.isDebugEnabled())
           logger.debug("making a nextpage link");
         Element nextLink = getListOfBooks(pBreadcrumbs, books, i, title, summary, urn, pFilename, SplitOption.Paginate, icon, options).getFirstElement();
@@ -549,8 +563,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())
           logger.trace("getListOfBooks: adding book to the list : " + book);
         try {
-          logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
-          Element entry = getBookEntry(breadcrumbs, book, options);
+          logger.trace("getListOfBooks: breadcrumbs=" + pBreadcrumbs + ", book=" + book + ", options=" + options);
+          Element entry = getBookEntry(pBreadcrumbs, book, options);
           if (entry != null) {
             logger.trace("getListOfBooks: entry=" + entry);
             result.add(entry);
@@ -561,38 +575,46 @@ public abstract class BooksSubCatalog extends SubCatalog {
           throw e;
         }
       }
-      // Page leadout
-      if (from % maxBeforePaginate == 0) {
-        // if needed, add the first elements to the feed
-        if (Helper.isNotNullOrEmpty(firstElements))
-          feed.addContent(firstElements);
-
-        // add the book entries to the feed
-        feed.addContent(result);
-
-        // write the element to the file
-        document.addContent(feed);
-        JDOM.INSTANCE.getOutputter().output(document, fos);
-      }
-
-      // create the same file as html
-      getHtmlManager().generateHtmlFromXml(document, outputFile);
-      Element entry;
-      String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
-      if (from > 0) {
-        String titleNext;
-        if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
-          titleNext = Localization.Main.getText("title.lastpage");
+      // Have we completed this page?
+      if (((i+1) % maxBeforePaginate == 0)
+      ||  ((i+1) ==  maxBooks)) {
+        // Are there further pages?
+        if ((i+1) < maxBooks) {
+          // If yes we need to add a next page link
         }
+        // Page leadout
+        if (from % maxBeforePaginate == 0) {
+          // if needed, add the first elements to the feed
+          if (Helper.isNotNullOrEmpty(firstElements))
+            feed.addContent(firstElements);
 
-        entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
-      } else {
-        entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
-      }
+          // add the book entries to the feed
+          feed.addContent(result);
+
+          // write the element to the file
+          document.addContent(feed);
+          JDOM.INSTANCE.getOutputter().output(document, fos);
+        }
+        // create the same file as html
+        getHtmlManager().generateHtmlFromXml(document, outputFile);
+        Element entry;
+        String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
+        if (from > 0) {
+          String titleNext;
+          if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
+            titleNext = Localization.Main.getText("title.lastpage");
+          }
+
+          entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+        } else {
+          entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
+        }
+      } // End of Page leadout
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
   */
+
   /**
    * Get a list of books split by letter
    * It is invoked when a list of books is to be further sub-divided by letter.
@@ -609,7 +631,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @throws IOException
    */
   private List<Element> getListOfBooksSplitByLetter(Breadcrumbs pBreadcrumbs,
-      Map<String, List<Book>> mapOfBooksByLetter,
+      Map<String,  List<Book>> mapOfBooksByLetter,
       String baseTitle,
       String baseUrn,
       String baseFilename,
@@ -627,14 +649,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     SortedSet<String> letters = new TreeSet<String>(mapOfBooksByLetter.keySet());
     for (String letter : letters) {
       // generate the letter file
-      String baseFilenameCleanedUp = SecureFileManager.INSTANCE.decode(baseFilename);
-      int pos = baseFilenameCleanedUp.indexOf(".xml");
-      if (pos > -1)
-        baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
-      letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
-
-      String letterUrn = baseUrn + ":" + letter;
+      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename, letter);
+      String letterUrn = Helper.getSplitString(baseUrn, letter, ":");
 
       List<Book> booksInThisLetter = mapOfBooksByLetter.get(letter);
       String letterTitle;
@@ -651,9 +667,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // ITIMPI:  Asert to check if the logic can ever let this be zero!
       assert (booksInThisLetter.size() > 0) : "booksInThisLetter=" + booksInThisLetter.size() + " for letter '" + letter + "'";
       if (booksInThisLetter.size() > 0) {
-        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename, 
-             (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate, icon, options)
-            .getFirstElement();
+        if (letter.length() < maxSplitLevels) {
+          element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
+              SplitOption.SplitByLetter , icon, options).getFirstElement();
+        } else {
+          element = getListOfBooks(pBreadcrumbs, booksInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
+              SplitOption.Paginate, icon, options).getFirstElement();
+        }
       }
 
       if (element != null)
@@ -702,7 +722,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String rangeFilename = rangeFilenameCleanedUp + "_" + range + ".xml";
       rangeFilename = SecureFileManager.INSTANCE.encode(rangeFilename);
 
-      String rangeUrn = baseUrn + ":" + range;
+      String rangeUrn = Helper.getSplitString(baseUrn, range.toString(), ":");
 
       String rangeTitle = LocalizationHelper.INSTANCE.getEnumConstantHumanName(range);
       List<Book> booksInThisRange = mapOfBooksByDate.get(range);
@@ -1263,7 +1283,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         hasContent = true;
       }  else {
         if (Helper.isNotNullOrEmpty(book.getComment())) {
-          logger.warn(Localization.Main.getText("error.badComment", book.getId() , book.getTitle()));
+          logger.warn(Localization.Main.getText("warn.badComment", book.getId() , book.getTitle()));
           logger.warn(book.getComment());
           book.setComment("");
         }

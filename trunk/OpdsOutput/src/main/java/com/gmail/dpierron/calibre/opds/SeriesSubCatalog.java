@@ -179,19 +179,10 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     }
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
-
-    String filename = SecureFileManager.INSTANCE.decode(pFilename);
-    if (from > 0) {
-      int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0)
-        filename = filename.substring(0, pos);
-      filename = filename + "_" + pageNumber;
-    }
-    if (!filename.endsWith(".xml"))
-      filename = filename + ".xml";
-    filename = SecureFileManager.INSTANCE.encode(filename);
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
 
     // list the entries (or split them)
+
     if (willSplitByLetter) {
       // split the series list by letter
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
@@ -252,16 +243,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
-    String filename = SecureFileManager.INSTANCE.decode(pFilename);
-    if (from > 0) {
-      int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0)
-        filename = filename.substring(0, pos);
-      filename = filename + "_" + pageNumber;
-    }
-    if (!filename.endsWith(".xml"))
-      filename = filename + ".xml";
-    filename = SecureFileManager.INSTANCE.encode(filename);
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
     String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
@@ -334,14 +316,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     SortedSet<String> letters = new TreeSet<String>(mapOfSeriesByLetter.keySet());
     for (String letter : letters) {
       // generate the letter file
-      String baseFilenameCleanedUp = SecureFileManager.INSTANCE.decode(baseFilename);
-      int pos = baseFilenameCleanedUp.indexOf(".xml");
-      if (pos > -1)
-        baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
-      letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
+      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename, letter);
 
-      String letterUrn = baseUrn + ":" + letter;
+      String letterUrn = Helper.getSplitString(baseUrn, letter, ":");
       List<Series> seriesInThisLetter = mapOfSeriesByLetter.get(letter);
       String letterTitle;
       int itemsCount = seriesInThisLetter.size();
