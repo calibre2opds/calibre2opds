@@ -133,15 +133,17 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   * @param pBreadcrumbs
-   * @param authors
-   * @param from
-   * @param title
-   * @param summary
-   * @param urn
-   * @param pFilename
-   * @param splitOption
-   * @return
+   * Produce a list of books.
+   * This function can be used recursively to handle a set of pages
+   * @param pBreadcrumbs    The point we have reached so far
+   * @param authors         The list of authors that need listing
+   * @param from            The point reached in the list.  Will be 0 first time through
+   * @param title           The title for this page
+   * @param summary         THe summary
+   * @param urn             The URN to link back to the calling point
+   * @param pFilename       The filename to be used as the bawe for this set of pages
+   * @param splitOption     The current preferred split option.
+   * @return                Link to the page just generated to insert into parent
    * @throws IOException
    */
   private Composite<Element, String> getListOfAuthors(Breadcrumbs pBreadcrumbs,
@@ -154,8 +156,17 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SplitOption splitOption) throws IOException {
     int catalogSize;
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
-    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (authors.size() > maxBeforeSplit);
-    if (willSplit) {
+    // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
+    boolean willSplitByLetter = false;
+    String lastName = authors.get(0).getLastName().toUpperCase();   // Get name of first entry
+    for (Author author : authors) {                                                   // debug
+      if (! author.getLastName().toUpperCase().equals(lastName)) {
+        // As long as entries are not all the same, apply the split criteria
+        willSplitByLetter = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (authors.size() > maxBeforeSplit);
+        break;
+      }
+    }
+    if (willSplitByLetter) {
       mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(authors);
       catalogSize = 0;
     } else
@@ -183,12 +194,11 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     try {
       fos = new FileOutputStream(outputFile);
-
       Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
       // list the entries (or split them)
       List<Element> result;
-      if (willSplit) {
+      if (willSplitByLetter) {
         logger.debug("splitting by letter");
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         result = getListOfAuthorsSplitByLetter(breadcrumbs, mapOfAuthorsByLetter, title, urn, pFilename);
@@ -221,9 +231,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       document.addContent(feed);
       JDOM.INSTANCE.getOutputter().output(document, fos);
     } catch (RuntimeException e) {
-      if (logger.isTraceEnabled())
-        logger.trace("Exception generating: " + outputFile.getName() + "\n" + e);
-      throw e;
       // ITIMPI:  Should we log something when NOT in trace mode?
     } finally {
       if (fos != null)
@@ -252,12 +259,16 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   * @param pBreadcrumbs
-   * @param mapOfAuthorsByLetter
-   * @param baseTitle
-   * @param baseUrn
-   * @param baseFilename
-   * @return
+   * Get a list of author that needs to be split by letter
+   * It might be necessary to recurse to further levels if this
+   * is allowed by the maximum split level setting
+   *
+   * @param pBreadcrumbs               The point we have currently reached
+   * @param mapOfAuthorsByLetter       The list of authors to list
+   * @param baseTitle                  The base URL for this level
+   * @param baseUrn                    The base Filename for this level
+   * @param baseFilename               The base filename form this level
+   * @return                           The link to this page for the parent
    * @throws IOException
    */
   private List<Element> getListOfAuthorsSplitByLetter(Breadcrumbs pBreadcrumbs,
@@ -281,10 +292,25 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       int pos = baseFilenameCleanedUp.indexOf(".xml");
       if (pos > -1)
         baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
+      String HexLetterPart = "_" + Helper.convertToHex(letter);
+      // ITIMPI:  Old algorithm used to concatenate a new part to the filename for each
+      //          Level of Split.   This could give very long filenames.
+      //          Changed to only add the 'differnce' to the end as this still
+      //          results in a unique name.
       String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
       letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
-
-      String letterUrn = baseUrn + ":" + letter;
+      // check we are not recursing so deep we may have an issue with pathlength!
+      if (letterFilename.length() > 200) {
+        assert true: "letterFilename.length() = " + letterFilename.length() + " (" + letterFilename + ")";
+      }
+      // ITIMPI:  Old logic concatenated each letter to this URN.
+      //          This is unnecessary as we only need the actual
+      //          current level at the end to make it unique
+      // String letterUrn = baseUrn + ":" + letter;
+      String letterUrn = baseUrn;
+      if (letter.length() == 1)
+        letterUrn = letterUrn + ":";
+      letterUrn = letterUrn + letter.substring(letter.length()-1);
       List<Author> authorsInThisLetter = mapOfAuthorsByLetter.get(letter);
 
       // sort the authors list
@@ -309,10 +335,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          */
         logger.debug("calling getListOfAuthors for the letter " + letter);
 
-        element =
-            getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
+        element = getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
 //                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
-                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
+                  (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
 
         if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
@@ -338,10 +363,12 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   * @param pBreadcrumbs
-   * @param author
-   * @param baseurn
-   * @return
+   * Get the details of a single author
+   *
+   * @param pBreadcrumbs          The point we have reached
+   * @param author                The author to be listed
+   * @param baseurn               The base URN for this author
+   * @return                      Yhe link to be inserted into the parent
    * @throws IOException
    */
   private Element getAuthor(Breadcrumbs pBreadcrumbs, Author author, String baseurn) throws IOException {
@@ -434,8 +461,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   * @param pBreadcrumbs
-   * @return
+   * Used to generate a sub-catalog
+   *
+   * @param pBreadcrumbs        The point reached so far
+   * @return                    The link to insert into the parent
    * @throws IOException
    */
   public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
