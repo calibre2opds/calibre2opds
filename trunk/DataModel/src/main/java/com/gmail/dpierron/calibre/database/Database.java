@@ -132,6 +132,7 @@ public enum Database {
         step=14 ; String isbn = set.getString("isbn");
         step=15 ; String authorSort = set.getString("author_sort");
         step=16 ; int iRating = set.getInt("rating");
+        iRating += (iRating % 2);    // bug #c2o-128  Ensure values even (round up if necessary)
         BookRating rating = BookRating.fromValue(iRating);
         Book book = new Book(bookId, uuid, title, title_sort, path, index, timestamp, modified, publicationDate, isbn, authorSort, rating);
 
