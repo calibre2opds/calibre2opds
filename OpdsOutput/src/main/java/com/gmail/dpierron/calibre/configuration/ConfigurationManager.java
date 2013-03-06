@@ -181,13 +181,13 @@ public enum ConfigurationManager {
       return configurationFolder;
     }
 
-    //  NOw all the standard locations if we do not already have an answer
+    //  Now all the standard locations if we do not already have an answer
 
     // try the CALIBRE2OPDS_CONFIG environment variable
     String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
     if (Helper.isNotNullOrEmpty(configDirectory)) {
       configurationFolder = new File(configDirectory);
-      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=" + configurationFolder);
+      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=");
       if (! configurationFolder.exists()) {
         ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
         configurationFolder = null;  

@@ -174,17 +174,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
-
-    String filename = SecureFileManager.INSTANCE.decode(pFilename);
-    if (from > 0) {
-      int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0)
-        filename = filename.substring(0, pos);
-      filename = filename + "_" + pageNumber;
-    }
-    if (!filename.endsWith(".xml"))
-      filename = filename + ".xml";
-
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename, Integer.toString(pageNumber));
     logger.debug("generating " + filename);
     filename = SecureFileManager.INSTANCE.encode(filename);
 
@@ -288,29 +278,13 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     SortedSet<String> letters = new TreeSet<String>(mapOfAuthorsByLetter.keySet());
     for (String letter : letters) {
       // generate the letter file
-      String baseFilenameCleanedUp = SecureFileManager.INSTANCE.decode(baseFilename);
-      int pos = baseFilenameCleanedUp.indexOf(".xml");
-      if (pos > -1)
-        baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String HexLetterPart = "_" + Helper.convertToHex(letter);
-      // ITIMPI:  Old algorithm used to concatenate a new part to the filename for each
-      //          Level of Split.   This could give very long filenames.
-      //          Changed to only add the 'differnce' to the end as this still
-      //          results in a unique name.
-      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
-      letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
+      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename,letter);
       // check we are not recursing so deep we may have an issue with pathlength!
+      // This should be MUCH less likely with reworked spliLevel algorithm
       if (letterFilename.length() > 200) {
         assert true: "letterFilename.length() = " + letterFilename.length() + " (" + letterFilename + ")";
       }
-      // ITIMPI:  Old logic concatenated each letter to this URN.
-      //          This is unnecessary as we only need the actual
-      //          current level at the end to make it unique
-      // String letterUrn = baseUrn + ":" + letter;
-      String letterUrn = baseUrn;
-      if (letter.length() == 1)
-        letterUrn = letterUrn + ":";
-      letterUrn = letterUrn + letter.substring(letter.length()-1);
+      String letterUrn = Helper.getSplitString(baseUrn,letter,":");
       List<Author> authorsInThisLetter = mapOfAuthorsByLetter.get(letter);
 
       // sort the authors list

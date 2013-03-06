@@ -1,5 +1,8 @@
 package com.gmail.dpierron.tools;
 
+/**
+ * Useful utility functions called from multiple areas of program
+ */
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -1140,4 +1143,45 @@ public class Helper {
     return sb.toString();
   }
 
+  /**
+   * This function is the 'worker' one for handling derived names for split-by-letter
+   * or split by page number.
+   *
+   * Any characters that are not alpha-numeric or the split character are hex encoded
+   * to make the results safe to use in a URN or filename.
+   *
+   * As an optimisation to try and keep values start, it assumed that if the end of the
+   * string passed in as the base corresponds to the start of the new encoded splitText
+   * then it is only necessay to extend the name to make it unique by the difference.
+   *
+   * @param baseString          The base string fromt he previous level
+   * @param splitText           The text for this split level
+   * @param splitSeparator      The seperator to be used between levels
+   * @return                    The link to this level for parent
+   */
+  public static String getSplitString (String baseString, String splitText, String splitSeparator) {
+    StringBuffer encodedSpltText = new StringBuffer();
+    encodedSpltText.append(splitSeparator);
+
+    // Get the encoded form of the spliText
+    for (int x= 0; x < splitText.length(); x++) {
+      char c = splitText.charAt(x);
+      if (Character.isLetterOrDigit(c)) {
+        // Alphanumerics are passed through unchanged
+        encodedSpltText.append(c);
+      } else {
+        // Other characters are hex encoded
+        encodedSpltText.append(Integer.toHexString(c));
+      }
+    }
+    // Now see if we only we need to extend the basename or add a new section
+    int pos = baseString.lastIndexOf(splitSeparator);
+    if (pos > 0) {
+      String checkPart = baseString.substring(pos);
+      if (encodedSpltText.toString().startsWith(checkPart)) {
+        return baseString.substring(0,pos) + encodedSpltText.toString();
+      }
+    }
+    return baseString + encodedSpltText.toString();
+  }
 }

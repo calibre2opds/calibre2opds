@@ -179,6 +179,12 @@ public class CatalogManager {
   /**
    * Get the Folder that a particular catalog file belongs in
    *
+   * The original implementation relied on the fact that we were
+   * using underscores to identify parts of the path.
+   *
+   * A revised implementation would take advantage of the fact
+   * that the secure file manager stores the parent for any file.
+   *
    * @param pCatalogFileName
    * @return
    */
@@ -186,13 +192,15 @@ public class CatalogManager {
     if (Helper.isNullOrEmpty(pCatalogFileName))
       return "";
 
-    String catalogFileName = pCatalogFileName;
-    int pos = catalogFileName.lastIndexOf('.');
+    // Get ythe name with any file extension removed
+    String catalogFileName;
+    int pos = pCatalogFileName.lastIndexOf('.');
     if (pos > -1)
-      catalogFileName = catalogFileName.substring(0, pos);
+      catalogFileName = pCatalogFileName.substring(0, pos);
     else {
       // ITIMPI - this sounds like an error to me that should be logged?
       System.out.println("");
+      catalogFileName = pCatalogFileName;
     }
 
     if (catalogFileName.length() >= 32 && !catalogFileName.substring(0, 32).contains("_"))
