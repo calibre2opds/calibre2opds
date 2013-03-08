@@ -8,7 +8,7 @@ public class EBookFormat implements Comparable<EBookFormat> {
   public final static EBookFormat EPUB = new EBookFormat("EPUB", "application/epub+zip");
   private final static EBookFormat TXT = new EBookFormat("TXT", "text/plain");
   private final static EBookFormat ZIP = new EBookFormat("ZIP", "application/zip");
-//  private final static EBookFormat PRC = new EBookFormat("PRC");
+  private final static EBookFormat HTMLZ = new EBookFormat("HTMLZ", "application/zip");
   private final static EBookFormat PRC = new EBookFormat("PRC", "application/x-mobipocket");
   private final static EBookFormat PDB = new EBookFormat("PDB", "application/pdb");
   private final static EBookFormat AZW = new EBookFormat("AZW", "application/octet-stream");
@@ -28,7 +28,7 @@ public class EBookFormat implements Comparable<EBookFormat> {
   private final static EBookFormat AZW3 = new EBookFormat("AZW3", "application/octet-stream");
   private final static EBookFormat KF8 = new EBookFormat("KF8", "application/octet-stream");
 
-  private final static EBookFormat[] values = {EPUB, TXT, ZIP, PRC, PDB, AZW, MOBI, LRF, LRX, FB2, RAR, PDF, RTF, LIT, DOC, DOCX, CBR, CBZ, CHM, AZW3, KF8, };
+  private final static EBookFormat[] values = {EPUB, TXT, ZIP, HTMLZ, PRC, PDB, AZW, MOBI, LRF, LRX, FB2, RAR, PDF, RTF, LIT, DOC, DOCX, CBR, CBZ, CHM, AZW3, KF8, };
 
   private String mime;
   private final String name;
