@@ -225,51 +225,51 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public String getAmazonAuthorUrl() {
-    return StanzaConstants.AMAZON_AUTHOR_URL;
-  }
-
-  public String getWikipediaUrl() {
-    return StanzaConstants.WIKIPEDIA_URL;
+    return Localization.Main.getText(StanzaConstants.AMAZON_AUTHORS_URL_DEFAULT);
   }
 
   public String getAmazonIsbnUrl() {
-    return StanzaConstants.AMAZON_ISBN_URL;
+    return Localization.Main.getText(StanzaConstants.AMAZON_ISBN_URL_DEFAULT);
   }
 
   public String getAmazonTitleUrl() {
-    return StanzaConstants.AMAZON_TITLE_URL;
+    return Localization.Main.getText(StanzaConstants.AMAZON_TITLE_URL_DEFAULT);
   }
 
   public String getGoodreadAuthorUrl() {
-    return StanzaConstants.GOODREAD_AUTHOR_URL;
+    return Localization.Main.getText(StanzaConstants.GOODREADS_AUTHOR_URL_DEFAULT);
   }
 
   public String getGoodreadIsbnUrl() {
-    return StanzaConstants.GOODREAD_ISBN_URL;
+    return Localization.Main.getText(StanzaConstants.GOODREADS_ISBN_URL_DEFAULT);
   }
 
   public String getGoodreadTitleUrl() {
-    return StanzaConstants.GOODREAD_TITLE_URL;
+    return Localization.Main.getText(StanzaConstants.GOODREADS_TITLE_URL_DEFAULT);
   }
 
   public String getGoodreadReviewIsbnUrl() {
-    return StanzaConstants.GOODREAD_REVIEW_ISBN_URL;
+    return Localization.Main.getText(StanzaConstants.GOODREADS_REVIEW_URL_DEFAULT);
   }
 
   public String getIsfdbAuthorUrl() {
-    return StanzaConstants.ISFDB_AUTHOR_URL;
+    return Localization.Main.getText(StanzaConstants.ISFDB_AUTHOR_URL_DEFAULT);
   }
 
   public String getLibrarythingAuthorUrl() {
-    return StanzaConstants.LIBRARYTHING_AUTHOR_URL;
+    return Localization.Main.getText(StanzaConstants.LIBRARYTHING_AUTHOR_URL_DEFAULT);
   }
 
   public String getLibrarythingIsbnUrl() {
-    return StanzaConstants.LIBRARYTHING_ISBN_URL;
+    return Localization.Main.getText(StanzaConstants.LIBRARYTHING_ISBN_URL_DEFAULT);
   }
 
   public String getLibrarythingTitleUrl() {
-    return StanzaConstants.LIBRARYTHING_TITLE_URL;
+    return Localization.Main.getText(StanzaConstants.LIBRARYTHING_TITLE_URL_DEFAULT);
+  }
+
+  public String getWikipediaUrl() {
+    return Localization.Main.getText(StanzaConstants.WIKIPEDIA_URL_DEFAULT);
   }
 
   public boolean getGenerateIndex() {

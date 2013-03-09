@@ -38,6 +38,12 @@ public enum Localization {
    */
   private ResourceBundle englishLocalizations;
 
+  /*
+   * all localizations.
+   * Loaded once to avoid reloads later.
+   */
+  private Vector<ResourceBundle> allLocalizations;
+
   /**
    * The name of the last loaded locale
    */
@@ -62,6 +68,15 @@ public enum Localization {
   }
 
   /**
+   * See if the localization for the given language code is available
+   *
+   * @param languageCodeIso2    The ISO character code
+   * @return                    True if Calibre2Opds has localization for this language, false if not
+   */
+  public boolean isLocalization (String languageCodeIso2) {
+      return getAvailableLocalizations().contains(languageCodeIso2);
+  }
+  /**
    * Constructs a new {@link Localization}
    *
    * @param localizationBundleName the properties files to load
@@ -71,17 +86,22 @@ public enum Localization {
     reloadLocalizations();
   }
 
+  // Save results to improve efficency on subsequent calls
+  private static Vector<String> availableLocalizations = null;
+
   public Vector<String> getAvailableLocalizations() {
-    Vector<String> result = new Vector<String>();
-    for (String lang : Locale.getISOLanguages()) {
-      Locale locale = new Locale(lang);
-      ResourceBundle bundle = getResourceBundle(localizationBundleName, locale, false);
-      if (bundle != null) {
-        if (bundle.getLocale().getLanguage().equalsIgnoreCase(lang))
-          result.add(locale.getLanguage());
+    if (Helper.isNullOrEmpty(availableLocalizations)) {
+      availableLocalizations = new Vector<String>();
+      for (String lang : Locale.getISOLanguages()) {
+        Locale locale = new Locale(lang);
+        ResourceBundle bundle = getResourceBundle(localizationBundleName, locale, false);
+        if (bundle != null) {
+          if (bundle.getLocale().getLanguage().equalsIgnoreCase(lang))
+            availableLocalizations.add(locale.getLanguage());
+        }
       }
     }
-    return result;
+    return availableLocalizations;
   }
 
   private ResourceBundle getResourceBundle(String name) {
@@ -107,13 +127,16 @@ public enum Localization {
     return getResourceBundle(name, locale, true);
   }
 
+  /**
+   * Reloads the localizations according to the language set in Configuration manager
+   */
   public void reloadLocalizations() {
     reloadLocalizations(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage());
   }
 
   /**
-   * forces the resource bundle to reload from the properties file (use when the
-   * locale changes)
+   * forces the resource bundle to reload from the properties file
+   * (use when the locale changes)
    *
    * @throws IOException
    */
@@ -138,6 +161,14 @@ public enum Localization {
     initialized = true;
   }
 
+  /**
+   * Get the text for the current localization that corresponds to the given key.
+   * If it cannot be found in the current localization we fall back to English.
+   * If it does not exist in English either we simply return the key name.
+   *
+   * @param key     Key to be used
+   * @return        The localized text
+   */
   private String lookupText(String key) {
     try {
       return getBundle().getString(key);
@@ -177,6 +208,10 @@ public enum Localization {
     return formattedMessage;
   }
 
+  /**
+   * Check if the localization bundle has been loaded
+   * @return
+   */
   public boolean isInitialized() {
     return initialized;
   }

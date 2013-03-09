@@ -81,8 +81,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-118: Provide more control over display and sorting of Authors
     - #c2o-119: Provide more control over display and sorting of Series
     - #c20-125: Add Publishers section to generated catalog
-    - #c2o-130: prc format crashed calibre2opds
-    - #c2o-133: Add support for Kindle KF8 and AZW3 formats
     - #c2o-134: Wrong sorting of list of authors/title with accent
     - #c20-135: CALIBRE2OPDS_CONFIG Environment variable used incorrectly
     - #c2o-141: The 'Open Log File' option does not work on Windows 8
@@ -113,7 +111,10 @@ v3.2
     - New: #c20-121: Add links to Localization and customization guides to Help menu
     - New: #c2o-122: Allow more control over contents of Book Details pages.
     - Fix: #c2o-128: Not Reading Ratings
+    - Fix: #c2o-130: prc format crashed calibre2opds
+    - Fix: #c2o-133: Add support for Kindle KF8 and AZW3 formats
     - Fix; #c2o-140: Help URL's do not point to latest documentation
+    - New: #c2o-142: Allow the book links to external sites to be localized
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1

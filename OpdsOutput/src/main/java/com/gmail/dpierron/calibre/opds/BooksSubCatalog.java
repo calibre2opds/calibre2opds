@@ -992,6 +992,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
+  private String getLocalizedUrl(Book book, String configUrl, String localizeUrl, String... args) {
+    String guiLanguage = currentProfile.getLanguage();
+    Language bookLanguage =  book.getBookLanguage();
+
+    String languageCode = bookLanguage.getIso2();
+    if (Helper.isNullOrEmpty(languageCode)){
+      languageCode = currentProfile.getLanguage();
+    }
+
+    String url = "";
+    return Localization.Main.getText(url, args);
+  }
+
   /**
    * Add links for further information about a book
    *

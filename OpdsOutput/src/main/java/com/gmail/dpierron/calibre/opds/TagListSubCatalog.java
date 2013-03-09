@@ -60,8 +60,10 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (logger.isTraceEnabled())
         logger.trace("getListOfTags: splitOption was null - set to " + splitOption);
     }
-    boolean willSplit = (splitOption == SplitOption.SplitByLetter) && (maxSplitLevels > 0) && (tags.size() > maxBeforeSplit);
-    if (willSplit) {
+    boolean willSplitByLetter = (splitOption == SplitOption.SplitByLetter)
+                                && (maxSplitLevels > 0)
+                                && (tags.size() > maxBeforeSplit);
+    if (willSplitByLetter) {
       mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
       catalogSize = 0;
     } else
@@ -96,7 +98,7 @@ public class TagListSubCatalog extends TagSubCatalog {
 
       // list the entries (or split them)
       List<Element> result;
-      if (willSplit) {
+      if (willSplitByLetter) {
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         logger.debug("calling getListOfTagsSplitByLetter");
         result = getListOfTagsSplitByLetter(breadcrumbs, mapOfTagsByLetter, guid, title, urn, pFilename);
@@ -174,26 +176,17 @@ public class TagListSubCatalog extends TagSubCatalog {
 
     List<Element> result = new LinkedList<Element>();
     SortedSet<String> letters = new TreeSet<String>(mapOfTagsByLetter.keySet());
+    assert baseFilename.endsWith(".xml");
     for (String letter : letters) {
-      // generate the letter file
-      String baseFilenameCleanedUp = SecureFileManager.INSTANCE.decode(baseFilename);
-      int pos = baseFilenameCleanedUp.indexOf(".xml");
-      if (pos > -1)
-        baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);
-      String letterFilename = baseFilenameCleanedUp + "_" + Helper.convertToHex(letter) + ".xml";
-      letterFilename = SecureFileManager.INSTANCE.encode(letterFilename);
-
-      String letterUrn = baseUrn + ":" + letter;
-
-      List<Tag> tagsInThisLetter = mapOfTagsByLetter.get(letter);
+      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename, letter);
+      String letterUrn = Helper.getSplitString(baseUrn,letter,":");
       String letterTitle;
       if (letter.equals("_"))
         letterTitle = Localization.Main.getText("splitByLetter.tag.other");
       else
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("tagword.title"),
                                                     letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
-
-      // try and list the items to make the summary
+      List<Tag> tagsInThisLetter = mapOfTagsByLetter.get(letter);
       String summary = Summarizer.INSTANCE.summarizeTags(tagsInThisLetter);
 
       Element element = null;
