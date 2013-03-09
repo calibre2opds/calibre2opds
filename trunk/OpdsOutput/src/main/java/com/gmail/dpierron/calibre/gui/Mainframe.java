@@ -408,6 +408,7 @@ public class Mainframe extends javax.swing.JFrame {
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
+    logger.info("Load Configuration Profile" + profileName);
     loadValues();
   }
 
@@ -4191,53 +4192,53 @@ public class Mainframe extends javax.swing.JFrame {
     txtThumbnailheight.setVisible(true);
   }//GEN-LAST:event_chkNoThumbnailGenerateActionPerformed
 
-  private void cmdWikipediaUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdWikipediaUrlResetActionPerformed
-    txtWikipediaUrl.setText(StanzaConstants.WIKIPEDIA_URL);
-  }//GEN-LAST:event_cmdWikipediaUrlResetActionPerformed
-
   private void cmdAmazonUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonUrlResetActionPerformed
-    txtAmazonAuthorUrl.setText(StanzaConstants.AMAZON_AUTHOR_URL);
+    txtAmazonAuthorUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_AUTHORS_URL_DEFAULT));
   }//GEN-LAST:event_cmdAmazonUrlResetActionPerformed
 
   private void cmdAmazonIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonIsbnResetActionPerformed
-    txtAmazonIsbnUrl.setText(StanzaConstants.AMAZON_ISBN_URL);
+    txtAmazonIsbnUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_ISBN_URL_DEFAULT));
   }//GEN-LAST:event_cmdAmazonIsbnResetActionPerformed
 
   private void cmdAmazonTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonTitleResetActionPerformed
-    txtAmazonTitleUrl.setText(StanzaConstants.AMAZON_TITLE_URL);
+    txtAmazonTitleUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_TITLE_URL_DEFAULT));
   }//GEN-LAST:event_cmdAmazonTitleResetActionPerformed
 
   private void cmdGoodreadAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadAuthorResetActionPerformed
-    txtGoodreadAuthorUrl.setText(StanzaConstants.GOODREAD_AUTHOR_URL);
+    txtGoodreadAuthorUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_AUTHOR_URL_DEFAULT));
   }//GEN-LAST:event_cmdGoodreadAuthorResetActionPerformed
 
   private void cmdGoodreadIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadIsbnResetActionPerformed
-    txtGoodreadIsbnUrl.setText(StanzaConstants.GOODREAD_ISBN_URL);
+    txtGoodreadIsbnUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_ISBN_URL_DEFAULT));
   }//GEN-LAST:event_cmdGoodreadIsbnResetActionPerformed
 
   private void cmdGoodreadTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadTitleResetActionPerformed
-    txtGoodreadTitleUrl.setText(StanzaConstants.GOODREAD_TITLE_URL);
+    txtGoodreadTitleUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_TITLE_URL_DEFAULT));
   }//GEN-LAST:event_cmdGoodreadTitleResetActionPerformed
 
   private void cmdGoodreadReviewResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadReviewResetActionPerformed
-    txtGoodreadReviewIsbnUrl.setText(StanzaConstants.GOODREAD_REVIEW_ISBN_URL);
+    txtGoodreadReviewIsbnUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_REVIEW_URL_DEFAULT));
   }//GEN-LAST:event_cmdGoodreadReviewResetActionPerformed
 
   private void cmdIsfdbAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdIsfdbAuthorResetActionPerformed
-    txtIsfdbAuthorUrl.setText(StanzaConstants.ISFDB_AUTHOR_URL);
+    txtIsfdbAuthorUrl.setText(Localization.Main.getText(StanzaConstants.ISFDB_AUTHOR_URL_DEFAULT));
   }//GEN-LAST:event_cmdIsfdbAuthorResetActionPerformed
 
   private void cmdLibrarythingAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingAuthorResetActionPerformed
-    txtLibrarythingAuthorUrl.setText(StanzaConstants.LIBRARYTHING_AUTHOR_URL);
+    txtLibrarythingAuthorUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_AUTHOR_URL_DEFAULT));
   }//GEN-LAST:event_cmdLibrarythingAuthorResetActionPerformed
 
   private void cmdLibrarythingIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingIsbnResetActionPerformed
-    txtLibrarythingIsbnUrl.setText(StanzaConstants.LIBRARYTHING_ISBN_URL);
+    txtLibrarythingIsbnUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_ISBN_URL_DEFAULT));
   }//GEN-LAST:event_cmdLibrarythingIsbnResetActionPerformed
 
   private void cmdLibrarythingTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingTitleResetActionPerformed
-    txtLibrarythingTitleUrl.setText(StanzaConstants.LIBRARYTHING_TITLE_URL);
+    txtLibrarythingTitleUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_TITLE_URL_DEFAULT));
   }//GEN-LAST:event_cmdLibrarythingTitleResetActionPerformed
+
+  private void cmdWikipediaUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdWikipediaUrlResetActionPerformed
+    txtWikipediaUrl.setText(Localization.Main.getText(StanzaConstants.WIKIPEDIA_URL_DEFAULT));
+  }//GEN-LAST:event_cmdWikipediaUrlResetActionPerformed
 
   private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
     checkHtmlDownloads();;

@@ -234,8 +234,10 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       SplitOption splitOption,
       boolean addTheSeriesWordToTheTitle) throws IOException {
     int catalogSize;
-    boolean willSplit = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (series.size() > maxBeforeSplit);
-    if (willSplit) {
+    boolean willSplitByLetter = (splitOption != SplitOption.Paginate)
+                                && (maxSplitLevels != 0)
+                                && (series.size() > maxBeforeSplit);
+    if (willSplitByLetter) {
       catalogSize = 0;
     } else
       catalogSize = series.size();

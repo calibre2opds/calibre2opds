@@ -77,20 +77,17 @@ public class StanzaConstants {
   public final static boolean IncludeModifiedInBookDetails = false;
   public final static boolean DisplayAuthorSortInBookDetails = false;
   public final static boolean DisplayTitleSortInBookDetails = false;
-  /* Book Links */
-  public final static String GOODREAD_ISBN_URL = "http://www.goodreads.com/book/isbn/{0}";
-  public final static String GOODREAD_REVIEW_ISBN_URL = "http://www.goodreads.com/review/isbn/{0}";
-  public final static String GOODREAD_TITLE_URL = "http://www.goodreads.com/book/title/{0}";
-  public final static String GOODREAD_AUTHOR_URL = "http://www.goodreads.com/book/author/{0}";
-  public final static String LIBRARYTHING_ISBN_URL = "http://www.librarything.com/isbn/{0}";
-  public final static String LIBRARYTHING_TITLE_URL = "http://www.librarything.com/title/{0}%20{1}";
-  public final static String LIBRARYTHING_AUTHOR_URL = "http://www.librarything.com/author/{0}";
-  public final static String AMAZON_ISBN_URL =
-      "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-isbn={0}";
-  public final static String AMAZON_TITLE_URL =
-      "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-title={0}&field-author={1}";
-  public final static String AMAZON_AUTHOR_URL =
-      "http://www.amazon.com/gp/search/ref=sr_adv_b/?search-alias=stripbooks&unfiltered=1&sort=relevanceexprank&field-author={0}";
-  public final static String ISFDB_AUTHOR_URL = "http://www.isfdb.org/cgi-bin/ea.cgi?{0}";
-  public final static String WIKIPEDIA_URL = "http://{0}.wikipedia.org/wiki/{1}";
+  /* Strings names for default URL's in Localization files */
+  public final static String AMAZON_AUTHORS_URL_DEFAULT = "config.AmazonAuthorUrl.default";
+  public final static String AMAZON_ISBN_URL_DEFAULT = "config.AmazonIsbnUrl.default";
+  public final static String AMAZON_TITLE_URL_DEFAULT = "config.AmazonTitleUrl.default";
+  public final static String GOODREADS_AUTHOR_URL_DEFAULT = "config.GoodreadAuthorUrl.default";
+  public final static String GOODREADS_ISBN_URL_DEFAULT = "config.GoodreadIsbnUrl.default";
+  public final static String GOODREADS_TITLE_URL_DEFAULT = "config.GoodreadTitleUrl.default";
+  public final static String GOODREADS_REVIEW_URL_DEFAULT = "config.GoodreadReviewIsbnUrl.default";
+  public final static String ISFDB_AUTHOR_URL_DEFAULT = "config.IsfdbAuthorUrl.default";
+  public final static String LIBRARYTHING_AUTHOR_URL_DEFAULT = "config.LibrarythingAuthorUrl.default";
+  public final static String LIBRARYTHING_ISBN_URL_DEFAULT = "config.LibrarythingIsbnUrl.default";
+  public final static String LIBRARYTHING_TITLE_URL_DEFAULT = "config.LibrarythingTitleUrl.default";
+  public final static String WIKIPEDIA_URL_DEFAULT = "config.WikipediaUrl.default";
 }

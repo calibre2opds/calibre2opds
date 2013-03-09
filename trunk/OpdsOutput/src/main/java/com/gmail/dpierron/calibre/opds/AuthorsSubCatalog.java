@@ -162,7 +162,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     for (Author author : authors) {                                                   // debug
       if (! author.getLastName().toUpperCase().equals(lastName)) {
         // As long as entries are not all the same, apply the split criteria
-        willSplitByLetter = (splitOption != SplitOption.Paginate) && (maxSplitLevels != 0) && (authors.size() > maxBeforeSplit);
+        willSplitByLetter = (splitOption != SplitOption.Paginate)
+                            && (maxSplitLevels != 0)
+                            && (authors.size() > maxBeforeSplit);
         break;
       }
     }
