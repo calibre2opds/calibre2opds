@@ -46,6 +46,7 @@ public class Mainframe extends javax.swing.JFrame {
   private final Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
   private String tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
   // Store this as we use it a lot and it should improve effeciency
+  // IMPORTANT:  We need to update this cached copy if the profile ever gets changed!
   private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
 
 
@@ -403,12 +404,14 @@ public class Mainframe extends javax.swing.JFrame {
    */
   private void setProfile(String profileName) {
     ConfigurationManager.INSTANCE.changeProfile(profileName);
+    // Changed profile - so need to update local cached copy as well!
+    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     if (currentProfile.isObsolete()) {
       currentProfile.reset();
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
-    logger.info("Load Configuration Profile" + profileName);
+    logger.info(Localization.Main.getText("info.loadProfile", profileName));
     loadValues();
   }
 
@@ -417,6 +420,8 @@ public class Mainframe extends javax.swing.JFrame {
     if ("default".equalsIgnoreCase(newProfileName))
       return;
     ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
+    // Changed profile - so need to update local cached copy pointer as well!
+    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     loadValues();
   }
 

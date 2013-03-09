@@ -34,7 +34,7 @@ del /q zia*
 
 echo Creating %ZIPFILE%
 
-"%ZIPPROG%"  "%ZIPFILE%" licence.txt   readme.txt   release.txt
+"%ZIPPROG%"  "%ZIPFILE%" licence.txt   readme.txt   release.txt install.sh install.cmd
 cd script
 "%ZIPPROG%"  "%ZIPFILE%" *
 cd ..
