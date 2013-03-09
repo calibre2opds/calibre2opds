@@ -54,7 +54,7 @@ public class Runner {
     Locale lc = Locale.getDefault();
     // System.out.println("System language: " + lc.getISO3Language());
     ConfigurationManager.addStartupLogMessage("\n");
-    ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****\n");
+    ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****\n\n");
     ConfigurationManager.addStartupLogMessage("System language: " + lc.getISO3Language());
     Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
     Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
