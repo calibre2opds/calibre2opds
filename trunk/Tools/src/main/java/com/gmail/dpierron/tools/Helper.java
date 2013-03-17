@@ -1153,6 +1153,10 @@ public class Helper {
    * As an optimisation to try and keep values start, it assumed that if the end of the
    * string passed in as the base corresponds to the start of the new encoded splitText
    * then it is only necessay to extend the name to make it unique by the difference.
+   * NOTE:  The above optimization does not cater for the special case of when we are
+   *        adding a page number to a split-by-letter where the letter is a number that
+   *        is the same as the page number.  This special case needs to be allowed for by
+   *        checking that we are not adding a value that is identical to that already there.
    *
    * @param baseString          The base string fromt he previous level
    * @param splitText           The text for this split level
@@ -1160,28 +1164,32 @@ public class Helper {
    * @return                    The link to this level for parent
    */
   public static String getSplitString (String baseString, String splitText, String splitSeparator) {
-    StringBuffer encodedSpltText = new StringBuffer();
-    encodedSpltText.append(splitSeparator);
+    StringBuffer encodedSplitText = new StringBuffer();
+    encodedSplitText.append(splitSeparator);
 
     // Get the encoded form of the spliText
     for (int x= 0; x < splitText.length(); x++) {
       char c = splitText.charAt(x);
       if (Character.isLetterOrDigit(c)) {
         // Alphanumerics are passed through unchanged
-        encodedSpltText.append(c);
+        encodedSplitText.append(c);
       } else {
         // Other characters are hex encoded
-        encodedSpltText.append(Integer.toHexString(c));
+        encodedSplitText.append(Integer.toHexString(c));
       }
     }
     // Now see if we only we need to extend the basename or add a new section
     int pos = baseString.lastIndexOf(splitSeparator);
     if (pos > 0) {
       String checkPart = baseString.substring(pos);
-      if (encodedSpltText.toString().startsWith(checkPart)) {
-        return baseString.substring(0,pos) + encodedSpltText.toString();
+      if (encodedSplitText.toString().startsWith(checkPart)) {
+        // We need to check for the special case of adding a numeric
+        // (page number) to a value that has been split by number.
+        if (!encodedSplitText.toString().equals(checkPart)) {
+           return baseString.substring(0,pos) + encodedSplitText.toString();
+        }
       }
     }
-    return baseString + encodedSpltText.toString();
+    return baseString + encodedSplitText.toString();
   }
 }

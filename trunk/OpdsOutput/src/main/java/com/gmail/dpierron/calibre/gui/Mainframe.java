@@ -588,12 +588,12 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogFolder.setText(currentProfile.getCatalogFolderName());
     txtCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
     lblCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
-    txtUrlBase.setText(currentProfile.getUrlBase());
+    txtUrlBooks.setText(currentProfile.getUrlBooks());
     // Temporary until we actually make use of this field
-    txtUrlBase.setEnabled(false);
-    lblUrlBase.setEnabled(false);
-    //txtUrlBase.setEnabled(!currentProfile.isUrlBaseReadOnly());
-    //lblUrlBase.setEnabled(!currentProfile.isUrlBaseReadOnly());
+    txtUrlBooks.setEnabled(false);
+    lblUrlBooks.setEnabled(false);
+    //txtUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
+    //lblUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
     txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
     lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
@@ -876,7 +876,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setReprocessEpubMetadata(chkReprocessEpubMetadata.isSelected());
     currentProfile.setWikipediaLanguage(txtWikilang.getText());
     currentProfile.setCatalogFolderName(txtCatalogFolder.getText());
-    currentProfile.setUrlBase(txtUrlBase.getText());
+    currentProfile.setUrlBooks(txtUrlBooks.getText());
     currentProfile.setCatalogTitle(txtCatalogTitle.getText());
     int i;
     i = getValue(txtThumbnailheight);
@@ -921,7 +921,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setOrderAllBooksBySeries(chkOrderAllBooksBySeries.isSelected());
     currentProfile.setSplitByAuthorInitialGoToBooks(chkSplitByAuthorInitialGoToBooks.isSelected());
     currentProfile.setCatalogFilter(txtCatalogFilter.getText());
-    
+
     // Catalog Structure
 
     currentProfile.setGenerateOpds(!chkNogenerateopds.isSelected());
@@ -955,7 +955,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setDisplayTitleSortInBookDetails(chkDisplayTitleSortInBookDetails.isSelected());
 
     // Advanced
-    
+
     currentProfile.setTagsToMakeDeep(txtTagsToMakeDeep.getText());
     currentProfile.setCoverResize(!chkNoCoverResize.isSelected());
     currentProfile.setThumbnailGenerate(!chkNoThumbnailGenerate.isSelected());
@@ -972,7 +972,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
 
     // External Links
-    
+
     currentProfile.setWikipediaUrl(txtWikipediaUrl.getText());
     currentProfile.setAmazonAuthorUrl(txtAmazonAuthorUrl.getText());
     currentProfile.setAmazonIsbnUrl(txtAmazonIsbnUrl.getText());
@@ -1054,9 +1054,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblCatalogFolder.setText(Localization.Main.getText("config.CatalogFolderName.label")); // NOI18N
     lblCatalogFolder.setToolTipText(Localization.Main.getText("config.CatalogFolderName.description")); // NOI18N
     txtCatalogFolder.setToolTipText(lblCatalogFolder.getToolTipText()); // NOI18N
-    lblUrlBase.setText(Localization.Main.getText("config.UrlBase.label")); // NOI18N
-    lblUrlBase.setToolTipText(Localization.Main.getText("config.UrlBase.description")); // NOI18N
-    txtUrlBase.setToolTipText(lblUrlBase.getToolTipText()); // NOI18N
+    lblUrlBooks.setText(Localization.Main.getText("config.UrlBooks.label")); // NOI18N
+    lblUrlBooks.setToolTipText(Localization.Main.getText("config.UrlBooks.description")); // NOI18N
+    txtUrlBooks.setToolTipText(lblUrlBooks.getToolTipText()); // NOI18N
     lblCatalogTitle.setText(Localization.Main.getText("config.CatalogTitle.label")); // NOI18N
     lblCatalogTitle.setToolTipText(Localization.Main.getText("config.CatalogTitle.description")); // NOI18N
     txtCatalogTitle.setToolTipText(lblCatalogTitle.getToolTipText()); // NOI18N
@@ -1473,8 +1473,8 @@ public class Mainframe extends javax.swing.JFrame {
         lblTargetFolder = new javax.swing.JLabel();
         txtTargetFolder = new javax.swing.JTextField();
         cmdSetTargetFolder = new javax.swing.JButton();
-        lblUrlBase = new javax.swing.JLabel();
-        txtUrlBase = new javax.swing.JTextField();
+        lblUrlBooks = new javax.swing.JLabel();
+        txtUrlBooks = new javax.swing.JTextField();
         lblCatalogFolder = new javax.swing.JLabel();
         txtCatalogFolder = new javax.swing.JTextField();
         lblCatalogTitle = new javax.swing.JLabel();
@@ -1692,9 +1692,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblDeviceDropbox.setIcon(new javax.swing.ImageIcon(getClass().getResource("/calibre-icon.gif"))); // NOI18N
         lblDeviceDropbox.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblDeviceDropboxMouseClicked(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            lblDeviceDropboxMouseClicked(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1704,9 +1704,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblDeviceNAS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nas.png"))); // NOI18N
         lblDeviceNAS.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblDeviceNASMouseClicked(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            lblDeviceNASMouseClicked(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1718,9 +1718,9 @@ public class Mainframe extends javax.swing.JFrame {
         lblDeviceNook.setMinimumSize(null);
         lblDeviceNook.setPreferredSize(null);
         lblDeviceNook.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblDeviceNookMouseClicked(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            lblDeviceNookMouseClicked(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -1755,9 +1755,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblDonate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/donate.gif"))); // NOI18N
         lblDonate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblDonateMouseClicked(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            lblDonateMouseClicked(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -1767,17 +1767,17 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMain.add(lblDonate, gridBagConstraints);
 
         pnlMainOptions.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                pnlMainOptionsComponentShown(evt);
-            }
+          public void componentShown(java.awt.event.ComponentEvent evt) {
+            pnlMainOptionsComponentShown(evt);
+          }
         });
         pnlMainOptions.setLayout(new java.awt.GridBagLayout());
 
         lblLang.setText("lblLang");
         lblLang.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            handleMouseClickOnLabel(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1786,17 +1786,17 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         pnlMainOptions.add(lblLang, gridBagConstraints);
 
-        cboLang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboLang.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         cboLang.setPreferredSize(new java.awt.Dimension(100, 20));
         cboLang.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboLangActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            cboLangActionPerformed(evt);
+          }
         });
         cboLang.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
-            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
-                cboLangVetoableChange(evt);
-            }
+          public void vetoableChange(java.beans.PropertyChangeEvent evt) throws java.beans.PropertyVetoException {
+            cboLangVetoableChange(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1809,9 +1809,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblDatabaseFolder.setText("lblDatabaseFolder");
         lblDatabaseFolder.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            handleMouseClickOnLabel(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1823,9 +1823,9 @@ public class Mainframe extends javax.swing.JFrame {
         txtDatabaseFolder.setText("txtDatabaseFolder");
         txtDatabaseFolder.setPreferredSize(new java.awt.Dimension(400, 20));
         txtDatabaseFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDatabaseFolderActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            txtDatabaseFolderActionPerformed(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1839,9 +1839,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         cmdSetDatabaseFolder.setText("...");
         cmdSetDatabaseFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetDatabaseFolderActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            cmdSetDatabaseFolderActionPerformed(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -1852,9 +1852,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblTargetFolder.setText("lblDatabaseFolder");
         lblTargetFolder.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            handleMouseClickOnLabel(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1866,9 +1866,9 @@ public class Mainframe extends javax.swing.JFrame {
         txtTargetFolder.setText("txtTargetFolder");
         txtTargetFolder.setPreferredSize(new java.awt.Dimension(400, 20));
         txtTargetFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTargetFolderActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            txtTargetFolderActionPerformed(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1882,9 +1882,9 @@ public class Mainframe extends javax.swing.JFrame {
 
         cmdSetTargetFolder.setText("...");
         cmdSetTargetFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetTargetFolderActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            cmdSetTargetFolderActionPerformed(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -1893,21 +1893,21 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(cmdSetTargetFolder, gridBagConstraints);
 
-        lblUrlBase.setText("lblUrlBase");
-        lblUrlBase.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
+        lblUrlBooks.setText("lblUrlBooks");
+        lblUrlBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            handleMouseClickOnLabel(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-        pnlMainOptions.add(lblUrlBase, gridBagConstraints);
+        pnlMainOptions.add(lblUrlBooks, gridBagConstraints);
 
-        txtUrlBase.setText("txtUrlBase");
-        txtUrlBase.setPreferredSize(new java.awt.Dimension(400, 20));
+        txtUrlBooks.setText("txtUrlBooks");
+        txtUrlBooks.setPreferredSize(new java.awt.Dimension(400, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -1916,7 +1916,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
-        pnlMainOptions.add(txtUrlBase, gridBagConstraints);
+        pnlMainOptions.add(txtUrlBooks, gridBagConstraints);
 
         lblCatalogFolder.setText("lblCatalogFolder");
         lblCatalogFolder.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -4566,7 +4566,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblTagsToMakeDeep;
     private javax.swing.JLabel lblTargetFolder;
     private javax.swing.JLabel lblThumbnailheight;
-    private javax.swing.JLabel lblUrlBase;
+    private javax.swing.JLabel lblUrlBooks;
     private javax.swing.JLabel lblWikilang;
     private javax.swing.JLabel lblWikipediaUrl;
     private javax.swing.JLabel lblZipTrookCatalog;
@@ -4636,7 +4636,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtTagsToMakeDeep;
     private javax.swing.JTextField txtTargetFolder;
     private javax.swing.JTextField txtThumbnailheight;
-    private javax.swing.JTextField txtUrlBase;
+    private javax.swing.JTextField txtUrlBooks;
     private javax.swing.JTextField txtWikilang;
     private javax.swing.JTextField txtWikipediaUrl;
     // End of variables declaration//GEN-END:variables

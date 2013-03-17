@@ -91,7 +91,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INDEXCOMMENTS = "IndexComments";
   private final static String PROPERTY_NAME_MAXKEYWORDS = "MaxKeywords";
   private final static String PROPERTY_NAME_INDEXFILTERALGORITHM = "IndexFilterAlgorithm";
-  private final static String PROPERTY_NAME_URLBASE = "UrlBase";
+  private final static String PROPERTY_NAME_URLBOOKS = "UrlBooks";
   private final static String PROPERTY_NAME_FEATUREDCATALOGTITLE = "FeaturedCatalogTitle";
   private final static String PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME = "FeaturedCatalogSavedSearchName";
   private final static String PROPERTY_NAME_CUSTOMCATALOGS = "CustomCatalogs";
@@ -1286,23 +1286,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXKEYWORDS);
   }
 
-  public boolean isUrlBaseReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_URLBASE);
+  public boolean isUrlBooksReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_URLBOOKS);
   }
 
-  public String getUrlBase() {
-    String s = getProperty(PROPERTY_NAME_URLBASE);
+  public String getUrlBooks() {
+    String s = getProperty(PROPERTY_NAME_URLBOOKS);
     if (s == null)
-      return defaults.getUrlBase();
+      return defaults.getUrlBooks();
     else
       return s;
   }
 
-  public void setUrlBase(String value) {
+  public void setUrlBooks(String value) {
     // correct the value if needed
     if (Helper.isNotNullOrEmpty(value) && value.charAt(value.length() - 1) != '/')
       value += "/";
-    setProperty(PROPERTY_NAME_URLBASE, value);
+    setProperty(PROPERTY_NAME_URLBOOKS, value);
   }
 
   public boolean isFeaturedCatalogSavedSearchNameReadOnly() {

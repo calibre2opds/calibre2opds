@@ -214,7 +214,7 @@ public enum FeedHelper {
     }
 
     // add a "start" link to the catalog main page
-    String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBase();
+    String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
     // root catalog link
     String startUrl;
     if (Helper.isNullOrEmpty(baseUrl))
