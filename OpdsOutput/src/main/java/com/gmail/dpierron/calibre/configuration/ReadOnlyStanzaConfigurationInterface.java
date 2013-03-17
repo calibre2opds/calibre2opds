@@ -112,7 +112,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public int getMaxMobileResolution();
 
-  public String getUrlBase();
+  public String getUrlBooks();
 
   /* Catalog Structure */
 

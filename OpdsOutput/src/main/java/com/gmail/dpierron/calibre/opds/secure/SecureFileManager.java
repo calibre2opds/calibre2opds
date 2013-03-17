@@ -251,9 +251,9 @@ public enum SecureFileManager {
   public String getSplitFilename (String baseFilename, String splitText) {
     String baseFilenameCleanedUp = decode(baseFilename);
     String fileExt = "";
-    int pos = baseFilenameCleanedUp.indexOf(".xml");                      // Cechk for presence of extension .xml
+    int pos = baseFilenameCleanedUp.indexOf(".xml");                      // Check for presence of extension .xml
     if (pos > -1) {                                                       // ... did we find it?
-      fileExt = baseFilenameCleanedUp.substring(pos);                   // save extension for later
+      fileExt = baseFilenameCleanedUp.substring(pos);                     // save extension for later
       baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);    // remove extension from cleaned up name
     }
     return encode(Helper.getSplitString(baseFilenameCleanedUp, splitText, "_")) + fileExt;

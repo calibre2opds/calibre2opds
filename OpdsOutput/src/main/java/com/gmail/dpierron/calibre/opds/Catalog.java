@@ -434,7 +434,7 @@ public class Catalog {
     CatalogContext.INSTANCE.initialize();
     CatalogContext.INSTANCE.setCallback(callback);
 
-    //                      PARAMTER VALIDATION PHASE
+    //                      PARAMETER VALIDATION PHASE
 
     // Do some sanity checks on the settings before starting the generation
     if (logger.isTraceEnabled())
@@ -1079,6 +1079,7 @@ public class Catalog {
               {
                 if (logger.isTraceEnabled())
                   logger.trace("deleting " + existingTargetFile.getPath());
+                callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
                 Helper.delete(existingTargetFile);
                 if (syncLog)
                   syncLogFile.printf("DELETED: %s\n", existingTargetFile);
@@ -1129,6 +1130,7 @@ public class Catalog {
           Helper.recursivelyZipFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), true, targetCatalogZipFile);
           // Now ensure that there is no unzipped catalog left behinf!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+          callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
           Helper.delete(targetCatalogFolder);
           break;
         }

@@ -127,7 +127,7 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setMaxMobileResolution(int value);
 
-  public void setUrlBase(String value);
+  public void setUrlBooks(String value);
 
   /* external links */
   public void setWikipediaUrl(String value);

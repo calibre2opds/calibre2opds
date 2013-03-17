@@ -288,8 +288,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.IndexFilterAlgorithm;
   }
 
-  public String getUrlBase() {
-    return StanzaConstants.UrlBase;
+  public String getUrlBooks() {
+    return StanzaConstants.UrlBooks;
   }
 
   public String getFeaturedCatalogTitle() {
