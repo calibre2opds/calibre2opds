@@ -56,7 +56,7 @@ public class DateRangeTest {
       fail("DateRange failed on SIXMONTHS");
 
     d = new GregorianCalendar();
-    d.add(Calendar.DAY_OF_MONTH, -360);
+    d.add(Calendar.DAY_OF_MONTH, -359);
 
     if (DateRange.YEAR != DateRange.valueOf(d.getTime()))
       fail("DateRange failed on YEAR");
