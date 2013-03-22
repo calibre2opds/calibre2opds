@@ -83,7 +83,12 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c20-125: Add Publishers section to generated catalog
     - #c2o-134: Wrong sorting of list of authors/title with accent
     - #c20-135: CALIBRE2OPDS_CONFIG Environment variable used incorrectly
+    - #c20-139: Include the .opf files when copying the library in "Publish" mode 
     - #c2o-141: The 'Open Log File' option does not work on Windows 8
+    - #c2o-143: Allow the book links to external sites to be localized 
+    - #c20-144: Remove redundant folder names in relative links 
+    - #c2o-145: Option to avoid splitting books by letter within a tag 
+    - #x2o-146: Improve Search facility for large libraries 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.
@@ -110,6 +115,7 @@ v3.2
     - New: #c2o-120: Remove option to Exit from the confirm dialog displayed after pressing Save
     - New: #c20-121: Add links to Localization and customization guides to Help menu
     - New: #c2o-122: Allow more control over contents of Book Details pages.
+    - Fix: #c2o-123: Not handling missing file
     - Fix: #c2o-128: Not Reading Ratings
     - Fix: #c2o-130: prc format crashed calibre2opds
     - Fix: #c2o-133: Add support for Kindle KF8 and AZW3 formats
