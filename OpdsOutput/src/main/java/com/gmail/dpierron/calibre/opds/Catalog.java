@@ -97,6 +97,8 @@ public class Catalog {
     // Sanity check on parameters
     // ITIMPI:  Would it better to throw an exception to ensure we fix this
     //          as I would have thought it indicates application logic fault?
+    //          As a compromise I have added an assert so it should be noticed when debugging!
+    assert (src != null) & (dst != null) : "Unexpected parameter to copy: src=" + src + ", dst=" +dst;
     if ((src == null) || (dst == null)) {
       if (src == null)
         logger.warn("syncFiles: Unexpected 'src' null parameter");
@@ -104,41 +106,56 @@ public class Catalog {
         logger.warn("syncFiles: Unexpected 'dst' null parameter");
       return;
     }
+    // Make sure we have CachedFile type objects to work with
+    // This can speed up some of the tests if it removes the
+    // need to do any actual disk I/O
+    CachedFile cf_src = CachedFileManager.INSTANCE.inCache(src);
+    CachedFile cf_dst = CachedFileManager.INSTANCE.inCache(dst);
 
     // Sanity check - we cannot copy a non-existent file
     // ITIMPI:  Would it better to throw an exception to ensure we fix this?
     //          However maybe it a valid check against file system having changed during run
-    if (!src.exists()) {
+    if (!cf_src.exists()) {
       // ITIMPI:
-      // The following code is to get around the fact that under certain conditions
-      // (as yet unclear) an exists()=false can incorrectly be cached for some
-      // image files generated during this run.  When the root cause is identified
-      // then this workaround can be removed.
+      // The following code is to get around the fact that if a user renames a book in
+      // Calibre while a generate is running then the book will be missing when we get
+      // around to trying to copy it.   We will silently ignore such cases although a wrning
+      // message is added to the log file.
+      //
+      // If the file that is missing is a .html or a .xml file then this is more serious as
+      // it suggest a file has gone missing that we created earlier in the generation process.
+      //
+      // There have also been some suggestions tha tthere might be a mismatch between the real
+      // state of the file and the cached state.  If so this is likely to be a program logic
+      // fault so we want to get details to help with diagnostics
+
       File f = new File(src.getAbsolutePath());
-      if (f.exists() == false) {
-        logger.warn("syncFiles: Unexpected missing file: " + src.getAbsolutePath());
+      if (f.exists() != false) {
+        logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
         return;
-      } else {
-        logger.debug("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
       }
+      // If we get here at least the cached state agrees with the real state!
+      // If it is amissing .xml or .html file then this is still a significant issue
+      if (cf_src.getName().endsWith(".xml") || cf_src.getName().endsWith(",html")) {
+        logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
+        return;
+      }
+      // If we get here then we assume it is the case where the user managed to rename a book
+      // while calibre2opds was running, so we simply log it has happened and otherwise ignore it.
+      logger.warn("syncFiles: Unexpected missing file: " + src.getAbsolutePath());
+      return;
     }
     // Sanity check - we cannot copy a file to itself
     // ITIMPI:  Easier to silently ignore such copies than include lots of
     //          logic according to mode to decide if a file is a copy candidate.
-    if (src.getAbsolutePath().equalsIgnoreCase(dst.getAbsolutePath())) {
+    if (cf_src.getAbsolutePath().equalsIgnoreCase(cf_dst.getAbsolutePath())) {
       // Lets add them to stats so we know it happens!
       copyToSelf++;
       if (syncFilesDetail && logger.isTraceEnabled())
         logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
       return;
     }
-
-
-    // Make sure we have CachedFile type objects to work with
-    // This can speed up some of the tests if it removes the
-    // need to do any actual disk I/O
-    CachedFile cf_src = CachedFileManager.INSTANCE.inCache(src);
-    CachedFile cf_dst = CachedFileManager.INSTANCE.inCache(dst);
+/*
     if (cf_src == null) {
       cf_src = new CachedFile(src.getPath());
       if (syncFilesDetail && logger.isTraceEnabled())
@@ -150,6 +167,7 @@ public class Catalog {
         logger.trace("syncFiles: Target not in cache: " + src.getPath());
       cf_dst.setTarget(true);
     }
+*/
 
     //-----------------------------------------------------------------------------
     // Directory Handling
@@ -220,9 +238,7 @@ public class Catalog {
         Helper.delete(file);
         if (syncLog)
           syncLogFile.printf("DELETED: %s\n", file.getAbsolutePath());
-        if (CachedFileManager.INSTANCE.inCache(file) != null) {
-          CachedFileManager.INSTANCE.removeCachedFile(file);
-        }
+        CachedFileManager.INSTANCE.removeCachedFile(file);
       }
       if (logger.isTraceEnabled())
         logger.trace("Directory " + src.getName() + " Processing completed");

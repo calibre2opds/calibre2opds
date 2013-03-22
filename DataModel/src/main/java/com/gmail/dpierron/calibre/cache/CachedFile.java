@@ -47,7 +47,7 @@ public class CachedFile extends File {
   /**
    * Clear all cached information.
    */
-  void clearCached() {
+  private void clearCached() {
     //        if (logCachedFile && logger.isTraceEnabled())
     //            logger.trace("reset to defaults");
     cachedFile = false;
@@ -125,7 +125,12 @@ public class CachedFile extends File {
     return exists;
   }
 
-
+  /**
+   * Check modified date of the cached file object
+   * Use cached value if known, otherwise get real value
+   *
+   * @return  last modified sate
+   */
   @Override
   public long lastModified() {
     checkCachedValues();
@@ -144,7 +149,12 @@ public class CachedFile extends File {
     return lastModified;
   }
 
-
+  /**
+   * Get the length of the file
+   * Use cached value if known, otherwise get real value and cache it
+   *
+   * @return  File length
+   */
   @Override
   public long length() {
     checkCachedValues();
@@ -257,7 +267,8 @@ public class CachedFile extends File {
 
 
   /**
-   * indicates that data is in cache
+   * indicates that data is from a cached object
+   * NOTE: Method only intended for use by CachedFileManager
    */
   public void setCached() {
     cachedFile = true;

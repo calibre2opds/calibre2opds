@@ -37,7 +37,7 @@ public enum CachedFileManager {
    * @param cf CachedFile object to check
    * @return null if not present, object otherwise
    */
-  CachedFile inCache(CachedFile cf) {
+  public CachedFile inCache(CachedFile cf) {
     CachedFile cf_result = cachedFilesMap.get(cf.getPath());
     if (logger.isTraceEnabled())
       logger.trace("inCache=" + (cf_result != null) + ": " + cf.getPath());
@@ -65,7 +65,7 @@ public enum CachedFileManager {
    * @param cf CachedFile object representing file
    * @return A CachedFile object for the given path
    */
-  CachedFile addCachedFile(CachedFile cf) {
+  public CachedFile addCachedFile(CachedFile cf) {
     String path = cf.getPath();
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
@@ -109,7 +109,6 @@ public enum CachedFileManager {
     return addCachedFile(new File(parent, child));
   }
 
-
   /**
    * Remove the entry from the cache (if it is present).
    *
@@ -125,6 +124,15 @@ public enum CachedFileManager {
       if (logger.isTraceEnabled())
         logger.trace("Remove CachedFile (not found): " + path);
     }
+  }
+
+  /**
+   * Remove the entry from the cache (if it is present).
+   *
+   * @param cf CachedFile object representing file
+   */
+  public void removeCachedFile(CachedFile cf) {
+    removeCachedFile((File)cf);
   }
 
 
@@ -320,6 +328,7 @@ public enum CachedFileManager {
     Helper.delete(cacheFile);
     if (logger.isDebugEnabled())
       logger.debug("Deleted CRC cache file " + cacheFile.getPath());
+    cacheFile = null;
   }
 
 }
