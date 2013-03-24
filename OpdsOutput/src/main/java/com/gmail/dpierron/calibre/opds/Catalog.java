@@ -111,7 +111,17 @@ public class Catalog {
     // need to do any actual disk I/O
     CachedFile cf_src = CachedFileManager.INSTANCE.inCache(src);
     CachedFile cf_dst = CachedFileManager.INSTANCE.inCache(dst);
-
+    if (cf_src == null) {
+      cf_src = new CachedFile(src.getPath());
+      if (syncFilesDetail && logger.isTraceEnabled())
+        logger.trace("syncFiles: Source not in cache: " + src.getPath());
+    }
+    if (cf_dst == null) {
+      cf_dst = CachedFileManager.INSTANCE.addCachedFile(dst);
+      if (syncFilesDetail && logger.isTraceEnabled())
+        logger.trace("syncFiles: Target not in cache: " + src.getPath());
+      cf_dst.setTarget(true);
+    }
     // Sanity check - we cannot copy a non-existent file
     // ITIMPI:  Would it better to throw an exception to ensure we fix this?
     //          However maybe it a valid check against file system having changed during run
