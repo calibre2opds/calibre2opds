@@ -267,8 +267,9 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void debugShowFolder(File file) {
     Frame parent = new Frame();            // Dummy ever shown
-    FileDialog fd = new FileDialog(parent, file.getPath(), FileDialog.LOAD);
-    fd.setDirectory(file.getPath());
+    FileDialog fd = new FileDialog(parent, file.getPath());
+    fd.setDirectory(file.getPath() +"\\");
+    fd.setMode(FileDialog.LOAD);
     fd.setVisible(true);
     // Do nothing with result
     parent.dispose();

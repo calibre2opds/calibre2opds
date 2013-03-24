@@ -14,6 +14,8 @@ public abstract class OS {
 
     WindowsXP("Windows XP", OsFamily.Windows),
     Windows7("Windows 7", OsFamily.Windows),
+    Windows8("Windows 8", OsFamily.Windows),
+    Windows("Windows", OsFamily.Windows),               // Catch-all for other Windows variants
     Linux("Linux", OsFamily.Linux),
     MacOsX("Mac OS X", OsFamily.MacOsX);
 
@@ -43,7 +45,7 @@ public abstract class OS {
   public static BaseOS factory(String osTypeName) {
     OsFamily family = null;
     for (OsType osType : OsType.values()) {
-      if (osType.getTypeName().equalsIgnoreCase(osTypeName)) {
+      if   (osTypeName.toUpperCase().startsWith(osType.getTypeName().toUpperCase())) {
         family = osType.getFamily();
         break;
       }
