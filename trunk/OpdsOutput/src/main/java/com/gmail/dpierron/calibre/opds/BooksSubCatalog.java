@@ -940,7 +940,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled())
             logger.trace("addNavigationLinks: add the series link");
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + ".xml")),
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + "_1.xml")),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
       }
@@ -954,7 +954,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           for (Author author : book.getAuthors()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
             entry.addContent(FeedHelper.INSTANCE
-                .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + ".xml")),
+                .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + "_1.xml")),
                     Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
           }
         }
@@ -970,7 +970,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
             if (nbBooks > 1) {
               entry.addContent(FeedHelper.INSTANCE
-                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + ".xml")),
+                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + "_1.xml")),
                       Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks), tag.getName())));
             }
           }
@@ -984,7 +984,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
         if (nbBooks > 1) {
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + ".xml")),
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + "_1.xml")),
               Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks),
                   LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
@@ -1002,7 +1002,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
 
     String url = "";
-    return Localization.Main.getText(url, args);
+    return Localization.Main.getText(url, (java.lang.Object[])args);
   }
 
   /**
