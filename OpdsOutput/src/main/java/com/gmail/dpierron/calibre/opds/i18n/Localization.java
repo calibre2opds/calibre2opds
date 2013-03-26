@@ -78,12 +78,13 @@ public enum Localization {
   }
   /**
    * Constructs a new {@link Localization}
+   * We initally load the English localization as we always want that
    *
    * @param localizationBundleName the properties files to load
    */
   private Localization(String localizationBundleName) {
     this.localizationBundleName = localizationBundleName;
-    reloadLocalizations();
+    reloadLocalizations("en");
   }
 
   // Save results to improve efficency on subsequent calls
