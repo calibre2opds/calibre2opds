@@ -143,7 +143,7 @@ public enum ConfigurationManager {
     // redirect is set, try the new home folder
     if (Helper.isNotNullOrEmpty(redirectToNewHome)) {
       configurationFolder = redirectToNewHome;
-      addStartupLogMessage("Default Configuration folder home redirected to " + redirectToNewHome.getPath());
+      addStartupLogMessage(Localization.Main.getText("startup.newhome", redirectToNewHome.getPath()));
       // addStartupLogMessage(Localization.Main.getText("startup.newhome", redirectToNewHome.getPath()));
     }
 
@@ -151,7 +151,7 @@ public enum ConfigurationManager {
     if (configurationFolder != null && configurationFolder.exists()) {
       File redirect = new File(configurationFolder, ".redirect");
       if (redirect.exists()) {
-        addStartupLogMessage(".redirect file found in " + configurationFolder.getPath());
+        addStartupLogMessage(Localization.Main.getText("startup.redirectfound", configurationFolder.getPath()));
         try {
           BufferedReader fr = null;
           try {
@@ -159,11 +159,11 @@ public enum ConfigurationManager {
             String newHomeFileName = fr.readLine();
             File newHome = new File(newHomeFileName);
             if (! newHome.exists()) {
-              addStartupLogMessage("... unable to find redirect folder " + newHome.getPath());
-              addStartupLogMessage("... so redirect abandoned");
+              addStartupLogMessage(Localization.Main.getText("startup.redirectnotfound", newHome.getPath()));
+              addStartupLogMessage(Localization.Main.getText("startup.redirectabandoned"));
             } else {
               // log4j is not yet initialized
-              addStartupLogMessage("redirecting home folder to " + newHome.getAbsolutePath());
+              addStartupLogMessage(Localization.Main.getText("startup.redirecting",newHome.getAbsolutePath()));
               configurationFolder = getDefaultConfigurationDirectory(newHome);
               return configurationFolder = getDefaultConfigurationDirectory();
             }
@@ -172,12 +172,12 @@ public enum ConfigurationManager {
               fr.close();
           }
         } catch (IOException e) {
-          addStartupLogMessage("... failure reading .redirect file ");
-          addStartupLogMessage("... so redirect abandoned");
+          addStartupLogMessage(Localization.Main.getText("startup.redirectreadfail"));
+          addStartupLogMessage(Localization.Main.getText("startup.redirectabandoned"));
         }
       }
       if (redirectToNewHome == null)
-        addStartupLogMessage("Using Configuration folder: " + configurationFolder);
+        addStartupLogMessage(Localization.Main.getText("startup.configusing", configurationFolder));
       return configurationFolder;
     }
 
@@ -189,7 +189,7 @@ public enum ConfigurationManager {
       configurationFolder = new File(configDirectory);
       ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=");
       if (! configurationFolder.exists()) {
-        ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
+        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
         configurationFolder = null;  
       }
     }
@@ -199,9 +199,11 @@ public enum ConfigurationManager {
       String userHomePath = System.getProperty("user.home");
       if (Helper.isNotNullOrEmpty(userHomePath)) {
         configurationFolder = new File(userHomePath);
-        ConfigurationManager.addStartupLogMessage("Try Configuration folder from user home: " + configurationFolder);
-        if (! configurationFolder.exists()) {
-          ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
+        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.folderuserhome", configurationFolder));
+        if (configurationFolder.exists()) {
+          configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
+        } else {
+          ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
           configurationFolder = null;
         }
       }
@@ -210,9 +212,11 @@ public enum ConfigurationManager {
     if (configurationFolder == null || !configurationFolder.exists()) {
       // try with tilde
       configurationFolder = new File("~");
-      ConfigurationManager.addStartupLogMessage("Try Configuration folder from tilde: " + configurationFolder);
-      if (! configurationFolder.exists()) {
-        ConfigurationManager.addStartupLogMessage("... but specified folder does not exist");
+      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldertilde", configurationFolder));
+      if (configurationFolder.exists()) {
+        configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
+      } else {
+        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
         configurationFolder = null;
       }
     }
@@ -220,26 +224,27 @@ public enum ConfigurationManager {
     if (configurationFolder == null || !configurationFolder.exists()) {
       // hopeless, try and find out where the JAR was stored
       configurationFolder = getInstallDirectory();
-      ConfigurationManager.addStartupLogMessage("Try Configuration folder from .jar location: " + configurationFolder);
-      if (! configurationFolder.exists()) {
-        // ITIMPI:   Is this condition really possible!
-        ConfigurationManager.addStartupLogMessage("... but specified folder dowes not exist");
+      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.folderjar", configurationFolder));
+      if (configurationFolder.exists()) {
+        configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
+      } else {
+        // ITIMPI:   Is this condition really possible as surely the InstallDirectory exists!!
+        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
         configurationFolder = null;
       }
     }
 
     if (configurationFolder == null) {
-      ConfigurationManager.addStartupLogMessage("ERROR: failed to find a suitable configuration folder");
+      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotfound"));
       ConfigurationManager.addStartupLogMessage("Exit(-1)");
       System.exit(-1);
     } else {
-      configurationFolder = new File(configurationFolder, CONFIGURATION_FOLDER);
-      if (!configurationFolder.exists()) {
+      if (! configurationFolder.exists()) {
         configurationFolder.mkdirs();
-        ConfigurationManager.addStartupLogMessage("Default Configuration folder created: " + configurationFolder.getPath());
+        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldercreated", configurationFolder.getPath()));
+        return configurationFolder;
       }
     }
-
     return getDefaultConfigurationDirectory();    // Recurse to allow for re-direction
   }
 

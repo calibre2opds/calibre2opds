@@ -50,6 +50,8 @@ public class Runner {
    * @param startGui
    */
   public static void run(String[] args, boolean startGui) {
+    // Initalize Localization object to English
+    Localization.Main.reloadLocalizations("en");
     // Start by setting locale to be the same as the system locale (or english if it is not one we support)
     Locale lc = Locale.getDefault();
     // System.out.println("System language: " + lc.getISO3Language());
@@ -71,10 +73,10 @@ public class Runner {
       if (args.length == 1) {
         String profileName = args[0];
         if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))  {
-          logger.info("Switching to profile: " + profileName);
+          logger.info(Localization.Main.getText("startup.profileswitch", profileName));
           ConfigurationManager.INSTANCE.changeProfile(profileName);
         } else {
-          logger.info("Cannot find profile: " + profileName);
+          logger.info(Localization.Main.getText("startup.profillemissing", profileName));
         }
       }
       runner.run(startGui);
