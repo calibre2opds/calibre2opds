@@ -56,7 +56,6 @@ Nore detail can be found in many cases on the calibre2opds Issue register
 here is not a committment that it will appear, but merely that it is under consideration.
 User are encouraged to add comments to the relevant issues in the Issue Register on their views.
    -  Improve/Extend localizations.
-   -  #c2o-18: Re-organise GUI fields amongst the various tabs
    -  #c2o-26: Introduce a carousel mode for the book pages
    -  #c2o-29: Generate a recent books RSS-compatible catalog
    -  #c2o-38: Is it possible to generate a flat display for catalogues
@@ -81,7 +80,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-118: Provide more control over display and sorting of Authors
     - #c2o-119: Provide more control over display and sorting of Series
     - #c20-125: Add Publishers section to generated catalog
-    - #c2o-134: Wrong sorting of list of authors/title with accent
     - #c20-139: Include the .opf files when copying the library in "Publish" mode
     - #c2o-143: Allow the book links to external sites to be localized
     - #c20-144: Remove redundant folder names in relative links 
@@ -100,6 +98,8 @@ that have been recorded in the Issue tracker.
 v3.2
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
               Using a wiki also allows for users to update it directly which should help with improving the documentation.
+   -  Fix: #c2o-18: Re-organise GUI fields amongst the various tabs
+                    (in particular move Featured Books fields to Custom Catalogs tab)
     - Fix: #c2o-85:  Sorting in the All Books catalog should ignore case
     - Fix: #c2o-91:  Setting catalog folder to  root (/) is not treated as an error
     - New: #c2o-97:  Context sensitive help on configuration tabs
@@ -117,6 +117,7 @@ v3.2
     - Fix: #c2o-128: Not Reading Ratings
     - Fix: #c2o-130: prc format crashed calibre2opds
     - Fix: #c2o-133: Add support for Kindle KF8 and AZW3 formats
+    - Fix: #c2o-134: Wrong sorting of list of authors/title with accent
     - Fix: #c20-135: CALIBRE2OPDS_CONFIG Environment variable used incorrectly
     - Fix: #c2o-140: Help URL's do not point to latest documentation
     - Fix: #c2o-141: The 'Open Log File' option does not work on Windows 8

@@ -187,7 +187,7 @@ public enum ConfigurationManager {
     String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
     if (Helper.isNotNullOrEmpty(configDirectory)) {
       configurationFolder = new File(configDirectory);
-      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=");
+      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=" + configDirectory);
       if (! configurationFolder.exists()) {
         ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
         configurationFolder = null;  
