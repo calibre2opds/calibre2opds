@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.Icons;
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
@@ -13,10 +14,12 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 
 public abstract class TagSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(TagSubCatalog.class);
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
 
   private List<Tag> tags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
@@ -64,9 +67,9 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       Collections.sort(tags, new Comparator<Tag>() {
 
         public int compare(Tag o1, Tag o2) {
-          String title1 = (o1 == null ? "" : o1.getName());
-          String title2 = (o2 == null ? "" : o2.getName());
-          return title1.compareTo(title2);
+          String title1 = (o1 == null ? "" : o1.getName().toUpperCase());
+          String title2 = (o2 == null ? "" : o2.getName().toUpperCase());
+          return collator.compare(title1, title2);
         }
       });
     }

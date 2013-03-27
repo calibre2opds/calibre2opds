@@ -11,6 +11,7 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
@@ -26,6 +27,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -33,7 +35,7 @@ import java.util.*;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
-
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
   // This is the date format used within the book details.
   // At the moment it is either a fulld ate or jsut the year
   // If users ask for more flexibility the coniguration options can be re-visited.
@@ -87,9 +89,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         //          If so then following tests for null can be removed to improve efficiency
         public int compare(Book o1, Book o2) {
           assert (o1 != null) && (o2 != null);
-          String title1 = (o1 == null ? "" : o1.getTitle_Sort());
-          String title2 = (o2 == null ? "" : o2.getTitle_Sort());
-          return title1.compareTo(title2);
+          String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
+          String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
+          return collator.compare(title1,title2);
         }
       });
     } else {
@@ -97,9 +99,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
         public int compare(Book o1, Book o2) {
           assert (o1 != null) && (o2 != null);
-          String title1 = (o1 == null ? "" : o1.getTitle());
-          String title2 = (o2 == null ? "" : o2.getTitle());
-          return title1.compareToIgnoreCase(title2);
+          String title1 = (o1 == null ? "" : o1.getTitle().toUpperCase());
+          String title2 = (o2 == null ? "" : o2.getTitle().toUpperCase());
+          return collator.compare(title1,title2);
         }
       });
 
@@ -144,13 +146,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (series2 == null) {
             // both series are null, we need to compare the book titles (as always...)
             if (currentProfile.getSortUsingTitle()) {
-              String title1 = (o1 == null ? "" : o1.getTitle());
-              String title2 = (o2 == null ? "" : o2.getTitle());
-              return title1.compareTo(title2);
+              String title1 = (o1 == null ? "" : o1.getTitle().toUpperCase());
+              String title2 = (o2 == null ? "" : o2.getTitle().toUpperCase());
+              return collator.compare(title1,title2);
             } else {
-              String title1 = (o1 == null ? "" : o1.getTitle_Sort());
-              String title2 = (o2 == null ? "" : o2.getTitle_Sort());
-              return title1.compareToIgnoreCase(title2);
+              String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
+              String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
+              return collator.compare(title1,title2);
             }
           } else {
             // only series2 set  so assume series2 sorts greater than series1
@@ -174,7 +176,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             return -1;
         } else {
           // different series, we need to compare the series title
-          return series1.getName().toUpperCase().compareTo(series2.getName().toUpperCase());
+          return collator.compare(series1.getName().toUpperCase(), series2.getName().toUpperCase());
         }
       }
     });
