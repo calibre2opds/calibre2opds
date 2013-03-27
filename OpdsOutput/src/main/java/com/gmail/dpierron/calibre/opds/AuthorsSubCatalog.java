@@ -8,6 +8,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.Icons;
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Author;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
@@ -24,10 +25,12 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 
 public class AuthorsSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(AuthorsSubCatalog.class);
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
   private List<Author> authors;
   private Map<Author, List<Book>> mapOfBooksByAuthor;
   private Map<Author, List<Series>> mapOfSeriesByAuthor;
@@ -56,18 +59,18 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       Collections.sort(authors, new Comparator<Author>() {
 
         public int compare(Author o1, Author o2) {
-          String name1 = (o1 == null ? "" : o1.getName());
-          String name2 = (o2 == null ? "" : o2.getName());
-          return name1.compareToIgnoreCase(name2);
+          String name1 = (o1 == null ? "" : o1.getName().toUpperCase());
+          String name2 = (o2 == null ? "" : o2.getName().toUpperCase());
+          return collator.compare(name1,name2);
         }
       });
       } else {
         Collections.sort(authors, new Comparator<Author>() {
 
           public int compare(Author o1, Author o2) {
-            String name1 = (o1 == null ? "" : o1.getNameForSort());
-            String name2 = (o2 == null ? "" : o2.getNameForSort());
-            return name1.compareToIgnoreCase(name2);
+            String name1 = (o1 == null ? "" : o1.getNameForSort().toUpperCase());
+            String name2 = (o2 == null ? "" : o2.getNameForSort().toUpperCase());
+            return collator.compare(name1, name2);
           }
         });
       }

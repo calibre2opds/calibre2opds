@@ -8,6 +8,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.Icons;
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
@@ -21,10 +22,12 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 
 public class SeriesSubCatalog extends BooksSubCatalog {
-  private Logger logger = Logger.getLogger(SeriesSubCatalog.class);
+  private final static Logger logger = Logger.getLogger(SeriesSubCatalog.class);
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
   private List<Series> series;
   private Map<Series, List<Book>> mapOfBooksBySerie;
 
@@ -60,9 +63,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       Collections.sort(series, new Comparator<Series>() {
 
         public int compare(Series o1, Series o2) {
-          String title1 = (o1 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o1.getName()));
-          String title2 = (o2 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o2.getName()));
-          return title1.compareTo(title2);
+          String title1 = (o1 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o1.getName().toUpperCase()));
+          String title2 = (o2 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o2.getName().toUpperCase()));
+          return collator.compare(title1, title2);
         }
       });
 

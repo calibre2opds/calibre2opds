@@ -50,20 +50,20 @@ public class Runner {
    * @param startGui
    */
   public static void run(String[] args, boolean startGui) {
-    // Initalize Localization object to English
-    Localization.Main.reloadLocalizations("en");
-    // Start by setting locale to be the same as the system locale (or english if it is not one we support)
     Locale lc = Locale.getDefault();
-    // System.out.println("System language: " + lc.getISO3Language());
-    ConfigurationManager.addStartupLogMessage("\n");
-    ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****\n\n");
-    ConfigurationManager.addStartupLogMessage("System language: " + lc.getISO3Language());
+    Localization.Main.reloadLocalizations("en");      // Initalize Localization object to English
     Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
     Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
     Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
 
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
+    ConfigurationManager.addStartupLogMessage("");
+    ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
+    ConfigurationManager.addStartupLogMessage("");
+    ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")");
+    ConfigurationManager.addStartupLogMessage("LANG: " + lc.getISO3Language());
+    ConfigurationManager.addStartupLogMessage("JAVA: " + System.getProperty("java.specification.version") + " (" + System.getProperty("java.version") + ")");
     ConfigurationManager.addStartupLogMessage("");
 
     Runner runner = new Runner();
