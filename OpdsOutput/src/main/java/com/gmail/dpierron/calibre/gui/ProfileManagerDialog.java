@@ -30,6 +30,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
   public ProfileManagerDialog(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
+    translateTexts();
   }
 
   private void loadProfiles() {
@@ -81,6 +82,14 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
     loadProfiles();
   }
 
+  /**
+   * Apply localization to this dialog
+   */
+  private void translateTexts() {
+    cmdNew.setText(Localization.Main.getText("gui.profile.new"));
+    cmdRename.setText(Localization.Main.getText("gui.profile.rename"));
+    cmdDelete.setText((Localization.Main.getText("gui.profile.delete")));
+  }
   /**
    * This method is called from within the constructor to
    * initialize the form.
