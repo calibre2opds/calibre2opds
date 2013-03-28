@@ -106,8 +106,9 @@ public class TagListSubCatalog extends TagSubCatalog {
         logger.debug("no split by letter");
         result = new LinkedList<Element>();
         for (int i = from; i < tags.size(); i++) {
-          if ((i - from) >= maxBeforePaginate) {
-            Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename, splitOption).getFirstElement();
+          if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+            Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename,
+                                             splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {

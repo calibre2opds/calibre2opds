@@ -194,9 +194,11 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       // list the series list
       result = new LinkedList<Element>();
       for (int i = from; i < series.size(); i++) {
-        if ((i - from) >= maxBeforePaginate) {
+        if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           Element nextLink =
-              getListOfSeries(pBreadcrumbs, series, i, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle).getFirstElement();
+              getListOfSeries(pBreadcrumbs, series, i, title, summary, urn, pFilename,
+                              splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption,
+                              addTheSeriesWordToTheTitle).getFirstElement();
           result.add(0, nextLink);
           break;
         } else {

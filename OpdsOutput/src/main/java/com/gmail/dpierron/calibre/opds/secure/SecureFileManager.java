@@ -249,6 +249,8 @@ public enum SecureFileManager {
    * @return
    */
   public String getSplitFilename (String baseFilename, String splitText) {
+    assert baseFilename != null : "getSplitFileName: baseFilename=null";
+    assert splitText != null : "getSplitFilename: splitText=null";
     String baseFilenameCleanedUp = decode(baseFilename);
     String fileExt = "";
     int pos = baseFilenameCleanedUp.indexOf(".xml");                      // Check for presence of extension .xml
