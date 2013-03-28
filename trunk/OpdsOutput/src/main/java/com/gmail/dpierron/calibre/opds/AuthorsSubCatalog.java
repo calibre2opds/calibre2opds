@@ -201,8 +201,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         logger.debug("NOT splitting by letter");
         result = new LinkedList<Element>();
         for (int i = from; i < authors.size(); i++) {
-          if ((i - from) >= maxBeforePaginate) {
-            Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename, splitOption).getFirstElement();
+          if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+            Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename,
+                                                splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
             result.add(0, nextLink);
             break;
           } else {
