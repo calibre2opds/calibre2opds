@@ -104,6 +104,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS = "IncludeRatingInBookDetails";
   private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
   private final static String PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS = "IncludePublisherInBookDetails";
   private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
@@ -1504,6 +1505,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
     if (b == null)
       return defaults.getIncludeSeriesInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeRatingInBookDetails(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS, value);
+  }
+
+  public boolean isIncludeRatingInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS);
+  }
+
+  public boolean getIncludeRatingInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS);
+    if (b == null)
+      return defaults.getIncludeRatingInBookDetails();
     else
       return b.booleanValue();
   }

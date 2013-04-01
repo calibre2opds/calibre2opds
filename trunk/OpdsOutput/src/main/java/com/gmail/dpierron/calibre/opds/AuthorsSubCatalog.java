@@ -45,37 +45,33 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   List<Author> getAuthors() {
-    if (authors == null) {
-      authors = new LinkedList<Author>();
-      for (Book book : getBooks()) {
-        for (Author author : book.getAuthors()) {
-          if (!authors.contains(author))
-            authors.add(author);
-        }
-      }
-      // sort the authors by name
-      // We can use configuration parameters to sort by either auth_sort or author
-      if (currentProfile.getSortUsingAuthor()) {
-      Collections.sort(authors, new Comparator<Author>() {
-
-        public int compare(Author o1, Author o2) {
-          String name1 = (o1 == null ? "" : o1.getName().toUpperCase());
-          String name2 = (o2 == null ? "" : o2.getName().toUpperCase());
-          return collator.compare(name1,name2);
-        }
-      });
-      } else {
-        Collections.sort(authors, new Comparator<Author>() {
-
-          public int compare(Author o1, Author o2) {
-            String name1 = (o1 == null ? "" : o1.getNameForSort().toUpperCase());
-            String name2 = (o2 == null ? "" : o2.getNameForSort().toUpperCase());
-            return collator.compare(name1, name2);
-          }
-        });
-      }
-
+    if (authors != null) {
+      return authors;
     }
+    authors = new LinkedList<Author>();
+    for (Book book : getBooks()) {
+      for (Author author : book.getAuthors()) {
+        if (!authors.contains(author))
+          authors.add(author);
+      }
+    }
+    // sort the authors by name
+    // We can use configuration parameters to sort by either auth_sort or author
+    Collections.sort(authors, new Comparator<Author>() {
+      public int compare(Author o1, Author o2) {
+        String name1;
+        String name2;
+        if (currentProfile.getSortUsingAuthor()) {
+          name1 = (o1 == null ? "" : o1.getName().toUpperCase());
+          name2 = (o2 == null ? "" : o2.getName().toUpperCase());
+          return collator.compare(name1,name2);
+        } else {
+          name1 = (o1 == null ? "" : o1.getNameForSort().toUpperCase());
+          name2 = (o2 == null ? "" : o2.getNameForSort().toUpperCase());
+        }
+        return collator.compare(name1, name2);
+      }
+    });
     return authors;
   }
 
@@ -179,7 +175,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
-    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename, Integer.toString(pageNumber));
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename, Constants.PAGE_DELIM + Integer.toString(pageNumber));
     logger.debug("generating " + filename);
     filename = SecureFileManager.INSTANCE.encode(filename);
 

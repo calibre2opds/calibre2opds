@@ -81,31 +81,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param books
    */
   void sortBooksByTitle(List<Book> books) {
-    if (currentProfile.getSortUsingTitle())
-    {
-      Collections.sort(books, new Comparator<Book>() {
-
-        // ITIMPI:  I would have thought that neither o1 or o2 can be null?
-        //          If so then following tests for null can be removed to improve efficiency
-        public int compare(Book o1, Book o2) {
-          assert (o1 != null) && (o2 != null);
-          String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
-          String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
-          return collator.compare(title1,title2);
+    Collections.sort(books, new Comparator<Book>() {
+      public int compare(Book o1, Book o2) {
+        if (currentProfile.getSortUsingTitle())  {
+          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
+        } else {
+          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
         }
-      });
-    } else {
-      Collections.sort(books, new Comparator<Book>() {
-
-        public int compare(Book o1, Book o2) {
-          assert (o1 != null) && (o2 != null);
-          String title1 = (o1 == null ? "" : o1.getTitle().toUpperCase());
-          String title2 = (o2 == null ? "" : o2.getTitle().toUpperCase());
-          return collator.compare(title1,title2);
-        }
-      });
-
-    }
+      }
+    });
   }
 
   /**
@@ -120,64 +104,46 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
+      assert (o1 != null) && (o2 != null);
+      Series series1 = o1.getSeries();
+      Series series2 = o2.getSeries();
 
-        // ITIMPI:  I would have thought that neither o1 or o2 can be null?
-        //          If so then following tests for null can be removed to slightly improve efficiency
-        assert (o1 != null) && (o2 != null);
-
-        if (o1 == null) {
-          if (o2 == null)
-            return 0;
-          else
-            return 1;
-        }
-
-        if (o2 == null) {
-          if (o1 == null)
-            return 0;
-          else
-            return -1;
-        }
-
-        Series series1 = o1.getSeries();
-        Series series2 = o2.getSeries();
-
-        if (series1 == null) {
-          if (series2 == null) {
-            // both series are null, we need to compare the book titles (as always...)
-            if (currentProfile.getSortUsingTitle()) {
-              String title1 = (o1 == null ? "" : o1.getTitle().toUpperCase());
-              String title2 = (o2 == null ? "" : o2.getTitle().toUpperCase());
-              return collator.compare(title1,title2);
-            } else {
-              String title1 = (o1 == null ? "" : o1.getTitle_Sort().toUpperCase());
-              String title2 = (o2 == null ? "" : o2.getTitle_Sort().toUpperCase());
-              return collator.compare(title1,title2);
-            }
+      if (series1 == null) {
+        if (series2 == null) {
+          // both series are null, we need to compare the book titles (as always...)
+          String title1;
+          String title2;
+          if (currentProfile.getSortUsingTitle()) {
+            title1 = (o1 == null ? "" : o1.getTitle());
+            title2 = (o2 == null ? "" : o2.getTitle());
           } else {
-            // only series2 set  so assume series2 sorts greater than series1
-            return 1;
+            title1 = (o1 == null ? "" : o1.getTitle_Sort());
+            title2 = (o2 == null ? "" : o2.getTitle_Sort());
           }
-        } else if (series2 == null){
-          // only series1 set  so assume series2 sorts less than series2
-          return -1;
-        }
-
-        // Both series set if we get to here
-        assert (series1 != null) || (series2 != null);
-        if (series1.getId().equals(series2.getId())) {
-          // same series, we need to compare the index
-          if (o1.getSerieIndex() == o2.getSerieIndex())
-            // series index the same, so we need to sort on the book title
-            return 0;
-          else if (o1.getSerieIndex() > o2.getSerieIndex())
-            return 1;
-          else
-            return -1;
+          return Helper.checkedCollatorCompareIgnoreCase(title1,title2, collator);
         } else {
-          // different series, we need to compare the series title
-          return collator.compare(series1.getName().toUpperCase(), series2.getName().toUpperCase());
+          // only series2 set  so assume series2 sorts greater than series1
+          return 1;
         }
+      } else if (series2 == null){
+        // only series1 set  so assume series2 sorts less than series2
+        return -1;
+      }
+
+      // Both series set if we get to here
+      assert (series1 != null) || (series2 != null);
+      if (! series1.getId().equals(series2.getId())) {
+        // different series, we need to compare the series title
+        return Helper.checkedCollatorCompareIgnoreCase(series1.getName(), series2.getName(), collator);
+      }
+      // same series, we need to compare the index
+      if (o1.getSerieIndex() == o2.getSerieIndex())
+        // series index the same, so we need to sort on the book title
+        return 0;
+      else if (o1.getSerieIndex() > o2.getSerieIndex())
+        return 1;
+      else
+        return -1;
       }
     });
   }
@@ -348,7 +314,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
     // generate the book list file
-    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Constants.PAGE_DELIM + Integer.toString(pageNumber));
     if (!filename.endsWith(".xml"))
       filename = filename + ".xml";
     filename = SecureFileManager.INSTANCE.encode(filename);
@@ -386,7 +352,26 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // Paginated listing
         result = new LinkedList<Element>();
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
+        StringBuffer progressText = new StringBuffer();
+        // Tidy up message removing redundant "starting with" ("splitByLetter.letter") entries
+        // Not stricly necessary, but improves user experience.
+        assert breadcrumbs.size() > 0;
+        for (int i = 0 ; i < breadcrumbs.size() ; i++) {
+          String thisElement = breadcrumbs.elementAt(i).toString();
+          if (i != 0) {
+            if (i < (breadcrumbs.size()-1)) {
+              if (breadcrumbs.elementAt(i+1).toString().startsWith(thisElement)) {
+                // Do not add an element if the next one starts with the same text!
+                continue;
+              }
+            }
+            progressText.append("/");
+           }
+          progressText.append(thisElement);
+
+        }
+        progressText.append(" (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
+        CatalogContext.INSTANCE.getCallback().showMessage(progressText.toString());
         for (int i = from; i < books.size(); i++) {
           // check if we must continue
           CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
@@ -944,7 +929,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled())
             logger.trace("addNavigationLinks: add the series link");
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + "_1.xml")),
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("series_" + book.getSeries().getId() + Constants.PAGE_DELIM + "1.xml")),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
       }
@@ -958,7 +943,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           for (Author author : book.getAuthors()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
             entry.addContent(FeedHelper.INSTANCE
-                .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + "_1.xml")),
+                .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("author_" + author.getId() + Constants.PAGE_DELIM + "1.xml")),
                     Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
           }
         }
@@ -974,7 +959,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
             if (nbBooks > 1) {
               entry.addContent(FeedHelper.INSTANCE
-                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + "_1.xml")),
+                  .getRelatedLink(getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("tag_" + tag.getId() + Constants.PAGE_DELIM + "1.xml")),
                       Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks), tag.getName())));
             }
           }
@@ -988,7 +973,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
         if (nbBooks > 1) {
           entry.addContent(FeedHelper.INSTANCE.getRelatedLink(
-              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + "_1.xml")),
+              getCatalogManager().getCatalogFileUrlInItsSubfolder(SecureFileManager.INSTANCE.encode("rated_" + book.getRating().getId() + Constants.PAGE_DELIM + "1.xml")),
               Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks),
                   LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
@@ -1215,6 +1200,21 @@ public abstract class BooksSubCatalog extends SubCatalog {
                .addContent(JDOM.INSTANCE.element("br"))
                .addContent(JDOM.INSTANCE.element("br"));
         hasContent = true;
+      }
+      // Rating (if present and wanted)
+      // If the user has requested tags we output this section even if the list is empty.
+      // The assumption is that the user in this case wants to see that no tags have been assigned
+      // If we get feedback that this is not  a valid addumption then we could omit it when the list is empty
+      if (currentProfile.getIncludeRatingInBookDetails()) {
+        if (Helper.isNotNullOrEmpty(book.getRating())) {
+          String rating = LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating());
+          content.addContent(JDOM.INSTANCE.element("strong")
+              .addContent(Localization.Main.getText("content.rating") + " "))
+              .addContent(rating)
+              .addContent(JDOM.INSTANCE.element("br"))
+              .addContent(JDOM.INSTANCE.element("br"));
+          hasContent = true;
+        }
       }
       // Tags (if present and wanted)
       // If the user has requested tags we output this section even if the list is empty.

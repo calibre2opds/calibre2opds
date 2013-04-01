@@ -21,7 +21,8 @@ public enum BookRating {
   }
 
   public String getId() {
-    return "RATED_" + name();
+    // return "RATED_" + name();
+    return name();
   }
 
   public int getValue() {

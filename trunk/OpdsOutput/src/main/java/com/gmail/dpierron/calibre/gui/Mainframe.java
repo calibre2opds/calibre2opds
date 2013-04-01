@@ -753,6 +753,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeSeriesInBookDetails.setSelected(currentProfile.getIncludeSeriesInBookDetails());
     chkIncludeSeriesInBookDetails.setEnabled(!currentProfile.isIncludeSeriesInBookDetailsReadOnly());
     lblIncludeSeriesInBookDetails.setEnabled(!currentProfile.isIncludeSeriesInBookDetailsReadOnly());
+    chkIncludeRatingInBookDetails1.setSelected(currentProfile.getIncludeRatingInBookDetails());
+    chkIncludeRatingInBookDetails1.setEnabled(!currentProfile.isIncludeRatingInBookDetailsReadOnly());
+    lblIncludeRatingInBookDetails.setEnabled(!currentProfile.isIncludeRatingInBookDetailsReadOnly());
     chkIncludeTagsInBookDetails.setSelected(currentProfile.getIncludeTagsInBookDetails());
     chkIncludeTagsInBookDetails.setEnabled(!currentProfile.isIncludeTagsInBookDetailsReadOnly());
     lblIncludeTagsInBookDetails.setEnabled(!currentProfile.isIncludeTagsInBookDetailsReadOnly());
@@ -907,6 +910,7 @@ public class Mainframe extends javax.swing.JFrame {
     i = getValue(txtMaxBookSummaryLength);
     if (i > -1)
       currentProfile.setMaxBookSummaryLength(i);
+    currentProfile.setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
     currentProfile.setSplitTagsOn(txtSplittagson.getText());
     currentProfile.setIncludeBooksWithNoFile(chkIncludeemptybooks.isSelected());
     currentProfile.setIncludeOnlyOneFile(chkIncludeOnlyOneFile.isSelected());
@@ -946,8 +950,8 @@ public class Mainframe extends javax.swing.JFrame {
 
     currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
     currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
-    currentProfile.setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
     currentProfile.setIncludeSeriesInBookDetails(chkIncludeSeriesInBookDetails.isSelected());
+    currentProfile.setIncludeRatingInBookDetails(chkIncludeRatingInBookDetails1.isSelected());
     currentProfile.setIncludeTagsInBookDetails(chkIncludeTagsInBookDetails.isSelected());
     currentProfile.setIncludePublisherInBookDetails(chkIncludePublisherInBookDetails.isSelected());
     currentProfile.setIncludePublishedInBookDetails(chkIncludePublishedInBookDetails.isSelected());
@@ -1147,6 +1151,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblIncludeSeriesInBookDetails.setText(Localization.Main.getText("config.IncludeSeriesInBookDetails.label")); // NOI18N
     lblIncludeSeriesInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeSeriesInBookDetails.description")); // NOI18N
     chkIncludeSeriesInBookDetails.setToolTipText(lblIncludeSeriesInBookDetails.getToolTipText()); // NOI18N
+    lblIncludeRatingInBookDetails.setText(Localization.Main.getText("config.IncludeRatingInBookDetails.label")); // NOI18N
+    lblIncludeRatingInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeRatingInBookDetails.description")); // NOI18N
+    chkIncludeRatingInBookDetails1.setToolTipText(lblIncludeRatingInBookDetails.getToolTipText()); // NOI18N
     lblIncludeTagsInBookDetails.setText(Localization.Main.getText("config.IncludeTagsInBookDetails.label")); // NOI18N
     lblIncludeTagsInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeTagsInBookDetails.description")); // NOI18N
     chkIncludeTagsInBookDetails.setToolTipText(lblIncludeTagsInBookDetails.getToolTipText()); // NOI18N
@@ -1562,6 +1569,8 @@ public class Mainframe extends javax.swing.JFrame {
         lblPublishedDateAsYear = new javax.swing.JLabel();
         lblIncludeAddedInBookDetails2 = new javax.swing.JLabel();
         chkIncludeAddednBookDetails1 = new javax.swing.JCheckBox();
+        lblIncludeRatingInBookDetails = new javax.swing.JLabel();
+        chkIncludeRatingInBookDetails1 = new javax.swing.JCheckBox();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2602,7 +2611,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlBookDetails.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludeTagsInBookDetails, gridBagConstraints);
@@ -2615,7 +2624,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludeTagsInBookDetails, gridBagConstraints);
@@ -2634,7 +2643,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludePublisherInBookDetails, gridBagConstraints);
@@ -2653,7 +2662,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlBookDetails.add(lblIncludeSeriesInBookDetails, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludePublisherInBookDetails, gridBagConstraints);
@@ -2666,7 +2675,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludePublishedInBookDetails, gridBagConstraints);
@@ -2679,19 +2688,19 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludeModifiedInBookDetails1, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludeModifiedInBookDetails, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludePublishedInBookDetails, gridBagConstraints);
@@ -2743,7 +2752,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogeneratecrosslinks, gridBagConstraints);
@@ -2751,7 +2760,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -2765,7 +2774,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogenerateexternallinks, gridBagConstraints);
@@ -2777,13 +2786,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2798,7 +2807,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblPublishedDateAsYear, gridBagConstraints);
@@ -2812,16 +2821,35 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludeAddedInBookDetails2, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludeAddednBookDetails1, gridBagConstraints);
+
+        lblIncludeRatingInBookDetails.setText("lblIncludeRatingInBookDetails");
+        lblIncludeRatingInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeRatingInBookDetails, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeRatingInBookDetails1, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4471,6 +4499,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludeOnlyOneFile;
     private javax.swing.JCheckBox chkIncludePublishedInBookDetails;
     private javax.swing.JCheckBox chkIncludePublisherInBookDetails;
+    private javax.swing.JCheckBox chkIncludeRatingInBookDetails1;
     private javax.swing.JCheckBox chkIncludeSeriesInBookDetails;
     private javax.swing.JCheckBox chkIncludeTagsInBookDetails;
     private javax.swing.JCheckBox chkIncludeemptybooks;
@@ -4562,6 +4591,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblIncludeOnlyOneFile;
     private javax.swing.JLabel lblIncludePublishedInBookDetails;
     private javax.swing.JLabel lblIncludePublisherInBookDetails;
+    private javax.swing.JLabel lblIncludeRatingInBookDetails;
     private javax.swing.JLabel lblIncludeSeriesInBookDetails;
     private javax.swing.JLabel lblIncludeTagsInBookDetails;
     private javax.swing.JLabel lblIncludeemptybooks;

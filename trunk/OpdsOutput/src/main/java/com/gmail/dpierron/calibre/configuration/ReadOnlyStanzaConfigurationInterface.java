@@ -132,6 +132,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeSeriesInBookDetails();
 
+  public boolean getIncludeRatingInBookDetails();
+
   public boolean getIncludeTagsInBookDetails();
 
   public boolean getIncludePublisherInBookDetails();

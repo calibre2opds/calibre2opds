@@ -328,6 +328,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.includeSeriesInBookDetails;
   }
 
+  public boolean getIncludeRatingInBookDetails() {
+    return StanzaConstants.includeRatingInBookDetails;
+  }
+
   public boolean getIncludeTagsInBookDetails() {
     return StanzaConstants.includeTagsInBookDetails;
   }
