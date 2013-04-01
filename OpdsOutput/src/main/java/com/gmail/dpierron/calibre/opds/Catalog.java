@@ -48,8 +48,8 @@ public class Catalog {
   private static long copyDeleted;       // Count of files/folders deleted during copy process
 
   // Values read once from configuration that are used repeatedly
-  private static final ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
-  private static final boolean checkCRC = currentProfile.getMinimizeChangedFiles();
+  private static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  private static boolean checkCRC = currentProfile.getMinimizeChangedFiles();
 
   private CatalogCallbackInterface callback;        // GUI handling routine
 
@@ -92,6 +92,9 @@ public class Catalog {
   private void syncFiles(File src, File dst) throws IOException {
 
 
+    if (logger.isTraceEnabled())
+      logger.trace("syncFiles (" + src + "," + dst + ")");
+
     callback.incStepProgressIndicatorPosition();
 
     // Sanity check on parameters
@@ -114,12 +117,12 @@ public class Catalog {
     if (cf_src == null) {
       cf_src = new CachedFile(src.getPath());
       if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("syncFiles: Source not in cache: " + src.getPath());
+        logger.trace("syncFiles: Source not in cache: " + src.getAbsolutePath());
     }
     if (cf_dst == null) {
       cf_dst = CachedFileManager.INSTANCE.addCachedFile(dst);
       if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("syncFiles: Target not in cache: " + src.getPath());
+        logger.trace("syncFiles: Target not in cache: " + src.getAbsolutePath());
       cf_dst.setTarget(true);
     }
     // Sanity check - we cannot copy a non-existent file
@@ -165,19 +168,6 @@ public class Catalog {
         logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
       return;
     }
-/*
-    if (cf_src == null) {
-      cf_src = new CachedFile(src.getPath());
-      if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("syncFiles: Source not in cache: " + src.getPath());
-    }
-    if (cf_dst == null) {
-      cf_dst = CachedFileManager.INSTANCE.addCachedFile(dst);
-      if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("syncFiles: Target not in cache: " + src.getPath());
-      cf_dst.setTarget(true);
-    }
-*/
 
     //-----------------------------------------------------------------------------
     // Directory Handling
@@ -195,6 +185,8 @@ public class Catalog {
           logger.trace("Directory " + cf_dst.getName() + " Create missing target");
         if (syncLog)
           syncLogFile.printf("CREATED: %s\n", cf_dst.getName());
+        if (dst.getName().endsWith("_Page"))
+          assert true;
         dst.mkdirs();
       }
 
@@ -223,11 +215,11 @@ public class Catalog {
           if ((cf_src.getName().endsWith(".xml")) && (currentProfile.getGenerateOpds() == true)) {
             // XML files never needed if not generating OPDS catalog
             if (logger.isTraceEnabled())
-              logger.trace("No OPDS catalog so delete " + src.getName());
+              logger.trace("No OPDS catalog so delete " + src.getAbsolutePath());
           } else {
             // remove entry from list of deletion candidates
             // as we are going to over-write it
-            targetNotInSourceFiles.remove(destFile);
+             targetNotInSourceFiles.remove(destFile);
             if (CachedFileManager.INSTANCE.inCache(destFile) == null)
               destFile = CachedFileManager.INSTANCE.addCachedFile(destFile);
           }
@@ -237,7 +229,7 @@ public class Catalog {
           // what this means in terms of application logic if we
           // actually get to this point!
           if (logger.isTraceEnabled())
-            logger.trace("Directory " + src.getName() + " Unexpected missing target");
+            logger.trace("Directory " + src.getAbsolutePath() + " Unexpected missing target" + cf_dst.getName());
           CachedFileManager.INSTANCE.removeCachedFile(destFile);
         }
         // copy across the file
@@ -247,7 +239,7 @@ public class Catalog {
       for (File file : targetNotInSourceFiles) {
         Helper.delete(file);
         if (syncLog)
-          syncLogFile.printf("DELETED: %s\n", file.getAbsolutePath());
+          syncLogFile.printf("DELETED: %s\n", file.getName());
         CachedFileManager.INSTANCE.removeCachedFile(file);
       }
       if (logger.isTraceEnabled())
@@ -267,10 +259,10 @@ public class Catalog {
         if (cf_src.getName().endsWith(".xml")) {
           if (cf_dst.exists()) {
             if (syncFilesDetail && logger.isTraceEnabled())
-              logger.trace("File " + cf_dst.getName() + ": Deleted as XML file and no OPDS catalog required");
+              logger.trace("File " + cf_dst.getAbsolutePath() + ": Deleted as XML file and no OPDS catalog required");
           } else {
             if (syncFilesDetail && logger.isTraceEnabled())
-              logger.trace("File " + cf_src.getName() + ": Ignored as XML file and no OPDS catalog required");
+              logger.trace("File " + cf_src.getAbsolutePath() + ": Ignored as XML file and no OPDS catalog required");
           }
           CachedFileManager.INSTANCE.removeCachedFile(cf_src);
           CachedFileManager.INSTANCE.removeCachedFile(cf_dst);
@@ -364,7 +356,7 @@ public class Catalog {
 
         callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
         if (syncFilesDetail && logger.isDebugEnabled())
-          logger.debug("Copying file " + cf_src.getName());
+          logger.debug("Copying file " + cf_src.getName() + " to " + cf_dst.getAbsolutePath());
         Helper.copy(cf_src, cf_dst);
         // Set target CRC to be same as source CRC
         cf_dst.setCrc(cf_src.getCrc());
@@ -436,6 +428,9 @@ public class Catalog {
 
     String textYES = Localization.Main.getText("boolean.yes");
     String textNO = Localization.Main.getText("boolean.no");
+    // Ensure cached values are current for this generate run.
+    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    checkCRC = currentProfile.getMinimizeChangedFiles();
 
     // The following are used to simplify code and to avoid continually referring to the profile
     File generateFolder = null;     // Location where catalog is generated
@@ -748,7 +743,7 @@ public class Catalog {
 
       callback.checkIfContinueGenerating();
 
-      String filename = SecureFileManager.INSTANCE.encode("index.xml");
+      String filename = SecureFileManager.INSTANCE.encode(Constants.INITIAL_URL);
 
       // prepare the Trook specific search database
 
@@ -759,11 +754,10 @@ public class Catalog {
 
       // c2o-87 - Title should use value from settings
       String title = currentProfile.getCatalogTitle();
-      String urn = "calibre:catalog";
 
       String urlExt = "../" + filename;
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(title, urlExt);
-      Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, urn, urlExt);
+      Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
 
       Element entry;
 

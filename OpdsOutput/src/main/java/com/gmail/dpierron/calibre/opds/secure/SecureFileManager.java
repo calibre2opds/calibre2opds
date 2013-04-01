@@ -4,7 +4,7 @@ package com.gmail.dpierron.calibre.opds.secure;
  * when generating a calbire2opds catalog.   This is used to help
  * maintain secutiry when making a calibre2opds catalog accessible
  * via the internet as it means that the filenames used withing
- * the catalog itself become ahrd to guess.
+ * the catalog itself become hard to guess.
  *
  * one feature is that the mapping of 'clear' to 'obfusticated' names
  * is maintained so that it is consistent between runs
@@ -16,6 +16,7 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.util.Hashtable;
 import java.util.Properties;
 
 public enum SecureFileManager {
@@ -23,10 +24,12 @@ public enum SecureFileManager {
 
   private final static boolean autosave = false;
   private final static char DELIM1 = '_';
+  private final static String NAKED_KEYWORD = "naked.";
+  private final static String CODED_KEYWORD = "coded.";
   private final static String PROPERTY_FILENAME = ".calibre2opds.secureFileManager.xml";
   private final static Logger logger = Logger.getLogger(SecureFileManager.class);
   private final static String COMMENT = Constants.PROGTITLE;
-  private Properties properties;
+  private static Properties properties;
   private File propertiesFile;
 
   private boolean isSecurityOn() {
@@ -37,14 +40,20 @@ public enum SecureFileManager {
     reset(true);
   }
 
+  /**
+   * Clear down any existing cached information and set up a new
+   * empty set of properties for security information.
+   * @param deleteFile
+   */
   private void reset(boolean deleteFile) {
     if (deleteFile)
       getPropertiesFile().delete();
 
     properties = new Properties();
 
-    // let's try and load the properties
-    tryAndLoadProperties();
+    // let's try and load the properties;
+    if (getPropertiesFile().exists())
+      load();
   }
 
   private SecureFileManager() {
@@ -55,7 +64,7 @@ public enum SecureFileManager {
    * Get the name of the file that is being used to store the secure
    * filenames between runs
    *
-   * ITIMPI:  At the moment this seems to be a global setting for agiven
+   * ITIMPI:  At the moment this seems to be a global setting for a given
    *          user.  Maybe it should be separate for each profile?
    *
    * @return
@@ -69,15 +78,6 @@ public enum SecureFileManager {
     }
 
     return propertiesFile;
-  }
-
-  /**
-   * ITIMPI:  Not sure why this is a separate function rathern than
-   *          the test for existence embedded in the 'Load' function?
-   */
-  private void tryAndLoadProperties() {
-    if (getPropertiesFile().exists())
-      load();
   }
 
   /**
@@ -148,9 +148,6 @@ public enum SecureFileManager {
    *           and it has been found that this can easily end up breaking
    *           the system limits on maximum path length.
    *
-   *           A better solution will be to have the concept of a parent
-   *           node that is saved and the current node
-   *
    * @param naked
    * @return
    */
@@ -183,7 +180,19 @@ public enum SecureFileManager {
   }
 
   /**
+   * Remove an entry from the secure file manage cache
+   *
+   * TODO:  Need to implement this and start using to stop cache from always growing
+   *
+   * @param filename
+   */
+  public void remove (String filename) {
+
+  }
+  /**
    * Convert a file name to its encoded form
+   * We do not encode the file extension, so this
+   * always needs to be accounted for.
    *
    * @param naked Filename that needs to be encoded
    * @return Encoded value.
@@ -193,18 +202,48 @@ public enum SecureFileManager {
   public String encode(String naked) {
     if (!isSecurityOn())
       return naked;
-    String result = getProperty("naked." + naked);
-    if (Helper.isNullOrEmpty(result)) {
-      result = generateNewRandomFile(naked);
-      setProperty("naked." + naked, result);
-      setProperty("coded." + result, naked);
+
+    String fileExt;
+    String fileBase;
+    if (naked == null)
+      assert naked != null;
+    int pos = naked.indexOf(Constants.PAGE_DELIM);
+    if (pos != -1 ) {
+      fileExt = naked.substring(pos);
+      fileBase = naked.substring(0,pos);
+    } else {
+      if (naked.endsWith(".xml")) {
+        fileExt = ".xml";
+        fileBase = naked.substring(0, naked.length()-4);
+      } else {
+        fileExt = "";
+        fileBase = naked;
+      }
     }
-    return result;
+
+    // We now need to see if we already have this encoded
+    // This stops us extended the name unneccesarily
+    String result = getProperty(NAKED_KEYWORD + fileBase);
+    if (Helper.isNotNullOrEmpty(result)) {
+      return result + fileExt;
+    }
+    // Check we have not been passed a name we have already encoded!
+    if (Helper.isNotNullOrEmpty(getProperty((CODED_KEYWORD + fileBase)))) {
+      return fileBase + fileExt;
+    }
+    result = generateNewRandomFile(fileBase);
+    setProperty(NAKED_KEYWORD + fileBase, result);
+    setProperty(CODED_KEYWORD + result, fileBase);
+    return result + fileExt;
   }
 
   /**
    * Take a (potentially) endoded name and convert it
    * to the decoded version for internal program use
+   *
+   * We always store code names without the file
+   * extension or the 'page' part of the filename so
+   * this needs to be accounted for.
    *
    * @param coded Encoded filename
    * @return Decoded filename
@@ -213,8 +252,24 @@ public enum SecureFileManager {
   public String decode(String coded) {
     if (!isSecurityOn())
       return coded;
-    String result = getProperty("coded." + coded);
-    return result;
+
+    String fileExt;
+    String fileBase;
+    int pos = coded.indexOf(Constants.PAGE_DELIM);
+    if (pos != -1 ) {
+      fileExt = coded.substring(pos);
+      fileBase = coded.substring(0,pos);
+    } else {
+      if (coded.endsWith(".xml")) {
+        fileExt = ".xml";
+        fileBase = coded.substring(0, coded.length()-4);
+      } else {
+        fileExt = "";
+        fileBase = coded;
+      }
+    }
+  String result = getProperty(CODED_KEYWORD + fileBase);
+    return result == null ? null : result + fileExt;
   }
 
   /**
@@ -249,15 +304,39 @@ public enum SecureFileManager {
    * @return
    */
   public String getSplitFilename (String baseFilename, String splitText) {
-    assert baseFilename != null : "getSplitFileName: baseFilename=null";
-    assert splitText != null : "getSplitFilename: splitText=null";
-    String baseFilenameCleanedUp = decode(baseFilename);
+    String baseFilenameNoExt;
+    String baseFilenameCleanedUp;
     String fileExt = "";
-    int pos = baseFilenameCleanedUp.indexOf(".xml");                      // Check for presence of extension .xml
-    if (pos > -1) {                                                       // ... did we find it?
-      fileExt = baseFilenameCleanedUp.substring(pos);                     // save extension for later
-      baseFilenameCleanedUp = baseFilenameCleanedUp.substring(0, pos);    // remove extension from cleaned up name
+    int pos = baseFilename.indexOf(".xml");   // Check for presence of extension .xml
+    // Get name without file extension
+    if (pos != -1) {                          // ... did we find it?
+      fileExt = baseFilename.substring(pos);  // save extension for later
+      baseFilenameNoExt = baseFilename.substring(0,pos);
+    } else {
+      baseFilenameNoExt = baseFilename;
     }
+    // See if we are merely trying to add a page number?
+    if (splitText.startsWith(Constants.PAGE_DELIM))  {
+      pos = baseFilename.indexOf(Constants.PAGE_DELIM);
+      if (pos != -1) {
+        baseFilenameCleanedUp = baseFilenameNoExt.substring(0, pos);
+      } else {
+        baseFilenameCleanedUp = baseFilenameNoExt;
+      }
+      if (baseFilenameCleanedUp == null)
+        assert baseFilenameCleanedUp == null : "baseFileNameCleanedUp=null while adding a page number";
+      // Now to see if we have been passed a encoded base?
+      if (isSecurityOn()) {
+        String result = getProperty(CODED_KEYWORD + baseFilenameNoExt);
+        if (Helper.isNotNullOrEmpty(result))
+          baseFilenameCleanedUp = result;
+      }
+      return encode(baseFilenameCleanedUp) + splitText + fileExt;
+    }
+    // We are not merely adding a page number!
+    baseFilenameCleanedUp = decode(baseFilenameNoExt);  // Remove any encoded part
+    if (baseFilenameCleanedUp == null)
+      assert baseFilenameCleanedUp == null : "baseFileNameCleanedUp=null while adding a page number";
     return encode(Helper.getSplitString(baseFilenameCleanedUp, splitText, "_")) + fileExt;
   }
 }

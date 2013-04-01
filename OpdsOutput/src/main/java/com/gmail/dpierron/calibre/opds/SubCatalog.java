@@ -26,11 +26,11 @@ public abstract class SubCatalog {
 
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
   // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
-  protected static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
-  protected static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
-  protected static int maxSplitLevels = currentProfile.getMaxSplitLevels();
-  protected static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
-  protected static boolean useExternalIcons = currentProfile.getExternalIcons();
+  protected final static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  protected final static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
+  protected final static int maxSplitLevels = currentProfile.getMaxSplitLevels();
+  protected final static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
+  protected final static boolean useExternalIcons = currentProfile.getExternalIcons();
 
   private List<Book> books;
   List<Object> stuffToFilterOut;

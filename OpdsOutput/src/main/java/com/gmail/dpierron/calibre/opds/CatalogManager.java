@@ -6,6 +6,7 @@ import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 
 import java.io.File;
 import java.util.HashMap;
@@ -42,8 +43,11 @@ public class CatalogManager {
    */
   public void setCatalogFolder(File parentfolder) {
     catalogFolder = new File(parentfolder, getCatalogFolderName());
-    if (!catalogFolder.exists())
+    if (!catalogFolder.exists()) {
+      // ITIMPI:  The following assert may now be redundant!  Added while investigating a bug
+      assert  !catalogFolder.getName().endsWith("_Page");
       catalogFolder.mkdirs();
+    }
   }
 
   /**
@@ -179,11 +183,8 @@ public class CatalogManager {
   /**
    * Get the Folder that a particular catalog file belongs in
    *
-   * The original implementation relied on the fact that we were
-   * using underscores to identify parts of the path.
-   *
-   * A revised implementation would take advantage of the fact
-   * that the secure file manager stores the parent for any file.
+   * Any File extension or 'Page' sections should be removed before
+   * we try and determine the folder the particular file belongs in.
    *
    * @param pCatalogFileName
    * @return
@@ -192,17 +193,45 @@ public class CatalogManager {
     if (Helper.isNullOrEmpty(pCatalogFileName))
       return "";
 
-    // Get ythe name with any file extension removed
+    // Gee if there is any page information or file extensionto remove
     String catalogFileName;
-    int pos = pCatalogFileName.lastIndexOf('.');
-    if (pos > -1)
+    int pos = pCatalogFileName.indexOf(Constants.PAGE_DELIM);
+    if (pos > -1) {
+      // Remove the _Page ... part of the name
       catalogFileName = pCatalogFileName.substring(0, pos);
-    else {
-      // ITIMPI - this sounds like an error to me that should be logged?
-      System.out.println("");
-      catalogFileName = pCatalogFileName;
+    } else {
+      pos = pCatalogFileName.lastIndexOf('.');
+      if (pos > -1) {
+        // Remove any file extension
+        catalogFileName = pCatalogFileName.substring(0, pos);
+      } else {
+        // ITIMPI - this sounds like an error to me that should be logged?
+        System.out.println("");
+        catalogFileName = pCatalogFileName;
+      }
+    }
+    // Remove and hash added while encrypting to folder name
+    // ITIMPI:  Need to check if this case can occur?
+    String temp = SecureFileManager.INSTANCE.decode(catalogFileName);
+    if (Helper.isNotNullOrEmpty(temp)) {
+      catalogFileName = temp;
     }
 
+    // ITIMPI:  We might want to revisit if this is the best way to
+    //          identify the folder that a file is to belocated in?
+    //          An alternative wcheme might be more robust?
+
+    pos = catalogFileName.indexOf("_");
+    switch (pos) {
+      case 32:
+      case 24:
+      case 16:
+      case 8:
+          return catalogFileName.substring(0, pos);
+      default:
+          // Fallthru
+    }
+/*
     if (catalogFileName.length() >= 32 && !catalogFileName.substring(0, 32).contains("_"))
       return catalogFileName.substring(0, 32);
 
@@ -214,7 +243,7 @@ public class CatalogManager {
 
     if (catalogFileName.length() >= 8 && !catalogFileName.substring(0, 8).contains("_"))
       return catalogFileName.substring(0, 8);
-
+*/
     pos = catalogFileName.lastIndexOf('_');
     if (pos < 0)
       return "";
@@ -233,8 +262,11 @@ public class CatalogManager {
     if (folderName == null) { // check in which folder this file goes
       folderName = getFolderName(catalogFileName);
       File folder = new File(getCatalogFolder(), folderName);
-      if (!folder.exists())
+      if (!folder.exists())  {
+        if (folder.getName().endsWith("_Page"))
+          assert true;
         folder.mkdirs();
+      }
     }
     mapOfCatalogFolderNames.put(catalogFileName, folderName);
     File result = new File(new File(getCatalogFolder(), folderName), catalogFileName);

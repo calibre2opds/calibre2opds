@@ -28,6 +28,9 @@ public class Constants {
   public final static String CUSTOMIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize";
   public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
   public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
+  public final static String PAGE_DELIM = "_Page_";
+  public final static String INITIAL_URL = "index.xml";
+  public final static String INITIAL_URN = "calibre:catalog";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
   public final static String TROOK_SEARCH_DATABASE_FILENAME = "calibre2opds_trook_search.db";
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";

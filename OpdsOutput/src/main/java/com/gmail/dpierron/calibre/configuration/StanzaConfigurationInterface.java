@@ -85,6 +85,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setIncludeSeriesInBookDetails(boolean value);
 
+  public void setIncludeRatingInBookDetails(boolean value);
+
   public void setIncludeTagsInBookDetails(boolean value);
 
   public void setIncludePublisherInBookDetails(boolean value);

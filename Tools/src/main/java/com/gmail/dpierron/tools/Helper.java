@@ -9,9 +9,11 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.dgc.VMID;
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -926,8 +928,11 @@ public class Helper {
   }
 
   public static void copy(InputStream in, File dst) throws IOException {
-    if (!dst.exists())
+    if (!dst.exists()) {
+      if (dst.getName().endsWith("_Page"))
+        assert true;
       dst.getParentFile().mkdirs();
+    }
     OutputStream out = null;
     try {
       out = new FileOutputStream(dst);
@@ -995,6 +1000,18 @@ public class Helper {
     return result;
   }
 
+  /**
+   * Routine to carry out comparisons using the object type's
+   * compareTo methods.  Allows for either option to be passed
+   * in a null.
+   * NOTE:  This uses the object's compareTo for method, so for
+   *        string objects this is a strict comparison that does
+   *        not take into account locale differences.  If you want
+   *        locale to be considerd then use the collator methods.
+   * @param o1
+   * @param o2
+   * @return
+   */
   public static int checkedCompare(Comparable o1, Comparable o2) {
     if (o1 == null) {
       if (o2 == null)
@@ -1008,6 +1025,85 @@ public class Helper {
         return -1;
     }
     return o1.compareTo(o2);
+  }
+
+  /**
+   * A checked string comparison that allows for null parameters
+   * but ignores case differences.
+   * @param s1
+   * @param s2
+   * @return
+   */
+  public static int checkedCompareIgnorCase (String s1, String s2) {
+    if (s1 == null) {
+      if (s2 == null)
+        return 0;
+      else
+        return 1;
+    } else if (s2 == null) {
+      if (s1 == null)
+        return 0;
+      else
+        return -1;
+    }
+    return s1.toUpperCase().compareTo(s2.toUpperCase());
+  }
+
+  /**
+   * A checked string compare that uses the collator methods
+   * that take into account local.  This method uses the
+   * default locale.
+   * @param s1
+   * @param s2
+   * @return
+   */
+  public static int checkedCollatorCompare (String s1, String s2, Collator collator) {
+    if (s1 == null) {
+      if (s2 == null)
+        return 0;
+      else
+        return 1;
+    } else if (s2 == null) {
+      if (s1 == null)
+        return 0;
+      else
+        return -1;
+    }
+    return  collator.compare(s1, s2);
+  }
+  public static int checkedCollatorCompareIgnoreCase (String s1, String s2, Collator collator) {
+    return checkedCollatorCompare(s1.toUpperCase(), s2.toUpperCase(), collator);
+  }
+
+  /**
+   * A checked string compare that uses the collator methods
+   * that take into account local.  This method uses the
+   * default locale.
+   * @param s1
+   * @param s2
+   * @return
+   */
+  public static int checkedCollatorCompare (String s1, String s2) {
+    final Collator collator = Collator.getInstance();
+    return checkedCollatorCompare(s1, s2, collator);
+  }
+  /**
+   * A checked string compare that uses the collator methods
+   * that take into account local.  This method uses the
+   * default locale.
+   * @param s1      First string to compare
+   * @param s2      Second string to compare
+   * @return
+   */
+  public static int checkedCollatorCompareIgnoreCase (String s1, String s2) {
+    return checkedCollatorCompare(s1.toUpperCase(), s2.toUpperCase());
+  }
+
+  public static int checkedCollatorCompare (String s1, String s2, Locale locale) {
+    return checkedCollatorCompare(s1, s2, Collator.getInstance(locale));
+  }
+  public static int checkedCollatorCompareIgnoreCase (String s1, String s2, Locale locale) {
+    return checkedCollatorCompare(s1.toUpperCase(), s2.toUpperCase(), locale);
   }
 
   public static ArrayList<File> listFilesIn(File dir) {
@@ -1153,10 +1249,6 @@ public class Helper {
    * As an optimisation to try and keep values start, it assumed that if the end of the
    * string passed in as the base corresponds to the start of the new encoded splitText
    * then it is only necessay to extend the name to make it unique by the difference.
-   * NOTE:  The above optimization does not cater for the special case of when we are
-   *        adding a page number to a split-by-letter where the letter is a number that
-   *        is the same as the page number.  This special case needs to be allowed for by
-   *        checking that we are not adding a value that is identical to that already there.
    *
    * @param baseString          The base string fromt he previous level
    * @param splitText           The text for this split level
@@ -1183,11 +1275,7 @@ public class Helper {
     if (pos > 0) {
       String checkPart = baseString.substring(pos);
       if (encodedSplitText.toString().startsWith(checkPart)) {
-        // We need to check for the special case of adding a numeric
-        // (page number) to a value that has been split by number.
-        if (!encodedSplitText.toString().equals(checkPart)) {
-           return baseString.substring(0,pos) + encodedSplitText.toString();
-        }
+         return baseString.substring(0,pos) + encodedSplitText.toString();
       }
     }
     return baseString + encodedSplitText.toString();

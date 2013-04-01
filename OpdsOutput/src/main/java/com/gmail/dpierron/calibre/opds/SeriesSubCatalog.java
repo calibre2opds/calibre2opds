@@ -182,7 +182,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     }
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
-    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Constants.PAGE_DELIM + Integer.toString(pageNumber));
 
     // list the entries (or split them)
 
@@ -250,7 +250,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
-    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Integer.toString(pageNumber));
+    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename,Constants.PAGE_DELIM + Integer.toString(pageNumber));
     String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
     File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
     FileOutputStream fos = null;
