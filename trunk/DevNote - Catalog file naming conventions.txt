@@ -1,0 +1,57 @@
+                      DevNote - Catalog file naming conventions
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                      
+This note specifies the naming standard for generating files within the catalog and sub-catalogs
+
+RULES:
+1.  Direcories will never be more than one level deep.
+2.  The top level will only contain generic files
+3.  When generating sublevels a Prefix is added to the folder and file names.
+    This prefix should be consistent for all files/folders at the same catalog level
+    
+
+allbooks/				Folder for allbooks catalog split by letter
+	books_XX_Page_nn		Files for allbooks split-by-level
+					Entries point to books in the book/ folder
+					
+authors/				Folder for authors split by letter
+	authors_XX_Page_nn		Files for the author-by-level where XX indicates the split level 
+					Point to author_nn_Page_1 entries in the author/ folder
+					
+author/					Folder for Files for each author
+	author_nn_Page_nn		Files for a given author listing series/books
+	author_nn_Series_nn_Page_nn	Files for a given series for that author
+	
+series/
+	series_XX_Page_nn
+	
+serie/
+	serie_nn_Page_nn
+	
+tags/					Folder for tags split by letter
+	tags_XX_Page_nn			Files for tags split by letter
+	
+tag/					Folder for files for each tag	
+	tag_nn_Page_nn
+
+rated/
+	rated_XXXX_Page_nn
+	
+recent/
+	recent_XXXX_Page_nn
+	
+featured/
+	featured_Page_nn
+	
+Custom Catalogs that genreate additional levels via a search will have a Prefix
+generated and added to the start of all folder and file names.
+
+e.g.
+ABCDEFGH_allbooks/	
+	ABCDEFGH_books_XX_Page_nn
+etc.
+
+Tags that generate additional levels are treated as a special case of custom folders
+
+If file encryption is active, then a (12 hex character) random value is added to the folder/filename
+either before the _Page_nn part or the file extension of the _Page_nn part is missing. 
