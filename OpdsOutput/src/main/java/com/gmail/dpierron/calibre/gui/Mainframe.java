@@ -78,7 +78,9 @@ public class Mainframe extends javax.swing.JFrame {
     translateTexts();
   }
 
-
+  /**
+   *
+   */
   private void addDeleteButtonToCustomCatalogsTable() {
     // add a button to the custom catalogs table
     Action delete = new AbstractAction() {
@@ -90,9 +92,11 @@ public class Mainframe extends javax.swing.JFrame {
 
     ButtonColumn buttonColumn = new ButtonColumn(tblCustomCatalogs, delete, 2);
     buttonColumn.setMnemonic(KeyEvent.VK_D);
-    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth(150);
-    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth(350);
-    tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth(40);
+
+    int width = 550;            // Should we read width of existing window instead?
+    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .3));
+    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .6));
+    tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth((int)(width * .1));    // Delete button
   }
 
   private void processEpubMetadataOfAllBooks() {
@@ -828,6 +832,7 @@ public class Mainframe extends javax.swing.JFrame {
     customCatalogTableModel.setCustomCatalogs(currentProfile.getCustomCatalogs());
     tblCustomCatalogs.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
     pnlCustomCatalogsTableButtons.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
+    tblCustomCatalogs.revalidate();         // Force a redraw of table contents
 
     DeviceMode mode = currentProfile.getDeviceMode();
     // Ensuer we have a Device Mode actually set
@@ -1351,6 +1356,7 @@ public class Mainframe extends javax.swing.JFrame {
     mnuHelpOpenForum.setText(Localization.Main.getText("gui.menu.help.supportForum")); // NOI18N
     mnuHelpOpenLocalize.setText(Localization.Main.getText("gui.menu.help.localize")); // NOI18N
     mnuHelpOpenCustomize.setText(Localization.Main.getText("gui.menu.help.customize")); // NOI18N
+    mnuToolsResetSecurityCache.setText(Localization.Main.getText("gui.menu.tools.resetEncrypted")); // NOI18N
     mnuToolsOpenLog.setText(Localization.Main.getText("gui.menu.tools.logFile")); // NOI18N
     mnuToolsClearLog.setText(Localization.Main.getText("gui.menu.tools.logClear")); // NOI18N
     mnuToolsOpenConfig.setText(Localization.Main.getText("gui.menu.tools.configFolder")); // NOI18N
@@ -1448,6 +1454,7 @@ public class Mainframe extends javax.swing.JFrame {
 
    private void addCustomCatalog() {
      customCatalogTableModel.addCustomCatalog();
+     tblCustomCatalogs.revalidate();
    }
 
    /**
@@ -1686,6 +1693,7 @@ public class Mainframe extends javax.swing.JFrame {
         mnuProfiles = new javax.swing.JMenu();
         mnuTools = new javax.swing.JMenu();
         mnuToolsprocessEpubMetadataOfAllBooks = new javax.swing.JMenuItem();
+        mnuToolsResetSecurityCache = new javax.swing.JMenuItem();
         mnuToolsOpenLog = new javax.swing.JMenuItem();
         mnuToolsClearLog = new javax.swing.JMenuItem();
         mnuToolsOpenConfig = new javax.swing.JMenuItem();
@@ -3963,6 +3971,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         tblCustomCatalogs.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblCustomCatalogs.setModel(getTblCustomCatalogsModel());
+        tblCustomCatalogs.setColumnSelectionAllowed(true);
         addDeleteButtonToCustomCatalogsTable();
         scrCustomCatalogs.setViewportView(tblCustomCatalogs);
 
@@ -4116,6 +4125,14 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         mnuTools.add(mnuToolsprocessEpubMetadataOfAllBooks);
+
+        mnuToolsResetSecurityCache.setText("mnuToolsResetSecurityCache");
+        mnuToolsResetSecurityCache.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsResetSecurityCacheActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsResetSecurityCache);
 
         mnuToolsOpenLog.setText("mnuToolsOpenLog");
         mnuToolsOpenLog.addActionListener(new java.awt.event.ActionListener() {
@@ -4327,7 +4344,20 @@ public class Mainframe extends javax.swing.JFrame {
     setExternalLinksEnabledState();
   }//GEN-LAST:event_chkNogenerateexternallinksStateChanged
 
-    private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
+  /**
+   * Reset the encrypted files cache as long as the user confirms that this is
+   * really what thery intended (to protect against clicking wrong menu optiob)
+   * @param evt
+   */
+  private void mnuToolsResetSecurityCacheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsResetSecurityCacheActionPerformed
+    if (JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.confirm.tools.resetEncrypted"), "", JOptionPane.YES_NO_OPTION))
+      return;
+    logger.info(Localization.Main.getText("gui.menu.tools.resetEncrypted"));
+    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(),  Constants.SECURITY_CACHE_FILENAME);
+    Helper.delete(f);
+  }//GEN-LAST:event_mnuToolsResetSecurityCacheActionPerformed
+
+  private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
       debugClearLogFile();
     }//GEN-LAST:event_mnuToolsClearLogActionPerformed
 
@@ -4663,6 +4693,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuToolsClearLog;
     private javax.swing.JMenuItem mnuToolsOpenConfig;
     private javax.swing.JMenuItem mnuToolsOpenLog;
+    private javax.swing.JMenuItem mnuToolsResetSecurityCache;
     private javax.swing.JMenuItem mnuToolsprocessEpubMetadataOfAllBooks;
     private javax.swing.JPanel pnlAdvancedOptions;
     private javax.swing.JPanel pnlBottom;
