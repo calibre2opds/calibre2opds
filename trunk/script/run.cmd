@@ -70,7 +70,6 @@ echo [INFO] Java not found in default 32-bit Java on 64-bit Windows JRE7 locatio
 REM This next section is about trying to find Java home via the registry
 REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 set _MYKEY=HKLM\Software\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
 if not "%_MYVAR1%" == "" (
@@ -147,6 +146,15 @@ if exist uninstaller.jar (
 	"%_JAVACMD%" -jar uninstaller/uninstaller.jar
 	goto end
 )
+
+REM The next few lines are to help with running in Portable mode with minimal user setup required
+
+if NOT "%CALIBRE2OPDS_CONFIG%" == "" goto start_c2o
+if NOT exist Calibre2|OpdsConfig goto start_c2o
+set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
+
+
+:start_c2o
 echo '
 echo "-----------------------"
 echo " Calibre2Opds STARTING "
@@ -158,7 +166,7 @@ REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
 echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
-"%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
+"%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
