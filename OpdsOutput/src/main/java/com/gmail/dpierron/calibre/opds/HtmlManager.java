@@ -49,7 +49,7 @@ public class HtmlManager {
       try {
         // create the same file as html
         long now = System.currentTimeMillis();
-        File htmlFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder(),getHtmlFilename(outputFile.toString()));
+        File htmlFile = new File(getHtmlFilename(outputFile.toString()));
         if (htmlFile.exists()) {
           return;
         }
