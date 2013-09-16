@@ -589,8 +589,8 @@ public abstract class SubCatalog {
     // Avoid creating files that already exist.
     // (if xml file exists then HTML one will as well)
     if (outputFile.exists()) {
-      if (logger.isTraceEnabled())
-        logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
+      logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
+//      if (logger.isTraceEnabled()) logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
       return;
     }
 

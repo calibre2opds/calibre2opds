@@ -347,8 +347,15 @@ public class Catalog {
         callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
         if (syncFilesDetail && logger.isDebugEnabled())
           logger.debug("Copying file " + cf_src.getName() + " to " + cf_dst.getAbsolutePath());
-        Helper.copy(cf_src, cf_dst);
+        try {
+          Helper.copy(cf_src, cf_dst);
+        } catch (java.io.FileNotFoundException e) {
+          // We ignore failed attempts to copy a file, although we log them
+          // This allows for the user to have made changes to the library while
+          // Calibre2opds is generating a library without the whole run failing.
+        }
         // Set target CRC to be same as source CRC
+        logger.warn("Unable to to copy file " + cf_src);
         cf_dst.setCrc(cf_src.getCrc());
       }
     }  // End of File Handling section
@@ -604,7 +611,7 @@ public class Catalog {
 
       File temp = File.createTempFile("calibre2opds", "");
       String tempPath = temp.getAbsolutePath();
-      temp.delete();  // Remove file juut created as we are going to create a folder there instead
+      temp.delete();  // Remove file just created as we are going to create a folder there instead
       generateFolder = new File(tempPath);
       if (logger.isTraceEnabled())
         logger.trace("generateFolder set to " + generateFolder);
@@ -913,6 +920,7 @@ public class Catalog {
                     logger.trace("deleting " + existingTargetFile.getPath());
                   callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
                   Helper.delete(existingTargetFile);
+
                   if (syncLog)
                     syncLogFile.printf("DELETED: %s\n", existingTargetFile);
                   // Ensure no longer in cache
