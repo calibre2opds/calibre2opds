@@ -1,9 +1,10 @@
 package com.gmail.dpierron.calibre.opds;
-
+/**
+ *
+ */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -19,12 +20,14 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
 
   public FeaturedBooksSubCatalog(List<Book> books) {
     this(books, SplitOption.DontSplitNorPaginate);
+    setCatalogType(Constants.FEATURED_TYPE);
   }
 
   public FeaturedBooksSubCatalog(List<Book> books, SplitOption splitOption) {
     super(books);
     this.splitOption = splitOption;
     sortBooks();
+    setCatalogType(Constants.FEATURED_TYPE);
   }
 
   public boolean isBookTheStepUnit() {
@@ -35,13 +38,13 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
     sortBooksByTimestamp(getBooks());
   }
 
-  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  public Composite<Element, String> getFeaturedCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_featuredbooks.xml");
+    String filename = getCatalogBaseFolderFileName();
     String title = currentProfile.getFeaturedCatalogTitle();
-    String urn = "calibre:featuredbooks";
+    String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
 
     String summary = "";
     if (getBooks().size() > 1)
@@ -51,11 +54,8 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    return getListOfBooks(pBreadcrumbs, getBooks(), 0, title, summary, urn, filename, splitOption,
+    return getCatalog(pBreadcrumbs, getBooks(), inSubDir, 0, title, summary, urn, filename, splitOption,
         // #751211: Use external icons option
-        useExternalIcons ?
-            (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_FEATURED :
-            Icons.ICON_FEATURED);
+        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_FEATURED : Icons.ICON_FEATURED, null);
   }
 }

@@ -265,10 +265,9 @@ public class CalibreQueryInterpreter {
         calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName);
         if (Helper.isNullOrEmpty(calibreQuery))
           calibreQuery = DataModel.INSTANCE.getMapOfSavedSearches().get(calibreSavedSearchName.toUpperCase());
-      }
-      if (Helper.isNullOrEmpty(calibreQuery))
-        throw new CalibreSavedSearchNotFoundException(calibreSavedSearchName);
-      else {
+        if (Helper.isNullOrEmpty(calibreQuery))
+          throw new CalibreSavedSearchNotFoundException(calibreSavedSearchName);
+      } else {
         if (logger.isDebugEnabled())
           logger.trace("interpreting " + calibreQuery);
 

@@ -14,16 +14,12 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.*;
@@ -31,26 +27,40 @@ import java.util.*;
 public class AuthorsSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(AuthorsSubCatalog.class);
   private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
-  private List<Author> authors;
-  private Map<Author, List<Book>> mapOfBooksByAuthor;
-  private Map<Author, List<Series>> mapOfSeriesByAuthor;
-  private Map<Author, List<Book>> mapOfBooksNotInSerieByAuthor;
+  private Map<Author, List<Book>> mapOfBooksByAuthor;     // Cached information for efficency
+  private List<Author> authors;                           // Cached information for efficiency
+
 
   public AuthorsSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
+    setCatalogType(Constants.AUTHORS_TYPE);
+    initMapOfBooksByAuthor();          // Force initialisation
   }
 
   public AuthorsSubCatalog(List<Book> books) {
     super(books);
+    setCatalogType(Constants.AUTHORS_TYPE);
+    initMapOfBooksByAuthor();          // Force initialisation
   }
 
-  List<Author> getAuthors() {
-    if (authors != null) {
-      return authors;
-    }
+  /**
+   * Build up the list of book/author relationships
+   * We cache the results for improved efficiency on indivisual authors.
+   *
+   * @return
+   */
+
+  private void initMapOfBooksByAuthor() {
+    mapOfBooksByAuthor = new HashMap<Author, List<Book>>();
     authors = new LinkedList<Author>();
     for (Book book : getBooks()) {
       for (Author author : book.getAuthors()) {
+        List<Book> currentbooks = mapOfBooksByAuthor.get(author);
+        if (currentbooks == null) {
+          currentbooks = new LinkedList<Book>();
+          mapOfBooksByAuthor.put(author, currentbooks);
+        }
+        currentbooks.add(book);
         if (!authors.contains(author))
           authors.add(author);
       }
@@ -72,70 +82,15 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         return collator.compare(name1, name2);
       }
     });
-    return authors;
-  }
-
-  public Map<Author, List<Book>> getMapOfBooksByAuthor() {
-    if (mapOfBooksByAuthor == null) {
-      mapOfBooksByAuthor = new HashMap<Author, List<Book>>();
-      for (Book book : getBooks()) {
-        for (Author author : book.getAuthors()) {
-          List<Book> books = mapOfBooksByAuthor.get(author);
-          if (books == null) {
-            books = new LinkedList<Book>();
-            mapOfBooksByAuthor.put(author, books);
-          }
-          books.add(book);
-        }
-      }
-    }
-    return mapOfBooksByAuthor;
-  }
-
-  public Map<Author, List<Series>> getMapOfSeriesByAuthor() {
-    if (mapOfSeriesByAuthor == null)
-      computeMapOfSeriesByAuthor();
-    return mapOfSeriesByAuthor;
-  }
-
-  public Map<Author, List<Book>> getMapOfBooksNotInSeriesByAuthor() {
-    if (mapOfBooksNotInSerieByAuthor == null)
-      computeMapOfSeriesByAuthor();
-    return mapOfBooksNotInSerieByAuthor;
-  }
-
-  private void computeMapOfSeriesByAuthor() {
-    mapOfSeriesByAuthor = new HashMap<Author, List<Series>>();
-    mapOfBooksNotInSerieByAuthor = new HashMap<Author, List<Book>>();
-    for (Book book : getBooks()) {
-      for (Author author : book.getAuthors()) {
-        Series serie = book.getSeries();
-        if (serie != null) {
-          List<Series> series = mapOfSeriesByAuthor.get(author);
-          if (series == null) {
-            series = new LinkedList<Series>();
-            mapOfSeriesByAuthor.put(author, series);
-          }
-          if (!series.contains(serie))
-            series.add(serie);
-        } else {
-          List<Book> books = mapOfBooksNotInSerieByAuthor.get(author);
-          if (books == null) {
-            books = new LinkedList<Book>();
-            mapOfBooksNotInSerieByAuthor.put(author, books);
-          }
-          if (!books.contains(book))
-            books.add(book);
-        }
-      }
-    }
   }
 
   /**
-   * Produce a list of books.
-   * This function can be used recursively to handle a set of pages
+   * Produce a list of authors.
+   * This function is used recursively to handle a set of pages
+   *
    * @param pBreadcrumbs    The point we have reached so far
-   * @param authors         The list of authors that need listing
+   * @param listauthors     The list of authors that need listing
+   * @param inSubDir
    * @param from            The point reached in the list.  Will be 0 first time through
    * @param title           The title for this page
    * @param summary         THe summary
@@ -145,107 +100,109 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return                Link to the page just generated to insert into parent
    * @throws IOException
    */
-  private Composite<Element, String> getListOfAuthors(Breadcrumbs pBreadcrumbs,
-      List<Author> authors,
+  public Composite<Element, String> getCatalog(
+      Breadcrumbs pBreadcrumbs,
+      List<Author> listauthors,
+      boolean inSubDir,
       int from,
       String title,
       String summary,
       String urn,
       String pFilename,
       SplitOption splitOption) throws IOException {
+
+
     int catalogSize;
+    int pos;
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
     boolean willSplitByLetter = false;
-    String lastName = authors.get(0).getLastName().toUpperCase();   // Get name of first entry
-    for (Author author : authors) {                                                   // debug
+    String lastName = listauthors.get(0).getLastName().toUpperCase();   // Get name of first entry
+    for (Author author : listauthors) {                                                   // debug
       if (! author.getLastName().toUpperCase().equals(lastName)) {
         // As long as entries are not all the same, apply the split criteria
-        willSplitByLetter = (splitOption != SplitOption.Paginate)
-                            && (maxSplitLevels != 0)
-                            && (authors.size() > maxBeforeSplit);
+        willSplitByLetter = checkSplitByLetter(splitOption,authors.size());
         break;
       }
     }
     if (willSplitByLetter) {
-      mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(authors);
+      mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(listauthors);
       catalogSize = 0;
     } else
-      catalogSize = authors.size();
+      catalogSize = listauthors.size();
 
+    if (from != 0) inSubDir = true;
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
-    String filename = SecureFileManager.INSTANCE.getSplitFilename(pFilename, Constants.PAGE_DELIM + Integer.toString(pageNumber));
-    logger.debug("generating " + filename);
-    filename = SecureFileManager.INSTANCE.encode(filename);
+    String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
+    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    logger.debug("generating " + urlExt);
 
-    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    FileOutputStream fos = null;
-    Document document = new Document();
-    String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-    try {
-      fos = new FileOutputStream(outputFile);
-      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    // list the entries (or split them)
+    List<Element> result;
+    if (willSplitByLetter) {
+      logger.debug("splitting by letter");
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+      result = getListOfAuthorsSplitByLetter(breadcrumbs,
+                                             mapOfAuthorsByLetter,
+                                             title,
+                                             urn,
+                                             pFilename);
+    } else {
+      logger.debug("NOT splitting by letter");
+      result = new LinkedList<Element>();
+      for (int i = from; i < listauthors.size(); i++) {
+        if ((splitOption != SplitOption.DontSplitNorPaginate)
+        && ((i - from) >= maxBeforePaginate)) {
+          // Get a new page
+          Element nextLink = getCatalog(pBreadcrumbs,
+                                        listauthors,
+                                        true,
+                                        i,
+                                        title,
+                                        summary,
+                                        urn,
+                                        pFilename,
+                                        splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
+          result.add(0, nextLink);
+          break;
+        } else {
+          // Get a specific author
+          Author author = listauthors.get(i);
+          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+          logger.debug("getAuthor:" + author);
+          // AuthorEntry authorEntry = new AuthorEntry (mapOfBooksByAuthor.get(author), author);
+          // Element entry = authorEntry.getSubCatalogEntry(breadcrumbs, true).getFirstElement();
 
-      // list the entries (or split them)
-      List<Element> result;
-      if (willSplitByLetter) {
-        logger.debug("splitting by letter");
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        result = getListOfAuthorsSplitByLetter(breadcrumbs, mapOfAuthorsByLetter, title, urn, pFilename);
-      } else {
-        logger.debug("NOT splitting by letter");
-        result = new LinkedList<Element>();
-        for (int i = from; i < authors.size(); i++) {
-          if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
-            Element nextLink = getListOfAuthors(pBreadcrumbs, authors, i, title, summary, urn, pFilename,
-                                                splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
-            result.add(0, nextLink);
-            break;
-          } else {
-            Author author = authors.get(i);
-            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-            logger.debug("getAuthor:" + author);
-            Element entry = getAuthor(breadcrumbs, author, urn);
-            if (entry != null) {
-              result.add(entry);
-              logger.debug("adding author to the TROOK database:" + author);
-              TrookSpecificSearchDatabaseManager.INSTANCE.addAuthor(author, entry);
-            }
+          Element entry = getAuthor(breadcrumbs,
+                                    mapOfBooksByAuthor.get(author),
+                                    author) ;
+          if (entry != null) {
+            result.add(entry);
+            logger.debug("adding author to the TROOK database:" + author);
+            TrookSpecificSearchDatabaseManager.INSTANCE.addAuthor(author, entry);
           }
         }
       }
-
-      // add the entries to the feed
-      feed.addContent(result);
-
-      // write the element to the file
-      document.addContent(feed);
-      JDOM.INSTANCE.getOutputter().output(document, fos);
-    } catch (RuntimeException e) {
-      // ITIMPI:  Should we log something when NOT in trace mode?
-    } finally {
-      if (fos != null)
-        fos.close();
     }
-
-    // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile);
+    feed.addContent(result);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
+    String urlInItsSubfolder = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1));
     if (from > 0) {
       String titleNext;
-      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
+      if (pageNumber != maxPages) {
+        titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
+      } else {
         titleNext = Localization.Main.getText("title.lastpage");
       }
-
       entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
     } else {
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
-          useExternalIcons ? (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
+          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
@@ -263,7 +220,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return                           The link to this page for the parent
    * @throws IOException
    */
-  private List<Element> getListOfAuthorsSplitByLetter(Breadcrumbs pBreadcrumbs,
+  private List<Element> getListOfAuthorsSplitByLetter(
+      Breadcrumbs pBreadcrumbs,
       Map<String, List<Author>> mapOfAuthorsByLetter,
       String baseTitle,
       String baseUrn,
@@ -272,6 +230,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     if (Helper.isNullOrEmpty(mapOfAuthorsByLetter))
       return null;
 
+    boolean inSubDir = getCatalogLevel().length() > 0 || pBreadcrumbs.size() > 1;
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
       sTitle = sTitle + ", ";
@@ -280,20 +239,15 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     SortedSet<String> letters = new TreeSet<String>(mapOfAuthorsByLetter.keySet());
     for (String letter : letters) {
       // generate the letter file
-      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename,letter);
-      // check we are not recursing so deep we may have an issue with pathlength!
-      // This should be MUCH less likely with reworked spliLevel algorithm
-      if (letterFilename.length() > 200) {
-        assert true: "letterFilename.length() = " + letterFilename.length() + " (" + letterFilename + ")";
-      }
-      String letterUrn = Helper.getSplitString(baseUrn,letter,":");
+      String letterFilename = Helper.getSplitString(baseFilename, letter, Constants.TYPE_SEPARATOR);
+      String letterUrn = Helper.getSplitString(baseUrn,letter,Constants.URN_SEPARATOR);
       List<Author> authorsInThisLetter = mapOfAuthorsByLetter.get(letter);
 
       // sort the authors list
       Collections.sort(authorsInThisLetter);
 
       String letterTitle;
-      if (letter.equals("_"))
+      if (letter.equals(Constants.TYPE_SEPARATOR))
         letterTitle = Localization.Main.getText("splitByLetter.author.other");
       else
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("authorword.title"),
@@ -309,26 +263,31 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          *  Prepare the list of authors in any case, even if it will be skipped by SplitByAuthorInitialGoToBooks.
          *  It'll be useful in cross references
          */
-        logger.debug("calling getListOfAuthors for the letter " + letter);
+        logger.debug("calling getCatalog for the letter " + letter);
 
-        element = getListOfAuthors(pBreadcrumbs, authorsInThisLetter, 0, letterTitle, summary, letterUrn, letterFilename,
-//                (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
-                  (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
+        element = getCatalog(pBreadcrumbs,
+                             authorsInThisLetter,
+                             true,
+                             0,
+                             letterTitle,
+                              summary,
+                             letterUrn,
+                             letterFilename,
+                             (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
 
         if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
           List<Book> books = new LinkedList<Book>();
           for (Author author : authorsInThisLetter) {
-            books.addAll(getMapOfBooksByAuthor().get(author));
+            books.addAll(mapOfBooksByAuthor.get(author));
           }
           if (logger.isTraceEnabled())
             logger.trace("getListOfAuthorsSplitByLetter:  Breadcrumbs=" + pBreadcrumbs.toString());
-          boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
 
-          element = getListOfBooks(pBreadcrumbs, books, 0,                       // Starting from start
+          element = getCatalog(pBreadcrumbs, books, true, 0,                       // Starting from start
               letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
-              useExternalIcons ? (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS).getFirstElement();
+              useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null).getFirstElement();
         }
       }
 
@@ -338,127 +297,130 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     return result;
   }
 
+  public List<Author> getAuthors() {
+    return authors;
+  }
+
   /**
-   * Get the details of a single author
    *
-   * @param pBreadcrumbs          The point we have reached
-   * @param author                The author to be listed
-   * @param baseurn               The base URN for this author
-   * @return                      Yhe link to be inserted into the parent
-   * @throws IOException
+   * @param pBreadcrumbs
+   * @param authorbooks
+   * @param author
+   * @return
    */
-  private Element getAuthor(Breadcrumbs pBreadcrumbs, Author author, String baseurn) throws IOException {
+  private Element getAuthor(Breadcrumbs pBreadcrumbs,
+                                  List<Book> authorbooks,
+                                  Author author) throws IOException  {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + author);
 
-    CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
+    CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
-      CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
+      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
-    List<Element> firstElements = null;
-    List<Book> books = null;
-    List<Book> booksByThisAuthor = getMapOfBooksByAuthor().get(author);
-    // sort  by title
-    logger.debug("sort 'booksByThisAuthor' by title");
-    sortBooksByTitle(booksByThisAuthor);
-
-    if (Helper.isNullOrEmpty(booksByThisAuthor))
-      return null;
-
-    String basename = "author_";
-    String filename = getFilenamePrefix(pBreadcrumbs) + basename + author.getId() + ".xml";
-    logger.debug("getAuthor:generating " + filename);
-    filename = SecureFileManager.INSTANCE.encode(filename);
-
-    String title = author.getSort();
-    String urn = baseurn + ":" + author.getId();
-
-    // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(booksByThisAuthor);
-    boolean areThereSeries = false;
-    for (Book book : booksByThisAuthor) {
-      if (book.getSeries() != null) {
-        areThereSeries = true;
-        logger.debug("there are series");
-        break;
+    List listOfBooksInSeries = new LinkedList<Book>();
+    List listOfBooksNotInSeries = new LinkedList<Book>();
+    // We only need to worry about series if they are being listed under the author.
+    if (currentProfile.getShowSeriesInAuthorCatalog()) {
+      for (Book book : authorbooks) {
+        Series serie = book.getSeries();
+        if (serie != null) {
+          listOfBooksInSeries.add(book);
+        } else {
+          listOfBooksNotInSeries.add(book);
+        }
       }
     }
 
-    List<Object> stuffToFilterOutPlusAuthor = new ArrayList<Object>();
-    if (stuffToFilterOut != null)
-      stuffToFilterOutPlusAuthor.addAll(stuffToFilterOut);
-    stuffToFilterOutPlusAuthor.add(author);
+
+    List<Element> firstElements = null;
+    List<Book> morebooks = null;
+
+    // sort  by title
+    logger.debug("sort 'booksByThisAuthor' by title");
+    sortBooksByTitle(authorbooks);
+
+    if (Helper.isNullOrEmpty(author))  {
+      return null;
+    }
+
+    String filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.AUTHOR_TYPE, author.getId());
+    logger.debug("getAuthor:generating " + filename);
+
+    String title = author.getSort();
+    String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
+
+    // try and list the items to make the summary
+    String summary = Summarizer.INSTANCE.summarizeBooks(getBooks());
 
     // We like to list series if we can before books not in series
     // (unless the user has suppressed series generation).
-    if (areThereSeries
-    && currentProfile.getGenerateSeries()
-    && currentProfile.getShowSeriesInAuthorCatalog()) {
+
+    if (listOfBooksInSeries.size() > 0
+        //          && currentProfile.getGenerateSeries()
+        && listOfBooksInSeries.size() != 0
+        && currentProfile.getShowSeriesInAuthorCatalog()) {
       logger.debug("processing the series by " + author);
 
       // make a link to the series by this author catalog
       logger.debug("make a link to the series by this author catalog");
-      firstElements = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor)
-          .getContentOfListOfSeries(pBreadcrumbs, title, summary, urn, filename, SplitOption.Paginate);
+      //        SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor);
+      SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
+      seriesSubCatalog.setCatalogLevel(getCatalogLevel());
+      seriesSubCatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
+      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.SERIES_TYPE);
+      firstElements = seriesSubCatalog.getContentOfListOfSeries(pBreadcrumbs,
+                                                               null,
+                                                               true,
+                                                               0, title, summary, urn,
+                                                               seriesSubCatalog.getCatalogBaseFolderFileName(),
+                                                               SplitOption.Paginate, true);
 
-      books = getMapOfBooksNotInSeriesByAuthor().get(author);
-      if (books == null)
-        books = new LinkedList<Book>();
-
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename));
-      logger.debug("processing the other books by " + author);
-      Element entry = new AllBooksSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor, true).getSubCatalogEntry(breadcrumbs, SplitOption.Paginate).getFirstElement();
+      // Make a link to the "allbooks entry" for this author
+      AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
+      booksSubcatalog.setCatalogLevel(getCatalogLevel());
+      booksSubcatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
+      booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
+      Element entry = booksSubcatalog.getCatalog(breadcrumbs,
+                                                 booksSubcatalog.getBooks(),
+                                                 true,
+                                                 0,       // from start
+                                                 Localization.Main.getText("allbooks.title"),
+                                                 booksSubcatalog.getSummary(),
+                                                 booksSubcatalog.getUrn(),
+                                                 booksSubcatalog.getCatalogBaseFolderFileName(),
+                                                 SplitOption.Paginate,
+                                                 useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS,
+                                                 null).getFirstElement();
       if (entry != null)
         firstElements.add(0, entry);
 
+      // Reset books to list non-series books
+      morebooks = listOfBooksNotInSeries;
+      logger.debug("processing the other " + morebooks.size() + " books by " + author);
     } else {
-      logger.debug("there are no series by " + author + ", processing all his books");
-      books = booksByThisAuthor;
-      if (Helper.isNullOrEmpty(books))
-        return null;
-
+      assert authorbooks != null;
+      morebooks = authorbooks;
+      logger.debug("there are no series by " + author + ", processing all his " + morebooks.size() + " books");
       // try and list the items to make the summary
       logger.debug("try and list the items to make the summary");
-      summary = Summarizer.INSTANCE.summarizeBooks(books);
+      summary = Summarizer.INSTANCE.summarizeBooks(getBooks());
     }
 
-    // sort 'books' by title
+    // sort 'morebooks' by title
     logger.debug("sort books by title");
-    sortBooksByTitle(books);
+    sortBooksByTitle(morebooks);
 
-    logger.debug("calling getListOfBooks with " + books.size() + " books");
+    logger.debug("calling getCatalog with " + morebooks.size() + " books");
     logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
 
-    Element result = getListOfBooks(pBreadcrumbs, books, 0,              // from
+    return getCatalog(pBreadcrumbs, morebooks, true,           // Always in subDir
+        0,              // from
         title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
         // #751211: Use external icons option
-        useExternalIcons ? (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
-    return result;
+        useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
   }
 
-  /**
-   * Used to generate a sub-catalog
-   *
-   * @param pBreadcrumbs        The point reached so far
-   * @return                    The link to insert into the parent
-   * @throws IOException
-   */
-  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
-    if (Helper.isNullOrEmpty(getAuthors()))
-      return null;
-
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_authors.xml");
-    String title = Localization.Main.getText("authors.title");
-    String urn = "calibre:authors";
-
-    String summary = "";
-    if (getAuthors().size() > 1)
-      summary = Localization.Main.getText("authors.alphabetical", authors.size());
-    else if (getAuthors().size() == 1)
-      summary = Localization.Main.getText("authors.alphabetical.single");
-
-    logger.debug("getListOfAuthors:" + pBreadcrumbs.toString());
-    return getListOfAuthors(pBreadcrumbs, getAuthors(), 0, title, summary, urn, filename, null);
-  }
 
 }

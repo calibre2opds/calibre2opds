@@ -120,6 +120,7 @@ public class Helper {
             } catch (NoSuchMethodException e) {
               logger.warn(e.getMessage(), e);
             }
+
             if (method != null)
               try {
                 result = method.invoke(result);
@@ -132,6 +133,7 @@ public class Helper {
               }
           }
         }
+
         lines.append(result);
         lines.append(theSeparator);
       }

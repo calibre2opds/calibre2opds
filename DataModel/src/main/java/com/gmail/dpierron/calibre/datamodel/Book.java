@@ -18,7 +18,7 @@ public class Book implements SplitableByLetter {
   private final String id;
   private final String uuid;
   private String title;
-  private String Title_Sort;
+  private String titleSort;
   private String titleWithSerieNumber;
   private String titleWithRating;
   private final String path;
@@ -48,6 +48,7 @@ public class Book implements SplitableByLetter {
   private List<Language> bookLanguages = new LinkedList<Language>();
   private boolean changed = false;
   private boolean flag;
+  private List<CustomColumnValue> customColumnValues;
 
   private static Date ZERO;
   private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
@@ -60,7 +61,7 @@ public class Book implements SplitableByLetter {
   public Book(String id,
       String uuid,
       String title,
-      String title_sort, 
+      String title_sort,
       String path,
       Float serieIndex,
       Date timestamp,
@@ -73,6 +74,7 @@ public class Book implements SplitableByLetter {
     this.id = id;
     this.uuid = uuid;
     setTitle(title);
+    this.titleSort = title_sort;
     this.path = path;
     this.serieIndex = serieIndex;
     this.timestamp = timestamp;
@@ -86,14 +88,27 @@ public class Book implements SplitableByLetter {
     this.rating = rating;
   }
 
+  /**
+   * Get the unique book id.
+   * It should always be set!
+   * @return
+   */
   public String getId() {
+    assert Helper.isNotNullOrEmpty(id);
     return id;
   }
 
   public String getUuid() {
+    assert Helper.isNotNullOrEmpty(uuid);
     return uuid;
   }
 
+  /**
+   * Store a new value for the title field
+   * Clear other related fields so that they get
+   * recalculatee if they are needed.
+   * @param value
+   */
   private void setTitle(String value) {
     titleWithRating = null;
     titleWithSerieNumber = null;
@@ -105,14 +120,29 @@ public class Book implements SplitableByLetter {
     }
   }
 
+  /**
+   * Get the title
+   * It should not be possible to have a book entry without this being set.
+   * @return
+   */
   public String getTitle() {
+    assert Helper.isNotNullOrEmpty(title) : "Unexpected null/empty title for book ID " + id;
     return title;
   }
 
+  /**
+   * Get the title_sort value
+   * It is normally set by Calibre autoamtically, but it can be cleared
+   * by users and may not be set by older versions of Calibre.  In these
+   * cases we fall back to using the (mandatory) title field and issue a warning
+   * @return
+   */
   public String getTitle_Sort() {
-    if (Helper.isNullOrEmpty(Title_Sort))
-      Title_Sort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
-    return Title_Sort;
+    if (Helper.isNullOrEmpty(titleSort)) {
+      logger.warn("Title_Sort not set - using Title for book '" + getTitle() + "'");
+      titleSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
+    }
+    return titleSort;
   }
 
   public Language getBookLanguage() {
@@ -140,6 +170,10 @@ public class Book implements SplitableByLetter {
     return (isbn == null ? "" : isbn);
   }
 
+  /**
+   * Get the title with the series information appended.
+   * @return
+   */
   public String getTitleWithSerieNumber() {
     if (titleWithSerieNumber == null) {
       DecimalFormat df = new DecimalFormat("####.##");
@@ -169,10 +203,10 @@ public class Book implements SplitableByLetter {
 
   /**
    * Remove leading text from the given XHTNL string.  This is
-   *        used to remove words such as SUMMARY that we add
-   *        ourselves in the catalog.   It is also used to remove
-   *        other common expressions from the Summary to try and
-   *        leave text that is more useful as a summary.
+   * used to remove words such as SUMMARY that we add  ourselves
+   * in the catalog.   It is also used to remove other common
+   * expressions from the Summary to try and leave text that is more
+   * useful as a summary.
    *
    *        Special processing requirements:
    *        - Any leading HTML tags or spaces are ignored
@@ -341,8 +375,18 @@ public class Book implements SplitableByLetter {
     return summary;
   }
 
+  /**&
+   * Get the series index.
+   * It is thought that Calibre always sets this but it is better to play safe!
+   * @return
+   */
   public Float getSerieIndex() {
-    return serieIndex;
+    if (Helper.isNotNullOrEmpty(serieIndex)) {
+      return  serieIndex;
+    }
+    // We never expect to get here!
+    logger.warn("Unexpected null/empty Series Index for book " + getTitle() + "(" + getId() + ")");
+    return (float)1.0;
   }
 
   public Date getTimestamp() {
@@ -562,7 +606,7 @@ public class Book implements SplitableByLetter {
   }
 
   public Book copy() {
-    Book result = new Book(id, uuid, title, Title_Sort, path, serieIndex, timestamp, modified, publicationDate, isbn, authorSort, rating);
+    Book result = new Book(id, uuid, title, titleSort, path, serieIndex, timestamp, modified, publicationDate, isbn, authorSort, rating);
     result.setComment(this.getComment());
     result.setSeries(this.getSeries());
     result.setPublisher(this.getPublisher());
@@ -602,5 +646,23 @@ public class Book implements SplitableByLetter {
   public void setChanged() {
     changed = true;
   }
+
+  public List<CustomColumnValue> getCustomColumnValues() {
+    return customColumnValues;
+  }
+
+  public void setCustomColumnValues (List <CustomColumnValue> values) {
+    customColumnValues = values;
+  }
+
+  public CustomColumnValue getCustomColumnValue (String name) {
+    assert false : "getCustomColumnValue() not yet ready for use";
+    return null;
+  }
+
+  public void setCustomColumnValue (String name, String value) {
+    assert false : "setCustomColumnValue() not yet ready for use";
+  }
+
 
 }

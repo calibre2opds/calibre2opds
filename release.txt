@@ -98,7 +98,11 @@ that have been recorded in the Issue tracker.
 v3.2
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
               Using a wiki also allows for users to update it directly which should help with improving the documentation.
-   -  Fix: #c2o-18: Re-organise GUI fields amongst the various tabs
+    - Change: Reworked the way that filenames within the catalog are derived.   Should mean that filenames are shorter
+              and less cryptic.   However invalidates any cached names from earlier releases.
+    - Change: Reworked way the 'encrypt' files option is handled.  When active an 'encryption string' is
+              added at the start of folder names only - but the remainder of names is same as unecrypted versions.
+    - Fix: #c2o-18: Re-organise GUI fields amongst the various tabs
                     (in particular move Featured Books fields to Custom Catalogs tab)
     - Fix: #c2o-85:  Sorting in the All Books catalog should ignore case
     - Fix: #c2o-91:  Setting catalog folder to  root (/) is not treated as an error
@@ -122,6 +126,8 @@ v3.2
     - Fix: #c2o-140: Help URL's do not point to latest documentation
     - Fix: #c2o-141: The 'Open Log File' option does not work on Windows 8
     - New: #c2o-142: Allow the book links to external sites to be localized
+                     (implemented for GUI defauls - not yet made book language specific)
+    - New: #c2o-149: Added an option to clear encrypted filenames cache to Tools menu
     - Fix: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
 
 v3.1

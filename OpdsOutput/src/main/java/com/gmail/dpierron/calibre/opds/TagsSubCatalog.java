@@ -1,5 +1,8 @@
 package com.gmail.dpierron.calibre.opds;
-
+/**
+ *  Abstract class that contains methos that are common to all
+ *  types of tag subcatalog.
+ */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
@@ -7,7 +10,6 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -17,27 +19,32 @@ import java.io.IOException;
 import java.text.Collator;
 import java.util.*;
 
-public abstract class TagSubCatalog extends BooksSubCatalog {
-  private final static Logger logger = Logger.getLogger(TagSubCatalog.class);
+public abstract class TagsSubCatalog extends BooksSubCatalog {
+  private final static Logger logger = Logger.getLogger(TagsSubCatalog.class);
   private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
 
   private List<Tag> tags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
 
-  public TagSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
+  public TagsSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
   }
 
-  public TagSubCatalog(List<Book> books) {
+  public TagsSubCatalog(List<Book> books) {
     super(books);
   }
 
+  /**
+   *
+   * @param originalBooks   The list of books to check
+   * @return                The list of books passing the criteria (may be an empty list if none found)
+   */
   @Override
   List<Book> filterOutStuff(List<Book> originalBooks) {
     List<Book> result = originalBooks;
 
     Set<Tag> tagsToRemove = new TreeSet<Tag>();
-    for (Object objectToFilterOut : stuffToFilterOut) {
+    for (Object objectToFilterOut : getStuffToFilterOut()) {
       if (objectToFilterOut instanceof Tag)
         tagsToRemove.add((Tag) objectToFilterOut);
     }
@@ -88,7 +95,6 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
           }
           books.add(book);
         }
-
       }
     }
     return mapOfBooksByTag;
@@ -116,25 +122,25 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
     return false;
   }
 
-  Element getTag(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
+  Element getTag(Breadcrumbs pBreadcrumbs,
+                 Tag tag,
+                 String baseurn,
+                 String titleWhenCategorized) throws IOException {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + tag);
 
-    CatalogContext.INSTANCE.getCallback().showMessage(pBreadcrumbs.toString());
+    CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
-      CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
+      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksByTag().get(tag);
     if (Helper.isNullOrEmpty(books))
       return null;
 
-
-    String basename = "tag_";
-    String filename = getFilenamePrefix(pBreadcrumbs) + basename + tag.getId() + ".xml";
-    filename = SecureFileManager.INSTANCE.encode(filename);
-
+    // Tags are held at the level (i.e. not the top level)
+    String filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId());
     String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
-    String urn = baseurn + ":" + tag.getId();
+    String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();
 
     // sort books by title
     if (logger.isDebugEnabled())
@@ -147,48 +153,33 @@ public abstract class TagSubCatalog extends BooksSubCatalog {
       // specify that this is a deep level
       String summary = Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(books.size()));
       if (logger.isDebugEnabled())
-        logger.debug("making a deep level");
+        logger.debug("getTag: Making a deep level for tag " + tag);
       if (logger.isDebugEnabled())
         logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      return getSubCatalogLevel(pBreadcrumbs, books, getStuffToFilterOutAnd(tag), title, summary, urn, filename, splitOption,
-          useExternalIcons ?
-              (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
-              Icons.ICON_TAGS);
+      // String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
+      // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null);
+      LevelSubCatalog level = new LevelSubCatalog(books, title);
+      level.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null));  // Create a brand new level using current breadcrumbs!
+      level.setCatalogType("");
+      level.setCatalogFolder("");
+      level.setCatalogBaseFilename(filename);
+      return level.getLevelCatalog(pBreadcrumbs,
+                                   getStuffToFilterOutAnd(tag),   // Used to determine what's left!
+                                   true,                          // Always in sub-dir for a tag !
+                                   summary,
+                                   urn, splitOption,
+                                   useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     } else {
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeBooks(books);
       if (logger.isDebugEnabled())
-        logger.debug("making a simple book list");
+        logger.debug("getTag: making a simple book list for tag " + tag);
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
-      boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-      return getListOfBooks(pBreadcrumbs, books, 0, title, summary, urn, filename, splitOption, useExternalIcons ?
-          (weAreAlsoInSubFolder ? "../" : "./") + Icons.ICONFILE_TAGS :
-          Icons.ICON_TAGS).getFirstElement();
+      return getCatalog(pBreadcrumbs, books, true,               // Always in sub-dir for tag
+          0, title, summary, urn, filename, splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS, null).getFirstElement();
     }
   }
 
-  abstract Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException;
+  abstract Composite<Element, String> getTagsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException;
 
-  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException {
-    if (Helper.isNullOrEmpty(getTags()))
-      return null;
-
-    logger.debug("getSubCatalogEntry:" + pBreadcrumbs.toString());
-    return _getEntry(pBreadcrumbs);
-  }
-
-  public static SubCatalog getTagSubCatalog(List<Book> books) {
-    if (Helper.isNotNullOrEmpty(currentProfile.getSplitTagsOn()))
-      return new TagTreeSubCatalog(books);
-    else
-      return new TagListSubCatalog(books);
-  }
-
-  public static SubCatalog getTagSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
-    if (Helper.isNotNullOrEmpty(currentProfile.getSplitTagsOn()))
-      return new TagTreeSubCatalog(stuffToFilterOut, books);
-    else
-      return new TagListSubCatalog(stuffToFilterOut, books);
-  }
 }

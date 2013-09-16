@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.jdom.Element;
+import sun.util.resources.CurrencyNames_ar_TN;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -122,6 +123,16 @@ public enum FeedHelper {
     return feed;
   }
 
+  /**
+   * Generate a link to a catalog entry
+   *
+   * @param pTitle
+   * @param urn
+   * @param filename
+   * @param pSummary
+   * @param icon
+   * @return
+   */
   public Element getCatalogEntry(String pTitle, String urn, String filename, String pSummary, String icon) {
     Element result = getAtomElement(false, "entry", pTitle, urn, filename, pSummary, false, icon);
     // add updated
@@ -129,6 +140,14 @@ public enum FeedHelper {
     return result;
   }
 
+  /**
+   * Generate a link to a book details entry
+   *
+   * @param pTitle
+   * @param urn
+   * @param timestamp
+   * @return
+   */
   public Element getBookEntry(String pTitle, String urn, long timestamp) {
     Element result = getAtomElement(false, "entry", pTitle, urn, null, null, null, (String) null, false, null);
     // add updated
@@ -136,6 +155,16 @@ public enum FeedHelper {
     return result;
   }
 
+  /**
+   * Generate a link to the 'About entry'
+   *
+   * @param title
+   * @param urn
+   * @param url
+   * @param summary
+   * @param icon
+   * @return
+   */
   public Element getAboutEntry(String title, String urn, String url, String summary, String icon) {
     Element result = getAtomElement(false, "entry", title, urn, url, LINKTYPE_HTML, summary, true, icon);
     // add updated
@@ -206,24 +235,38 @@ public enum FeedHelper {
     if (feed == null)
       return;
 
-    // add a navigation link to every breadcrumb in the hierarchy
-    if (breadcrumbs != null) {
-      for (Breadcrumb breadcrumb : breadcrumbs) {
-        feed.addContent(getLinkElement(breadcrumb.url, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
-      }
+    if ((! url.endsWith(Constants.XML_EXTENSION)) && (! url.endsWith(Constants.HTML_EXTENSION))) {
+      int dummy = 1;
+      // assert url.endsWith(Constants.XML_EXTENSION) : "Program Error: Attempt to set up URL without .xml extension ";
     }
-
     // add a "start" link to the catalog main page
     String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
     // root catalog link
-    String startUrl;
-    if (Helper.isNullOrEmpty(baseUrl))
-      // c2o-104 - index.xml should not point to current folder expcept at top level
-      startUrl =  ((breadcrumbs != null && breadcrumbs.size() > 0) ? "../" : "") + "index.xml";
-    else
-      startUrl = baseUrl + "index.xml";
+    String startUrl = baseUrl;
+    if (baseUrl.length() == 0) startUrl += Constants.PARENT_PATH_PREFIX;
+    startUrl += CatalogManager.initialUrl + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
     feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
+
+    // add a navigation link to every breadcrumb in the hierarchy
+    if (breadcrumbs != null) {
+      // Special treatment for first breadcrumb (start URL)
+      Breadcrumb breadcrumb = breadcrumbs.firstElement();
+      feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
+      // Add links for remaining breadcrumbs
+      for (int i = 1 ; i < breadcrumbs.size() ; i++) {
+        breadcrumb = breadcrumbs.elementAt(i);
+        String breadcrumbUrl = breadcrumb.url;
+        // All breadcrumb URL's (except first) need to be to parent level
+        if (breadcrumbUrl.startsWith(Constants.CURRENT_PATH_PREFIX)) {
+          breadcrumbUrl = Constants.PARENT_PATH_PREFIX + breadcrumbUrl.substring(Constants.CURRENT_PATH_PREFIX.length());
+        }
+        if (! breadcrumbUrl.startsWith(Constants.PARENT_PATH_PREFIX)) {
+          breadcrumbUrl = breadcrumbUrl.substring(Constants.PARENT_PATH_PREFIX.length());
+        }
+        feed.addContent(getLinkElement(breadcrumbUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
+      }
+    }
 
     String selfUrl = baseUrl;
     if (url != null) {
@@ -239,13 +282,14 @@ public enum FeedHelper {
       selfUrl = baseUrl + s;
     }
 
-    // Self URL's mean we are already in a  folder, so do need to add in @../@ at start  (c2o-104)
+    // Self URL's mean we are already in a  folder, so do need to add in "../" at start  (c2o-104)
     // ITIMPI:  How does thes the above test for removing "../" interact (at all) with this?
-    if (selfUrl.indexOf('/') != -1)
-        selfUrl="../" + selfUrl;
+    if (selfUrl.startsWith(Constants.PARENT_PATH_PREFIX))
+      selfUrl = Constants.CURRENT_PATH_PREFIX + selfUrl.substring(3);
+    if (! selfUrl.startsWith(Constants.CURRENT_PATH_PREFIX))
+      selfUrl = Constants.CURRENT_PATH_PREFIX + selfUrl;
 
     feed.addContent(getLinkElement(selfUrl, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
-
   }
   /* ---------- METADATA ----------*/
 
@@ -321,7 +365,7 @@ public enum FeedHelper {
       Calendar c = Calendar.getInstance();
       return getUpdatedTag(c);
     } else {
-      // return fake updated time - Oh, my birthday, what a coincidence ;)
+      // DP: return fake updated time - Oh, my birthday, what a coincidence ;)
       return JDOM.INSTANCE.element("updated").addContent("1973-01-26T08:00:00Z");
     }
   }

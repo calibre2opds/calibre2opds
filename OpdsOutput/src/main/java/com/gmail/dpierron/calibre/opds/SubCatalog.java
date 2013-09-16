@@ -7,11 +7,8 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.Option;
-import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
-// import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -19,30 +16,433 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.zip.CRC32;
 
 public abstract class SubCatalog {
-
+  // cache some widely used objects.
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
-  // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
+  protected final static CatalogManager catalogManager = CatalogContext.INSTANCE.catalogManager; // cache as optimization
+  protected final static HtmlManager htmlManager = CatalogContext.INSTANCE.htmlManager;
+  protected final static ImageManager coverManager = CatalogContext.INSTANCE.coverManager;
+  protected final static ThumbnailManager thumbnailManager = CatalogContext.INSTANCE.thumbnailManager;
   protected final static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
   protected final static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
   protected final static int maxSplitLevels = currentProfile.getMaxSplitLevels();
   protected final static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
   protected final static boolean useExternalIcons = currentProfile.getExternalIcons();
+  private final static String securityCode = catalogManager.securityCode;
+
+  //  PROPERTIES
+
+  // This variable is set to the level (if any) for a particular catalog instance.
+  // It would be a null/empty string for top level catalogs.   It will be set when
+  // generating any additional level  This could be a custom catalog, the Featured
+  // catalog or perhaps an additional level from extra tags/custom columns.
+  private String catalogLevel;
+
+  // This identifies the particular catalog type.   It is set within the classes
+  // derived from this class.  It is used in conjuction with the level to work
+  // out the default catalog and basefilename for a particular catalog instance.
+  private String catalogType;
+
+  // The folder in which the files for this sub-catalog are to be placed.
+  // It should always be set - for the top level it is an empty string
+  // It should always be stored without level and/or security information as
+  // there are methods available to get the version with these added.
+  private String catalogFolder;
+
+  // The filename on which files in this catalog are based.
+  // If not set then it is assumed to be the same as the catalog folder
+  private String catalogBaseFilename;
+
+  // The full path for the folder and base filename including the security code,
+  // level in the folder part and all relevant separators. It is a cached copy for
+  // effeciency reasons as it is needed for each catalog entry.
+  private String catalogFolderBaseFilename;
+
+  private List<Object> stuffToFilterOut;
 
   private List<Book> books;
-  List<Object> stuffToFilterOut;
-  boolean isMainStep = true;
+
+  private String optimizeUrlPrefix;       // String that is used when trying to optimize URL's
+
+  // CONSTRUCTORS
 
   public SubCatalog(List<Book> books) {
     this(null, books);
   }
 
+  public SubCatalog () {
+    // Do nothing special!
+  }
+
   public SubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     setStuffToFilterOut(stuffToFilterOut);
     setBooks(books);
+  }
+
+  private void setOptimizUrlPrefix() {
+    optimizeUrlPrefix = Constants.PARENT_PATH_PREFIX + getCatalogPrefix() + getCatalogFolder() + Constants.FOLDER_SEPARATOR;
+  }
+  // METHODS
+
+  /**
+   * Get the current catalog level for this catalog instance
+   * If we are not in a sub-level this will be empty
+   * @return
+   */
+  public String getCatalogLevel () {
+    if (catalogLevel == null) {
+      catalogLevel = "" ;
+    }
+    return catalogLevel;
+  }
+  /**
+   * Set the catalog level for this particular catalog instance
+   * It is only set for catalogs that are not top-level ones
+   * @param newlevel
+   */
+  public void setCatalogLevel (String newlevel) {
+    assert newlevel != null;
+    catalogLevel = newlevel;
+    catalogFolderBaseFilename = null;
+    setOptimizUrlPrefix();
+  }
+
+  /**
+   * set the Catalog Level based on the breadcrumbs to this point
+   * This is used when a complete set of sub-catalogs are required.
+   * TODO assumes that the breadcrumbs are unique - this assumption needs validation
+   * @param breadcrumbs
+   */
+  public void setCatalogLevel (Breadcrumbs breadcrumbs) {
+    assert (breadcrumbs != null);
+    CRC32 crc32 = new CRC32();
+    crc32.update(breadcrumbs.toString().getBytes());
+    setCatalogLevel(Long.toHexString(crc32.getValue()));
+    setOptimizUrlPrefix();
+  }
+
+
+  /**
+   * Get the current level and if necessary add the prefix if not empty
+   *
+   * @return
+   */
+  private String getCatalogPrefix() {
+    String prefix = securityCode;
+    if (securityCode.length() > 0) prefix += Constants.SECURITY_SEPARATOR;
+    if (catalogLevel == null) catalogLevel = "";
+    prefix += catalogLevel;
+    if (catalogLevel.length() > 0) prefix += Constants.LEVEL_SEPARATOR;
+    return prefix;
+  }
+
+  /**
+   * Get the current catalog type.
+   * If it has never been set we assume an empty string
+   * @return
+   */
+  public String getCatalogType() {
+    if (catalogType == null)
+      catalogType = "";
+    return catalogType;
+  }
+
+  /**
+   * Set the catalog type.
+   * This would normally only be used for special catalog types as the main
+   * ones will have set this to a final value as part of class initialisation
+   * @param type
+   */
+  public void setCatalogType (String type) {
+    assert (type != null);
+    catalogType = catalogFolder = catalogBaseFilename = type;
+    catalogFolderBaseFilename = null;
+    setOptimizUrlPrefix();
+  }
+
+  /**
+   * Get the folder for this sub-catalog
+   *
+   * @return  The foldername for this catalog
+   */
+  public String getCatalogFolder () {
+    if (Helper.isNullOrEmpty(catalogFolder)) {
+      catalogFolder = getCatalogFolder(getCatalogType());
+    }
+
+    assert catalogFolder.indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+           "Program error: catalogFolder contains SECURITY_SEPARATOR (" + catalogFolder + ")";
+    assert catalogFolder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+           "Program error: catalogFolder contains LEVEL_SEPARATOR (" + catalogFolder + ")";
+
+    return catalogFolder;
+  }
+  /**
+   * Get the full folder name for the given folder type
+   * Needs to take into account any level we may be working at
+   * and also any secutiry code that might be active.
+   *
+   * @param foldertype    // The type (ignoring level) of folder we want
+   * @return              // The folder name including any level and security prefix if type not empty
+   */
+  public String getCatalogFolder (String foldertype) {
+    assert (foldertype != null);
+    if (foldertype.length() == 0) {
+      return foldertype;
+    }
+    return getCatalogPrefix() + foldertype;
+  }
+
+  /**
+   * Get the catalog folder for the given type with the name derived
+   * from catalog type.  It should have the security prefix the catalog name
+   * but omit any level information.   This is primarily used for the
+   * sub-catalog types such as 'books' and 'author' which are always
+   * at the top level.
+   *
+   * @return            The catalog name preceded with any security infomation, but no level
+   */
+  public String getCatalogFolderWithSecurityNoLevel() {
+    assert Helper.isNotNullOrEmpty(catalogType) : "Program Error catalogType not set";
+    return getCatalogFolderWithSecurityNoLevel(catalogType);
+  }
+    /**
+     * Get the catalog folder for the given type with the name derived
+     * from type.  It should have the security prefix the catalog name
+     * but omit any level information.   This is primarily used for the
+     * sub-catalog types such as 'books' and 'author' which are always
+     * at the top level.
+     *
+     * @param foldertype  The catalog 'type'
+     * @return            The catalog name preceded with any security infomation, but no level
+     */
+  public String getCatalogFolderWithSecurityNoLevel (String foldertype) {
+    assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
+    String prefix = catalogManager.securityCode;
+    if (prefix.length() > 0) prefix += Constants.SECURITY_SEPARATOR;
+
+    int pos = prefix.indexOf(Constants.SECURITY_SEPARATOR);
+    assert prefix.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+        "Program error: Two occurences of SECURITY_SEPARATOR (" + prefix + ")";
+    assert prefix.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+        "Program error: Unexpected LEVEL_SEPARATOR (" + prefix + ")";
+
+    return prefix + foldertype;
+  }
+  /**
+   * Get the catalog folder for the given type with the name derived
+   * from type.  It should have the security prefix the catalog name
+   * but omit any level information.   This is primarily used for the
+   * sub-catalog types such as 'books' and 'author' which are always
+   * at the top level.
+   *
+   * @param foldertype  The catalog 'type'
+   * @return            The catalog name preceded with any security infomation, but no level
+   */
+  public String getCatalogFolderWithLevelAndSecurity (String foldertype) {
+    assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
+    String result = securityCode;
+    if (result.length() > 0) result += Constants.SECURITY_SEPARATOR;
+    int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
+
+    assert result.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+        "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
+    pos = result.indexOf(Constants.LEVEL_SEPARATOR);
+    assert result.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+        "Program error: Two occurences of LEVEL_SEPARATOR (" + result + ")";
+
+    result += foldertype;
+    return result;
+  }
+
+  /**
+   * Set the folder to be used
+   * It is always stored decoded and without any trailing slash
+   * @param folder  folder name to set
+   */
+  public void setCatalogFolder (String folder) {
+    assert folder != null;
+
+    assert ! folder.endsWith(Constants.FOLDER_SEPARATOR);
+    assert folder.indexOf(Constants.SECURITY_SEPARATOR) == -1:
+            "Program error: Unexpected Occurencs of SECURITY_SEPARATOR (" + folder + ")";        ;
+    assert folder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+            "Program error: Unexpected occurencs of SECURITY_SEPARATOR (" + folder + ")";
+
+    catalogFolder = folder;
+    setOptimizUrlPrefix();
+  }
+
+  /**
+   * Get the Current Catalog Base filename
+   *
+   * If both the folder name, catalog type and catalog level are not set we treat
+   * this as a special case and add in the security code.
+   *
+   * @return
+   */
+  public String getCatalogBasefilename () {
+    if (catalogBaseFilename == null) {
+      catalogBaseFilename = getCatalogType();
+    }
+    assert catalogBaseFilename.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
+            "Program Error:  Unexpected FOLDER_SEPARATOR (" + catalogBaseFilename + ")";
+    if (catalogLevel.length() == 0 && catalogFolder.length() == 0 && catalogType.length() == 0) {
+      // The special case for top level
+      return securityCode + Constants.SECURITY_SEPARATOR + catalogBaseFilename;
+    } else {
+      // The normal case
+      return catalogBaseFilename;
+    }
+  }
+  /**
+   * Set the base filename to be used for this catalog.
+   * Only needed when it cannot be derived automatically from the type
+   *
+   * @param name
+   */
+  public void setCatalogBaseFilename (String name) {
+    assert Helper.isNotNullOrEmpty(name) :
+                "Program Error: invalid name (" + name +")";
+    // We want to skip over any leading folder name
+    int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
+    assert name.substring(pos+1).indexOf(Constants.FOLDER_SEPARATOR) == -1 :
+            "Program Error: Multiple FOLDER_SEPARTORS found (" + name + ")";
+    if (pos != -1) {
+      name = name.substring(pos+1);     // Remove the folder part
+    }
+    // We also want to remove any leading occurrence of security code
+    if (name.startsWith(securityCode)) {
+      catalogBaseFilename = name.substring(securityCode.length()+1);  // Remove the security code
+    } else {
+      catalogBaseFilename = name;
+    }
+    catalogFolderBaseFilename = null;
+  }
+
+
+  /**
+   * Get the base folder/file name based on the object propertied
+   * Level is added from the current object as require
+   *
+   * @return
+   */
+  public String getCatalogBaseFolderFileName () {
+    if (Helper.isNullOrEmpty(catalogFolderBaseFilename)) {
+      // Special case of empty folder and level (as used for index files!)
+      if (catalogFolder.length() == 0  & catalogLevel.length() == 0) {
+        catalogFolderBaseFilename = getCatalogBasefilename();
+      } else {
+        catalogFolderBaseFilename = getCatalogPrefix() + getCatalogFolder();  // This will include security/level prefixes
+        catalogFolderBaseFilename += Constants.FOLDER_SEPARATOR + getCatalogBasefilename();
+      }
+    }
+
+    int pos = catalogFolderBaseFilename.indexOf(Constants.SECURITY_SEPARATOR);
+    assert catalogFolderBaseFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+            "Program error: Two occurences of SECURITY_SEPARATOR (" + catalogFolderBaseFilename + ")";
+    pos = catalogFolderBaseFilename.indexOf(Constants.LEVEL_SEPARATOR);
+    assert catalogFolderBaseFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+        "Program error: Two occurences of LEVEL_SEPARATOR (" + catalogFolderBaseFilename + ")";
+
+    return catalogFolderBaseFilename;
+  }
+  /**
+   * Get the folder/file name based on the type parameter
+   * Level is added from the current object as require .
+   * It will have the embedded level/security information if needed.
+   *
+   * @return
+   */
+  public String getCatalogBaseFolderFileName (String type) {
+    assert Helper.isNotNullOrEmpty(type);
+    String folder = getCatalogFolder(type);
+    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + type;
+  }
+
+  public String getCatalogBaseFolderFileNameNoLevel (String type) {
+    assert Helper.isNotNullOrEmpty(type);
+    String result = securityCode;
+    if (result.length() > 0)  result += Constants.SECURITY_SEPARATOR;
+    result += type;
+    if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
+    return result + type;
+  }
+
+    /**
+     * Get the full base folder/filename including the speified id.
+     * It will get the level/security information from the current catalog properties.
+     *
+     * @param id
+     * @return
+     */
+  public String getCatalogBaseFolderFileNameId (String id) {
+    return getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + id;
+  }
+
+  /**
+   * Get the full base folder/filename for the given type and id
+   * It will get the level information from the current catalog properties.
+   * Security information will also be added as required
+   *
+   * @param type
+   * @param id
+   * @return
+   */
+  public String getCatalogBaseFolderFileNameId (String type, String id) {
+    return getCatalogBaseFolderFileName(type) + Constants.TYPE_SEPARATOR + id;
+  }
+
+
+  /**
+   * Get the full base folder/filename for the given type and id
+   * Security information will be added, but no level information.
+   * This is intended for entry types that are always at the top level
+   * (such as books)
+   *
+   * @param type
+   * @param id
+   * @return
+   */
+  public String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
+    return getCatalogBaseFolderFileNameNoLevel(type) + Constants.TYPE_SEPARATOR + id;
+  }
+
+  /**
+   * Determine if the icon prefix should be for the current or parent folder
+   *
+   * @param inSubDir
+   * @return
+   */
+  protected String getIconPrefix (boolean inSubDir)  {
+    return inSubDir ? Constants.PARENT_PATH_PREFIX : Constants.CURRENT_PATH_PREFIX;
+  }
+
+  /**
+   * Optimise the URN to simplify them if pointing to files in sthe currentcatalog folder
+   *
+   * NOTE:  We should never optimize breadcrumb URL's as we do not know ehere they are called from
+   *
+   * @param url       the unoptimised URL
+   * @return          the optimized URL
+   */
+  public String optimizeCatalogURL (String url) {
+    assert optimizeUrlPrefix != null :  "Program Error:  optimizeUrlPrefix should not be null!";
+    // See if start is pointing back to current folder?
+    if (url.startsWith(optimizeUrlPrefix)) {
+      // If so we can strip the folder name part
+      int pos = optimizeUrlPrefix.length();
+      assert url.length() > pos : "Program Error: URL only has prefix!";
+      //TODO  Activate the following code if trace shows would achieve expected results
+      if (logger.isTraceEnabled())
+        logger.trace("should be able to optimize following URL: " + url + ", (folder=" + getCatalogFolder() +") to " + Constants.CURRENT_PATH_PREFIX + url.substring(pos) );
+      // return Constants.CURRENT_PATH_PREFIX + url.substring(pos);
+    }
+    return url;
   }
 
   /**
@@ -59,14 +459,28 @@ public abstract class SubCatalog {
       this.books = books;
   }
 
+  /**
+   * Get the list of books associated with this sub-catalog
+   *
+   * @return
+   */
   List<Book> getBooks() {
     return books;
   }
-
+  /**
+   * Get the list of stuff acting as a filter for this sub-catalog
+   *
+   * @return
+   */
   List<Object> getStuffToFilterOut() {
     return stuffToFilterOut;
   }
-
+  /**
+   * Get the list of stuff to filter out extended by new values
+   *
+   * @param newStuff
+   * @return
+   */
   List<Object> getStuffToFilterOutAnd(Object newStuff) {
     List<Object> result = new ArrayList<Object>();
     if (stuffToFilterOut != null)
@@ -76,284 +490,129 @@ public abstract class SubCatalog {
     return result;
   }
 
+  /**
+   * Set the list of stuff to filter out
+   *
+   * @param stuffToFilterOut
+   * @return
+   */
   SubCatalog setStuffToFilterOut(List<Object> stuffToFilterOut) {
     this.stuffToFilterOut = stuffToFilterOut;
     return this;
   }
 
+  /**
+   * Get the list of books filtered according to the filter criteria
+   *
+   * @param originalBooks
+   * @return
+   */
   List<Book> filterOutStuff(List<Book> originalBooks) {
     // by default, simply return the book list
     return originalBooks;
+  }
+
+  /**
+   * Extract the folder part of the filename
+   *
+   * @param   pCatalogFileName
+   * @return
+   */
+  public String getFolderName(String pCatalogFileName) {
+    assert (Helper.isNotNullOrEmpty(pCatalogFileName)) : "Program Error: empty filename!";
+    int pos = pCatalogFileName.indexOf(Constants.FOLDER_SEPARATOR);
+    return (pos == -1) ? pCatalogFileName : pCatalogFileName.substring(0,pos);
+  }
+
+  /**
+   * Determine if the conditions for SplitByLetter to be active are tru
+   *
+   * @param splitOption
+   * @param count
+   * @return
+   */
+  public Boolean checkSplitByLetter (SplitOption splitOption, int count) {
+    return (splitOption == SplitOption.SplitByLetter)
+            && (maxSplitLevels > 0)
+            && count > maxBeforeSplit;
+  }
+
+  /**
+   * Determine if Splitoption should be changed from SplitByLetter to Paginate
+   * because we have already split by the maximum number of levels requested..
+   *
+   * @param splitLetters
+   * @return
+   */
+  public SplitOption checkSplitByLetter (String splitLetters) {
+    return splitLetters.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate;
   }
 
   boolean isInDeepLevel() {
     return Helper.isNotNullOrEmpty(stuffToFilterOut);
   }
 
-  HtmlManager getHtmlManager() {
-    return CatalogContext.INSTANCE.getHtmlManager();
-  }
-
-  void setHtmlManager(HtmlManager htmlManager) {
-    CatalogContext.INSTANCE.setHtmlManager(htmlManager);
-  }
-
-  CatalogManager getCatalogManager() {
-    return CatalogContext.INSTANCE.getCatalogManager();
-  }
-
-  void setCatalogManager(CatalogManager catalogManager) {
-    CatalogContext.INSTANCE.setCatalogManager(catalogManager);
-  }
-
-  public ThumbnailManager getThumbnailManager() {
-    return CatalogContext.INSTANCE.getThumbnailManager();
-  }
-
-  public void setThumbnailManager(ThumbnailManager thumbnailManager) {
-    CatalogContext.INSTANCE.setThumbnailManager(thumbnailManager);
-  }
-
-  public ImageManager getCoverManager() {
-    return CatalogContext.INSTANCE.getCoverManager();
-  }
-
-  public void setCoverManager(ImageManager coverManager) {
-    CatalogContext.INSTANCE.setCoverManager(coverManager);
-  }
-
   /**
    * @return a result composed of the resulting OPDS entry, and the relative url to the subcatalog
    */
-  public abstract Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs) throws IOException;
+  // public abstract Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException;
 
-  public Element getSubCatalogLevel(Breadcrumbs pBreadcrumbs,
-      List<Book> books,
-      List<Object> stuffToFilterOut,
-      String title,
-      String summary,
-      String urn,
-      String filename,
-      SplitOption splitOption,
-      String icon,
-      Option... options) throws IOException {
-    // generate an additional level
-    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    FileOutputStream fos = null;
+  /**
+   * Create the XML and HTML files (as required by configuration parameters) from
+   * the XML document that has just been created.
+   *
+   * @param feed            The feed that is to be used to generate the output files
+   * @param outputFilename  The name of the output file.
+   * @param feedType        The type of file that is to be generated
+   * @throws IOException    Any exception would be unexpected, but it is always theoretically possible!
+   */
+  public void createFilesFromElement(Element feed, String outputFilename, HtmlManager.FeedType feedType) throws IOException {
+
+    // Various asserts to help with identifying logic faults in the program!
+    assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
+    assert Helper.isNotNullOrEmpty(outputFilename): "Program error: Attempt to create XML file for empty/null filename";
+    assert ! outputFilename.startsWith(catalogManager.getCatalogFolder().toString()):
+             "Program Error:  filename should not include catalog folder (" + outputFilename + ")";
+    int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
+    assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+        "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
+    pos = outputFilename.indexOf(Constants.LEVEL_SEPARATOR);
+    assert outputFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+        "Program error: Two occurences of LEVEL_SEPARATOR (" + outputFilename + ")";
+
+
+    String xmlfilename = outputFilename;
+    if (! xmlfilename.endsWith(Constants.XML_EXTENSION)) {
+      xmlfilename += Constants.XML_EXTENSION;
+    }
+    File outputFile = catalogManager.storeCatalogFile(xmlfilename);
+    // Avoid creating files that already exist.
+    // (if xml file exists then HTML one will as well)
+    if (outputFile.exists()) {
+      if (logger.isTraceEnabled())
+        logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
+      return;
+    }
+
+    // Create as a DOM object
+    // TODO  Check if there might be a cheaper way to do this not using DOM?
+    String test = feed.toString();
     Document document = new Document();
+    document.addContent (feed);
+
+    // write the XML file
+    FileOutputStream fos = null;
     try {
       fos = new FileOutputStream(outputFile);
-
-      String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-
-      Composite<Element, String> subCatalogEntry;
-      Element entry;
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Tags */
-      logger.debug("SubCatalog - STARTED: Generating tags catalog");
-      subCatalogEntry = TagSubCatalog.getTagSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Authors */
-      logger.debug("SubCatalog - STARTED: Generating Authors catalog");
-      subCatalogEntry = new AuthorsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Series */
-      logger.debug("SubCatalog - STARTED: Generating Series catalog");
-      subCatalogEntry = new SeriesSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Recent books */
-      if (currentProfile.getGenerateRecent()) {
-        logger.debug("SubCatalog - STARTED: Generating Recent books catalog");
-        subCatalogEntry = new RecentBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-        if (subCatalogEntry != null) {
-          entry = subCatalogEntry.getFirstElement();
-          if (entry != null)
-            feed.addContent(entry);
-        }
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Rated books */
-      if (currentProfile.getGenerateRatings()) {
-        logger.debug("SubCatalog - STARTED: Generating Rated books catalog");
-        subCatalogEntry = new RatingsSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-        if (subCatalogEntry != null) {
-          entry = subCatalogEntry.getFirstElement();
-          if (entry != null)
-            feed.addContent(entry);
-        }
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* Featured catalog */
-      if (CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter() != null) {
-        logger.debug("SubCatalog - STARTED: Generating Featured catalog");
-        List<Book> featuredBooks = FilterHelper.filter(CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter(), books);
-        Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
-        if (featuredCatalog != null) {
-          feed.addContent(featuredCatalog.getFirstElement());
-        }
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      /* All books */
-      if (currentProfile.getGenerateAllbooks()) {
-        logger.debug("SubCatalog - STARTED: Generating All books catalog");
-        subCatalogEntry = new AllBooksSubCatalog(stuffToFilterOut, books).getSubCatalogEntry(breadcrumbs);
-        if (subCatalogEntry != null) {
-          entry = subCatalogEntry.getFirstElement();
-          if (entry != null)
-            feed.addContent(entry);
-        }
-      }
-
-      // check if we must continue
-      CatalogContext.INSTANCE.getCallback().checkIfContinueGenerating();
-
-      // write the element to the file
-      document.addContent(feed);
       JDOM.INSTANCE.getOutputter().output(document, fos);
-
-    } finally {
+    } catch (RuntimeException e) {
+      logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
+    }  finally {
       if (fos != null)
         fos.close();
     }
 
-    // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile);
-    if (logger.isTraceEnabled())
-      logger.trace("getSubCatalogLevel  Breadcrumbs=" + pBreadcrumbs.toString());
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    return FeedHelper.INSTANCE.getCatalogEntry(title, urn, getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder), summary, icon);
-
+    //  generate corresponding HTML file
+  htmlManager.generateHtmlFromDOM(document, outputFile, feedType);
   }
-
-
-  String getFilenamePrefix(Breadcrumbs pBreadcrumbs) {
-    if (isInDeepLevel())
-      return pBreadcrumbs.getFilename() + "_";
-    else
-      return "";
-  }
-
-  public boolean isMainStep() {
-    return isMainStep;
-  }
-
-  public void setMainStep(boolean mainStep) {
-    isMainStep = mainStep;
-  }
-
-  /*
-    // TODO The following is commented out as it is still a 'work-in-progress'
-    FileOutputStream getCatalogLeadin(String pFilename) {
-      if (from > 0) {
-        int pos = filename.lastIndexOf(".xml");
-        if (pos >= 0)
-          filename = filename.substring(0, pos);
-        filename = filename + "_" + pageNumber;
-      }
-      if (!filename.endsWith(".xml"))
-        filename = filename + ".xml";
-      filename = SecureFileManager.INSTANCE.encode(filename);
-      File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-      FileOutputStream fos = null;
-      Document document = new Document();
-      String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-      try {
-        if (logger.isTraceEnabled())
-          logger.trace("getListOfBooks: fos=" + outputFile);
-        try {
-          fos = new FileOutputStream(outputFile);
-        } catch (Exception e) {
-          // ITIMPI:  This should not normally happen.   However it has been found that it can
-          // if the filename we are trying to use is invalid for the file system we are using.
-          // If it does occur we cannot continue with generation of the details for this book
-          logger.error("Failed to create feed file " +  outputFile + "\n" + e);
-          return null;
-        }
-        Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
-
-        // list the books (or split them)
-        // Paginated listing
-        result = new LinkedList<Element>();
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        CatalogContext.INSTANCE.getCallback().showMessage(breadcrumbs.toString() + " (" + Summarizer.INSTANCE.getBookWord(books.size()) + ")");
-      } finally {
-        if (fos != null)
-          fos.close();
-      }
-
-    }
-  */
-  /**
-   * Add the catalog leadout to anexisting filestream
-   * @return
-   */
-  /*
-/*
-  // TODO The following is commented out as it is still a 'work-in-progress'
-  boolean getCatalogLeadout(FileOutputStream fos) {
-    if (fos != null)  { 
-      try {
-      fos.close();
-      } catch (Exception e) {
-      }
-        // We do not expect an error here in rality
-        return false;
-      }
-
-    // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile);
-    Element entry;
-    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
-    if (from > 0) {
-      String titleNext;
-      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
-        titleNext = Localization.Main.getText("title.lastpage");
-      }
-
-      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
-    } else {
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
-    }
-
-    return true;
-  }
-  */
 }

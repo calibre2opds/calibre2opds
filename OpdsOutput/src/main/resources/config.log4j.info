@@ -50,8 +50,8 @@ log4j.logger.org.apache=INFO
 #log4j.logger.com.gmail.dpierron.calibre.trook=TRACE
 
 # 3. Set the logging level for the Tags catalog generation process (uncomment only one of these two lines)
-#log4j.logger.com.gmail.dpierron.calibre.opds.TagSubCatalog=DEBUG
-#log4j.logger.com.gmail.dpierron.calibre.opds.TagSubCatalog=TRACE
+#log4j.logger.com.gmail.dpierron.calibre.opds.TagsSubCatalog=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.opds.TagsSubCatalog=TRACE
 
 # 4. Set the logging level for the Books catalog generation process (uncomment only one of these two lines)
 #log4j.logger.com.gmail.dpierron.calibre.opds.BooksSubCatalog=DEBUG

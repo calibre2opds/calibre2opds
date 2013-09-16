@@ -1,5 +1,8 @@
 package com.gmail.dpierron.calibre.opds;
-
+/**
+ * Constants used internally within the Calibre2opds program
+ * Assembled here to help with making them visible and easy to change.
+ */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.tools.Helper;
 
@@ -14,9 +17,34 @@ public class Constants {
   public final static String LOGFILE_FOLDER = "log";
   public final static String LOGFILE_NAME = "calibre2opds.log";
   public final static String SYNCFILE_NAME = "synclog.log";
+  public final static String SECURITY_CACHE_FILENAME = ".calibre2opds.secureFileManager.xml";
   public final static String CONFIGURATION_COMPATIBILITY_VERSIONCHIP = "02030101";
   // ITIMPI:  Not sure what was the intended use of this constant?
   // public final static String DSNNAME = "CALIBRE";
+  public final static String LIBRARY_PATH_PREFIX = "../../";
+  public final static String PARENT_PATH_PREFIX = "../";
+  public final static String CURRENT_PATH_PREFIX = "./";
+  public final static String FOLDER_SEPARATOR = "/";
+  public final static String LEVEL_SEPARATOR = "!";
+  public final static String TYPE_SEPARATOR = "_";
+  public final static String URN_SEPARATOR = ":";
+  public final static String SECURITY_SEPARATOR = "@";
+  public final static String ALLBOOKS_TYPE = "allbooks";
+  public final static String BOOK_TYPE ="book";
+  public final static String AUTHOR_TYPE = "author";
+  public final static String AUTHORS_TYPE = "authors";
+  public final static String SERIE_TYPE = "serie";
+  public final static String SERIES_TYPE = "series";
+  public final static String TAG_TYPE = "tag";
+  public final static String TAGS_TYPE = "tags";
+  public final static String RATED_TYPE = "rated";
+  public final static String RECENT_TYPE = "recent";
+  public final static String PUBLISHER_TYPE = "publisher";
+  public final static String PUBLISHERS_TYPE = "publishers";
+  public final static String FEATURED_TYPE = "featured";
+  public final static String CUSTOM_TYPE = "custom";
+  public final static String XML_EXTENSION = ".xml";
+  public final static String HTML_EXTENSION = ".html";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
   public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
@@ -29,8 +57,8 @@ public class Constants {
   public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
   public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String PAGE_DELIM = "_Page_";
-  public final static String INITIAL_URL = "index.xml";
-  public final static String INITIAL_URN = "calibre:catalog";
+  public final static String INITIAL_URL = "index";
+  public final static String INITIAL_URN_PREFIX = "Calibre2opds:";
   public final static String TROOK_FOLDER_EXTENSION = ".library";
   public final static String TROOK_SEARCH_DATABASE_FILENAME = "calibre2opds_trook_search.db";
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";

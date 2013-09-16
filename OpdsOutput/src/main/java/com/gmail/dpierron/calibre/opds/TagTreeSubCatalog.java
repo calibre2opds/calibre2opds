@@ -1,52 +1,54 @@
 package com.gmail.dpierron.calibre.opds;
-
+/**
+ *  Class for defining a new set of levels based on a tag.
+ */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.RootTreeNode;
 import com.gmail.dpierron.tools.TreeNode;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
+
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TagTreeSubCatalog extends TagSubCatalog {
+public class TagTreeSubCatalog extends TagsSubCatalog {
   private final static Logger logger = Logger.getLogger(TagTreeSubCatalog.class);
 
   public TagTreeSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
+    setCatalogType("tagtree");    // Not sure this will ever be used!
   }
 
   public TagTreeSubCatalog(List<Book> books) {
     super(books);
+    setCatalogType("tagtree");    // Not sure this will ever be used!
   }
 
   private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
+
+    boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0));
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int itemsCount = level.getChildren().size();
 
-    String filename = pBreadcrumbs.getFilename() + "_tags" + level.getGuid();
+    String filename = pBreadcrumbs.getFilename() + Constants.TYPE_SEPARATOR + Constants.TAGS_TYPE + Constants.TYPE_SEPARATOR + level.getGuid();
     if (from > 0) {
       filename = filename + "_" + pageNumber;
     }
-    filename = filename + ".xml";
+    filename = filename + Constants.XML_EXTENSION;
     logger.debug("getLevelOfTreeNode,int: generating " + filename);
-    filename = SecureFileManager.INSTANCE.encode(filename);
 
     boolean onRoot = (level.isRoot());
 
     String title = (onRoot ? Localization.Main.getText("tags.title") : level.getId());
-    String urn = "calibre:tags:" + level.getGuid();
+    String urn = Constants.INITIAL_URN_PREFIX + getCatalogType() + Constants.URN_SEPARATOR + level.getGuid();
 
     String summary = "";
     if (onRoot) {
@@ -61,46 +63,29 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     }
     int maxPages = Summarizer.INSTANCE.getPageNumber(itemsCount);
 
-    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    FileOutputStream fos = null;
-    Document document = new Document();
-    String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-    try {
-      fos = new FileOutputStream(outputFile);
-      List<Element> result = new LinkedList<Element>();
-      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    List<Element> result = new LinkedList<Element>();
+    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
-      for (int i = from; i < itemsCount; i++) {
-        if ((i - from) >= maxBeforePaginate) {
-          Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i).getFirstElement();
-          result.add(0, nextLink);
-          break;
-        } else {
-          TreeNode childLevel = level.getChildren().get(i);
-          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-          Element entry = getLevelOfTreeNode(breadcrumbs, childLevel).getFirstElement();
-          if (entry != null)
-            result.add(entry);
-        }
+    for (int i = from; i < itemsCount; i++) {
+      if ((i - from) >= maxBeforePaginate) {
+        Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i).getFirstElement();
+        result.add(0, nextLink);
+        break;
+      } else {
+        TreeNode childLevel = level.getChildren().get(i);
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+        Element entry = getLevelOfTreeNode(breadcrumbs, childLevel).getFirstElement();
+        if (entry != null)
+          result.add(entry);
       }
-
-      // add the entries to the feed
-      feed.addContent(result);
-
-      // write the element to the file
-      document.addContent(feed);
-      JDOM.INSTANCE.getOutputter().output(document, fos);
-    } finally {
-      if (fos != null)
-        fos.close();
     }
 
-    // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile);
+    feed.addContent(result);
+    createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    boolean weAreAlsoInSubFolder = pBreadcrumbs.size() > 1;
-    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, pBreadcrumbs.size() > 1);
+    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename, inSubDir);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
@@ -109,22 +94,30 @@ public class TagTreeSubCatalog extends TagSubCatalog {
 
       entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
     } else {
+      if (title.equals("Science Fiction")) {
+        int x = 1;
+      }
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
       entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
-          useExternalIcons ?
-          (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_TAGS :
-          Icons.ICON_TAGS);
+          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
     return new Composite<Element, String>(entry, urlInItsSubfolder);
   }
 
+  /**
+   *
+   * @param pBreadcrumbs
+   * @param level
+   * @return
+   * @throws IOException
+   */
   private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
     logger.debug("getLevelOfTreeNode:" + level);
     if (Helper.isNullOrEmpty(level.getChildren())) {
       // it's a leaf, consisting of a single tag : make a list of books
       logger.debug("it's a leaf, consisting of a single tag : make a list of books");
       Tag tag = (Tag) level.getData();
-      String urn = "calibre:tags";
+      String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
       Element entry = getTag(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
       return new Composite<Element, String>(entry, urn);
@@ -134,13 +127,24 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     }
   }
 
+  /**
+   *
+   * @param pBreadcrumbs
+   * @return
+   * @throws IOException
+   */
   @Override
-  Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
+  Composite<Element, String> getTagsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     TreeNode root = getTreeOfTags(getTags());
     logger.debug("_getEntry:" + pBreadcrumbs.toString());
     return getLevelOfTreeNode(pBreadcrumbs, root);
   }
 
+  /**
+   *
+   * @param tags
+   * @return
+   */
   private TreeNode getTreeOfTags(List<Tag> tags) {
     // compute the tree
     logger.debug("compute the tree of tags");
@@ -167,6 +171,12 @@ public class TagTreeSubCatalog extends TagSubCatalog {
     return root;
   }
 
+  /**
+   *
+   * @param node
+   * @param removedParent
+   * @return
+   */
   private TreeNode removeUnNeededLevelsInTree(TreeNode node, TreeNode removedParent) {
     if (removedParent != null)
       node.setId(removedParent.getId() + currentProfile.getSplitTagsOn() + node.getId());

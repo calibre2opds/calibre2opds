@@ -5,7 +5,6 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
@@ -13,21 +12,17 @@ import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
-import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -62,21 +57,14 @@ public class Catalog {
   private static PrintWriter syncLogFile;           // File to be used for the Sync log
 
   /**
-   * Default Constructor
-   */
-  private Catalog() {
-    super();
-  }
-
-  /**
    * Constructor setting callback interface for GUI
    *
    * @param callback
    */
   public Catalog(CatalogCallbackInterface callback) {
-    this();
+    super();
     this.callback = callback;
-    CatalogContext.INSTANCE.setCallback(callback);
+    CatalogContext.INSTANCE.callback = callback;
   }
 
   /**
@@ -149,7 +137,8 @@ public class Catalog {
       }
       // If we get here at least the cached state agrees with the real state!
       // If it is amissing .xml or .html file then this is still a significant issue
-      if (cf_src.getName().endsWith(".xml") || cf_src.getName().endsWith(",html")) {
+      if (cf_src.getName().endsWith(Constants.XML_EXTENSION)
+      || cf_src.getName().endsWith(Constants.HTML_EXTENSION)) {
         logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
         return;
       }
@@ -212,7 +201,8 @@ public class Catalog {
         // ITIMPI:  Need to decide if the exists() check is redundant
         //          as it may cause an unneeded file access
         if (destFile.exists()) {
-          if ((cf_src.getName().endsWith(".xml")) && (currentProfile.getGenerateOpds() == true)) {
+          if ((cf_src.getName().endsWith(Constants.XML_EXTENSION))
+          && (currentProfile.getGenerateOpds() == true)) {
             // XML files never needed if not generating OPDS catalog
             if (logger.isTraceEnabled())
               logger.trace("No OPDS catalog so delete " + src.getAbsolutePath());
@@ -256,7 +246,7 @@ public class Catalog {
       // Ignore XML files if no OPDS catalog wanted
       // IS this the best place to do this?
       if (!currentProfile.getGenerateOpds()) {
-        if (cf_src.getName().endsWith(".xml")) {
+        if (cf_src.getName().endsWith(Constants.XML_EXTENSION)) {
           if (cf_dst.exists()) {
             if (syncFilesDetail && logger.isTraceEnabled())
               logger.trace("File " + cf_dst.getAbsolutePath() + ": Deleted as XML file and no OPDS catalog required");
@@ -453,7 +443,7 @@ public class Catalog {
     // reinitialize caches (in case of multiple calls in the same session)
     CachedFileManager.INSTANCE.initialize();
     CatalogContext.INSTANCE.initialize();
-    CatalogContext.INSTANCE.setCallback(callback);
+    CatalogContext.INSTANCE.callback = callback;
 
     //                      PARAMETER VALIDATION PHASE
 
@@ -550,6 +540,7 @@ public class Catalog {
 
     // FILE PLACEMENT CHECKS
 
+    assert Helper.isNotNullOrEmpty(libraryFolder);
     if (targetFolder != null) {
       // Check that target folder (if set) is not set to be the same as the library folder
       if (libraryFolder.getAbsolutePath().equals(targetFolder.getAbsolutePath())) {
@@ -564,8 +555,7 @@ public class Catalog {
       }
       // If not already a catalog at target, give overwrite warning
       if (!checkCatalogExistence(targetFolder, false)) {
-        int n = callback.askUser(Localization.Main.getText("gui.confirm.clear", targetFolder), textYES, textNO);
-        if (1 == n) {
+        if (1 == callback.askUser(Localization.Main.getText("gui.confirm.clear", targetFolder), textYES, textNO)) {
           return;
         }
       }
@@ -576,16 +566,17 @@ public class Catalog {
     // N.B.  Whether calibreTargetFolder was set to be different to the Library folder is mode dependent
     if (catalogParentFolder == null || catalogParentFolder.getName().length() == 0) {
       if (!checkCatalogExistence(libraryFolder, true)) {
-        int n = callback.askUser(Localization.Main.getText("gui.confirm.clear", libraryFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
-        if (1 == n) {
-          return;
+        if (! libraryFolder.equals(targetFolder)) {     // Avoid two prompts for same folder
+          if (1 == callback.askUser(Localization.Main.getText("gui.confirm.clear", libraryFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO)) {
+            return;
+          }
         }
       }
       catalogParentFolder = libraryFolder;
     }
     logger.trace("catalogParentFolder set to " + catalogParentFolder);
     // Set catalog folder (remembering to add TROOK extension if in Nook mode)
-    File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+    File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
 //                                + ((currentProfile.getDeviceMode() == DeviceMode.Nook ? Constants.TROOK_FOLDER_EXTENSION + "/" + Constants.NOOK_CATALOG_FOLDERNAME : "")));
     if (logger.isTraceEnabled())
       logger.trace("New catalog to be generated at " + catalogFolder.getPath());
@@ -594,10 +585,11 @@ public class Catalog {
     if (true == currentProfile.getCopyToDatabaseFolder()) {
       File databaseFolder = currentProfile.getDatabaseFolder();
       if ( !checkCatalogExistence(databaseFolder, true)) {
-        int n = callback
-            .askUser(Localization.Main.getText("gui.confirm.clear", databaseFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO);
-        if (1 == n) {
-          return;
+        if (! databaseFolder.equals(catalogParentFolder)
+        &&  ! databaseFolder.equals(libraryFolder)) {     // Avoid two prompts for same folder
+          if (1 == callback.askUser(Localization.Main.getText("gui.confirm.clear", databaseFolder + File.separator + currentProfile.getCatalogFolderName()), textYES, textNO)) {
+            return;
+          }
         }
       }
       // catalogParentFolder = null;    // We are finished with this, so clear for future reference as still in scope
@@ -617,8 +609,8 @@ public class Catalog {
       if (logger.isTraceEnabled())
         logger.trace("generateFolder set to " + generateFolder);
 
-      // Save the lcoation of the Catalog folder for any other component that needs to knw it
-      CatalogContext.INSTANCE.getCatalogManager().setCatalogFolder(generateFolder);
+      // Save the location of the Catalog folder for any other component that needs to knw it
+      CatalogContext.INSTANCE.catalogManager.setCatalogFolder(generateFolder);
 
       callback.startCreateMainCatalog();
 
@@ -633,31 +625,34 @@ public class Catalog {
 
       // Prepare the feature books search query
       BookFilter featuredBookFilter = null;
+      String featuredCatalogTitle = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle();
       String featuredCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
       if (Helper.isNotNullOrEmpty(featuredCatalogSearch)) {
         try {
           featuredBookFilter = CalibreQueryInterpreter.interpret(featuredCatalogSearch);
         } catch (CalibreSavedSearchInterpretException e) {
-          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+          // callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", featuredCatalogTitle,featuredBookFilter), e);
         } catch (CalibreSavedSearchNotFoundException e) {
-          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+          // callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+          callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", featuredCatalogTitle, featuredCatalogSearch), null);
         }
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
           if (n == 1) {
-            callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
-          return;
-            }
+            callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+            return;
+          }
         }
       }
-      CatalogContext.INSTANCE.getCatalogManager().setFeaturedBooksFilter(featuredBookFilter);
+      CatalogContext.INSTANCE.catalogManager.featuredBooksFilter = featuredBookFilter;
       callback.checkIfContinueGenerating();      // check if we must continue
 
       // Prepare the Custom catalogs search query
-      Map<String, BookFilter> customCatalogsFilters = new HashMap<String, BookFilter>();
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
+        CatalogContext.INSTANCE.catalogManager.customCatalogsFilters = new HashMap<String, BookFilter>();
         for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
@@ -673,19 +668,22 @@ public class Catalog {
             try {
               customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
             } catch (CalibreSavedSearchInterpretException e) {
-              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+              // callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
+              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", customCatalogTitle, customCatalogSearch), e);
             } catch (CalibreSavedSearchNotFoundException e) {
-              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+              // callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
+              callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", customCatalogTitle, customCatalogSearch), null);
             }
             if (customCatalogFilter == null) {
               // an error occured, let's ask the user if he wants to abort
-              int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
-              if (n == 1) {
-                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+              if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
+                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
                 return;
               }
+              // TODO Set something to suppress this custom catalog entry at generate stage!
+              //      Currently an entry is generated to a none-existent URL
             } else {
-              customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
+              CatalogContext.INSTANCE.catalogManager.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
             }
           }
         }
@@ -743,7 +741,6 @@ public class Catalog {
 
       callback.checkIfContinueGenerating();
 
-      String filename = SecureFileManager.INSTANCE.encode(Constants.INITIAL_URL);
 
       // prepare the Trook specific search database
 
@@ -752,239 +749,59 @@ public class Catalog {
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
 
-      // c2o-87 - Title should use value from settings
-      String title = currentProfile.getCatalogTitle();
-
-      String urlExt = "../" + filename;
-      Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(title, urlExt);
-      Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
-
-      Element entry;
-
-      /* About entry */
-
-      if (currentProfile.getIncludeAboutLink()) {
-        entry = FeedHelper.INSTANCE
-            .getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HOME_URL,
-                Localization.Main.getText("about.summary"), currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT);
-        if (entry != null)
-          main.addContent(entry);
-      }
-
-      callback.checkIfContinueGenerating();
-
-      /* All books */
-
-      logger.debug("STARTED: Generating All Books catalog");
-      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateAllbooks()) {
-        entry = new AllBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          main.addContent(entry);
-      }
-      callback.endCreateAllbooks(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating All Books catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Authors */
-
-      logger.debug("STARTING: Generating Authors catalog");
-      callback.startCreateAuthors(DataModel.INSTANCE.getListOfAuthors().size());
-      now = System.currentTimeMillis();
-      entry = new AuthorsSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-      if (entry != null)
-        main.addContent(entry);
-      callback.endCreateAuthors(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Authors catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Tags */
-
-      logger.debug("STARTING: Generating Tags catalog");
-      callback.startCreateTags(DataModel.INSTANCE.getListOfTags().size());
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateTags()) {
-        entry = TagSubCatalog.getTagSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          main.addContent(entry);
-      }
-      callback.endCreateTags(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Tags catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Series */
-
-      logger.debug("STARTING: Generating Series catalog");
-      callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateSeries()) {
-        // bug c20-81  Need to allow for (perhaps unlikely) case where no books in library have a series entry set
-        Composite<Element, String>  subcat = new SeriesSubCatalog(books).getSubCatalogEntry(breadcrumbs);
-        if (subcat != null) {
-          entry = subcat.getFirstElement();
-          if (entry != null)
-            main.addContent(entry);
-        }
-      }
-      callback.endCreateSeries(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Series catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Recent books */
-
-      logger.debug("STARTING: Generating Recent catalog");
-      int nbRecentBooks = Math.min(currentProfile.getBooksInRecentAdditions(), DataModel.INSTANCE.getListOfBooks().size());
-      callback.startCreateRecent(nbRecentBooks);
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateRecent()) {
-        Composite<Element, String> recent = new RecentBooksSubCatalog(books).getSubCatalogEntry(breadcrumbs);
-        if (recent != null) {
-          main.addContent(recent.getFirstElement());
-        }
-      }
-      callback.endCreateRecent(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Recent catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Rated books */
-
-      logger.debug("STARTING: Generating Ratings catalog");
-      callback.startCreateRated(DataModel.INSTANCE.getListOfBooks().size());
-      now = System.currentTimeMillis();
-      if (currentProfile.getGenerateRatings()) {
-        entry = new RatingsSubCatalog(books).getSubCatalogEntry(breadcrumbs).getFirstElement();
-        if (entry != null)
-          main.addContent(entry);
-      }
-      callback.endCreateRated(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Ratings catalog");
-
-      callback.checkIfContinueGenerating();
-
-      /* Featured catalog */
-
-      now = System.currentTimeMillis();
-      if (CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter() != null) {
-        logger.debug("STARTED: Generating Featured books catalog");
-        List<Book> featuredBooks = FilterHelper.filter(CatalogContext.INSTANCE.getCatalogManager().getFeaturedBooksFilter(), books);
-        callback.startCreateFeaturedBooks(featuredBooks.size());
-        Composite<Element, String> featuredCatalog = new FeaturedBooksSubCatalog(featuredBooks).getSubCatalogEntry(breadcrumbs);
-        if (featuredCatalog != null) {
-          // add a "featured" link - 6 places the link right where we want it...
-          main.addContent(6, FeedHelper.INSTANCE
-              .getFeaturedLink(featuredCatalog.getSecondElement(), ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle()));
-          // add the actual catalog
-          main.addContent(featuredCatalog.getFirstElement());
-        }
-      }
-      callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
-
-      callback.checkIfContinueGenerating();
-
-      /* Custom catalogs */
-
-      now = System.currentTimeMillis();
-      if (Helper.isNotNullOrEmpty(customCatalogs)) {
-        int pos = 1;
-        logger.debug("STARTED: Generating custom catalogs");
-        callback.startCreateCustomCatalogs(customCatalogs.size());
-        for (Composite<String, String> customCatalog : customCatalogs) {
-          callback.checkIfContinueGenerating();
-          String customCatalogTitle = customCatalog.getFirstElement();
-          BookFilter customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
-          if (Helper.isNotNullOrEmpty(customCatalogTitle)) {
-            if (customCatalogBookFilter != null) {
-              // custom catalog
-              if (logger.isDebugEnabled())
-                logger.debug("STARTED: Generating custom catalog " + title);
-
-              List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, books);
-              if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
-                Composite<Element, String> customCatalogEntry = new CustomSubCatalog(customCatalogBooks, customCatalogTitle).getSubCatalogEntry(breadcrumbs);
-                main.addContent(customCatalogEntry.getFirstElement());
-              }
-            } else {
-              // external catalog
-              if (logger.isDebugEnabled())
-                logger.debug("STARTED: Adding external link " + title);
-
-              String externalLinkUrl = customCatalog.getSecondElement();
-              entry = FeedHelper.INSTANCE.getExternalLinkEntry(customCatalogTitle, "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
-                  currentProfile.getExternalIcons() ? Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
-              if (entry != null)
-                main.addContent(entry);
-            }
-          }
-          callback.incStepProgressIndicatorPosition();
-
-          callback.checkIfContinueGenerating();
-        }
-      }
-      callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
-
-      callback.checkIfContinueGenerating();
-
-      File outputFile = new File(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), filename);
-      Document document = new Document();
-      FileOutputStream fos = null;
-      try {
-        fos = new FileOutputStream(outputFile);
-
-        // write the element to the file
-        document.addContent(main);
-        JDOM.INSTANCE.getOutputter().output(document, fos);
-      } finally {
-        if (fos != null)
-          fos.close();
-      }
-
-      callback.checkIfContinueGenerating();
-
       // copy the resource files to the catalog folder
       // We check in the following order:
       //  - Configuration folder
       //  - Install folder
       //  - built-in resource
+
       logger.debug("STARTED: Copying Resource files");
       for (String resource : Constants.FILE_RESOURCES) {
         callback.checkIfContinueGenerating();
         InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
-        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/" + resource);
+        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
         Helper.copy(resourceStream, resourceFile);
         logger.trace("Copying Resource " + resource);
       }
       logger.debug("COMPLETED: Copying Resource files");
-
       callback.checkIfContinueGenerating();
 
-      /* Thumbnails */
+      //      Standard sub-catalogs for a folder level
 
+      //      Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
+      logger.debug("Starter generating top level catalog");
+      LevelSubCatalog levelSubCatalog = new LevelSubCatalog(books,currentProfile.getCatalogTitle());
+      levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs
+      levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!
+      levelSubCatalog.setCatalogFolder("");         // Force to top level!
+      levelSubCatalog.setCatalogBaseFilename(levelSubCatalog.catalogManager.initialUrl);
+      Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
+                                "dummy.xml");
+      Element entry = levelSubCatalog.getLevelCatalog(breadcrumbs, null,           // StufftoFilterOut
+          false,          // at top level
+          "",             // Summary
+          "",             // urn
+          null,           // Splitoption
+          "");            // icon
+      levelSubCatalog = null; // Maybe not necessary - but foced free may help release resources earlier
       logger.debug("STARTING: Generating Thumbnails");
-      int nbThumbnails = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
+      int nbThumbnails = CatalogContext.INSTANCE.thumbnailManager.getNbImagesToGenerate();
       callback.startCreateThumbnails(nbThumbnails);
       now = System.currentTimeMillis();
-        countThumbnails = CatalogContext.INSTANCE.getThumbnailManager().generateImages();
+        countThumbnails = CatalogContext.INSTANCE.thumbnailManager.generateImages();
       callback.endCreateThumbnails(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Thumbnails");
-
       callback.checkIfContinueGenerating();
 
       /* Reduced Covers */
 
       logger.debug("STARTING: Generating Reduced Covers");
-      int nbCovers = CatalogContext.INSTANCE.getThumbnailManager().getNbImagesToGenerate();
+      int nbCovers = CatalogContext.INSTANCE.thumbnailManager.getNbImagesToGenerate();
       callback.startCreateCovers(nbCovers);
       now = System.currentTimeMillis();
-      countCovers = CatalogContext.INSTANCE.getCoverManager().generateImages();
+      countCovers = CatalogContext.INSTANCE.coverManager.generateImages();
       callback.endCreateCovers(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Reduced Covers");
-
       callback.checkIfContinueGenerating();
 
       /* Javascript search database */
@@ -997,7 +814,6 @@ public class Catalog {
         IndexManager.INSTANCE.exportToJavascriptArrays();
       callback.endCreateJavascriptDatabase(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Generating Javascript database");
-
       callback.checkIfContinueGenerating();
 
       /* Epub metadata reprocessing */
@@ -1024,15 +840,6 @@ public class Catalog {
       }
       callback.endReprocessingEpubMetadata(System.currentTimeMillis() - now);
       logger.debug("COMPLETED: Processing ePub Metadata");
-
-      callback.checkIfContinueGenerating();
-
-      // create the same file as html
-
-      logger.debug("STARTED: Generating HTML Files");
-      CatalogContext.INSTANCE.getHtmlManager().generateHtmlFromXml(document, outputFile, HtmlManager.FeedType.MainCatalog);
-      logger.debug("COMPLETED: Generating HTML Files");
-
       callback.checkIfContinueGenerating();
 
       if (syncLog)
@@ -1041,35 +848,38 @@ public class Catalog {
 
       // reset stats fields for this run
 
-      copyExistHits = copyLengthHits = copyCrcUnchecked = copyCrcHits = copyCrcMisses = copyDateMisses = copyCrcUnchecked = 0;
+      copyExistHits = copyLengthHits
+                    = copyCrcUnchecked
+                    = copyCrcHits
+                    = copyCrcMisses
+                    = copyDateMisses
+                    = copyCrcUnchecked = 0;
 
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 
       // if the target folder is set, copy/syncFiles the library there
-      int nbFilesToCopyToTarget = CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy().size();
+      int nbFilesToCopyToTarget = CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
       if (currentProfile.getDeviceMode() != DeviceMode.Dropbox) {
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
-        for (String pathToCopy : CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy()) {
+        for (String pathToCopy : CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy()) {
           callback.checkIfContinueGenerating();
           CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
           File targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, pathToCopy);
           syncFiles(sourceFile, targetFile);
         }
         logger.debug("COMPLETED: syncFiles eBook files to target");
-
         callback.checkIfContinueGenerating();
 
         callback.showMessage(Localization.Main.getText("info.step.tidyingtarget"));
-
         // delete the target folders that were not in the source list (minus the catalog folder, of course)
         logger.debug("STARTING: Build list of files to delete from target");
         Set<File> usefulTargetFiles = new TreeSet<File>();
-        List<String> sourceFiles = new LinkedList<String>(CatalogContext.INSTANCE.getCatalogManager().getListOfFilesPathsToCopy());
+        List<String> sourceFiles = new LinkedList<String>(CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy());
         for (String sourceFile : sourceFiles) {
           callback.checkIfContinueGenerating();
           File targetFile = new File(targetFolder, sourceFile);
@@ -1079,32 +889,35 @@ public class Catalog {
           }
         }
         logger.debug("COMPLETED: Build list of files to delete from target");
-
         callback.checkIfContinueGenerating();
 
         logger.debug("STARTED: Creating list of files on target");
         List<File> existingTargetFiles = Helper.listFilesIn(targetFolder);
         logger.debug("COMPLETED: Creating list of files on target");
-        String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName()).getAbsolutePath();
+        String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName()).getAbsolutePath();
         String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
         logger.debug("STARTING: Delete superfluous files from target");
+        String catalogfolder = currentProfile.getCatalogFolderName();
         for (File existingTargetFile : existingTargetFiles) {
           callback.checkIfContinueGenerating();
-          if (!usefulTargetFiles.contains(existingTargetFile)) {
-            if (!existingTargetFile.getAbsolutePath().startsWith(targetCatalogFolderPath)) // don't delete the catalog files
-            {
-              if (!existingTargetFile.getAbsolutePath()
-                  .startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
+          // Never delete catalog folder if present
+          if (! existingTargetFile.getName().endsWith(catalogFolderName)) {
+            if (!usefulTargetFiles.contains(existingTargetFile)) {
+              if (!existingTargetFile.getAbsolutePath().startsWith(targetCatalogFolderPath)) // don't delete the catalog files
               {
-                if (logger.isTraceEnabled())
-                  logger.trace("deleting " + existingTargetFile.getPath());
-                callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
-                Helper.delete(existingTargetFile);
-                if (syncLog)
-                  syncLogFile.printf("DELETED: %s\n", existingTargetFile);
-                // Ensure no longer in cache
-                CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
+                if (!existingTargetFile.getAbsolutePath()
+                    .startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
+                {
+                  if (logger.isTraceEnabled())
+                    logger.trace("deleting " + existingTargetFile.getPath());
+                  callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
+                  Helper.delete(existingTargetFile);
+                  if (syncLog)
+                    syncLogFile.printf("DELETED: %s\n", existingTargetFile);
+                  // Ensure no longer in cache
+                  CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
+                }
               }
             }
           }
@@ -1112,10 +925,9 @@ public class Catalog {
         logger.debug("COMPLETED: Delete superfluous files from target");
       }
       callback.endCopyLibToTarget(System.currentTimeMillis() - now);
-
       callback.checkIfContinueGenerating();
 
-      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder());
+      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getCatalogFolder());
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -1134,9 +946,9 @@ public class Catalog {
         }
         // Also need to make sure catalog.xml exists for Trook use
         // Use index.xml already generated
-        File indexFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/index.xml");
+        File indexFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/index.xml");
         // replicate it to catalog.xml
-        File catalogFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName() + "/catalog.xml");
+        File catalogFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/catalog.xml");
         if (logger.isTraceEnabled())
           logger.trace("copy '" + indexFile + "' to '" + catalogFile + "'");
         syncFiles(indexFile, catalogFile);
@@ -1147,36 +959,34 @@ public class Catalog {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), true, targetCatalogZipFile);
+          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getCatalogFolder(), true, targetCatalogZipFile);
           // Now ensure that there is no unzipped catalog left behinf!
-          File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+          File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
           Helper.delete(targetCatalogFolder);
           break;
         }
         // FALLTHRU Sync catalog files if not using ZIP mode
       case Nas:
-        File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
-        syncFiles(CatalogContext.INSTANCE.getCatalogManager().getCatalogFolder(), targetCatalogFolder);
+        File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        syncFiles(CatalogContext.INSTANCE.catalogManager.getCatalogFolder(), targetCatalogFolder);
         break;
       case Dropbox:
         // Do nothing.   In this mode we sync the catalog using the code for copying back to the library
         break;
       }
       logger.debug("COMPLETED: syncFiles Catalog Folder");
-
       callback.checkIfContinueGenerating();
 
       // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
-        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());;
+        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());;
         syncFiles(generateCatalogFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
       }
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
-
       callback.checkIfContinueGenerating();
 
       if (syncLog) {
@@ -1192,9 +1002,7 @@ public class Catalog {
 
       callback.checkIfContinueGenerating();
 
-      // save the SecureFileManager data
-      callback.showMessage("Saving Cache data");
-      SecureFileManager.INSTANCE.save();
+      // Produce run statistics
 
       if (syncLog) {
         syncLogFile.println();
@@ -1232,6 +1040,7 @@ public class Catalog {
         logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));
 
       // Now work put where to tell user result has been placed
+
       if (logger.isTraceEnabled())
         logger.trace("try to determine where the results have been put");
       switch (currentProfile.getDeviceMode()) {
@@ -1282,7 +1091,7 @@ public class Catalog {
       else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
-        callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.getHtmlManager().getTimeInHtml());
+        callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
     }
   }
 
@@ -1317,7 +1126,7 @@ public class Catalog {
         break;
     
       default:    
-        File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.getCatalogManager().getCatalogFolderName());
+        File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
     
         // We treat catalog folder as not existing as being equivalent to
         // catalog existing as there is no problem with over-writing.
