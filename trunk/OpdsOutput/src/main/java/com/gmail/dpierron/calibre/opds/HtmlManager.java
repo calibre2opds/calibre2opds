@@ -1,7 +1,16 @@
 package com.gmail.dpierron.calibre.opds;
+/**
+ *  This class controls the generation of appropriate HTML files from
+ *  the XML documents created during the catalog build process.
+ *
+ *  The process uses an XSLT transform on the DOM document.  A number
+ *  of different transformation variants are possible according to the
+ *  document type that is being handled
+ */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.transform.JDOMSource;
@@ -14,14 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class HtmlManager {
-  private final static Logger logger = Logger.getLogger(HtmlManager.class);
-
   public enum FeedType {
-    MainCatalog,
     Catalog,
-    BookFullEntry
+    BookFullEntry,
+    MainCatalog
   }
-
+  private final static Logger logger = Logger.getLogger(HtmlManager.class);
   private long timeInHtml = 0;
 
   public HtmlManager() {
@@ -32,19 +39,21 @@ public class HtmlManager {
     return timeInHtml;
   }
 
-  public void generateHtmlFromXml(Document document, File outputFile) throws IOException {
-    generateHtmlFromXml(document, outputFile, FeedType.Catalog);
+  public void generateHtmlFromDOM(Document document, File outputFile) throws IOException {
+    generateHtmlFromDOM(document, outputFile, FeedType.Catalog);
   }
 
-  public void generateHtmlFromXml(Document document, File outputFile, FeedType feedType) throws IOException {
+  public void generateHtmlFromDOM(Document document, File outputFile, FeedType feedType) throws IOException {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
       try {
         // create the same file as html
         long now = System.currentTimeMillis();
+        File htmlFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getTargetFolder(),getHtmlFilename(outputFile.toString()));
+        if (htmlFile.exists()) {
+          return;
+        }
         JDOMSource source = new JDOMSource(document);
-        String xmlFilename = outputFile.getAbsolutePath();
-        File htmlFile = new File(getHtmlFilenameFromXmlFilename(xmlFilename));
         fos = new FileOutputStream(htmlFile);
         StreamResult streamResult = new StreamResult(fos);
         try {
@@ -54,15 +63,19 @@ public class HtmlManager {
               generateHeaderHtml(document, outputFile);
               transformer = JDOM.INSTANCE.getMainCatalogTransformer();
               break;
+
             case Catalog:
               transformer = JDOM.INSTANCE.getCatalogTransformer();
               break;
+
             case BookFullEntry:
               transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
               break;
+
             default:
               assert false : "generateHtmlFromXml: Unknown feed type " + feedType;
           }
+
           if (transformer == null) {
             logger.fatal("Failed to get transformer: tProbably means XSL file invalid and failed to compile!" );
           } else {
@@ -79,6 +92,9 @@ public class HtmlManager {
     }
   }
 
+  /**
+   *   TODO:  Decide if this function is needed at all!
+   */
   private void generateHeaderHtml(Document document, File outputFile) throws IOException {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
@@ -102,9 +118,23 @@ public class HtmlManager {
     }
   }
 
-  public String getHtmlFilenameFromXmlFilename(String xmlFilename) {
-    String htmlFilename = xmlFilename.substring(0, xmlFilename.length() - 4) + ".html";
-    return htmlFilename;
+  /**
+   * create the HTML filename.
+   * Handle the case of both no file extension, and existing XML one.
+   *
+   * @param filename
+   * @return
+   */
+  public String getHtmlFilename(String filename) {
+    assert Helper.isNotNullOrEmpty(filename) : "Program error: Attempt to create HTML filename for empty/null filename";
+    // TODO when refactoring done activate following assert to check no occurences of full path no longer present
+    assert ! filename.startsWith(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName()):
+              "Program Error:  filename should not include catalog folder" ;
+    String htmlfilename = filename.replaceAll(Constants.XML_EXTENSION, "") + Constants.HTML_EXTENSION;
+    if (! htmlfilename.endsWith(Constants.HTML_EXTENSION)) {
+      htmlfilename += Constants.HTML_EXTENSION;
+    }
+    return htmlfilename;
   }
 
 

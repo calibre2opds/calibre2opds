@@ -86,7 +86,7 @@ public enum JDOM {
   }
 
   /**
-   * Set parameters that are common to all the transformers we use.
+   * Set parameters that are common to many the transformers we use.
    * @param catalogTransformer
    */
   private void setParametersOnCatalog(Transformer catalogTransformer) {
@@ -127,6 +127,7 @@ public enum JDOM {
       try {
         catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(catalogTransformer);
+        catalogTransformer.setParameter("programName", "");  // Set to empty for all pages except top level
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e);
 

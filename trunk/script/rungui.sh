@@ -3,7 +3,7 @@
 #
 # Normally we expect the calibre2opds binaries to be in the same location
 # as this script, but we need to allow for the case of testing where they
-# are aactually in the location this script was invoked from!
+# are actually in the location this script was invoked from!
 
 c2o_jar=OpdsOutput-3.2-SNAPSHOT.jar 
 
@@ -23,6 +23,15 @@ if [ ! -f $c2o_jar ]; then
     exit -1
   fi
   cd $scriptdir
+fi
+
+# The next few lines are to help with running in Portable mode with minimal user setup required
+
+if [ "$CALIBRE2OPDS_CONFIG" == "" ]; then
+  if [ -d $scriptdir/Calibre2OpdsConfig ]; then
+    CALIBRE2OPDS_CONFIG=Calibre2OpdsConfig
+    export CALIBRE2OPDS_CONFIG
+  fi
 fi
 
 echo "Starting calibre2opds"

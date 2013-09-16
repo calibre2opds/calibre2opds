@@ -139,6 +139,16 @@ pause
 set _JAVACMD=%_JAVAPROG%
 
 :run_c2o
+
+REM The next few lines are to help with running in Portable mode with minimal user setup required
+
+if NOT "%CALIBRE2OPDS_CONFIG%" == "" goto start_c2o
+if NOT exist Calibre2|OpdsConfig goto start_c2o
+set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
+
+
+:start_c2o
+
 REM  We set stack limits explicitly here to get consistency across systems
 REM -Xms<value> define starting size
 REM -Xmx<value> defines maximum size

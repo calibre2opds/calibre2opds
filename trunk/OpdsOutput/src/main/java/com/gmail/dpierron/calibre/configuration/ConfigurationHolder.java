@@ -1291,12 +1291,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_URLBOOKS);
   }
 
+  /**
+   * Get the Base URL for this library
+   * If set it is always returned with the trailing '/' present
+   * @return
+   */
   public String getUrlBooks() {
     String s = getProperty(PROPERTY_NAME_URLBOOKS);
-    if (s == null)
-      return defaults.getUrlBooks();
-    else
-      return s;
+    if (s == null) {
+      s = defaults.getUrlBooks();
+    } else {
+      if (Helper.isNotNullOrEmpty(s) && (! s.endsWith(Constants.FOLDER_SEPARATOR)))
+        s+= Constants.FOLDER_SEPARATOR;
+      // Ignore a simple / as the base Url
+      if (s.equals(Constants.FOLDER_SEPARATOR));
+        s = "";
+    }
+    return s;
   }
 
   public void setUrlBooks(String value) {

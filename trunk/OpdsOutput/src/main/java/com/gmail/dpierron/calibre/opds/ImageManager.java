@@ -103,8 +103,8 @@ public abstract class ImageManager {
       if (logger.isDebugEnabled())
         logger.debug("generateImages: " + imageFile.getAbsolutePath());
       File coverFile = fileEntry.getValue();
-      CatalogContext.INSTANCE.getCallback().incStepProgressIndicatorPosition();
-      CatalogContext.INSTANCE.getCallback().showMessage(imageFile.getParentFile().getName() + File.separator + imageFile.getName());
+      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogContext.INSTANCE.callback.showMessage(imageFile.getParentFile().getName() + File.separator + imageFile.getName());
       long now = System.currentTimeMillis();
       try {
         CreateThumbnail ct = new CreateThumbnail(coverFile.getAbsolutePath());
@@ -116,7 +116,7 @@ public abstract class ImageManager {
           logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
         countFiles++;         // Update count of files processed
       } catch (Exception e) {
-        CatalogContext.INSTANCE.getCallback()
+        CatalogContext.INSTANCE.callback
             .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
       } catch (Throwable t) {
            logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );

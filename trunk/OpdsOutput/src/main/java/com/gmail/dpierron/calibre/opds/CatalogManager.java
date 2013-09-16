@@ -5,27 +5,45 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.CRC32;
 
 public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
   private File catalogFolder;
-  private BookFilter featuredBooksFilter;
+  public BookFilter featuredBooksFilter;
+  public List<Composite<String, String>> customCatalogs;
+  public Map<String, BookFilter> customCatalogsFilters;
   private List<CachedFile> listOfFilesToCopy = new LinkedList<CachedFile>();
   private List<String> listOfFilesPathsToCopy = new LinkedList<String>();
   private Map<String, Book> mapOfBookByPathToCopy = new HashMap<String, Book>();
   private Map<String, String> mapOfCatalogFolderNames = new HashMap<String, String>();
   private List<File> bookEntriesFiles = new LinkedList<File>();
+  public static String securityCode;
+  public static String initialUrl;
 
   public CatalogManager() {
     super();
+    // Avoid superflous settings of static object!
+    if (initialUrl == null) {
+      if (! ConfigurationManager.INSTANCE.getCurrentProfile().getCryptFilenames()) {
+        securityCode = "";
+      } else {
+        CRC32 crc32 = new CRC32();
+        crc32.update(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().toString().getBytes());
+        securityCode = Long.toHexString(crc32.getValue());
+      }
+      initialUrl = securityCode;
+      if (initialUrl.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
+      initialUrl += Constants.INITIAL_URL;
+    }
   }
 
   /**
@@ -114,77 +132,36 @@ public class CatalogManager {
   }
 
   /**
+   * Get the URL that is used to reference a particular file.
+   * If not alreaady present then added it to the map of files
+   * that are currently in the catalog.
+   *
+   * It will have the appropriate suffix added to ensure that it
+   * correctly references the current or parent folder.
    *
    * @param catalogFileName
+
    * @return
    */
-  public String getCatalogFileUrlInItsSubfolder(String catalogFileName) {
-    return getCatalogFileUrlInItsSubfolder(catalogFileName, true);
-  }
-
-  /**
-   *
-   * @param catalogFileName
-   * @param weAreAlsoInASubFolder
-   * @return
-   */
-  public String getCatalogFileUrlInItsSubfolder(String catalogFileName, boolean weAreAlsoInASubFolder) {
+  public String getCatalogFileUrl(String catalogFileName, Boolean inSubDir) {
+    assert Helper.isNotNullOrEmpty(catalogFileName);
+    int pos =  catalogFileName.indexOf(Constants.FOLDER_SEPARATOR);
     String catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
     if (Helper.isNullOrEmpty(catalogFolderName)) {
-      storeCatalogFileInSubfolder(catalogFileName);
-      catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
+      storeCatalogFile(catalogFileName);
+      // catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
+      catalogFolderName = pos == -1 ? "" : catalogFileName.substring(0,pos);
     }
-    return (weAreAlsoInASubFolder ? "../" : "") + FeedHelper.INSTANCE.urlEncode(catalogFolderName) + "/" + FeedHelper.INSTANCE.urlEncode(catalogFileName);
+
+    return (inSubDir  ? Constants.PARENT_PATH_PREFIX : Constants.CURRENT_PATH_PREFIX)
+                        + FeedHelper.INSTANCE.urlEncode(catalogFolderName)
+                        + (pos == - 1 ? "" : Constants.FOLDER_SEPARATOR)
+                        + FeedHelper.INSTANCE.urlEncode(catalogFileName.substring(pos + 1));
   }
 
-  /**
-   * Givnn the current catalog filename, work out the prefix that needs
-   * to be added to a URL to get back to the catalog root folder
-   *
-   * @param catalogFileName
-   * @return Relative path to catalog root
-   */
-  public String getPathToCatalogRoot(String catalogFileName) {
-    return getPathToCatalogRoot(catalogFileName, true);
-  }
-
-  /**
-   * Givnn the current catalog filename, work out the prefix that needs
-   * to be added to a URL to get back to the catalog root folder
-   *
-   * @param catalogFileName
-   * @return Relative path to catalog root
-   */
-  public String getPathToCatalogRoot(String catalogFileName, boolean weAreAlsoInASubFolder) {
-    if (logger.isTraceEnabled()) {
-      logger.trace("getPathToCatalogRoot: catalogFileName=" + catalogFileName);
-      logger.trace("getPathToCatalogRoot: weAreAlsoInSubFolder=" + weAreAlsoInASubFolder);
-    }
-    String catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
-    if (Helper.isNullOrEmpty(catalogFolderName)) {
-      storeCatalogFileInSubfolder(catalogFileName);
-      catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
-    }
-    // Now derive a relative path to catalog root
-    String result;
-
-    result = weAreAlsoInASubFolder ? "../" : "";
-    if (logger.isTraceEnabled())
-      logger.trace("getPathToCatalogRoot: catalogFolderName=" + catalogFolderName);
-    for (int i = 0; -1 != catalogFolderName.indexOf('/', i); i++) {
-      result = result + "../";
-    }
-    result = FeedHelper.INSTANCE.urlEncode(result, true);
-    if (logger.isTraceEnabled())
-      logger.trace("getPathToCatalogRoot=" + result);
-    return result;
-  }
 
   /**
    * Get the Folder that a particular catalog file belongs in
-   *
-   * Any File extension or 'Page' sections should be removed before
-   * we try and determine the folder the particular file belongs in.
    *
    * @param pCatalogFileName
    * @return
@@ -193,88 +170,39 @@ public class CatalogManager {
     if (Helper.isNullOrEmpty(pCatalogFileName))
       return "";
 
-    // Gee if there is any page information or file extensionto remove
-    String catalogFileName;
-    int pos = pCatalogFileName.indexOf(Constants.PAGE_DELIM);
-    if (pos > -1) {
-      // Remove the _Page ... part of the name
-      catalogFileName = pCatalogFileName.substring(0, pos);
-    } else {
-      pos = pCatalogFileName.lastIndexOf('.');
-      if (pos > -1) {
-        // Remove any file extension
-        catalogFileName = pCatalogFileName.substring(0, pos);
-      } else {
-        // ITIMPI - this sounds like an error to me that should be logged?
-        System.out.println("");
-        catalogFileName = pCatalogFileName;
-      }
-    }
-    // Remove and hash added while encrypting to folder name
-    // ITIMPI:  Need to check if this case can occur?
-    String temp = SecureFileManager.INSTANCE.decode(catalogFileName);
-    if (Helper.isNotNullOrEmpty(temp)) {
-      catalogFileName = temp;
-    }
-
-    // ITIMPI:  We might want to revisit if this is the best way to
-    //          identify the folder that a file is to belocated in?
-    //          An alternative wcheme might be more robust?
-
-    pos = catalogFileName.indexOf("_");
-    switch (pos) {
-      case 32:
-      case 24:
-      case 16:
-      case 8:
-          return catalogFileName.substring(0, pos);
-      default:
-          // Fallthru
-    }
-/*
-    if (catalogFileName.length() >= 32 && !catalogFileName.substring(0, 32).contains("_"))
-      return catalogFileName.substring(0, 32);
-
-    if (catalogFileName.length() >= 24 && !catalogFileName.substring(0, 24).contains("_"))
-      return catalogFileName.substring(0, 24);
-
-    if (catalogFileName.length() >= 16 && !catalogFileName.substring(0, 16).contains("_"))
-      return catalogFileName.substring(0, 16);
-
-    if (catalogFileName.length() >= 8 && !catalogFileName.substring(0, 8).contains("_"))
-      return catalogFileName.substring(0, 8);
-*/
-    pos = catalogFileName.lastIndexOf('_');
-    if (pos < 0)
-      return "";
-    return catalogFileName.substring(0, pos);
-
+    int pos = pCatalogFileName.indexOf(Constants.FOLDER_SEPARATOR);
+    return (pos == -1) ? pCatalogFileName : pCatalogFileName.substring(0,pos);
   }
 
   /**
-   * Get the full path for a file in a catalog.
+   * Set up an entry for the given file in the catalog.
+   * Checks to see if the file is already present and if not adds it
    *
-   * @param catalogFileName
-   * @return
+   * @param catalogFileName   The name of the file to be stored.  Includes folde if relevant
+   * @return                  File object corresponding to the given path
    */
-  public File storeCatalogFileInSubfolder(String catalogFileName) {
-    String folderName = mapOfCatalogFolderNames.get(catalogFileName);
-    if (folderName == null) { // check in which folder this file goes
-      folderName = getFolderName(catalogFileName);
-      File folder = new File(getCatalogFolder(), folderName);
-      if (!folder.exists())  {
-        if (folder.getName().endsWith("_Page"))
-          assert true;
-        folder.mkdirs();
-      }
+  public File storeCatalogFile(String catalogFileName) {
+    File folder = null;
+    String folderName;
+    int pos = catalogFileName.indexOf(Constants.FOLDER_SEPARATOR);       // Look for catalog name terminator being present
+    if (pos != -1 ) {
+      // truncate name supplied to use to only be folder part
+      folderName = catalogFileName.substring(0, pos);
+      folder = new File(getCatalogFolder(), folderName);
+    } else {
+      folderName = "";
+      folder = new File(getCatalogFolder(), folderName);
+    }
+    if (!folder.exists())  {
+      folder.mkdirs();
     }
     mapOfCatalogFolderNames.put(catalogFileName, folderName);
-    File result = new File(new File(getCatalogFolder(), folderName), catalogFileName);
+    File result = new File(getCatalogFolder(), catalogFileName);
     return result;
   }
 
   /**
-   * Add a book entry to the given catalog
+   * Add a book entry to the list of files for the catalog
    *
    * @param bookEntry
    * @return true if book was added because not already there
@@ -286,22 +214,33 @@ public class CatalogManager {
 
     bookEntriesFiles.add(bookEntry);
     return true;
-
   }
 
-  /**
-   *
-   * @return
-   */
+  /*
+  Make these properties public to avoid the need for simpe get/set routines that do nothing else!
+
   public BookFilter getFeaturedBooksFilter() {
     return featuredBooksFilter;
   }
 
-  /**
-   *
-   * @param featuredBooksFilter
-   */
   public void setFeaturedBooksFilter(BookFilter featuredBooksFilter) {
     this.featuredBooksFilter = featuredBooksFilter;
   }
+
+  public List<Composite<String, String>> getCustomCatalogs() {
+    return customCatalogs;
+  }
+
+  public void setCustomCatalogs (List<Composite<String, String>> pcustomCatalogs) {
+    customCatalogs = pcustomCatalogs;
+  }
+
+  public  Map<String, BookFilter> getCustomCatalogFilters () {
+    return customCatalogsFilters;
+  }
+
+  public void setCustomCatalogsFilter (Map<String, BookFilter> pcustomCatalogsFilters) {
+    customCatalogsFilters = pcustomCatalogsFilters;
+  }
+  */
 }

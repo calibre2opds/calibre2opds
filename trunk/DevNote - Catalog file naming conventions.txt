@@ -4,54 +4,72 @@
 This note specifies the naming standard for generating files within the catalog and sub-catalogs
 
 RULES:
-1.  Direcories will never be more than one level deep.
-2.  The top level will only contain generic files
+1.  All filename sshould be unique
+2.  Files are organised into directories where the directory name corresponds to the start of the
+    filename.   This is primarily for performance by avoiding having very large number of files in
+    the same folder.  It is also convenient if you ever peruse the catalog at the file elvel.
+3.  Direcories will never be more than one level deep.
+4.  The top level folder will only contain generic files
 3.  When generating sublevels a Prefix is added to the folder and file names.
     This prefix should be consistent for all files/folders at the same catalog level
     
 
-allbooks/				Folder for allbooks catalog split by letter
-	books_XX_Page_nn		Files for allbooks split-by-level
+Details:
+~~~~~~~
+author/					Folder for Files for each author
+	author_nn			Files for a given author listing series/books
+					(we suppress pagination within an author although this could be changed)
+	author_nn_series_nn_Page_nn	Files listing book for a given series for that author
+
+book/					folder for details about individual books
+	book_nn				File for a book with id nn
+	
+serie/					Folder for files for each series
+	serie_nn_Page_nn
+
+tag/					Folder for files for each tag	
+	tag_nn_Page_nn
+	
+
+Sub-catalogs:
+~~~~~~~~~~~~
+allbooks/				Folder for allbooks sub-catalog split by letter/page
+	allbooks_XX_Page_nn		Files for allbooks split-by-level
 					Entries point to books in the book/ folder
 					
-authors/				Folder for authors split by letter
+authors/				Folder for authors sub-catalog split by letter/page
 	authors_XX_Page_nn		Files for the author-by-level where XX indicates the split level 
 					Point to author_nn_Page_1 entries in the author/ folder
 					
-author/					Folder for Files for each author
-	author_nn_Page_nn		Files for a given author listing series/books
-	author_nn_Series_nn_Page_nn	Files for a given series for that author
-	
-series/
+series/					Folder for series sub-catalog split by letter/page
 	series_XX_Page_nn
 	
-serie/
-	serie_nn_Page_nn
-	
-tags/					Folder for tags split by letter
+tags/					Folder for tags sub-catalog split by letter/page
 	tags_XX_Page_nn			Files for tags split by letter
 	
-tag/					Folder for files for each tag	
-	tag_nn_Page_nn
-
-rated/
-	rated_XXXX_Page_nn
+rated/					Folder for rated books sub-catalog. 
+	rated_XXXX_Page_nn		Files for the list of books at given rating levels (XXX is rating)
 	
-recent/
-	recent_XXXX_Page_nn
+recent/					Folder for recent books sub-catalog.
+	recent_XXXX_Page_nn		Files for list of books in each period (XXX is period)
 	
-featured/
-	featured_Page_nn
+featured/				Folder for featured books sub-catalog split by page
+	featured_Page_nn		Files for list of books in the featured list
 	
-Custom Catalogs that genreate additional levels via a search will have a Prefix
-generated and added to the start of all folder and file names.
+XXXXXXX/				Custom catalog sub-folder
+	XXXXXX_YY_Page_nn
+	
+Custom Catalogs that generate additional levels via a search will have a Prefix
+generated and added to the start of all folder names.   As we need the prefix
+to be consistent across runs, the prefix is generated using CRC32 on the breadcrumbs.
 
 e.g.
 ABCDEFGH_allbooks/	
-	ABCDEFGH_books_XX_Page_nn
+	ABCDEFGH_allbooks_XX_Page_nn
 etc.
 
 Tags that generate additional levels are treated as a special case of custom folders
 
-If file encryption is active, then a (12 hex character) random value is added to the folder/filename
-either before the _Page_nn part or the file extension of the _Page_nn part is missing. 
+If file encryption is active, then a (8 hex character) random value is added to the start of the 
+folder (and the index file).  This should keep all related folders and files together while still
+keeping sufficient obfustication to avaoid it being easy to guess the correct path to any particular file

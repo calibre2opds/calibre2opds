@@ -1,14 +1,22 @@
 package com.gmail.dpierron.calibre.opds;
 
+/**
+ * Container object for linking many object types used within the program
+ *
+ * NOTES:
+ *   1.  We use public variables when getter/setters would have no additional logic!
+ *       (this tends to lead to slightly more efficient Java code).
+ */
 
 public enum CatalogContext {
   INSTANCE;
 
-  private CatalogManager catalogManager;
-  private HtmlManager htmlManager;
-  ThumbnailManager thumbnailManager;
-  ImageManager coverManager;
-  private CatalogCallbackInterface callback;
+  public CatalogManager catalogManager;
+  public HtmlManager htmlManager;
+  public ThumbnailManager thumbnailManager;
+  public ImageManager coverManager;
+  public CatalogCallbackInterface callback;
+  public SecurityManager securityManager;
 
   private CatalogContext() {
     initialize();
@@ -19,8 +27,9 @@ public enum CatalogContext {
     this.htmlManager = new HtmlManager();
     this.thumbnailManager = ImageManager.newThumbnailManager();
     this.coverManager = ImageManager.newCoverManager();
+    this.securityManager = new SecurityManager();
   }
-
+ /*
   public CatalogCallbackInterface getCallback() {
     if (callback == null)
       callback = new Log4jCatalogCallback();
@@ -62,5 +71,6 @@ public enum CatalogContext {
   public void setCoverManager(ImageManager coverManager) {
     this.coverManager = coverManager;
   }
+  */
 
 }

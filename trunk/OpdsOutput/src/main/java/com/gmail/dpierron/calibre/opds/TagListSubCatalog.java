@@ -1,53 +1,54 @@
 package com.gmail.dpierron.calibre.opds;
-
+/**
+ *  Class for defining methods that define a tag sub catalog
+ */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.secure.SecureFileManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class TagListSubCatalog extends TagSubCatalog {
+public class TagListSubCatalog extends TagsSubCatalog {
   private final static Logger logger = Logger.getLogger(TagListSubCatalog.class);
+
 
   public TagListSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
+    setCatalogType(Constants.TAGS_TYPE);
   }
 
   public TagListSubCatalog(List<Book> books) {
     super(books);
+    setCatalogType(Constants.TAGS_TYPE);
   }
 
   @Override
-  Composite<Element, String> _getEntry(Breadcrumbs pBreadcrumbs) throws IOException {
-    String filename = SecureFileManager.INSTANCE.encode(pBreadcrumbs.getFilename() + "_tags.xml");
-    String title = Localization.Main.getText("tags.title");
-    String urn = "calibre:tags";
-
-    String summary = "";
-    if (getTags().size() > 1)
-      summary = Localization.Main.getText("tags.alphabetical", getTags().size());
-    else if (getTags().size() == 1)
-      summary = Localization.Main.getText("authors.alphabetical.single");
-
-    return getListOfTags(pBreadcrumbs, getTags(), 0, null, title, summary, urn, filename, null);
+  Composite<Element, String> getTagsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+    return getListOfTags(pBreadcrumbs,
+                         getTags(),
+                         pBreadcrumbs.size() > 1,
+                         0,
+                         Localization.Main.getText("tags.title"),
+                         getTags().size() > 1 ? Localization.Main.getText("tags.alphabetical", getTags().size())
+                                              : (getTags().size() == 1 ? Localization.Main.getText("authors.alphabetical.single") : "") ,
+                         Constants.INITIAL_URN_PREFIX + getCatalogType() + getCatalogLevel(),
+                         getCatalogBaseFolderFileName(),
+                         null);
   }
 
-  private Composite<Element, String> getListOfTags(Breadcrumbs pBreadcrumbs,
-      List<Tag> tags,
+  private Composite<Element, String> getListOfTags(
+      Breadcrumbs pBreadcrumbs,
+      List<Tag> listtags,
+      boolean inSubDir,
       int from,
-      String guid,
       String title,
       String summary,
       String urn,
@@ -60,88 +61,63 @@ public class TagListSubCatalog extends TagSubCatalog {
       if (logger.isTraceEnabled())
         logger.trace("getListOfTags: splitOption was null - set to " + splitOption);
     }
-    boolean willSplitByLetter = (splitOption == SplitOption.SplitByLetter)
-                                && (maxSplitLevels > 0)
-                                && (tags.size() > maxBeforeSplit);
+    boolean willSplitByLetter = checkSplitByLetter(splitOption, listtags.size());
     if (willSplitByLetter) {
-      mapOfTagsByLetter = DataModel.splitTagsByLetter(tags);
+      mapOfTagsByLetter = DataModel.splitTagsByLetter(listtags);
       catalogSize = 0;
     } else
-      catalogSize = tags.size();
+      catalogSize = listtags.size();
 
+    if (from != 0) inSubDir = true;
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
-    String filename = SecureFileManager.INSTANCE.decode(pFilename);
-    if (Helper.isNotNullOrEmpty(guid))
-      filename = filename + "_" + guid;
-    if (from > 0) {
-      int pos = filename.lastIndexOf(".xml");
-      if (pos >= 0)
-        filename = filename.substring(0, pos);
-      filename = filename + "_" + pageNumber;
-    }
-    if (!filename.endsWith(".xml"))
-      filename = filename + ".xml";
-
+    String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
     logger.debug("getListOfTags: generating " + filename);
-    filename = SecureFileManager.INSTANCE.encode(filename);
+    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
-    File outputFile = getCatalogManager().storeCatalogFileInSubfolder(filename);
-    FileOutputStream fos = null;
-    Document document = new Document();
-    String urlExt = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename);
-    try {
-      fos = new FileOutputStream(outputFile);
-
-      Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
-
-      // list the entries (or split them)
-      List<Element> result;
-      if (willSplitByLetter) {
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        logger.debug("calling getListOfTagsSplitByLetter");
-        result = getListOfTagsSplitByLetter(breadcrumbs, mapOfTagsByLetter, guid, title, urn, pFilename);
-      } else {
-        logger.debug("no split by letter");
-        result = new LinkedList<Element>();
-        for (int i = from; i < tags.size(); i++) {
-          if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
-            Element nextLink = getListOfTags(pBreadcrumbs, tags, i, guid, title, summary, urn, pFilename,
-                                             splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
-            result.add(0, nextLink);
-            break;
-          } else {
-            Tag tag = tags.get(i);
-            Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-            logger.debug("getTag:" + tag);
-            Element entry = getTag(breadcrumbs, tag, urn, null);
-            if (entry != null) {
-              logger.debug("adding tag to the TROOK database:" + tag);
-              result.add(entry);
-              TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
-            }
+    // list the entries (or split them)
+    List<Element> result;
+    if (willSplitByLetter) {
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+      logger.debug("calling getListOfTagsSplitByLetter");
+      result = getListOfTagsSplitByLetter(breadcrumbs,
+                                          mapOfTagsByLetter,
+                                          inSubDir, title, urn, pFilename);
+    } else {
+      logger.debug("no split by letter");
+      result = new LinkedList<Element>();
+      for (int i = from; i < listtags.size(); i++) {
+        if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+          Element nextLink = getListOfTags(pBreadcrumbs,
+                                           listtags,
+                                           inSubDir,
+                                           i,
+                                           title, summary, urn, pFilename,
+                                           splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
+          result.add(0, nextLink);
+          break;
+        } else {
+          Tag tag = listtags.get(i);
+          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+          logger.debug("getTag:" + tag);
+          Element entry = getTag(breadcrumbs, tag, urn, null);
+          if (entry != null) {
+            logger.debug("adding tag to the TROOK database:" + tag);
+            result.add(entry);
+            TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
           }
         }
-      }
-
-      // add the entries to the feed
-      feed.addContent(result);
-
-      // write the element to the file
-      document.addContent(feed);
-      JDOM.INSTANCE.getOutputter().output(document, fos);
-    } finally {
-      if (fos != null)
-        fos.close();
+      } // End of tags for loop
     }
 
-    // create the same file as html
-    getHtmlManager().generateHtmlFromXml(document, outputFile);
+    feed.addContent(result);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    String urlNext = catalogManager.getCatalogFileUrl(filename + Constants.PAGE_DELIM + (pageNumber+1) + Constants.XML_EXTENSION, inSubDir);
 
     Element entry;
-    boolean weAreAlsoInSubFolder = (pBreadcrumbs.size() > 1);
-    String urlInItsSubfolder = getCatalogManager().getCatalogFileUrlInItsSubfolder(filename, weAreAlsoInSubFolder);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages)
@@ -153,18 +129,18 @@ public class TagListSubCatalog extends TagSubCatalog {
     } else {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());
-
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
-          useExternalIcons ?
-          (pBreadcrumbs.size() > 1 ? "../" : "./") + Icons.ICONFILE_TAGS :
-          Icons.ICON_TAGS);
+      if (title.equals("Science Fiction")) {
+        int x = 1;
+      }
+      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlExt, summary,
+          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
-    return new Composite<Element, String>(entry, urlInItsSubfolder);
+    return new Composite<Element, String>(entry, urlExt);
   }
 
   private List<Element> getListOfTagsSplitByLetter(Breadcrumbs pBreadcrumbs,
       Map<String, List<Tag>> mapOfTagsByLetter,
-      String guid,
+      boolean inSubDir,
       String baseTitle,
       String baseUrn,
       String baseFilename) throws IOException {
@@ -173,14 +149,14 @@ public class TagListSubCatalog extends TagSubCatalog {
 
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
-      sTitle = sTitle + ", ";
+      sTitle += ", ";
 
     List<Element> result = new LinkedList<Element>();
     SortedSet<String> letters = new TreeSet<String>(mapOfTagsByLetter.keySet());
-    assert baseFilename.endsWith(".xml");
+    // assert baseFilename.endsWith(Constants.XML_EXTENSION);
     for (String letter : letters) {
-      String letterFilename = SecureFileManager.INSTANCE.getSplitFilename(baseFilename, letter);
-      String letterUrn = Helper.getSplitString(baseUrn,letter,":");
+      String letterFilename = Helper.getSplitString(baseFilename,letter, Constants.TYPE_SEPARATOR);
+      String letterUrn = Helper.getSplitString(baseUrn,letter,Constants.URN_SEPARATOR);
       String letterTitle;
       if (letter.equals("_"))
         letterTitle = Localization.Main.getText("splitByLetter.tag.other");
@@ -193,11 +169,14 @@ public class TagListSubCatalog extends TagSubCatalog {
       Element element = null;
       if (tagsInThisLetter.size() > 0) {
         logger.debug("calling getListOfTags for the letter " + letter);
-        element =
-            getListOfTags(pBreadcrumbs, tagsInThisLetter, 0, guid, letterTitle, summary, letterUrn, letterFilename, 
-                letter.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
+        element = getListOfTags(pBreadcrumbs,
+                                tagsInThisLetter,
+                                inSubDir,
+                                0,
+                                letterTitle,
+                                summary, letterUrn, letterFilename,
+                                checkSplitByLetter(letter)).getFirstElement();
       }
-
       if (element != null)
         result.add(element);
     }

@@ -68,7 +68,11 @@ public class Runner {
 
     Runner runner = new Runner();
     runner.initLog4J();
-    // log4j now intialised so we can start using it.
+    // log4j now initialised so we can start using it.
+    logger.info ("LOG LEVEL: " + logger.getLevel() );
+    if (logger.isTraceEnabled())  logger.info("== TRACE level logging active");
+    if (logger.isDebugEnabled())  logger.info("== DEBUG level logging active");
+    logger.info("");
     try {
       if (args.length == 1) {
         String profileName = args[0];
@@ -96,6 +100,7 @@ public class Runner {
       logger.info(Localization.Main.getText("intro.goal"));
       logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
       logger.info("");
+      // TODO:   ITIMPI: List of members removed as no longer seems to reflect active developers!
       logger.info(Localization.Main.getText("intro.team.title"));
       logger.info("  * " + Localization.Main.getText("intro.team.list1"));
       logger.info("  * " + Localization.Main.getText("intro.team.list2"));
@@ -106,8 +111,7 @@ public class Runner {
       logger.info(Localization.Main.getText("intro.thanks.1"));
       logger.info(Localization.Main.getText("intro.thanks.2"));
       logger.info("");
-      logger
-          .info(Localization.Main.getText("usage.intro", ConfigurationManager.INSTANCE.getCurrentProfile().getPropertiesFile().getPath()));
+      logger.info(Localization.Main.getText("usage.intro", ConfigurationManager.INSTANCE.getCurrentProfile().getPropertiesFile().getPath()));
       logger.info("");
       introDone = true;
     }
