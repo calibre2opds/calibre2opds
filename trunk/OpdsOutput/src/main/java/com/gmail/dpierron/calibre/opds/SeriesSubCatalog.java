@@ -12,7 +12,6 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 
 import org.apache.log4j.Logger;
@@ -95,7 +94,10 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   * Get the list of series.
+   * Get the list of series for embedding at the current level.
+   *
+   * This is used when you want to add a list of series to an existing
+   * page without creating a link to a new page.
    *
    * This reoutine is called recursively to generate each file (page or split level)
    *
@@ -112,7 +114,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @throws IOException
    */
 
-  public List<Element> getContentOfListOfSeries(Breadcrumbs pBreadcrumbs,
+  public List<Element> getListOfSeries(
+      Breadcrumbs pBreadcrumbs,
       List<Series> series,        //  The list of series to be processed.
       boolean inSubDir,
       int from,                   // Start point - set to 0 if not known
@@ -123,13 +126,15 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       SplitOption splitOption,
       boolean addTheSeriesWordToTheTitle) throws IOException {
 
+    // Set if not specified from catalog properties
+    if (series == null) series = getSeries();
+    if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
+
     Map<String, List<Series>> mapOfSeriesByLetter = null;
     List<Element> result;
 
-    if (series == null) series = getSeries();
-
     if (logger.isTraceEnabled())
-      logger.trace("getContentOfListOfSeries: title=" + title);
+      logger.trace("getListOfSeries: title=" + title);
     boolean willSplitByLetter;
 
     if (null == splitOption)
@@ -145,13 +150,13 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
       default:
         if (logger.isTraceEnabled())
-          logger.trace("getContentOfListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
+          logger.trace("getListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
               maxBeforeSplit);
         willSplitByLetter = (maxSplitLevels != 0) &&  (series.size() > maxBeforeSplit);
         break;
     }
     if (logger.isTraceEnabled())
-      logger.trace("getContentOfListOfSeries:  willSplitByLetter=" + willSplitByLetter);
+      logger.trace("getListOfSeries:  willSplitByLetter=" + willSplitByLetter);
 
     if (willSplitByLetter) {
       mapOfSeriesByLetter = DataModel.splitSeriesByLetter(series);
@@ -166,16 +171,21 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (willSplitByLetter) {
       // split the series list by letter
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-      result = getListOfSeriesSplitByLetter(breadcrumbs, mapOfSeriesByLetter, inSubDir, title, urn, pFilename, addTheSeriesWordToTheTitle);
+      result = getListOfSeriesSplitByLetter(breadcrumbs,
+                                            mapOfSeriesByLetter,
+                                            inSubDir,
+                                            title,
+                                            urn,
+                                            pFilename,
+                                            addTheSeriesWordToTheTitle);
     } else {
       // list the series list
       result = new LinkedList<Element>();
       for (int i = from; i < series.size(); i++) {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           Element nextLink =
-              getListOfSeries(pBreadcrumbs, series, inSubDir, i, title, summary, urn, pFilename,
-                              splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption,
-                              addTheSeriesWordToTheTitle).getFirstElement();
+              getSubCatalog(pBreadcrumbs, series, inSubDir, i, title, summary, urn, pFilename,
+                  splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, addTheSeriesWordToTheTitle)/*.getFirstElement()*/;
           result.add(0, nextLink);
           break;
         } else {
@@ -194,30 +204,35 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   }
 
   /**
+   * Get a new Series sub-catalog.
+   *
    * @param pBreadcrumbs
-   * @param series
+   * @param series              series, or nuil to derive series from books
    * @param inSubDir
    * @param from
    * @param title
    * @param summary
    * @param urn
-   * @param pFilename
+   * @param pFilename            if null then derived from getCatalogBaseFolderFileName()
    * @param splitOption
    * @param addTheSeriesWordToTheTitle
    * @return
    * @throws IOException
    */
-  public Composite<Element, String> getListOfSeries(
-      Breadcrumbs pBreadcrumbs,
-      List<Series> series,
-      boolean inSubDir,
-      int from,
-      String title,
-      String summary,
-      String urn,
-      String pFilename,
-      SplitOption splitOption,
-      boolean addTheSeriesWordToTheTitle) throws IOException {
+//  public Composite<Element, String> getListOfBooks(Breadcrumbs pBreadcrumbs,
+      public Element getSubCatalog(Breadcrumbs pBreadcrumbs,
+          List<Series> series,
+          boolean inSubDir,
+          int from,
+          String title,
+          String summary,
+          String urn,
+          String pFilename,
+          SplitOption splitOption,
+          boolean addTheSeriesWordToTheTitle) throws IOException {
+
+    if (series == null) series = getSeries();
+    if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
 
     int catalogSize;
     boolean willSplitByLetter = checkSplitByLetter(splitOption, series.size());
@@ -235,7 +250,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
     // list the entries (or split them)
-    List<Element> result = getContentOfListOfSeries(pBreadcrumbs, series, inSubDir, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
+    List<Element> result = getListOfSeries(pBreadcrumbs, series, inSubDir, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
 
     // add the entries to the feed
     feed.addContent(result);
@@ -258,7 +273,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           // #751211: Use external icons option
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES);
     }
-    return new Composite<Element, String>(entry, urlInItsSubfolder);
+//    return new Composite<Element, String>(entry, urlInItsSubfolder);
+    return entry;
   }
 
   /**
@@ -307,9 +323,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element = getListOfSeries(pBreadcrumbs, seriesInThisLetter, inSubDir, 0, letterTitle, summary, letterUrn, letterFilename,
-            letter.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate,
-            addTheSeriesWordToTheTitle).getFirstElement();
+        element = getSubCatalog(pBreadcrumbs, seriesInThisLetter, inSubDir, 0, letterTitle, summary, letterUrn, letterFilename, checkSplitByLetter(letter),
+            addTheSeriesWordToTheTitle)/* .getFirstElement() */;
       }
 
       if (element != null)
@@ -328,7 +343,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getSerie(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
+  private Element getSerie(
+      Breadcrumbs pBreadcrumbs,
+      Series serie,
+      String baseurn,
+      boolean addTheSeriesWordToTheTitle) throws IOException {
+
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + serie);
 
@@ -354,40 +374,14 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (addTheSeriesWordToTheTitle)
       title = Localization.Main.getText("content.series") + " " + title;
     String urn = baseurn + Constants.URN_SEPARATOR + serie.getId();
-    String filename = getCatalogBaseFolderFileName(Constants.SERIE_TYPE)
-                      + Constants.TYPE_SEPARATOR + serie.getId();
+    String filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.SERIE_TYPE, serie.getId());
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
 
-    Element result = getCatalog(pBreadcrumbs, books, true, 0,   // Starting at 0
+    Element result = getListOfBooks(pBreadcrumbs, books, true, 0,   // Starting at 0
         title, summary, urn, filename, SplitOption.Paginate,   // Do not split on letter in Series - it does not really make sense
         useExternalIcons      // #751211: Use external icons option
             ? getIconPrefix(true) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES, null, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
     return result;
   }
-
-  /**
-   * @param pBreadcrumbs
-   * @return
-   * @throws IOException
-   */
-  public Composite<Element, String> getSeriesCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
-    if (Helper.isNullOrEmpty(getSeries()))
-      return null;
-
-    String filename = getCatalogBaseFolderFileName();
-    String title = Localization.Main.getText("series.title");
-    String urn = "calibre:series";
-
-    String summary = "";
-    if (getSeries().size() > 1)
-      summary = Localization.Main.getText("series.alphabetical", series.size());
-    else if (getSeries().size() == 1)
-      summary = Localization.Main.getText("series.alphabetical.single");
-
-    return getListOfSeries(pBreadcrumbs, getSeries(), inSubDir, 0,           // Start at 0
-                            title, summary, urn, filename, null,        // SplitOption
-                            false);
-  }
-
 }

@@ -96,6 +96,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getSplitByAuthorInitialGoToBooks();
 
+  public boolean getLanguageAsTag();
+
   public String getTagsToMakeDeep();
 
   public int getMinBooksToMakeDeepLevel();

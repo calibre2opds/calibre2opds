@@ -31,7 +31,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
   }
 
   @Override
-  Composite<Element, String> getTagsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     return getListOfTags(pBreadcrumbs,
                          getTags(),
                          pBreadcrumbs.size() > 1,

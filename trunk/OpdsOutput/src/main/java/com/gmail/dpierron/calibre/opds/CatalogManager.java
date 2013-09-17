@@ -17,7 +17,7 @@ import java.util.zip.CRC32;
 
 public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
-  private File catalogFolder;
+  private File generateFolder;
   public BookFilter featuredBooksFilter;
   public List<Composite<String, String>> customCatalogs;
   public Map<String, BookFilter> customCatalogsFilters;
@@ -50,21 +50,21 @@ public class CatalogManager {
    * Get the current catalog folder
    * @return
    */
-  public File getCatalogFolder() {
-    return catalogFolder;
+  public File getGenerateFolder() {
+    return generateFolder;
   }
 
   /**
    * Set the catalog folder given the parth to the parent
-   * The name takes into account teh configuration settings and mode
+   * The name takes into account the configuration settings and mode
+   * This is really just the path to where the temporary files are generated
    * @param parentfolder
    */
-  public void setCatalogFolder(File parentfolder) {
-    catalogFolder = new File(parentfolder, getCatalogFolderName());
-    if (!catalogFolder.exists()) {
-      // ITIMPI:  The following assert may now be redundant!  Added while investigating a bug
-      assert  !catalogFolder.getName().endsWith("_Page");
-      catalogFolder.mkdirs();
+  public void setGenerateFolder(File parentfolder) {
+//    generateFolder = new File(parentfolder, getCatalogFolderName());
+    generateFolder = parentfolder;
+    if (!generateFolder.exists()) {
+      generateFolder.mkdirs();
     }
   }
 
@@ -188,16 +188,17 @@ public class CatalogManager {
     if (pos != -1 ) {
       // truncate name supplied to use to only be folder part
       folderName = catalogFileName.substring(0, pos);
-      folder = new File(getCatalogFolder(), folderName);
+      folder = new File(getGenerateFolder(), folderName);
     } else {
       folderName = "";
-      folder = new File(getCatalogFolder(), folderName);
+      folder = new File(getGenerateFolder(), folderName);
     }
     if (!folder.exists())  {
       folder.mkdirs();
     }
     mapOfCatalogFolderNames.put(catalogFileName, folderName);
-    File result = new File(getCatalogFolder(), catalogFileName);
+    File result = new File(getGenerateFolder(), catalogFileName);
+//    File result = new File(catalogFileName);
     return result;
   }
 

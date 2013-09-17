@@ -353,9 +353,9 @@ public class Catalog {
           // We ignore failed attempts to copy a file, although we log them
           // This allows for the user to have made changes to the library while
           // Calibre2opds is generating a library without the whole run failing.
+          logger.warn("Unable to to copy file " + cf_src);
         }
         // Set target CRC to be same as source CRC
-        logger.warn("Unable to to copy file " + cf_src);
         cf_dst.setCrc(cf_src.getCrc());
       }
     }  // End of File Handling section
@@ -617,7 +617,7 @@ public class Catalog {
         logger.trace("generateFolder set to " + generateFolder);
 
       // Save the location of the Catalog folder for any other component that needs to knw it
-      CatalogContext.INSTANCE.catalogManager.setCatalogFolder(generateFolder);
+      CatalogContext.INSTANCE.catalogManager.setGenerateFolder(generateFolder);
 
       callback.startCreateMainCatalog();
 
@@ -626,6 +626,7 @@ public class Catalog {
       callback.startReadDatabase();
       now = System.currentTimeMillis();
 
+      DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.preloadDataModel();
       callback.checkIfContinueGenerating();      // check if we must continue
@@ -766,7 +767,8 @@ public class Catalog {
       for (String resource : Constants.FILE_RESOURCES) {
         callback.checkIfContinueGenerating();
         InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
-        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
+//        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
+        File resourceFile = new File(generateFolder, resource);
         Helper.copy(resourceStream, resourceFile);
         logger.trace("Copying Resource " + resource);
       }
@@ -784,13 +786,17 @@ public class Catalog {
       levelSubCatalog.setCatalogBaseFilename(levelSubCatalog.catalogManager.initialUrl);
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
                                 "dummy.xml");
-      Element entry = levelSubCatalog.getLevelCatalog(breadcrumbs, null,           // StufftoFilterOut
+      levelSubCatalog.getCatalog(
+          breadcrumbs,
+          null,           // StufftoFilterOut
           false,          // at top level
           "",             // Summary
           "",             // urn
           null,           // Splitoption
           "");            // icon
-      levelSubCatalog = null; // Maybe not necessary - but foced free may help release resources earlier
+      levelSubCatalog = null; // Maybe not necessary - but forced free may help release resources earlier
+
+
       logger.debug("STARTING: Generating Thumbnails");
       int nbThumbnails = CatalogContext.INSTANCE.thumbnailManager.getNbImagesToGenerate();
       callback.startCreateThumbnails(nbThumbnails);
@@ -865,7 +871,7 @@ public class Catalog {
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 
-      // if the target folder is set, copy/syncFiles the library there
+      // if the target folder is set, copy/sync Files from the library there
       int nbFilesToCopyToTarget = CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       // In modes other than default mode we make a copy of all the ebook
@@ -904,6 +910,7 @@ public class Catalog {
         String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName()).getAbsolutePath();
         String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
+        // TODO    Look if this can be done more effeiently?  Perhaps piecemeal during sync?
         logger.debug("STARTING: Delete superfluous files from target");
         String catalogfolder = currentProfile.getCatalogFolderName();
         for (File existingTargetFile : existingTargetFiles) {
@@ -935,7 +942,7 @@ public class Catalog {
       callback.endCopyLibToTarget(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
 
-      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getCatalogFolder());
+      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getGenerateFolder());
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -967,7 +974,7 @@ public class Catalog {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getCatalogFolder(), true, targetCatalogZipFile);
+          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile);
           // Now ensure that there is no unzipped catalog left behinf!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
@@ -977,7 +984,8 @@ public class Catalog {
         // FALLTHRU Sync catalog files if not using ZIP mode
       case Nas:
         File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
-        syncFiles(CatalogContext.INSTANCE.catalogManager.getCatalogFolder(), targetCatalogFolder);
+//        syncFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), targetCatalogFolder);
+        syncFiles(generateFolder, targetCatalogFolder);
         break;
       case Dropbox:
         // Do nothing.   In this mode we sync the catalog using the code for copying back to the library
@@ -989,9 +997,10 @@ public class Catalog {
       // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+//        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());;
-        syncFiles(generateCatalogFolder, libraryCatalogFolder);
+//        syncFiles(generateCatalogFolder, libraryCatalogFolder);
+        syncFiles(generateFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
       }
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);

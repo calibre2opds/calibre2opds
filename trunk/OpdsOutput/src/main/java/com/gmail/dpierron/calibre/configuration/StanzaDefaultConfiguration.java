@@ -176,6 +176,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.browseByCover;
   }
 
+  public boolean getLanguageAsTag() {
+    return StanzaConstants.languageAsTag;
+  }
+
   public boolean getSplitByAuthorInitialGoToBooks() {
     return StanzaConstants.splitByAuthorInitialGoToBooks;
   }

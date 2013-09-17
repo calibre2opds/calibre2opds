@@ -7,7 +7,6 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -119,13 +118,37 @@ public abstract class SubCatalog {
    */
   public void setCatalogLevel (Breadcrumbs breadcrumbs) {
     assert (breadcrumbs != null);
-    CRC32 crc32 = new CRC32();
-    crc32.update(breadcrumbs.toString().getBytes());
-    setCatalogLevel(Long.toHexString(crc32.getValue()));
+    setCatalogLevel(encryptString(breadcrumbs.toString()));
     setOptimizUrlPrefix();
   }
 
+  /**
+   * Routine to get CRC32 value for given string
+   * Used as helper function when encrypting folder and file names
+   *
+   * @param data
+   * @return
+   */
+  private String encryptString (String data) {
+    CRC32 crc32 = new CRC32();
+    crc32.update(data.getBytes());
+    return Long.toHexString(crc32.getValue());
+  }
 
+  /**
+   * If the user has asked for encrypted filename, then an
+   * encryption string is added to the start of the filename
+   * that is derived from the actual filename, and then the
+   * filename in the clear is added.  This should mean that
+   * catalogs are easy to read while the filenames are hard to guess.
+   *
+   * @param filename
+   * @return
+   */
+  private String encryptFilename (String filename) {
+    if (securityCode.length()==0) return filename;
+    return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename;
+  }
   /**
    * Get the current level and if necessary add the prefix if not empty
    *
@@ -299,6 +322,7 @@ public abstract class SubCatalog {
       return catalogBaseFilename;
     }
   }
+
   /**
    * Set the base filename to be used for this catalog.
    * Only needed when it cannot be derived automatically from the type
@@ -311,7 +335,7 @@ public abstract class SubCatalog {
     // We want to skip over any leading folder name
     int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
     assert name.substring(pos+1).indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-            "Program Error: Multiple FOLDER_SEPARTORS found (" + name + ")";
+            "Program Error: Multiple FOLDER_SEPARATORS found (" + name + ")";
     if (pos != -1) {
       name = name.substring(pos+1);     // Remove the folder part
     }
@@ -332,22 +356,20 @@ public abstract class SubCatalog {
    * @return
    */
   public String getCatalogBaseFolderFileName () {
-    if (Helper.isNullOrEmpty(catalogFolderBaseFilename)) {
+    if (catalogFolderBaseFilename == null) {
       // Special case of empty folder and level (as used for index files!)
       if (catalogFolder.length() == 0  & catalogLevel.length() == 0) {
         catalogFolderBaseFilename = getCatalogBasefilename();
       } else {
         catalogFolderBaseFilename = getCatalogPrefix() + getCatalogFolder();  // This will include security/level prefixes
-        catalogFolderBaseFilename += Constants.FOLDER_SEPARATOR + getCatalogBasefilename();
+        catalogFolderBaseFilename += Constants.FOLDER_SEPARATOR +  encryptFilename(getCatalogBasefilename());
       }
     }
 
-    int pos = catalogFolderBaseFilename.indexOf(Constants.SECURITY_SEPARATOR);
-    assert catalogFolderBaseFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-            "Program error: Two occurences of SECURITY_SEPARATOR (" + catalogFolderBaseFilename + ")";
-    pos = catalogFolderBaseFilename.indexOf(Constants.LEVEL_SEPARATOR);
-    assert catalogFolderBaseFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-        "Program error: Two occurences of LEVEL_SEPARATOR (" + catalogFolderBaseFilename + ")";
+    //int pos = catalogFolderBaseFilename.indexOf(Constants.SECURITY_SEPARATOR);
+    //pos = catalogFolderBaseFilename.indexOf(Constants.LEVEL_SEPARATOR);
+    //assert catalogFolderBaseFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+    //    "Program error: Two occurences of LEVEL_SEPARATOR (" + catalogFolderBaseFilename + ")";
 
     return catalogFolderBaseFilename;
   }
@@ -361,7 +383,7 @@ public abstract class SubCatalog {
   public String getCatalogBaseFolderFileName (String type) {
     assert Helper.isNotNullOrEmpty(type);
     String folder = getCatalogFolder(type);
-    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + type;
+    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(type);
   }
 
   public String getCatalogBaseFolderFileNameNoLevel (String type) {
@@ -370,7 +392,7 @@ public abstract class SubCatalog {
     if (result.length() > 0)  result += Constants.SECURITY_SEPARATOR;
     result += type;
     if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
-    return result + type;
+    return result + encryptFilename(type);
   }
 
     /**
@@ -381,7 +403,7 @@ public abstract class SubCatalog {
      * @return
      */
   public String getCatalogBaseFolderFileNameId (String id) {
-    return getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + id;
+    return encryptFilename(getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + id) ;
   }
 
   /**
@@ -394,7 +416,8 @@ public abstract class SubCatalog {
    * @return
    */
   public String getCatalogBaseFolderFileNameId (String type, String id) {
-    return getCatalogBaseFolderFileName(type) + Constants.TYPE_SEPARATOR + id;
+    String folder = getCatalogFolder(type);
+    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(Constants.TYPE_SEPARATOR + id);
   }
 
 
@@ -409,7 +432,11 @@ public abstract class SubCatalog {
    * @return
    */
   public String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
-    return getCatalogBaseFolderFileNameNoLevel(type) + Constants.TYPE_SEPARATOR + id;
+    String result = securityCode;
+    if (result.length() > 0)  result += Constants.SECURITY_SEPARATOR;
+    result += type;
+    if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
+    return result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
   }
 
   /**
@@ -571,11 +598,11 @@ public abstract class SubCatalog {
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
     assert Helper.isNotNullOrEmpty(outputFilename): "Program error: Attempt to create XML file for empty/null filename";
-    assert ! outputFilename.startsWith(catalogManager.getCatalogFolder().toString()):
+    assert ! outputFilename.startsWith(catalogManager.getGenerateFolder().toString()):
              "Program Error:  filename should not include catalog folder (" + outputFilename + ")";
     int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
-    assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-        "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
+    // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+    //    "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
     pos = outputFilename.indexOf(Constants.LEVEL_SEPARATOR);
     assert outputFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
         "Program error: Two occurences of LEVEL_SEPARATOR (" + outputFilename + ")";

@@ -15,7 +15,6 @@ import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -100,8 +99,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return                Link to the page just generated to insert into parent
    * @throws IOException
    */
-  public Composite<Element, String> getCatalog(
-      Breadcrumbs pBreadcrumbs,
+  // public Composite<Element, String> getListOfBooks(
+  public Element getSubCatalog(Breadcrumbs pBreadcrumbs,
       List<Author> listauthors,
       boolean inSubDir,
       int from,
@@ -121,7 +120,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     for (Author author : listauthors) {                                                   // debug
       if (! author.getLastName().toUpperCase().equals(lastName)) {
         // As long as entries are not all the same, apply the split criteria
-        willSplitByLetter = checkSplitByLetter(splitOption,authors.size());
+        willSplitByLetter = checkSplitByLetter(splitOption,listauthors.size());
         break;
       }
     }
@@ -141,7 +140,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     // list the entries (or split them)
     List<Element> result;
-    if (willSplitByLetter) {
+    if (willSplitByLetter  & listauthors.size() > 1) {
       logger.debug("splitting by letter");
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
       result = getListOfAuthorsSplitByLetter(breadcrumbs,
@@ -156,15 +155,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         if ((splitOption != SplitOption.DontSplitNorPaginate)
         && ((i - from) >= maxBeforePaginate)) {
           // Get a new page
-          Element nextLink = getCatalog(pBreadcrumbs,
-                                        listauthors,
-                                        true,
-                                        i,
-                                        title,
-                                        summary,
-                                        urn,
-                                        pFilename,
-                                        splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
+          Element nextLink = getSubCatalog(pBreadcrumbs, listauthors, true, i, title, summary, urn, pFilename,
+              splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption)/*.getFirstElement()*/;
           result.add(0, nextLink);
           break;
         } else {
@@ -204,7 +196,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           // #751211: Use external icons option
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
     }
-    return new Composite<Element, String>(entry, urlInItsSubfolder);
+//    return new Composite<Element, String>(entry, urlInItsSubfolder);
+    return entry;
   }
 
   /**
@@ -263,17 +256,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
          *  Prepare the list of authors in any case, even if it will be skipped by SplitByAuthorInitialGoToBooks.
          *  It'll be useful in cross references
          */
-        logger.debug("calling getCatalog for the letter " + letter);
+        logger.debug("calling getListOfBooks for the letter " + letter);
 
-        element = getCatalog(pBreadcrumbs,
-                             authorsInThisLetter,
-                             true,
-                             0,
-                             letterTitle,
-                              summary,
-                             letterUrn,
-                             letterFilename,
-                             (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate).getFirstElement();
+        element = getSubCatalog(pBreadcrumbs, authorsInThisLetter, true, 0, letterTitle, summary, letterUrn, letterFilename,
+            (letter.length() < maxSplitLevels) ? SplitOption.SplitByLetter : SplitOption.Paginate)/* .getFirstElement() */;
 
         if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
           logger.debug("getting all books by all the authors in this letter");
@@ -284,7 +270,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           if (logger.isTraceEnabled())
             logger.trace("getListOfAuthorsSplitByLetter:  Breadcrumbs=" + pBreadcrumbs.toString());
 
-          element = getCatalog(pBreadcrumbs, books, true, 0,                       // Starting from start
+          element = getListOfBooks(pBreadcrumbs, books, true, 0,                       // Starting from start
               letterTitle, summary, letterUrn, letterFilename, SplitOption.DontSplit,     // Bug #716917 Do not split on letter
               // #751211: Use external icons option
               useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null).getFirstElement();
@@ -352,54 +338,43 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
 
     // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(getBooks());
+    String summary = Summarizer.INSTANCE.summarizeBooks(authorbooks);
 
     // We like to list series if we can before books not in series
     // (unless the user has suppressed series generation).
 
-    if (listOfBooksInSeries.size() > 0
-        //          && currentProfile.getGenerateSeries()
-        && listOfBooksInSeries.size() != 0
-        && currentProfile.getShowSeriesInAuthorCatalog()) {
+    if (listOfBooksInSeries.size() > 0 && currentProfile.getShowSeriesInAuthorCatalog()) {
       logger.debug("processing the series by " + author);
 
       // make a link to the series by this author catalog
       logger.debug("make a link to the series by this author catalog");
-      //        SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOutPlusAuthor, booksByThisAuthor);
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       seriesSubCatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
       seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.SERIES_TYPE);
-      firstElements = seriesSubCatalog.getContentOfListOfSeries(pBreadcrumbs,
-                                                               null,
-                                                               true,
-                                                               0, title, summary, urn,
-                                                               seriesSubCatalog.getCatalogBaseFolderFileName(),
-                                                               SplitOption.Paginate, true);
+      firstElements = seriesSubCatalog.getListOfSeries(pBreadcrumbs, null,      // series derived from catalog books
+          true, 0, title, summary, urn, null,      // filename derived from catalog properties
+          SplitOption.Paginate, true);
+
+      seriesSubCatalog = null;    // May nopt be necessary, but allow earlier release of resources
 
       // Make a link to the "allbooks entry" for this author
       AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
       booksSubcatalog.setCatalogLevel(getCatalogLevel());
       booksSubcatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
       booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
-      Element entry = booksSubcatalog.getCatalog(breadcrumbs,
-                                                 booksSubcatalog.getBooks(),
-                                                 true,
-                                                 0,       // from start
-                                                 Localization.Main.getText("allbooks.title"),
-                                                 booksSubcatalog.getSummary(),
-                                                 booksSubcatalog.getUrn(),
-                                                 booksSubcatalog.getCatalogBaseFolderFileName(),
-                                                 SplitOption.Paginate,
-                                                 useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS,
-                                                 null).getFirstElement();
-      if (entry != null)
-        firstElements.add(0, entry);
+      Element entry = booksSubcatalog.getListOfBooks(breadcrumbs, null,          // derived from catalog properties
+          true, 0,       // from start
+          Localization.Main.getText("allbooks.title"), booksSubcatalog.getSummary(), booksSubcatalog.getUrn(), booksSubcatalog.getCatalogBaseFolderFileName(),
+          SplitOption.Paginate, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null).getFirstElement();
+      booksSubcatalog = null;     // May not be necessary - but allowe earlier release of resources
+      firstElements.add(0,entry); // Add at start (in front of Series list)
 
       // Reset books to list non-series books
       morebooks = listOfBooksNotInSeries;
       logger.debug("processing the other " + morebooks.size() + " books by " + author);
     } else {
+      // No series (or we do not want them in author - simply take all te books to list them
       assert authorbooks != null;
       morebooks = authorbooks;
       logger.debug("there are no series by " + author + ", processing all his " + morebooks.size() + " books");
@@ -412,15 +387,21 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     logger.debug("sort books by title");
     sortBooksByTitle(morebooks);
 
-    logger.debug("calling getCatalog with " + morebooks.size() + " books");
+    logger.debug("calling getListOfBooks with " + morebooks.size() + " books");
     logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
 
-    return getCatalog(pBreadcrumbs, morebooks, true,           // Always in subDir
-        0,              // from
-        title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
-        // #751211: Use external icons option
-        useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements).getFirstElement();
+    return getListOfBooks(pBreadcrumbs,
+                          morebooks,
+                          true,           // Always in subDir
+                          0,              // from
+                          title,
+                          summary,
+                          urn,
+                          filename,
+                          SplitOption.DontSplit,        // Bug #716917 Do not split on letter
+                          // #751211: Use external icons option
+                          useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS,
+                          firstElements).getFirstElement();
   }
-
 
 }

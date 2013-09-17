@@ -134,7 +134,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @throws IOException
    */
   @Override
-  Composite<Element, String> getTagsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     TreeNode root = getTreeOfTags(getTags());
     logger.debug("_getEntry:" + pBreadcrumbs.toString());
     return getLevelOfTreeNode(pBreadcrumbs, root);
