@@ -162,9 +162,9 @@ echo "-----------------------"
 echo '
 if not "%1"=="-enableassertions" goto no_assertions
 REM Start the GUI leaving this batch file running for progress/debug messages
-echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
+echo [INFO]  "%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp %_C2O% Gui
 echo '
-"%_JAVACMD%" -Xms128m -Xmx512m  -enableassertions -cp %_C2O% Gui
+"%_JAVACMD%" -Xms256m -Xmx1024fsm  -enableassertions -cp %_C2O% Gui
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "

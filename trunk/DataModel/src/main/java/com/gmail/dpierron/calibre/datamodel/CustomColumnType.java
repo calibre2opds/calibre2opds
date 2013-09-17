@@ -7,6 +7,12 @@ package com.gmail.dpierron.calibre.datamodel;
  */
 public class CustomColumnType {
 
+  private long    id;
+  private String  label;
+  private String  name;
+  private String  datatype;
+  private String  display;
+
   //  CONSTRUCTORS
 
   //  METHODS and PROPERTIES
