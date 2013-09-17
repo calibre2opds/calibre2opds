@@ -49,6 +49,8 @@ public enum DataModel {
   private Map<String, Language> mapOfLanguagesByIsoCode;
   private Map<String, String> mapOfSavedSearches;
 
+  private boolean useLanguageAsTags = true;
+
   public void reset() {
     mapOfFilesByBookId = null;
     mapOfPublishersByBookId = null;
@@ -491,8 +493,11 @@ public enum DataModel {
    * It checks for collisions with existing tags (i.e. it will not add a book twice to an already set tag).
    * Must be called AFTER the datamodel list of books and tags has been loaded, but before the map of books by
    * tags is loaded (or else it'll be reloaded)
+   *
+   * There is a configuration option to disable the treatement of language as implict tags.
    */
   void generateImplicitLanguageTags() {
+    if (useLanguageAsTags == false) return;
     // compute the latest id
     int lastId = -1;
     for (Tag tag : getListOfTags()) {
@@ -533,5 +538,9 @@ public enum DataModel {
       }
     }
     mapOfBooksByTag = null;
+  }
+
+  public void setUseLanguageAsTags (boolean b) {
+    useLanguageAsTags = b;
   }
 }
