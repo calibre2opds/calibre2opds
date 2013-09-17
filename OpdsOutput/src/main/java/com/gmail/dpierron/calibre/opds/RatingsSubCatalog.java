@@ -88,13 +88,13 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
     SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
-    Element result = getCatalog(pBreadcrumbs, books, true, 0, title, summary, urn, filename, splitOption,
+    Element result = getListOfBooks(pBreadcrumbs, books, true, 0, title, summary, urn, filename, splitOption,
         // #751211: Use external icons option
         useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING).getFirstElement();
     return result;
   }
 
-  public Composite<Element, String> getRatingsCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  public Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getRatings()))
       return null;
 

@@ -137,7 +137,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @return
    * @throws IOException
    */
-  Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs,
+  Composite<Element, String> getListOfBooks(Breadcrumbs pBreadcrumbs,
       List<Book> listbooks,
       boolean inSubDir,
       int from,
@@ -149,17 +149,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String icon,
       List<Element> firstElements,
       Option... options) throws IOException {
-    if (logger.isDebugEnabled()) logger.debug("getCatalog: START");
+    if (logger.isDebugEnabled()) logger.debug("getListOfBooks: START");
 
     // Special case of first time through when not all values set
-    if (listbooks == null){
-      listbooks = getBooks();
-    }
+    if (listbooks == null) listbooks = getBooks();
+    if (pFilename == null)  pFilename = getCatalogBaseFolderFileName();
+
     //  Now some consistency checks
 
     // Now get on with main processing
     int catalogSize = listbooks.size();
-    if (logger.isDebugEnabled()) logger.debug("getCatalog:catalogSize=" + catalogSize);
+    if (logger.isDebugEnabled()) logger.debug("getListOfBooks:catalogSize=" + catalogSize);
 
     if (from != 0) inSubDir = true;
     if (pBreadcrumbs.size() > 1) inSubDir = true;
@@ -174,35 +174,35 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // ITIMPI: Null seems to be equivalent to SplitByLetter !
       //         Might be better to replace calls by explicit value?
       splitOption = SplitOption.SplitByLetter;
-      if (logger.isDebugEnabled()) logger.debug("getCatalog:splitOption=null.  Changed to SplitByLetter");
+      if (logger.isDebugEnabled()) logger.debug("getListOfBooks:splitOption=null.  Changed to SplitByLetter");
     }
     switch (splitOption) {
       case Paginate:
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=Paginate");
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=Paginate");
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
       case DontSplitNorPaginate:
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=DontSplitNorPaginate");
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=DontSplitNorPaginate");
         assert from == 0 : "getListBooks: DontSplitNorPaginate, from=" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
       case DontSplit:
         // Bug #716917 Do not split on letter (used in Author and Series book lists)
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=DontSplit");
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=DontSplit");
         assert from == 0 : "getListBooks: DontSplit, from=" + from;
         willSplitByLetter = false;
         willSplitByDate = false;
         break;
       case SplitByDate:
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=SplitByDate");
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=SplitByDate");
         assert from == 0 : "getListBooks: splitByDate, from=" + from;
         willSplitByLetter = checkSplitByLetter(splitOption, listbooks.size());
         willSplitByDate = true;
         break;
       case SplitByLetter:
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=SplitByLetter");
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=SplitByLetter");
         assert from == 0 : "getListBooks: splitByLetter, from=" + from;
         willSplitByLetter = checkSplitByLetter(splitOption, listbooks.size());
         willSplitByDate = false;
@@ -210,7 +210,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       default:
         // ITIMPI:  Not sure that this case can ever arise
         //          Just added as a safety check
-        if (logger.isTraceEnabled()) logger.trace("getCatalog:splitOption=" + splitOption);
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=" + splitOption);
         assert from == 0 : "getListBooks: unknown splitOption, from=" + from;
         willSplitByLetter = checkSplitByLetter(splitOption, listbooks.size());
         willSplitByDate = false;
@@ -221,8 +221,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     &&  (currentProfile.getBrowseByCoverWithoutSplit())) {
         willSplitByLetter = false;
     }
-    if (logger.isTraceEnabled()) logger.trace("getCatalog:willSplitByLetter=" + willSplitByLetter);
-    if (logger.isTraceEnabled()) logger.trace("getCatalog:willSplitByDate=" + willSplitByDate);
+    if (logger.isTraceEnabled()) logger.trace("getListOfBooks:willSplitByLetter=" + willSplitByLetter);
+    if (logger.isTraceEnabled()) logger.trace("getListOfBooks:willSplitByDate=" + willSplitByDate);
     if (logger.isTraceEnabled()) logger.trace("listing books from=" + from + ", title=" + title);
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
@@ -266,7 +266,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           // ... YES - so go for next page
           if (logger.isDebugEnabled()) logger.debug("making a nextpage link");
-          Element nextLink = getCatalog(pBreadcrumbs, listbooks, true,             // Awlays in SubDir (need to check this)
+          Element nextLink = getListOfBooks(pBreadcrumbs, listbooks, true,             // Awlays in SubDir (need to check this)
               i,                // Continue nfrom where we were
               title, summary, urn, pFilename, splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, icon, null,
               // No firstElements
@@ -276,17 +276,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
         } else {
           // ... NO - so add book to this page
           Book book = listbooks.get(i);
-          if (logger.isTraceEnabled()) logger.trace("getCatalog: adding book to the list : " + book);
+          if (logger.isTraceEnabled()) logger.trace("getListOfBooks: adding book to the list : " + book);
           try {
-            logger.trace("getCatalog: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
+            logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
             Element entry = getBookEntry(breadcrumbs, book, options);
             if (entry != null) {
-              if (logger.isTraceEnabled()) logger.trace("getCatalog: entry=" + entry);
+              if (logger.isTraceEnabled()) logger.trace("getListOfBooks: entry=" + entry);
               result.add(entry);
               TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
             }
           } catch (RuntimeException e) {
-            logger.error("getCatalog: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
+            logger.error("getListOfBooks: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
             throw e;
           }
         }
@@ -370,7 +370,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisLetter.size() > 0) {
-        element = getCatalog(pBreadcrumbs, booksInThisLetter, true,              // Always inSubDir
+        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, true,              // Always inSubDir
             0,                 // start at first page
             letterTitle, summary, letterUrn, letterFilename, checkSplitByLetter(letter), icon, null, options).getFirstElement();
       }
@@ -432,7 +432,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisRange.size() > 0) {
-        element = getCatalog(pBreadcrumbs, booksInThisRange, true,         // Always inSubDir
+        element = getListOfBooks(pBreadcrumbs, booksInThisRange, true,         // Always inSubDir
             0,            // Start at first page
             rangeTitle, summary, rangeUrn, rangeFilename, SplitOption.Paginate, icon, null, options).getFirstElement();
       }
@@ -602,8 +602,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     } else {
       // resize the default thumbnail if needed
-      File resizedDefaultThumbnail = new File(catalogManager.getCatalogFolder(), Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME);
-      File defaultThumbnail = new File(catalogManager.getCatalogFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME);
+      File resizedDefaultThumbnail = new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME);
+      File defaultThumbnail = new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME);
       if (!resizedDefaultThumbnail.exists() || thumbnailManager.hasImageSizeChanged() || resizedDefaultThumbnail.lastModified() < defaultThumbnail.lastModified()) {
         thumbnailManager.setImageToGenerate(resizedDefaultThumbnail, defaultThumbnail);
       }

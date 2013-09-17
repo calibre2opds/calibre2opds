@@ -49,6 +49,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
+  private final static String PROPERTY_NAME_LANGUAGEASTAG = "LanguageAsTag";
   private final static String PROPERTY_NAME_EXTERNALICONS = "ExternalIcons";
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
   private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
@@ -534,7 +535,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public boolean getPublishedDateAsYear() {
     Boolean b = getBoolean(PROPERTY_NAME_PUBLISHEDDATEASYEAR);
     if (b == null)
-      return defaults.getSuppressRatingsInTitles();
+      return defaults.getPublishedDateAsYear();
+    else
+      return b.booleanValue();
+  }
+
+  public void setLanguageAsTag(boolean value) {
+    setProperty(PROPERTY_NAME_LANGUAGEASTAG, value);
+  }
+
+  public boolean isLanguageAsTagReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_LANGUAGEASTAG);
+  }
+
+  public boolean getLanguageAsTag() {
+    Boolean b = getBoolean(PROPERTY_NAME_LANGUAGEASTAG);
+    if (b == null)
+      return defaults.getLanguageAsTag();
     else
       return b.booleanValue();
   }

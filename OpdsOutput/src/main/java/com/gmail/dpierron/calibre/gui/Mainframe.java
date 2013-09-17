@@ -604,6 +604,12 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
     txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
     lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    txtCatalogTitle.setText(currentProfile.getCatalogTitle());
+    txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    chkLanguageAsTag.setSelected(!currentProfile.getLanguageAsTag());
+    chkLanguageAsTag.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
+    lblLang.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
     chkNoThumbnailGenerate.setSelected(!currentProfile.getThumbnailGenerate());
     chkNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
     lblNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
@@ -946,6 +952,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setGenerateRecent(!chkNogeneraterecent.isSelected());
     currentProfile.setGenerateRatings(!chkNogenerateratings.isSelected());
     currentProfile.setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
+    currentProfile.setLanguageAsTag(chkLanguageAsTag.isSelected());
     currentProfile.setDisplayAuthorSortInAuthorLists(chkDisplayAuthorSortInAuthorLists.isSelected());
     currentProfile.setDisplayTitleSortInBookListss(chkDisplayTitleSortInBookLists.isSelected());
     currentProfile.setSortUsingAuthor(chkSortUsingAuthorSort.isSelected());
@@ -1099,6 +1106,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblBrowseByCoverWithoutSplit.setText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.label")); // NOI18N
     lblBrowseByCoverWithoutSplit.setToolTipText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.description")); // NOI18N
     chkBrowseByCoverWithoutSplit.setToolTipText(lblBrowseByCoverWithoutSplit.getToolTipText()); // NOI18N
+    lblLanguageAsTag.setText(Localization.Main.getText("config.LanguageAsTag.label")); // NOI18N
+    lblLanguageAsTag.setToolTipText(Localization.Main.getText("config.LanguageAsTag.description")); // NOI18N
+    chkLanguageAsTag.setToolTipText(lblLanguageAsTag.getToolTipText()); // NOI18N
     lblNoIncludeAboutLink.setText(Localization.Main.getText("config.IncludeAboutLink.label")); // NOI18N
     lblNoIncludeAboutLink.setToolTipText(Localization.Main.getText("config.IncludeAboutLink.description")); // NOI18N
     chkNoIncludeAboutLink.setToolTipText(lblNoIncludeAboutLink.getToolTipText()); // NOI18N
@@ -1553,6 +1563,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkDisplayTitleSortInBookLists = new javax.swing.JCheckBox();
         chkSortUsingAuthorSort = new javax.swing.JCheckBox();
         chkSortUsingTitleSort = new javax.swing.JCheckBox();
+        lblLanguageAsTag = new javax.swing.JLabel();
+        chkLanguageAsTag = new javax.swing.JCheckBox();
         javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
@@ -2229,8 +2241,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblBrowseByCoverWithoutSplit, gridBagConstraints);
         lblBrowseByCoverWithoutSplit.getAccessibleContext().setAccessibleName("Do not split by letter in \"Browse by Cover\" mode");
 
@@ -2608,6 +2618,28 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkSortUsingTitleSort, gridBagConstraints);
+
+        lblLanguageAsTag.setText("lblLanguageAsTag");
+        lblLanguageAsTag.setToolTipText("");
+        lblLanguageAsTag.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblLanguageAsTag, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkLanguageAsTag, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
@@ -4534,6 +4566,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludeTagsInBookDetails;
     private javax.swing.JCheckBox chkIncludeemptybooks;
     private javax.swing.JCheckBox chkIndexComments;
+    private javax.swing.JCheckBox chkLanguageAsTag;
     private javax.swing.JCheckBox chkMinimizeChangedFiles;
     private javax.swing.JCheckBox chkNoCoverResize;
     private javax.swing.JCheckBox chkNoGenerateAuthors;
@@ -4630,6 +4663,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblIndexFilterAlgorithm;
     private javax.swing.JLabel lblIsfdbAuthorUrl;
     private javax.swing.JLabel lblLang;
+    private javax.swing.JLabel lblLanguageAsTag;
     private javax.swing.JLabel lblLibrarythingAuthorUrl;
     private javax.swing.JLabel lblLibrarythingIsbnUrl;
     private javax.swing.JLabel lblLibrarythingTitleUrl;

@@ -54,7 +54,7 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-    return getCatalog(pBreadcrumbs, getBooks(), inSubDir, 0, title, summary, urn, filename, splitOption,
+    return getListOfBooks(pBreadcrumbs, getBooks(), inSubDir, 0, title, summary, urn, filename, splitOption,
         // #751211: Use external icons option
         useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_FEATURED : Icons.ICON_FEATURED, null);
   }
