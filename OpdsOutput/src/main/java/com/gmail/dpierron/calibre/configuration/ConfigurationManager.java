@@ -26,8 +26,8 @@ public enum ConfigurationManager {
   private static File installDirectory;
   private static File configurationDirectory;
   private static File configurationFolder = null;
-  private ConfigurationHolder currentProfile;
-  private PropertiesBasedConfiguration defaultConfiguration;
+  private static ConfigurationHolder currentProfile;
+  private static PropertiesBasedConfiguration defaultConfiguration;
   private static Locale configLocale = null;
 
   PropertiesBasedConfiguration getDefaultConfiguration() {

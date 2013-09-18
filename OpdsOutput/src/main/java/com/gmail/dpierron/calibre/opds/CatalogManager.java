@@ -26,8 +26,8 @@ public class CatalogManager {
   private Map<String, Book> mapOfBookByPathToCopy = new HashMap<String, Book>();
   private Map<String, String> mapOfCatalogFolderNames = new HashMap<String, String>();
   private List<File> bookEntriesFiles = new LinkedList<File>();
-  public static String securityCode;
-  public static String initialUrl;
+  private static String securityCode;
+  private static String initialUrl;
 
   public CatalogManager() {
     super();
@@ -41,11 +41,18 @@ public class CatalogManager {
         securityCode = Long.toHexString(crc32.getValue());
       }
       initialUrl = securityCode;
-      if (initialUrl.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
+      if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
       initialUrl += Constants.INITIAL_URL;
     }
   }
 
+  public static String getSecurityCode() {
+    return securityCode;
+  }
+
+  public static String getInitialUr() {
+    return initialUrl;
+  }
   /**
    * Get the current catalog folder
    * @return
@@ -154,9 +161,9 @@ public class CatalogManager {
     }
 
     return (inSubDir  ? Constants.PARENT_PATH_PREFIX : Constants.CURRENT_PATH_PREFIX)
-                        + FeedHelper.INSTANCE.urlEncode(catalogFolderName)
+                        + FeedHelper.urlEncode(catalogFolderName)
                         + (pos == - 1 ? "" : Constants.FOLDER_SEPARATOR)
-                        + FeedHelper.INSTANCE.urlEncode(catalogFileName.substring(pos + 1));
+                        + FeedHelper.urlEncode(catalogFileName.substring(pos + 1));
   }
 
 

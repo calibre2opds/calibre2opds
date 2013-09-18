@@ -32,7 +32,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     setCatalogType("tagtree");    // Not sure this will ever be used!
   }
 
-  private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
+  private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
 
     boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0));
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
@@ -65,17 +65,17 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     List<Element> result = new LinkedList<Element>();
-    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
     for (int i = from; i < itemsCount; i++) {
       if ((i - from) >= maxBeforePaginate) {
-        Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i).getFirstElement();
+        Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i)/*.getFirstElement()*/;
         result.add(0, nextLink);
         break;
       } else {
         TreeNode childLevel = level.getChildren().get(i);
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        Element entry = getLevelOfTreeNode(breadcrumbs, childLevel).getFirstElement();
+        Element entry = getLevelOfTreeNode(breadcrumbs, childLevel)/*.getFirstElement()*/;
         if (entry != null)
           result.add(entry);
       }
@@ -92,16 +92,16 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
         titleNext = Localization.Main.getText("title.lastpage");
       }
 
-      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+      entry = FeedHelper.getNextLink(urlExt, titleNext);
     } else {
       if (title.equals("Science Fiction")) {
         int x = 1;
       }
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+      entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
-    return new Composite<Element, String>(entry, urlInItsSubfolder);
+    return entry;
   }
 
   /**
@@ -111,7 +111,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @return
    * @throws IOException
    */
-  private Composite<Element, String> getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
+  private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
     logger.debug("getLevelOfTreeNode:" + level);
     if (Helper.isNullOrEmpty(level.getChildren())) {
       // it's a leaf, consisting of a single tag : make a list of books
@@ -120,7 +120,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
       Element entry = getTag(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
-      return new Composite<Element, String>(entry, urn);
+      return entry;
     } else {
       logger.debug("calling getLevelOfTreeNode,int");
       return getLevelOfTreeNode(pBreadcrumbs, level, 0);
@@ -134,7 +134,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @throws IOException
    */
   @Override
-  Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     TreeNode root = getTreeOfTags(getTags());
     logger.debug("_getEntry:" + pBreadcrumbs.toString());
     return getLevelOfTreeNode(pBreadcrumbs, root);

@@ -18,17 +18,20 @@ Details:
 ~~~~~~~
 author/					Folder for Files for each author
 	author_nn			Files for a given author listing series/books
-					(we suppress pagination within an author although this could be changed)
-	author_nn_series_nn_Page_nn	Files listing book for a given series for that author
+					      (we suppress pagination within an author although this could be changed)
+	author_nn_ss_Page_nn	      Files listing book for a given series for that author
+	author_nn_allbooks_Page_nn  Files listing all books for the given author
 
-book/					folder for details about individual books
+book/					  folder for details about individual books
 	book_nn				File for a book with id nn
 	
 serie/					Folder for files for each series
+                At the moment this is always a top level entry - not subidivided by level
 	serie_nn_Page_nn
 
-tag/					Folder for files for each tag	
-	tag_nn_Page_nn
+tag/					  Folder for files for each tag
+                There is one of these for each level so that tag books are level dependent
+	tag_nn_Page_nn Files giving books for a specific tag
 	
 
 Sub-catalogs:
@@ -70,6 +73,21 @@ etc.
 
 Tags that generate additional levels are treated as a special case of custom folders
 
-If file encryption is active, then a (8 hex character) random value is added to the start of the 
-folder (and the index file).  This should keep all related folders and files together while still
-keeping sufficient obfustication to avaoid it being easy to guess the correct path to any particular file
+Security
+~~~~~~~~
+Calibre2opds offers an option to 'encrypt' filenames.  Strictly speaking this obfuscates the
+names so that thye are virtually impossible to guess rather than really encrypting them.  The
+purpose of this feature if for thos who want to put their libraries on the internet and are
+not able to provide other protection such as username/password (e.h. DropBox users).   Making
+names almist impossible to guess means that such catalogs are not really prone to being found
+by unauthorised users.
+
+An open question is whether we should also provide this type of obfustication to Book files.
+However they are already deemed to be hard to guess as they are heavily dependant on both
+their author/title information and also the calibre Id that is included in the names.
+
+If file encryption is active, then a (8 hex character) value is added to the start of the
+folder (and the index file). This should keep all related folders and files together while still
+keeping sufficient obfustication to avoid it being easy to guess the correct path to any particular file
+File names within folders also have a value added to the start of the name.  This value is
+different for each file group although it will be the same for related files.

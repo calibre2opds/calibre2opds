@@ -134,8 +134,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
     logger.debug("generating " + urlExt);
 
     // list the entries (or split them)
@@ -182,7 +182,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1));
+    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {
@@ -190,9 +190,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       } else {
         titleNext = Localization.Main.getText("title.lastpage");
       }
-      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+      entry = FeedHelper.getNextLink(urlExt, titleNext);
     } else {
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+      entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS);
     }
@@ -351,7 +351,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       seriesSubCatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
-      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.SERIES_TYPE);
+      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId());
       firstElements = seriesSubCatalog.getListOfSeries(pBreadcrumbs, null,      // series derived from catalog books
           true, 0, title, summary, urn, null,      // filename derived from catalog properties
           SplitOption.Paginate, true);

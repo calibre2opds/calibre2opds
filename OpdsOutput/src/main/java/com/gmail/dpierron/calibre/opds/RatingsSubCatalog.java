@@ -104,7 +104,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String summary = Localization.Main.getText("rating.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
 
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
     // list the entries (or split them)
     List<Element> result;
@@ -121,7 +121,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element result2 = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
+    Element result2 = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
         // #751211: Use external icons option
         useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING);
     return new Composite<Element, String>(result2, urlInItsSubfolder);

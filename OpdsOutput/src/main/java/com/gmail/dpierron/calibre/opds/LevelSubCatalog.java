@@ -96,7 +96,7 @@ public class LevelSubCatalog extends SubCatalog {
     CatalogCallbackInterface callback = CatalogContext.INSTANCE.callback; // Cache for efficiency
 
     String urlExt = catalogManager.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
     Breadcrumbs breadcrumbs = inSubDir ? Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt)  : pBreadcrumbs;
 
     Composite<Element, String> subCatalogEntry;
@@ -108,7 +108,7 @@ public class LevelSubCatalog extends SubCatalog {
     if (atTopLevel) {
       if (currentProfile.getIncludeAboutLink()) {
         logger.debug("Generating About entry");
-        entry = FeedHelper.INSTANCE.getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HOME_URL,
+        entry = FeedHelper.getAboutEntry(Localization.Main.getText("about.title", Constants.PROGTITLE), "urn:calibre2opds:about", Constants.HOME_URL,
                 Localization.Main.getText("about.summary"), currentProfile.getExternalIcons() ? Icons.ICONFILE_ABOUT : Icons.ICON_ABOUT);
         if (entry != null)
           feed.addContent(entry);
@@ -179,13 +179,10 @@ public class LevelSubCatalog extends SubCatalog {
                                   ? new TagTreeSubCatalog(stuffToFilterOut, getBooks())
                                   : new TagListSubCatalog(stuffToFilterOut, getBooks());
       tagssubCatalog.setCatalogLevel(getCatalogLevel());
-      subCatalogEntry = tagssubCatalog.getCatalog(breadcrumbs, pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
+      entry = tagssubCatalog.getCatalog(breadcrumbs, pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
       tagssubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
-      }
+      if (entry != null)
+        feed.addContent(entry);
       logger.debug("COMPLETED: Generating tags catalog");
     }
     if (atTopLevel)  callback.endCreateTags(System.currentTimeMillis() - now);
@@ -259,7 +256,7 @@ public class LevelSubCatalog extends SubCatalog {
     callback.checkIfContinueGenerating();
 
     /* Featured catalog */
-    // TODO:  Decide if this should be restricted to top level catalog?
+    // TODO:  Decide if this should be restricted to top level catalog - currentl assuming yes?
 
     now = System.currentTimeMillis();
     if (CatalogContext.INSTANCE.catalogManager.featuredBooksFilter != null) {
@@ -296,8 +293,8 @@ public class LevelSubCatalog extends SubCatalog {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
-          BookFilter customCatalogBookFilter = CatalogContext.INSTANCE.catalogManager.customCatalogsFilters.get(customCatalogTitle);
           if (Helper.isNotNullOrEmpty(customCatalogTitle)) {
+            BookFilter customCatalogBookFilter = CatalogContext.INSTANCE.catalogManager.customCatalogsFilters.get(customCatalogTitle);
             if (customCatalogBookFilter != null) {
               // custom catalog
               if (logger.isDebugEnabled())
@@ -314,7 +311,7 @@ public class LevelSubCatalog extends SubCatalog {
                   customSubCatalog.setCatalogType(Constants.CUSTOM_TYPE);
                   customSubCatalog.setCatalogFolder(Constants.CUSTOM_TYPE);
                   customSubCatalog.setCatalogLevel(custombreadcrumbs);
-                  customSubCatalog.setCatalogBaseFilename(catalogManager.initialUrl);
+                  customSubCatalog.setCatalogBaseFilename(catalogManager.getInitialUr());
                   entry = customSubCatalog.getCatalog(custombreadcrumbs, null,    // No further filter at this point
                       inSubDir,    // Custom catalogs always in subDir
                       Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(customCatalogBooks.size())),
@@ -333,7 +330,7 @@ public class LevelSubCatalog extends SubCatalog {
                 logger.debug("STARTED: Adding external link " + title);
 
               String externalLinkUrl = customCatalog.getSecondElement();
-              entry = FeedHelper.INSTANCE.getExternalLinkEntry(customCatalogTitle, "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
+              entry = FeedHelper.getExternalLinkEntry(customCatalogTitle, "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
                   currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
               if (entry != null)
                 feed.addContent(entry);
@@ -355,9 +352,7 @@ public class LevelSubCatalog extends SubCatalog {
     } else {
       createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog);
     }
-    return FeedHelper.INSTANCE.getCatalogEntry(title, urn, catalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
+    return FeedHelper.getCatalogEntry(title, urn, catalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
 
   }
-
-
 }

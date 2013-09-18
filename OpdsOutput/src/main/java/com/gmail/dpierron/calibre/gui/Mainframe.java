@@ -166,6 +166,8 @@ public class Mainframe extends javax.swing.JFrame {
    * We do not allow HTML Downloads if OPDS Downloads are suppressed
    */
   private void checkHtmlDownloads() {
+// TODO ITIMPI:  Remove as no longer needed as we CAN have HTML downloads with OPDS ones?
+/*
     if (chkNogenerateopdsfiles.isSelected() == true) {
       chkNogeneratehtmlfiles.setSelected(true);
       chkNogeneratehtmlfiles.setEnabled(false);
@@ -173,6 +175,22 @@ public class Mainframe extends javax.swing.JFrame {
       if (chkNogeneratehtmlfiles.isEnabled() == false) {
         chkNogeneratehtmlfiles.setEnabled(true);
         chkNogeneratehtmlfiles.setSelected(false);
+      }
+    }
+*/
+  }
+
+  /**
+   * It makes no sense to allow OPDS downloads if we are not generating an Opds catalog!
+   */
+  private void checkOpdsDownloads() {
+    if (chkNogenerateopdsfiles.isSelected() == true) {
+      chkNogenerateopdsfiles.setSelected(true);
+      chkNogenerateopdsfiles.setEnabled(false);
+    } else {
+      if (chkNogeneratehtmlfiles.isEnabled() == false) {
+        chkNogenerateopdsfiles.setEnabled(true);
+        chkNogenerateopdsfiles.setSelected(false);
       }
     }
   }
@@ -855,7 +873,7 @@ public class Mainframe extends javax.swing.JFrame {
     loadProfiles();
 
     checkHtmlDownloads();   // Fix for backwards compatibility
-
+    checkOpdsDownloads();
     pack();
   }
 
@@ -2373,6 +2391,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkNogeneratehtmlfiles, gridBagConstraints);
+
+        chkNogenerateopds.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                checkOpdsDownloads(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -4361,7 +4385,7 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_cmdWikipediaUrlResetActionPerformed
 
   private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
-    checkHtmlDownloads();;
+    checkHtmlDownloads();
   }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
 
   private void chkGenerateIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGenerateIndexActionPerformed
@@ -4468,6 +4492,10 @@ public class Mainframe extends javax.swing.JFrame {
     private void txtFeaturedCatalogTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFeaturedCatalogTitleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFeaturedCatalogTitleActionPerformed
+
+    private void checkOpdsDownloads(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_checkOpdsDownloads
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkOpdsDownloads
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();

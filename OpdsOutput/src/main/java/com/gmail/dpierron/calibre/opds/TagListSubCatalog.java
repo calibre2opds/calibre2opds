@@ -30,8 +30,10 @@ public class TagListSubCatalog extends TagsSubCatalog {
     setCatalogType(Constants.TAGS_TYPE);
   }
 
+
   @Override
-  Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  //Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     return getListOfTags(pBreadcrumbs,
                          getTags(),
                          pBreadcrumbs.size() > 1,
@@ -44,7 +46,8 @@ public class TagListSubCatalog extends TagsSubCatalog {
                          null);
   }
 
-  private Composite<Element, String> getListOfTags(
+//  private Composite<Element, String> getListOfTags(
+      private Element getListOfTags(
       Breadcrumbs pBreadcrumbs,
       List<Tag> listtags,
       boolean inSubDir,
@@ -76,7 +79,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
     logger.debug("getListOfTags: generating " + filename);
     String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-    Element feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
 
     // list the entries (or split them)
     List<Element> result;
@@ -96,7 +99,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
                                            inSubDir,
                                            i,
                                            title, summary, urn, pFilename,
-                                           splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption).getFirstElement();
+                                           splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption)/*.getFirstElement()*/;
           result.add(0, nextLink);
           break;
         } else {
@@ -125,17 +128,18 @@ public class TagListSubCatalog extends TagsSubCatalog {
       else
         titleNext = Localization.Main.getText("title.lastpage");
 
-      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+      entry = FeedHelper.getNextLink(urlExt, titleNext);
     } else {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());
       if (title.equals("Science Fiction")) {
         int x = 1;
       }
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlExt, summary,
+      entry = FeedHelper.getCatalogEntry(title, urn, urlExt, summary,
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
-    return new Composite<Element, String>(entry, urlExt);
+//    return new Composite<Element, String>(entry, urlExt);
+    return entry;
   }
 
   private List<Element> getListOfTagsSplitByLetter(Breadcrumbs pBreadcrumbs,
@@ -175,7 +179,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
                                 0,
                                 letterTitle,
                                 summary, letterUrn, letterFilename,
-                                checkSplitByLetter(letter)).getFirstElement();
+                                checkSplitByLetter(letter))/*.getFirstElement()*/;
       }
       if (element != null)
         result.add(element);

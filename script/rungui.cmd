@@ -19,6 +19,19 @@ set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 set _JAVAPROG=JAVAW.EXE
 if "%1"=="-enableassertions" set _JAVAPROG=JAVA.EXE
 
+REM  The following is used to determine free RAM
+REM  (we want to use this as a basis for giving the JVM 
+REM  more RAM on systems with plenty free).
+
+for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do ( 
+  set m=%%p
+  goto :done
+)
+:done
+echo '
+echo Free RAM: %m%
+
+
 echo '
 echo [INFO]  Trying to locate Java on this system
 echo [INFO]  ====================================
@@ -164,7 +177,7 @@ if not "%1"=="-enableassertions" goto no_assertions
 REM Start the GUI leaving this batch file running for progress/debug messages
 echo [INFO]  "%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp %_C2O% Gui
 echo '
-"%_JAVACMD%" -Xms256m -Xmx1024fsm  -enableassertions -cp %_C2O% Gui
+"%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp %_C2O% Gui
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "

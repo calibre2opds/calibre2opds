@@ -230,10 +230,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // generate the book list files
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir));
+    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
 
     Element feed;
-    feed = FeedHelper.INSTANCE.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
     // Update breadcrumbs ready for next iteration
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
@@ -303,16 +303,16 @@ public abstract class BooksSubCatalog extends SubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
         titleNext = Localization.Main.getText("title.lastpage");
       }
 
-      entry = FeedHelper.INSTANCE.getNextLink(urlExt, titleNext);
+      entry = FeedHelper.getNextLink(urlExt, titleNext);
     } else {
-      entry = FeedHelper.INSTANCE.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
+      entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
     }
 
     return new Composite<Element, String>(entry, urlInItsSubfolder);
@@ -475,8 +475,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       else
         catalogManager.addFileToTheMapOfFilesToCopy(file.getFile());
 
-      entry.addContent(FeedHelper.INSTANCE.getAcquisitionLink("../../" + FeedHelper.INSTANCE.urlEncode(book.getPath(), true)
-          + Constants.FOLDER_SEPARATOR + FeedHelper.INSTANCE.urlEncode(file.getName() + file.getExtension(), true),
+      entry.addContent(FeedHelper.getAcquisitionLink("../../" + FeedHelper.urlEncode(book.getPath(), true)
+          + Constants.FOLDER_SEPARATOR + FeedHelper.urlEncode(file.getName() + file.getExtension(), true),
           file.getFormat().getMime(), // Mime type
           Localization.Main.getText("bookentry.download", file.getFormat())));
 
@@ -551,11 +551,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled())  logger.trace("addCoverLink: coverResize=false. No resizedCover file for book " + book.getTitle());
         }
         // Change URI name to user cover.jpg
-        coverUri = FeedHelper.INSTANCE.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
+        coverUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
       }
       if (logger.isTraceEnabled())  logger.trace("addCoverLink: coverUri=" + coverUri);
 
-      entry.addContent(FeedHelper.INSTANCE.getCoverLink(coverUri));
+      entry.addContent(FeedHelper.getCoverLink(coverUri));
     }
 
     // add the thumbnail link
@@ -598,7 +598,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
         CachedFileManager.INSTANCE.removeCachedFile(thumbnailFile);
         // Change URI name to user cover.jpg
-        thumbnailUri = FeedHelper.INSTANCE.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
+        thumbnailUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
       }
     } else {
       // resize the default thumbnail if needed
@@ -609,13 +609,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // Change URI name to user default thumbnail
-      thumbnailUri = FeedHelper.INSTANCE.urlEncode(Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME, true);
+      thumbnailUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME, true);
     }
 
     if (logger.isTraceEnabled())  logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
 
     thumbnailManager.addBook(book, thumbnailUri);
-    entry.addContent(FeedHelper.INSTANCE.getThumbnailLink(thumbnailUri));
+    entry.addContent(FeedHelper.getThumbnailLink(thumbnailUri));
   }
 
   /**
@@ -639,7 +639,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
           // Series are always held at top level
           filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.SERIE_TYPE, book.getSeries().getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
-          entry.addContent(FeedHelper.INSTANCE.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+          entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
       }
@@ -653,7 +653,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
             // Authors are always held at top level !
             filename =  getCatalogBaseFolderFileNameIdNoLevel(Constants.AUTHOR_TYPE, author.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
-            entry.addContent(FeedHelper.INSTANCE.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+            entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
           }
         }
@@ -669,7 +669,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             // Tags are held at level
             filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
             if (nbBooks > 1) {
-              entry.addContent(FeedHelper.INSTANCE.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+              entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                   Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks),
                       tag.getName())));
             }
@@ -684,7 +684,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (nbBooks > 1) {
           // Ratings are held at level
           filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, book.getRating().getId().toString()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
-          entry.addContent(FeedHelper.INSTANCE.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+          entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
       }
@@ -721,18 +721,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
         url = currentProfile.getGoodreadIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
+          entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
           ));
 
         url = currentProfile.getGoodreadReviewIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(
-              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
+              FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
       } else {
         url = currentProfile.getGoodreadTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE
-              .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
+          entry.addContent(FeedHelper
+              .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
               ));
       }
 
@@ -740,8 +740,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Wikipedia book link");
       url = currentProfile.getWikipediaUrl();
       if (Helper.isNotNullOrEmpty(url))
-        entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-            MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(book.getTitle()
+        entry.addContent(FeedHelper.getRelatedHtmlLink(
+            MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(book.getTitle()
             )),
             Localization.Main.getText("bookentry.wikipedia")));
 
@@ -751,12 +751,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
         url = currentProfile.getLibrarythingIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
           entry.addContent(
-              FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
+              FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
       } else if (Helper.isNotNullOrEmpty(book.getTitle())) {
         url = currentProfile.getLibrarythingTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
+          entry.addContent(FeedHelper.getRelatedHtmlLink(
+              MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName())),
               Localization.Main.getText("bookentry.librarything")));
       }
 
@@ -765,12 +765,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (Helper.isNotNullOrEmpty(book.getIsbn())) {
         url = currentProfile.getAmazonIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
+          entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
       } else if (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle())) {
         url = currentProfile.getAmazonTitleUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(book.getTitle()), FeedHelper.INSTANCE.urlEncode(book.getMainAuthor().getName())),
+          entry.addContent(FeedHelper.getRelatedHtmlLink(
+              MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName())),
               Localization.Main.getText("bookentry.amazon")));
       }
 
@@ -781,7 +781,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         for (Author author : book.getAuthors()) {
           url = currentProfile.getGoodreadAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.goodreads.author", author.getName())));
         }
 
@@ -790,8 +790,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         for (Author author : book.getAuthors()) {
           url = currentProfile.getWikipediaUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(currentProfile.getWikipediaUrl(),
-                currentProfile.getWikipediaLanguage(), FeedHelper.INSTANCE.urlEncode(author.getName())),
+            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(currentProfile.getWikipediaUrl(),
+                currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.wikipedia.author", author.getName())));
         }
 
@@ -800,10 +800,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
         for (Author author : book.getAuthors()) {
           url = currentProfile.getLibrarythingAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(
+            entry.addContent(FeedHelper.getRelatedHtmlLink(
                 // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
                 MessageFormat.format(currentProfile.getLibrarythingAuthorUrl(),
-                    FeedHelper.INSTANCE.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
+                    FeedHelper.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
                 Localization.Main.getText("bookentry.librarything.author", author.getName())));
         }
 
@@ -812,7 +812,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         for (Author author : book.getAuthors()) {
           url = currentProfile.getAmazonAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.amazon.author", author.getName())));
         }
 
@@ -821,7 +821,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         for (Author author : book.getAuthors()) {
           url = currentProfile.getIsfdbAuthorUrl();
           if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.INSTANCE.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.INSTANCE.urlEncode(author.getName())),
+            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
                 Localization.Main.getText("bookentry.isfdb.author", author.getName())));
         }
       }
@@ -856,13 +856,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // published element
     if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   published " + book.getPublicationDate());
-    Element published = FeedHelper.INSTANCE.getPublishedTag(book.getPublicationDate());
+    Element published = FeedHelper.getPublishedTag(book.getPublicationDate());
     entry.addContent(published);
 
     // dublin core - language
     for (Language language : book.getBookLanguages()) {
       if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   language " + language.getIso2());
-      Element dcLang = FeedHelper.INSTANCE.getDublinCoreLanguageElement(language.getIso2());
+      Element dcLang = FeedHelper.getDublinCoreLanguageElement(language.getIso2());
       entry.addContent(dcLang);
     }
 
@@ -870,7 +870,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Publisher publisher = book.getPublisher();
     if (Helper.isNotNullOrEmpty(publisher)) {
       if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   publisher " + publisher.getName());
-      Element dcPublisher = FeedHelper.INSTANCE.getDublinCorePublisherElement(publisher.getName());
+      Element dcPublisher = FeedHelper.getDublinCorePublisherElement(publisher.getName());
       entry.addContent(dcPublisher);
     }
 
@@ -879,14 +879,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // tags
       for (Tag tag : book.getTags()) {
         if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   tag " + tag.getName());
-        Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(tag.getName());
+        Element categoryElement = FeedHelper.getCategoryElement(tag.getName());
         entry.addContent(categoryElement);
       }
     }
     // series
     if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
       if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   series " + book.getSeries().getName() + "[" + book.getSerieIndex() + "]");
-      Element categoryElement = FeedHelper.INSTANCE.getCategoryElement(book.getSeries().getName());
+      Element categoryElement = FeedHelper.getCategoryElement(book.getSeries().getName());
       entry.addContent(categoryElement);
     }
 
@@ -1108,9 +1108,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
       entry.addContent (JDOM.INSTANCE.element("title").addContent(book.getTitle()));
       entry.addContent(JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid()));
-      entry.addContent(FeedHelper.INSTANCE.getUpdatedTag(book.getLatestFileModifiedDate()));
+      entry.addContent(FeedHelper.getUpdatedTag(book.getLatestFileModifiedDate()));
       // add the navigation links
-      FeedHelper.INSTANCE.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
+      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
       // add the required data to the book entry
       decorateBookEntry(entry, book, true);
       // write the element to the files
@@ -1123,14 +1123,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     }
 
-    Element entry = FeedHelper.INSTANCE.getBookEntry(title, urn, book.getLatestFileModifiedDate());
+    Element entry = FeedHelper.getBookEntry(title, urn, book.getLatestFileModifiedDate());
 
     // add the required data to the book entry
     decorateBookEntry(entry, book, false);
 
     // add a full entry link to the partial entry
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: add a full entry link to the partial entry");
-    entry.addContent(FeedHelper.INSTANCE.getFullEntryLink(fullEntryUrl));
+    entry.addContent(FeedHelper.getFullEntryLink(fullEntryUrl));
 
     return entry;
   }
