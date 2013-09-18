@@ -777,13 +777,13 @@ public class Catalog {
 
       //      Standard sub-catalogs for a folder level
 
-      //      Element main = FeedHelper.INSTANCE.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
+      //      Element main = FeedHelper.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
       logger.debug("Starter generating top level catalog");
       LevelSubCatalog levelSubCatalog = new LevelSubCatalog(books,currentProfile.getCatalogTitle());
       levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs
       levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!
       levelSubCatalog.setCatalogFolder("");         // Force to top level!
-      levelSubCatalog.setCatalogBaseFilename(levelSubCatalog.catalogManager.initialUrl);
+      levelSubCatalog.setCatalogBaseFilename(levelSubCatalog.catalogManager.getInitialUr());
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
                                 "dummy.xml");
       levelSubCatalog.getCatalog(

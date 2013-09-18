@@ -14,8 +14,6 @@ import java.util.Properties;
 public class PropertiesBasedConfiguration {
   private final static Logger logger = Logger.getLogger(PropertiesBasedConfiguration.class);
 
-  final static String COMMENT = Constants.PROGTITLE;
-
   Properties properties;
   File propertiesFile;
   boolean readOnly = false;
@@ -64,7 +62,7 @@ public class PropertiesBasedConfiguration {
     try {
       try {
         bos = new BufferedOutputStream(new FileOutputStream(getPropertiesFile()));
-        properties.storeToXML(bos, COMMENT);
+        properties.storeToXML(bos, Constants.PROGTITLE);
       } finally {
         if (bos != null)
           bos.close();

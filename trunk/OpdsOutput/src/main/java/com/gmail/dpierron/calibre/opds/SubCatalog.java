@@ -31,7 +31,8 @@ public abstract class SubCatalog {
   protected final static int maxSplitLevels = currentProfile.getMaxSplitLevels();
   protected final static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
   protected final static boolean useExternalIcons = currentProfile.getExternalIcons();
-  private final static String securityCode = catalogManager.securityCode;
+  private final static String securityCode = catalogManager.getSecurityCode();
+  private final static String securityCodeAndSeparator = securityCode + Constants.SECURITY_SEPARATOR;
 
   //  PROPERTIES
 
@@ -155,12 +156,10 @@ public abstract class SubCatalog {
    * @return
    */
   private String getCatalogPrefix() {
-    String prefix = securityCode;
-    if (securityCode.length() > 0) prefix += Constants.SECURITY_SEPARATOR;
     if (catalogLevel == null) catalogLevel = "";
-    prefix += catalogLevel;
-    if (catalogLevel.length() > 0) prefix += Constants.LEVEL_SEPARATOR;
-    return prefix;
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + catalogLevel;
+    if (catalogLevel.length() > 0) result += Constants.LEVEL_SEPARATOR;
+    return result;
   }
 
   /**
@@ -197,6 +196,7 @@ public abstract class SubCatalog {
       catalogFolder = getCatalogFolder(getCatalogType());
     }
 
+    //  Debugging asserts - could be removed if not wanted
     assert catalogFolder.indexOf(Constants.SECURITY_SEPARATOR) == -1 :
            "Program error: catalogFolder contains SECURITY_SEPARATOR (" + catalogFolder + ")";
     assert catalogFolder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
@@ -245,16 +245,16 @@ public abstract class SubCatalog {
      */
   public String getCatalogFolderWithSecurityNoLevel (String foldertype) {
     assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
-    String prefix = catalogManager.securityCode;
-    if (prefix.length() > 0) prefix += Constants.SECURITY_SEPARATOR;
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
 
-    int pos = prefix.indexOf(Constants.SECURITY_SEPARATOR);
-    assert prefix.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-        "Program error: Two occurences of SECURITY_SEPARATOR (" + prefix + ")";
-    assert prefix.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-        "Program error: Unexpected LEVEL_SEPARATOR (" + prefix + ")";
+    // Debugging asserts  - could be removed if not wanted
+    int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
+    assert result.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+        "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
+    assert result.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+        "Program error: Unexpected LEVEL_SEPARATOR (" + result + ")";
 
-    return prefix + foldertype;
+    return result + foldertype;
   }
   /**
    * Get the catalog folder for the given type with the name derived
@@ -268,17 +268,16 @@ public abstract class SubCatalog {
    */
   public String getCatalogFolderWithLevelAndSecurity (String foldertype) {
     assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
-    String result = securityCode;
-    if (result.length() > 0) result += Constants.SECURITY_SEPARATOR;
-    int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
 
-    assert result.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
+    // Debugging asserts - could be removed if not wanted
+    int pos = result.indexOf(Constants.SECURITY_SEPARATOR) + 1;
+    assert result.substring(pos).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
         "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
     pos = result.indexOf(Constants.LEVEL_SEPARATOR);
-    assert result.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+    assert result.substring(pos).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
         "Program error: Two occurences of LEVEL_SEPARATOR (" + result + ")";
 
-    result += foldertype;
     return result;
   }
 
@@ -290,11 +289,13 @@ public abstract class SubCatalog {
   public void setCatalogFolder (String folder) {
     assert folder != null;
 
-    assert ! folder.endsWith(Constants.FOLDER_SEPARATOR);
+    // Debugging asserts - could be removed if not wanted
+    assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
+            "Program Error: Unexpected occurence of FOLDER_SEPARATOR )" + folder + ")";
     assert folder.indexOf(Constants.SECURITY_SEPARATOR) == -1:
             "Program error: Unexpected Occurencs of SECURITY_SEPARATOR (" + folder + ")";        ;
     assert folder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-            "Program error: Unexpected occurencs of SECURITY_SEPARATOR (" + folder + ")";
+            "Program error: Unexpected occurencs of LEVEL_SEPARATOR (" + folder + ")";
 
     catalogFolder = folder;
     setOptimizUrlPrefix();
@@ -312,11 +313,14 @@ public abstract class SubCatalog {
     if (catalogBaseFilename == null) {
       catalogBaseFilename = getCatalogType();
     }
+
+    // Debugging assert - could be removed if not wanted
     assert catalogBaseFilename.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
             "Program Error:  Unexpected FOLDER_SEPARATOR (" + catalogBaseFilename + ")";
+
     if (catalogLevel.length() == 0 && catalogFolder.length() == 0 && catalogType.length() == 0) {
       // The special case for top level
-      return securityCode + Constants.SECURITY_SEPARATOR + catalogBaseFilename;
+      return securityCodeAndSeparator + catalogBaseFilename;
     } else {
       // The normal case
       return catalogBaseFilename;
@@ -330,18 +334,19 @@ public abstract class SubCatalog {
    * @param name
    */
   public void setCatalogBaseFilename (String name) {
-    assert Helper.isNotNullOrEmpty(name) :
-                "Program Error: invalid name (" + name +")";
+    assert Helper.isNotNullOrEmpty(name) : "Program Error: invalid name parameter (" + name +")";
     // We want to skip over any leading folder name
     int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
+
+    // Debugging assert - could be removed if not wanted
     assert name.substring(pos+1).indexOf(Constants.FOLDER_SEPARATOR) == -1 :
             "Program Error: Multiple FOLDER_SEPARATORS found (" + name + ")";
     if (pos != -1) {
       name = name.substring(pos+1);     // Remove the folder part
     }
     // We also want to remove any leading occurrence of security code
-    if (name.startsWith(securityCode)) {
-      catalogBaseFilename = name.substring(securityCode.length()+1);  // Remove the security code
+    if (securityCode.length() > 0 && name.startsWith(securityCodeAndSeparator)) {
+      catalogBaseFilename = name.substring(securityCodeAndSeparator.length() +1);  // Remove the security code
     } else {
       catalogBaseFilename = name;
     }
@@ -388,9 +393,7 @@ public abstract class SubCatalog {
 
   public String getCatalogBaseFolderFileNameNoLevel (String type) {
     assert Helper.isNotNullOrEmpty(type);
-    String result = securityCode;
-    if (result.length() > 0)  result += Constants.SECURITY_SEPARATOR;
-    result += type;
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
     if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
     return result + encryptFilename(type);
   }
@@ -417,7 +420,7 @@ public abstract class SubCatalog {
    */
   public String getCatalogBaseFolderFileNameId (String type, String id) {
     String folder = getCatalogFolder(type);
-    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(Constants.TYPE_SEPARATOR + id);
+    return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
   }
 
 
@@ -432,11 +435,10 @@ public abstract class SubCatalog {
    * @return
    */
   public String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
-    String result = securityCode;
-    if (result.length() > 0)  result += Constants.SECURITY_SEPARATOR;
-    result += type;
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
     if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
-    return result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
+    result = result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
+    return result;
   }
 
   /**
@@ -628,15 +630,18 @@ public abstract class SubCatalog {
     document.addContent (feed);
 
     // write the XML file
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(outputFile);
-      JDOM.INSTANCE.getOutputter().output(document, fos);
-    } catch (RuntimeException e) {
-      logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
-    }  finally {
-      if (fos != null)
-        fos.close();
+    // (unless the user has suppressed the OPDS catalogs)
+    if (currentProfile.getGenerateOpds()) {
+      FileOutputStream fos = null;
+      try {
+        fos = new FileOutputStream(outputFile);
+        JDOM.INSTANCE.getOutputter().output(document, fos);
+      } catch (RuntimeException e) {
+        logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
+      }  finally {
+        if (fos != null)
+          fos.close();
+      }
     }
 
     //  generate corresponding HTML file

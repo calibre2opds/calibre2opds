@@ -177,6 +177,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     }
   }
 
-  abstract Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException;
+//  abstract Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException;
+  abstract Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException;
 
 }

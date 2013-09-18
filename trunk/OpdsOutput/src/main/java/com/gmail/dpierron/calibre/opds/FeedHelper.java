@@ -12,8 +12,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 
-public enum FeedHelper {
-  INSTANCE;
+public class FeedHelper {
 
   /**
    * An Acquisition Feed with newly released OPDS Catalog Entries. These Acquisition Feeds typically contain a subset of the OPDS Catalog
@@ -63,12 +62,12 @@ public enum FeedHelper {
   /**
    * A link to the same page (self-link)
    */
-  private static final String RELATION_SELF = "self";
+  private final static String RELATION_SELF = "self";
 
   /**
    * A link to the start page of the catalog
    */
-  private static final String RELATION_START = "start";
+  private final static String RELATION_START = "start";
 
   /**
    * a graphical Resource associated to the OPDS Catalog Entry
@@ -98,7 +97,7 @@ public enum FeedHelper {
   /**
    * a link to a jpeg image
    */
-  private static final String LINKTYPE_JPEG = "image/jpeg";
+  private final static String LINKTYPE_JPEG = "image/jpeg";
 
   /* ---------- ELEMENTS -----------*/
 
@@ -111,7 +110,7 @@ public enum FeedHelper {
    * @param urlExt      the URL of the feed (relative to the base URL)
    * @return a 'feed' element
    */
-  public Element getFeedRootElement(Breadcrumbs breadcrumbs, String pTitle, String urn, String urlExt) {
+  public static Element getFeedRootElement(Breadcrumbs breadcrumbs, String pTitle, String urn, String urlExt) {
     Element feed = getAtomElement(true, "feed", pTitle, urn, null, LINKTYPE_NAVIGATION, null, true, null);
 
     // updated tag
@@ -133,7 +132,7 @@ public enum FeedHelper {
    * @param icon
    * @return
    */
-  public Element getCatalogEntry(String pTitle, String urn, String filename, String pSummary, String icon) {
+  public static Element getCatalogEntry(String pTitle, String urn, String filename, String pSummary, String icon) {
     Element result = getAtomElement(false, "entry", pTitle, urn, filename, pSummary, false, icon);
     // add updated
     result.addContent(getUpdatedTag());
@@ -148,7 +147,7 @@ public enum FeedHelper {
    * @param timestamp
    * @return
    */
-  public Element getBookEntry(String pTitle, String urn, long timestamp) {
+  public static Element getBookEntry(String pTitle, String urn, long timestamp) {
     Element result = getAtomElement(false, "entry", pTitle, urn, null, null, null, (String) null, false, null);
     // add updated
     result.addContent(getUpdatedTag(timestamp));
@@ -165,14 +164,14 @@ public enum FeedHelper {
    * @param icon
    * @return
    */
-  public Element getAboutEntry(String title, String urn, String url, String summary, String icon) {
+  public static Element getAboutEntry(String title, String urn, String url, String summary, String icon) {
     Element result = getAtomElement(false, "entry", title, urn, url, LINKTYPE_HTML, summary, true, icon);
     // add updated
     result.addContent(getUpdatedTag());
     return result;
   }
 
-  public Element getExternalLinkEntry(String title, String urn, String url, String icon) {
+  public static Element getExternalLinkEntry(String title, String urn, String url, String icon) {
     String linkType;
     if (url.toUpperCase().endsWith(".XML") ||url.toUpperCase().startsWith("OPDS://")) {
       linkType = LINKTYPE_NAVIGATION;
@@ -190,35 +189,35 @@ public enum FeedHelper {
 
   /* ---------- LINKS -----------*/
 
-  public Element getNextLink(String filename, String title) {
+  public static Element getNextLink(String filename, String title) {
     return getLinkElement(filename, LINKTYPE_NAVIGATION, RELATION_NEXT, title);
   }
 
-  public Element getFullEntryLink(String url) {
+  public static Element getFullEntryLink(String url) {
     return getLinkElement(url, LINKTYPE_FULLENTRY, RELATION_ALTERNATE, null);
   }
 
-  public Element getRelatedLink(String url, String title) {
+  public static Element getRelatedLink(String url, String title) {
     return getLinkElement(url, LINKTYPE_NAVIGATION, RELATION_RELATED, title);
   }
 
-  public Element getRelatedHtmlLink(String url, String title) {
+  public static Element getRelatedHtmlLink(String url, String title) {
     return getLinkElement(url, LINKTYPE_HTML, RELATION_RELATED, title);
   }
 
-  public Element getAcquisitionLink(String url, String mimeType, String title) {
+  public static Element getAcquisitionLink(String url, String mimeType, String title) {
     return getLinkElement(url, mimeType, RELATION_ACQUISITION, title);
   }
 
-  public Element getCoverLink(String url) {
+  public static Element getCoverLink(String url) {
     return getLinkElement(url, LINKTYPE_JPEG, RELATION_COVER, null);
   }
 
-  public Element getThumbnailLink(String url) {
+  public static Element getThumbnailLink(String url) {
     return getLinkElement(url, "image/jpeg", RELATION_THUMBNAIL, null);
   }
 
-  public Element getFeaturedLink(String url, String title) {
+  public static Element getFeaturedLink(String url, String title) {
     return getLinkElement(url, LINKTYPE_NAVIGATION, RELATION_FEATURED, title);
   }
 
@@ -231,7 +230,7 @@ public enum FeedHelper {
    * @param url      the url end of the page (baseURL + url = complete url)
    * @param isEntry if true, the document is a full entry, if false, it's a catalog
    */
-  public void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url, boolean isEntry) {
+  public static void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url, boolean isEntry) {
     if (feed == null)
       return;
 
@@ -244,7 +243,7 @@ public enum FeedHelper {
     // root catalog link
     String startUrl = baseUrl;
     if (baseUrl.length() == 0) startUrl += Constants.PARENT_PATH_PREFIX;
-    startUrl += CatalogManager.initialUrl + Constants.XML_EXTENSION;
+    startUrl += CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
     feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
 
@@ -293,19 +292,19 @@ public enum FeedHelper {
   }
   /* ---------- METADATA ----------*/
 
-  public Element getDublinCoreLanguageElement(String lang) {
+  public static Element getDublinCoreLanguageElement(String lang) {
     Element result = JDOM.INSTANCE.element("language", Namespace.DcTerms);
     result.setText(lang);
     return result;
   }
 
-  public Element getDublinCorePublisherElement(String publisher) {
+  public static Element getDublinCorePublisherElement(String publisher) {
     Element result = JDOM.INSTANCE.element("publisher", Namespace.DcTerms);
     result.setText(publisher);
     return result;
   }
 
-  public Element getCategoryElement(String term) {
+  public static Element getCategoryElement(String term) {
     Element result = JDOM.INSTANCE.element("category");
     result.setAttribute("term", term);
     return result;
@@ -316,7 +315,7 @@ public enum FeedHelper {
   /**
    * URL encode a string. Any embedded slashes are NOT encoded
    */
-  public String urlEncode(String s) {
+  public static String urlEncode(String s) {
     return urlEncode(s, false);
   }
 
@@ -326,7 +325,7 @@ public enum FeedHelper {
    * @param s                  the string to be encoded
    * @param doNotEncodeSlashes if true, slashes will not be encoded
    */
-  public String urlEncode(String s, boolean doNotEncodeSlashes) {
+  public static String urlEncode(String s, boolean doNotEncodeSlashes) {
     try {
       String result = s;
       if (doNotEncodeSlashes)
@@ -345,11 +344,11 @@ public enum FeedHelper {
 
   /* ---------- PRIVATE -----------*/
 
-  private Element getFeedAuthorElement() {
+  private static Element getFeedAuthorElement() {
     return getFeedAuthorElement(Constants.AUTHORNAME, Constants.CALIBRE2OPDS_COM, Constants.AUTHOREMAIL);
   }
 
-  private Element getFeedAuthorElement(String name, String uri, String email) {
+  private static Element getFeedAuthorElement(String name, String uri, String email) {
     Element author = JDOM.INSTANCE.element("author");
     if (Helper.isNotNullOrEmpty(author))
       author.addContent(JDOM.INSTANCE.element("name").addContent(name));
@@ -360,7 +359,7 @@ public enum FeedHelper {
     return author;
   }
 
-  private Element getUpdatedTag() {
+  private static Element getUpdatedTag() {
     if (!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth()) {
       Calendar c = Calendar.getInstance();
       return getUpdatedTag(c);
@@ -370,14 +369,14 @@ public enum FeedHelper {
     }
   }
 
-  private String getDateAsIsoDate(Date d) {
+  private static String getDateAsIsoDate(Date d) {
     Calendar c = Calendar.getInstance();
     c.setTime(d);
     return getDateAsIsoDate(c);
 
   }
 
-  private String getDateAsIsoDate(Calendar c) {
+  private static String getDateAsIsoDate(Calendar c) {
     StringBuffer result = new StringBuffer();
 
     result.append(Helper.leftPad("" + c.get(Calendar.YEAR), '0', 4));
@@ -396,21 +395,21 @@ public enum FeedHelper {
     return result.toString();
   }
 
-  public Element getUpdatedTag(long timeInMilli) {
+  public static Element getUpdatedTag(long timeInMilli) {
     Calendar c = Calendar.getInstance();
     c.setTimeInMillis(timeInMilli);
     return getUpdatedTag(c);
   }
 
-  private Element getUpdatedTag(Calendar c) {
+  private static Element getUpdatedTag(Calendar c) {
     return JDOM.INSTANCE.element("updated").addContent(getDateAsIsoDate(c));
   }
 
-  public Element getPublishedTag(Date d) {
+  public static Element getPublishedTag(Date d) {
     return JDOM.INSTANCE.element("published").addContent(getDateAsIsoDate(d));
   }
 
-  private Element getLinkElement(String url, String urlType, String urlRelation, String title) {
+  private static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element("link");
     if (urlType != null && urlRelation != null && urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
       // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)
@@ -432,7 +431,7 @@ public enum FeedHelper {
     return link;
   }
 
-  private Element getAtomElement(boolean isRoot,
+  private static Element getAtomElement(boolean isRoot,
       String pElement,
       String pTitle,
       String urn,
@@ -443,7 +442,7 @@ public enum FeedHelper {
     return getAtomElement(isRoot, pElement, pTitle, urn, filename, LINKTYPE_NAVIGATION, pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot,
+  private static Element getAtomElement(boolean isRoot,
       String pElement,
       String pTitle,
       String urn,
@@ -456,7 +455,7 @@ public enum FeedHelper {
         pSummary, includeAuthor, icon);
   }
 
-  private Element getAtomElement(boolean isRoot,
+  private static Element getAtomElement(boolean isRoot,
       String elementName,
       String title,
       String id,

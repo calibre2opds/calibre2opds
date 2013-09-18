@@ -77,7 +77,7 @@ public abstract class ImageManager {
   }
 
   String getImageUri(Book book) {
-    return FeedHelper.INSTANCE.urlEncode("../../" + book.getPath() + "/" + getResultFilename(book), true);
+    return FeedHelper.urlEncode("../../" + book.getPath() + "/" + getResultFilename(book), true);
   }
 
   public void writeImageHeightFile() {
