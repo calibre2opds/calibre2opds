@@ -19,6 +19,19 @@ set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
 
 set _JAVAPROG=JAVA.EXE
 
+REM  The following is used to determine free RAM
+REM  (we want to use this as a basis for giving the JVM 
+REM  more RAM on systems with plenty free).
+
+for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do ( 
+  set m=%%p
+  goto :done
+)
+:done
+echo '
+echo Free RAM: %m%
+
+
 echo '
 echo [INFO]  Trying to locate Java on this system
 echo [INFO]  ====================================
@@ -166,7 +179,7 @@ REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
 echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
-"%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
+"%_JAVACMD%" -Xms128m -Xmx1024m -cp %_C2O% Cli %*
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "

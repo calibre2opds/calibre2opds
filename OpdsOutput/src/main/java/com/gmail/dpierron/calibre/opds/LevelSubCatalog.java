@@ -265,6 +265,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (featuredBooks.size() == 0) {
         logger.warn("No books found for Featured Books section");
       } else {
+        callback.setFeaturedCount("" + featuredBooks.size() + " " + Localization.Main.getText("bookword.title"));
         FeaturedBooksSubCatalog featuredBooksSubCatalog = new FeaturedBooksSubCatalog(featuredBooks);
         if (atTopLevel)  callback.startCreateFeaturedBooks(featuredBooks.size());
         featuredBooksSubCatalog.setCatalogLevel(getCatalogLevel());

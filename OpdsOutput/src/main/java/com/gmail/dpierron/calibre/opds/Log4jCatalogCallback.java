@@ -83,7 +83,6 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
       logger.info(Localization.Main.getText("info.html.donein", timeInHtml / 1000));
 
     logger.info(Localization.Main.getText("info.step.done", where));
-
   }
 
   public void startReadDatabase() {
@@ -93,6 +92,27 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void endReadDatabase(long milliseconds, String summary) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
     logger.info(Localization.Main.getText(summary));
+  }
+
+  public void setAuthorCount(String s) {
+    return;
+  }
+  public void setSeriesCount(String s) {
+    return;
+  }
+  public void setTagCount(String s) {
+    return;
+  }
+  public void setFeaturedCount(String s) {
+    return;
+  }
+
+  public void setCopyLibCount(String s) {
+    // do nothing
+  }
+
+  public void setCopyCatCount(String s) {
+    // do nothing
   }
 
   public void startCreateTags(long nb) {

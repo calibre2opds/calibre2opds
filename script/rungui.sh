@@ -36,11 +36,15 @@ fi
 
 echo "Starting calibre2opds"
 
+#  We set stack limits explicitly here to get consistency across systems
+# -Xms<value> define starting size
+# -Xmx<value> defines maximum size
+# -Xss<value> defines stack size
 if [ "$1" == "-enableassertions" -o "$old" != "$scriptdir" ]; then
-  echo java $c2o_opts $1 -cp $c2o_jar Gui
-  java $c2o_opts $1 -cp $c2o_jar Gui $*
+  echo java -Xms128m -Xmx1024m $c2o_opts $1 -cp $c2o_jar Gui
+  java -Xms128m -Xmx1024m $c2o_opts $1 -cp $c2o_jar Gui $*
 else
-  echo java $c2o_opts -cp $c2o_jar Gui
-  java $c2o_opts -cp $c2o_jar Gui >/dev/null &
+  echo java -Xms128m -Xmx1024m $c2o_opts -cp $c2o_jar Gui
+  java -Xms128m -Xmx1024m $c2o_opts -cp $c2o_jar Gui >/dev/null &
 fi
 cd $old

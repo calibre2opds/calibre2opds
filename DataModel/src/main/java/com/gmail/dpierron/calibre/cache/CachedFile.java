@@ -33,6 +33,7 @@ public class CachedFile extends File {
   private boolean crcCalced;
   private boolean targetFile;           // Set to true if file/directory is only on target
   private boolean cachedFile;           // Set to true if data is from cache and not filing system
+  private boolean isChanged;            // If set to false the can assume file is unchanged so target cioy is OK
 
   // Constructors mirror those for the File class
 
@@ -286,6 +287,22 @@ public class CachedFile extends File {
     if (logger.isTraceEnabled())
       logger.trace("isCached=" + cachedFile + ": " + getAbsolutePath());
     return cachedFile;
+  }
+
+  public boolean isChanged() {
+    return isChanged;
+  }
+
+  /**
+   * Set to status to say whether file has changed since last run
+   * of calibre2opds.  For backwards compatibility default is true.
+   *
+   * @param b True if it is, false otherwise
+   */
+  public void setChanged (boolean b) {
+    isChanged = b;
+    if (logger.isTraceEnabled())
+      logger.trace("setChanged(" + isChanged + "): " + getAbsolutePath());
   }
 
 }

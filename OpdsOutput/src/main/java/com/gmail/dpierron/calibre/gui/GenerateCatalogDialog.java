@@ -165,6 +165,22 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblDatabaseTime);
   }
 
+  public void setAuthorCount(String summary){
+    lblAuthors.setText(lblAllbooks.getText() + " (" + summary + ")");
+  }
+
+  public void setSeriesCount(String summary) {
+    lblSeries.setText(lblSeries.getText() + " (" + summary + ")");
+  }
+
+  public void setTagCount(String summary) {
+    lblTags.setText(lblTags.getText() + " (" + summary + ")");
+  }
+
+  public void setFeaturedCount(String summary) {
+    lblFeaturedBooks.setText(lblFeaturedBooks.getText() + " (" + summary + ")");
+  }
+
   public void startCreateTags(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.tags"));
@@ -323,6 +339,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblIndexTime.setText(String.format("%tT", System.currentTimeMillis()));
   }
 
+  public void setCopyLibCount(String summary){
+    lblCopyLibToTarget.setText(lblCopyLibToTarget.getText() + " (" + summary + ")");
+  }
+
   public void startCopyLibToTarget(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.copylib"));
@@ -334,6 +354,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     chkCopyLibToTarget.setSelected(true);
     boldFont(lblCopyLibToTarget, false);
     setTimeNow(lblCopyLibraryTime);
+  }
+
+  public void setCopyCatCount(String summary){
+    lblCopyCatToTarget.setText(lblCopyCatalogTime.getText() + " (" + summary + ")");
   }
 
   public void startCopyCatToTarget(long nb) {

@@ -287,6 +287,7 @@ public enum CachedFileManager {
             // Not in cache, so simply add it and
             // set indicator that values not yet checked
             cf.setCached();
+            cf.setChanged(true);    // Assume changed unless we find otherwise
             addCachedFile(cf);
             if (logger.isTraceEnabled())
               logger.trace("added entry to cache");
