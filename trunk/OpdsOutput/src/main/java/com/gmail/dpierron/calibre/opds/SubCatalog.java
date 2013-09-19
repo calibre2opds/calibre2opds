@@ -32,7 +32,7 @@ public abstract class SubCatalog {
   protected final static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
   protected final static boolean useExternalIcons = currentProfile.getExternalIcons();
   private final static String securityCode = catalogManager.getSecurityCode();
-  private final static String securityCodeAndSeparator = securityCode + Constants.SECURITY_SEPARATOR;
+  private final static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
 
   //  PROPERTIES
 
@@ -147,7 +147,7 @@ public abstract class SubCatalog {
    * @return
    */
   private String encryptFilename (String filename) {
-    if (securityCode.length()==0) return filename;
+    if (securityCode.length() == 0) return filename;  // Do nothing if encryption not active
     return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename;
   }
   /**

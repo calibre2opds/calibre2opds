@@ -187,7 +187,7 @@ goto end
 
 :no_assertions
 REM Start the GUI in normal mode as a separate process and close this batch file
-echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui  
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx1024m -cp %_C2O% Gui  
 echo '
 START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Gui
 

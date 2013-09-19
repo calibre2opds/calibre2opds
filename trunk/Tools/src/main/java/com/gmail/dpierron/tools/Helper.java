@@ -961,8 +961,13 @@ public class Helper {
     }
   }
 
-  private final static String[] FilesToKeep = new String[] { ".htaccess" };
+  private final static String[] FilesToKeep = new String[] { ".htaccess", "index.html" };
 
+  /**
+   * Delete the given folder/files unless it is on the list of those to keep
+   *
+   * @param path
+   */
   static public void delete(File path) {
     if (path.exists()) {
       // Allo for list of Delete file xceptions (#c2o-112)
@@ -987,6 +992,11 @@ public class Helper {
     }
   }
 
+  /**
+   * Given a path, get a count of the contained folders and files
+   * @param path
+   * @return
+   */
   static public long count(File path) {
     int result = 0;
     if (path.exists()) {

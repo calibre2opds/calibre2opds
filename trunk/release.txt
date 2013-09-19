@@ -112,6 +112,7 @@ v3.2
               added at the start of folder/file names only - but the remainder of names is same as unecrypted versions.
     - Change: Improvements to run.cmd and rungui.cmd for handling 32-bit Java on 64-bit Windows
     - Change: Changed the way progress text messages are derived so should be more meaningfull.
+    - New: Added counts to some of the generation progress lines where it made sense (authors, tags, series etc)
     - Fix: #c2o-18: Re-organise GUI fields amongst the various tabs
                     (in particular move Featured Books fields to Custom Catalogs tab)
     - Fix: #c2o-85:  Sorting in the All Books catalog should ignore case
