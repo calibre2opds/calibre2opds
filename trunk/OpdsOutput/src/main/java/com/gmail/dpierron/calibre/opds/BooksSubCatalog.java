@@ -137,7 +137,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @return
    * @throws IOException
    */
-  Composite<Element, String> getListOfBooks(Breadcrumbs pBreadcrumbs,
+  Element getListOfBooks(Breadcrumbs pBreadcrumbs,
       List<Book> listbooks,
       boolean inSubDir,
       int from,
@@ -266,11 +266,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           // ... YES - so go for next page
           if (logger.isDebugEnabled()) logger.debug("making a nextpage link");
-          Element nextLink = getListOfBooks(pBreadcrumbs, listbooks, true,             // Awlays in SubDir (need to check this)
-              i,                // Continue nfrom where we were
-              title, summary, urn, pFilename, splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, icon, null,
-              // No firstElements
-              options).getFirstElement();
+          Element nextLink = getListOfBooks(pBreadcrumbs,
+                                            listbooks,
+                                            true,             // Awlays in SubDir (need to check this)
+                                            i,                // Continue nfrom where we were
+                                            title,
+                                            summary,
+                                            urn,
+                                            pFilename,
+                                            splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption,
+                                            icon,
+                                            null,              // No firstElements
+                                            options);
           result.add(0, nextLink);
           break;
         } else {
@@ -315,7 +322,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
     }
 
-    return new Composite<Element, String>(entry, urlInItsSubfolder);
+    return entry;
   }
 
 
@@ -370,9 +377,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisLetter.size() > 0) {
-        element = getListOfBooks(pBreadcrumbs, booksInThisLetter, true,              // Always inSubDir
-            0,                 // start at first page
-            letterTitle, summary, letterUrn, letterFilename, checkSplitByLetter(letter), icon, null, options).getFirstElement();
+        element = getListOfBooks(pBreadcrumbs,
+                                 booksInThisLetter,
+                                 true,              // Always inSubDir
+                                 0,                 // start at first page
+                                 letterTitle,
+                                 summary,
+                                 letterUrn,
+                                 letterFilename,
+                                 checkSplitByLetter(letter),
+                                 icon,
+                                 null,              // No firstElements
+                                 options);
       }
       else
       {
@@ -434,7 +450,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (booksInThisRange.size() > 0) {
         element = getListOfBooks(pBreadcrumbs, booksInThisRange, true,         // Always inSubDir
             0,            // Start at first page
-            rangeTitle, summary, rangeUrn, rangeFilename, SplitOption.Paginate, icon, null, options).getFirstElement();
+            rangeTitle, summary, rangeUrn, rangeFilename, SplitOption.Paginate, icon, null, options);
       }
 
       if (element != null)

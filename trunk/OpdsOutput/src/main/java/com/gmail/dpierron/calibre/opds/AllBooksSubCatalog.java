@@ -37,7 +37,9 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
    * @param subbooks
    * @param sortByTitle
    */
-  public AllBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> subbooks, Boolean sortByTitle) {
+  public AllBooksSubCatalog(List<Object> stuffToFilterOut,
+                            List<Book> subbooks,
+                            boolean sortByTitle) {
     super(stuffToFilterOut, subbooks);
     if (sortByTitle)
       sortBooksByTitle(getBooks());

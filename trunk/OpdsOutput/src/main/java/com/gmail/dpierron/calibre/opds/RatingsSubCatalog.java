@@ -88,13 +88,21 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
     SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
-    Element result = getListOfBooks(pBreadcrumbs, books, true, 0, title, summary, urn, filename, splitOption,
-        // #751211: Use external icons option
-        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING).getFirstElement();
+    Element result = getListOfBooks(pBreadcrumbs,
+                                    books,
+                                    true,
+                                    0,
+                                    title,
+                                    summary,
+                                    urn,
+                                    filename,
+                                    splitOption,
+                                    // #751211: Use external icons option
+                                    useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING);
     return result;
   }
 
-  public Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  public Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getRatings()))
       return null;
 
@@ -121,10 +129,13 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element result2 = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
-        // #751211: Use external icons option
-        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING);
-    return new Composite<Element, String>(result2, urlInItsSubfolder);
+    Element result2 = FeedHelper.getCatalogEntry(title,
+                                                 urn,
+                                                 urlInItsSubfolder,
+                                                 summary,
+                                                 // #751211: Use external icons option
+                                                 useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING);
+    return result2;
   }
 
 }

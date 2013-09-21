@@ -163,17 +163,28 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       level.setCatalogType("");
       level.setCatalogFolder("");
       level.setCatalogBaseFilename(filename);
-      return level.getCatalog(pBreadcrumbs, getStuffToFilterOutAnd(tag),   // Used to determine what's left!
-          true,                          // Always in sub-dir for a tag !
-          summary, urn, splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
+      return level.getCatalog(pBreadcrumbs,
+                              getStuffToFilterOutAnd(tag),   // Used to determine what's left!
+                              true,                          // Always in sub-dir for a tag !
+                              summary,
+                              urn,
+                              splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     } else {
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeBooks(books);
       if (logger.isDebugEnabled())
         logger.debug("getTag: making a simple book list for tag " + tag);
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
-      return getListOfBooks(pBreadcrumbs, books, true,               // Always in sub-dir for tag
-          0, title, summary, urn, filename, splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS, null).getFirstElement();
+      return getListOfBooks(pBreadcrumbs,
+                            books,
+                            true,               // Always in sub-dir for tag
+                            0,
+                            title,
+                            summary,
+                            urn,
+                            filename,
+                            splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS,
+                            null);
     }
   }
 

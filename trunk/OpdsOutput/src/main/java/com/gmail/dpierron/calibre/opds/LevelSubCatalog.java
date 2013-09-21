@@ -128,16 +128,16 @@ public class LevelSubCatalog extends SubCatalog {
         allBooksSummary = Localization.Main.getText("allbooks.alphabetical", getBooks().size());
       else if (getBooks().size() == 1)
         allBooksSummary = Localization.Main.getText("allbooks.alphabetical.single");
-      subCatalogEntry = allBooksSubCatalog.getListOfBooks(breadcrumbs, getBooks(), getCatalogLevel().length() > 0, 0,          // from start
+      entry = allBooksSubCatalog.getListOfBooks(breadcrumbs, getBooks(), getCatalogLevel().length() > 0, 0,          // from start
           Localization.Main.getText("allbooks.title"), allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
           allBooksSubCatalog.getCatalogBaseFolderFileName(), SplitOption.SplitByLetter,
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
       allBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+
+      if (entry != null) {
+        feed.addContent(entry);
       }
+
       logger.debug("COMPLETED: Generating All Books catalog");
     }
     if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
@@ -153,14 +153,18 @@ public class LevelSubCatalog extends SubCatalog {
       authorsSubCatalog.setCatalogLevel(getCatalogLevel());
       String authorsSummary = "";
       if (authorsSubCatalog.getAuthors().size() > 1)
-        summary = Localization.Main.getText("authors.alphabetical", authorsSubCatalog.getAuthors().size());
+        authorsSummary = Localization.Main.getText("authors.alphabetical", authorsSubCatalog.getAuthors().size());
       else if (authorsSubCatalog.getAuthors().size() == 1)
-        summary = Localization.Main.getText("authors.alphabetical.single");
-      entry = authorsSubCatalog.getSubCatalog(breadcrumbs, authorsSubCatalog.getAuthors(),// sTART WITH ALL AUTHORS
-          getCatalogFolder().length() > 0, 0,        // from start,
-          Localization.Main.getText("authors.title"), authorsSummary,
-          Constants.INITIAL_URN_PREFIX + authorsSubCatalog.getCatalogType() + authorsSubCatalog.getCatalogLevel(),
-          authorsSubCatalog.getCatalogBaseFolderFileName(), SplitOption.SplitByLetter);
+        authorsSummary = Localization.Main.getText("authors.alphabetical.single");
+      entry = authorsSubCatalog.getSubCatalog(breadcrumbs,
+                                              authorsSubCatalog.getAuthors(),// sTART WITH ALL AUTHORS
+                                              getCatalogFolder().length() > 0,
+                                              0,        // from start,
+                                              Localization.Main.getText("authors.title"),
+                                              authorsSummary,
+                                              Constants.INITIAL_URN_PREFIX + authorsSubCatalog.getCatalogType() + authorsSubCatalog.getCatalogLevel(),
+                                              authorsSubCatalog.getCatalogBaseFolderFileName(),
+                                              SplitOption.SplitByLetter);
       authorsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
           feed.addContent(entry);
@@ -223,12 +227,10 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Recent books catalog");
       RecentBooksSubCatalog recentBooksSubCatalog = new RecentBooksSubCatalog(stuffToFilterOut, getBooks());
       recentBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-      subCatalogEntry = recentBooksSubCatalog.getCatalog(breadcrumbs, getCatalogLevel().length() > 0);
+      entry = recentBooksSubCatalog.getCatalog(breadcrumbs, getCatalogLevel().length() > 0);
       recentBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+      if (entry != null) {
+        feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Recent books catalog");
     }
@@ -243,12 +245,11 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Rated books catalog");
       RatingsSubCatalog ratingsSubCatalog = new RatingsSubCatalog(stuffToFilterOut,getBooks());
       ratingsSubCatalog.setCatalogLevel(getCatalogLevel());
-      subCatalogEntry = ratingsSubCatalog.getCatalog(breadcrumbs, getCatalogLevel().length() > 0);
-      ratingsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-      if (subCatalogEntry != null) {
-        entry = subCatalogEntry.getFirstElement();
-        if (entry != null)
-          feed.addContent(entry);
+      entry = ratingsSubCatalog.getCatalog(breadcrumbs,
+                                           getCatalogLevel().length() > 0);
+                                           ratingsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
+      if (entry != null) {
+        feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Rated books catalog");
     }
@@ -269,10 +270,10 @@ public class LevelSubCatalog extends SubCatalog {
         FeaturedBooksSubCatalog featuredBooksSubCatalog = new FeaturedBooksSubCatalog(featuredBooks);
         if (atTopLevel)  callback.startCreateFeaturedBooks(featuredBooks.size());
         featuredBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-        Composite<Element, String> featuredCatalog = featuredBooksSubCatalog.getFeaturedCatalog(breadcrumbs, inSubDir);
+        Element featuredCEntry = featuredBooksSubCatalog.getFeaturedCatalog(breadcrumbs, inSubDir);
         featuredBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-        if (featuredCatalog != null) {
-          feed.addContent(featuredCatalog.getFirstElement());
+        if (featuredCEntry != null) {
+          feed.addContent(featuredCEntry);
         }
       }
       logger.debug("COMPLETED: Generating Featured catalog");
