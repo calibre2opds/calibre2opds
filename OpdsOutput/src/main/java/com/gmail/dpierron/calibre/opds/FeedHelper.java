@@ -123,7 +123,7 @@ public class FeedHelper {
   }
 
   /**
-   * Generate a link to a catalog entry
+   * Generate a link to a catalog entry adding an updated element
    *
    * @param pTitle
    * @param urn
@@ -132,7 +132,12 @@ public class FeedHelper {
    * @param icon
    * @return
    */
-  public static Element getCatalogEntry(String pTitle, String urn, String filename, String pSummary, String icon) {
+  public static Element getCatalogEntry(
+      String pTitle,
+      String urn,
+      String filename,
+      String pSummary,
+      String icon) {
     Element result = getAtomElement(false, "entry", pTitle, urn, filename, pSummary, false, icon);
     // add updated
     result.addContent(getUpdatedTag());

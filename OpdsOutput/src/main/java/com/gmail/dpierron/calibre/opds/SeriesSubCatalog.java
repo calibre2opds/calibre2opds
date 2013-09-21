@@ -386,10 +386,19 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(books);
 
-    Element result = getListOfBooks(pBreadcrumbs, books, true, 0,   // Starting at 0
-        title, summary, urn, filename, SplitOption.Paginate,   // Do not split on letter in Series - it does not really make sense
-        useExternalIcons      // #751211: Use external icons option
-            ? getIconPrefix(true) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES, null, Option.INCLUDE_SERIE_NUMBER).getFirstElement();
+    Element result = getListOfBooks(pBreadcrumbs,
+                                    books,
+                                    true,
+                                    0,   // Starting at 0
+                                    title,
+                                    summary,
+                                    urn,
+                                    filename,
+                                    SplitOption.Paginate,   // Do not split on letter in Series - it does not really make sense
+                                    useExternalIcons      // #751211: Use external icons option
+                                        ? getIconPrefix(true) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES,
+                                    null,
+                                    Option.INCLUDE_SERIE_NUMBER);
     return result;
   }
 }

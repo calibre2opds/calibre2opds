@@ -166,9 +166,7 @@ public class Mainframe extends javax.swing.JFrame {
    * We do not allow HTML Downloads if OPDS Downloads are suppressed
    */
   private void checkHtmlDownloads() {
-// TODO ITIMPI:  Remove as no longer needed as we CAN have HTML downloads with OPDS ones?
-/*
-    if (chkNogenerateopdsfiles.isSelected() == true) {
+    if (chkNogeneratehtml.isSelected() == true) {
       chkNogeneratehtmlfiles.setSelected(true);
       chkNogeneratehtmlfiles.setEnabled(false);
     } else {
@@ -177,18 +175,17 @@ public class Mainframe extends javax.swing.JFrame {
         chkNogeneratehtmlfiles.setSelected(false);
       }
     }
-*/
   }
 
   /**
    * It makes no sense to allow OPDS downloads if we are not generating an Opds catalog!
    */
   private void checkOpdsDownloads() {
-    if (chkNogenerateopdsfiles.isSelected() == true) {
+    if (chkNogenerateopds.isSelected() == true) {
       chkNogenerateopdsfiles.setSelected(true);
       chkNogenerateopdsfiles.setEnabled(false);
     } else {
-      if (chkNogeneratehtmlfiles.isEnabled() == false) {
+      if (chkNogenerateopdsfiles.isEnabled() == false) {
         chkNogenerateopdsfiles.setEnabled(true);
         chkNogenerateopdsfiles.setSelected(false);
       }
@@ -2201,6 +2198,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNogeneratehtml, gridBagConstraints);
+
+        chkNogeneratehtml.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chkNogeneratehtmlMouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -2303,11 +2306,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(lblNogenerateopdsfiles, gridBagConstraints);
         lblNogenerateopdsfiles.getAccessibleContext().setAccessibleName("Do not generate OPDS downloads");
 
-        chkNogenerateopdsfiles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkNogenerateopdsfilesActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -2394,7 +2392,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         chkNogenerateopds.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                checkOpdsDownloads(evt);
+                chkNogenerateopdsMouseClicked(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4384,10 +4382,6 @@ public class Mainframe extends javax.swing.JFrame {
     txtWikipediaUrl.setText(Localization.Main.getText(StanzaConstants.WIKIPEDIA_URL_DEFAULT));
   }//GEN-LAST:event_cmdWikipediaUrlResetActionPerformed
 
-  private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
-    checkHtmlDownloads();
-  }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
-
   private void chkGenerateIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGenerateIndexActionPerformed
     actOnGenerateIndexActionPerformed();
   }//GEN-LAST:event_chkGenerateIndexActionPerformed
@@ -4493,9 +4487,13 @@ public class Mainframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFeaturedCatalogTitleActionPerformed
 
-    private void checkOpdsDownloads(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_checkOpdsDownloads
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkOpdsDownloads
+    private void chkNogeneratehtmlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogeneratehtmlMouseClicked
+        checkHtmlDownloads();        // TODO add your handling code here:
+    }//GEN-LAST:event_chkNogeneratehtmlMouseClicked
+
+    private void chkNogenerateopdsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogenerateopdsMouseClicked
+        checkOpdsDownloads();        // TODO add your handling code here:
+    }//GEN-LAST:event_chkNogenerateopdsMouseClicked
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();

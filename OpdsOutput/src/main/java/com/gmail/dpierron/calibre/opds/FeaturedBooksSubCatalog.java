@@ -38,7 +38,7 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
     sortBooksByTimestamp(getBooks());
   }
 
-  public Composite<Element, String> getFeaturedCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  public Element getFeaturedCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 

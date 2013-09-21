@@ -37,7 +37,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
     setBooks(new Helper.ListCopier<Book>().copyList(getBooks(), currentProfile.getBooksInRecentAdditions()));
   }
 
-  public Composite<Element, String> getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
+  public Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getBooks()))
       return null;
 
@@ -54,11 +54,19 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
     String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1);
-    Element result = getListOfBooks(pBreadcrumbs, getBooks(), inSubDir, 0, title, summary, urn, filename, SplitOption.SplitByDate,
-        // #751211: Use external icons option
-        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RECENT : Icons.ICON_RECENT, null,     // No first element
-        Option.INCLUDE_TIMESTAMP).getFirstElement();
-    return new Composite<Element, String>(result, urlInItsSubfolder);
+    Element result = getListOfBooks(pBreadcrumbs,
+                                    getBooks(),
+                                    inSubDir,
+                                    0,
+                                    title,
+                                    summary,
+                                    urn,
+                                    filename,
+                                    SplitOption.SplitByDate,
+                                    // #751211: Use external icons option
+                                    useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RECENT : Icons.ICON_RECENT, null,     // No first element
+                                    Option.INCLUDE_TIMESTAMP);
+    return result;
   }
 
 }
