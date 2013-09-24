@@ -65,7 +65,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     List<Element> result = new LinkedList<Element>();
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
     for (int i = from; i < itemsCount; i++) {
       if ((i - from) >= maxBeforePaginate) {

@@ -22,6 +22,7 @@ import org.jdom.Element;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class LevelSubCatalog extends SubCatalog {
@@ -93,10 +94,11 @@ public class LevelSubCatalog extends SubCatalog {
       Option... options) throws IOException {
 
     boolean atTopLevel = (pBreadcrumbs.size() == 1 && getCatalogLevel().length() == 0);
+
     CatalogCallbackInterface callback = CatalogContext.INSTANCE.callback; // Cache for efficiency
 
     String urlExt = catalogManager.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, inSubDir || pBreadcrumbs.size() > 1);
     Breadcrumbs breadcrumbs = inSubDir ? Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt)  : pBreadcrumbs;
 
     Composite<Element, String> subCatalogEntry;
@@ -291,12 +293,13 @@ public class LevelSubCatalog extends SubCatalog {
         logger.debug("STARTED: Generating custom catalogs");
         int pos = 1;
         callback.startCreateCustomCatalogs(customCatalogs.size());
+        Map<String, BookFilter> customCatalogsFilters = CatalogContext.INSTANCE.catalogManager.customCatalogsFilters;
         for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
-          if (Helper.isNotNullOrEmpty(customCatalogTitle)) {
-            BookFilter customCatalogBookFilter = CatalogContext.INSTANCE.catalogManager.customCatalogsFilters.get(customCatalogTitle);
+          if (Helper.isNotNullOrEmpty(customCatalogTitle)  && (Helper.isNotNullOrEmpty(customCatalogsFilters))) {
+            BookFilter customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
             if (customCatalogBookFilter != null) {
               // custom catalog
               if (logger.isDebugEnabled())

@@ -112,7 +112,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String summary = Localization.Main.getText("rating.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
 
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir */);
 
     // list the entries (or split them)
     List<Element> result;

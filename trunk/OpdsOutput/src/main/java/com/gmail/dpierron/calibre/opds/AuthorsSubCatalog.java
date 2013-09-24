@@ -111,6 +111,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     int catalogSize;
     int pos;
+
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
     boolean willSplitByLetter = false;
@@ -133,7 +134,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
     logger.debug("generating " + urlExt);
 
     // list the entries (or split them)
