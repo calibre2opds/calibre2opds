@@ -372,7 +372,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       logger.debug("make a link to the series by this author catalog");
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
-      seriesSubCatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
+      seriesSubCatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
       seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId());
       firstElements = seriesSubCatalog.getListOfSeries(pBreadcrumbs, null,      // series derived from catalog books
           true, 0, title, summary, urn, null,      // filename derived from catalog properties
@@ -383,7 +383,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       // Make a link to the "allbooks entry" for this author
       AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
       booksSubcatalog.setCatalogLevel(getCatalogLevel());
-      booksSubcatalog.setCatalogFolder(Constants.AUTHOR_TYPE);
+      booksSubcatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
       booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
       Element entry = booksSubcatalog.getListOfBooks(breadcrumbs,
                                                       null,          // derived from catalog properties

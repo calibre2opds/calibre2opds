@@ -302,6 +302,15 @@ public abstract class SubCatalog {
   }
 
   /**
+   * Variant of setFolder when we want to split according to Id
+   *
+   * @param folder
+   * @param id
+   */
+  public void setCatalogFolderSplit (String folder, String id) {
+    setCatalogFolder(folder + Constants.TYPE_SEPARATOR + (int)(Long.valueOf(id)/1000));
+  }
+  /**
    * Get the Current Catalog Base filename
    *
    * If both the folder name, catalog type and catalog level are not set we treat
