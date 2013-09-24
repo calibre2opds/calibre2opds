@@ -1103,7 +1103,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
     File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
-    if (!isInDeepLevel() && isBookTheStepUnit())
+    if (!isInDeepLevel() && isBookTheStepUnit() && !getCatalogFolder().equals(Constants.AUTHOR_TYPE))
       CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry:" + book);
