@@ -166,7 +166,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void setAuthorCount(String summary){
-    lblAuthors.setText(lblAllbooks.getText() + " (" + summary + ")");
+    lblAuthors.setText(lblAuthors.getText() + " (" + summary + ")");
   }
 
   public void setSeriesCount(String summary) {

@@ -130,7 +130,7 @@ public abstract class SubCatalog {
    * @param data
    * @return
    */
-  private String encryptString (String data) {
+  private static String encryptString (String data) {
     CRC32 crc32 = new CRC32();
     crc32.update(data.getBytes());
     return Long.toHexString(crc32.getValue());
@@ -146,7 +146,7 @@ public abstract class SubCatalog {
    * @param filename
    * @return
    */
-  private String encryptFilename (String filename) {
+  private static String encryptFilename (String filename) {
     if (securityCode.length() == 0) return filename;  // Do nothing if encryption not active
     return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename;
   }
@@ -434,11 +434,29 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  public String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
+  public static String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
     if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
     result = result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
     return result;
+  }
+
+  /**
+   * Get the folder/filename that is to be used for storing the given type.
+   *  To keep the number of files in a single folder down (which can affect
+   *  perforance we store a maximum of 1000 book id;s in a single folder
+   *  (although in practise it is likely to be slightly less due to gaps
+   *  in the Calibre Id sequence after books have been deleted/altered/merged.
+   *
+   * @param id
+   * @return
+   */
+  public static String getCatalogBaseFolderFileNameIdNoLevelSplit (String type, String id) {
+    String filename = getCatalogBaseFolderFileNameIdNoLevel(type, id);
+    int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
+    assert pos != -1;
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / 1000)) + filename.substring(pos);
+    return filename;
   }
 
   /**

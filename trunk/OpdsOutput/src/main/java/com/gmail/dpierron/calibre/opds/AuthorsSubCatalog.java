@@ -352,7 +352,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       return null;
     }
 
-    String filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.AUTHOR_TYPE, author.getId());
+    String filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId());
     logger.debug("getAuthor:generating " + filename);
 
     String title = author.getSort();
