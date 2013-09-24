@@ -184,8 +184,15 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       for (int i = from; i < series.size(); i++) {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           Element nextLink =
-              getSubCatalog(pBreadcrumbs, series, inSubDir, i, title, summary, urn, pFilename,
-                  splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, addTheSeriesWordToTheTitle)/*.getFirstElement()*/;
+              getSubCatalog(pBreadcrumbs,
+                            series,
+                            true /*inSubDir*/,      // Must be in subDir if paginating!
+                            i,
+                            title,
+                            summary,
+                            urn,
+                            pFilename,
+                            splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, addTheSeriesWordToTheTitle);
           result.add(0, nextLink);
           break;
         } else {
@@ -247,7 +254,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // list the entries (or split them)
     List<Element> result = getListOfSeries(pBreadcrumbs, series, inSubDir, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);

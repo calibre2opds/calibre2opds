@@ -233,7 +233,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
 
     Element feed;
-    feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir */);
     // Update breadcrumbs ready for next iteration
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
@@ -243,15 +243,23 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Split by date listing
       result = getListOfBooksSplitByDate(breadcrumbs,
                                          DataModel.splitBooksByDate(listbooks),
-                                         title, urn, pFilename,
-                                         icon, options);
+                                         true /*inSubDir*/,   // Musy be true if splitting by date
+                                         title,
+                                         urn,
+                                         pFilename,
+                                         icon,
+                                         options);
     } else if (willSplitByLetter) {
       // Split by letter listing
       result = getListOfBooksSplitByLetter(breadcrumbs,
                                            DataModel.splitBooksByLetter(listbooks),
-                                           title, urn, pFilename,
+                                           true   /*inSubDir*/, // Must be true if splitting by letter
+                                           title,
+                                           urn,
+                                           pFilename,
                                            SplitOption.SplitByLetter,
-                                           icon, options);
+                                           icon,
+                                           options);
     } else {
       // Paginated listing
       result = new LinkedList<Element>();
@@ -344,6 +352,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private List<Element> getListOfBooksSplitByLetter(
       Breadcrumbs pBreadcrumbs,
       Map<String,  List<Book>> mapOfBooksByLetter,
+      boolean inSubDir,
       String baseTitle,
       String baseUrn,
       String baseFilename,
@@ -352,6 +361,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       Option... options) throws IOException {
     if (Helper.isNullOrEmpty(mapOfBooksByLetter))
       return null;
+
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
 
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
@@ -379,7 +390,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (booksInThisLetter.size() > 0) {
         element = getListOfBooks(pBreadcrumbs,
                                  booksInThisLetter,
-                                 true,              // Always inSubDir
+                                 true,              // Always inSubDir if in letter
                                  0,                 // start at first page
                                  letterTitle,
                                  summary,
@@ -420,6 +431,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private List<Element> getListOfBooksSplitByDate(
       Breadcrumbs pBreadcrumbs,
       Map<DateRange, List<Book>> mapOfBooksByDate,
+      boolean inSubDir,
       String baseTitle,
       String baseUrn,
       String baseFilename,
@@ -431,6 +443,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
       sTitle = sTitle + ", ";
+
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
 
     List<Element> result = new LinkedList<Element>();
     SortedSet<DateRange> ranges = new TreeSet<DateRange>(mapOfBooksByDate.keySet());
@@ -448,9 +462,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       Element element = null;
       if (booksInThisRange.size() > 0) {
-        element = getListOfBooks(pBreadcrumbs, booksInThisRange, true,         // Always inSubDir
-            0,            // Start at first page
-            rangeTitle, summary, rangeUrn, rangeFilename, SplitOption.Paginate, icon, null, options);
+        element = getListOfBooks(pBreadcrumbs,
+                                 booksInThisRange,
+                                 true,         // Always inSubDir
+                                 0,            // Start at first page
+                                 rangeTitle,
+                                 summary,
+                                 rangeUrn,
+                                 rangeFilename,
+                                 SplitOption.Paginate,
+                                 icon,
+                                 null,
+                                 options);
       }
 
       if (element != null)
@@ -1077,6 +1100,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
     String filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.BOOK_TYPE, book.getId());
+
+    // The following bit of code is used to limit the number of book files stored in a single folder.
+    // This can help with performance on some systems.
+    int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
+    assert pos != -1;
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(book.getId()) / 1000)) + filename.substring(pos);
+
     String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
     File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
@@ -1126,7 +1156,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry.addContent(JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid()));
       entry.addContent(FeedHelper.getUpdatedTag(book.getLatestFileModifiedDate()));
       // add the navigation links
-      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
+      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true, true);
       // add the required data to the book entry
       decorateBookEntry(entry, book, true);
       // write the element to the files

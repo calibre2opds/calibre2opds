@@ -57,6 +57,8 @@ public class TagListSubCatalog extends TagsSubCatalog {
       String urn,
       String pFilename,
       SplitOption splitOption) throws IOException {
+
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
     int catalogSize;
     Map<String, List<Tag>> mapOfTagsByLetter = null;
     if (splitOption == null) {
@@ -79,7 +81,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
     logger.debug("getListOfTags: generating " + filename);
     String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
     // list the entries (or split them)
     List<Element> result;
@@ -151,6 +153,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     if (Helper.isNullOrEmpty(mapOfTagsByLetter))
       return null;
 
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))
       sTitle += ", ";
