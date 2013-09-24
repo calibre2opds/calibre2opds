@@ -360,7 +360,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       logger.debug(pBreadcrumbs + "/" + serie);
 
     CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
-    if (!isInDeepLevel())
+    if (! (isInDeepLevel() || getCatalogFolder().equals(Constants.AUTHOR_TYPE)))
       CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksBySerie().get(serie);
