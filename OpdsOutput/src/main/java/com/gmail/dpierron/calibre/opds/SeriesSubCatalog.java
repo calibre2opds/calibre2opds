@@ -386,7 +386,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // if we are not then we want it at the top level
     String filename;
     if (getCatalogFolder().startsWith(getCatalogType())) {
-      filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.SERIE_TYPE, serie.getId());
+      filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, serie.getId());
     } else {
       filename = getCatalogBaseFolderFileNameId(serie.getId());
     }

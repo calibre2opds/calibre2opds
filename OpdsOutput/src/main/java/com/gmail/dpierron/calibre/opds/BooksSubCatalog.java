@@ -677,7 +677,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
           // Series are always held at top level
-          filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.SERIE_TYPE, book.getSeries().getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+          filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, book.getSeries().getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
@@ -691,7 +691,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           for (Author author : book.getAuthors()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
             // Authors are always held at top level !
-            filename =  getCatalogBaseFolderFileNameIdNoLevel(Constants.AUTHOR_TYPE, author.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+            filename =  getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
             entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
           }
@@ -1099,14 +1099,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
-    String filename = getCatalogBaseFolderFileNameIdNoLevel(Constants.BOOK_TYPE, book.getId());
-
-    // The following bit of code is used to limit the number of book files stored in a single folder.
-    // This can help with performance on some systems.
-    int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
-    assert pos != -1;
-    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(book.getId()) / 1000)) + filename.substring(pos);
-
+    String filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.BOOK_TYPE,book.getId());
     String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
     File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
