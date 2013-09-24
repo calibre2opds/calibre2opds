@@ -86,7 +86,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-145: Option to avoid splitting books by letter within a tag 
     - #x2o-146: Improve Search facility for large libraries
     - #c2o-147: Option to suppress selected tags in tags sub-catalog
-    = #c2o-151: Incorrect index link
     - #c2o-153: Allow Calibre Custom Column values to be displayed in Book Details
     - #c2o-154: Allow Calibre Custom Column values to be treated like additional tags
     - #c2o-155: Allow Calibre Custom Column values to be used in calibre2opds search criteria
@@ -138,9 +137,11 @@ v3.2
     - Fix: #c2o-141: The 'Open Log File' option does not work on Windows 8
     - New: #c2o-142: Allow the book links to external sites to be localized
                      (implemented for GUI defauls - not yet made book language specific)
+    - New:  #c2o-147: (partial for Language) Option to suppress selected tags in tags sub-catalog
     - Fix: #c2o-148: Catalog generation crashes 3.2 RC (r206)
     - New: #c2o-149: Added an option to clear encrypted filenames cache to Tools menu
     - Fix: #c2o-150: Bug 3.2 rev206M - java.lang.NullPointerException: null
+    = Fix: #c2o-151: Incorrect index link
     - Fix: #c2o-152: Catalog generation causes crash. v. 3.1 rev170M and v3.2 Release Candidate (rev 206)
     - Fix: #c2o-153: Crash during Copy if Calibre has altered book author/title during run
     - New: #c2o-154: Allow the user to decide if language should be treated like a tag
