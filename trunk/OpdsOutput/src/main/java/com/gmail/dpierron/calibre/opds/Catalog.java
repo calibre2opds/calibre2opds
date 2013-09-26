@@ -946,6 +946,11 @@ public class Catalog {
       callback.checkIfContinueGenerating();
 
       long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getGenerateFolder());
+      // If we are copying to two locations need to double count
+      if (! currentProfile.getDeviceMode().equals(DeviceMode.Dropbox)
+      &&  currentProfile.getCopyToDatabaseFolder()) {
+        nbCatalogFilesToCopyToTarget += nbCatalogFilesToCopyToTarget;
+      }
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -987,7 +992,6 @@ public class Catalog {
         // FALLTHRU Sync catalog files if not using ZIP mode
       case Nas:
         File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
-//        syncFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), targetCatalogFolder);
         syncFiles(generateFolder, targetCatalogFolder);
         break;
       case Dropbox:
@@ -1000,9 +1004,7 @@ public class Catalog {
       // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-//        File generateCatalogFolder = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
-        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());;
-//        syncFiles(generateCatalogFolder, libraryCatalogFolder);
+        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         syncFiles(generateFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
       }

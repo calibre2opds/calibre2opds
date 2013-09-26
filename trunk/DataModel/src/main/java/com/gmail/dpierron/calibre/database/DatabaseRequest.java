@@ -39,7 +39,8 @@ public enum DatabaseRequest {
   BOOKS_DATA("select book, format, name from data"),
   BOOKS_COMMENTS("select book, text from comments"),
   BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
-  SAVED_SEARCHES("select val from preferences where key='saved_searches'");
+  SAVED_SEARCHES("select val from preferences where key='saved_searches'"),
+  CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype from custom_columns");
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
   private final String sql;

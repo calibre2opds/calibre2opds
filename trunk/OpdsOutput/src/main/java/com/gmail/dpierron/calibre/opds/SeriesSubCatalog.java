@@ -239,10 +239,13 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           boolean addTheSeriesWordToTheTitle) throws IOException {
 
     if (series == null) series = getSeries();
+    int catalogSize = series.size();
     if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
+    if (summary == null) summary = catalogSize > 1 ? Localization.Main.getText("series.alphabetical", catalogSize)
+                                                   : (catalogSize == 1 ? Localization.Main.getText("series.alphabetical.single") : "");
+    if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + getCatalogLevel();
 
-    int catalogSize;
-    boolean willSplitByLetter = checkSplitByLetter(splitOption, series.size());
+    boolean willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
     if (willSplitByLetter) {
       catalogSize = 0;
     } else
@@ -257,7 +260,16 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // list the entries (or split them)
-    List<Element> result = getListOfSeries(pBreadcrumbs, series, inSubDir, from, title, summary, urn, pFilename, splitOption, addTheSeriesWordToTheTitle);
+    List<Element> result = getListOfSeries(pBreadcrumbs,
+                                           series,
+                                           inSubDir,
+                                           from,
+                                           title,
+                                           summary,
+                                           urn,
+                                           pFilename,
+                                           splitOption,
+                                           addTheSeriesWordToTheTitle);
 
     // add the entries to the feed
     feed.addContent(result);
@@ -302,6 +314,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       String baseUrn,
       String baseFilename,
       boolean addTheSeriesWordToTheTitle) throws IOException {
+
     if (Helper.isNullOrEmpty(mapOfSeriesByLetter))
       return null;
 
@@ -330,8 +343,16 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         // try and list the items to make the summary
         String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
 
-        element = getSubCatalog(pBreadcrumbs, seriesInThisLetter, inSubDir, 0, letterTitle, summary, letterUrn, letterFilename, checkSplitByLetter(letter),
-            addTheSeriesWordToTheTitle)/* .getFirstElement() */;
+        element = getSubCatalog(pBreadcrumbs,
+                                seriesInThisLetter,
+                                true,        // inSubDir must be true if splitting by letter
+                                0,
+                                letterTitle,
+                                summary,
+                                letterUrn,
+                                letterFilename,
+                                checkSplitByLetter(letter),
+                                addTheSeriesWordToTheTitle);
       }
 
       if (element != null)
