@@ -156,7 +156,7 @@ set _JAVACMD=%_JAVAPROG%
 REM The next few lines are to help with running in Portable mode with minimal user setup required
 
 if NOT "%CALIBRE2OPDS_CONFIG%" == "" goto start_c2o
-if NOT exist Calibre2|OpdsConfig goto start_c2o
+if NOT exist Calibre2OpdsConfig goto start_c2o
 set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
 
 

@@ -203,13 +203,18 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Series catalog");
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOut, getBooks());
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = seriesSubCatalog.getSubCatalog(breadcrumbs, null,     // let it be derived from books
-          getCatalogLevel().length() > 0, 0, Localization.Main.getText("series.title"), seriesSubCatalog.getSeries().size() > 1 ?
-          Localization.Main.getText("series.alphabetical", seriesSubCatalog.getSeries().size()) :
-          (seriesSubCatalog.getSeries().size() == 1 ? Localization.Main.getText("series.alphabetical.single") : ""),
-          Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + seriesSubCatalog.getCatalogLevel(), null,
-          // let it be derived from catalog properties
-          SplitOption.Paginate, true);
+      entry = seriesSubCatalog.getSubCatalog(breadcrumbs,
+                                             null,     // let it be derived from books
+                                             getCatalogLevel().length() > 0,
+                                             0,
+                                             Localization.Main.getText("series.title"),
+                                             seriesSubCatalog.getSeries().size() > 1
+                                                ? Localization.Main.getText("series.alphabetical", seriesSubCatalog.getSeries().size())
+                                                : (seriesSubCatalog.getSeries().size() == 1 ? Localization.Main.getText("series.alphabetical.single") : ""),
+                                            null,       // urn:      let it be derived from catalog properties,
+                                            null,       // filename: let it be derived from catalog properties
+                                            SplitOption.SplitByLetter,
+                                            false);     // seriesWod: Do NOT add to series title
       seriesSubCatalog = null;  // Maybe not necesary - but explicit object cleanup for earlier resource release
       if (entry != null)
         feed.addContent(entry);
