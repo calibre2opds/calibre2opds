@@ -276,8 +276,8 @@ public class Book implements SplitableByLetter {
             case '<':
                 if (text.charAt(cutEnd+1) != '/'){
                   // Handle case of BR tag following removed text
-                  if (text.substring(cutEnd).startsWith("<BR")) {
-                      int tagEnd = text.indexOf('>');
+                  if (text.substring(cutEnd).toUpperCase().startsWith("<BR")) {
+                      int tagEnd = text.indexOf('>', cutEnd+1);
                       if (tagEnd != -1)  {
                         cutEnd = tagEnd + 1;
                         break;
@@ -321,6 +321,7 @@ public class Book implements SplitableByLetter {
     summaryMaxLength = -1;
     if (Helper.isNotNullOrEmpty(value)) {
       comment = removeLeadingText(value, "SUMMARY");
+      comment = removeLeadingText(comment, "PRODUCT DESCRIPTION");
       // The following log entry can be useful if trying to debug character encoding issues
       // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
     
@@ -360,15 +361,23 @@ public class Book implements SplitableByLetter {
           // For fractions we want only 2 decimal places to match calibre
           seriesIndexText = String.format("%.2f",seriesIndexFloat);
         }
-        summary += Helper.shorten(getSeries().getName() + " [" + seriesIndexText + "]: ", maxLength);
+        summary += getSeries().getName() + " [" + seriesIndexText + "]: ";
+        if (maxLength != -1) {
+          summary = Helper.shorten(summary, maxLength);
+        }
       }
       // See if still space for comment info
-      if (maxLength > (summary.length() + 3)) {
+      // allow for special case of -1 which means no limit.
+      if (maxLength == -1 || (maxLength > (summary.length() + 3))) {
         String noHtml = Helper.removeHtmlElements(getComment());
         if (noHtml != null) {
           noHtml = removeLeadingText(noHtml, "SUMMARY");
           noHtml = removeLeadingText(noHtml, "PRODUCT DESCRIPTION");
-          summary += Helper.shorten(noHtml, maxLength - summary.length());
+          if (maxLength == -1 ) {
+            summary += noHtml;
+          } else {
+            summary += Helper.shorten(noHtml, maxLength - summary.length());
+          }
         }
       }
     }

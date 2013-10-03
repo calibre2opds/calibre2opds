@@ -163,7 +163,7 @@ if exist uninstaller.jar (
 REM The next few lines are to help with running in Portable mode with minimal user setup required
 
 if NOT "%CALIBRE2OPDS_CONFIG%" == "" goto start_c2o
-if NOT exist Calibre2|OpdsConfig goto start_c2o
+if NOT exist Calibre2OpdsConfig goto start_c2o
 set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
 
 
@@ -178,7 +178,7 @@ REM -Xms<value> define starting size
 REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
-echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp OpdsOutput-3.1-SNAPSHOT.jar Cli %*
+echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
 "%_JAVACMD%" -Xms128m -Xmx1024m -cp %_C2O% Cli %*
 echo '
 echo "-----------------------"

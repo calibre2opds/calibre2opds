@@ -934,7 +934,7 @@ public class Mainframe extends javax.swing.JFrame {
     if (i > -1)
       currentProfile.setMaxSummaryLength(i);
     i = getValue(txtMaxBookSummaryLength);
-    if (i > -1)
+    if (i >= -1)
       currentProfile.setMaxBookSummaryLength(i);
     currentProfile.setIncludeAboutLink(!chkNoIncludeAboutLink.isSelected());
     currentProfile.setSplitTagsOn(txtSplittagson.getText());

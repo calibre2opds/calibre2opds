@@ -81,6 +81,10 @@ public enum DataModel {
     DatabaseManager.INSTANCE.reset();
   }
 
+  /**
+   * The following loads up data in a number of different views
+   * to help with more efficient access to it later in the run
+   */
   public void preloadDataModel() {
     getMapOfLanguagesById();
     // getMapOfLanguagesByIsoCode(); not useful, loaded by getMapOfLanguagesById();
