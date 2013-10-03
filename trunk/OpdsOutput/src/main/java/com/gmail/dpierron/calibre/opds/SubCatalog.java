@@ -309,6 +309,7 @@ public abstract class SubCatalog {
    */
   public void setCatalogFolderSplit (String folder, String id) {
     setCatalogFolder(folder + Constants.TYPE_SEPARATOR + (int)(Long.valueOf(id)/1000));
+    // setCatalogFolder(folder);
   }
   /**
    * Get the Current Catalog Base filename

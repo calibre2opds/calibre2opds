@@ -381,7 +381,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       logger.debug(pBreadcrumbs + "/" + serie);
 
     CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
-    if (! (isInDeepLevel() || getCatalogFolder().equals(Constants.AUTHOR_TYPE)))
+    // We want to avoid incrementing the progress bar if we are not doing
+    // the top level series sub-catalog
+    if ( !(isInDeepLevel() || (getCatalogFolder().equals(Constants.AUTHOR_TYPE))))
       CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksBySerie().get(serie);
