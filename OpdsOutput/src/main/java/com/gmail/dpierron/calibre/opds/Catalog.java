@@ -420,6 +420,11 @@ public class Catalog {
     long countThumbnails;   // Count of thumbnail files that are generated/updated
     long countCovers;       // Count of image files that are generated/updated
 
+    // reinitialize caches (in case of multiple calls in the same session)
+    CachedFileManager.INSTANCE.initialize();
+    CatalogContext.INSTANCE.initialize();
+    CatalogContext.INSTANCE.callback = callback;
+
     Localization.Main.reloadLocalizations();
     Localization.Enum.reloadLocalizations();
 
@@ -446,11 +451,6 @@ public class Catalog {
 
     logger.info(Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName()));
     callback.dumpOptions();
-
-    // reinitialize caches (in case of multiple calls in the same session)
-    CachedFileManager.INSTANCE.initialize();
-    CatalogContext.INSTANCE.initialize();
-    CatalogContext.INSTANCE.callback = callback;
 
     //                      PARAMETER VALIDATION PHASE
 

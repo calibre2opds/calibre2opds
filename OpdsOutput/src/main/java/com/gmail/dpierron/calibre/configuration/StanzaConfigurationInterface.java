@@ -163,4 +163,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void setFeaturedCatalogSavedSearchName(String value);
 
   public void setCustomCatalogs(List<Composite<String, String>> value);
+
+  public void setSecurityCode (String code);
 }

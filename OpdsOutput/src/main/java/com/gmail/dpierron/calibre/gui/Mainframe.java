@@ -38,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class Mainframe extends javax.swing.JFrame {
   Logger logger = Logger.getLogger(Mainframe.class);
@@ -4403,8 +4404,9 @@ public class Mainframe extends javax.swing.JFrame {
     if (JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.confirm.tools.resetEncrypted"), "", JOptionPane.YES_NO_OPTION))
       return;
     logger.info(Localization.Main.getText("gui.menu.tools.resetEncrypted"));
-    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(),  Constants.SECURITY_CACHE_FILENAME);
-    Helper.delete(f);
+    Random generator = new Random(System.currentTimeMillis());
+    String securityCode = Integer.toHexString(generator.nextInt());
+    ConfigurationManager.INSTANCE.getCurrentProfile().setSecurityCode(securityCode);
   }//GEN-LAST:event_mnuToolsResetSecurityCacheActionPerformed
 
   private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed

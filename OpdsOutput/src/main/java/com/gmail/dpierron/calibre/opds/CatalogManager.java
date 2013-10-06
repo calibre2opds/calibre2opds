@@ -9,10 +9,7 @@ import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.CRC32;
 
 public class CatalogManager {
@@ -32,18 +29,18 @@ public class CatalogManager {
   public CatalogManager() {
     super();
     // Avoid superflous settings of static object!
-    if (initialUrl == null) {
-      if (! ConfigurationManager.INSTANCE.getCurrentProfile().getCryptFilenames()) {
-        securityCode = "";
-      } else {
-        CRC32 crc32 = new CRC32();
-        crc32.update(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().toString().getBytes());
-        securityCode = Long.toHexString(crc32.getValue());
-      }
-      initialUrl = securityCode;
-      if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
-      initialUrl += Constants.INITIAL_URL;
+    securityCode = ConfigurationManager.INSTANCE.getCurrentProfile().getSecurityCode();
+    if (Helper.isNullOrEmpty(securityCode)) {
+      Random generator = new Random(System.currentTimeMillis());
+      securityCode = Integer.toHexString(generator.nextInt());
+      ConfigurationManager.INSTANCE.getCurrentProfile().setSecurityCode(securityCode);
     }
+    if (! ConfigurationManager.INSTANCE.getCurrentProfile().getCryptFilenames()) {
+      securityCode = "";
+    }
+    initialUrl = securityCode;
+    if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
+    initialUrl += Constants.INITIAL_URL;
   }
 
   public static String getSecurityCode() {
