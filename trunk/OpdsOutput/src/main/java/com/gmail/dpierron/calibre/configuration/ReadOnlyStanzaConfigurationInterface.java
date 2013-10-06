@@ -189,4 +189,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public String getFeaturedCatalogSavedSearchName();
 
   public List<Composite<String, String>> getCustomCatalogs();
+
+  public String getSecurityCode();
 }

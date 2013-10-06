@@ -7,6 +7,7 @@ import com.gmail.dpierron.tools.Composite;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Vector;
 
 public class StanzaDefaultConfiguration extends DefaultConfiguration implements ReadOnlyStanzaConfigurationInterface {
@@ -362,5 +363,9 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public boolean getDisplayTitleSortInBookDetails() {
     return StanzaConstants.DisplayTitleSortInBookDetails;
+  }
+
+  public String getSecurityCode() {
+    return null;
   }
 }

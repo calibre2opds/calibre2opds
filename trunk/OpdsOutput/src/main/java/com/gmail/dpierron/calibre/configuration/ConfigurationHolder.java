@@ -114,6 +114,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
+  private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -1664,4 +1665,18 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setDisplayTitleSortInBookDetails(boolean value) {
     setProperty(PROPERTY_NAME_DisplayTitleSortInBookDetails, value);
   }
+
+
+  public String getSecurityCode() {
+    String s = getProperty(PROPERTY_NAME_SecurityCode);
+    if (Helper.isNullOrEmpty(s))
+      return defaults.getSecurityCode();
+    else
+      return s;
+  }
+
+  public void setSecurityCode(String code) {
+    setProperty(PROPERTY_NAME_SecurityCode, code);
+  }
+
 }
