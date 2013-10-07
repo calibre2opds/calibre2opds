@@ -86,9 +86,10 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-145: Option to avoid splitting books by letter within a tag 
     - #x2o-146: Improve Search facility for large libraries
     - #c2o-147: Option to suppress selected tags in tags sub-catalog
-    - #c2o-153: Allow Calibre Custom Column values to be displayed in Book Details
-    - #c2o-154: Allow Calibre Custom Column values to be treated like additional tags
-    - #c2o-155: Allow Calibre Custom Column values to be used in calibre2opds search criteria
+    - #c2o-155: Allow Calibre Custom Column values to be displayed in Book Details
+    - #c2o-156: Allow Calibre Custom Column values to be treated like additional tags
+    - #c2o-157: Allow Calibre Custom Column values to be used in calibre2opds search criteria
+    - #c2o-158: Improve performance by avoiding generating unchanged pages
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -145,6 +146,7 @@ v3.2
     - Fix: #c2o-152: Catalog generation causes crash. v. 3.1 rev170M and v3.2 Release Candidate (rev 206)
     - Fix: #c2o-153: Crash during Copy if Calibre has altered book author/title during run
     - New: #c2o-154: Allow the user to decide if language should be treated like a tag
+    - Fix: #c2o-159: A value for Maximum Books Summary length of -1 is not being treated correctly
 
 v3.1
     - Fix: #c2o-51:  Crash while generating covers if image file bad
