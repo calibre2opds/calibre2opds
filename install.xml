@@ -3,7 +3,7 @@
 <installation version="1.0">
     <info>
         <appname>Calibre2opds</appname>
-        <appversion>3.2</appversion>
+        <appversion>3.3</appversion>
         <authors>
             <author name="David Pierron" email="dpierron@gmail.com"/>
             <author name="Dave Walker" email="itimpi@ntlworld.com"/>
@@ -82,10 +82,10 @@
             <file src="script/run.cmd" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.sh" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.cmd" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/OpdsOutput-3.2-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/DataModel-3.2-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/Tools-3.2-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-			      <file src="Install/target/dependency/CalibreQueryLanguage-3.2-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/OpdsOutput-3.3-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/DataModel-3.3-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/Tools-3.3-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+			      <file src="Install/target/dependency/CalibreQueryLanguage-3.3-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
                         
             <file src="Install/target/dependency/jdom-1.1.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-2.7.7.jar" targetdir="$INSTALL_PATH"/>

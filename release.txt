@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.2
+                    RELEASE NOTES for Calibre2Opds v3.3
                     -----------------------------------
 
 Documentation
@@ -102,6 +102,8 @@ Release History
 The following shows the Calibre2Opds releases in reverse chronological order (so that the most recent
 is at the top) showing main changes and bug fixes.  The bug number references are to those
 that have been recorded in the Issue tracker.
+
+v3.3
 
 v3.2
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
