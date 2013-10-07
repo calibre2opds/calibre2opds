@@ -14,7 +14,7 @@ cls
 echo Calibre2opds startup
 echo ====================
 
-set _C2O=OpdsOutput-3.2-SNAPSHOT.jar
+set _C2O=OpdsOutput-3.3-SNAPSHOT.jar
 
 set _JAVAPROG=JAVAW.EXE
 if "%1"=="-enableassertions" set _JAVAPROG=JAVA.EXE

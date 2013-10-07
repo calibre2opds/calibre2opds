@@ -2,13 +2,13 @@
   <parent>
     <artifactId>calibre2opds</artifactId>
     <groupId>com.gmail.dpierron.calibre</groupId>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gmail.dpierron.calibre</groupId>
   <artifactId>DataModel</artifactId>
   <name>Datamodel</name>
-  <version>3.2-SNAPSHOT</version>
+  <version>3.3-SNAPSHOT</version>
   <description>The datamodel of the Calibre SQLite database</description>
   <dependencies>
     <dependency>
@@ -25,12 +25,12 @@
     <dependency>
       <groupId>com.gmail.dpierron</groupId>
       <artifactId>Tools</artifactId>
-      <version>3.2-SNAPSHOT</version>
+      <version>3.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.gmail.dpierron.calibre</groupId>
       <artifactId>CalibreQueryLanguage</artifactId>
-      <version>3.2-SNAPSHOT</version>
+      <version>3.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
