@@ -626,8 +626,8 @@ public class Catalog {
       callback.startReadDatabase();
       now = System.currentTimeMillis();
 
-      DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.reset();
+      DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.preloadDataModel();
       callback.checkIfContinueGenerating();      // check if we must continue
 
