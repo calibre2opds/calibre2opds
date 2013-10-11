@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.gmail.dpierron</groupId>
             <artifactId>Tools</artifactId>
-            <version>3.2-SNAPSHOT</version>
+            <version>3.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -81,7 +81,7 @@
                                 <artifactItem>
                                     <groupId>com.gmail.dpierron.calibre</groupId>
                                     <artifactId>OpdsOutput</artifactId>
-                                    <version>3.2-SNAPSHOT</version>
+                                    <version>3.3-SNAPSHOT</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>

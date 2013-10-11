@@ -36,7 +36,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("ListTag: " + e);
-      sqlException += 1;
+      sqlException += (2^0);
     }
     return result;
   }
@@ -49,7 +49,7 @@ public enum Database {
     } catch (Exception e) {
       if (logger.isDebugEnabled())
         logger.debug("test: " + e);
-      sqlException +=2;
+      sqlException += (2^1);
       return false;
     }
   }
@@ -73,7 +73,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("getMapsOfLanguages: " + e);
-      sqlException += 4;
+      sqlException += (2^2);
     }
     return new Composite<Map<String, Language>, Map<String, Language>>(mapOfLanguagesById, mapOfLanguagesByIsoCode);
   }
@@ -90,7 +90,7 @@ public enum Database {
         set = statement.executeQuery();
       } catch (SQLException e) {
         logger.error("listBooks: statement=" + statement + "\n" + e);
-        sqlException += 8;
+        sqlException += (2^3);
         return result;
       }
       // if (logger.isTraceEnabled())
@@ -143,7 +143,7 @@ public enum Database {
           setLanguages = stmtBooksLanguagesLink.executeQuery();
         } catch (SQLException e) {
           logger.error("listBooks: bookId=" + bookId + "\nstmtBooksLanguageLink=" + stmtBooksLanguagesLink + "\n" + e);
-          sqlException += 16;
+          sqlException += (2^4);
           return result;
         }
         step=21;
@@ -198,7 +198,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listBooks: step=" + step + "\n" + e);
-      sqlException += 32;
+      sqlException += (2^5);
     }
     return result;
   }
@@ -218,7 +218,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listAuthors: " + e);
-      sqlException += 64;
+      sqlException += (2^6);
     }
     return result;
   }
@@ -238,7 +238,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listPublishers: " + e);
-      sqlException += 128;
+      sqlException += (2^7);
     }
     return result;
   }
@@ -258,7 +258,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listSeries: " + e);
-      sqlException += 6256;
+      sqlException += (2^8);
     }
     return result;
   }
@@ -281,7 +281,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listFilesByBook: " + e);
-      sqlException += 512;
+      sqlException += (2^9);
     }
     return result;
   }
@@ -307,7 +307,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listAuthorsByBook: " + e);
-      sqlException += 1024;
+      sqlException += (2^10);
     }
     return result;
   }
@@ -333,7 +333,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listPublishersByBook: " + e);
-      sqlException += 2048;
+      sqlException += (2^11);
     }
     return result;
   }
@@ -359,7 +359,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listTagsByBookId: " + e);
-      sqlException += 4096;
+      sqlException += (2^12);
     }
     return result;
   }
@@ -385,7 +385,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listSeriesByBookId: " + e);
-      sqlException += 8192;
+      sqlException += (2^13);
     }
     return result;
   }
@@ -407,7 +407,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("listCommentsByBookId: " + e);
-      sqlException += 16384;
+      sqlException += (2^14);
     }
     return result;
   }
@@ -443,7 +443,7 @@ public enum Database {
       }
     } catch (SQLException e) {
       logger.error("getMapOfSavedSearches: " + e);
-      sqlException += 32768;
+      sqlException += (2^15);
     }
     return result;
   }
@@ -456,5 +456,42 @@ public enum Database {
    */
   public int wasSqlEsception() {
     return sqlException;
+  }
+
+  /**
+   * Get the list of Custom Column type definitions
+   *
+   * @return
+   */
+  public List<CustomColumnType> getlistOfCustoColumnTypes() {
+    List<CustomColumnType> result = new LinkedList<CustomColumnType>();
+    PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DEFINITION.getStatement();
+    try {
+      ResultSet set = statement.executeQuery();
+    } catch (SQLException e) {
+      logger.error("getlistOfCustoColumnTypes: " + e);
+      sqlException += (2^16);
+    }
+
+    return result;
+  }
+
+  /**
+   * Get the list of custom column values by Book Id.
+   *
+   * @return
+   */
+  public Map<String, CustomColumnValue> getMapofCustomColumnValuesbyBookId () {
+    Map<String, CustomColumnValue> result = new HashMap<String, CustomColumnValue>();
+    // TODO Work out correct SQL Statement as table name varies by custom column type)
+    PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DEFINITION.getStatement();
+    try {
+      ResultSet set = statement.executeQuery();
+    } catch (SQLException e) {
+      logger.error("getMapofCustomColumnValuesbyBookId: " + e);
+      sqlException += (2^17);
+    }
+
+    return result;
   }
 }

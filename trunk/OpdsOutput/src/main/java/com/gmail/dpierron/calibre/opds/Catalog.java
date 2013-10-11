@@ -621,10 +621,8 @@ public class Catalog {
 
       callback.startCreateMainCatalog();
 
-      long now = System.currentTimeMillis();
-
       callback.startReadDatabase();
-      now = System.currentTimeMillis();
+      Long now = System.currentTimeMillis();
 
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());

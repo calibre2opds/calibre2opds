@@ -7,7 +7,6 @@ import com.gmail.dpierron.tools.Composite;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Vector;
 
 public class StanzaDefaultConfiguration extends DefaultConfiguration implements ReadOnlyStanzaConfigurationInterface {
@@ -44,11 +43,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getMinimizeChangedFiles() {
-    return StanzaConstants.MINIMIZECHANGEDFILES;
+    return StanzaConstants.MINIMIZE_CHANGED_FILES;
   }
 
   public boolean getExternalIcons() {
-    return StanzaConstants.EXTERNALICONS;
+    return StanzaConstants.USE_EXTERNAL_ICONS;
   }
 
   public boolean getSaveBandwidth() {
@@ -70,19 +69,19 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
 
   public boolean getGenerateOpds() {
-    return StanzaConstants.GENERATEOPDS;
+    return StanzaConstants.GENERATE_OPDS;
   }
 
   public boolean getGenerateHtml() {
-    return StanzaConstants.GENERATEHTML;
+    return StanzaConstants.GENERATE_HTML;
   }
 
   public boolean getGenerateOpdsDownloads() {
-    return StanzaConstants.GENERATEOPDSDOWNLOADS;
+    return StanzaConstants.GENERATE_OPDS_DOWNLOADS;
   }
 
   public boolean getGenerateHtmlDownloads() {
-    return StanzaConstants.GENERATEHTMLDOWNLOADS;
+    return StanzaConstants.GENERATE_HTML_DOWNLOADS;
   }
 
   public boolean getSuppressRatingsInTitles() {
@@ -90,7 +89,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getGenerateDownloads() {
-    return StanzaConstants.GENERATEDOWNLOADS;
+    return StanzaConstants.GENERATE_DOWNLOADS;
   }
 
   public int getMaxBeforeSplit() {
@@ -102,7 +101,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public String getSplitTagsOn() {
-    return StanzaConstants.SPLITTAGSON;
+    return StanzaConstants.SPLIT_TAGS_ON;
   }
 
   public boolean getIncludeBooksWithNoFile() {
@@ -138,27 +137,31 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getGenerateAuthors() {
-    return StanzaConstants.generateAuthors;
+    return StanzaConstants.GENERATE_AUTHORS;
   }
 
   public boolean getGenerateTags() {
-    return StanzaConstants.generateTags;
+    return StanzaConstants.GENERATE_TAGS;
+  }
+
+  public String getTagsToIgnore() {
+    return StanzaConstants.TAGS_TO_IGNOREp;
   }
 
   public boolean getGenerateSeries() {
-    return StanzaConstants.generateSeries;
+    return StanzaConstants.GENERATE_SERIES;
   }
 
   public boolean getGenerateRecent() {
-    return StanzaConstants.generateRecent;
+    return StanzaConstants.GENERATE_RECENT;
   }
 
   public boolean getGenerateRatings() {
-    return StanzaConstants.generateRatings;
+    return StanzaConstants.GENERATE_RATINGS;
   }
 
   public boolean getGenerateAllbooks() {
-    return StanzaConstants.generateAllbooks;
+    return StanzaConstants.GENERATE_ALLBOOKS;
   }
 
   public File getTargetFolder() {
@@ -174,7 +177,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getBrowseByCover() {
-    return StanzaConstants.browseByCover;
+    return StanzaConstants.NTOWSE_BY_COVER;
   }
 
   public boolean getLanguageAsTag() {
@@ -186,7 +189,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getIncludeAboutLink() {
-    return StanzaConstants.includeAboutLink;
+    return StanzaConstants.INCLUDE_ABOUT_LINK;
   }
 
   public boolean getPublishedDateAsYear() {
@@ -194,7 +197,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public String getTagsToMakeDeep() {
-    return StanzaConstants.tagsToMakeDeep;
+    return StanzaConstants.TAGS_TO_MAKE_DEEP;
   }
 
   public boolean getBrowseByCoverWithoutSplit() {

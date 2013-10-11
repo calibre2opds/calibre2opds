@@ -50,10 +50,11 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
   private final static String PROPERTY_NAME_LANGUAGEASTAG = "LanguageAsTag";
+  private final static String PROPERTY_NAME_TAGSTOIGNORE = "TagsToIgnore";
   private final static String PROPERTY_NAME_EXTERNALICONS = "ExternalIcons";
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
   private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
-  private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TagsToMakeDeep";
+  private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TAGS_TO_MAKE_DEEP";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
   private final static String PROPERTY_NAME_MAXBOOKSUMMARYLENGTH = "MaxBookSummaryLength";
   private final static String PROPERTY_NAME_GENERATEAUTHORS = "GenerateAuthors";
@@ -907,6 +908,32 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setIncludeAboutLink(boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEABOUTLINK, value);
+  }
+
+  public boolean isTagsToIgnoreReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_TAGSTOIGNORE);
+  }
+
+  private List<String> tokenizedTagsToIgnore;
+
+  public List<String> getTokenizedTagsToIgnore() {
+    if (tokenizedTagsToIgnore == null) {
+      tokenizedTagsToIgnore = Helper.tokenize(getTagsToIgnore().toUpperCase(), ",", true);
+    }
+    return tokenizedTagsToIgnore;
+  }
+
+  public String getTagsToIgnore() {
+    String s = getProperty(PROPERTY_NAME_TAGSTOIGNORE);
+    if (s == null)
+      return defaults.getTagsToIgnore();
+    else
+      return s;
+  }
+
+  public void setTagsToIgnore(String value) {
+    setProperty(PROPERTY_NAME_TAGSTOIGNORE, value);
+    tokenizedTagsToIgnore = null;
   }
 
   public boolean isTagsToMakeDeepReadOnly() {
