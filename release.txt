@@ -105,6 +105,8 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 v3.3
+    - Fix: #c2o-161: The "Language as Tag" value being inverted when saved
+
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
