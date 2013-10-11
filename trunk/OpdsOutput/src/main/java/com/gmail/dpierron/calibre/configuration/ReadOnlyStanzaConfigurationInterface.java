@@ -154,6 +154,11 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeModifiedInBookDetails();
 
+  /*  Advanced */
+
+  public boolean getIncludeCoversInCatalog();
+
+
   /* external links */
 
   public String getWikipediaUrl();

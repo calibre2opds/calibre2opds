@@ -80,6 +80,7 @@ public class StanzaConstants {
   public final static boolean IncludeModifiedInBookDetails = false;
   public final static boolean DisplayAuthorSortInBookDetails = false;
   public final static boolean DisplayTitleSortInBookDetails = false;
+  public final static boolean IncludeCoversInCatalog = false;
   /* Strings names for default URL's in Localization files */
   public final static String AMAZON_AUTHORS_URL_DEFAULT = "config.AmazonAuthorUrl.default";
   public final static String AMAZON_ISBN_URL_DEFAULT = "config.AmazonIsbnUrl.default";

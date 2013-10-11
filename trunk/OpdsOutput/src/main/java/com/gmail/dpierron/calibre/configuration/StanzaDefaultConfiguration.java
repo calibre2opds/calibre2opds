@@ -232,6 +232,9 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.OrderAllBooksBySeries;
   }
 
+  public boolean getIncludeCoversInCatalog() {
+    return StanzaConstants.IncludeCoversInCatalog;
+  }
   public String getAmazonAuthorUrl() {
     return Localization.Main.getText(StanzaConstants.AMAZON_AUTHORS_URL_DEFAULT);
   }

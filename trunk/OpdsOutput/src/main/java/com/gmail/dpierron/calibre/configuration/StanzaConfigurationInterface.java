@@ -135,6 +135,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setUrlBooks(String value);
 
+  public void setIncludeCoversInCatalog(boolean value);
+
   /* external links */
   public void setWikipediaUrl(String value);
 

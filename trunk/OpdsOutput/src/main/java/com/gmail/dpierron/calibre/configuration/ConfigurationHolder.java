@@ -116,6 +116,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
   private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
+  /* Advanced */
+  private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -1609,6 +1611,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
     if (b == null)
       return defaults.getIncludePublisherInBookDetails();
+    else
+      return b.booleanValue();
+  }
+
+
+  public void setIncludeCoversInCatalog(boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG, value);
+  }
+
+  public boolean isIncludeCoversInCatalogReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
+  }
+
+  public boolean getIncludeCoversInCatalog() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
+    if (b == null)
+      return defaults.getIncludeCoversInCatalog();
     else
       return b.booleanValue();
   }
