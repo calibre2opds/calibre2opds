@@ -90,6 +90,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-156: Allow Calibre Custom Column values to be treated like additional tags
     - #c2o-157: Allow Calibre Custom Column values to be used in calibre2opds search criteria
     - #c2o-158: Improve performance by avoiding generating unchanged pages
+    - #c2o-160: Allow Books to be on a different URL to the catalog
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -105,7 +106,7 @@ that have been recorded in the Issue tracker.
 
 v3.3
 
-v3.2
+v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
               Using a wiki also allows for users to update it directly which should help with improving the documentation.
     - Change: Reworked the way that filenames within the catalog are derived.   Should mean that filenames are shorter

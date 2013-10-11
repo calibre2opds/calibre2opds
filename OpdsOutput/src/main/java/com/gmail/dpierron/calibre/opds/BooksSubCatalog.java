@@ -508,7 +508,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     for (EBookFile file : book.getFiles()) {
       // prepare to copy the ebook file
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: prepare to copy the ebook file " + file.getName());
-      // ITIMPI  Why is EPUB treated as a special case?
+      // TODO ITIMPI  Why is EPUB treated as a special case?
       if (file.getFormat() == EBookFormat.EPUB)
         catalogManager.addFileToTheMapOfFilesToCopy(file.getFile(), book);
       else

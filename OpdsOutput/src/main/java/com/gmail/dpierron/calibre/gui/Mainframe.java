@@ -613,17 +613,17 @@ public class Mainframe extends javax.swing.JFrame {
     lblCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
     txtUrlBooks.setText(currentProfile.getUrlBooks());
     // Temporary until we actually make use of this field
-    txtUrlBooks.setEnabled(false);
-    lblUrlBooks.setEnabled(false);
-    //txtUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
-    //lblUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
+    // txtUrlBooks.setEnabled(false);
+    // lblUrlBooks.setEnabled(false);
+    txtUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
+    lblUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
     txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
     lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
     txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
     lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
-    chkLanguageAsTag.setSelected(!currentProfile.getLanguageAsTag());
+    chkLanguageAsTag.setSelected(currentProfile.getLanguageAsTag());
     chkLanguageAsTag.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
     lblLang.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
     chkNoThumbnailGenerate.setSelected(!currentProfile.getThumbnailGenerate());
@@ -727,52 +727,58 @@ public class Mainframe extends javax.swing.JFrame {
 
     chkNogenerateopdsfiles.setSelected(!currentProfile.getGenerateDownloads());
     chkNogenerateopdsfiles.setEnabled(!currentProfile.isGenerateDownloadsReadOnly());
-    lblNogenerateopdsfiles.setEnabled(!currentProfile.isGenerateDownloadsReadOnly());
+    lblNogenerateopdsfiles.setEnabled(chkNogenerateopdsfiles.isEnabled());
     chkCryptFilenames.setSelected(currentProfile.getCryptFilenames());
     chkCryptFilenames.setEnabled(!currentProfile.isCryptFilenamesReadOnly());
-    lblCryptFilenames.setEnabled(!currentProfile.isCryptFilenamesReadOnly());
+    lblCryptFilenames.setEnabled(chkCryptFilenames.isEnabled());
     chkNoShowSeries.setSelected(!currentProfile.getShowSeriesInAuthorCatalog());
     chkNoShowSeries.setEnabled(!currentProfile.isShowSeriesInAuthorCatalogReadOnly());
-    lblNoShowSeries.setEnabled(!currentProfile.isShowSeriesInAuthorCatalogReadOnly());
+    lblNoShowSeries.setEnabled(chkNoShowSeries.isEnabled());
     chkOrderAllBooksBySeries.setSelected(currentProfile.getOrderAllBooksBySeries());
     chkOrderAllBooksBySeries.setEnabled(!currentProfile.isOrderAllBooksBySeriesReadOnly());
-    lblOrderAllBooksBySeries.setEnabled(!currentProfile.isOrderAllBooksBySeriesReadOnly());
+    lblOrderAllBooksBySeries.setEnabled(chkOrderAllBooksBySeries.isEnabled());
     chkSplitByAuthorInitialGoToBooks.setSelected(currentProfile.getSplitByAuthorInitialGoToBooks());
     chkSplitByAuthorInitialGoToBooks.setEnabled(!currentProfile.isSplitByAuthorInitialGoToBooksReadOnly());
-    chkSplitByAuthorInitialGoToBooks.setEnabled(!currentProfile.isSplitByAuthorInitialGoToBooksReadOnly());
+    lblSplitByAuthorInitialGoToBooks.setEnabled(chkSplitByAuthorInitialGoToBooks.isEnabled());
     txtCatalogFilter.setText("" + currentProfile.getCatalogFilter());
     txtCatalogFilter.setEnabled(!currentProfile.isCatalogFilterReadOnly());
-    lblCatalogFilter.setEnabled(!currentProfile.isCatalogFilterReadOnly());
+    lblCatalogFilter.setEnabled(txtCatalogFilter.isEnabled());
     chkNoGenerateAuthors.setSelected(!currentProfile.getGenerateAuthors());
     chkNoGenerateAuthors.setEnabled(!currentProfile.isGenerateAuthorsReadOnly());
-    lblNoGenerateAuthors.setEnabled(!currentProfile.isGenerateAuthorsReadOnly());
+    lblNoGenerateAuthors.setEnabled(chkNoGenerateAuthors.isEnabled());
     chkNoGenerateTags.setSelected(!currentProfile.getGenerateTags());
     chkNoGenerateTags.setEnabled(!currentProfile.isGenerateTagsReadOnly());
-    lblNoGenerateTags.setEnabled(!currentProfile.isGenerateTagsReadOnly());
+    lblNoGenerateTags.setEnabled(chkNoGenerateTags.isEnabled());
+    txtTagsToIgnore.setText("" + currentProfile.getTagsToIgnore());
+    txtTagsToIgnore.setEnabled(!currentProfile.isTagsToIgnoreReadOnly());
+    lblTagsToIgnore.setEnabled(txtTagsToIgnore.isEnabled());
+    txtTagsToMakeDeep.setText("" + currentProfile.getTagsToMakeDeep());
+    txtTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
+    lblTagsToMakeDeep.setEnabled(txtTagsToMakeDeep.isEnabled());
     chkNoGenerateSeries.setSelected(!currentProfile.getGenerateSeries());
     chkNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
-    lblNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
+    lblNoGenerateSeries.setEnabled(chkNoGenerateSeries.isEnabled());
     chkNogeneraterecent.setSelected(!currentProfile.getGenerateRecent());
     chkNogeneraterecent.setEnabled(!currentProfile.isGenerateRecentReadOnly());
-    lblNogeneraterecent.setEnabled(!currentProfile.isGenerateRecentReadOnly());
+    lblNogeneraterecent.setEnabled(chkNogeneraterecent.isEnabled());
     chkNogenerateratings.setSelected(!currentProfile.getGenerateRatings());
     chkNogenerateratings.setEnabled(!currentProfile.isGenerateRatingsReadOnly());
-    lblNogenerateratings.setEnabled(!currentProfile.isGenerateRatingsReadOnly());
+    lblNogenerateratings.setEnabled(chkNogenerateratings.isEnabled());
     chkNogenerateallbooks.setSelected(!currentProfile.getGenerateAllbooks());
     chkNogenerateallbooks.setEnabled(!currentProfile.isGenerateAllbooksReadOnly());
-    lblNogenerateallbooks.setEnabled(!currentProfile.isGenerateAllbooksReadOnly());
+    lblNogenerateallbooks.setEnabled(chkNogenerateallbooks.isEnabled());
     chkDisplayAuthorSortInAuthorLists.setSelected(currentProfile.getDisplayAuthorSortInAuthorLists());
     chkDisplayAuthorSortInAuthorLists.setEnabled(!currentProfile.isDisplayAuthorSortInAuthorListsReadOnly());
-    lblDisplayAuthorSortInAuthorLists.setEnabled(!currentProfile.isDisplayAuthorSortInAuthorListsReadOnly());
+    lblDisplayAuthorSortInAuthorLists.setEnabled(chkDisplayAuthorSortInAuthorLists.isEnabled());
     chkDisplayTitleSortInBookLists.setSelected(currentProfile.getDisplayTitleSortInBookLists());
     chkDisplayTitleSortInBookLists.setEnabled(!currentProfile.isDisplayTitleSortInBookListsReadOnly());
-    lblDisplayTitleSortInBookLists.setEnabled(!currentProfile.isDisplayTitleSortInBookListsReadOnly());
+    lblDisplayTitleSortInBookLists.setEnabled(chkDisplayTitleSortInBookLists.isEnabled());
     chkSortUsingAuthorSort.setSelected(currentProfile.getSortUsingAuthor());
     chkSortUsingAuthorSort.setEnabled(!currentProfile.isSortUsingAuthorReadOnly());
-    lblSortUsingAuthor.setEnabled(!currentProfile.isSortUsingAuthorReadOnly());
+    lblSortUsingAuthor.setEnabled(chkSortUsingAuthorSort.isEnabled());
     chkSortUsingTitleSort.setSelected(currentProfile.getSortUsingTitle());
     chkSortUsingTitleSort.setEnabled(!currentProfile.isSortUsingTitleReadOnly());
-    lblSortUsingTitle.setEnabled(!currentProfile.isSortUsingTitleReadOnly());
+    lblSortUsingTitle.setEnabled(chkSortUsingTitleSort.isEnabled());
 
     // Book Details
 
@@ -815,9 +821,6 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Advanced
 
-    txtTagsToMakeDeep.setText("" + currentProfile.getTagsToMakeDeep());
-    txtTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
-    lblTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
     txtMinBooksToMakeDeepLevel.setText("" + currentProfile.getMinBooksToMakeDeepLevel());
     txtMinBooksToMakeDeepLevel.setInputVerifier(iv);
     txtMinBooksToMakeDeepLevel.setEnabled(!currentProfile.isMinBooksToMakeDeepLevelReadOnly());
@@ -825,8 +828,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtMaxMobileResolution.setText("" + currentProfile.getMaxMobileResolution());
     txtMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
     lblMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
-    txtMaxMobileResolution.setVisible(false);   // Not currently being used
-    lblMaxMobileResolution.setVisible(false);   // Not currently being used
+    // txtMaxMobileResolution.setVisible(false);   // Not currently being used
+    // lblMaxMobileResolution.setVisible(false);   // Not currently being used
 
     /* external links */
     txtWikipediaUrl.setText(currentProfile.getWikipediaUrl());
@@ -969,6 +972,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setGenerateRatings(!chkNogenerateratings.isSelected());
     currentProfile.setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
     currentProfile.setLanguageAsTag(chkLanguageAsTag.isSelected());
+    currentProfile.setTagsToIgnore(txtTagsToIgnore.getText());
     currentProfile.setDisplayAuthorSortInAuthorLists(chkDisplayAuthorSortInAuthorLists.isSelected());
     currentProfile.setDisplayTitleSortInBookListss(chkDisplayTitleSortInBookLists.isSelected());
     currentProfile.setSortUsingAuthor(chkSortUsingAuthorSort.isSelected());
@@ -995,7 +999,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setCoverResize(!chkNoCoverResize.isSelected());
     currentProfile.setThumbnailGenerate(!chkNoThumbnailGenerate.isSelected());
     i = getValue(txtMinBooksToMakeDeepLevel);
-    if (i > -1)
+    if (i >= -1)
       currentProfile.setMinBooksToMakeDeepLevel(i);
     i = getValue(txtMaxMobileResolution);
     if (i > -1)
@@ -1143,6 +1147,12 @@ public class Mainframe extends javax.swing.JFrame {
     lblNoGenerateTags.setText(Localization.Main.getText("config.GenerateTags.label")); // NOI18N
     lblNoGenerateTags.setToolTipText(Localization.Main.getText("config.GenerateTags.description")); // NOI18N
     chkNoGenerateTags.setToolTipText(lblNoGenerateTags.getToolTipText()); // NOI18N
+    lblTagsToIgnore.setText(Localization.Main.getText("config.TagsToIgnore.label")); // NOI18N
+    lblTagsToIgnore.setToolTipText(Localization.Main.getText("config.TagsToIgnore.description")); // NOI18N
+    txtTagsToIgnore.setToolTipText(lblTagsToIgnore.getToolTipText()); // NOI18N
+    lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
+    lblTagsToMakeDeep.setToolTipText(Localization.Main.getText("config.TagsToMakeDeep.description")); // NOI18N
+    txtTagsToMakeDeep.setToolTipText(lblTagsToMakeDeep.getToolTipText()); // NOI18N
     lblNoGenerateSeries.setText(Localization.Main.getText("config.GenerateSeries.label")); // NOI18N
     lblNoGenerateSeries.setToolTipText(Localization.Main.getText("config.GenerateSeries.description")); // NOI18N
     chkNoGenerateSeries.setToolTipText(lblNoGenerateSeries.getToolTipText()); // NOI18N
@@ -1263,9 +1273,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblCoverHeight.setText(Localization.Main.getText("config.CoverHeight.label")); // NOI18N
     lblCoverHeight.setToolTipText(Localization.Main.getText("config.CoverHeight.description")); // NOI18N
     txtCoverHeight.setToolTipText(lblCoverHeight.getToolTipText()); // NOI18N
-    lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
-    lblTagsToMakeDeep.setToolTipText(Localization.Main.getText("config.TagsToMakeDeep.description")); // NOI18N
-    txtTagsToMakeDeep.setToolTipText(lblTagsToMakeDeep.getToolTipText()); // NOI18N
     lblMinBooksToMakeDeepLevel.setText(Localization.Main.getText("config.MinBooksToMakeDeepLevel.label")); // NOI18N
     lblMinBooksToMakeDeepLevel.setToolTipText(Localization.Main.getText("config.MinBooksToMakeDeepLevel.description")); // NOI18N
     txtMinBooksToMakeDeepLevel.setToolTipText(lblMinBooksToMakeDeepLevel.getToolTipText()); // NOI18N
@@ -1581,6 +1588,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkSortUsingTitleSort = new javax.swing.JCheckBox();
         lblLanguageAsTag = new javax.swing.JLabel();
         chkLanguageAsTag = new javax.swing.JCheckBox();
+        lblTagsToIgnore = new javax.swing.JLabel();
+        txtTagsToIgnore = new javax.swing.JTextField();
         javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
@@ -1621,8 +1630,6 @@ public class Mainframe extends javax.swing.JFrame {
         chkIncludeemptybooks = new javax.swing.JCheckBox();
         lblThumbnailheight = new javax.swing.JLabel();
         txtThumbnailheight = new javax.swing.JTextField();
-        lblTagsToMakeDeep = new javax.swing.JLabel();
-        txtTagsToMakeDeep = new javax.swing.JTextField();
         lblMinBooksToMakeDeepLevel = new javax.swing.JLabel();
         txtMinBooksToMakeDeepLevel = new javax.swing.JTextField();
         txtCoverHeight = new javax.swing.JTextField();
@@ -1655,6 +1662,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkCryptFilenames = new javax.swing.JCheckBox();
         chkNobandwidthoptimize = new javax.swing.JCheckBox();
         lblNobandwidthoptimize = new javax.swing.JLabel();
+        txtTagsToMakeDeep = new javax.swing.JTextField();
+        lblTagsToMakeDeep = new javax.swing.JLabel();
         pnlExternalUrlsOptions = new javax.swing.JPanel();
         lblWikipediaUrl = new javax.swing.JLabel();
         txtWikipediaUrl = new javax.swing.JTextField();
@@ -2325,7 +2334,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNogenerateratings, gridBagConstraints);
@@ -2333,7 +2342,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2348,13 +2357,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNogenerateallbooks, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2369,7 +2378,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSupressRatings, gridBagConstraints);
@@ -2377,7 +2386,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2433,7 +2442,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNoGenerateSeries, gridBagConstraints);
@@ -2446,13 +2455,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNogeneraterecent, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkNogeneraterecent, gridBagConstraints);
@@ -2490,7 +2499,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkNoGenerateTags, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkNoGenerateSeries, gridBagConstraints);
@@ -2503,13 +2512,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNoShowSeries, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2524,13 +2533,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblOrderAllBooksBySeries, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2545,13 +2554,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSplitByAuthorInitialGoToBooks, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2566,7 +2575,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayAuthorSortInAuthorLists, gridBagConstraints);
@@ -2579,7 +2588,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayTitleSortInBookLists, gridBagConstraints);
@@ -2592,7 +2601,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingAuthor, gridBagConstraints);
@@ -2605,13 +2614,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingTitle, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2619,7 +2628,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayAuthorSortInAuthorLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2627,7 +2636,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayTitleSortInBookLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2635,7 +2644,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkSortUsingAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2663,6 +2672,30 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkLanguageAsTag, gridBagConstraints);
+
+        lblTagsToIgnore.setText("lblTagsToIgnore");
+        lblTagsToIgnore.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblTagsToIgnore, gridBagConstraints);
+
+        txtTagsToIgnore.setText("txtTagsToIgnore");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(txtTagsToIgnore, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
@@ -2815,7 +2848,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogeneratecrosslinks, gridBagConstraints);
@@ -2823,7 +2856,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -2837,7 +2870,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogenerateexternallinks, gridBagConstraints);
@@ -2849,7 +2882,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
@@ -3088,30 +3121,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtThumbnailheight, gridBagConstraints);
-
-        lblTagsToMakeDeep.setText("lblTagsToMakeDeep");
-        lblTagsToMakeDeep.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(lblTagsToMakeDeep, gridBagConstraints);
-
-        txtTagsToMakeDeep.setText("txtTagsToMakeDeep");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(txtTagsToMakeDeep, gridBagConstraints);
 
         lblMinBooksToMakeDeepLevel.setText("lblMinBooksToMakeDeepLevel");
         lblMinBooksToMakeDeepLevel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -3484,6 +3493,30 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(lblNobandwidthoptimize, gridBagConstraints);
         lblNobandwidthoptimize.getAccessibleContext().setAccessibleName("Regenerate all thumbnail images ");
+
+        txtTagsToMakeDeep.setText("txtTagsToMakeDeep");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(txtTagsToMakeDeep, gridBagConstraints);
+
+        lblTagsToMakeDeep.setText("lblTagsToMakeDeep");
+        lblTagsToMakeDeep.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(lblTagsToMakeDeep, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlAdvancedOptions", pnlAdvancedOptions);
 
@@ -4497,6 +4530,10 @@ public class Mainframe extends javax.swing.JFrame {
         checkOpdsDownloads();        // TODO add your handling code here:
     }//GEN-LAST:event_chkNogenerateopdsMouseClicked
 
+    private void txtTagsToIgnoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTagsToIgnoreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTagsToIgnoreActionPerformed
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -4729,6 +4766,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblSplitByAuthorInitialGoToBooks;
     private javax.swing.JLabel lblSplittagson;
     private javax.swing.JLabel lblSupressRatings;
+    private javax.swing.JLabel lblTagsToIgnore;
     private javax.swing.JLabel lblTagsToMakeDeep;
     private javax.swing.JLabel lblTargetFolder;
     private javax.swing.JLabel lblThumbnailheight;
@@ -4800,6 +4838,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtMaxsummarylength;
     private javax.swing.JTextField txtMinBooksToMakeDeepLevel;
     private javax.swing.JTextField txtSplittagson;
+    private javax.swing.JTextField txtTagsToIgnore;
     private javax.swing.JTextField txtTagsToMakeDeep;
     private javax.swing.JTextField txtTargetFolder;
     private javax.swing.JTextField txtThumbnailheight;
