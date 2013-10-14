@@ -106,6 +106,7 @@ that have been recorded in the Issue tracker.
 
 v3.3
     - Fix: #c2o-161: The "Language as Tag" value being inverted when saved
+    - Fix: #c20-163: If you do multiple generation runs without reloading calibre2opds the catalogs are not correctly generated.
 
 
 v3.2 (released 6th October 2013)

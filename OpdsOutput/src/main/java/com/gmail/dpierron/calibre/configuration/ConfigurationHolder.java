@@ -1348,11 +1348,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     if (s == null) {
       s = defaults.getUrlBooks();
     } else {
-      if (Helper.isNotNullOrEmpty(s) && (! s.endsWith(Constants.FOLDER_SEPARATOR)))
+      if (Helper.isNotNullOrEmpty(s) && (! s.endsWith(Constants.FOLDER_SEPARATOR))) {
         s+= Constants.FOLDER_SEPARATOR;
+      }
       // Ignore a simple / as the base Url
-      if (s.equals(Constants.FOLDER_SEPARATOR));
+      if (s.equals(Constants.FOLDER_SEPARATOR)) {
         s = "";
+      }
     }
     return s;
   }

@@ -22,7 +22,7 @@ import java.util.prefs.BackingStoreException;
 public enum CachedFileManager {
   INSTANCE;
   private final static Logger logger = Logger.getLogger(CachedFileManager.class);
-  private Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
+  private static Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
   private File cacheFile = null;
 
   public void initialize() {

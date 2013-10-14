@@ -421,8 +421,8 @@ public class Catalog {
     long countCovers;       // Count of image files that are generated/updated
 
     // reinitialize caches (in case of multiple calls in the same session)
-    CachedFileManager.INSTANCE.initialize();
     CatalogContext.INSTANCE.initialize();
+    CatalogContext.INSTANCE.catalogManager.reset();
     CatalogContext.INSTANCE.callback = callback;
 
     Localization.Main.reloadLocalizations();
@@ -740,7 +740,8 @@ public class Catalog {
         if (logger.isTraceEnabled())
           logger.trace("Loading Cache");
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
-        CachedFileManager.INSTANCE.loadCache();
+        // CachedFileManager.INSTANCE.loadCache();
+        CachedFileManager.INSTANCE.initialize();
       } else {
         if (logger.isTraceEnabled())
           logger.trace("Deleting Cache");

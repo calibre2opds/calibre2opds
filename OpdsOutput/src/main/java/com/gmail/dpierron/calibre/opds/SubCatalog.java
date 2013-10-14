@@ -21,18 +21,18 @@ import java.util.zip.CRC32;
 public abstract class SubCatalog {
   // cache some widely used objects.
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
-  protected final static CatalogManager catalogManager = CatalogContext.INSTANCE.catalogManager; // cache as optimization
-  protected final static HtmlManager htmlManager = CatalogContext.INSTANCE.htmlManager;
-  protected final static ImageManager coverManager = CatalogContext.INSTANCE.coverManager;
-  protected final static ThumbnailManager thumbnailManager = CatalogContext.INSTANCE.thumbnailManager;
-  protected final static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  protected static CatalogManager catalogManager = CatalogContext.INSTANCE.catalogManager; // cache as optimization
+  protected static HtmlManager htmlManager = CatalogContext.INSTANCE.htmlManager;
+  protected static ImageManager coverManager = CatalogContext.INSTANCE.coverManager;
+  protected static ThumbnailManager thumbnailManager = CatalogContext.INSTANCE.thumbnailManager;
+  protected static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
   // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
-  protected final static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
-  protected final static int maxSplitLevels = currentProfile.getMaxSplitLevels();
-  protected final static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
-  protected final static boolean useExternalIcons = currentProfile.getExternalIcons();
-  private final static String securityCode = catalogManager.getSecurityCode();
-  private final static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
+  protected static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
+  protected static int maxSplitLevels = currentProfile.getMaxSplitLevels();
+  protected static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
+  protected static boolean useExternalIcons = currentProfile.getExternalIcons();
+  private static String securityCode = catalogManager.getSecurityCode();
+  private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
 
   //  PROPERTIES
 

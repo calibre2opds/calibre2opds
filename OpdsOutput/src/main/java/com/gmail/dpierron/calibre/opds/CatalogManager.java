@@ -14,15 +14,15 @@ import java.util.zip.CRC32;
 
 public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
-  private File generateFolder;
-  public BookFilter featuredBooksFilter;
-  public List<Composite<String, String>> customCatalogs;
-  public Map<String, BookFilter> customCatalogsFilters;
-  private List<CachedFile> listOfFilesToCopy = new LinkedList<CachedFile>();
-  private List<String> listOfFilesPathsToCopy = new LinkedList<String>();
-  private Map<String, Book> mapOfBookByPathToCopy = new HashMap<String, Book>();
-  private Map<String, String> mapOfCatalogFolderNames = new HashMap<String, String>();
-  private List<File> bookEntriesFiles = new LinkedList<File>();
+  private static File generateFolder;
+  public static BookFilter featuredBooksFilter;
+  public static List<Composite<String, String>> customCatalogs;
+  public static Map<String, BookFilter> customCatalogsFilters;
+  private static List<CachedFile> listOfFilesToCopy;
+  private static List<String> listOfFilesPathsToCopy;
+  private static Map<String, Book> mapOfBookByPathToCopy;
+  private static Map<String, String> mapOfCatalogFolderNames;
+  private static List<File> bookEntriesFiles;
   private static String securityCode;
   private static String initialUrl;
 
@@ -41,6 +41,18 @@ public class CatalogManager {
     initialUrl = securityCode;
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
+  }
+
+  public void reset() {
+    generateFolder = null;
+    featuredBooksFilter = null;
+    customCatalogs = null;
+    customCatalogsFilters = null;
+    listOfFilesToCopy = new LinkedList<CachedFile>();
+    listOfFilesPathsToCopy = new LinkedList<String>();
+    mapOfBookByPathToCopy = new HashMap<String, Book>();
+    mapOfCatalogFolderNames = new HashMap<String, String>();
+    bookEntriesFiles = new LinkedList<File>();
   }
 
   public static String getSecurityCode() {

@@ -275,6 +275,7 @@ public enum ConfigurationManager {
   }
   
   // ITIMPI:  Method does not appear to be used anywhere!
+/*
   public File getConfigurationFile() {
     File configurationFolder = getConfigurationDirectory();
 
@@ -286,6 +287,7 @@ public enum ConfigurationManager {
       return null;
 
   }
+*/
 
   public boolean isHacksEnabled() {
     return Helper.isNotNullOrEmpty(System.getenv("CALIBRE2OPDS_HACKSENABLED"));
