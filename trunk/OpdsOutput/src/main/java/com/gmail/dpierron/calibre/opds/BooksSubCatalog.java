@@ -513,8 +513,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
         catalogManager.addFileToTheMapOfFilesToCopy(file.getFile(), book);
       else
         catalogManager.addFileToTheMapOfFilesToCopy(file.getFile());
-
-      entry.addContent(FeedHelper.getAcquisitionLink("../../" + FeedHelper.urlEncode(book.getPath(), true)
+      // Allowm for books on specific URL (#c2o-160)
+      String prefix = currentProfile.getUrlBooks();
+      if (Helper.isNullOrEmpty(prefix)) {
+        prefix = Constants.PARENT_PATH_PREFIX + Constants.PARENT_PATH_PREFIX ;
+      }
+      entry.addContent(FeedHelper.getAcquisitionLink(prefix + FeedHelper.urlEncode(book.getPath(), true)
           + Constants.FOLDER_SEPARATOR + FeedHelper.urlEncode(file.getName() + file.getExtension(), true),
           file.getFormat().getMime(), // Mime type
           Localization.Main.getText("bookentry.download", file.getFormat())));
