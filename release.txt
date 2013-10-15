@@ -91,6 +91,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-157: Allow Calibre Custom Column values to be used in calibre2opds search criteria
     - #c2o-158: Improve performance by avoiding generating unchanged pages
     - #c2o-160: Allow Books to be on a different URL to the catalog
+    - #c2o-164: Option to Publish only the generated catalog in Publish mode when Books URL specified 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you

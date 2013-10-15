@@ -11,6 +11,7 @@ public class StanzaConstants {
   public final static int MAX_SPLIT_LEVELS = 1;
   public final static int MAX_RECENT_ADDITIONS = 99999;
   public final static String CATALOGFOLDER = "_catalog";
+  public final static boolean ONLY_CATALOG_A_TTARGET = false;
   public final static String CATALOGTITLE = "Calibre library";
   public final static String WIKIPEDIA_LANGUAGE = "en";
   public final static String INCLUDEDFORMATS = "EPUB, PDF, RTF, TXT, PRC, PDB, MOBI, LRF, LRX, FB2";
@@ -19,7 +20,6 @@ public class StanzaConstants {
   public final static boolean GENERATE_OPDS_DOWNLOADS = true;
   public final static boolean GENERATE_HTML_DOWNLOADS = true;
   public final static boolean GENERATE_DOWNLOADS = true;
-  public final static boolean SAVEBANDWIDTH = true;
   public final static boolean MINIMIZE_CHANGED_FILES = true;
   public final static boolean USE_EXTERNAL_ICONS = false;
   public final static int THUMBNAIL_HEIGHT = 144;

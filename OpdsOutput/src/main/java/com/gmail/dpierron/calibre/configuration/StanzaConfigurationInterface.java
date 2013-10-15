@@ -21,6 +21,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setCatalogFolderName(String value);
 
+  public void setOnlyCatalogAtTarget(boolean value);
+
   public void setCatalogTitle(String value);
 
   public void setMaxBeforePaginate(int value);
@@ -30,8 +32,6 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
   public void setWikipediaLanguage(String value);
 
   public void setIncludedFormatsList(String value);
-
-  public void setSaveBandwidth(boolean value);
 
   public void setMinimizeChangedFiles(boolean value);
 

@@ -19,6 +19,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.CATALOGFOLDER;
   }
 
+  public boolean getOnlyCatalogAtTarget() {
+    return StanzaConstants.ONLY_CATALOG_A_TTARGET;
+  }
+
   public String getCatalogTitle() {
     if (Localization.Main.isInitialized())
       return Localization.Main.getText("main.title");
@@ -49,11 +53,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public boolean getExternalIcons() {
     return StanzaConstants.USE_EXTERNAL_ICONS;
   }
-
-  public boolean getSaveBandwidth() {
-    return StanzaConstants.SAVEBANDWIDTH;
-  }
-
 
   public boolean getCoverResize() {
     return StanzaConstants.COVER_RESIZE;
