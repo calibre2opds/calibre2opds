@@ -164,6 +164,19 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
+   * To enable HTML doloads to be enabled we must donwload links
+   * present in the OPDS files.  This means we cannot have HTML
+   * downloads if we have suppressed OPDS ones.   However if we
+   * have suppressed OPDS catalogs completely then the HTML setting
+   * should be a;;owed as we can generate the download link in the
+   * OPDS files we start with (and subsequently discard).
+   */
+  private void checkDownloads() {
+    if (chkNogenerateopds.isSelected()) {
+
+    }
+  }
+  /**
    * We do not allow HTML Downloads if OPDS Downloads are suppressed
    */
   private void checkHtmlDownloads() {
@@ -190,6 +203,15 @@ public class Mainframe extends javax.swing.JFrame {
         chkNogenerateopdsfiles.setEnabled(true);
         chkNogenerateopdsfiles.setSelected(false);
       }
+    }
+  }
+
+  /**
+   * Decide if the user should be able to specify the target folder.
+   */
+  void checkOnlyCatalogAtTarget() {
+    if (chkOnlyCatalogAtTarget.isSelected()) {
+
     }
   }
 
@@ -612,9 +634,6 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
     lblCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
     txtUrlBooks.setText(currentProfile.getUrlBooks());
-    // Temporary until we actually make use of this field
-    // txtUrlBooks.setEnabled(false);
-    // lblUrlBooks.setEnabled(false);
     txtUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
     lblUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
@@ -678,9 +697,6 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeOnlyOneFile.setSelected(currentProfile.getIncludeOnlyOneFile());
     chkIncludeOnlyOneFile.setEnabled(!currentProfile.isIncludeOnlyOneFileReadOnly());
     lblIncludeOnlyOneFile.setEnabled(!currentProfile.isIncludeOnlyOneFileReadOnly());
-    chkNobandwidthoptimize.setSelected(!currentProfile.getSaveBandwidth());
-    chkNobandwidthoptimize.setEnabled(!currentProfile.isSaveBandwidthReadOnly());
-    lblNobandwidthoptimize.setEnabled(!currentProfile.isSaveBandwidthReadOnly());
     chkNogenerateopds.setSelected(!currentProfile.getGenerateOpds());
     chkNogenerateopds.setEnabled(!currentProfile.isGenerateOpdsReadOnly());
     lblNogenerateopds.setEnabled(!currentProfile.isGenerateOpdsReadOnly());
@@ -951,7 +967,6 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setZipTrookCatalog(chkZipTrookCatalog.isSelected());
     currentProfile.setMinimizeChangedFiles(chkMinimizeChangedFiles.isSelected());
     currentProfile.setExternalIcons(chkExternalIcons.isSelected());
-    currentProfile.setSaveBandwidth(!chkNobandwidthoptimize.isSelected());
     currentProfile.setSuppressRatingsInTitles(chkSupressRatings.isSelected());
     currentProfile.setBrowseByCover(chkBrowseByCover.isSelected());
     currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
@@ -1092,6 +1107,11 @@ public class Mainframe extends javax.swing.JFrame {
     lblCopyToDatabaseFolder.setText(Localization.Main.getText("config.CopyToDatabaseFolder.label")); // NOI18N
     lblCopyToDatabaseFolder.setToolTipText(Localization.Main.getText("config.CopyToDatabaseFolder.description")); // NOI18N
     chkCopyToDatabaseFolder.setToolTipText(lblCopyToDatabaseFolder.getToolTipText()); // NOI18N
+    lblOnlyCatalogAtTarget.setText(Localization.Main.getText("config.OnlyCatalogAtTarget.label")); // NOI18N
+    lblOnlyCatalogAtTarget.setToolTipText(Localization.Main.getText("config.OnlyCatalogAtTarget.description")); // NOI18N
+    chkOnlyCatalogAtTarget.setToolTipText(lblOnlyCatalogAtTarget.getToolTipText()); // NOI18N
+    lblOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
+    chkOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
     lblReprocessEpubMetadata.setText(Localization.Main.getText("config.ReprocessEpubMetadata.label")); // NOI18N
     lblReprocessEpubMetadata.setToolTipText(Localization.Main.getText("config.ReprocessEpubMetadata.description")); // NOI18N
     chkReprocessEpubMetadata.setToolTipText(lblReprocessEpubMetadata.getToolTipText()); // NOI18N
@@ -1140,9 +1160,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblNogenerateopdsfiles.setText(Localization.Main.getText("config.GenerateOpdsDownloads.label")); // NOI18N
     lblNogenerateopdsfiles.setToolTipText(Localization.Main.getText("config.GenerateOpdsDownloads.description")); // NOI18N
     chkNogenerateopdsfiles.setToolTipText(lblNogenerateopdsfiles.getToolTipText()); // NOI18N
-    lblNobandwidthoptimize.setText(Localization.Main.getText("config.SaveBandwidth.label")); // NOI18N
-    lblNobandwidthoptimize.setToolTipText(Localization.Main.getText("config.SaveBandwidth.description")); // NOI18N
-    chkNobandwidthoptimize.setToolTipText(lblNobandwidthoptimize.getToolTipText()); // NOI18N
     lblExternalIcons.setText(Localization.Main.getText("config.ExternalIcons.label")); // NOI18N
     lblExternalIcons.setToolTipText(Localization.Main.getText("config.ExternalIcons.description")); // NOI18N
     chkExternalIcons.setToolTipText(lblExternalIcons.getToolTipText()); // NOI18N
@@ -1155,6 +1172,8 @@ public class Mainframe extends javax.swing.JFrame {
     lblTagsToIgnore.setText(Localization.Main.getText("config.TagsToIgnore.label")); // NOI18N
     lblTagsToIgnore.setToolTipText(Localization.Main.getText("config.TagsToIgnore.description")); // NOI18N
     txtTagsToIgnore.setToolTipText(lblTagsToIgnore.getToolTipText()); // NOI18N
+    lblTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
+    txtTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
     lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
     lblTagsToMakeDeep.setToolTipText(Localization.Main.getText("config.TagsToMakeDeep.description")); // NOI18N
     txtTagsToMakeDeep.setToolTipText(lblTagsToMakeDeep.getToolTipText()); // NOI18N
@@ -1277,7 +1296,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkNoCoverResize.setToolTipText(lblNoCoverResize.getToolTipText()); // NOI18N
     lblIncludeCoversInCatalog.setText(Localization.Main.getText("config.IncludeCoversInCatalog.label")); // NOI18N
     lblIncludeCoversInCatalog.setToolTipText(Localization.Main.getText("config.IncludeCoversInCatalog.description")); // NOI18N
-    chkGenerateIndex.setToolTipText(lblIncludeCoversInCatalog.getToolTipText()); // NOI18N
+    chkIncludeCoversInCatalog.setToolTipText(lblIncludeCoversInCatalog.getToolTipText()); // NOI18N
+    lblIncludeCoversInCatalog.setEnabled(false);    // TODO enable when support cody ready
+    chkIncludeCoversInCatalog.setEnabled(false);    // TODO enable when support code ready
     lblCoverHeight.setText(Localization.Main.getText("config.CoverHeight.label")); // NOI18N
     lblCoverHeight.setToolTipText(Localization.Main.getText("config.CoverHeight.description")); // NOI18N
     txtCoverHeight.setToolTipText(lblCoverHeight.getToolTipText()); // NOI18N
@@ -1296,12 +1317,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblGenerateIndex.setText(Localization.Main.getText("config.GenerateIndex.label")); // NOI18N
     lblGenerateIndex.setToolTipText(Localization.Main.getText("config.GenerateIndex.description")); // NOI18N
     chkGenerateIndex.setToolTipText(lblGenerateIndex.getToolTipText()); // NOI18N
-    lblFeaturedCatalogTitle.setText(Localization.Main.getText("config.FeaturedCatalogTitle.label")); // NOI18N
-    lblFeaturedCatalogTitle.setToolTipText(Localization.Main.getText("config.FeaturedCatalogTitle.description")); // NOI18N
-    txtFeaturedCatalogTitle.setToolTipText(lblFeaturedCatalogTitle.getToolTipText()); // NOI18N
-    lblFeaturedCatalogSavedSearchName.setText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.label")); // NOI18N
-    lblFeaturedCatalogSavedSearchName.setToolTipText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.description")); // NOI18N
-    txtFeaturedCatalogSavedSearchName.setToolTipText(lblFeaturedCatalogSavedSearchName.getToolTipText()); // NOI18N
 
     // external links
 
@@ -1377,6 +1392,12 @@ public class Mainframe extends javax.swing.JFrame {
     // Custom catalogs
 
     cmdAdd.setText(Localization.Main.getText("gui.add")); // NOI18N
+    lblFeaturedCatalogTitle.setText(Localization.Main.getText("config.FeaturedCatalogTitle.label")); // NOI18N
+    lblFeaturedCatalogTitle.setToolTipText(Localization.Main.getText("config.FeaturedCatalogTitle.description")); // NOI18N
+    txtFeaturedCatalogTitle.setToolTipText(lblFeaturedCatalogTitle.getToolTipText()); // NOI18N
+    lblFeaturedCatalogSavedSearchName.setText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.label")); // NOI18N
+    lblFeaturedCatalogSavedSearchName.setToolTipText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.description")); // NOI18N
+    txtFeaturedCatalogSavedSearchName.setToolTipText(lblFeaturedCatalogSavedSearchName.getToolTipText()); // NOI18N
 
     // menus
 
@@ -1551,6 +1572,8 @@ public class Mainframe extends javax.swing.JFrame {
         lblReprocessEpubMetadata = new javax.swing.JLabel();
         lblZipTrookCatalog = new javax.swing.JLabel();
         chkZipTrookCatalog = new javax.swing.JCheckBox();
+        lblOnlyCatalogAtTarget = new javax.swing.JLabel();
+        chkOnlyCatalogAtTarget = new javax.swing.JCheckBox();
         pnlCatalogStructure = new javax.swing.JPanel();
         lblNogeneratehtml = new javax.swing.JLabel();
         chkNogeneratehtml = new javax.swing.JCheckBox();
@@ -1668,8 +1691,6 @@ public class Mainframe extends javax.swing.JFrame {
         txtMaxSplitLevels = new javax.swing.JTextField();
         lblCryptFilenames = new javax.swing.JLabel();
         chkCryptFilenames = new javax.swing.JCheckBox();
-        chkNobandwidthoptimize = new javax.swing.JCheckBox();
-        lblNobandwidthoptimize = new javax.swing.JLabel();
         txtTagsToMakeDeep = new javax.swing.JTextField();
         lblTagsToMakeDeep = new javax.swing.JLabel();
         lblIncludeCoversInCatalog = new javax.swing.JLabel();
@@ -2196,6 +2217,34 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkZipTrookCatalog, gridBagConstraints);
 
+        lblOnlyCatalogAtTarget.setText("lblOnlCatalogAtTarget");
+        lblOnlyCatalogAtTarget.setAutoscrolls(true);
+        lblOnlyCatalogAtTarget.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(lblOnlyCatalogAtTarget, gridBagConstraints);
+
+        chkOnlyCatalogAtTarget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkOnlyCatalogAtTargetActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(chkOnlyCatalogAtTarget, gridBagConstraints);
+
         tabOptionsTabs.addTab("pnlMainOptions", pnlMainOptions);
         pnlMainOptions.getAccessibleContext().setAccessibleName("Main Option");
 
@@ -2326,6 +2375,11 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(lblNogenerateopdsfiles, gridBagConstraints);
         lblNogenerateopdsfiles.getAccessibleContext().setAccessibleName("Do not generate OPDS downloads");
 
+        chkNogenerateopdsfiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkNogenerateopdsfilesActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -3429,16 +3483,16 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(lblExternalIcons, gridBagConstraints);
 
         chkExternalIcons.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkExternalIcons, gridBagConstraints);
@@ -3488,28 +3542,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkCryptFilenames, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(chkNobandwidthoptimize, gridBagConstraints);
-
-        lblNobandwidthoptimize.setText("lblNobandwidthoptimize");
-        lblNobandwidthoptimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(lblNobandwidthoptimize, gridBagConstraints);
-        lblNobandwidthoptimize.getAccessibleContext().setAccessibleName("Regenerate all thumbnail images ");
 
         txtTagsToMakeDeep.setText("txtTagsToMakeDeep");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4059,11 +4091,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCustomCatalogs.add(lblFeaturedCatalogTitle, gridBagConstraints);
 
         txtFeaturedCatalogTitle.setText("txtFeaturedCatalogTitle");
-        txtFeaturedCatalogTitle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFeaturedCatalogTitleActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -4556,21 +4583,21 @@ public class Mainframe extends javax.swing.JFrame {
       BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
     }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
 
-    private void txtFeaturedCatalogTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFeaturedCatalogTitleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFeaturedCatalogTitleActionPerformed
-
     private void chkNogeneratehtmlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogeneratehtmlMouseClicked
-        checkHtmlDownloads();        // TODO add your handling code here:
+        checkHtmlDownloads();
     }//GEN-LAST:event_chkNogeneratehtmlMouseClicked
 
     private void chkNogenerateopdsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogenerateopdsMouseClicked
-        checkOpdsDownloads();        // TODO add your handling code here:
+        checkOpdsDownloads();
     }//GEN-LAST:event_chkNogenerateopdsMouseClicked
 
-    private void txtTagsToIgnoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTagsToIgnoreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTagsToIgnoreActionPerformed
+    private void chkOnlyCatalogAtTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOnlyCatalogAtTargetActionPerformed
+      checkOnlyCatalogAtTarget();
+    }//GEN-LAST:event_chkOnlyCatalogAtTargetActionPerformed
+
+    private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
+       checkDownloads();
+    }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4679,7 +4706,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkNoIncludeAboutLink;
     private javax.swing.JCheckBox chkNoShowSeries;
     private javax.swing.JCheckBox chkNoThumbnailGenerate;
-    private javax.swing.JCheckBox chkNobandwidthoptimize;
     private javax.swing.JCheckBox chkNogenerateallbooks;
     private javax.swing.JCheckBox chkNogeneratecrosslinks;
     private javax.swing.JCheckBox chkNogenerateexternallinks;
@@ -4689,6 +4715,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkNogenerateopdsfiles;
     private javax.swing.JCheckBox chkNogenerateratings;
     private javax.swing.JCheckBox chkNogeneraterecent;
+    private javax.swing.JCheckBox chkOnlyCatalogAtTarget;
     private javax.swing.JCheckBox chkOrderAllBooksBySeries;
     private javax.swing.JCheckBox chkPublishedDateAsYear;
     private javax.swing.JCheckBox chkReprocessEpubMetadata;
@@ -4788,7 +4815,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblNoIncludeAboutLink;
     private javax.swing.JLabel lblNoShowSeries;
     private javax.swing.JLabel lblNoThumbnailGenerate;
-    private javax.swing.JLabel lblNobandwidthoptimize;
     private javax.swing.JLabel lblNogenerateallbooks;
     private javax.swing.JLabel lblNogeneratecrosslinks;
     private javax.swing.JLabel lblNogenerateexternallinks;
@@ -4798,6 +4824,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblNogenerateopdsfiles;
     private javax.swing.JLabel lblNogenerateratings;
     private javax.swing.JLabel lblNogeneraterecent;
+    private javax.swing.JLabel lblOnlyCatalogAtTarget;
     private javax.swing.JLabel lblOrderAllBooksBySeries;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;

@@ -383,7 +383,7 @@ public class FeedHelper {
   }
 
   private static Element getUpdatedTag() {
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getSaveBandwidth()) {
+    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getMinimizeChangedFiles()) {
       Calendar c = Calendar.getInstance();
       return getUpdatedTag(c);
     } else {

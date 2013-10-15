@@ -29,6 +29,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_TARGETFOLDER = "TargetFolder";
   private final static String PROPERTY_NAME_LANGUAGE = "Language";
   private final static String PROPERTY_NAME_CATALOGFOLDERNAME = "CatalogFolderName";
+  private final static String PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET = "OnlyCatalogAtTarget";
   private final static String PROPERTY_NAME_CATALOGTITLE = "CatalogTitle";
   private final static String PROPERTY_NAME_MAXBEFOREPAGINATE = "MaxBeforePaginate";
   private final static String PROPERTY_NAME_MAXBEFORESPLIT = "MaxBeforeSplit";
@@ -36,7 +37,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_BOOKSINRECENTADDITIONS = "BooksInRecentAdditions";
   private final static String PROPERTY_NAME_WIKIPEDIALANGUAGE = "WikipediaLanguage";
   private final static String PROPERTY_NAME_INCLUDEDFORMATSLIST = "IncludedFormatsList";
-  private final static String PROPERTY_NAME_SAVEBANDWIDTH = "SaveBandwidth";
   private final static String PROPERTY_NAME_THUMBNAILGENERATE = "ThumbnailGenerate";
   private final static String PROPERTY_NAME_THUMBNAILHEIGHT = "ThumbnailHeight";
   private final static String PROPERTY_NAME_GENERATEHTML = "GenerateHtml";
@@ -432,6 +432,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_MINIMIZECHANGEDFILES, minimizeChangedFiles);
   }
 
+  public boolean isOnlyCatalogAtTargetReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET);
+  }
+
+  public boolean getOnlyCatalogAtTarget() {
+    Boolean b = getBoolean(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET);
+    if (b == null)
+      return defaults.getOnlyCatalogAtTarget();
+    else
+      return b.booleanValue();
+  }
+
+  public void setOnlyCatalogAtTarget(boolean value) {
+    setProperty(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET, value);
+  }
+
+
   public boolean isExternalIconsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_EXTERNALICONS);
   }
@@ -446,22 +463,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setExternalIcons(boolean externalIcons) {
     setProperty(PROPERTY_NAME_EXTERNALICONS, externalIcons);
-  }
-
-  public boolean isSaveBandwidthReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SAVEBANDWIDTH);
-  }
-
-  public boolean getSaveBandwidth() {
-    Boolean b = getBoolean(PROPERTY_NAME_SAVEBANDWIDTH);
-    if (b == null)
-      return defaults.getSaveBandwidth();
-    else
-      return b.booleanValue();
-  }
-
-  public void setSaveBandwidth(boolean saveBandwidth) {
-    setProperty(PROPERTY_NAME_SAVEBANDWIDTH, saveBandwidth);
   }
 
   public boolean isGenerateOpdsReadOnly() {

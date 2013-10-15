@@ -28,6 +28,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public File getTargetFolder();
 
+  public boolean getOnlyCatalogAtTarget();
+
   public boolean getCopyToDatabaseFolder();
 
   public int getMaxBeforePaginate();
@@ -39,8 +41,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public String getWikipediaLanguage();
 
   public String getIncludedFormatsList();
-
-  public boolean getSaveBandwidth();
 
   public boolean getThumbnailGenerate();
 
