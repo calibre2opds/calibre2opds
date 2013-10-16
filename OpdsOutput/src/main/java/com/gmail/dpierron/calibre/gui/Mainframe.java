@@ -828,6 +828,10 @@ public class Mainframe extends javax.swing.JFrame {
     chkDisplayTitleSortInBookDetails.setSelected(currentProfile.getDisplayTitleSortInBookDetails());
     chkDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
     lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
+    txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
+    txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
+    lblBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
+    txtBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
     lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
@@ -840,10 +844,10 @@ public class Mainframe extends javax.swing.JFrame {
     txtMinBooksToMakeDeepLevel.setText("" + currentProfile.getMinBooksToMakeDeepLevel());
     txtMinBooksToMakeDeepLevel.setInputVerifier(iv);
     txtMinBooksToMakeDeepLevel.setEnabled(!currentProfile.isMinBooksToMakeDeepLevelReadOnly());
-    lblMinBooksToMakeDeepLevel.setEnabled(!currentProfile.isMinBooksToMakeDeepLevelReadOnly());
+    lblMinBooksToMakeDeepLevel.setEnabled(txtMinBooksToMakeDeepLevel.isEnabled());
     txtMaxMobileResolution.setText("" + currentProfile.getMaxMobileResolution());
     txtMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
-    lblMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
+    lblMaxMobileResolution.setEnabled(txtMaxMobileResolution.isEnabled());
     txtMaxMobileResolution.setVisible(false);   // Not currently being used
     lblMaxMobileResolution.setVisible(false);   // Not currently being used
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
@@ -999,8 +1003,6 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Book Details
 
-    currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
-    currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
     currentProfile.setIncludeSeriesInBookDetails(chkIncludeSeriesInBookDetails.isSelected());
     currentProfile.setIncludeRatingInBookDetails(chkIncludeRatingInBookDetails1.isSelected());
     currentProfile.setIncludeTagsInBookDetails(chkIncludeTagsInBookDetails.isSelected());
@@ -1011,6 +1013,9 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setIncludeModifiedInBookDetails(chkIncludeModifiedInBookDetails.isSelected());
     currentProfile.setDisplayAuthorSortInBookDetails(chkDisplayAuthorSortInBookDetails.isSelected());
     currentProfile.setDisplayTitleSortInBookDetails(chkDisplayTitleSortInBookDetails.isSelected());
+    currentProfile.setBookDetailsCustomFields(txtBookDetailsCustomFields.getText());
+    currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
+    currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
 
     // Advanced
 
@@ -1207,12 +1212,6 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Book Details Options
 
-    lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
-    lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
-    chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
-    lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
-    lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
-    chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
     lblIncludeSeriesInBookDetails.setText(Localization.Main.getText("config.IncludeSeriesInBookDetails.label")); // NOI18N
     lblIncludeSeriesInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeSeriesInBookDetails.description")); // NOI18N
     chkIncludeSeriesInBookDetails.setToolTipText(lblIncludeSeriesInBookDetails.getToolTipText()); // NOI18N
@@ -1243,6 +1242,15 @@ public class Mainframe extends javax.swing.JFrame {
     lblDisplayTitleSortInBookDetails.setText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.label")); // NOI18N
     lblDisplayTitleSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.description")); // NOI18N
     chkDisplayTitleSortInBookDetails.setToolTipText(lblDisplayTitleSortInBookDetails.getToolTipText()); // NOI18N
+    lblBookDetailsCustomFields.setText(Localization.Main.getText("config.BookDetailsCustomFields.label")); // NOI18N
+    lblBookDetailsCustomFields.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.description")); // NOI18N
+    txtBookDetailsCustomFields.setToolTipText(lblBookDetailsCustomFields.getToolTipText());
+    lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
+    lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
+    chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
+    lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
+    lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
+    chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
 
     // advanced customization options
 
@@ -1646,6 +1654,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkIncludeAddednBookDetails1 = new javax.swing.JCheckBox();
         lblIncludeRatingInBookDetails = new javax.swing.JLabel();
         chkIncludeRatingInBookDetails1 = new javax.swing.JCheckBox();
+        txtBookDetailsCustomFields = new javax.swing.JTextField();
+        lblBookDetailsCustomFields = new javax.swing.JLabel();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2912,7 +2922,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogeneratecrosslinks, gridBagConstraints);
@@ -2920,7 +2930,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -2934,7 +2944,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogenerateexternallinks, gridBagConstraints);
@@ -2946,7 +2956,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
@@ -3010,6 +3020,30 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludeRatingInBookDetails1, gridBagConstraints);
+
+        txtBookDetailsCustomFields.setText("txtBookDetailsCustomFields");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(txtBookDetailsCustomFields, gridBagConstraints);
+
+        lblBookDetailsCustomFields.setText("lblBookDetailsCustomFields");
+        lblBookDetailsCustomFields.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblBookDetailsCustomFields, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4748,6 +4782,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblAmazonAuthorUrl;
     private javax.swing.JLabel lblAmazonIsbnUrl;
     private javax.swing.JLabel lblAmazonTitleUrl;
+    private javax.swing.JLabel lblBookDetailsCustomFields;
     private javax.swing.JLabel lblBooksinrecent;
     private javax.swing.JLabel lblBottom0;
     private javax.swing.JLabel lblBrowseByCover;
@@ -4879,6 +4914,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtAmazonAuthorUrl;
     private javax.swing.JTextField txtAmazonIsbnUrl;
     private javax.swing.JTextField txtAmazonTitleUrl;
+    private javax.swing.JTextField txtBookDetailsCustomFields;
     private javax.swing.JTextField txtBooksinrecent;
     private javax.swing.JTextField txtCatalogFilter;
     private javax.swing.JTextField txtCatalogFolder;

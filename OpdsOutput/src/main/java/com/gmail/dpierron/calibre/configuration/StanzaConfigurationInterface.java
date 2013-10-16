@@ -35,6 +35,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setMinimizeChangedFiles(boolean value);
 
+  public void setBookDetailsCustomFields(String value);
+
   public void setThumbnailGenerate(boolean value);
 
   public void setThumbnailHeight(int value);

@@ -48,6 +48,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getSuppressRatingsInTitles();
 
+  public String getBookDetailsCustomFields();
+
   public int getMaxBeforeSplit();
 
   public String getSplitTagsOn();
