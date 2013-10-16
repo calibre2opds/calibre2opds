@@ -835,6 +835,10 @@ public class Mainframe extends javax.swing.JFrame {
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
     lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
+    chkIncludeTagCrossReferences.setSelected(!currentProfile.getIncludeTagCrossReferences());
+    chkNogeneratecrosslinks.setEnabled(!currentProfile.isIncludeTagCrossReferencesReadOnly());
+    lblIncludeTagCrossReferences.setEnabled(!currentProfile.isIncludeTagCrossReferencesReadOnly());
+
     chkNogenerateexternallinks.setSelected(!currentProfile.getGenerateExternalLinks());
     chkNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
     lblNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
@@ -1016,6 +1020,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setBookDetailsCustomFields(txtBookDetailsCustomFields.getText());
     currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
     currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
+    currentProfile.setIncludeTagCrossReferences(chkIncludeTagCrossReferences.isSelected());
 
     // Advanced
 
@@ -1251,6 +1256,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
     lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
     chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
+    lblIncludeTagCrossReferences.setText(Localization.Main.getText("config.IncludeTagCrossReferences.label")); // NOI18N
+    lblIncludeTagCrossReferences.setToolTipText(Localization.Main.getText("config.IncludeTagCrossReferences.description")); // NOI18N
+    chkIncludeTagCrossReferences.setToolTipText(lblIncludeTagCrossReferences.getToolTipText()); // NOI18N
 
     // advanced customization options
 
@@ -1656,6 +1664,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkIncludeRatingInBookDetails1 = new javax.swing.JCheckBox();
         txtBookDetailsCustomFields = new javax.swing.JTextField();
         lblBookDetailsCustomFields = new javax.swing.JLabel();
+        chkIncludeTagCrossReferences = new javax.swing.JCheckBox();
+        lblIncludeTagCrossReferences = new javax.swing.JLabel();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2943,8 +2953,8 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblNogenerateexternallinks, gridBagConstraints);
@@ -2955,8 +2965,8 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
@@ -3025,7 +3035,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -3044,6 +3054,26 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblBookDetailsCustomFields, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeTagCrossReferences, gridBagConstraints);
+
+        lblIncludeTagCrossReferences.setText("lblIncludeTagCrossReferences");
+        lblIncludeTagCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeTagCrossReferences, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4728,6 +4758,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludePublisherInBookDetails;
     private javax.swing.JCheckBox chkIncludeRatingInBookDetails1;
     private javax.swing.JCheckBox chkIncludeSeriesInBookDetails;
+    private javax.swing.JCheckBox chkIncludeTagCrossReferences;
     private javax.swing.JCheckBox chkIncludeTagsInBookDetails;
     private javax.swing.JCheckBox chkIncludeemptybooks;
     private javax.swing.JCheckBox chkIndexComments;
@@ -4823,6 +4854,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblIncludePublisherInBookDetails;
     private javax.swing.JLabel lblIncludeRatingInBookDetails;
     private javax.swing.JLabel lblIncludeSeriesInBookDetails;
+    private javax.swing.JLabel lblIncludeTagCrossReferences;
     private javax.swing.JLabel lblIncludeTagsInBookDetails;
     private javax.swing.JLabel lblIncludeemptybooks;
     private javax.swing.JLabel lblIncludeformat;

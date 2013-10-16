@@ -19,4 +19,11 @@ public class CustomColumnValue {
 
   // METHODS and PROPERTIES
 
+  public CustomColumnType getType () {
+    return type;
+  }
+
+  public String getValue () {
+    return value;
+  }
 }

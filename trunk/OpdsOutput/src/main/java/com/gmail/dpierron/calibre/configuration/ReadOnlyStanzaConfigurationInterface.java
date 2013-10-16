@@ -50,6 +50,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getBookDetailsCustomFields();
 
+  public boolean getIncludeTagCrossReferences();
+
   public int getMaxBeforeSplit();
 
   public String getSplitTagsOn();

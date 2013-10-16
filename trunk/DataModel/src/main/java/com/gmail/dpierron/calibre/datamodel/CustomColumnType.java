@@ -15,7 +15,19 @@ public class CustomColumnType {
 
   //  CONSTRUCTORS
 
+  public CustomColumnType(long id, String label, String name, String datatype, String display){
+    this.id = id;
+    this.label = label;
+    this.name = name;
+    this.datatype = datatype;
+    this.display = display;
+  }
+
   //  METHODS and PROPERTIES
+
+  public Long getId() {
+    return id;
+  }
 
   /**
    * check if a custom column with the given name actually exists!

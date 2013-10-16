@@ -116,6 +116,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
   private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
+  private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
   private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
@@ -432,6 +433,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setBookDetailsCustomFields(String fieldList) {
     setProperty(PROPERTY_NAME_BookDetailsCustomFields, fieldList);
   }
+
+  public boolean isIncludeTagCrossReferencesReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_IncludeTagCrossReferences);
+  }
+
+  public boolean getIncludeTagCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeTagCrossReferences);
+    if (b == null)
+      return defaults.getIncludeTagCrossReferences();
+    else
+      return b.booleanValue();
+  }
+
+  public void setIncludeTagCrossReferences(boolean value) {
+    setProperty(PROPERTY_NAME_IncludeTagCrossReferences, value);
+  }
+
 
   public boolean isMinimizeChangedFilesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MINIMIZECHANGEDFILES);

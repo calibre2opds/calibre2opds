@@ -37,6 +37,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setBookDetailsCustomFields(String value);
 
+  public void setIncludeTagCrossReferences(boolean value);
+
   public void setThumbnailGenerate(boolean value);
 
   public void setThumbnailHeight(int value);
