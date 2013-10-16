@@ -49,6 +49,9 @@ public enum DataModel {
   private Map<String, Language> mapOfLanguagesByIsoCode;
   private Map<String, String> mapOfSavedSearches;
 
+  private List<CustomColumnType> listOfCustomColumnTypes;
+  private Map<String, List <CustomColumnValue>> mapOfCustomColumnValuesByBookId;
+
   private boolean useLanguageAsTags = true;
 
   public void reset() {
@@ -76,6 +79,8 @@ public enum DataModel {
     mapOfLanguagesById = null;
     mapOfLanguagesByIsoCode = null;
     mapOfSavedSearches = null;
+    listOfCustomColumnTypes = null;
+    mapOfCustomColumnValuesByBookId = null;
 
     // reset the database
     DatabaseManager.INSTANCE.reset();
@@ -106,6 +111,23 @@ public enum DataModel {
     getMapOfSeries();
     getMapOfBooksBySeries();
     getMapOfBooksByRating();
+    getListOfCustomColumnTypes();
+    getMapOfCustomColumnValuesByBookId(listOfCustomColumnTypes);
+  }
+
+  public List<CustomColumnType> getListOfCustomColumnTypes () {
+    if (listOfCustomColumnTypes == null) {
+      listOfCustomColumnTypes = Database.INSTANCE.getlistOfCustoColumnTypes();
+    }
+    return listOfCustomColumnTypes;
+  }
+
+  public Map<String, List<CustomColumnValue>> getMapOfCustomColumnValuesByBookId(List<CustomColumnType> listTypes ) {
+    if (mapOfCustomColumnValuesByBookId == null) {
+       mapOfCustomColumnValuesByBookId = Database.INSTANCE.getMapofCustomColumnValuesbyBookId(listTypes);
+    }
+    return mapOfCustomColumnValuesByBookId;
+
   }
 
   public Map<String, String> getMapOfSavedSearches() {

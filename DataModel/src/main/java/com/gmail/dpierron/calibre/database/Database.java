@@ -468,6 +468,15 @@ public enum Database {
     PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DEFINITION.getStatement();
     try {
       ResultSet set = statement.executeQuery();
+      while (set.next()) {
+        Long id = set.getLong("id");
+        String label = set.getString("label");
+        String name = set.getString("name");
+        String datatype = set.getString("datatype");
+        String display = set.getString("display");
+        CustomColumnType customColType = new CustomColumnType(id, label, name, datatype, display);
+        result.add(customColType);
+      }
     } catch (SQLException e) {
       logger.error("getlistOfCustoColumnTypes: " + e);
       sqlException += (2^16);
@@ -481,15 +490,27 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, CustomColumnValue> getMapofCustomColumnValuesbyBookId () {
-    Map<String, CustomColumnValue> result = new HashMap<String, CustomColumnValue>();
-    // TODO Work out correct SQL Statement as table name varies by custom column type)
-    PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DEFINITION.getStatement();
-    try {
-      ResultSet set = statement.executeQuery();
-    } catch (SQLException e) {
-      logger.error("getMapofCustomColumnValuesbyBookId: " + e);
-      sqlException += (2^17);
+  public Map<String, List<CustomColumnValue>> getMapofCustomColumnValuesbyBookId (List<CustomColumnType> listTypes) {
+    Map<String, List<CustomColumnValue>> result = new HashMap<String, List<CustomColumnValue>>();
+    for (CustomColumnType listType : listTypes)  {
+      PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DATA.getStatementId(Long.toString(listType.getId()));
+      try {
+        ResultSet set = statement.executeQuery();
+          while (set.next()) {
+            String bookId = set.getString("book");
+            String value = set.getString("value");
+            List<CustomColumnValue> customColumnValues = result.get(bookId);
+            if (customColumnValues == null) {
+              customColumnValues = new LinkedList<CustomColumnValue>();
+              result.put(bookId, customColumnValues);
+            }
+            CustomColumnValue customColumnValue = new CustomColumnValue(listType, value);
+            customColumnValues.add (customColumnValue);
+          }
+      } catch (SQLException e) {
+        logger.error("getMapofCustomColumnValuesbyBookId: " + e);
+        sqlException += (2^17);
+      }
     }
 
     return result;

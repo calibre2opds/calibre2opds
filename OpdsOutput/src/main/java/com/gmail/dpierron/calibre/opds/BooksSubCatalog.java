@@ -486,7 +486,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   //    BOOK ENTRY
   // ----------------
 
-  //  The rremainder of the methods are specific to creating an entry for a specific book
+  //  The remainder of the methods are specific to creating an entry for a specific book
 
   /**
    * Add the aquistion links
@@ -687,24 +687,28 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
 
+      String booksText = Localization.Main.getText("bookword.title");
       // add the author page link(s)
       // (but only if we generate an authors catalog)
       if (currentProfile.getGenerateSeries()) {
         if (book.hasAuthor()) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the author page link(s)");
           for (Author author : book.getAuthors()) {
-            int nbBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size();
+            // c2o-168 - Omit Counts if MinimizeChangedFiles set
+            if (! currentProfile.getMinimizeChangedFiles()) {
+              booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
+            }
             // Authors are always held at top level !
             filename =  getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
             entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
-                Localization.Main.getText("bookentry.author", Summarizer.INSTANCE.getBookWord(nbBooks), author.getName())));
+                Localization.Main.getText("bookentry.author", booksText, author.getName())));
           }
         }
       }
 
       // add the tags links
       // (but only if we generate a tags catalog)
-      if (currentProfile.getGenerateTags()) {
+      if (currentProfile.getGenerateTags() && currentProfile.getIncludeTagCrossReferences()) {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
           for (Tag tag : book.getTags()) {
@@ -712,9 +716,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
             // Tags are held at level
             filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
             if (nbBooks > 1) {
+              // c2o-168 - Omit Counts if MinimizeChangedFiles set
+              if (! currentProfile.getMinimizeChangedFiles()) {
+                booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+              }
               entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
-                  Localization.Main.getText("bookentry.tags", Summarizer.INSTANCE.getBookWord(nbBooks),
-                      tag.getName())));
+                  Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
             }
           }
         }
@@ -725,10 +732,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the ratings links");
         int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
         if (nbBooks > 1) {
+          // c2o-168 - Omit Counts if MinimizeChangedFiles set
+          if (! currentProfile.getMinimizeChangedFiles()) {
+            booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+          }
           // Ratings are held at level
           filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, book.getRating().getId().toString()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
-              Localization.Main.getText("bookentry.ratings", Summarizer.INSTANCE.getBookWord(nbBooks), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
+              Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
       }
     }

@@ -40,7 +40,8 @@ public enum DatabaseRequest {
   BOOKS_COMMENTS("select book, text from comments"),
   BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
   SAVED_SEARCHES("select val from preferences where key='saved_searches'"),
-  CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype from custom_columns");
+  CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype from custom_columns"),
+  CUSTOM_COLUMN_DATA("select book, value from custom_column_");
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
   private final String sql;
@@ -54,7 +55,33 @@ public enum DatabaseRequest {
     preparedStatement = null;
   }
 
+  /**
+   * Generic case where the SQL that is preset is already exactly what is needed
+   * @return
+   * @throws RuntimeException
+   */
   public PreparedStatement getStatement() throws RuntimeException {
+    return getStatement(sql);
+  }
+
+  /**
+   * Special case used in custom columns where we need to add an id to the table name
+   * @param id
+   * @return
+   * @throws RuntimeException
+   */
+  public PreparedStatement getStatementId(String id) throws RuntimeException {
+    return getStatement(sql + id);
+  }
+
+  /**
+   * Code to actually set up the statement provided
+   *
+   * @param sql
+   * @return
+   * @throws RuntimeException
+   */
+  private PreparedStatement getStatement(String sql) throws RuntimeException {
     if (preparedStatement == null) {
       try {
         Connection connection = DatabaseManager.INSTANCE.getConnection();

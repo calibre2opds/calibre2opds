@@ -377,4 +377,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public String getBookDetailsCustomFields() {
     return StanzaConstants.BOOK_DETAILS_CUSTOM_FIELDS;
   }
+
+  public boolean getIncludeTagCrossReferences () {
+    return StanzaConstants.INCLUDE_TAG_CROSS_REFERENCES;
+  }
 }
