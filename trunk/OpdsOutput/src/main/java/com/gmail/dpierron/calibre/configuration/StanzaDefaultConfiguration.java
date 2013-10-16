@@ -373,4 +373,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public String getSecurityCode() {
     return null;
   }
+
+  public String getBookDetailsCustomFields() {
+    return StanzaConstants.BOOK_DETAILS_CUSTOM_FIELDS;
+  }
 }

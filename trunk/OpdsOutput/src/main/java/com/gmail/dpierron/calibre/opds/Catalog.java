@@ -718,6 +718,8 @@ public class Catalog {
         logger.info("Database loaded: " + books.size() + " books");
       }
 
+      // TODO  Check any custom columns specified exist in the database
+
       callback.checkIfContinueGenerating();
 
       callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));

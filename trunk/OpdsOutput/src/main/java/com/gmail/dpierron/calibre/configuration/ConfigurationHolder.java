@@ -115,9 +115,10 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
-  private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
+  private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
+  private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
@@ -414,6 +415,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setIncludedFormatsList(String includedFormatsList) {
     setProperty(PROPERTY_NAME_INCLUDEDFORMATSLIST, includedFormatsList);
+  }
+
+  public boolean isBookDetailsCustomFieldsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_BookDetailsCustomFields);
+  }
+
+  public String getBookDetailsCustomFields() {
+    String s = getProperty(PROPERTY_NAME_BookDetailsCustomFields);
+    if (s == null)
+      return defaults.getBookDetailsCustomFields();
+    else
+      return s;
+  }
+
+  public void setBookDetailsCustomFields(String fieldList) {
+    setProperty(PROPERTY_NAME_BookDetailsCustomFields, fieldList);
   }
 
   public boolean isMinimizeChangedFilesReadOnly() {

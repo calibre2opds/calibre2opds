@@ -37,6 +37,7 @@ public class StanzaConstants {
   public final static boolean GENERATE_RECENT = true;
   public final static boolean GENERATE_RATINGS = true;
   public final static boolean GENERATE_ALLBOOKS = true;
+  public final static String BOOK_DETAILS_CUSTOM_FIELDS = "";
   public final static boolean suppressRatingsInTitles = false;
   public final static String targetFolder = ".";
   public final static boolean COPYTODATABASEFOLDER = true;
