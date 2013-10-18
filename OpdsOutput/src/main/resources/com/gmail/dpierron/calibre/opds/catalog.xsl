@@ -31,6 +31,10 @@
   <xsl:param name="intro.goal"/>
   <xsl:param name="intro.wiki.title"/>
   <xsl:param name="intro.wiki.url"/>
+  <xsl:param name="intro.userguide"/>
+  <xsl:param name="intro.userguide.url"/>
+  <xsl:param name="intro.developerguide"/>
+  <xsl:param name="intro.developerguide.url"/>
   <xsl:param name="intro.team.title"/>
   <xsl:param name="intro.team.list1"/>
   <xsl:param name="intro.team.list2"/>
@@ -283,9 +287,12 @@
           <br/>
           <br/><xsl:value-of select="$intro.goal"/>
           <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
-              <xsl:value-of select="$intro.wiki.url"/>
-          </a>
-          <br/><xsl:value-of select="$intro.team.title"/>
+              <xsl:value-of select="$intro.wiki.url"/></a>
+          <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
+              <xsl:value-of select="$intro.userguide"/> </a>
+          <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
+              <xsl:value-of select="$intro.developerguide"/> </a>
+          <br/><br/><xsl:value-of select="$intro.team.title"/>
           <ul>
             <li>
               <xsl:value-of select="$intro.team.list1"/>
@@ -300,7 +307,7 @@
               <xsl:value-of select="$intro.team.list4"/>
             </li>
           </ul>
-          <br/><xsl:value-of select="$intro.thanks.1"/>
+          <xsl:value-of select="$intro.thanks.1"/>
           <br/><xsl:value-of select="$intro.thanks.2"/>
         </small>
         </div>

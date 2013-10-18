@@ -51,6 +51,10 @@ public enum JDOM {
         headerTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
         headerTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
         headerTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
+        headerTransformer.setParameter("intro.userguide", Localization.Main.getText("gui.menu.help.userGuide"));
+        headerTransformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
+        headerTransformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
+        headerTransformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL);
         headerTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
         headerTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
         headerTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
@@ -159,6 +163,10 @@ public enum JDOM {
         mainTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
         mainTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
         mainTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
+        mainTransformer.setParameter("intro.userguide", Localization.Main.getText("gui.menu.help.userGuide"));
+        mainTransformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
+        mainTransformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
+        mainTransformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL);
         mainTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
         mainTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
         mainTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));

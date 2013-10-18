@@ -1013,13 +1013,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludePublishedInBookDetails()) {
         Date pubtmp = book.getPublicationDate();
         if (Helper.isNotNullOrEmpty(pubtmp)) {
-          if (currentProfile.getPublishedDateAsYear()) {
             content.addContent(JDOM.INSTANCE.element("strong")
                 .addContent(Localization.Main.getText("content.published") + " "))
                 .addContent(PUBLICATIONDATE_FORMAT.format(book.getPublicationDate()))
                 .addContent(JDOM.INSTANCE.element("br"))
                 .addContent(JDOM.INSTANCE.element("br"));
-          }
         }
       }
 

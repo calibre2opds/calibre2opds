@@ -94,6 +94,9 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-164: Option to Publish only the generated catalog in Publish mode when Books URL specified
     - #c2o-165: Problem adding Custom Catalog entries
     - #c2o-166: HTML Downloads not generated if OPDS catalog not being generated
+    - #c2o-170: Provide direct links from a list of books to the related authors
+    - #c2o-171: Publication date does not show up in the book details page
+    - #cw0-172: Dmg Release of Mac OSX broken.
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
