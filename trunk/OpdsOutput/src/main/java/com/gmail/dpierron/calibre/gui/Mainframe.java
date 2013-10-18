@@ -2575,6 +2575,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNoGenerateAuthors, gridBagConstraints);
+
+        chkNoGenerateTags.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkNoGenerateTagsActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -4189,6 +4195,8 @@ public class Mainframe extends javax.swing.JFrame {
         tblCustomCatalogs.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblCustomCatalogs.setModel(getTblCustomCatalogsModel());
         tblCustomCatalogs.setColumnSelectionAllowed(true);
+        tblCustomCatalogs.setRowHeight(30);
+        tblCustomCatalogs.setRowMargin(3);
         addDeleteButtonToCustomCatalogsTable();
         scrCustomCatalogs.setViewportView(tblCustomCatalogs);
 
@@ -4662,6 +4670,13 @@ public class Mainframe extends javax.swing.JFrame {
     private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
        checkDownloads();
     }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
+
+    private void chkNoGenerateTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoGenerateTagsActionPerformed
+      chkIncludeTagCrossReferences.setEnabled(true);
+      if (chkNoGenerateTags.isSelected()) chkIncludeTagCrossReferences.setSelected(false);
+      lblIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
+      chkIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
+    }//GEN-LAST:event_chkNoGenerateTagsActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();

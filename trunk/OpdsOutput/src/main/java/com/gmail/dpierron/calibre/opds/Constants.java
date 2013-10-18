@@ -17,10 +17,7 @@ public class Constants {
   public final static String LOGFILE_FOLDER = "log";
   public final static String LOGFILE_NAME = "calibre2opds.log";
   public final static String SYNCFILE_NAME = "synclog.log";
-  public final static String SECURITY_CACHE_FILENAME = ".calibre2opds.secureFileManager.xml";
   public final static String CONFIGURATION_COMPATIBILITY_VERSIONCHIP = "02030101";
-  // ITIMPI:  Not sure what was the intended use of this constant?
-  // public final static String DSNNAME = "CALIBRE";
   public final static String LIBRARY_PATH_PREFIX = "../../";
   public final static String PARENT_PATH_PREFIX = "../";
   public final static String CURRENT_PATH_PREFIX = "./";
