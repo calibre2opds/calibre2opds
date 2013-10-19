@@ -94,10 +94,10 @@ public class Mainframe extends javax.swing.JFrame {
     ButtonColumn buttonColumn = new ButtonColumn(tblCustomCatalogs, delete, 2);
     buttonColumn.setMnemonic(KeyEvent.VK_D);
 
-    int width = 550;            // Should we read width of existing window instead?
-    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .3));
-    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .6));
-    tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth((int)(width * .1));    // Delete button
+    int width = 550; //tblCustomCatalogs.getWidth();
+    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .25));
+    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .65));
+    tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth((int)(width * .075));    // Delete button
   }
 
   private void processEpubMetadataOfAllBooks() {
@@ -164,48 +164,41 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
-   * To enable HTML doloads to be enabled we must donwload links
-   * present in the OPDS files.  This means we cannot have HTML
-   * downloads if we have suppressed OPDS ones.   However if we
-   * have suppressed OPDS catalogs completely then the HTML setting
-   * should be a;;owed as we can generate the download link in the
-   * OPDS files we start with (and subsequently discard).
+   * Control the valid combinations of gneration types and downloads allowed
    */
   private void checkDownloads() {
+    // If we are not generating OPDS files, then the option to
+    // set OPDS downloads will follow the HTML setting.  Also the
+    // user can no longer toggle the OPDS download option directly.
     if (chkNogenerateopds.isSelected()) {
-
+       chkNogeneratehtmlfiles.setEnabled(chkNogeneratehtml.isEnabled());
+       chkNogenerateopdsfiles.setSelected(chkNogeneratehtmlfiles.isSelected());
+       chkNogenerateopdsfiles.setEnabled(false);
+    } else {
+      // If  we are generating OPDS catalogs, then start by assuming that
+      // both types of downloads are allowed.
+      chkNogenerateopdsfiles.setEnabled(true);
+      // If we are not generating OPDS downloads then the HTML downloads
+      // must be suppressed.
+      if (chkNogenerateopdsfiles.isSelected()) {
+        chkNogeneratehtmlfiles.setSelected(true);
+        chkNogeneratehtmlfiles.setEnabled(false);
+      } else {
+        chkNogeneratehtmlfiles.setEnabled(true);
+      }
     }
-  }
-  /**
-   * We do not allow HTML Downloads if OPDS Downloads are suppressed
-   */
-  private void checkHtmlDownloads() {
-    if (chkNogeneratehtml.isSelected() == true) {
+    // If we are not generating HTML catalogs then we cannot
+    // set HTML downloads
+    if (chkNogeneratehtml.isSelected()) {
       chkNogeneratehtmlfiles.setSelected(true);
       chkNogeneratehtmlfiles.setEnabled(false);
     } else {
-      if (chkNogeneratehtmlfiles.isEnabled() == false) {
-        chkNogeneratehtmlfiles.setEnabled(true);
-        chkNogeneratehtmlfiles.setSelected(false);
-      }
+      // If we are generating HTHL catalogs then HTML
+      // downloads are only allowed if OPDS ones are also active
+      // or we are not generating OPDS catalogs
+      chkNogeneratehtmlfiles.setEnabled(chkNogenerateopds.isSelected()==true || chkNogenerateopdsfiles.isSelected()==false);
     }
   }
-
-  /**
-   * It makes no sense to allow OPDS downloads if we are not generating an Opds catalog!
-   */
-  private void checkOpdsDownloads() {
-    if (chkNogenerateopds.isSelected() == true) {
-      chkNogenerateopdsfiles.setSelected(true);
-      chkNogenerateopdsfiles.setEnabled(false);
-    } else {
-      if (chkNogenerateopdsfiles.isEnabled() == false) {
-        chkNogenerateopdsfiles.setEnabled(true);
-        chkNogenerateopdsfiles.setSelected(false);
-      }
-    }
-  }
-
   /**
    * Decide if the user should be able to specify the target folder.
    */
@@ -457,6 +450,7 @@ public class Mainframe extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
     logger.info(Localization.Main.getText("info.loadProfile", profileName));
+    customCatalogTableModel.reset();
     loadValues();
   }
 
@@ -900,9 +894,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     changeLanguage();
     loadProfiles();
-
-    checkHtmlDownloads();   // Fix for backwards compatibility
-    checkOpdsDownloads();
+    checkDownloads();
     pack();
   }
 
@@ -2288,9 +2280,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblNogeneratehtml, gridBagConstraints);
 
-        chkNogeneratehtml.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                chkNogeneratehtmlMouseClicked(evt);
+        chkNogeneratehtml.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkDownloads(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2387,6 +2379,11 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkNoIncludeAboutLink, gridBagConstraints);
 
         lblNogenerateopdsfiles.setText("lblNogenerateopdsfiles");
+        lblNogenerateopdsfiles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -2397,7 +2394,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         chkNogenerateopdsfiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkNogenerateopdsfilesActionPerformed(evt);
+                checkDownloads(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2476,6 +2473,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkSupressRatings, gridBagConstraints);
+
+        chkNogeneratehtmlfiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkDownloads(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
@@ -2484,9 +2487,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkNogeneratehtmlfiles, gridBagConstraints);
 
-        chkNogenerateopds.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                chkNogenerateopdsMouseClicked(evt);
+        chkNogenerateopds.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkDownloads(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4655,21 +4658,9 @@ public class Mainframe extends javax.swing.JFrame {
       BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
     }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
 
-    private void chkNogeneratehtmlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogeneratehtmlMouseClicked
-        checkHtmlDownloads();
-    }//GEN-LAST:event_chkNogeneratehtmlMouseClicked
-
-    private void chkNogenerateopdsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chkNogenerateopdsMouseClicked
-        checkOpdsDownloads();
-    }//GEN-LAST:event_chkNogenerateopdsMouseClicked
-
     private void chkOnlyCatalogAtTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOnlyCatalogAtTargetActionPerformed
       checkOnlyCatalogAtTarget();
     }//GEN-LAST:event_chkOnlyCatalogAtTargetActionPerformed
-
-    private void chkNogenerateopdsfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogenerateopdsfilesActionPerformed
-       checkDownloads();
-    }//GEN-LAST:event_chkNogenerateopdsfilesActionPerformed
 
     private void chkNoGenerateTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoGenerateTagsActionPerformed
       chkIncludeTagCrossReferences.setEnabled(true);
@@ -4677,6 +4668,10 @@ public class Mainframe extends javax.swing.JFrame {
       lblIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
       chkIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
     }//GEN-LAST:event_chkNoGenerateTagsActionPerformed
+
+    private void checkDownloads(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkDownloads
+        checkDownloads();
+    }//GEN-LAST:event_checkDownloads
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();

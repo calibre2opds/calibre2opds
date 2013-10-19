@@ -13,9 +13,20 @@ import java.util.Vector;
  * The table model for the custom catalogs options table
  */
 public class CustomCatalogTableModel implements TableModel {
-  java.util.List<Composite<String, String>> customCatalogs = new Vector<Composite<String, String>>();
-  List<TableModelListener> listeners = new Vector<TableModelListener>();
+  private static java.util.List<Composite<String, String>> customCatalogs;
+  private static List<TableModelListener> listeners;
 
+  public CustomCatalogTableModel() {
+    if (customCatalogs == null) {
+      customCatalogs = new Vector<Composite<String, String>>();
+      listeners = new Vector<TableModelListener>();
+    }
+  }
+
+  public void reset() {
+    listeners = null;
+    customCatalogs = null;
+  }
   /**
    * Get the Custom catalogs String representation
    * (used to load the GUI control values)
