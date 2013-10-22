@@ -403,7 +403,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String title = serie.getName();
     if (addTheSeriesWordToTheTitle)
       title = Localization.Main.getText("content.series") + " " + title;
-    String urn = baseurn + Constants.SERIE_TYPE + Constants.SERIE_TYPE + Constants.URN_SEPARATOR + serie.getId();
+    String urn = baseurn + Constants.SERIE_TYPE + Constants.URN_SEPARATOR + serie.getId();
     // We need to determine if we are generating a serie within an author?
     // If we are we want the file to be in the author folder
     // if we are not then we want it at the top level

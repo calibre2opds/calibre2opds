@@ -144,6 +144,10 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void reset() {
+    tokenizedTagsToMakeDeep = null;
+    tokenizedBookDetailsCustomColumns = null;
+    tokenizedTagsToIgnore = null;
+
     StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
     for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
@@ -985,6 +989,15 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       tokenizedTagsToMakeDeep = Helper.tokenize(getTagsToMakeDeep().toUpperCase(), ",", true);
     }
     return tokenizedTagsToMakeDeep;
+  }
+
+  private List<String> tokenizedBookDetailsCustomColumns;
+
+  public List<String> getTokenizedBookDetailsCustomColumns() {
+    if (tokenizedBookDetailsCustomColumns == null) {
+      tokenizedBookDetailsCustomColumns = Helper.tokenize(getBookDetailsCustomFields().toUpperCase(), ",", true);
+    }
+    return tokenizedBookDetailsCustomColumns;
   }
 
   public String getTagsToMakeDeep() {
