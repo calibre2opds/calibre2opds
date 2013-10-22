@@ -33,6 +33,7 @@ public abstract class SubCatalog {
   protected static boolean useExternalIcons = currentProfile.getExternalIcons();
   private static String securityCode = catalogManager.getSecurityCode();
   private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
+  private static CRC32 crc32;
 
   //  PROPERTIES
 
@@ -72,15 +73,21 @@ public abstract class SubCatalog {
 
   public SubCatalog(List<Book> books) {
     this(null, books);
+    if (crc32 == null)
+      crc32 = new CRC32();
   }
 
   public SubCatalog () {
     // Do nothing special!
+    if (crc32 == null)
+      crc32 = new CRC32();
   }
 
   public SubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     setStuffToFilterOut(stuffToFilterOut);
     setBooks(books);
+    if (crc32 == null)
+      crc32 = new CRC32();
   }
 
   private void setOptimizUrlPrefix() {
@@ -131,7 +138,6 @@ public abstract class SubCatalog {
    * @return
    */
   private static String encryptString (String data) {
-    CRC32 crc32 = new CRC32();
     crc32.update(data.getBytes());
     return Long.toHexString(crc32.getValue());
   }
@@ -143,12 +149,16 @@ public abstract class SubCatalog {
    * filename in the clear is added.  This should mean that
    * catalogs are easy to read while the filenames are hard to guess.
    *
+   * As a special case we need to separate out the foldername
+   * (if present) and only encrypt the filename part.
+   *
    * @param filename
    * @return
    */
   private static String encryptFilename (String filename) {
     if (securityCode.length() == 0) return filename;  // Do nothing if encryption not active
-    return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename;
+    int pos = filename.indexOf(Constants.SECURITY_SEPARATOR);
+    return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename.substring(pos + 1);
   }
   /**
    * Get the current level and if necessary add the prefix if not empty
@@ -309,7 +319,6 @@ public abstract class SubCatalog {
    */
   public void setCatalogFolderSplit (String folder, String id) {
     setCatalogFolder(folder + Constants.TYPE_SEPARATOR + (int)(Long.valueOf(id)/1000));
-    // setCatalogFolder(folder);
   }
   /**
    * Get the Current Catalog Base filename
@@ -356,7 +365,7 @@ public abstract class SubCatalog {
     }
     // We also want to remove any leading occurrence of security code
     if (securityCode.length() > 0 && name.startsWith(securityCodeAndSeparator)) {
-      catalogBaseFilename = name.substring(securityCodeAndSeparator.length() +1);  // Remove the security code
+      catalogBaseFilename = name.substring(securityCodeAndSeparator.length());  // Remove the security code
     } else {
       catalogBaseFilename = name;
     }
@@ -416,7 +425,15 @@ public abstract class SubCatalog {
      * @return
      */
   public String getCatalogBaseFolderFileNameId (String id) {
-    return encryptFilename(getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + id) ;
+    String name = getCatalogBaseFolderFileName();
+    int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
+    String folder = "";
+    if (pos != -1) {
+      folder = name.substring(0, pos+1);
+      name = name.substring(pos+1);
+    }
+    String result = encryptFilename(name + Constants.TYPE_SEPARATOR + id);
+    return folder + result;
   }
 
   /**

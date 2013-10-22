@@ -3,7 +3,9 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
+import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
@@ -25,6 +27,8 @@ public class CatalogManager {
   private static List<File> bookEntriesFiles;
   private static String securityCode;
   private static String initialUrl;
+  private static List<CustomColumnType> bookDetailsCustomColumns = null;
+
 
   public CatalogManager() {
     super();
@@ -53,6 +57,7 @@ public class CatalogManager {
     mapOfBookByPathToCopy = new HashMap<String, Book>();
     mapOfCatalogFolderNames = new HashMap<String, String>();
     bookEntriesFiles = new LinkedList<File>();
+    bookDetailsCustomColumns = null;
   }
 
   public static String getSecurityCode() {
@@ -233,6 +238,31 @@ public class CatalogManager {
     return true;
   }
 
+  /**
+   * Get the list of curom columns that are to be included in Book Details.
+   * @return
+   */
+  public List<CustomColumnType> getBookDetailsCustomColumns() {
+    if (bookDetailsCustomColumns == null)  {
+      List<CustomColumnType> types = Database.INSTANCE.getlistOfCustoColumnTypes();
+      if (types == null) {
+        logger.warn("getBookDetailsCustomColumns: No custom columns read from database.");
+        return null;
+      }
+      bookDetailsCustomColumns = new LinkedList<CustomColumnType>();
+      for (String customColumnLabel : ConfigurationManager.INSTANCE.getCurrentProfile().getTokenizedBookDetailsCustomColumns()) {
+        if (customColumnLabel.startsWith("#")) {
+          customColumnLabel = customColumnLabel.substring(1);
+          for (CustomColumnType type : types) {
+            if (type.getLabel().toUpperCase().equals(customColumnLabel.toUpperCase())) {
+              bookDetailsCustomColumns.add(type);
+            }
+          }
+        }
+      }
+    }
+    return bookDetailsCustomColumns;
+  }
   /*
   Make these properties public to avoid the need for simpe get/set routines that do nothing else!
 

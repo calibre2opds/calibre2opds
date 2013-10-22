@@ -4,11 +4,13 @@
 Documentation
 ~~~~~~~~~~~~~
 Online documentation for Calibre2Opds can now be found at:
-  http://calibre2opds.com/read-the-documentation/
+  http://wiki.mobileread.com/wiki/Calibre2Opds_Index
 There is a link to this from the main Calibre2Opds GUI via the Help
 button.  It is also included in the Calibre2Opds catalogs at the top
-level.  User areencouraged to pass back suggestions for enhancments
-to reflect their experience of using Calibre2Opds.
+level.  User are encouraged to pass back suggestions for enhancments
+to reflect their experience of using Calibre2Opds. Since the documentation
+is organised as a wiki, users can also contribute their own input to
+improve the documentation.
 
 The #number type references in these notes refer to the bug number
 entries for calibre2opds in the calibre2opds Issue register that is at:
@@ -23,39 +25,19 @@ correct localization text.  This is not a task that requires
 programming skills, so users are encouraged to contribute their
 expertise in this area.  The details on how to go about this can be
 found at:
-  http://calibre2opds.com/read-the-documentation/development/localization/
+  http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize
 
-Known Issues
-~~~~~~~~~~~~
-The following issues are known to be outstanding in this release.  More detail can be found by
-looking at the calibre2opds issue register (http://calibre2opds.myjetbrains.com/youtrack/)
- - #627926  Publish mode limiting formats allowed (will be fixed by #c2o-93)
- - #729859  Internal links not working in XML catalogs
-            (may not be fixable as it tends to be a limitation of the OPDS clients)
- - #c2o-15  Filenames generated can exceed system limits
-            (this is particularly likely to happen in the larger catalog sections on very large
-            libraries, or if many sub-levels based on tags are specified).  The avoidance actio is
-            to ensure that the Maximum Number of Split Levels option is set to a small value (e.g. 3)
- - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
- - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
- - #c2o-100: Uninstall does not work under Windows 7
- - #c2o-123: Not handling missing file
+Outstanding Feature Requests/Bug Reports
+~~~~~~~~~~~~~~~~~~~~--------------------
+The items listed below are lnown bugs in the current release and new features
+that are under consideration for future releases.
 
- - Localization: The current localizations now have significant gaps until users can provide the 
-            required translation strings for the large number of new messages introduced in v3.0.
-
-If you think that you have found a bug, or would simply like to raise a feature request for a
-new capability this can be done via the calibre2opds Issue tracking system at
-http://calibre2opds.myjetbrains.com/youtrack/
-
-Outstanding Feature Requests
-~~~~~~~~~~~~~~~~~~~~--------
-The items listed below are under consideration for future releases.
 Nore detail can be found in many cases on the calibre2opds Issue register
 (http://calibre2opds.myjetbrains.com/youtrack/).    Note that the fact a feature is listed
 here is not a committment that it will appear, but merely that it is under consideration.
 User are encouraged to add comments to the relevant issues in the Issue Register on their views.
    -  Improve/Extend localizations.
+   - #627926  Publish mode limiting formats allowed (will be fixed by #c2o-93)
    -  #c2o-26: Introduce a carousel mode for the book pages
    -  #c2o-29: Generate a recent books RSS-compatible catalog
    -  #c2o-38: Is it possible to generate a flat display for catalogues
@@ -67,9 +49,12 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-74: Goto Page option in HTML catalogs
     - #c2o-76: Add context sensitive links to help (documentation)
     - #c2o-82: Test option for Saved Searches/ Custom Catalogs
+    - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
     - #c2o-90: Make Custom Catalogs setting easier to edit manually in XML
     - #c2o-93: Make supported formats and Mime type extendable by users
+    - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
     - #c2o-96: Add some runtime stats on Search database
+    - #c2o-100: Uninstall does not work under Windows 7
     - #c2o-102: Advise user when Log file contains errors or warnings
     - #c2o-103: Goodreads URL (by Goodreads ID when available)
     - #c2o-105: Add a download link to the 'group' pages
@@ -77,8 +62,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-108: Omit download section for books with no available download
     - #c2o-109: Improve navigation links in pages
     - #c2o-115: Send to Readmill Library
-    - #c2o-118: Provide more control over display and sorting of Authors
-    - #c2o-119: Provide more control over display and sorting of Series
     - #c20-125: Add Publishers section to generated catalog
     - #c20-139: Include the .opf files when copying the library in "Publish" mode
     - #c2o-143: Allow the book links to external sites to be localized
@@ -92,11 +75,9 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-158: Improve performance by avoiding generating unchanged pages
     - #c2o-162: Option to Include cover images within the catalog
     - #c2o-164: Option to Publish only the generated catalog in Publish mode when Books URL specified
-    - #c2o-165: Problem adding Custom Catalog entries
-    - #c2o-166: HTML Downloads not generated if OPDS catalog not being generated
-    - #c2o-170: Provide direct links from a list of books to the related authors
-    - #c2o-171: Publication date does not show up in the book details page
-    - #cw0-172: Dmg Release of Mac OSX broken.
+    - #c2o-170: Provide direct links from a list of books to the related authors in HTML catalogs
+    - #c20-172: Dmg Release of Mac OSX broken.
+    - #c2o-173: Make authors, series and tags into active links in book details 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -114,9 +95,11 @@ v3.3
     - New: #c2o-160: Allow Books to be on a different URL to the catalog
     - Fix: #c2o-161: The "Language as Tag" value being inverted when saved
     - Fix: #c20-163: If you do multiple generation runs without reloading calibre2opds the catalogs are not correctly generated.
-    - Fix: #c2o-167: Option to Save bandwidth no longer makes sense so remove it
+    - Fix: #c2o-166: HTML Downloads not generated if OPDS catalog not being generated
+    - Fix: #c2o-167: Option to Save bandwidth no longer makes sense so removed it
     - New: #c2o-168: Omit counts from internal links when Minimize Changed Files selected
     - New: #c2o-169: Option to exclude tags from cross-reference links
+    - Fix: #c2o-171: Publication date does not show up in the book details page
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 

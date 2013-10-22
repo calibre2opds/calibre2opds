@@ -25,8 +25,46 @@ public class CustomColumnType {
 
   //  METHODS and PROPERTIES
 
+  /**
+   * Get Calibre internal Id for this custom column
+   * @return
+   */
   public Long getId() {
     return id;
+  }
+
+  /**
+   * Get Calibre custom column name
+   * @return
+   */
+  public String getLabel() {
+    return label;
+  }
+
+  /**
+   * Get Custom Column display name
+   * @return
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Get custom column type
+   *
+   * @return
+   */
+  public String getDatatype() {
+    return datatype;
+  }
+
+  /**
+   * Get custom column formatting string for displaying values
+   *
+   * @return
+   */
+  public String getDisplayFormat () {
+    return display;
   }
 
   /**

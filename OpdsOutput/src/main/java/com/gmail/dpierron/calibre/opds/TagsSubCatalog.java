@@ -100,6 +100,12 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     return mapOfBooksByTag;
   }
 
+  /**
+   *
+   * @param tag
+   * @param books
+   * @return
+   */
   private boolean makeTagDeep(Tag tag, List<Book> books) {
     if (tag == null)
       return false;

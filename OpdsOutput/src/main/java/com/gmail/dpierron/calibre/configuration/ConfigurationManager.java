@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.configuration;
 
+import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
