@@ -70,6 +70,11 @@ public class FeedHelper {
   private final static String RELATION_START = "start";
 
   /**
+   * A link to an author of the item
+   */
+  public final static String RELATION_AUTHOR = "author";
+
+  /**
    * a graphical Resource associated to the OPDS Catalog Entry
    */
   private final static String RELATION_COVER = "http://opds-spec.org/image";
@@ -87,7 +92,7 @@ public class FeedHelper {
   /**
    * a navigation link, i.e. to another catalog
    */
-  private final static String LINKTYPE_NAVIGATION = "application/atom+xml;profile=opds-catalog;kind=navigation";
+  public final static String LINKTYPE_NAVIGATION = "application/atom+xml;profile=opds-catalog;kind=navigation";
 
   /**
    * a link to an html page - external links use this type, in our catalogs
@@ -432,7 +437,15 @@ public class FeedHelper {
     return JDOM.INSTANCE.element("published").addContent(getDateAsIsoDate(d));
   }
 
-  private static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
+  /**
+   *
+   * @param url
+   * @param urlType
+   * @param urlRelation
+   * @param title
+   * @return
+   */
+  public static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element("link");
     if (urlType != null && urlRelation != null && urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
       // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)

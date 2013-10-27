@@ -112,17 +112,30 @@
                 <xsl:value-of select="opds:title"/>
                 <br/>
                 <small><em><small><em>
-                  <xsl:for-each select="opds:author/opds:name">
+                  <xsl:for-each select="opds:author">
+                    <xsl:variable name="uri">
+                      <xsl:value-of select="opds:uri"/>
+                    </xsl:variable>
                     <xsl:if test="string-length(.) > 0">
                       <xsl:choose>
                         <xsl:when test="position() = 1">
-                          <xsl:value-of select="."/>
+                          <xsl:element name="a">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                            </xsl:attribute>
+                            <xsl:value-of select="opds:name"/>
+                          </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
                           <small>
                             <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
                           </small>
-                          <xsl:value-of select="."/>
+                          <xsl:element name="a">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                            </xsl:attribute>
+                            <xsl:value-of select="opds:name"/>
+                          </xsl:element>
                         </xsl:otherwise>
                       </xsl:choose>
                     </xsl:if>
