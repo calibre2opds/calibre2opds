@@ -141,28 +141,28 @@
               <xsl:when test="contains(opds:id, ':book:')">
                 <xsl:variable name="bookId" select="opds:id"/>
                 <!-- partial entry -->
+
+                <!-- thumbnail -->
                 <div class="x_container" id="{$bookId}">
+                  <div class="cover">
 
                   <xsl:variable name="authorlist">
-                    <xsl:for-each select="opds:author/opds:name">
-                      <xsl:if test="string-length(.) > 0">
-                        <xsl:choose>
-                          <xsl:when test="position() = 1">
-                            <xsl:value-of select="."/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:value-of select="concat(' ',$i18n.and,' ',.)"/>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:if>
-                    </xsl:for-each>
+                  <xsl:for-each select="opds:author">
+                    <xsl:if test="string-length(.) > 0">
+                      <xsl:choose>
+                        <xsl:when test="position() = 1">
+                            <xsl:value-of select="opds:name"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
+                            <xsl:value-of select="opds:name"/>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:if>
+                  </xsl:for-each>
                   </xsl:variable>
                   <xsl:variable name="bookTitle"><xsl:value-of select="concat($authorlist, ' - ', opds:title)"/></xsl:variable>
-
-                  <!-- thumbnail -->
-                  <div class="cover">
                     <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="{$bookTitle}">
-
                       <xsl:choose>
                         <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
                           <img src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" width="{$thumbWidth}" height="{$thumbHeight}" />
@@ -181,14 +181,42 @@
                         <a href="{concat(substring-before(opds:link[@type='application/atom+xml;type=entry;profile=opds-catalog'  and @rel='alternate']/@href, '.xml'), '.html')}" title="opds:title">
                         <xsl:value-of select="opds:title"/>
                         </a>
-                        <xsl:if test="string-length($authorlist) > 1">
-                          <br/>
+                        <br/>
                           <small>
                             <em>
-                              <xsl:value-of select="$authorlist"/>
-                            </em>
+                  <xsl:for-each select="opds:author">
+                    <xsl:variable name="uri">
+                      <xsl:value-of select="opds:uri"/>
+                    </xsl:variable>
+                    <xsl:if test="string-length(.) > 0">
+                      <xsl:choose>
+                        <xsl:when test="position() = 1">
+                          <xsl:element name="a">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                            </xsl:attribute>
+                            <xsl:value-of select="opds:name"/>
+                          </xsl:element>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <small>
+                            <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
                           </small>
-                        </xsl:if>
+                          <xsl:element name="a">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                            </xsl:attribute>
+                            <xsl:value-of select="opds:name"/>
+                          </xsl:element>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:if>
+                  </xsl:for-each>
+                        </em></small>
+
+
+
+
                         <xsl:if test="string-length(opds:summary) > 1">
                           <br/>
                           <small>

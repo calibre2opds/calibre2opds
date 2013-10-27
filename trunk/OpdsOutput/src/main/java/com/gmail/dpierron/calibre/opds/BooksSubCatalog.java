@@ -681,7 +681,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
           // Series are always held at top level
-          filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, book.getSeries().getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+          filename = SeriesSubCatalog.getSeriesFolderFilename(book.getSeries()) + Constants.PAGE_ONE_XML;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
@@ -699,7 +699,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
             }
             // Authors are always held at top level !
-            filename =  getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+            filename = AuthorsSubCatalog.getAuthorFolderFilename(author) + Constants.PAGE_ONE_XML;
             entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", booksText, author.getName())));
           }
@@ -714,7 +714,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           for (Tag tag : book.getTags()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
             // Tags are held at level
-            filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+            filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId()) + Constants.PAGE_ONE_XML;
             if (nbBooks > 1) {
               // c2o-168 - Omit Counts if MinimizeChangedFiles set
               if (! currentProfile.getMinimizeChangedFiles()) {
@@ -737,7 +737,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
           }
           // Ratings are held at level
-          filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, book.getRating().getId().toString()) + Constants.PAGE_DELIM + "1" + Constants.XML_EXTENSION;
+          filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, book.getRating().getId().toString()) + Constants.PAGE_ONE_XML;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
@@ -901,9 +901,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       for (Author author : book.getAuthors()) {
         if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   author " + author);
         Element authorElement = JDOM.INSTANCE.element("author")
-            .addContent(JDOM.INSTANCE.element("name")
-                .addContent(author.getName()))
-            .addContent(JDOM.INSTANCE.element("uri").addContent(Constants.AUTHOR_TYPE + author.getId() + Constants.XML_EXTENSION));
+            .addContent(JDOM.INSTANCE.element("name").addContent(author.getName()))
+            .addContent(JDOM.INSTANCE.element("uri").addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilename(author) + Constants.PAGE_ONE_XML));
         entry.addContent(authorElement);
       }
     }
@@ -1092,6 +1091,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
+   * Get the base filename that is used to store a given book
+   *
+   * Since we always hold books at the top level the name can be
+   * derived purely knowing the book involved.
+   *
+   * @param book
+   * @return
+   */
+  public static String getBoookFolderFilename (Book book) {
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.BOOK_TYPE,book.getId());
+  }
+  /**
    * Control generating a book Full Details entry
    *
    * The partial details are always generated as these are
@@ -1112,7 +1123,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
-    String filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.BOOK_TYPE,book.getId());
+    String filename = getBoookFolderFilename(book);
     String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
     File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 

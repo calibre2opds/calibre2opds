@@ -765,6 +765,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtTagsToMakeDeep.setText("" + currentProfile.getTagsToMakeDeep());
     txtTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
     lblTagsToMakeDeep.setEnabled(txtTagsToMakeDeep.isEnabled());
+    txtTagsToIgnore.setEnabled(false);  // TODO enable when code ready
+    lblTagsToIgnore.setEnabled(false);  // TODO enable when code ready
     chkNoGenerateSeries.setSelected(!currentProfile.getGenerateSeries());
     chkNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
     lblNoGenerateSeries.setEnabled(chkNoGenerateSeries.isEnabled());
@@ -824,8 +826,8 @@ public class Mainframe extends javax.swing.JFrame {
     lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
     txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
     txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
-    lblBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
-    txtBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
+    // lblBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
+    // txtBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
     lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
@@ -846,8 +848,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtMaxMobileResolution.setText("" + currentProfile.getMaxMobileResolution());
     txtMaxMobileResolution.setEnabled(!currentProfile.isMaxMobileResolutionReadOnly());
     lblMaxMobileResolution.setEnabled(txtMaxMobileResolution.isEnabled());
-    txtMaxMobileResolution.setVisible(false);   // Not currently being used
-    lblMaxMobileResolution.setVisible(false);   // Not currently being used
+    txtMaxMobileResolution.setVisible(false);   // TODO Not currently being used
+    lblMaxMobileResolution.setVisible(false);   // TODO Not currently being used
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
     chkIncludeCoversInCatalog.setEnabled(!currentProfile.isIncludeCoversInCatalogReadOnly());
     lblIncludeCoversInCatalog.setEnabled(chkIncludeCoversInCatalog.isEnabled());

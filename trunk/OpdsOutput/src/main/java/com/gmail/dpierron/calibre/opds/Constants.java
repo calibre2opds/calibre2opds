@@ -54,6 +54,7 @@ public class Constants {
   public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
   public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String PAGE_DELIM = "_Page_";
+  public final static String PAGE_ONE_XML = "_Page_1.xml";
   public final static String INITIAL_URL = "index";
   public final static String INITIAL_URN_PREFIX = "Calibre2opds:";
   public final static String TROOK_FOLDER_EXTENSION = ".library";

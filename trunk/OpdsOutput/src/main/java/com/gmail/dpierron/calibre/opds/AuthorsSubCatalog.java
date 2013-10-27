@@ -310,6 +310,18 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
+   *    * Get the base filename that is used to store a given author
+   *
+   * Since we always hold authors at the top level the name can be
+   * derived purely knowing the author involved.
+
+   * @param author
+   * @return
+   */
+  public static String getAuthorFolderFilename (Author author) {
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId());
+  }
+  /**
    *
    * @param pBreadcrumbs
    * @param authorbooks
@@ -352,7 +364,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       return null;
     }
 
-    String filename = getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId());
+    String filename = getAuthorFolderFilename(author);
     logger.debug("getAuthor:generating " + filename);
 
     String title = author.getSort();
@@ -384,12 +396,15 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       sortBooksByTitle(authorbooks);
       AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
       booksSubcatalog.setCatalogLevel(getCatalogLevel());
-      booksSubcatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
-      booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
+      String authorFolderFilename = getAuthorFolderFilename(author);
+      // booksSubcatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
+      booksSubcatalog.setCatalogFolder(authorFolderFilename);
+      // booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
+      booksSubcatalog.setCatalogBaseFilename(authorFolderFilename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
       Element entry = booksSubcatalog.getListOfBooks(breadcrumbs,
                                                       null,          // derived from catalog properties
                                                       true, 0,       // from start
-                                                      Localization.Main.getText("allbooks.title"),
+                                                      Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getName()),
                                                       booksSubcatalog.getSummary(),
                                                       booksSubcatalog.getUrn(),
                                                       booksSubcatalog.getCatalogBaseFolderFileName(),

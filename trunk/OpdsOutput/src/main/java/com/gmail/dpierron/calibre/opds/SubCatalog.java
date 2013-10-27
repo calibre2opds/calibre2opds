@@ -138,6 +138,7 @@ public abstract class SubCatalog {
    * @return
    */
   private static String encryptString (String data) {
+    crc32.reset();
     crc32.update(data.getBytes());
     return Long.toHexString(crc32.getValue());
   }
@@ -158,6 +159,9 @@ public abstract class SubCatalog {
   private static String encryptFilename (String filename) {
     if (securityCode.length() == 0) return filename;  // Do nothing if encryption not active
     int pos = filename.indexOf(Constants.SECURITY_SEPARATOR);
+    if (pos != -1) {
+      int dummy = 1;
+    }
     return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename.substring(pos + 1);
   }
   /**
@@ -294,20 +298,29 @@ public abstract class SubCatalog {
   /**
    * Set the folder to be used
    * It is always stored decoded and without any trailing slash
+   * There should also not be any security code present - if so remove it.
+   *
+   * NOTE: For convenience we also allow a full folder.filename path
+   *       to be passed in and then we extract the folder part.
    * @param folder  folder name to set
    */
   public void setCatalogFolder (String folder) {
     assert folder != null;
 
     // Debugging asserts - could be removed if not wanted
-    assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-            "Program Error: Unexpected occurence of FOLDER_SEPARATOR )" + folder + ")";
-    assert folder.indexOf(Constants.SECURITY_SEPARATOR) == -1:
-            "Program error: Unexpected Occurencs of SECURITY_SEPARATOR (" + folder + ")";        ;
-    assert folder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-            "Program error: Unexpected occurencs of LEVEL_SEPARATOR (" + folder + ")";
+    // assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
+    //        "Program Error: Unexpected occurence of FOLDER_SEPARATOR )" + folder + ")";
+    // assert folder.indexOf(Constants.SECURITY_SEPARATOR) == -1:
+    //        "Program error: Unexpected Occurencs of SECURITY_SEPARATOR (" + folder + ")";        ;
+    // assert folder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+    //        "Program error: Unexpected occurencs of LEVEL_SEPARATOR (" + folder + ")";
 
-    catalogFolder = folder;
+    int pos = folder.indexOf(Constants.FOLDER_SEPARATOR);
+    if (pos != -1) {
+      folder = folder.substring(0,pos);
+    }
+    pos = folder.indexOf(Constants.SECURITY_SEPARATOR);
+    catalogFolder = folder.substring(pos+1);
     setOptimizUrlPrefix();
   }
 
@@ -350,6 +363,9 @@ public abstract class SubCatalog {
    * Set the base filename to be used for this catalog.
    * Only needed when it cannot be derived automatically from the type
    *
+   * NOTE:  The name is always stored 'in the clear' so any security code
+   *        or level type information needs removing.
+   *
    * @param name
    */
   public void setCatalogBaseFilename (String name) {
@@ -365,10 +381,12 @@ public abstract class SubCatalog {
     }
     // We also want to remove any leading occurrence of security code
     if (securityCode.length() > 0 && name.startsWith(securityCodeAndSeparator)) {
-      catalogBaseFilename = name.substring(securityCodeAndSeparator.length());  // Remove the security code
-    } else {
-      catalogBaseFilename = name;
+      name = name.substring(securityCodeAndSeparator.length());  // Remove the security code
     }
+    // Finally we want to remove any existing encryption string
+    pos = name.indexOf(Constants.SECURITY_SEPARATOR);
+    name = name.substring(pos+1);
+    catalogBaseFilename = name;
     catalogFolderBaseFilename = null;
   }
 
@@ -461,7 +479,7 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  public static String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
+  private static String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
     if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
     result = result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
