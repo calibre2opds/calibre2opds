@@ -8,6 +8,8 @@ import com.gmail.dpierron.tools.Helper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class Constants {
   public final static String PROGNAME = "calibre2opds";
@@ -70,7 +72,8 @@ public class Constants {
   public final static String HELP_URL_ADVANCED = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Advanced_Tab";
   public final static String HELP_URL_EXTERNALLINKS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Links_tab";
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
-
+  public final static Collection<String> CUSTOM_COLUMN_TYPES_SUPPORTED = Arrays.asList("text", "comments", "float", "int");
+  public final static Collection<String> CUSTOM_COLUMN_TYPES_UNSUPPORTED = Arrays.asList("rating", "series", "datetime", "bool", "enumeration");
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
   public final static String[] FILE_RESOURCES = {

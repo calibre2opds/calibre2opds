@@ -853,7 +853,8 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
     chkIncludeCoversInCatalog.setEnabled(!currentProfile.isIncludeCoversInCatalogReadOnly());
     lblIncludeCoversInCatalog.setEnabled(chkIncludeCoversInCatalog.isEnabled());
-
+    chkIncludeCoversInCatalog.setEnabled(false);  // TODO enable when support code ready
+    lblIncludeCoversInCatalog.setEnabled(false);  // TODO enable when support code ready
 
     /* external links */
     txtWikipediaUrl.setText(currentProfile.getWikipediaUrl());

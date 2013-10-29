@@ -305,7 +305,7 @@ public enum JDOM {
     return result;
   }
 
-  public List<Element> convertBookCommentToXhtml(String text) {
+  public List<Element> convertHtmlTextToXhtml(String text) {
     List<Element> result = null;
 
     // if (logger.isTraceEnabled())
@@ -314,7 +314,7 @@ public enum JDOM {
       if (!text.startsWith("<")) {
         // plain text
         if (logger.isTraceEnabled())
-          logger.trace("convertBookCommentToXhtml: plain text");
+          logger.trace("convertHtmlTextToXhtml: plain text");
         StringBuffer sb = new StringBuffer();
         if (Helper.isNotNullOrEmpty(text)) {
           List<String> strings = Helper.tokenize(text, "\n", true);
@@ -333,29 +333,29 @@ public enum JDOM {
 
       // tidy the text
       if (logger.isTraceEnabled())
-        logger.trace("convertBookCommentToXhtml: tidy the text");
+        logger.trace("convertHtmlTextToXhtml: tidy the text");
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (JDOMParseException j) {
         if (logger.isDebugEnabled())
-          logger.trace("convertBookCommentToXhtml: caught JDOMParseException in the tidy process");
+          logger.trace("convertHtmlTextToXhtml: caught JDOMParseException in the tidy process");
         if (logger.isTraceEnabled())
           logger.trace( "" + j);
       } catch (Exception ee) {
         if (logger.isDebugEnabled())
-          logger.debug("convertBookCommentToXhtml: caught exception in the tidy process", ee);
+          logger.debug("convertHtmlTextToXhtml: caught exception in the tidy process", ee);
         tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       } catch (Throwable t) {
-        logger.error("convertBookCommentToXhtml: caught throwable in the tidy process", t);
+        logger.error("convertHtmlTextToXhtml: caught throwable in the tidy process", t);
         tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       }
 
       if (result != null) {
         if (logger.isTraceEnabled())
-          logger.trace("convertBookCommentToXhtml: returning XHTML");
+          logger.trace("convertHtmlTextToXhtml: returning XHTML");
       } else {
         if (Helper.isNotNullOrEmpty(text))
-          logger.debug("convertBookCommentToXhtml: Cannot convert comment text\n" + text);
+          logger.debug("convertHtmlTextToXhtml: Cannot convert comment text\n" + text);
       }
     }
     return result;

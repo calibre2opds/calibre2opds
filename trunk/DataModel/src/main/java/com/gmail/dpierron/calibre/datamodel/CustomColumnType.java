@@ -11,16 +11,18 @@ public class CustomColumnType {
   private String  label;
   private String  name;
   private String  datatype;
-  private String  display;
+  private boolean  is_multiple;
+  private boolean  normalized;
 
   //  CONSTRUCTORS
 
-  public CustomColumnType(long id, String label, String name, String datatype, String display){
+  public CustomColumnType(long id, String label, String name, String datatype, boolean is_multiple, boolean normalized){
     this.id = id;
     this.label = label;
     this.name = name;
     this.datatype = datatype;
-    this.display = display;
+    this.is_multiple = is_multiple;
+    this.normalized = normalized;
   }
 
   //  METHODS and PROPERTIES
@@ -63,8 +65,12 @@ public class CustomColumnType {
    *
    * @return
    */
-  public String getDisplayFormat () {
-    return display;
+  public boolean isNormalized () {
+    return normalized;
+  }
+
+  public boolean isMultiple () {
+    return is_multiple;
   }
 
   /**

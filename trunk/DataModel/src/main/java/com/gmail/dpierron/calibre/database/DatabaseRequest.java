@@ -40,11 +40,13 @@ public enum DatabaseRequest {
   BOOKS_COMMENTS("select book, text from comments"),
   BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
   SAVED_SEARCHES("select val from preferences where key='saved_searches'"),
-  CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype from custom_columns"),
-  CUSTOM_COLUMN_DATA("select book, value from custom_column_");
+  CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype,is_multiple, normalized from custom_columns"),
+  CUSTOM_COLUMN_DATA("select book, value from custom_column_?"),
+  CUSTOM_COLUMN_NORMALIZED_DATA("select bccl.book AS book, cc.value AS value FROM books_custom_column_?_link bccl "
+                      + "LEFT OUTER JOIN custom_column_? cc ON bccl.value=cc.id" );
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
-  private final String sql;
+  private String sql;
   private PreparedStatement preparedStatement;
 
   private DatabaseRequest(String sql) {
@@ -71,7 +73,7 @@ public enum DatabaseRequest {
    * @throws RuntimeException
    */
   public PreparedStatement getStatementId(String id) throws RuntimeException {
-    return getStatement(sql + id);
+    return getStatement(sql.replace("?",id).replace("?",id));
   }
 
   /**
