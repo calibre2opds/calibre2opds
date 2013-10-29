@@ -473,8 +473,9 @@ public enum Database {
         String label = set.getString("label");
         String name = set.getString("name");
         String datatype = set.getString("datatype");
-        String display = set.getString("display");
-        CustomColumnType customColType = new CustomColumnType(id, label, name, datatype, display);
+        boolean is_multiple = set.getBoolean("is_multiple");
+        boolean normalized = set.getBoolean("normalized");
+        CustomColumnType customColType = new CustomColumnType(id, label, name, datatype, is_multiple, normalized );
         result.add(customColType);
       }
     } catch (SQLException e) {
@@ -493,12 +494,21 @@ public enum Database {
   public Map<String, List<CustomColumnValue>> getMapofCustomColumnValuesbyBookId (List<CustomColumnType> listTypes) {
     Map<String, List<CustomColumnValue>> result = new HashMap<String, List<CustomColumnValue>>();
     for (CustomColumnType listType : listTypes)  {
-      PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DATA.getStatementId(Long.toString(listType.getId()));
+      PreparedStatement statement;
+      if (listType.isNormalized()) {
+        DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.resetStatement();
+        statement = DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.getStatementId(Long.toString(listType.getId()));
+      } else {
+        DatabaseRequest.CUSTOM_COLUMN_DATA.resetStatement();
+        statement = DatabaseRequest.CUSTOM_COLUMN_DATA.getStatementId(Long.toString(listType.getId()));
+      }
       try {
         ResultSet set = statement.executeQuery();
           while (set.next()) {
-            String bookId = set.getString("book");
-            String value = set.getString("value");
+            String bookId;
+            String value;
+            bookId = set.getString("book");
+            value = set.getString("value");
             List<CustomColumnValue> customColumnValues = result.get(bookId);
             if (customColumnValues == null) {
               customColumnValues = new LinkedList<CustomColumnValue>();

@@ -75,9 +75,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-158: Improve performance by avoiding generating unchanged pages
     - #c2o-162: Option to Include cover images within the catalog
     - #c2o-164: Option to Publish only the generated catalog in Publish mode when Books URL specified
-    - #c2o-170: Provide direct links from a list of books to the related authors in HTML catalogs
-    - #c20-172: Dmg Release of Mac OSX broken.
-    - #c2o-173: Make authors, series and tags into active links in book details 
+    - #c2o-173: Make authors, series and tags into active links in book details
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -99,7 +97,9 @@ v3.3
     - Fix: #c2o-167: Option to Save bandwidth no longer makes sense so removed it
     - New: #c2o-168: Omit counts from internal links when Minimize Changed Files selected
     - New: #c2o-169: Option to exclude tags from cross-reference links
+    - New: #c2o-170: Provide direct links from a list of books to the related authors in HTML catalogs
     - Fix: #c2o-171: Publication date does not show up in the book details page
+    - Fix: #c20-172: Dmg Release of Mac OSX broken.
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 

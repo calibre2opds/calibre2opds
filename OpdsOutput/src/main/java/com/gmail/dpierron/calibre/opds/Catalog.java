@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
@@ -388,7 +389,7 @@ public class Catalog {
       try {
         FileInputStream is = new FileInputStream(summaryFile);
         String text = Helper.readTextFile(is);
-        List<Element> htmlElements = JDOM.INSTANCE.convertBookCommentToXhtml(text);
+        List<Element> htmlElements = JDOM.INSTANCE.convertHtmlTextToXhtml(text);
         if (htmlElements != null)
           for (Element htmlElement : htmlElements) {
             contentElement.addContent(htmlElement.detach());
@@ -545,6 +546,42 @@ public class Catalog {
     }
     logger.trace("targetFolder set to " + targetFolder);
 
+    // Check any custom columns specified actually exist
+    List<String> customColumnsWanted = currentProfile.getCustomColumnsWanted();
+    if (customColumnsWanted != null && customColumnsWanted.size() > 0) {
+      testcol: for (String customLabel : customColumnsWanted) {
+        if (customLabel.startsWith("#")){
+          customLabel = customLabel.substring(1);
+        }
+        for (CustomColumnType type : DataModel.INSTANCE.getListOfCustomColumnTypes()) {
+          if (type.getLabel().toUpperCase().equals(customLabel.toUpperCase())) {
+            if (Constants.CUSTOM_COLUMN_TYPES_SUPPORTED.contains(type.getDatatype())) {
+              continue testcol;
+            }
+            if (Constants.CUSTOM_COLUMN_TYPES_UNSUPPORTED.contains(type.getDatatype())) {
+              if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotSupported", customLabel), textYES, textNO)) {
+                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+                return;
+              }
+              continue testcol;
+            }
+            if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotRecognized", customLabel), textYES, textNO)) {
+              callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+              return;
+            }
+            continue testcol;
+          }
+        }
+        // If we get here we did not find the relevant custom column
+        if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotFound", customLabel), textYES, textNO)) {
+          callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+          return;
+        }
+      }
+    }
+
+
+
     // FILE PLACEMENT CHECKS
 
     assert Helper.isNotNullOrEmpty(libraryFolder);
@@ -626,8 +663,39 @@ public class Catalog {
 
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
-      DataModel.INSTANCE.preloadDataModel();
-      callback.checkIfContinueGenerating();      // check if we must continue
+      DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
+      callback.checkIfContinueGenerating();     // check if we must continue
+
+      // Database read optimizations
+      // (ony read in optional databitems if weneed them later)
+
+      // TODO Tags
+      // TODO Series
+      // TODO Published
+      // TODO Publisher
+      // Custom Columns - remove any custom columns that are not on wanted list
+      List<CustomColumnType>customColumns = DataModel.INSTANCE.getListOfCustomColumnTypes();
+      customColumnsWanted = currentProfile.getCustomColumnsWanted();
+      checktype: for (int i=0; i < customColumns.size() ; i++) {
+        CustomColumnType type = customColumns.get(i);
+        if (customColumnsWanted == null || customColumnsWanted.size() == 0) {
+          customColumns.remove(type);
+          i--;  // Decrement as we have removed current node
+        } else {
+          for (String label : customColumnsWanted) {
+            if (label.startsWith("#")) {
+              label = label.substring(1);
+            }
+            if (type.getLabel().toUpperCase().equals(label.toUpperCase())) {
+              continue checktype;
+            }
+          }
+          customColumns.remove(type);
+          i--;    // Decrement as we have removed current node
+        }
+      }
+      DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId();
+
 
       // Prepare the feature books search query
       BookFilter featuredBookFilter = null;
@@ -645,8 +713,7 @@ public class Catalog {
         }
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
-          int n = callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO);
-          if (n == 1) {
+          if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
             callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
             return;
           }
@@ -717,9 +784,6 @@ public class Catalog {
       } else {
         logger.info("Database loaded: " + books.size() + " books");
       }
-
-      // TODO  Check any custom columns specified exist in the database
-
       callback.checkIfContinueGenerating();
 
       callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));

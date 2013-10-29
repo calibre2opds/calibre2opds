@@ -6,6 +6,7 @@ import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
+import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
@@ -27,7 +28,6 @@ public class CatalogManager {
   private static List<File> bookEntriesFiles;
   private static String securityCode;
   private static String initialUrl;
-  private static List<CustomColumnType> bookDetailsCustomColumns = null;
 
 
   public CatalogManager() {
@@ -238,13 +238,18 @@ public class CatalogManager {
     return true;
   }
 
+  private static List<CustomColumnType> bookDetailsCustomColumns = null;
+
   /**
    * Get the list of curom columns that are to be included in Book Details.
+   * If we do not recognize any of them they are ignored as an earlier
+   * validation tst will have checked this with the user.
+   *
    * @return
    */
   public List<CustomColumnType> getBookDetailsCustomColumns() {
     if (bookDetailsCustomColumns == null)  {
-      List<CustomColumnType> types = Database.INSTANCE.getlistOfCustoColumnTypes();
+      List<CustomColumnType> types = DataModel.INSTANCE.getListOfCustomColumnTypes();
       if (types == null) {
         logger.warn("getBookDetailsCustomColumns: No custom columns read from database.");
         return null;
@@ -253,10 +258,10 @@ public class CatalogManager {
       for (String customColumnLabel : ConfigurationManager.INSTANCE.getCurrentProfile().getTokenizedBookDetailsCustomColumns()) {
         if (customColumnLabel.startsWith("#")) {
           customColumnLabel = customColumnLabel.substring(1);
-          for (CustomColumnType type : types) {
-            if (type.getLabel().toUpperCase().equals(customColumnLabel.toUpperCase())) {
-              bookDetailsCustomColumns.add(type);
-            }
+        }
+        for (CustomColumnType type : types) {
+          if (type.getLabel().toUpperCase().equals(customColumnLabel.toUpperCase())) {
+            bookDetailsCustomColumns.add(type);
           }
         }
       }

@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.viewer.configure.ConfigurationManager;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -88,7 +89,10 @@ public enum DataModel {
 
   /**
    * The following loads up data in a number of different views
-   * to help with more efficient access to it later in the run
+   * to help with more efficient access to it later in the run.
+   *
+   * Some values that are optional are only loaded on demand when
+   * an attempt is amde to access their data set.
    */
   public void preloadDataModel() {
     getMapOfLanguagesById();
@@ -110,9 +114,10 @@ public enum DataModel {
     getListOfSeries();
     getMapOfSeries();
     getMapOfBooksBySeries();
-    getMapOfBooksByRating();
-    getListOfCustomColumnTypes();
-    getMapOfCustomColumnValuesByBookId(listOfCustomColumnTypes);
+    // TODO Avoid loading any values not required by this run!
+    // getMapOfBooksByRating();
+    // getListOfCustomColumnTypes();
+    // getMapOfCustomColumnValuesByBookId();
   }
 
   public List<CustomColumnType> getListOfCustomColumnTypes () {
@@ -122,12 +127,11 @@ public enum DataModel {
     return listOfCustomColumnTypes;
   }
 
-  public Map<String, List<CustomColumnValue>> getMapOfCustomColumnValuesByBookId(List<CustomColumnType> listTypes ) {
+  public Map<String, List<CustomColumnValue>> getMapOfCustomColumnValuesByBookId() {
     if (mapOfCustomColumnValuesByBookId == null) {
-       mapOfCustomColumnValuesByBookId = Database.INSTANCE.getMapofCustomColumnValuesbyBookId(listTypes);
+       mapOfCustomColumnValuesByBookId = Database.INSTANCE.getMapofCustomColumnValuesbyBookId(getListOfCustomColumnTypes());
     }
     return mapOfCustomColumnValuesByBookId;
-
   }
 
   public Map<String, String> getMapOfSavedSearches() {

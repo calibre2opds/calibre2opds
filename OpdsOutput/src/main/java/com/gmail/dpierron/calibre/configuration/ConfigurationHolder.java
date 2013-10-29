@@ -995,9 +995,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public List<String> getTokenizedBookDetailsCustomColumns() {
     if (tokenizedBookDetailsCustomColumns == null) {
-      tokenizedBookDetailsCustomColumns = Helper.tokenize(getBookDetailsCustomFields().toUpperCase(), ",", true);
+      tokenizedBookDetailsCustomColumns = Helper.tokenize(getBookDetailsCustomFields(), ",", true);
     }
     return tokenizedBookDetailsCustomColumns;
+  }
+
+  /**
+   * Get the full list of custom column names that have been asked for.
+   * This can be used both for checking if they exist on the database,
+   * and subsequently we can load only the ones that are required.
+   *
+   * @return
+   */
+  public List<String> getCustomColumnsWanted() {
+    List<String> result = getTokenizedBookDetailsCustomColumns();
+    // TODO Add any custom columns required elsewhere (such as Custom Columns to be treated as tags)
+    return result;
   }
 
   public String getTagsToMakeDeep() {
