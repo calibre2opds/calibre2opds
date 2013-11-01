@@ -1055,6 +1055,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
             // We only do values the user has asked for
             if (bookDetailsCustomColumnTypes.contains(value.getType())) {
               String textValue = value.getValue();
+              if (value.getType().getDatatype().equals("bool")) {
+                textValue = textValue.equals("0") ? Localization.Main.getText("boolean.no")
+                                              : Localization.Main.getText("boolean.yes");
+              }
               int posStart = textValue.startsWith("<div>") ? 5 : 0;
               int posEnd = textValue.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
               int posPara = textValue.indexOf("<p>");
@@ -1063,6 +1067,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               } else {
                 textValue = "<span id=\"" + value.getType().getLabel() + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
               }
+
               List<Element>valuexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(textValue);
               content.addContent(JDOM.INSTANCE.element("strong")
                   .addContent(value.getType().getName() + ": "));

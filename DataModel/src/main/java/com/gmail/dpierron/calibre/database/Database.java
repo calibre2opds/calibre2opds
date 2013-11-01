@@ -496,8 +496,13 @@ public enum Database {
     for (CustomColumnType listType : listTypes)  {
       PreparedStatement statement;
       if (listType.isNormalized()) {
-        DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.resetStatement();
-        statement = DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.getStatementId(Long.toString(listType.getId()));
+        if (listType.getLabel().equals("series")) {
+          DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.resetStatement();
+          statement = DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA_EXTRA.getStatementId(Long.toString(listType.getId()));
+        } else {
+          DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.resetStatement();
+          statement = DatabaseRequest.CUSTOM_COLUMN_NORMALIZED_DATA.getStatementId(Long.toString(listType.getId()));
+        }
       } else {
         DatabaseRequest.CUSTOM_COLUMN_DATA.resetStatement();
         statement = DatabaseRequest.CUSTOM_COLUMN_DATA.getStatementId(Long.toString(listType.getId()));
@@ -509,6 +514,9 @@ public enum Database {
             String value;
             bookId = set.getString("book");
             value = set.getString("value");
+            if (listType.getDatatype().equals("series")) {
+              value += " [" + set.getString("extra") + "]";
+            }
             List<CustomColumnValue> customColumnValues = result.get(bookId);
             if (customColumnValues == null) {
               customColumnValues = new LinkedList<CustomColumnValue>();

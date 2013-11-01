@@ -13,14 +13,35 @@ import com.gmail.dpierron.tools.Helper;
 
 
 public enum DeviceMode {
-  Dropbox("CatalogFolderName", "_catalog", false, "TargetFolder", "", true, "CopyToDatabaseFolder", true, true, "ZipTrookCatalog", false,
-      true, "ReprocessEpubMetadata", false, false),
-  Nas("CatalogFolderName", "_catalog", false, "TargetFolder", ".", false, "CopyToDatabaseFolder", false, false, "ZipTrookCatalog", false,
-      true, "ReprocessEpubMetadata", false, false),
-  Nook("CatalogFolderName", "Calibre", false, "IncludedFormatsList", "EPUB,PDB,PDF", false, "SaveBandwith", true, false, "ThumbnailHeight",
-      144, true, "GenerateHtml", false, false, "GenerateHtmlDownloads", false, false, "GenerateDownloads", true, true,
-      "IncludeBooksWithNoFile", false, false, "CryptFilenames", false, true, "TargetFolder", ".", false, "CopyToDatabaseFolder", false,
-      false, "IncludeAboutLink", false, false, "ZipTrookCatalog", false, false, "ReprocessEpubMetadata", false, false);
+  Dropbox("CatalogFolderName", "_catalog", false,
+          "TargetFolder", "", true,
+          "CopyToDatabaseFolder", true, true,
+          "OnlyCatalogAtTarget", false, true,
+          "ZipTrookCatalog", false, true,
+          "ReprocessEpubMetadata", false, false),
+
+  Nas("CatalogFolderName", "_catalog", false,
+      "TargetFolder", ".", false,
+      "CopyToDatabaseFolder", false, false,
+      "OnlyCatalogAtTarget", false, false,
+      "ZipTrookCatalog", false, true,
+      "ReprocessEpubMetadata", false, false),
+
+  Nook( "CatalogFolderName", "Calibre", false,
+        "IncludedFormatsList", "EPUB,PDB,PDF", false,
+        "SaveBandwith", true, false,
+        "ThumbnailHeight", 144, true,
+        "GenerateHtml", false, false,
+        "GenerateHtmlDownloads", false, false,
+        "GenerateDownloads", true, true,
+        "IncludeBooksWithNoFile", false, false,
+        "CryptFilenames", false, true,
+        "TargetFolder", ".", false,
+        "CopyToDatabaseFolder", false, false,
+        "OnlyCatalogAtTarget", false, true,
+        "IncludeAboutLink", false, false,
+        "ZipTrookCatalog", false, false,
+        "ReprocessEpubMetadata", false, false);
 
   Object[] options;
 

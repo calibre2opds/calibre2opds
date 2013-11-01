@@ -15,6 +15,7 @@ public class Constants {
   public final static String PROGNAME = "calibre2opds";
   public final static String PROGVERSION = "3.3 beta";
   public final static String BZR_VERSION = getBzrVersion();
+  public final static String CALIBRE_METADATA_DB_= "metadata.db";
   public final static String PROGTITLE = PROGNAME + " " + PROGVERSION;
   public final static String LOGFILE_FOLDER = "log";
   public final static String LOGFILE_NAME = "calibre2opds.log";
@@ -72,8 +73,8 @@ public class Constants {
   public final static String HELP_URL_ADVANCED = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Advanced_Tab";
   public final static String HELP_URL_EXTERNALLINKS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Links_tab";
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
-  public final static Collection<String> CUSTOM_COLUMN_TYPES_SUPPORTED = Arrays.asList("text", "comments", "float", "int");
-  public final static Collection<String> CUSTOM_COLUMN_TYPES_UNSUPPORTED = Arrays.asList("rating", "series", "datetime", "bool", "enumeration");
+  public final static Collection<String> CUSTOM_COLUMN_TYPES_SUPPORTED = Arrays.asList("text", "comments", "float", "int", "bool", "rating", "datetime", "enumeration");
+  public final static Collection<String> CUSTOM_COLUMN_TYPES_UNSUPPORTED = Arrays.asList("series");
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files
   public final static String[] FILE_RESOURCES = {
