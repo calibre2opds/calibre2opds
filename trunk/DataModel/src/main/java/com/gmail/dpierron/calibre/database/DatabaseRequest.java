@@ -41,9 +41,14 @@ public enum DatabaseRequest {
   BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
   SAVED_SEARCHES("select val from preferences where key='saved_searches'"),
   CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype,is_multiple, normalized from custom_columns"),
+  // Simple custom columns types
   CUSTOM_COLUMN_DATA("select book, value from custom_column_?"),
+  // Normalised custom column types (not series)
   CUSTOM_COLUMN_NORMALIZED_DATA("select bccl.book AS book, cc.value AS value FROM books_custom_column_?_link bccl "
-                      + "LEFT OUTER JOIN custom_column_? cc ON bccl.value=cc.id" );
+                      + "LEFT OUTER JOIN custom_column_? cc ON bccl.value=cc.id"),
+  // Special case for Series data
+  CUSTOM_COLUMN_NORMALIZED_DATA_EXTRA("select bccl.book AS book, cc.value AS value, bccl.extra AS extra FROM books_custom_column_?_link bccl "
+      + "LEFT OUTER JOIN custom_column_? cc ON bccl.value=cc.id" );
 
   private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
   private String sql;

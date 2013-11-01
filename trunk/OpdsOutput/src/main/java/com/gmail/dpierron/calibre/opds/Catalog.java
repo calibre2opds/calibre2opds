@@ -547,6 +547,7 @@ public class Catalog {
     logger.trace("targetFolder set to " + targetFolder);
 
     // Check any custom columns specified actually exist
+    boolean errors = false;
     List<String> customColumnsWanted = currentProfile.getCustomColumnsWanted();
     if (customColumnsWanted != null && customColumnsWanted.size() > 0) {
       testcol: for (String customLabel : customColumnsWanted) {
@@ -559,33 +560,37 @@ public class Catalog {
               continue testcol;
             }
             if (Constants.CUSTOM_COLUMN_TYPES_UNSUPPORTED.contains(type.getDatatype())) {
-              if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotSupported", customLabel), textYES, textNO)) {
-                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
-                return;
-              }
+              callback.errorOccured(Localization.Main.getText("gui.error.customColumnNotSupported", customLabel), null);
+              errors = true;
               continue testcol;
             }
-            if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotRecognized", customLabel), textYES, textNO)) {
-              callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
-              return;
-            }
+            callback.errorOccured(Localization.Main.getText("gui.error.customColumnNotRecognized", customLabel), null);
+            errors = true;
             continue testcol;
           }
         }
         // If we get here we did not find the relevant custom column
-        if (1 == callback.askUser(Localization.Main.getText("gui.error.customColumnNotFound", customLabel), textYES, textNO)) {
-          callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+        callback.errorOccured(Localization.Main.getText("gui.error.customColumnNotFound", customLabel), null);
+        errors = true;
+      }
+      if (errors == true) {
+        if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating", targetFolder), textYES, textNO)) {
           return;
         }
       }
     }
 
-
-
     // FILE PLACEMENT CHECKS
 
     assert Helper.isNotNullOrEmpty(libraryFolder);
     if (targetFolder != null) {
+      if (currentProfile.getOnlyCatalogAtTarget()) {
+        File f = new File(targetFolder, Constants.CALIBRE_METADATA_DB_);
+        if (f.exists()) {
+          callback.errorOccured(Localization.Main.getText("error.targetislibrary"), null);
+          return;
+        }
+      }
       // Check that target folder (if set) is not set to be the same as the library folder
       if (libraryFolder.getAbsolutePath().equals(targetFolder.getAbsolutePath())) {
         callback.errorOccured(Localization.Main.getText("error.targetsame"), null);
@@ -944,7 +949,8 @@ public class Catalog {
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
-      if (currentProfile.getDeviceMode() != DeviceMode.Dropbox) {
+      if ((currentProfile.getDeviceMode() != DeviceMode.Dropbox)
+      && (!currentProfile.getOnlyCatalogAtTarget())){
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
         for (String pathToCopy : CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy()) {
@@ -1056,7 +1062,12 @@ public class Catalog {
         }
         // FALLTHRU Sync catalog files if not using ZIP mode
       case Nas:
-        File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        File targetCatalogFolder;
+        if (currentProfile.getOnlyCatalogAtTarget()) {
+          targetCatalogFolder = targetFolder;
+        } else {
+          targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        }
         syncFiles(generateFolder, targetCatalogFolder);
         break;
       case Dropbox:
@@ -1212,9 +1223,14 @@ public class Catalog {
         }
         break;
     
-      default:    
-        File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
-    
+      default:
+        File catalogFolder;
+        if (currentProfile.getOnlyCatalogAtTarget()) {
+          // If this option set, then catalog going to be at supplied level
+          catalogFolder = catalogParentFolder;
+        } else {
+          catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        }
         // We treat catalog folder as not existing as being equivalent to
         // catalog existing as there is no problem with over-writing.
         if ((false == catalogFolder.exists()) && (true == checkCatalogFolderOnly)) {

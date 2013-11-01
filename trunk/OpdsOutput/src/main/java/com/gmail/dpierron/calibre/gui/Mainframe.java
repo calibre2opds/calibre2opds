@@ -199,13 +199,13 @@ public class Mainframe extends javax.swing.JFrame {
       chkNogeneratehtmlfiles.setEnabled(chkNogenerateopds.isSelected()==true || chkNogenerateopdsfiles.isSelected()==false);
     }
   }
-  /**
-   * Decide if the user should be able to specify the target folder.
-   */
-  void checkOnlyCatalogAtTarget() {
-    if (chkOnlyCatalogAtTarget.isSelected()) {
 
-    }
+  /**
+   * Check if the user is allowed to set the option to only have a
+   * catalog at the target location?
+   */
+  private void checkOnlyCatalogAllowed() {
+    // Do nothing at the moment
   }
 
   private void actOnDontsplittagsActionPerformed() {
@@ -264,6 +264,7 @@ public class Mainframe extends javax.swing.JFrame {
         break;
     }
     // show all the buttons and commands
+    // ITIMPI:  Not quite sure why this needs to be done here?
     cmdCancel.setEnabled(true);
     mnuFileExit.setEnabled(true);
     cmdGenerate.setEnabled(true);
@@ -570,6 +571,21 @@ public class Mainframe extends javax.swing.JFrame {
     lblLibrarythingTitleUrl.setEnabled(derivedState);
     cmdLibrarythingTitleReset.setEnabled((derivedState));
   }
+
+  /**
+   * Helper function to set up a checkbox and associated label given its base name
+   * @param classNameBase
+   */
+  private void setCheckBox(String classNameBase) {
+    String chkName = "chk" + classNameBase;
+    String lblName = "lbl" + classNameBase;
+    String getName = "get" + classNameBase;
+    String roName = "is" + classNameBase + "ReadOnly";
+    chkCopyToDatabaseFolder.setSelected(currentProfile.getCopyToDatabaseFolder());
+    chkCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
+    lblCopyToDatabaseFolder.setEnabled(chkCopyToDatabaseFolder.isEnabled());
+
+  }
   /**
    * Load values for configuration into GUI
    * Also enable/disable any fields according to current values if required
@@ -617,38 +633,38 @@ public class Mainframe extends javax.swing.JFrame {
     cmdSetTargetFolder.setEnabled(txtTargetFolder.isEnabled());
     chkCopyToDatabaseFolder.setSelected(currentProfile.getCopyToDatabaseFolder());
     chkCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
-    lblCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
+    lblCopyToDatabaseFolder.setEnabled(chkCopyToDatabaseFolder.isEnabled());
+    chkOnlyCatalogAtTarget.setSelected(currentProfile.getOnlyCatalogAtTarget());
+    chkOnlyCatalogAtTarget.setEnabled((!currentProfile.isOnlyCatalogAtTargetReadOnly()));
+    lblOnlyCatalogAtTarget.setEnabled(chkOnlyCatalogAtTarget.isEnabled());
     chkReprocessEpubMetadata.setSelected(currentProfile.getReprocessEpubMetadata());
     chkReprocessEpubMetadata.setEnabled(!currentProfile.isReprocessEpubMetadataReadOnly());
-    lblReprocessEpubMetadata.setEnabled(!currentProfile.isReprocessEpubMetadataReadOnly());
+    lblReprocessEpubMetadata.setEnabled(chkReprocessEpubMetadata.isEnabled());
     txtWikilang.setText(currentProfile.getWikipediaLanguage());
     txtWikilang.setEnabled(!currentProfile.isWikipediaLanguageReadOnly());
-    lblWikilang.setEnabled(!currentProfile.isWikipediaLanguageReadOnly());
+    lblWikilang.setEnabled(txtWikilang.isEnabled());
     txtCatalogFolder.setText(currentProfile.getCatalogFolderName());
     txtCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
-    lblCatalogFolder.setEnabled(!currentProfile.isCatalogFolderNameReadOnly());
+    lblCatalogFolder.setEnabled(txtCatalogFolder.isEnabled());
     txtUrlBooks.setText(currentProfile.getUrlBooks());
     txtUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
-    lblUrlBooks.setEnabled(!currentProfile.isUrlBooksReadOnly());
+    lblUrlBooks.setEnabled(txtUrlBooks.isEnabled());
     txtCatalogTitle.setText(currentProfile.getCatalogTitle());
     txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
-    lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
-    txtCatalogTitle.setText(currentProfile.getCatalogTitle());
-    txtCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
-    lblCatalogTitle.setEnabled(!currentProfile.isCatalogTitleReadOnly());
+    lblCatalogTitle.setEnabled(txtCatalogTitle.isEnabled());
     chkLanguageAsTag.setSelected(currentProfile.getLanguageAsTag());
     chkLanguageAsTag.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
-    lblLang.setEnabled(!currentProfile.isLanguageAsTagReadOnly());
+    lblLanguageAsTag.setEnabled(chkLanguageAsTag.isEnabled());
     chkNoThumbnailGenerate.setSelected(!currentProfile.getThumbnailGenerate());
     chkNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
-    lblNoThumbnailGenerate.setEnabled(!currentProfile.isThumbnailGenerateReadOnly());
+    lblNoThumbnailGenerate.setEnabled(chkNoThumbnailGenerate.isEnabled());
     txtThumbnailheight.setText("" + currentProfile.getThumbnailHeight());
     txtThumbnailheight.setInputVerifier(iv);
     txtThumbnailheight.setEnabled(!currentProfile.isThumbnailHeightReadOnly());
-    lblThumbnailheight.setEnabled(!currentProfile.isThumbnailHeightReadOnly());
+    lblThumbnailheight.setEnabled(txtThumbnailheight.isEnabled());
     chkNoCoverResize.setSelected(!currentProfile.getCoverResize());
     chkNoCoverResize.setEnabled(!currentProfile.isCoverResizeReadOnly());
-    lblNoCoverResize.setEnabled(!currentProfile.isCoverResizeReadOnly());
+    lblNoCoverResize.setEnabled(chkNoCoverResize.isEnabled());
     txtCoverHeight.setText("" + currentProfile.getCoverHeight());
     txtCoverHeight.setInputVerifier(iv);
     txtCoverHeight.setEnabled(!currentProfile.isCoverHeightReadOnly());
@@ -826,8 +842,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
     txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
     txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
-    // lblBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
-    // txtBookDetailsCustomFields.setEnabled(false); // TODO enable when support ready
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
     lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
@@ -932,6 +946,7 @@ public class Mainframe extends javax.swing.JFrame {
     } else
       currentProfile.setTargetFolder(null);
     currentProfile.setCopyToDatabaseFolder(chkCopyToDatabaseFolder.isSelected());
+    currentProfile.setOnlyCatalogAtTarget((chkOnlyCatalogAtTarget.isSelected()));
     currentProfile.setReprocessEpubMetadata(chkReprocessEpubMetadata.isSelected());
     currentProfile.setWikipediaLanguage(txtWikilang.getText());
     currentProfile.setCatalogFolderName(txtCatalogFolder.getText());
@@ -1115,8 +1130,8 @@ public class Mainframe extends javax.swing.JFrame {
     lblOnlyCatalogAtTarget.setText(Localization.Main.getText("config.OnlyCatalogAtTarget.label")); // NOI18N
     lblOnlyCatalogAtTarget.setToolTipText(Localization.Main.getText("config.OnlyCatalogAtTarget.description")); // NOI18N
     chkOnlyCatalogAtTarget.setToolTipText(lblOnlyCatalogAtTarget.getToolTipText()); // NOI18N
-    lblOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
-    chkOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
+    // lblOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
+    // chkOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
     lblReprocessEpubMetadata.setText(Localization.Main.getText("config.ReprocessEpubMetadata.label")); // NOI18N
     lblReprocessEpubMetadata.setToolTipText(Localization.Main.getText("config.ReprocessEpubMetadata.description")); // NOI18N
     chkReprocessEpubMetadata.setToolTipText(lblReprocessEpubMetadata.getToolTipText()); // NOI18N
@@ -2019,6 +2034,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         txtUrlBooks.setText("txtUrlBooks");
         txtUrlBooks.setPreferredSize(new java.awt.Dimension(400, 20));
+        txtUrlBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CheckOnlyCatalogAllowed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -2232,7 +2252,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkZipTrookCatalog, gridBagConstraints);
 
-        lblOnlyCatalogAtTarget.setText("lblOnlCatalogAtTarget");
+        lblOnlyCatalogAtTarget.setText("lblOnlyCatalogAtTarget");
+        lblOnlyCatalogAtTarget.setToolTipText("");
         lblOnlyCatalogAtTarget.setAutoscrolls(true);
         lblOnlyCatalogAtTarget.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -2245,12 +2266,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblOnlyCatalogAtTarget, gridBagConstraints);
-
-        chkOnlyCatalogAtTarget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkOnlyCatalogAtTargetActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
@@ -4661,10 +4676,6 @@ public class Mainframe extends javax.swing.JFrame {
       BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
     }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
 
-    private void chkOnlyCatalogAtTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOnlyCatalogAtTargetActionPerformed
-      checkOnlyCatalogAtTarget();
-    }//GEN-LAST:event_chkOnlyCatalogAtTargetActionPerformed
-
     private void chkNoGenerateTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoGenerateTagsActionPerformed
       chkIncludeTagCrossReferences.setEnabled(true);
       if (chkNoGenerateTags.isSelected()) chkIncludeTagCrossReferences.setSelected(false);
@@ -4675,6 +4686,10 @@ public class Mainframe extends javax.swing.JFrame {
     private void checkDownloads(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkDownloads
         checkDownloads();
     }//GEN-LAST:event_checkDownloads
+
+    private void CheckOnlyCatalogAllowed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOnlyCatalogAllowed
+       checkOnlyCatalogAllowed();
+    }//GEN-LAST:event_CheckOnlyCatalogAllowed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
