@@ -1212,7 +1212,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry.addContent(JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid()));
       entry.addContent(FeedHelper.getUpdatedTag(book.getLatestFileModifiedDate()));
       // add the navigation links
-      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true, true);
+      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
       // add the required data to the book entry
       decorateBookEntry(entry, book, true);
       // write the element to the files
