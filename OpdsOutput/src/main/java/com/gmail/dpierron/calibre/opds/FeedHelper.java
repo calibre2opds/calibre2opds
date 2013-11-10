@@ -104,8 +104,6 @@ public class FeedHelper {
    */
   private final static String LINKTYPE_JPEG = "image/jpeg";
 
-  private final static String baseUrl = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
-
   /* ---------- ELEMENTS -----------*/
 
   /**
@@ -124,7 +122,7 @@ public class FeedHelper {
     Element updated = getUpdatedTag();
     feed.addContent(updated);
 
-    decorateElementWithNavigationLinks(feed, breadcrumbs, pTitle, urlExt, false, inSubDir);
+    decorateElementWithNavigationLinks(feed, breadcrumbs, pTitle, urlExt, false);
 
     return feed;
   }
@@ -234,88 +232,67 @@ public class FeedHelper {
   }
 
   /**
-   * Decorate a root element (feed or entry, in the case of a full book entry) with the start and self links, and the breadcrumb navigation tree
+   * Decorate a root element
+   * (feed or entry, in the case of a full book entry) with the start and self links, and the breadcrumb navigation tree
    *
    * @param feed        the feed to decorate
    * @param breadcrumbs the breadcrumbs retracing steps to the root
-   * @param title      the title of the page
-   * @param url         the url end of the page (baseURL + url = complete url)
+   * @param title       the title of the page
+   * @param catalogFilename         the url (filename) of the page being decorated
    * @param isEntry     if true, the document is a full entry, if false, it's a catalog
-   * @param inSubDir    if true we are currently in a sub directory
    */
-  public static void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String url, boolean isEntry, boolean inSubDir) {
+  public static void decorateElementWithNavigationLinks(Element feed, Breadcrumbs breadcrumbs, String title, String catalogFilename, boolean isEntry) {
     if (feed == null)
       return;
+    assert breadcrumbs != null;
+    assert catalogFilename!= null;
+    assert catalogFilename.endsWith(Constants.XML_EXTENSION) || catalogFilename.endsWith(Constants.HTML_EXTENSION)
+             : "Program Error: url should end with .xml extension";
 
-    // assert (breadcrumbs.size() > 1) == inSubDir : "Program Error: mismatch between breadcrumbs size and subDir indiator";
-    if (breadcrumbs.size() == 1 && inSubDir == true) {
-      int z = 1;
-    }
-    //assert url.endsWith(Constants.XML_EXTENSION) || url.endsWith(Constants.HTML_EXTENSION)
-    //         : "Program Error: url should end with .xml extension";
-    if ((! url.endsWith(Constants.XML_EXTENSION)) && (! url.endsWith(Constants.HTML_EXTENSION))) {
+    if (catalogFilename.contains("custom")) {
       int dummy = 1;
-      // assert url.endsWith(Constants.XML_EXTENSION) : "Program Error: Attempt to set up URL without .xml extension ";
     }
+
+    // We want to get past any folder separators to get to the base filename;
+    int pos = 0;
+    while (catalogFilename.substring(pos).contains(Constants.FOLDER_SEPARATOR))
+      pos = catalogFilename.indexOf(Constants.FOLDER_SEPARATOR,pos) + 1;
+    String filename = catalogFilename.substring(pos);
+    String folder = catalogFilename.substring(0,pos);
+    pos = folder.indexOf(Constants.CURRENT_PATH_PREFIX);   // Also handles parent case!
+    if (pos != -1)
+      folder = folder.substring(pos+Constants.CURRENT_PATH_PREFIX.length());
+    feed.addContent(getLinkElement(Constants.CURRENT_PATH_PREFIX + filename, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
 
     // add a "start" link to the catalog main page
 
-    String startUrl = baseUrl;
-    if (baseUrl.length() > 0) {
-      startUrl = startUrl + Constants.FOLDER_SEPARATOR;
-    } else {
-      startUrl = (inSubDir ? Constants.PARENT_PATH_PREFIX : Constants.CURRENT_PATH_PREFIX);
-    }
-    startUrl += CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
+    String startUrl = (folder.length() == 0 ? Constants.CURRENT_PATH_PREFIX : Constants.PARENT_PATH_PREFIX)
+                      + CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
     feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
 
     // add a navigation link to every breadcrumb in the hierarchy
-    if (breadcrumbs != null) {
-      // Special treatment for first breadcrumb (start URL)
-      Breadcrumb breadcrumb = breadcrumbs.firstElement();
-      feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
-      // Add links for remaining breadcrumbs
-      for (int i = 1 ; i < breadcrumbs.size() ; i++) {
-        breadcrumb = breadcrumbs.elementAt(i);
-        String breadcrumbUrl = breadcrumb.url;
-        // All breadcrumb URL's (except first) need to be to parent level
-        if (breadcrumbUrl.startsWith(Constants.CURRENT_PATH_PREFIX) && inSubDir) {
-          breadcrumbUrl = Constants.PARENT_PATH_PREFIX + breadcrumbUrl.substring(Constants.CURRENT_PATH_PREFIX.length());
-        }
-        if (! breadcrumbUrl.startsWith(Constants.PARENT_PATH_PREFIX)) {
-          if (inSubDir ==  false && (! breadcrumbUrl.startsWith(Constants.CURRENT_PATH_PREFIX))) {
-            breadcrumbUrl = Constants.CURRENT_PATH_PREFIX + breadcrumbUrl;
-          } else {
-            assert false : "Program Error?:  unexpected inSubDir=" + inSubDir +", breadcrumbRrl=" + breadcrumbUrl;
-          }
-        }
-        feed.addContent(getLinkElement(breadcrumbUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
-      }
+
+    // Special treatment for first breadcrumb (start URL)
+    Breadcrumb breadcrumb = breadcrumbs.firstElement();
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
+    // Add links for remaining breadcrumbs
+    for (int i = 1 ; i < breadcrumbs.size() ; i++) {
+      breadcrumb = breadcrumbs.elementAt(i);
+      String breadcrumbUrl = breadcrumb.url;
+      while (breadcrumbUrl.substring(pos).contains(Constants.FOLDER_SEPARATOR))
+        pos = breadcrumbUrl.indexOf(Constants.FOLDER_SEPARATOR,pos) + 1;
+      String breadcrumbFilename = breadcrumbUrl.substring(pos);
+      String breadcrumbFolder = breadcrumbUrl.substring(0,pos);
+      pos = breadcrumbFolder.indexOf(Constants.CURRENT_PATH_PREFIX);   // Also handles parent case!
+      if (pos != -1)
+        breadcrumbFolder = breadcrumbFolder.substring(pos+Constants.CURRENT_PATH_PREFIX.length());
+      feed.addContent(getLinkElement((breadcrumbFolder.equals(folder)
+                                     ? Constants.CURRENT_PATH_PREFIX
+                                     : Constants.PARENT_PATH_PREFIX + breadcrumbFolder)
+                                     + breadcrumbFilename,
+                      LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
     }
-
-    String selfUrl = baseUrl;
-    if (url != null) {
-      /*
-       little programming trick ; due to the way this method is called, url is also used for the breadcrumbs and
-       therefore starts with ../
-        */
-      String s;
-      if (url.startsWith("../"))
-        s = url.substring(3);
-      else
-        s = url;
-      selfUrl = baseUrl + s;
-    }
-
-    // Self URL's mean we are already in a  folder, so no need to add in "../" at start  (c2o-104)
-    // ITIMPI:  How does thes the above test for removing "../" interact (at all) with this?
-    if (selfUrl.startsWith(Constants.PARENT_PATH_PREFIX))
-      selfUrl = Constants.CURRENT_PATH_PREFIX + selfUrl.substring(3);
-    if (! selfUrl.startsWith(Constants.CURRENT_PATH_PREFIX))
-      selfUrl = Constants.CURRENT_PATH_PREFIX + selfUrl;
-
-    feed.addContent(getLinkElement(selfUrl, isEntry ? LINKTYPE_FULLENTRY : LINKTYPE_NAVIGATION, RELATION_SELF, title));
   }
 
   /* ---------- METADATA ----------*/

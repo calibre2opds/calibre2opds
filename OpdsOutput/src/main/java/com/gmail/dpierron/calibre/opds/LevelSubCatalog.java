@@ -314,14 +314,18 @@ public class LevelSubCatalog extends SubCatalog {
                 logger.warn("No books found for custom catalog " + customCatalogTitle);
               } else {
                 if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
-                  String customFilename = getCatalogBaseFolderFileName();
-                  String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
-                  Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
                   LevelSubCatalog customSubCatalog = new LevelSubCatalog(customCatalogBooks, customCatalogTitle);
                   customSubCatalog.setCatalogType(Constants.CUSTOM_TYPE);
                   customSubCatalog.setCatalogFolder(Constants.CUSTOM_TYPE);
-                  customSubCatalog.setCatalogLevel(custombreadcrumbs);
+                  // String customFilename = getCatalogBaseFolderFileName();
+                  // String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+                  // Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
+                  // customSubCatalog.setCatalogLevel(custombreadcrumbs);
+                  customSubCatalog.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, null));
                   customSubCatalog.setCatalogBaseFilename(catalogManager.getInitialUr());
+                  String customFilename = customSubCatalog.getCatalogBaseFolderFileName();
+                  String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+                  Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
                   entry = customSubCatalog.getCatalog(custombreadcrumbs, null,    // No further filter at this point
                       inSubDir,    // Custom catalogs always in subDir
                       Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(customCatalogBooks.size())),
