@@ -43,8 +43,10 @@ public class Constants {
   public final static String PUBLISHERS_TYPE = "publishers";
   public final static String FEATURED_TYPE = "featured";
   public final static String CUSTOM_TYPE = "custom";
+  public final static String IMAGES_FOLDER = "images";
   public final static String XML_EXTENSION = ".xml";
   public final static String HTML_EXTENSION = ".html";
+  public final static String JPG_EXTENSION = ".jpg";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
   public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
@@ -65,6 +67,10 @@ public class Constants {
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
+  public final static String RESIZED_COVER_FILENAME = "resizedcover.jpg";
+  public final static String THUMBNAIL_FILE = "thumbnail.jpg";
+  public final static String COVERHEIGHT_DAT_FILENAME = "coverHeight.dat";
+  public final static String THUMBNAILHEIGHT_DAT_FILENAME = "thumbnailHeight.dat";
   public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
   public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";

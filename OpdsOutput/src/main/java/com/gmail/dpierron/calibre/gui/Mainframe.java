@@ -355,6 +355,7 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void about() {
     logger.info("Displaying About dialog");
+    String prog_version = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION);
     String intro_goal = Localization.Main.getText("intro.goal");
     String intro_wiki_title = Localization.Main.getText("intro.wiki.title");
     String intro_wiki_url = Localization.Main.getText("intro.wiki.url");
@@ -366,8 +367,8 @@ public class Mainframe extends javax.swing.JFrame {
     String intro_thanks_1 = Localization.Main.getText("intro.thanks.1");
     String intro_thanks_2 = Localization.Main.getText("intro.thanks.2");
     String message =
-        "<html>" + intro_goal + "<br>" + intro_wiki_title + intro_wiki_url + "<br>" + intro_team_title + "<br><ul>" + "<li>" + intro_team_list1 + "<li>" +
-            intro_team_list2 + "<li>" + intro_team_list3 + "<li>" + intro_team_list4 + "</ul><br>" + intro_thanks_1 + "<br>" + intro_thanks_2 + "</html>";
+        "<html>" + prog_version + "<br><br>" + intro_goal + "<br><br>" + intro_wiki_title + intro_wiki_url + "<br><br>" + intro_team_title + "<br><ul>" + "<li>" + intro_team_list1 + "<li>" +
+            intro_team_list2 + "<li>" + intro_team_list3 + "<li>" + intro_team_list4 + "</ul><br>" + intro_thanks_1 + "<br>" + intro_thanks_2 + "<br><br></html>";
     JOptionPane.showMessageDialog(this, message, Localization.Main.getText("gui.menu.help.about"), JOptionPane.INFORMATION_MESSAGE);
   }
 
@@ -842,16 +843,16 @@ public class Mainframe extends javax.swing.JFrame {
     lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
     txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
     txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
+    lblBookDetailsCustomFields.setEnabled(txtBookDetailsCustomFields.isEnabled());
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
-    lblNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
-    chkIncludeTagCrossReferences.setSelected(!currentProfile.getIncludeTagCrossReferences());
-    chkNogeneratecrosslinks.setEnabled(!currentProfile.isIncludeTagCrossReferencesReadOnly());
-    lblIncludeTagCrossReferences.setEnabled(!currentProfile.isIncludeTagCrossReferencesReadOnly());
-
+    lblNogeneratecrosslinks.setEnabled(chkNogeneratecrosslinks.isEnabled());
+    chkIncludeTagCrossReferences.setSelected(currentProfile.getIncludeTagCrossReferences());
+    chkIncludeTagCrossReferences.setEnabled(!currentProfile.isIncludeTagCrossReferencesReadOnly());
+    lblIncludeTagCrossReferences.setEnabled(chkIncludeTagCrossReferences.isEnabled());
     chkNogenerateexternallinks.setSelected(!currentProfile.getGenerateExternalLinks());
     chkNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
-    lblNogenerateexternallinks.setEnabled(!currentProfile.isGenerateExternalLinksReadOnly());
+    lblNogenerateexternallinks.setEnabled(chkNogenerateexternallinks.isEnabled());
 
     // Advanced
 

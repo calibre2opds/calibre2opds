@@ -53,14 +53,7 @@ public class CachedFile extends File {
     //            logger.trace("reset to defaults");
     cachedFile = false;
     targetFile = false;
-    crcCalced = false;
-    lastModifiedChecked = false;
-    existsChecked = false;
-    lengthChecked = false;
-    exists = false;
-    lastModified = 0;
-    crc = -1;
-    exists = false;
+    setAsNew();
   }
 
   /**
@@ -127,6 +120,22 @@ public class CachedFile extends File {
   }
 
   /**
+   * Use this when we have just created a new file.
+   * This is pribarliy when new image files are generated,
+   * so we want to force any cached files to be re-read.
+   */
+  public void setAsNew() {
+    crcCalced = false;
+    lastModifiedChecked = false;
+    existsChecked = false;
+    lengthChecked = false;
+    exists = false;
+    lastModified = 0;
+    crc = -1;
+    exists = false;
+  }
+
+  /**
    * Check modified date of the cached file object
    * Use cached value if known, otherwise get real value
    *
@@ -172,7 +181,6 @@ public class CachedFile extends File {
       logger.trace("length=" + length + ": " + getAbsolutePath());
     return length;
   }
-
 
   /**
    * Get the CRC for the given file.

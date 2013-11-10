@@ -55,6 +55,7 @@ public class Catalog {
   //-----------------------------------------
   private static final boolean syncLog = true;      // Set to true to get a log of the file copy process
   //-----------------------------------------         (If set false, code is optimised out by compiler)
+
   private static PrintWriter syncLogFile;           // File to be used for the Sync log
 
   /**
@@ -137,7 +138,7 @@ public class Catalog {
         return;
       }
       // If we get here at least the cached state agrees with the real state!
-      // If it is amissing .xml or .html file then this is still a significant issue
+      // If it is missing .xml or .html file then this is still a significant issue
       if (cf_src.getName().endsWith(Constants.XML_EXTENSION)
       || cf_src.getName().endsWith(Constants.HTML_EXTENSION)) {
         logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
@@ -246,8 +247,10 @@ public class Catalog {
 
       // Ignore XML files if no OPDS catalog wanted
       // IS this the best place to do this?
+      // TODO.  Suspect this section is now redundant - need to check this!
       if (!currentProfile.getGenerateOpds()) {
         if (cf_src.getName().endsWith(Constants.XML_EXTENSION)) {
+          int dummy = 1;
           if (cf_dst.exists()) {
             if (syncFilesDetail && logger.isTraceEnabled())
               logger.trace("File " + cf_dst.getAbsolutePath() + ": Deleted as XML file and no OPDS catalog required");
