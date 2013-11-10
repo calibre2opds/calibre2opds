@@ -573,9 +573,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
               logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
           }
           coverManager.setImageToGenerate(resizedCoverFile, coverFile);
+          resizedCoverFile.setAsNew();  // Reset cached status
         } else {
           if (logger.isTraceEnabled())  logger.trace("addCoverLink: resizedCover not to be generated");
         }
+
       } else {
         // Not using resized covers - use original cover.jpg
 
@@ -623,6 +625,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             logger.trace("addCoverLink: thumbnail set to be generated (new cover)");
           }
           thumbnailManager.setImageToGenerate(thumbnailFile, coverFile);
+          thumbnailFile.setAsNew();     // Reset cached file status
         } else {
           if (logger.isTraceEnabled())  logger.trace("addCoverLink: thumbnail not to be generated");
         }

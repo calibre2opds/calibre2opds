@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+
 /**
  * Container object for linking many object types used within the program
  *
@@ -11,24 +13,38 @@ package com.gmail.dpierron.calibre.opds;
 public enum CatalogContext {
   INSTANCE;
 
-  public CatalogManager catalogManager;
-  public HtmlManager htmlManager;
-  public ThumbnailManager thumbnailManager;
-  public ImageManager coverManager;
-  public CatalogCallbackInterface callback;
-  public SecurityManager securityManager;
+  public static CatalogManager catalogManager;
+  public static HtmlManager htmlManager;
+  public static ThumbnailManager thumbnailManager;
+  public static ImageManager coverManager;
+  public static CatalogCallbackInterface callback;
+  public static SecurityManager securityManager;
+  public static ConfigurationManager configurationManager;
 
   private CatalogContext() {
     initialize();
   }
 
   public void initialize() {
-    this.catalogManager = new CatalogManager();
-    this.htmlManager = new HtmlManager();
-    this.thumbnailManager = ImageManager.newThumbnailManager();
-    this.coverManager = ImageManager.newCoverManager();
-    this.securityManager = new SecurityManager();
+    if (catalogManager == null)   catalogManager = new CatalogManager();
+    if (htmlManager == null)      htmlManager = new HtmlManager();
+    if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
+    if (coverManager==null)       coverManager = ImageManager.newCoverManager();
+    if (securityManager==null)    securityManager = new SecurityManager();
   }
+
+  /*
+  public void reset() {
+    catalogManager = null;
+    htmlManager = null;
+    thumbnailManager = null;
+    coverManager = null;
+    securityManager = null;
+  }
+  */
+
+  //  The following methods have been deprecated in favour of making
+  //  some global variables available.  This decision might need revisiting.
  /*
   public CatalogCallbackInterface getCallback() {
     if (callback == null)
@@ -45,7 +61,7 @@ public enum CatalogContext {
   }
 
   public void setCatalogManager(CatalogManager catalogManager) {
-    this.catalogManager = catalogManager;
+    catalogManager = catalogManager;
   }
 
   public HtmlManager getHtmlManager() {
@@ -53,7 +69,7 @@ public enum CatalogContext {
   }
 
   public void setHtmlManager(HtmlManager htmlManager) {
-    this.htmlManager = htmlManager;
+    htmlManager = htmlManager;
   }
 
   public ThumbnailManager getThumbnailManager() {
@@ -61,7 +77,7 @@ public enum CatalogContext {
   }
 
   public void setThumbnailManager(ThumbnailManager thumbnailManager) {
-    this.thumbnailManager = thumbnailManager;
+    thumbnailManager = thumbnailManager;
   }
 
   public ImageManager getCoverManager() {
@@ -72,5 +88,4 @@ public enum CatalogContext {
     this.coverManager = coverManager;
   }
   */
-
 }

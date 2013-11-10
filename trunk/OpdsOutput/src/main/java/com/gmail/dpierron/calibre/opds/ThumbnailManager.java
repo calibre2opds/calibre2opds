@@ -9,34 +9,62 @@ import java.util.Map;
 public class ThumbnailManager extends ImageManager {
   Map<String, String> mapOfThumbnailUrlByBookId = new HashMap<String, String>();
 
+  // CONSTRUCTOS
+
   public ThumbnailManager(int maxSize) {
     super(maxSize);
   }
 
-  public void addBook(Book book, String url) {
-    mapOfThumbnailUrlByBookId.put(book.getId(), url);
-  }
+  // METHODS and PROPERTIES
 
-  String getThumbnailUrl(String bookId) {
-    return mapOfThumbnailUrlByBookId.get(bookId);
-  }
-
-  public String getThumbnailUrl(Book book) {
-    return getThumbnailUrl(book.getId());
-  }
-
+  /**
+   *
+   * @param book
+   * @return
+   */
   @Override
   String getResultFilename(Book book) {
     EBookFile file = book.getPreferredFile();
     if (file != null)
-      return file.getName() + ".jpg";
+      return file.getName() + Constants.JPG_EXTENSION;
     else
-      return "thumbnail.jpg";
+      return Constants.THUMBNAIL_FILE;
   }
 
+  /**
+   *
+   * @return
+   */
   @Override
   String getImageHeightDat() {
-    return "thumbnailHeight.dat";
+    return Constants.THUMBNAILHEIGHT_DAT_FILENAME;
+  }
+
+  /**
+   *
+   * @param book
+   * @param url
+   */
+  public void addBook(Book book, String url) {
+    mapOfThumbnailUrlByBookId.put(book.getId(), url);
+  }
+
+  /**
+   *
+   * @param bookId
+   * @return
+   */
+  String getThumbnailUrl(String bookId) {
+    return mapOfThumbnailUrlByBookId.get(bookId);
+  }
+
+  /**
+   *
+   * @param book
+   * @return
+   */
+  public String getThumbnailUrl(Book book) {
+    return getThumbnailUrl(book.getId());
   }
 
 }

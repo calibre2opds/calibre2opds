@@ -29,13 +29,7 @@ public abstract class ImageManager {
 
   abstract String getImageHeightDat();
 
-  public final static ThumbnailManager newThumbnailManager() {
-    return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
-  }
-
-  public final static ImageManager newCoverManager() {
-    return new CoverManager(ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
-  }
+  // CONSTRUCTOR
 
   ImageManager(int imageHeight) {
     imagesToGenerate = new HashMap<File, File>();
@@ -43,6 +37,8 @@ public abstract class ImageManager {
     this.imageHeight = imageHeight;
 
 
+    // TODO Move this test to somewhere else so result gets cached
+    // as there is no need to repeat it for every image generated.
     File imageSizeFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
 
     if (!imageSizeFile.exists())
@@ -57,12 +53,23 @@ public abstract class ImageManager {
         } finally {
           if (ois != null)
             ois.close();
+          // TODO Need to update cachedFile information.
         }
       } catch (IOException e) {
         // we don't care about the file error, let's just say size has changed
         imageSizeChanged = true;
       }
     }
+  }
+
+  // METHODS and PROPERTIES
+
+  public final static ThumbnailManager newThumbnailManager() {
+    return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
+  }
+
+  public final static ImageManager newCoverManager() {
+    return new CoverManager(ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
   }
 
   public void setImageToGenerate(File reducedCoverFile, File coverFile) {
@@ -76,6 +83,12 @@ public abstract class ImageManager {
     return imageSizeChanged;
   }
 
+  /**
+   * Get the URI for a cover image.
+   *
+   * @param book
+   * @return
+   */
   String getImageUri(Book book) {
     return FeedHelper.urlEncode("../../" + book.getPath() + "/" + getResultFilename(book), true);
   }

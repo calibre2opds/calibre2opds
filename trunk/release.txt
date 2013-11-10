@@ -75,6 +75,8 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-162: Option to Include cover images within the catalog
     - #c2o-165: Problem adding Custom Catalog entries (partially fixed)
     - #c2o-173: Make authors, series and tags into active links in book details
+    - #c20-175: Set logging level via GUI
+    - #c2o-177: Link to top level incorrect if Books URL is specified.
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -101,6 +103,9 @@ v3.3
     - New: #c2o-170: Provide direct links from a list of books to the related authors in HTML catalogs
     - Fix: #c2o-171: Publication date does not show up in the book details page
     - Fix: #c20-172: Dmg Release of Mac OSX broken.
+    - Fix: #c2o-174: Invalid catalog generated if Encrypt filenames selected
+    - Fix: #c2o-176: New thumbnails and resized covers not copied until next run in Publish mode
+    - Fix: #c2o-178: Setting for including tags in cross-references toggle between runs
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 

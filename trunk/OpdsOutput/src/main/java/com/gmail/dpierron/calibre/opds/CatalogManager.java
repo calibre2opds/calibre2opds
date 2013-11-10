@@ -143,8 +143,10 @@ public class CatalogManager {
 
     String filePath = file.getAbsolutePath();
 
-    if (!filePath.startsWith(databasePath))
+    if (!filePath.startsWith(databasePath))  {
+      logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
       return; // let's not copy files outside the database folder
+    }
 
     String relativePath = filePath.substring(databasePathLength);
     listOfFilesPathsToCopy.add(relativePath);
