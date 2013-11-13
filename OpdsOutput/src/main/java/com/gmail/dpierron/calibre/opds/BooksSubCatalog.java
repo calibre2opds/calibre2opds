@@ -558,6 +558,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // get the generated cover filename
       CachedFile resizedCoverFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), coverManager.getResultFilename(book));
+      FeedHelper.checkFileNameIsNewStandard(resizedCoverFile,
+          CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), coverManager.getResultFilenameOld(book)));
 
       // prepare to copy the thumbnail if we are using them file
       if (currentProfile.getCoverResize()) {
@@ -573,7 +575,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               logger.trace("addCoverLink: resizedCover set to be generated (new cover)");
           }
           coverManager.setImageToGenerate(resizedCoverFile, coverFile);
-          resizedCoverFile.setAsNew();  // Reset cached status
+          resizedCoverFile.clearCachedInformation();  // Reset cached status
         } else {
           if (logger.isTraceEnabled())  logger.trace("addCoverLink: resizedCover not to be generated");
         }
@@ -607,6 +609,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (coverFile.exists()) {
       thumbnailUri = thumbnailManager.getImageUri(book);
       CachedFile thumbnailFile = CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), thumbnailManager.getResultFilename(book));
+      FeedHelper.checkFileNameIsNewStandard(thumbnailFile,CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(),
+          thumbnailManager.getResultFilenameOld(book)));
+
       // Take into account whether thumbnail generation suppressed
       if (currentProfile.getThumbnailGenerate()) {
         // Using generated thumbnail files
@@ -625,7 +630,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             logger.trace("addCoverLink: thumbnail set to be generated (new cover)");
           }
           thumbnailManager.setImageToGenerate(thumbnailFile, coverFile);
-          thumbnailFile.setAsNew();     // Reset cached file status
+          thumbnailFile.clearCachedInformation();     // Reset cached file status
         } else {
           if (logger.isTraceEnabled())  logger.trace("addCoverLink: thumbnail not to be generated");
         }
@@ -647,8 +652,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
     } else {
       // resize the default thumbnail if needed
-      File resizedDefaultThumbnail = new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME);
-      File defaultThumbnail = new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME);
+      CachedFile resizedDefaultThumbnail = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME));
+      CachedFile defaultThumbnail = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME));
+
+      FeedHelper.checkFileNameIsNewStandard(resizedDefaultThumbnail, CachedFileManager.INSTANCE.addCachedFile(catalogManager.getGenerateFolder(),
+          "c2o_" + Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME));
       if (!resizedDefaultThumbnail.exists() || thumbnailManager.hasImageSizeChanged() || resizedDefaultThumbnail.lastModified() < defaultThumbnail.lastModified()) {
         thumbnailManager.setImageToGenerate(resizedDefaultThumbnail, defaultThumbnail);
       }
@@ -1049,6 +1057,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // See if any Custom Column values to be included
+      // TODO rework code to honor the checkbox field for always including Custom Fields
 
       List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogContext.INSTANCE.catalogManager.getBookDetailsCustomColumns();
       if (bookDetailsCustomColumnTypes != null && bookDetailsCustomColumnTypes.size() > 0) {
@@ -1166,7 +1175,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
     File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
-    if (!isInDeepLevel() && isBookTheStepUnit() && !getCatalogFolder().equals(Constants.AUTHOR_TYPE))
+    if (!isInDeepLevel() && isBookTheStepUnit() && !getCatalogFolder().startsWith(Constants.AUTHOR_TYPE))
       CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry:" + book);

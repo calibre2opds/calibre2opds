@@ -24,11 +24,14 @@ public class ThumbnailManager extends ImageManager {
    */
   @Override
   String getResultFilename(Book book) {
+    return "c2o_thumbnail.jpg";
+  }
+  String getResultFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     if (file != null)
       return file.getName() + Constants.JPG_EXTENSION;
     else
-      return Constants.THUMBNAIL_FILE;
+      return "thumbnail.jpg";
   }
 
   /**
@@ -37,7 +40,7 @@ public class ThumbnailManager extends ImageManager {
    */
   @Override
   String getImageHeightDat() {
-    return Constants.THUMBNAILHEIGHT_DAT_FILENAME;
+    return "c2o_thumbnailHeight.dat";
   }
 
   /**

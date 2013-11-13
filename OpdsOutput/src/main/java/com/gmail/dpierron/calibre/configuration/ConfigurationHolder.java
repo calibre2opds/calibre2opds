@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.opds.CatalogContext;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Composite;
@@ -116,6 +117,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
   private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
+  private final static String PROPERTY_NAME_BookDetailsCustomFieldsAlways = "BookDetailsCustomFieldsAlways";
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
@@ -436,6 +438,19 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setBookDetailsCustomFields(String fieldList) {
     setProperty(PROPERTY_NAME_BookDetailsCustomFields, fieldList);
+  }
+
+
+  public boolean getBookDetailsCustomFieldsAlways() {
+    Boolean b = getBoolean(PROPERTY_NAME_BookDetailsCustomFieldsAlways);
+    if (b == null)
+      return defaults.getBookDetailsCustomFieldsAlways();
+    else
+      return b.booleanValue();
+  }
+
+  public void setBookDetailsCustomFieldsAlways(boolean value) {
+    setProperty(PROPERTY_NAME_BookDetailsCustomFieldsAlways, value);
   }
 
   public boolean isIncludeTagCrossReferencesReadOnly() {
@@ -1485,6 +1500,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       }
     } catch (RuntimeException e) {
       logger.warn("error while decoding custom catalogs : " + s, e);
+
     }
     return result;
   }

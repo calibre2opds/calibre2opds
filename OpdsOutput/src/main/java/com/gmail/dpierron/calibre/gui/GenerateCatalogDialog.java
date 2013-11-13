@@ -451,6 +451,17 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     }
   }
 
+  private int warnCount;
+  public void resetWarnCount() {
+    warnCount = 0;
+  }
+  public int getWarnCount() {
+    return warnCount;
+  }
+  public void incrementWarnCount() {
+    warnCount++;
+    return;
+  }
   /**
    * This method is called from within the constructor to initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is always

@@ -26,6 +26,7 @@ public abstract class ImageManager {
   private int imageHeight = 1;
 
   abstract String getResultFilename(Book book);
+  abstract String getResultFilenameOld(Book book);
 
   abstract String getImageHeightDat();
 
@@ -36,10 +37,8 @@ public abstract class ImageManager {
     timeInImages = 0;
     this.imageHeight = imageHeight;
 
-
-    // TODO Move this test to somewhere else so result gets cached
-    // as there is no need to repeat it for every image generated.
-    File imageSizeFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
+    CachedFile imageSizeFile = CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
+    FeedHelper.checkFileNameIsNewStandard(imageSizeFile, CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), imageSizeFile.getName().substring(4)));
 
     if (!imageSizeFile.exists())
       imageSizeChanged = true;

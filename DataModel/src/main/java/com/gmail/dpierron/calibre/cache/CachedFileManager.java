@@ -24,11 +24,14 @@ public enum CachedFileManager {
   private final static Logger logger = Logger.getLogger(CachedFileManager.class);
   private static Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
   private File cacheFile = null;
+  private final static String CALIBRE2OPDS_LOG_FILENAME = "c2o_cache";
+  private final static String CALIBRE2OPDS_LOG_FILENAME_OLD = "calibre2opds.cache";
+
 
   public void initialize() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
-    loadCache();
+    // loadCache();
   }
 
   /**
@@ -66,8 +69,8 @@ public enum CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public CachedFile addCachedFile(CachedFile cf) {
-    if (cf.getName().endsWith("_Page"))
-        assert true;
+//    if (cf.getName().endsWith("_Page"))
+//        assert true;
     String path = cf.getPath();
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
@@ -88,8 +91,8 @@ public enum CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public CachedFile addCachedFile(File f) {
-    if (f.getName().endsWith("_Page"))
-      assert true;
+    // if (f.getName().endsWith("_Page"))
+    //   assert true;
     String path = f.getPath();
     CachedFile cf = inCache(f);
     if (cf == null) {
@@ -148,8 +151,21 @@ public enum CachedFileManager {
    */
   public void setCacheFolder(File cf) {
     assert cf != null;    // cf must not be null
-    cacheFile = new File(cf, "calibre2opds.cache");
+    cacheFile = new File(cf, CALIBRE2OPDS_LOG_FILENAME);
     logger.info("CRC Cache file set to " + cacheFile.getPath());
+
+    // Check for old name, and if necessary rename to new style
+    File cacheFileOld = new File(cf, CALIBRE2OPDS_LOG_FILENAME_OLD);
+    if (cacheFileOld.exists()) {
+        logger.debug("Cache file found with name " + CALIBRE2OPDS_LOG_FILENAME_OLD + ", rename to " + CALIBRE2OPDS_LOG_FILENAME);
+        if (cacheFileOld.renameTo(cacheFile)) {
+          logger.debug("Cache file renamed to " + CALIBRE2OPDS_LOG_FILENAME);
+        } else {
+          logger.debug("ERROR: failed to rename cache file");
+      }
+    }
+
+
   }
 
   /**

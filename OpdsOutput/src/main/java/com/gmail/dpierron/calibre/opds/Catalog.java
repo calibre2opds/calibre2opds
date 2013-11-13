@@ -190,7 +190,14 @@ public class Catalog {
       // Create current list of files that are in source locations
       File sourceFiles[] = src.listFiles();
       // Create current list of files that are in target location
-      List<File> targetNotInSourceFiles = new LinkedList<File>(Arrays.asList(dst.listFiles()));
+      File destfiles[] = dst.listFiles();
+      List<File> targetNotInSourceFiles;
+      if (destfiles != null) {
+        targetNotInSourceFiles = new LinkedList<File>(Arrays.asList(dst.listFiles()));
+      } else {
+        logger.debug("***** Possible Program Error: unexpected null from dst.listFiles() when dst=" + dst);
+        targetNotInSourceFiles = new LinkedList<File>();  // Assign empty list
+      }
 
       // Now we want to:
       // - Remove any that are in the source list as they will not need to be deleted.
@@ -816,6 +823,8 @@ public class Catalog {
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
         // CachedFileManager.INSTANCE.loadCache();
         CachedFileManager.INSTANCE.initialize();
+        CachedFileManager.INSTANCE.loadCache();
+
       } else {
         if (logger.isTraceEnabled())
           logger.trace("Deleting Cache");

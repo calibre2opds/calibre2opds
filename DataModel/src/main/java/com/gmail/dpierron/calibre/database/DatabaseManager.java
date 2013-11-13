@@ -47,7 +47,7 @@ public enum DatabaseManager {
         connection.close();
         connection = null;
       } catch (SQLException e) {
-        logger.warn("closeConnection: " + e);
+        logger.warn("Unexpected error on database closeConnection: " + e);
       }
   }
 
