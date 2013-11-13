@@ -20,10 +20,14 @@ public class CoverManager extends ImageManager {
    */
   @Override
   public String getResultFilename(Book book) {
+    return "c2o_resizedcover.jpg";
+  }
+
+  public String getResultFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     String result;
-    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + Constants.RESIZED_COVER_FILENAME
-                            : Constants.RESIZED_COVER_FILENAME;
+    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + "resizedcover.jpg"
+                            : "resizedcover.jpg";
     return result;
   }
 
@@ -33,7 +37,7 @@ public class CoverManager extends ImageManager {
    */
   @Override
   public String getImageHeightDat() {
-    return Constants.COVERHEIGHT_DAT_FILENAME;
+    return "c2o_coverHeight.dat";
   }
 
 }

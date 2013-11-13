@@ -53,7 +53,7 @@ public class CachedFile extends File {
     //            logger.trace("reset to defaults");
     cachedFile = false;
     targetFile = false;
-    setAsNew();
+    clearCachedInformation();
   }
 
   /**
@@ -124,7 +124,7 @@ public class CachedFile extends File {
    * This is pribarliy when new image files are generated,
    * so we want to force any cached files to be re-read.
    */
-  public void setAsNew() {
+  public void clearCachedInformation() {
     crcCalced = false;
     lastModifiedChecked = false;
     existsChecked = false;

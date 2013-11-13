@@ -1,11 +1,12 @@
 package com.gmail.dpierron.calibre.opds;
 
+import com.gmail.dpierron.calibre.cache.CachedFile;
+import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
+import org.apache.log4j.Logger;
 import org.jdom.Element;
-import sun.util.resources.CurrencyNames_ar_TN;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class FeedHelper {
+  private final static Logger logger = Logger.getLogger(ImageManager.class);
+
 
   /**
    * An Acquisition Feed with newly released OPDS Catalog Entries. These Acquisition Feeds typically contain a subset of the OPDS Catalog
@@ -517,5 +520,23 @@ public class FeedHelper {
     if (includeAuthor)
       element.addContent(getFeedAuthorElement());
     return element;
+  }
+
+  /**
+   * We changed the standard for naming files.
+   * This carries out the check if a file exists with the old naming
+   * standard and and if necessary renames it to the new standard.
+   * It use the CachedFile class to try and minimise any I/O from repeated checks
+   *
+   * @param newfile
+   * @param oldfile
+   */
+  public static void checkFileNameIsNewStandard (CachedFile newfile, CachedFile oldfile) {
+    if (! newfile.exists() && oldfile.exists()) {
+      oldfile.renameTo(newfile);
+      newfile.clearCachedInformation();                 // Clear cached information
+      CachedFileManager.INSTANCE.removeCachedFile(oldfile);
+      logger.info("File " + oldfile.getName() + "renamed to " + newfile.getName());
+    }
   }
 }

@@ -844,6 +844,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
     txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
     lblBookDetailsCustomFields.setEnabled(txtBookDetailsCustomFields.isEnabled());
+    chkBookDetailsCustomFieldsAlways.setSelected(currentProfile.getBookDetailsCustomFieldsAlways());
+    chkBookDetailsCustomFieldsAlways.setEnabled(txtBookDetailsCustomFields.isEnabled());
     chkNogeneratecrosslinks.setSelected(!currentProfile.getGenerateCrossLinks());
     chkNogeneratecrosslinks.setEnabled(!currentProfile.isGenerateCrossLinksReadOnly());
     lblNogeneratecrosslinks.setEnabled(chkNogeneratecrosslinks.isEnabled());
@@ -1029,6 +1031,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setDisplayAuthorSortInBookDetails(chkDisplayAuthorSortInBookDetails.isSelected());
     currentProfile.setDisplayTitleSortInBookDetails(chkDisplayTitleSortInBookDetails.isSelected());
     currentProfile.setBookDetailsCustomFields(txtBookDetailsCustomFields.getText());
+    currentProfile.setBookDetailsCustomFieldsAlways(chkBookDetailsCustomFieldsAlways.isSelected());
     currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
     currentProfile.setGenerateExternalLinks(!chkNogenerateexternallinks.isSelected());
     currentProfile.setIncludeTagCrossReferences(chkIncludeTagCrossReferences.isSelected());
@@ -1261,6 +1264,7 @@ public class Mainframe extends javax.swing.JFrame {
     lblBookDetailsCustomFields.setText(Localization.Main.getText("config.BookDetailsCustomFields.label")); // NOI18N
     lblBookDetailsCustomFields.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.description")); // NOI18N
     txtBookDetailsCustomFields.setToolTipText(lblBookDetailsCustomFields.getToolTipText());
+    chkBookDetailsCustomFieldsAlways.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.checkbox")); // NOI18N
     lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
     lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
     chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
@@ -1677,6 +1681,7 @@ public class Mainframe extends javax.swing.JFrame {
         lblBookDetailsCustomFields = new javax.swing.JLabel();
         chkIncludeTagCrossReferences = new javax.swing.JCheckBox();
         lblIncludeTagCrossReferences = new javax.swing.JLabel();
+        chkBookDetailsCustomFieldsAlways = new javax.swing.JCheckBox();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2998,6 +3003,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
+
+        chkPublishedDateAsYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkPublishedDateAsYearActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 6;
@@ -3102,6 +3113,20 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludeTagCrossReferences, gridBagConstraints);
+
+        chkBookDetailsCustomFieldsAlways.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkBookDetailsCustomFieldsAlwaysActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkBookDetailsCustomFieldsAlways, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4692,6 +4717,14 @@ public class Mainframe extends javax.swing.JFrame {
        checkOnlyCatalogAllowed();
     }//GEN-LAST:event_CheckOnlyCatalogAllowed
 
+    private void chkBookDetailsCustomFieldsAlwaysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBookDetailsCustomFieldsAlwaysActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkBookDetailsCustomFieldsAlwaysActionPerformed
+
+    private void chkPublishedDateAsYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPublishedDateAsYearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkPublishedDateAsYearActionPerformed
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -4768,6 +4801,7 @@ public class Mainframe extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboIndexFilterAlgorithm;
     private javax.swing.JComboBox cboLang;
+    private javax.swing.JCheckBox chkBookDetailsCustomFieldsAlways;
     private javax.swing.JCheckBox chkBrowseByCover;
     private javax.swing.JCheckBox chkBrowseByCoverWithoutSplit;
     private javax.swing.JCheckBox chkCopyToDatabaseFolder;

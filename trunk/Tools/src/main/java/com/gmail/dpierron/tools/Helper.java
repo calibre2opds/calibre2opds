@@ -985,10 +985,7 @@ public class Helper {
             delete(files[i]);
           }
       }
-      boolean result = path.delete();
-      if (!result) {
-        logger.warn("couldn't delete " + path.getAbsolutePath());
-      }
+      path.delete();
     }
   }
 

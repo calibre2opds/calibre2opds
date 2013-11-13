@@ -281,4 +281,16 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     if (!continueGenerating)
       throw new GenerationStoppedException();
   }
+
+  private int warnCount;
+  public void resetWarnCount() {
+    warnCount = 0;
+  }
+  public int getWarnCount() {
+    return warnCount;
+  }
+  public void incrementWarnCount() {
+    warnCount++;
+    return;
+  }
 }

@@ -131,4 +131,8 @@ public interface CatalogCallbackInterface {
    * @throws GenerationStoppedException if the user has specified that he wants to stop the generation
    */
   public void checkIfContinueGenerating() throws GenerationStoppedException;
+
+  public void resetWarnCount();
+  public int getWarnCount();
+  public void incrementWarnCount();
 }
