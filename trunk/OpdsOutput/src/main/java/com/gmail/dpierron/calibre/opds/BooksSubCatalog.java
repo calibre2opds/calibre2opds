@@ -1057,32 +1057,124 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // See if any Custom Column values to be included
-      // TODO rework code to honor the checkbox field for always including Custom Fields
 
       List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogContext.INSTANCE.catalogManager.getBookDetailsCustomColumns();
       if (bookDetailsCustomColumnTypes != null && bookDetailsCustomColumnTypes.size() > 0) {
         List<CustomColumnValue> values = DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId().get(book.getId().toString());
+        for (CustomColumnType columnType : bookDetailsCustomColumnTypes) {
+          String textValue = "";
+          String dataType = columnType.getDatatype();
+          String name = columnType.getName();
+          String label = columnType.getLabel();
+          if (values != null && values.size()> 0) {
+            for (CustomColumnValue value : values) {
+              if (value.getType().equals(columnType)) {
+                textValue = value.getValue();
+                break;
+              }
+            }
+          }
+          if (currentProfile.getBookDetailsCustomFieldsAlways()
+          || Helper.isNotNullOrEmpty(textValue)) {
+
+            content.addContent(JDOM.INSTANCE.element("strong"));
+
+                // Special processing for bool type
+            // convert to localized yes/no text
+            if (dataType.equals("bool")) {
+              if (Helper.isNotNullOrEmpty(textValue)) {
+                textValue = textValue.equals("0") ? Localization.Main.getText("boolean.no")
+                                                  : Localization.Main.getText("boolean.yes");
+              }
+            }
+
+            // Special processing for fields that look like links
+            // We convert them to a link, and use name as the description.
+            if (textValue.toUpperCase().startsWith("HTTP://")
+                ||  textValue.toString().startsWith("HTTPS://")) {
+              name = "<U><A HREF=\"" + textValue + "\">" + name + "</A></U>";
+              textValue = "";
+              List<Element>namexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(name);
+              for (Element p : namexhtml) {
+                content.addContent(p.detach());
+              }
+            } else {
+              name += ": ";
+              content.addContent(name);
+            }
+
+            // Special processing for fields that contain HTML (e.g. comment)
+            // We want to remove the leading <DIV> tag inserted by Calibre
+            int posStart = textValue.startsWith("<div>") ? 5 : 0;
+            int posEnd = textValue.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
+            int posPara = textValue.indexOf("<p>");
+
+            // We want a <DIV> around the custom field inserted by Calibre to be
+            // changed to a <SPAN> to avoid unecessary white space being inserted at display time
+            if (posPara != -1 ) {
+              textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posPara) + "</span>" + textValue.substring(posPara+4);
+            } else {
+              textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
+            }
+
+            // Now add the text (if any)
+            if (Helper.isNotNullOrEmpty(textValue)) {
+              List<Element>valuexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(textValue);
+              for (Element p : valuexhtml) {
+                content.addContent(p.detach());
+              }
+            }
+            // Finally some spacing elements
+            content.addContent(JDOM.INSTANCE.element("br"))
+                .addContent(JDOM.INSTANCE.element("br"));
+
+          }
+        }
+        /*
         if (values != null && values.size()> 0) {
           for (CustomColumnValue value : values) {
             // We only do values the user has asked for
             if (bookDetailsCustomColumnTypes.contains(value.getType())) {
               String textValue = value.getValue();
-              if (value.getType().getDatatype().equals("bool")) {
+              String datatype = value.getType().getDatatype();
+              String name = value.getType().getName();
+              String label = value.getType().getLabel();
+
+              // Special processing for bool type
+              // convert to localized yes/no text
+              if (datatype.equals("bool")) {
                 textValue = textValue.equals("0") ? Localization.Main.getText("boolean.no")
                                               : Localization.Main.getText("boolean.yes");
               }
+
+              // Special processing for fields that look like links
+              // We convert them to a link, and use name as the description.
+              if (textValue.toUpperCase().startsWith("HTTP://")
+              ||  textValue.toString().startsWith("HTTPS://")) {
+                name = "<A HREF=\"" + textValue + "\">" + name + "</A>";
+                textValue = "";
+              }
+              if (Helper.isNotNullOrEmpty(textValue)) {
+                name += ": ";
+              }
+
+              // Special processing for fields that contain HTML (e.g. comment)
+              // We want to remove the leading <DIV> tag inserted by Calibre
               int posStart = textValue.startsWith("<div>") ? 5 : 0;
               int posEnd = textValue.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
               int posPara = textValue.indexOf("<p>");
+
+              // We want a <DIV> around the custom field inserted by Calibre to be
+              // changed to a <SPAN> to avoid unecessary white space being inserted at display time
               if (posPara != -1 ) {
-                textValue = "<span id=\"" + value.getType().getLabel() + "\">" +  textValue.substring(posStart,posPara) + "</span>" + textValue.substring(posPara+4);
+                textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posPara) + "</span>" + textValue.substring(posPara+4);
               } else {
-                textValue = "<span id=\"" + value.getType().getLabel() + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
+                textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
               }
 
               List<Element>valuexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(textValue);
               content.addContent(JDOM.INSTANCE.element("strong")
-                  .addContent(value.getType().getName() + ": "));
+                  .addContent(name));
               for (Element p : valuexhtml) {
                 content.addContent(p.detach());
               }
@@ -1091,6 +1183,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             }
           }
         }
+        */
       }
 
       List<Element> comments = JDOM.INSTANCE.convertHtmlTextToXhtml(book.getComment());
