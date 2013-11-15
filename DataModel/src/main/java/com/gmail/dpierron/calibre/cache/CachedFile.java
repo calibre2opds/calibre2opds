@@ -312,5 +312,4 @@ public class CachedFile extends File {
     if (logger.isTraceEnabled())
       logger.trace("setChanged(" + isChanged + "): " + getAbsolutePath());
   }
-
 }

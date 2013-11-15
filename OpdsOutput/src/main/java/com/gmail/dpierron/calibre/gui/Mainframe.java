@@ -720,7 +720,6 @@ public class Mainframe extends javax.swing.JFrame {
     chkExternalIcons.setSelected(currentProfile.getExternalIcons());
     chkExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
     lblExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
-    lblNogeneratehtmlfiles.setEnabled(!currentProfile.isGenerateHtmlDownloadsReadOnly());
     chkSupressRatings.setSelected(currentProfile.getSuppressRatingsInTitles());
     chkSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
     lblSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
@@ -753,8 +752,8 @@ public class Mainframe extends javax.swing.JFrame {
     actOnGenerateIndexActionPerformed();
 
     chkNogenerateopdsfiles.setSelected(!currentProfile.getGenerateDownloads());
-    chkNogenerateopdsfiles.setEnabled(!currentProfile.isGenerateDownloadsReadOnly());
-    lblNogenerateopdsfiles.setEnabled(chkNogenerateopdsfiles.isEnabled());
+    chkNogeneratehtmlfiles.setSelected(!currentProfile.getGenerateHtmlDownloads());
+    checkDownloads();
     chkCryptFilenames.setSelected(currentProfile.getCryptFilenames());
     chkCryptFilenames.setEnabled(!currentProfile.isCryptFilenamesReadOnly());
     lblCryptFilenames.setEnabled(chkCryptFilenames.isEnabled());

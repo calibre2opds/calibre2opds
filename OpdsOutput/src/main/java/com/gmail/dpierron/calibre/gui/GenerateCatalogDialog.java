@@ -382,6 +382,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       logger.info(message);
       JOptionPane.showMessageDialog(this, message);
     }
+    if (getWarnCount() != 0) {
+      String message = Localization.Main.getText("info.completedWithWarnings", getWarnCount()) ;
+      logger.info(message);
+      JOptionPane.showMessageDialog(this, message);
+    }
   }
 
   public void incStepProgressIndicatorPosition() {

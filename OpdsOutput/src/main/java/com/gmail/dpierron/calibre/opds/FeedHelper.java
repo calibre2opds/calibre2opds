@@ -536,7 +536,7 @@ public class FeedHelper {
       oldfile.renameTo(newfile);
       newfile.clearCachedInformation();                 // Clear cached information
       CachedFileManager.INSTANCE.removeCachedFile(oldfile);
-      logger.info("File " + oldfile.getName() + "renamed to " + newfile.getName());
+      logger.info("File " + oldfile.getName() + " renamed to " + newfile.getName());
     }
   }
 }
