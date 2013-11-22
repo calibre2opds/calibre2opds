@@ -9,6 +9,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.thumbnails.CreateThumbnail;
+import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -89,7 +90,11 @@ public abstract class ImageManager {
    * @return
    */
   String getImageUri(Book book) {
-    return FeedHelper.urlEncode("../../" + book.getPath() + "/" + getResultFilename(book), true);
+    String uriBase = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
+    if (Helper.isNullOrEmpty(uriBase)) {
+      uriBase = Constants.PARENT_PATH_PREFIX + Constants.PARENT_PATH_PREFIX;
+    }
+    return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResultFilename(book), true);
   }
 
   public void writeImageHeightFile() {

@@ -26,6 +26,7 @@ public class CatalogManager {
   private static Map<String, Book> mapOfBookByPathToCopy;
   private static Map<String, String> mapOfCatalogFolderNames;
   private static List<File> bookEntriesFiles;
+  private static Map<String,String> mapOfCatalogImagesByBookid;
   private static String securityCode;
   private static String initialUrl;
 
@@ -139,6 +140,35 @@ public class CatalogManager {
       return;
 
     if (listOfFilesToCopy.contains(file))
+      return;
+
+    String filePath = file.getAbsolutePath();
+
+    if (!filePath.startsWith(databasePath))  {
+      logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
+      return; // let's not copy files outside the database folder
+    }
+
+    String relativePath = filePath.substring(databasePathLength);
+    listOfFilesPathsToCopy.add(relativePath);
+    mapOfBookByPathToCopy.put(relativePath, book);
+    listOfFilesToCopy.add(file);
+  }
+  /**
+   * TODO:  Image files that need to be added to the catalog
+   * We need to know both the target name to be used and the source name
+   * @param file
+   * @param book
+   */
+  void addFileToTheMapOfCatalogImages(CachedFile file, Book book) {
+    final String databasePath = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
+    final int databasePathLength = databasePath.length() + 1;
+
+    if (file == null)
+      return;
+
+    // TODO: Decide if this check is really necessary!
+    if (mapOfCatalogImagesByBookid.containsKey(book.getId().toString()))
       return;
 
     String filePath = file.getAbsolutePath();

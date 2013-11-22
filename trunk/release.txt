@@ -109,7 +109,7 @@ v3.3
     - Fix: #c2o-177: Link to top level incorrect if Books URL is specified.
     - Fix: #c2o-178: Setting for including tags in cross-references toggle between runs
     - New: #c2o-179: Prefix all files that Calibre2opds adds to Calibre library with c2o_
-
+    - Fix: #c2o-181: Setting for HTML Downloads not being correctly loaded/saved
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 

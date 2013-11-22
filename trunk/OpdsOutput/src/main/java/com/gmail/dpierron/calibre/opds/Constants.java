@@ -44,6 +44,8 @@ public class Constants {
   public final static String FEATURED_TYPE = "featured";
   public final static String CUSTOM_TYPE = "custom";
   public final static String IMAGES_FOLDER = "images";
+  public final static String RESIZEDCOVER_FILENAME = "c2o_resizedcover.jpg";
+  public final static String THUMBNAIL_FILENAME = "c2o_thumbnail.jpg";
   public final static String XML_EXTENSION = ".xml";
   public final static String HTML_EXTENSION = ".html";
   public final static String JPG_EXTENSION = ".jpg";

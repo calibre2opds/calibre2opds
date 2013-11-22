@@ -599,9 +599,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // Change URI name to user cover.jpg
         coverUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
       }
+      if (currentProfile.getIncludeCoversInCatalog()) {
+        coverUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX
+                                        + Constants.IMAGES_FOLDER
+                                        + "book" + Constants.FOLDER_SEPARATOR
+                                        + coverManager.getResultFilename(book));
+      }
       if (logger.isTraceEnabled())  logger.trace("addCoverLink: coverUri=" + coverUri);
-
       entry.addContent(FeedHelper.getCoverLink(coverUri));
+
     }
 
     // add the thumbnail link
@@ -665,6 +671,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       thumbnailUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_RESIZED_THUMBNAIL_FILENAME, true);
     }
 
+    if (currentProfile.getIncludeCoversInCatalog()) {
+      thumbnailUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX
+                     + Constants.IMAGES_FOLDER
+                     + "book" + Constants.FOLDER_SEPARATOR
+                     + thumbnailManager.getResultFilename(book));
+    }
     if (logger.isTraceEnabled())  logger.trace("addCoverLink: thumbNailUri=" + thumbnailUri);
 
     thumbnailManager.addBook(book, thumbnailUri);
@@ -907,6 +919,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
    */
   private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING book decoration to book " + book);
+
+    // cover and thumbnail links
+    addCoverLink(book, entry);
+
+    // acquisition links
+    addAcquisitionLinks(book, entry);
+
     if (book.hasAuthor()) {
       for (Author author : book.getAuthors()) {
         if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   author " + author);
@@ -1130,60 +1149,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
           }
         }
-        /*
-        if (values != null && values.size()> 0) {
-          for (CustomColumnValue value : values) {
-            // We only do values the user has asked for
-            if (bookDetailsCustomColumnTypes.contains(value.getType())) {
-              String textValue = value.getValue();
-              String datatype = value.getType().getDatatype();
-              String name = value.getType().getName();
-              String label = value.getType().getLabel();
-
-              // Special processing for bool type
-              // convert to localized yes/no text
-              if (datatype.equals("bool")) {
-                textValue = textValue.equals("0") ? Localization.Main.getText("boolean.no")
-                                              : Localization.Main.getText("boolean.yes");
-              }
-
-              // Special processing for fields that look like links
-              // We convert them to a link, and use name as the description.
-              if (textValue.toUpperCase().startsWith("HTTP://")
-              ||  textValue.toString().startsWith("HTTPS://")) {
-                name = "<A HREF=\"" + textValue + "\">" + name + "</A>";
-                textValue = "";
-              }
-              if (Helper.isNotNullOrEmpty(textValue)) {
-                name += ": ";
-              }
-
-              // Special processing for fields that contain HTML (e.g. comment)
-              // We want to remove the leading <DIV> tag inserted by Calibre
-              int posStart = textValue.startsWith("<div>") ? 5 : 0;
-              int posEnd = textValue.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
-              int posPara = textValue.indexOf("<p>");
-
-              // We want a <DIV> around the custom field inserted by Calibre to be
-              // changed to a <SPAN> to avoid unecessary white space being inserted at display time
-              if (posPara != -1 ) {
-                textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posPara) + "</span>" + textValue.substring(posPara+4);
-              } else {
-                textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
-              }
-
-              List<Element>valuexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(textValue);
-              content.addContent(JDOM.INSTANCE.element("strong")
-                  .addContent(name));
-              for (Element p : valuexhtml) {
-                content.addContent(p.detach());
-              }
-              content.addContent(JDOM.INSTANCE.element("br"))
-                  .addContent(JDOM.INSTANCE.element("br"));
-            }
-          }
-        }
-        */
       }
 
       List<Element> comments = JDOM.INSTANCE.convertHtmlTextToXhtml(book.getComment());
@@ -1215,12 +1180,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (Helper.isNotNullOrEmpty(summary))
         entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
     }
-
-    // acquisition links
-    addAcquisitionLinks(book, entry);
-
-    // cover and thumbnail links
-    addCoverLink(book, entry);
 
     if (isFullEntry) {
       // navigation links
