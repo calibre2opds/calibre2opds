@@ -24,14 +24,14 @@ public class ThumbnailManager extends ImageManager {
    */
   @Override
   String getResultFilename(Book book) {
-    return "c2o_thumbnail.jpg";
+    return Constants.THUMBNAIL_FILENAME;
   }
   String getResultFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     if (file != null)
       return file.getName() + Constants.JPG_EXTENSION;
     else
-      return "thumbnail.jpg";
+      return Constants.THUMBNAIL_FILENAME.substring(4);
   }
 
   /**

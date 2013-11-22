@@ -26,8 +26,8 @@ public class CoverManager extends ImageManager {
   public String getResultFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     String result;
-    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + "resizedcover.jpg"
-                            : "resizedcover.jpg";
+    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + Constants.RESIZEDCOVER_FILENAME.substring(4)
+                            : Constants.RESIZEDCOVER_FILENAME.substring(4);
     return result;
   }
 

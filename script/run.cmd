@@ -16,6 +16,8 @@ echo Calibre2opds startup
 echo ====================
 
 set _C2O=OpdsOutput-3.3-SNAPSHOT.jar
+set _CD=%cd%
+echo [INFO] Current Directory: %_CD%
 
 set _JAVAPROG=JAVA.EXE
 
@@ -25,9 +27,9 @@ REM  more RAM on systems with plenty free).
 
 for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do ( 
   set m=%%p
-  goto :done
+  goto freemem_done
 )
-:done
+:freemem_done
 echo '
 echo Free RAM: %m%
 
@@ -85,45 +87,59 @@ REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 set _MYKEY=HKLM\Software\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if not "%_MYVAR1%" == "" (
-  echo [INFO] Java found via registry JRE key
-  goto get_javahome
-) 
+if "%_MYVAR1%" == "" GOTO not_jrereg
+echo [INFO] Java found via registry JRE key %_MYKEY%
+goto get_javahome
+:not_jrereg
+echo [INFO] Java not found at reg key  %_MYKEY%
 
 set _MYKEY=HKLM\Software\JavaSoft\Java Development Kit
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if not "%_MYVAR1%" == "" (
-  echo [INFO] Java found via registry JDK key
-  goto get_javahome
-)
+if "%_MYVAR1%" == "" GOTO not_jdkreg
+echo [INFO] Java found via registry JDK key %_MYKEY%
+goto get_javahome
+:not_jdkreg
+echo [INFO] Java not found at reg key  %_MYKEY%
+
 set _MYKEY=HKLM\Software\Wow6432Node\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if not "%_MYVAR1%" == "" (
-  echo [INFO] Java found via registry JRE key for 32 bit Java on 64 bit system
-  goto get_javahome
-)
-set _MYKEY=HKLM\Software\Wow6432Node\JavaSoft\Java Development Kit  
+if "%_MYVAR1%" == "" goto not_jrewow
+echo [INFO] Java found via registry JRE key for 32 bit Java on 64 bit system
+goto get_javahome
+:not_jrewow
+echo [INFO] Java not found at reg key  %_MYKEY%
+
+set _MYKEY=HKLM\Software\Wow6432Node\JavaSoft\Java Development Kit
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if not "%_MYVAR1%" == "" (
-  echo [INFO] Java found via registry JDK key for 32 bit Java on 64 bit system
-  goto get_javahome
-)
+if "%_MYVAR1%" == "" GOTO not_jdkwow
+echo [INFO] Java found via registry JDK key for 32 bit Java on 64 bit system
+GOTO get_javahome
+:not_jdkwow
+echo [INFO] Java not found at reg key  %_MYKEY%
+
 echo [INFO] Unable to find Java Registry entry
 goto java_notfound
 
+REM  We apear to have found a location for Java.  Check that it is valid
+REM  -------------------------------------------------------------------
 :get_javahome
 FOR /F "tokens=3*" %%A IN ('REG.EXE QUERY "%_MYKEY%\%_MYVAR1%" /s ^| FIND "JavaHome"') DO set _MYVAR2=%%A %%B
-if "%_MYVAR2%" == "" (
-  echo [INFO]  Failed to find JavaHome registry key
-  goto java_notfound
-)
-if not exist "%_MYVAR2%\bin\%_JAVAPROG%" (
-  echo [INFO]  Failed to find Java at location indicated by registry
-  goto java_notfound
-)
+if not "%_MYVAR2%" == "" goto ok_javajomereg
+echo [INFO]  Failed to find JavaHome registry key
+goto java_notfound
+:ok_javahomereg
+echo [INFO]  Found JavaHome registry key
+
+
+if exist "%_MYVAR2%\bin\%_JAVAPROG%"
+echo [INFO]  Failed to find Java at location indicated by registry
+goto java_notfound
+:ok_javaprog
+echo [INFO] Found "%_MYVAR2%\bin\%_JAVAPROG%"
+
 set _JAVACMD=%_MYVAR2%\bin\%_JAVAPROG%
 echo [INFO] Java located at %_MYVAR2%
-goto run_c2o 
+goto run_c2o
 
 :java_notfound
 echo '
@@ -173,13 +189,17 @@ echo "-----------------------"
 echo " Calibre2Opds STARTING "
 echo "-----------------------"
 echo '
+echo cd %TEMP%
+echo [INFO] Current directory set to %cd%
+pause
+
 REM  We set stack limits explicitly here to get consistency across systems
 REM -Xms<value> define starting size
 REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
-echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp %_C2O% Cli %*
-"%_JAVACMD%" -Xms128m -Xmx1024m -cp %_C2O% Cli %*
+echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx512m -cp "%_CD%/*" -jar "%_cd%\%_C2O%" Cli %*
+"%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Cli %*
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
@@ -194,5 +214,8 @@ set _JAVAPROG=
 set _C2O=
 set _MYVAR1=
 set _MYVAR2=
+cd %_CD%
+set _CD%=
+
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<installation version="1.0">
+<installation version="5.0">
     <info>
         <appname>Calibre2opds</appname>
         <appversion>3.3</appversion>

@@ -61,7 +61,7 @@ public class StanzaConstants {
   public final static boolean IndexComments = true;
   public final static int MaxKeywords = -1; // don't filter
   public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
-  public final static String UrlBooks = null;
+  public final static String UrlBooks = "";
   public final static String FeaturedCatalogTitle = "Featured books";
   public final static String FeaturedCatalogSavedSearchName = "";
   /* Catalog Structure */
