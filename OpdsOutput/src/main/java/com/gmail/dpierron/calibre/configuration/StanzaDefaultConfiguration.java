@@ -314,6 +314,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return new Vector<Composite<String, String>>();
   }
 
+  public String getCatalogCustomColumns() {
+    return StanzaConstants.CatalogCustomColumns;
+  }
+
   /* Catalog Structure */
 
   public boolean getDisplayAuthorSortInAuthorLists() {

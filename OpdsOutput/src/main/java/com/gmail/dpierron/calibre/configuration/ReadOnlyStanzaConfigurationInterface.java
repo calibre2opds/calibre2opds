@@ -201,5 +201,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public List<Composite<String, String>> getCustomCatalogs();
 
+  public String getCatalogCustomColumns();
+
   public String getSecurityCode();
 }

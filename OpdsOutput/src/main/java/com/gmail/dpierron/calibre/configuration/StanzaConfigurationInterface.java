@@ -174,5 +174,7 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setCustomCatalogs(List<Composite<String, String>> value);
 
+  public void setCatalogCustomColumns(String value);
+
   public void setSecurityCode (String code);
 }

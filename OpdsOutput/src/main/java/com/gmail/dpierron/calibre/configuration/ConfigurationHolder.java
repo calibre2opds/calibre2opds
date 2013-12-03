@@ -98,6 +98,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_FEATUREDCATALOGTITLE = "FeaturedCatalogTitle";
   private final static String PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME = "FeaturedCatalogSavedSearchName";
   private final static String PROPERTY_NAME_CUSTOMCATALOGS = "CustomCatalogs";
+  private final static String PROPERTY_NAME_CATALOGCUSTOMCOLUMNS = "CatalogCustomColumns";
   /* Catalog Structure */
   private final static String PROPERTY_NAME_DisplayAuthorSortInAuthorLists = "DisplayAuthorSortInAuthorLists";
   private final static String PROPERTY_NAME_DisplayTitleSortInBookLists = "DisplayTitleSortInBookLists";
@@ -1530,6 +1531,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       s = mainsb.toString();
     } else s="";
     setProperty(PROPERTY_NAME_CUSTOMCATALOGS, s);
+  }
+
+  public String getCatalogCustomColumns() {
+    String s = getProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
+    if (s == null)
+      return defaults.getCatalogCustomColumns();
+    else
+      return s;
+  }
+
+  public void setCatalogCustomColumns(String value) {
+    setProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS, value);
+  }
+
+  public boolean isCatalogCustomColumnsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
   }
 
   /*
