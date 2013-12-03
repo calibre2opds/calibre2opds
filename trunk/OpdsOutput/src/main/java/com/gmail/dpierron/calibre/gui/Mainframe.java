@@ -205,7 +205,29 @@ public class Mainframe extends javax.swing.JFrame {
    * catalog at the target location?
    */
   private void checkOnlyCatalogAllowed() {
-    // Do nothing at the moment
+    if (lblTargetFolder.isEnabled()
+    &&  Helper.isNotNullOrEmpty(txtUrlBooks.getText())) {
+      lblOnlyCatalogAtTarget.setEnabled(true);
+    } else {
+      lblOnlyCatalogAtTarget.setEnabled(false);
+    }
+    chkOnlyCatalogAtTarget.setEnabled(lblOnlyCatalogAtTarget.isEnabled());
+    checkCatalogFolderNeeded();
+  }
+
+  /**
+   * Decide if the catalog folder setting is relevant
+   */
+  private void checkCatalogFolderNeeded() {
+    if (Helper.isNotNullOrEmpty(txtUrlBooks.getText())
+    &&  chkOnlyCatalogAtTarget.isSelected()
+    &&  lblOnlyCatalogAtTarget.isEnabled()
+    && !chkCopyToDatabaseFolder.isSelected()) {
+      lblCatalogFolder.setEnabled(false);
+    } else {
+      lblCatalogFolder.setEnabled(true);
+    }
+    txtCatalogFolder.setEnabled(lblCatalogFolder.isEnabled());
   }
 
   private void actOnDontsplittagsActionPerformed() {
@@ -775,6 +797,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkNoGenerateTags.setSelected(!currentProfile.getGenerateTags());
     chkNoGenerateTags.setEnabled(!currentProfile.isGenerateTagsReadOnly());
     lblNoGenerateTags.setEnabled(chkNoGenerateTags.isEnabled());
+    txtCatalogCustomColumns.setText("" + currentProfile.getCatalogCustomColumns());
+    txtCatalogCustomColumns.setEnabled(!currentProfile.isCatalogCustomColumnsReadOnly());
+    lblCatalogCustomColumns.setEnabled(txtCatalogCustomColumns.isEnabled());
     txtTagsToIgnore.setText("" + currentProfile.getTagsToIgnore());
     txtTagsToIgnore.setEnabled(!currentProfile.isTagsToIgnoreReadOnly());
     lblTagsToIgnore.setEnabled(txtTagsToIgnore.isEnabled());
@@ -914,6 +939,7 @@ public class Mainframe extends javax.swing.JFrame {
     changeLanguage();
     loadProfiles();
     checkDownloads();
+    checkOnlyCatalogAllowed();
     pack();
   }
 
@@ -997,6 +1023,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setOrderAllBooksBySeries(chkOrderAllBooksBySeries.isSelected());
     currentProfile.setSplitByAuthorInitialGoToBooks(chkSplitByAuthorInitialGoToBooks.isSelected());
     currentProfile.setCatalogFilter(txtCatalogFilter.getText());
+    currentProfile.setCatalogCustomColumns((txtCatalogCustomColumns.getText()));
 
     // Catalog Structure
 
@@ -1133,8 +1160,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblOnlyCatalogAtTarget.setText(Localization.Main.getText("config.OnlyCatalogAtTarget.label")); // NOI18N
     lblOnlyCatalogAtTarget.setToolTipText(Localization.Main.getText("config.OnlyCatalogAtTarget.description")); // NOI18N
     chkOnlyCatalogAtTarget.setToolTipText(lblOnlyCatalogAtTarget.getToolTipText()); // NOI18N
-    // lblOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
-    // chkOnlyCatalogAtTarget.setEnabled(false);    // TODO enable when support implemented
     lblReprocessEpubMetadata.setText(Localization.Main.getText("config.ReprocessEpubMetadata.label")); // NOI18N
     lblReprocessEpubMetadata.setToolTipText(Localization.Main.getText("config.ReprocessEpubMetadata.description")); // NOI18N
     chkReprocessEpubMetadata.setToolTipText(lblReprocessEpubMetadata.getToolTipText()); // NOI18N
@@ -1197,7 +1222,10 @@ public class Mainframe extends javax.swing.JFrame {
     txtTagsToIgnore.setToolTipText(lblTagsToIgnore.getToolTipText()); // NOI18N
     lblTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
     txtTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
+    lblCatalogCustomColumns.setText(Localization.Main.getText("config.CatalogCustomColumns.label"));
+    lblCatalogCustomColumns.setToolTipText(Localization.Main.getText("config.CatalogCustomColumns.description"));
     lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
+    txtCatalogCustomColumns.setToolTipText(lblCatalogCustomColumns.getToolTipText());
     lblTagsToMakeDeep.setToolTipText(Localization.Main.getText("config.TagsToMakeDeep.description")); // NOI18N
     txtTagsToMakeDeep.setToolTipText(lblTagsToMakeDeep.getToolTipText()); // NOI18N
     lblNoGenerateSeries.setText(Localization.Main.getText("config.GenerateSeries.label")); // NOI18N
@@ -1651,6 +1679,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkLanguageAsTag = new javax.swing.JCheckBox();
         lblTagsToIgnore = new javax.swing.JLabel();
         txtTagsToIgnore = new javax.swing.JTextField();
+        lblCatalogCustomColumns = new javax.swing.JLabel();
+        txtCatalogCustomColumns = new javax.swing.JTextField();
         javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
@@ -1894,8 +1924,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         pnlMain.add(lblDonate, gridBagConstraints);
 
-        tabOptionsTabs.setMinimumSize(new java.awt.Dimension(900, 450));
-        tabOptionsTabs.setPreferredSize(new java.awt.Dimension(824, 660));
+        tabOptionsTabs.setMinimumSize(new java.awt.Dimension(900, 500));
+        tabOptionsTabs.setPreferredSize(new java.awt.Dimension(824, 740));
 
         pnlMainOptions.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
@@ -2039,6 +2069,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         txtUrlBooks.setText("txtUrlBooks");
         txtUrlBooks.setPreferredSize(new java.awt.Dimension(400, 20));
+        txtUrlBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtUrlBooksMouseExited(evt);
+            }
+        });
         txtUrlBooks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CheckOnlyCatalogAllowed(evt);
@@ -2193,6 +2228,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtWikilang, gridBagConstraints);
+
+        chkCopyToDatabaseFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkCatalogFolderNeeded(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -2271,6 +2312,12 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblOnlyCatalogAtTarget, gridBagConstraints);
+
+        chkOnlyCatalogAtTarget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkCatalogFolderNeeded(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
@@ -2691,7 +2738,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayAuthorSortInAuthorLists, gridBagConstraints);
@@ -2704,7 +2751,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblDisplayTitleSortInBookLists, gridBagConstraints);
@@ -2717,7 +2764,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingAuthor, gridBagConstraints);
@@ -2730,13 +2777,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingTitle, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2744,7 +2791,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayAuthorSortInAuthorLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2752,7 +2799,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkDisplayTitleSortInBookLists, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2760,7 +2807,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlCatalogStructure.add(chkSortUsingAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2812,6 +2859,31 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(txtTagsToIgnore, gridBagConstraints);
+
+        lblCatalogCustomColumns.setText("lblCatalogCustomColumns");
+        lblCatalogCustomColumns.setToolTipText("");
+        lblCatalogCustomColumns.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblCatalogCustomColumns, gridBagConstraints);
+
+        txtCatalogCustomColumns.setText("txtCatalogCustomColumns");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(txtCatalogCustomColumns, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
@@ -3002,12 +3074,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkNogenerateexternallinks, gridBagConstraints);
-
-        chkPublishedDateAsYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkPublishedDateAsYearActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 6;
@@ -3112,12 +3178,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludeTagCrossReferences, gridBagConstraints);
-
-        chkBookDetailsCustomFieldsAlways.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkBookDetailsCustomFieldsAlwaysActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 9;
@@ -4716,13 +4776,13 @@ public class Mainframe extends javax.swing.JFrame {
        checkOnlyCatalogAllowed();
     }//GEN-LAST:event_CheckOnlyCatalogAllowed
 
-    private void chkBookDetailsCustomFieldsAlwaysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBookDetailsCustomFieldsAlwaysActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chkBookDetailsCustomFieldsAlwaysActionPerformed
+    private void checkCatalogFolderNeeded(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCatalogFolderNeeded
+      checkCatalogFolderNeeded();
+    }//GEN-LAST:event_checkCatalogFolderNeeded
 
-    private void chkPublishedDateAsYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPublishedDateAsYearActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chkPublishedDateAsYearActionPerformed
+    private void txtUrlBooksMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUrlBooksMouseExited
+      checkOnlyCatalogAllowed();
+    }//GEN-LAST:event_txtUrlBooksMouseExited
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4880,6 +4940,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblBottom0;
     private javax.swing.JLabel lblBrowseByCover;
     private javax.swing.JLabel lblBrowseByCoverWithoutSplit;
+    private javax.swing.JLabel lblCatalogCustomColumns;
     private javax.swing.JLabel lblCatalogFilter;
     private javax.swing.JLabel lblCatalogFolder;
     private javax.swing.JLabel lblCatalogTitle;
@@ -5010,6 +5071,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtAmazonTitleUrl;
     private javax.swing.JTextField txtBookDetailsCustomFields;
     private javax.swing.JTextField txtBooksinrecent;
+    private javax.swing.JTextField txtCatalogCustomColumns;
     private javax.swing.JTextField txtCatalogFilter;
     private javax.swing.JTextField txtCatalogFolder;
     private javax.swing.JTextField txtCatalogTitle;

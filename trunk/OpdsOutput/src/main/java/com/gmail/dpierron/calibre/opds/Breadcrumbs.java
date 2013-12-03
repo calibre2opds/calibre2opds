@@ -74,14 +74,20 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
     return Helper.concatenateList("/", this);
   }
 
+  /**
+   * Create the string to be displayed as the progress message
+   *
+   * @param breadcrumbs
+   * @return
+   */
   public static String getProgressText (Breadcrumbs breadcrumbs) {
     assert breadcrumbs.size() > 0;
     StringBuffer progressText = new StringBuffer();
     // Tidy up message removing redundant "starting with" ("splitByLetter.letter") entries
     // Not stricly necessary, but improves user experience.
-    for (int i = 0 ; i < breadcrumbs.size() ; i++) {
+    for (int i = 1 ; i < breadcrumbs.size() ; i++) {
       String thisElement = breadcrumbs.elementAt(i).toString();
-      if (i != 0) {
+      if (i != 1) {
         if (i < (breadcrumbs.size()-1)) {
           if (breadcrumbs.elementAt(i+1).toString().startsWith(thisElement)) {
             // Do not add an element if the next one starts with the same text!

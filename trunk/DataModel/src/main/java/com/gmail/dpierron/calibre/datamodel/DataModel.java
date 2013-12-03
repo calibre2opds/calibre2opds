@@ -24,6 +24,8 @@ public enum DataModel {
   private Map<String, List<Tag>> mapOfTagsByBookId;
   private Map<String, List<Series>> mapOfSeriesByBookId;
   private Map<String, List<String>> mapOfCommentsByBookId;
+  private Map<String, List<Tag>> mapOfCustomTagsByBookId;
+  private Map<String, List<Series>> mapOfCustomSeriesByBookId;
 
   private List<Book> listOfBooks;
   private Map<String, Book> mapOfBooks;
@@ -31,6 +33,7 @@ public enum DataModel {
   private List<Tag> listOfTags;
   private Map<String, Tag> mapOfTags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
+  private List<Tag> listofCustomTags;
 
   private List<Author> listOfAuthors;
   private Map<String, Author> mapOfAuthors;
@@ -39,6 +42,7 @@ public enum DataModel {
   private List<Series> listOfSeries;
   private Map<String, Series> mapOfSeries;
   private Map<Series, List<Book>> mapOfBooksBySeries;
+  private List<Series> listOfCustomSeries;
 
   private Map<BookRating, List<Book>> mapOfBooksByRating;
 
