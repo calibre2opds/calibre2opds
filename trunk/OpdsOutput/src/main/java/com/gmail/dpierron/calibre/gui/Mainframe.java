@@ -211,6 +211,7 @@ public class Mainframe extends javax.swing.JFrame {
     } else {
       lblOnlyCatalogAtTarget.setEnabled(false);
     }
+    lblOnlyCatalogAtTarget.setEnabled(false);   // TODO Remove to activate this option
     chkOnlyCatalogAtTarget.setEnabled(lblOnlyCatalogAtTarget.isEnabled());
     checkCatalogFolderNeeded();
   }
@@ -800,6 +801,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogCustomColumns.setText("" + currentProfile.getCatalogCustomColumns());
     txtCatalogCustomColumns.setEnabled(!currentProfile.isCatalogCustomColumnsReadOnly());
     lblCatalogCustomColumns.setEnabled(txtCatalogCustomColumns.isEnabled());
+    lblCatalogCustomColumns.setEnabled(false);  // TODO remove to activate option
+    txtCatalogCustomColumns.setEnabled(false);  // TODO remove to actiavet option
     txtTagsToIgnore.setText("" + currentProfile.getTagsToIgnore());
     txtTagsToIgnore.setEnabled(!currentProfile.isTagsToIgnoreReadOnly());
     lblTagsToIgnore.setEnabled(txtTagsToIgnore.isEnabled());
