@@ -364,8 +364,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   /**
    *  Get the base filename that is used to store a given series
    *
-   * Since we always hold series at the top level the name can be
-   * derived purely knowing the series involved.
+   * Since we always hold a complete set of series at the top level
+   * the name can be derived purely knowing the series involved.
    *
    * NOTE.  This is NOT used in the case where we are doing the
    *        sub-set of a series for a given author.
@@ -373,8 +373,19 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @param serie
    * @return
    */
-  public static String getSeriesFolderFilename(Series serie) {
+  public static String getSeriesFolderFilenameNoLevel(Series serie) {
     return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, serie.getId());
+  }
+
+  /**
+   *  Get the base filename that is used to store a given series
+   *  taking into account any level information
+   *
+   * @param serie
+   * @return
+   */
+  public String getSeriesFolderFilenameWithLevel(Series serie) {
+    return getCatalogBaseFolderFileNameIdSplit(Constants.SERIE_TYPE, serie.getId());
   }
   /**
    * List the books that belong to the given series
@@ -424,7 +435,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // if we are not then we want it at the top level
     String filename;
     if (getCatalogFolder().startsWith(getCatalogType())) {
-      filename = getSeriesFolderFilename(serie);
+      filename = getSeriesFolderFilenameWithLevel(serie);
     } else {
       filename = getCatalogBaseFolderFileNameId(serie.getId());
     }

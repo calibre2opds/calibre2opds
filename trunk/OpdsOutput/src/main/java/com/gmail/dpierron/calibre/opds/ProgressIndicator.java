@@ -60,8 +60,4 @@ public class ProgressIndicator {
   public int getPosition() {
     return position;
   }
-
-  public int getPos() {
-    return pos;
-  }
 }

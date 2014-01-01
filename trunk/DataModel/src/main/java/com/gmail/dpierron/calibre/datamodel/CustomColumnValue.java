@@ -1,5 +1,10 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import com.gmail.dpierron.tools.Helper;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * User: WalkerDJ
  *
@@ -9,12 +14,17 @@ public class CustomColumnValue {
 
   private CustomColumnType type;
   private String value;
+  private String extra;
 
   //  CONSTRUCTORS
 
-  public CustomColumnValue (CustomColumnType type, String value) {
+  public CustomColumnValue (CustomColumnType type, String value, String extra) {
+    assert type != null;
+    assert value != null;
+
     this.type = type;
     this.value = value;
+    this.extra = extra;
   }
 
   // METHODS and PROPERTIES
@@ -23,7 +33,42 @@ public class CustomColumnValue {
     return type;
   }
 
-  public String getValue () {
-    return value;
+  /**
+   * Get Raw value as String
+   *
+   * This will convert values if any special treatment
+   * is needed (e.g. Boolean or Series types)
+   */
+  public String getValueAsString() {
+    assert Helper.isNotNullOrEmpty(value);
+    String result = value;
+    if (type.equals("bool")) {
+        result = value.equals("0") ? "No" : "Yes";
+          // TODO Localize yes/no values
+//        result = value.equals("0") ? Localization.Main.getText("boolean.no")
+//            : Localization.Main.getText("boolean.yes");
+    } else if (type.equals("series")) {
+      result += " [" + extra + "]";
+    }
+    return result;
+  }
+
+  public List<String> getValueAsList () {
+    return Arrays.asList(getValueAsString());
+  }
+
+  /**
+   * Get the value as a series if the column is of this type.
+   * This is used to create a new series sub-section.
+   * @return
+   */
+  public Series getValueAsSeries () {
+    if (type.equals("series")) {
+      Series series = new Series("0", value, extra);
+      return series;
+    } else {
+      return null;
+    }
   }
 }
+

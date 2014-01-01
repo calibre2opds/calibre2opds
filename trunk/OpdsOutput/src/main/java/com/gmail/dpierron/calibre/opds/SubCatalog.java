@@ -213,8 +213,8 @@ public abstract class SubCatalog {
     //  Debugging asserts - could be removed if not wanted
     assert catalogFolder.indexOf(Constants.SECURITY_SEPARATOR) == -1 :
            "Program error: catalogFolder contains SECURITY_SEPARATOR (" + catalogFolder + ")";
-    assert catalogFolder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-           "Program error: catalogFolder contains LEVEL_SEPARATOR (" + catalogFolder + ")";
+    // assert catalogFolder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+    //       "Program error: catalogFolder contains LEVEL_SEPARATOR (" + catalogFolder + ")";
 
     return catalogFolder;
   }
@@ -468,6 +468,27 @@ public abstract class SubCatalog {
     return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
   }
 
+  /**
+   * Get the full base folder/filename for the given type and id
+   * It will get the level information from the current catalog properties.
+   * Security information will also be added as required.
+   *
+   *  To keep the number of files in a single folder down (which can affect
+   *  perforance we store a maximum of 1000 book id;s in a single folder
+   *  (although in practise it is likely to be slightly less due to gaps
+   *  in the Calibre Id sequence after books have been deleted/altered/merged.
+   *
+   * @param type
+   * @param id
+   * @return
+   */
+  public String getCatalogBaseFolderFileNameIdSplit (String type, String id) {
+    String filename = getCatalogBaseFolderFileNameId(type, id);
+    int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
+    assert pos != -1;
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / 1000)) + filename.substring(pos);
+    return filename;
+  }
 
   /**
    * Get the full base folder/filename for the given type and id
@@ -487,7 +508,11 @@ public abstract class SubCatalog {
   }
 
   /**
-   * Get the folder/filename that is to be used for storing the given type.
+   * Get the full base folder/filename for the given type and id
+   * Security information will be added, but no level information.
+   * This is intended for entry types that are always at the top level
+   * (such as books)
+   *
    *  To keep the number of files in a single folder down (which can affect
    *  perforance we store a maximum of 1000 book id;s in a single folder
    *  (although in practise it is likely to be slightly less due to gaps
@@ -665,12 +690,12 @@ public abstract class SubCatalog {
     assert Helper.isNotNullOrEmpty(outputFilename): "Program error: Attempt to create XML file for empty/null filename";
     assert ! outputFilename.startsWith(catalogManager.getGenerateFolder().toString()):
              "Program Error:  filename should not include catalog folder (" + outputFilename + ")";
-    int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
+    // int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
     // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
     //    "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
-    pos = outputFilename.indexOf(Constants.LEVEL_SEPARATOR);
-    assert outputFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-        "Program error: Two occurences of LEVEL_SEPARATOR (" + outputFilename + ")";
+    // pos = outputFilename.indexOf(Constants.LEVEL_SEPARATOR);
+    // assert outputFilename.substring(pos+1).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
+    //    "Program error: Two occurences of LEVEL_SEPARATOR (" + outputFilename + ")";
 
 
     String xmlfilename = outputFilename;

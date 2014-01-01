@@ -512,17 +512,20 @@ public enum Database {
           while (set.next()) {
             String bookId;
             String value;
+            String extra;
             bookId = set.getString("book");
             value = set.getString("value");
             if (listType.getDatatype().equals("series")) {
-              value += " [" + set.getString("extra") + "]";
+              extra = set.getString("extra");
+            } else {
+              extra = null;
             }
             List<CustomColumnValue> customColumnValues = result.get(bookId);
             if (customColumnValues == null) {
               customColumnValues = new LinkedList<CustomColumnValue>();
               result.put(bookId, customColumnValues);
             }
-            CustomColumnValue customColumnValue = new CustomColumnValue(listType, value);
+            CustomColumnValue customColumnValue = new CustomColumnValue(listType, value, extra);
             customColumnValues.add (customColumnValue);
           }
       } catch (SQLException e) {

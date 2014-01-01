@@ -703,7 +703,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
           // Series are always held at top level
-          filename = SeriesSubCatalog.getSeriesFolderFilename(book.getSeries()) + Constants.PAGE_ONE_XML;
+          filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(book.getSeries()) + Constants.PAGE_ONE_XML;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
@@ -721,7 +721,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
             }
             // Authors are always held at top level !
-            filename = AuthorsSubCatalog.getAuthorFolderFilename(author) + Constants.PAGE_ONE_XML;
+            filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
             entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", booksText, author.getName())));
           }
@@ -932,7 +932,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         Element authorElement = JDOM.INSTANCE.element("author")
             .addContent(JDOM.INSTANCE.element("name").addContent(author.getName()))
             .addContent(JDOM.INSTANCE.element("uri")
-                .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilename(author) + Constants.PAGE_ONE_XML));
+                .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
         entry.addContent(authorElement);
       }
     }
@@ -1088,7 +1088,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (values != null && values.size()> 0) {
             for (CustomColumnValue value : values) {
               if (value.getType().equals(columnType)) {
-                textValue = value.getValue();
+                textValue = value.getValueAsString();
                 break;
               }
             }

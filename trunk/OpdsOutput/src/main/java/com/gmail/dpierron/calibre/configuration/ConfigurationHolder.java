@@ -1025,6 +1025,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
    */
   public List<String> getCustomColumnsWanted() {
     List<String> result = getTokenizedBookDetailsCustomColumns();
+    List<String> result2;
     // TODO Add any custom columns required elsewhere (such as Custom Columns to be treated as tags)
     return result;
   }
