@@ -40,7 +40,9 @@ public class Runner {
         }
       });
     } else {
-      new Catalog(new Log4jCatalogCallback()).createMainCatalog();
+      Log4jCatalogCallback log4jCatalogCallback =  new Log4jCatalogCallback();
+      log4jCatalogCallback.setStartGui(false);
+      new Catalog(log4jCatalogCallback).createMainCatalog();
     }
   }
 
@@ -69,9 +71,18 @@ public class Runner {
     Runner runner = new Runner();
     runner.initLog4J();
     // log4j now initialised so we can start using it.
-    logger.info ("LOG LEVEL: " + logger.getLevel() );
-    if (logger.isTraceEnabled())  logger.info("== TRACE level logging active");
-    if (logger.isDebugEnabled())  logger.info("== DEBUG level logging active");
+    String levelText;
+    if (logger.isTraceEnabled()) {
+      levelText= "TRACE";
+    } else if (logger.isDebugEnabled()) {
+      levelText = "DEBUG";
+    } else if (logger.isInfoEnabled()) {
+      levelText = "INFO";
+    } else {
+      levelText = "WARN + ERROR + FATAL";
+    }
+    logger.info("");
+    logger.info ("LOG LEVEL: " + levelText);
     logger.info("");
     try {
       if (args.length == 1) {

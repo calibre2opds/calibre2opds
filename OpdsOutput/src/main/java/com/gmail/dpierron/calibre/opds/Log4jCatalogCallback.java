@@ -21,6 +21,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   // step progress indicator
   ProgressIndicator progressStep = new ProgressIndicator().setIndicator('*');
   protected boolean continueGenerating = true;
+  private boolean startGui = true;
 
   /**
    * Dump the value for the given option to the log file
@@ -234,8 +235,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   }
 
   public void incStepProgressIndicatorPosition() {
-    checkIfContinueGenerating();
-    progressStep.incPosition();
+    if (startGui) {
+      checkIfContinueGenerating();
+      progressStep.incPosition();
+    }
   }
 
   public void endCopyLibToTarget(long milliseconds) {
@@ -292,5 +295,9 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void incrementWarnCount() {
     warnCount++;
     return;
+  }
+
+  public void setStartGui (boolean startGui) {
+    this.startGui = startGui;
   }
 }

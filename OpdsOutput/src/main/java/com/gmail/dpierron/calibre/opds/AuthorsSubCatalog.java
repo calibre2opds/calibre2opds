@@ -310,16 +310,25 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   }
 
   /**
-   *    * Get the base filename that is used to store a given author
+   * Get the base filename that is used to store a given author
    *
-   * Since we always hold authors at the top level the name can be
-   * derived purely knowing the author involved.
+   * Since we always hold a full list of authors at the top level the
+   * name can be derived purely knowing the author involved.
 
    * @param author
    * @return
    */
-  public static String getAuthorFolderFilename (Author author) {
+  public static String getAuthorFolderFilenameNoLevel(Author author) {
     return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId());
+  }
+  /**
+   *    Get the base filename that is used to store a given author
+   *    This version works within the given level
+   * @param author
+   * @return
+   */
+  public String getAuthorFolderFilenameWithLevel (Author author) {
+    return getCatalogBaseFolderFileNameIdSplit(Constants.AUTHOR_TYPE, author.getId());
   }
   /**
    *
@@ -364,7 +373,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       return null;
     }
 
-    String filename = getAuthorFolderFilename(author);
+    String filename = getAuthorFolderFilenameWithLevel(author);
     logger.debug("getAuthor:generating " + filename);
 
     String title = author.getSort();
@@ -385,7 +394,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       seriesSubCatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
-      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId());
+      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId()
+                                              + Constants.TYPE_SEPARATOR + Constants.SERIE_TYPE);
       firstElements = seriesSubCatalog.getListOfSeries(pBreadcrumbs, null,      // series derived from catalog books
           true, 0, title, summary, urn, null,      // filename derived from catalog properties
           SplitOption.Paginate, true);
@@ -396,11 +406,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       sortBooksByTitle(authorbooks);
       AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
       booksSubcatalog.setCatalogLevel(getCatalogLevel());
-      String authorFolderFilename = getAuthorFolderFilename(author);
-      // booksSubcatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
-      booksSubcatalog.setCatalogFolder(authorFolderFilename);
-      // booksSubcatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId() + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
-      booksSubcatalog.setCatalogBaseFilename(authorFolderFilename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
+      booksSubcatalog.setCatalogFolder(filename);
+      booksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
       Element entry = booksSubcatalog.getListOfBooks(breadcrumbs,
                                                       null,          // derived from catalog properties
                                                       true, 0,       // from start

@@ -67,18 +67,18 @@ goto run_c2o
 :not_jre7
 echo [INFO] Java not found in default JRE7 location [%ProgramFiles%\Java\jre7]
 
-if not exist "%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%" goto not_jre6_64
+if not exist "%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%" goto not_jre664
 set _JAVACMD=%ProgramFiles% (x86)\Java\jre6\bin\%_JAVAPROG%
 echo [INFO] Java found at default 32-bit Java on 64-bit Windows JRE6 location [%ProgramFiles% ^(x86^)\Java\jre6]
 goto run_c2o
-:not_jre6_64
+:not_jre664
 echo [INFO] Java not found in default 32-bit Java on 64-bit Windows JRE6 location [%ProgramFiles% (x86)\Java\jre6]
 
-if not exist "%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%" goto not_jre7_64
+if not exist "%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%" goto no_jre764
 set _JAVACMD=%ProgramFiles% (x86)\Java\jre7\bin\%_JAVAPROG%
 echo [INFO] Java found at default 32-bit Java on 64-bit Windows JRE7 location [%ProgramFiles% ^(x86^)\Java\jre7]
 goto run_c2o
-:not_jre7_64
+:no_jre764
 echo [INFO] Java not found in default 32-bit Java on 64-bit Windows JRE7 location [%ProgramFiles% (x86)\Java\jre7]
 
 
@@ -87,34 +87,34 @@ REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 set _MYKEY=HKLM\Software\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if "%_MYVAR1%" == "" GOTO not_jrereg
+if "%_MYVAR1%" == "" GOTO no_jrereg
 echo [INFO] Java found via registry JRE key %_MYKEY%
 goto get_javahome
-:not_jrereg
+:no_jrereg
 echo [INFO] Java not found at reg key  %_MYKEY%
 
 set _MYKEY=HKLM\Software\JavaSoft\Java Development Kit
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if "%_MYVAR1%" == "" GOTO not_jdkreg
+if "%_MYVAR1%" == "" GOTO no_jdkreg
 echo [INFO] Java found via registry JDK key %_MYKEY%
 goto get_javahome
-:not_jdkreg
+:no_jdkreg
 echo [INFO] Java not found at reg key  %_MYKEY%
 
 set _MYKEY=HKLM\Software\Wow6432Node\JavaSoft\Java RunTime Environment
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if "%_MYVAR1%" == "" goto not_jrewow
+if "%_MYVAR1%" == "" goto no_jrewow
 echo [INFO] Java found via registry JRE key for 32 bit Java on 64 bit system
 goto get_javahome
-:not_jrewow
+:no_jrewow
 echo [INFO] Java not found at reg key  %_MYKEY%
 
 set _MYKEY=HKLM\Software\Wow6432Node\JavaSoft\Java Development Kit
 for /F "tokens=3" %%A IN ('REG.EXE QUERY "%_MYKEY%" /s ^| FIND "CurrentVersion"') DO set _MYVAR1=%%A
-if "%_MYVAR1%" == "" GOTO not_jdkwow
+if "%_MYVAR1%" == "" GOTO no_jdkwow
 echo [INFO] Java found via registry JDK key for 32 bit Java on 64 bit system
 GOTO get_javahome
-:not_jdkwow
+:no_jdkwow
 echo [INFO] Java not found at reg key  %_MYKEY%
 
 echo [INFO] Unable to find Java Registry entry
@@ -124,10 +124,10 @@ REM  We apear to have found a location for Java.  Check that it is valid
 REM  -------------------------------------------------------------------
 :get_javahome
 FOR /F "tokens=3*" %%A IN ('REG.EXE QUERY "%_MYKEY%\%_MYVAR1%" /s ^| FIND "JavaHome"') DO set _MYVAR2=%%A %%B
-if not "%_MYVAR2%" == "" goto ok_javahomereg
+if not "%_MYVAR2%" == "" goto regjavahome
 echo [INFO]  Failed to find JavaHome registry key
 goto java_notfound
-:ok_javahomereg
+:regjavahome
 echo [INFO]  Found JavaHome registry key
 
 if exist "%_MYVAR2%\bin\%_JAVAPROG%" goto ok_javaprog
@@ -193,6 +193,7 @@ cd "%TEMP%"
 echo [INFO] Current directory set to %cd%
 
 if not "%1"=="-enableassertions" goto no_assertions
+shift
 REM Start the GUI leaving this batch file running for progress/debug messages
 echo [INFO]  "%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp "%_CD%/*" -jar "%_cd%/C2O%" Gui
 echo '
@@ -206,9 +207,9 @@ goto end
 
 :no_assertions
 REM Start the GUI in normal mode as a separate process and close this batch file
-echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx1024m -jar "%_cd%\%_C2O%" Gui
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Gui -jar "%_cd%/%_C2O%"
 echo '
-START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m -jar "%_cd%\%_C2O%" Gui
+START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m  -cp "%_CD%/*" Gui -jar "%_cd%/%_C2O%"
 
 :end
 REM Clear down all the environment variables we (might have) used
