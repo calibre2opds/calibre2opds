@@ -236,7 +236,7 @@ public class Catalog {
       }
       // Now actually remove the files that are still in the list of removal candidates
       for (File file : targetNotInSourceFiles) {
-        Helper.delete(file);
+        Helper.delete(file, true);
         if (syncLog)
           syncLogFile.printf("DELETED: %s\n", file.getName());
         CachedFileManager.INSTANCE.removeCachedFile(file);
@@ -1012,7 +1012,7 @@ public class Catalog {
                   if (logger.isTraceEnabled())
                     logger.trace("deleting " + existingTargetFile.getPath());
                   callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
-                  Helper.delete(existingTargetFile);
+                  Helper.delete(existingTargetFile, true);
 
                   if (syncLog)
                     syncLogFile.printf("DELETED: %s\n", existingTargetFile);
@@ -1069,7 +1069,7 @@ public class Catalog {
           // Now ensure that there is no unzipped catalog left behinf!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
-          Helper.delete(targetCatalogFolder);
+          Helper.delete(targetCatalogFolder, true);
           break;
         }
         // FALLTHRU Sync catalog files if not using ZIP mode
@@ -1191,7 +1191,7 @@ public class Catalog {
       logger.info(Localization.Main.getText("info.step.deletingfiles"));
       if (generateFolder != null ) {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
-        Helper.delete(generateFolder);
+        Helper.delete(generateFolder, false);
         // ITIMPI:  TODO  Check if we can delete the folder using the statement below as being faster then doing the individual files?
         // generateFolder.deleteOnExit();
       }
