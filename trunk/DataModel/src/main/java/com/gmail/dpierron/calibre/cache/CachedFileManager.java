@@ -346,7 +346,7 @@ public enum CachedFileManager {
         logger.debug("Aborting deleteCache() as cache folder not set");
       return;
     }
-    Helper.delete(cacheFile);
+    Helper.delete(cacheFile, false);
     if (logger.isDebugEnabled())
       logger.debug("Deleted CRC cache file " + cacheFile.getPath());
     cacheFile = null;

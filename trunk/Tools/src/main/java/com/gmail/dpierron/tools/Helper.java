@@ -964,25 +964,33 @@ public class Helper {
   private final static String[] FilesToKeep = new String[] { ".htaccess", "index.html" };
 
   /**
-   * Delete the given folder/files unless it is on the list of those to keep
+   * Delete the given folder/files.
    *
-   * @param path
+   * You can specifiy whether the file should not be deleted if it is on
+   * the list of those to keep, or should be deleted unconditionally
+   *
+   * @param path    File to delete
+   * @param check   Specify whether to be kept if on reserved list
    */
-  static public void delete(File path) {
+
+  static public void delete (File path, boolean check) {
+
     if (path.exists()) {
-      // Allo for list of Delete file xceptions (#c2o-112)
-      for (String f : FilesToKeep) {
-        if (path.getName().toLowerCase().endsWith(f)) {
-          if (logger.isTraceEnabled())
-            logger.trace("File not deleted (on exception list): " + path);
-          return;
+      // Allow for list of Delete file xceptions (#c2o-112)
+      if (check) {
+        for (String f : FilesToKeep) {
+          if (path.getName().toLowerCase().endsWith(f)) {
+            if (logger.isTraceEnabled())
+              logger.trace("File not deleted (on exception list): " + path);
+            return;
+          }
         }
       }
       if (path.isDirectory()) {
         File[] files = path.listFiles();
         if (files != null)
           for (int i = 0; i < files.length; i++) {
-            delete(files[i]);
+            delete(files[i], check);
           }
       }
       path.delete();

@@ -1,4 +1,4 @@
-REM @echo OFF
+@echo OFF
 REM  batch file for running the Calibre2Opds program in CLI mode.
 REM
 REM  The checks for Java have been adapted from those used to
@@ -198,7 +198,7 @@ REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM It is possible that for very large libraries this may not be enough - we will have to see.
 
-IF "%1" == "--hidden" then goto hidden:
+IF "%1" == "--hidden" goto hidden
 
 echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
 "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*"  Cli -jar "%_cd%/%_C2O%" %*
@@ -211,7 +211,8 @@ goto end
 
 :hidden
 shift
-START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
+echo [INFO]  "START ""calibre2opds"" "/MIN" "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
+START "Calibre2Opds" /MIN "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
 
 :end
 REM Clear down all the environment variables we used
