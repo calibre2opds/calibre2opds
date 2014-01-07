@@ -319,7 +319,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getAuthorFolderFilenameNoLevel(Author author) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId());
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId(), 1000);
   }
   /**
    *    Get the base filename that is used to store a given author
@@ -328,7 +328,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getAuthorFolderFilenameWithLevel (Author author) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.AUTHOR_TYPE, author.getId());
+    return getCatalogBaseFolderFileNameIdSplit(Constants.AUTHOR_TYPE, author.getId(), 1000);
   }
   /**
    *
@@ -400,7 +400,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           true, 0, title, summary, urn, null,      // filename derived from catalog properties
           SplitOption.Paginate, true);
 
-      seriesSubCatalog = null;    // May nopt be necessary, but allow earlier release of resources
+      seriesSubCatalog = null;    // May not be necessary, but allow earlier release of resources
 
       // Make a link to the "allbooks entry" for this author
       sortBooksByTitle(authorbooks);

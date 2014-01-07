@@ -307,20 +307,32 @@ public abstract class SubCatalog {
   public void setCatalogFolder (String folder) {
     assert folder != null;
 
-    // Debugging asserts - could be removed if not wanted
-    // assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-    //        "Program Error: Unexpected occurence of FOLDER_SEPARATOR )" + folder + ")";
-    // assert folder.indexOf(Constants.SECURITY_SEPARATOR) == -1:
-    //        "Program error: Unexpected Occurencs of SECURITY_SEPARATOR (" + folder + ")";        ;
-    // assert folder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-    //        "Program error: Unexpected occurencs of LEVEL_SEPARATOR (" + folder + ")";
-
     int pos = folder.indexOf(Constants.FOLDER_SEPARATOR);
     if (pos != -1) {
       folder = folder.substring(0,pos);
+      assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
+          "Program Error: Unexpected occurence of FOLDER_SEPARATOR (folder=" + folder + ")";
     }
+
     pos = folder.indexOf(Constants.SECURITY_SEPARATOR);
-    catalogFolder = folder.substring(pos+1);
+    if (pos != -1) {
+      assert (folder.substring(0,pos).equals(securityCode)) :
+          "Program Error:  Security Code does not seem to match expected value (folder=" + folder + ")";
+      assert folder.indexOf(Constants.SECURITY_SEPARATOR, pos+1) == -1 :
+          "Program error: Unexpected Second Occurencs of SECURITY_SEPARATOR (folder=" + folder + ")";        ;
+      folder = folder.substring(pos+1);
+    }
+
+    pos = folder.indexOf(Constants.LEVEL_SEPARATOR);
+    if (pos != -1) {
+      assert (folder.substring(0,pos).equals(catalogLevel)) :
+          "Program Error:  Catalog level does not seem to match expected value  (folder=" + folder + ")";
+      assert folder.indexOf(Constants.LEVEL_SEPARATOR, pos+1) == -1 :
+          "Program error: Unexpected second occurencs of LEVEL_SEPARATOR (folder=" + folder + ")";
+      folder = folder.substring(pos+1);
+    }
+
+    catalogFolder = folder;
     setOptimizUrlPrefix();
   }
 
@@ -482,11 +494,11 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  public String getCatalogBaseFolderFileNameIdSplit (String type, String id) {
+  public String getCatalogBaseFolderFileNameIdSplit (String type, String id, int splitSize) {
     String filename = getCatalogBaseFolderFileNameId(type, id);
     int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
     assert pos != -1;
-    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / 1000)) + filename.substring(pos);
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / splitSize)) + filename.substring(pos);
     return filename;
   }
 
@@ -521,11 +533,11 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  public static String getCatalogBaseFolderFileNameIdNoLevelSplit (String type, String id) {
+  public static String getCatalogBaseFolderFileNameIdNoLevelSplit (String type, String id, int splitSize) {
     String filename = getCatalogBaseFolderFileNameIdNoLevel(type, id);
     int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
     assert pos != -1;
-    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / 1000)) + filename.substring(pos);
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / splitSize)) + filename.substring(pos);
     return filename;
   }
 

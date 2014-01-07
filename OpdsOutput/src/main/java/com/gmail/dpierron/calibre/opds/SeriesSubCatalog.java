@@ -374,7 +374,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getSeriesFolderFilenameNoLevel(Series serie) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, serie.getId());
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, serie.getId(), 1000);
   }
 
   /**
@@ -385,7 +385,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getSeriesFolderFilenameWithLevel(Series serie) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.SERIE_TYPE, serie.getId());
+    return getCatalogBaseFolderFileNameIdSplit(Constants.SERIE_TYPE, serie.getId(), 1000);
   }
   /**
    * List the books that belong to the given series

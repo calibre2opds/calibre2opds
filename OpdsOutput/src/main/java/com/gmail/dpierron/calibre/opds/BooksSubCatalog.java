@@ -702,7 +702,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getGenerateSeries()) {
         if (book.getSeries() != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(book.getSeries()).size() > 1) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
-          // Series are always held at top level
+          // Series for cross-references are always held at top level
+          // TODO Perhaps consider whether level should be taken into account?
           filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(book.getSeries()) + Constants.PAGE_ONE_XML;
           entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
@@ -720,7 +721,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
             if (! currentProfile.getMinimizeChangedFiles()) {
               booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
             }
-            // Authors are always held at top level !
+            // Authors for cross-references are always held at top level !
+            // TODO Perhaps consider whether level should be taken into account?
             filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
             entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", booksText, author.getName())));
@@ -735,8 +737,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
           for (Tag tag : book.getTags()) {
             int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
-            // Tags are held at level
-            filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId()) + Constants.PAGE_ONE_XML;
+            // Tags for cross-references are held at top level
+            // TODO Perhaps consider whether level should be taken into account?
+            filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
             if (nbBooks > 1) {
               // c2o-168 - Omit Counts if MinimizeChangedFiles set
               if (! currentProfile.getMinimizeChangedFiles()) {
@@ -1200,7 +1203,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @return
    */
   public static String getBoookFolderFilename (Book book) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.BOOK_TYPE,book.getId());
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.BOOK_TYPE,book.getId(),1000);
   }
   /**
    * Control generating a book Full Details entry

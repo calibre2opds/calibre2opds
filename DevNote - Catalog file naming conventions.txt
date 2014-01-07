@@ -73,10 +73,22 @@ etc.
 
 Tags that generate additional levels are treated as a special case of custom folders
 
+NOTE:
+It has been found that if you are using a FAT32 filing system for either the temporary
+files or the final catalog, then there is a limit to the number of files that can be held
+within a folder.   This is limited by the maximum of 64K directory entries, which by
+the time you take into account multiple entries per file to support long file names
+equates to something like 16K files per folder.   To allow for this, the 'books',
+'author' and 'serie' folders are limited to 100 entities per folder and the 'tag'
+folder to 100 tags per folder. It may be necessary to consider in the future if
+these values need to be more dynamic according to the number of split levels allowed
+as higher split levels can result in more files per folder.
+
+
 Security
 ~~~~~~~~
 Calibre2opds offers an option to 'encrypt' filenames.  Strictly speaking this obfuscates the
-names so that thye are virtually impossible to guess rather than really encrypting them.  The
+names so that the are virtually impossible to guess rather than really encrypting them.  The
 purpose of this feature if for thos who want to put their libraries on the internet and are
 not able to provide other protection such as username/password (e.h. DropBox users).   Making
 names almist impossible to guess means that such catalogs are not really prone to being found
