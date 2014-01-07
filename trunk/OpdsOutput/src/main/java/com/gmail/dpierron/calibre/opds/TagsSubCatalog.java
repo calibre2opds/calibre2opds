@@ -127,7 +127,38 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     }
     return false;
   }
+  /**
+   * Get the base filename that is used to store a given author
+   *
+   * Since we always hold a full list of authors at the top level the
+   * name can be derived purely knowing the author involved.
 
+   * @param tag
+   * @return
+   */
+  public static String getTagFolderFilenameNoLevel(Tag tag) {
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.TAG_TYPE,tag.getId(), 10);
+  }
+  /**
+   *    Get the base filename that is used to store a given author
+   *    This version works within the given level
+   * @param tag
+   * @return
+   */
+  public String getTagFolderFilenameWithLevel (Tag tag) {
+    return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 10);
+  }
+
+  /**
+   * Get the details for a specific tag
+   *
+   * @param pBreadcrumbs
+   * @param tag
+   * @param baseurn
+   * @param titleWhenCategorized
+   * @return
+   * @throws IOException
+   */
   Element getTag(Breadcrumbs pBreadcrumbs,
                  Tag tag,
                  String baseurn,
@@ -144,7 +175,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       return null;
 
     // Tags are held at the level (i.e. not the top level)
-    String filename = getCatalogBaseFolderFileNameId(Constants.TAG_TYPE, tag.getId());
+    String filename = getTagFolderFilenameWithLevel(tag);
     String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
     String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();
 

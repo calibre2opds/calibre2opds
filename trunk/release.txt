@@ -64,7 +64,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-115: Send to Readmill Library
     - #c20-125: Add Publishers section to generated catalog
     - #c20-139: Include the .opf files when copying the library in "Publish" mode
-    - #c2o-143: Allow the book links to external sites to be localized
+    - #c2o-143: Allow the default book links to external sites to be localized
     - #c2o-145: Option to avoid splitting books by letter within a tag
     - #x2o-146: Improve Search facility for large libraries
     - #c2o-147: Option to suppress selected tags in tags sub-catalog
