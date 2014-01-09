@@ -135,4 +135,6 @@ public interface CatalogCallbackInterface {
   public void resetWarnCount();
   public int getWarnCount();
   public void incrementWarnCount();
+
+  public void setStopGenerating ();
 }

@@ -297,6 +297,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     return;
   }
 
+  public void setStopGenerating () {
+
+  };
+
   public void setStartGui (boolean startGui) {
     this.startGui = startGui;
   }
