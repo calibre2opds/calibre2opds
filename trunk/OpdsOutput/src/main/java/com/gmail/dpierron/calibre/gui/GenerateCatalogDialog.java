@@ -435,18 +435,25 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     return nAnswer;
   }
 
-  private void actionStopGenerating() {
-    cmdStopGenerating.setVisible(false);
+  private void setCmdStopGeneratingVisbile(boolean state)  {
+    cmdStopGenerating.setVisible(state);
     cmdStopGenerating.repaint();
+  }
+  public void setStopGenerating () {
+    setCmdStopGeneratingVisbile(false);
+    lblStoppingGeneration.repaint();
+    continueGenerating = false;
+  }
+  private void actionStopGenerating() {
+    setCmdStopGeneratingVisbile(false);
     int n = JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.stopGeneration.confirm"), "", JOptionPane.OK_CANCEL_OPTION);
     if (JOptionPane.OK_OPTION == n) {
       lblStoppingGeneration.setText(Localization.Main.getText("gui.prepareStopGeneration"));
       lblStoppingGeneration.setVisible(true);
-      lblStoppingGeneration.repaint();
-      continueGenerating = false;
-    } else
-      cmdStopGenerating.setVisible(true);
-    cmdStopGenerating.repaint();
+      setStopGenerating();
+    } else {
+      setCmdStopGeneratingVisbile(true);
+    }
   }
 
   public void checkIfContinueGenerating() throws GenerationStoppedException {

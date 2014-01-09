@@ -137,7 +137,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getTagFolderFilenameNoLevel(Tag tag) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.TAG_TYPE,tag.getId(), 10);
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.TAG_TYPE,tag.getId(), 100);
   }
   /**
    *    Get the base filename that is used to store a given author
@@ -146,7 +146,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getTagFolderFilenameWithLevel (Tag tag) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 10);
+    return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
   }
 
   /**

@@ -58,6 +58,13 @@ public class Catalog {
 
   private static PrintWriter syncLogFile;           // File to be used for the Sync log
 
+  // The following are used to simplify code and to avoid continually referring to the profile
+  private File generateFolder = null;     // Location where catalog is generated
+  private File targetFolder = null;       // Location where final catalog will be copied to (if reuired)
+  // In Nook mode this should be the same as the generateFolder
+  private File libraryFolder = null;      // Folder holding the Calibre library
+  private String catalogFolderName = null;//Name of the catalog folder (not including path)
+
   /**
    * Constructor setting callback interface for GUI
    *
@@ -167,8 +174,12 @@ public class Catalog {
     if (cf_src.isDirectory()) {
       if (logger.isTraceEnabled())
         logger.trace("Directory " + cf_src.getName() + " Processing Started");
-
-      callback.showMessage(src.getParentFile().getName() + File.separator + cf_src.getName());
+      String displayText = src.getParentFile().getName() + File.separator + cf_src.getName();
+      // Improve message by removing name of TEMP folder from start
+      if (displayText.startsWith(generateFolder.getName())) {
+         displayText = displayText.substring(generateFolder.getName().length()+1);
+      }
+      callback.showMessage(displayText);
 
       // Create any missing target directories
       if (!cf_dst.exists()) {
@@ -177,7 +188,7 @@ public class Catalog {
         if (syncLog)
           syncLogFile.printf("CREATED: %s\n", cf_dst.getName());
         if (dst.getName().endsWith("_Page"))
-          assert true;
+          assert false;
         dst.mkdirs();
       }
 
@@ -445,12 +456,6 @@ public class Catalog {
     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     checkCRC = currentProfile.getMinimizeChangedFiles();
 
-    // The following are used to simplify code and to avoid continually referring to the profile
-    File generateFolder = null;     // Location where catalog is generated
-    File targetFolder = null;       // Location where final catalog will be copied to (if reuired)
-                                    // In Nook mode this should be the same as the generateFolder
-    File libraryFolder = null;      // Folder holding the Calibre library
-    String catalogFolderName = null;//Name of the catalog folder (not including path)
 
     /** where the catalog is eventually located */
     String where = null;
@@ -1191,6 +1196,7 @@ public class Catalog {
       logger.info(Localization.Main.getText("info.step.deletingfiles"));
       if (generateFolder != null ) {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
+        callback.setStopGenerating();
         Helper.delete(generateFolder, false);
         // ITIMPI:  TODO  Check if we can delete the folder using the statement below as being faster then doing the individual files?
         // generateFolder.deleteOnExit();
