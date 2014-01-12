@@ -67,7 +67,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-143: Allow the default book links to external sites to be localized
     - #c2o-145: Option to avoid splitting books by letter within a tag
     - #x2o-146: Improve Search facility for large libraries
-    - #c2o-147: Option to suppress selected tags in tags sub-catalog
     - #c2o-156: Allow Calibre Custom Column values to be treated like additional tags
     - #c2o-157: Allow Calibre Custom Column values to be used in calibre2opds search criteria
     - #c2o-158: Improve performance by avoiding generating unchanged pages
@@ -91,6 +90,7 @@ that have been recorded in the Issue tracker.
 
 v3.3
     - New: #c20-144: Remove redundant folder names in relative links
+    - New: #c2o-147: Option to suppress selected tags in tags sub-catalog
     - New: #c2o-155: Allow Calibre Custom Column values to be displayed in Book Details
     - New: #c2o-160: Allow Books to be on a different URL to the catalog
     - Fix: #c2o-161: The "Language as Tag" value being inverted when saved

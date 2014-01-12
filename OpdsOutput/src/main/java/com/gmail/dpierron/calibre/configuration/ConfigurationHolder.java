@@ -149,7 +149,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void reset() {
     tokenizedTagsToMakeDeep = null;
     tokenizedBookDetailsCustomColumns = null;
-    tokenizedTagsToIgnore = null;
+    regexTagsToIgnore = null;
 
     StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
     for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
@@ -972,13 +972,16 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_TAGSTOIGNORE);
   }
 
-  private List<String> tokenizedTagsToIgnore;
+  private List<String> regexTagsToIgnore;
 
-  public List<String> getTokenizedTagsToIgnore() {
-    if (tokenizedTagsToIgnore == null) {
-      tokenizedTagsToIgnore = Helper.tokenize(getTagsToIgnore().toUpperCase(), ",", true);
+  public List<String> getRegExTagsToIgnore() {
+    if (regexTagsToIgnore == null) {
+      regexTagsToIgnore = new LinkedList<String>();
+      for (String tagName : Helper.tokenize(getTagsToIgnore().toUpperCase(), ",", true)) {
+        regexTagsToIgnore.add(Helper.convertGlobToRegEx(tagName));
+      }
     }
-    return tokenizedTagsToIgnore;
+    return regexTagsToIgnore;
   }
 
   public String getTagsToIgnore() {
@@ -991,7 +994,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setTagsToIgnore(String value) {
     setProperty(PROPERTY_NAME_TAGSTOIGNORE, value);
-    tokenizedTagsToIgnore = null;
+    regexTagsToIgnore = null;
   }
 
   public boolean isTagsToMakeDeepReadOnly() {
@@ -1025,8 +1028,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
    */
   public List<String> getCustomColumnsWanted() {
     List<String> result = getTokenizedBookDetailsCustomColumns();
-    List<String> result2;
-    // TODO Add any custom columns required elsewhere (such as Custom Columns to be treated as tags)
+    result.addAll(getTokenizedCatalogCustomColumns());
     return result;
   }
 
@@ -1549,6 +1551,16 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public boolean isCatalogCustomColumnsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
   }
+
+  private List<String> tokenizedCatalogCustomColumns;
+
+  public List<String> getTokenizedCatalogCustomColumns() {
+    if (tokenizedCatalogCustomColumns == null) {
+      tokenizedCatalogCustomColumns = Helper.tokenize(getCatalogCustomColumns().toUpperCase(), ",", true);
+    }
+    return tokenizedCatalogCustomColumns;
+  }
+
 
   /*
     Catalog Structure

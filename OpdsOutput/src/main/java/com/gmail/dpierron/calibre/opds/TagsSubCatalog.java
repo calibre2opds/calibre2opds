@@ -5,7 +5,11 @@ package com.gmail.dpierron.calibre.opds;
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.database.Database;
+import com.gmail.dpierron.calibre.database.DatabaseManager;
+import com.gmail.dpierron.calibre.database.DatabaseRequest;
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
@@ -60,15 +64,42 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     return result;
   }
 
+private static List<Tag> tagsToIgnore = null;
+
+private static List<Tag>  getTagsToIgnore () {
+  if (tagsToIgnore == null) {
+    tagsToIgnore = new LinkedList<Tag>();
+    for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
+      List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
+      for (String regexTag : regextagsToIgnore) {
+        if (tag.getName().toUpperCase().matches(regexTag)) {
+          if (! tagsToIgnore.contains(tag)) {
+            tagsToIgnore.add(tag);
+          }
+        }
+      }
+    }
+
+  }
+  return tagsToIgnore;
+}
+  /**
+   * Get the list of tags we want to use
+   * @return
+   */
   List<Tag> getTags() {
     if (tags == null) {
       tags = new LinkedList<Tag>();
       for (Book book : getBooks()) {
         for (Tag tag : book.getTags()) {
-          if (!tags.contains(tag))
+          if (! getTagsToIgnore().contains(tag)
+          &&  ! tags.contains(tag)) {
             tags.add(tag);
+          }
         }
       }
+    }
+
 
       // sort the tags alphabetically
       Collections.sort(tags, new Comparator<Tag>() {
@@ -79,7 +110,6 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
           return collator.compare(title1, title2);
         }
       });
-    }
     return tags;
   }
 
