@@ -670,12 +670,12 @@ public class Catalog {
       String tempPath = temp.getAbsolutePath();
       temp.delete();  // Remove file just created as we are going to create a folder there instead
       generateFolder = new File(tempPath);
-      if (logger.isTraceEnabled())
-        logger.trace("generateFolder set to " + generateFolder);
+      if (logger.isTraceEnabled())logger.trace("generateFolder set to " + generateFolder);
+      generateFolder.mkdir();
+      generateFolder.deleteOnExit();
 
       // Save the location of the Catalog folder for any other component that needs to knw it
       CatalogContext.INSTANCE.catalogManager.setGenerateFolder(generateFolder);
-
       callback.startCreateMainCatalog();
 
       callback.startReadDatabase();
@@ -1198,8 +1198,6 @@ public class Catalog {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
         callback.setStopGenerating();
         Helper.delete(generateFolder, false);
-        // ITIMPI:  TODO  Check if we can delete the folder using the statement below as being faster then doing the individual files?
-        // generateFolder.deleteOnExit();
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
       if (generationStopped)

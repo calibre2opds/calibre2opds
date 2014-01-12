@@ -806,11 +806,11 @@ public class Mainframe extends javax.swing.JFrame {
     txtTagsToIgnore.setText("" + currentProfile.getTagsToIgnore());
     txtTagsToIgnore.setEnabled(!currentProfile.isTagsToIgnoreReadOnly());
     lblTagsToIgnore.setEnabled(txtTagsToIgnore.isEnabled());
+    // lblTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
+    // txtTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
     txtTagsToMakeDeep.setText("" + currentProfile.getTagsToMakeDeep());
     txtTagsToMakeDeep.setEnabled(!currentProfile.isTagsToMakeDeepReadOnly());
     lblTagsToMakeDeep.setEnabled(txtTagsToMakeDeep.isEnabled());
-    txtTagsToIgnore.setEnabled(false);  // TODO enable when code ready
-    lblTagsToIgnore.setEnabled(false);  // TODO enable when code ready
     chkNoGenerateSeries.setSelected(!currentProfile.getGenerateSeries());
     chkNoGenerateSeries.setEnabled(!currentProfile.isGenerateSeriesReadOnly());
     lblNoGenerateSeries.setEnabled(chkNoGenerateSeries.isEnabled());
@@ -1223,8 +1223,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblTagsToIgnore.setText(Localization.Main.getText("config.TagsToIgnore.label")); // NOI18N
     lblTagsToIgnore.setToolTipText(Localization.Main.getText("config.TagsToIgnore.description")); // NOI18N
     txtTagsToIgnore.setToolTipText(lblTagsToIgnore.getToolTipText()); // NOI18N
-    lblTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
-    txtTagsToIgnore.setEnabled(false);    // TODO enable when support code ready
     lblCatalogCustomColumns.setText(Localization.Main.getText("config.CatalogCustomColumns.label"));
     lblCatalogCustomColumns.setToolTipText(Localization.Main.getText("config.CatalogCustomColumns.description"));
     lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
