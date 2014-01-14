@@ -1299,13 +1299,16 @@ public class Helper {
   }
 
   /*
-   * Convert a 'glob' that contains ? and * wildcards to a regex
+   * Convert a parameter option 'glob' that contains ? and * wildcards to a regex
+   *
+   * Adapted from routine found via google search
    */
   public static String convertGlobToRegEx(String line) {
     line = line.trim();
     int strLen = line.length();
     StringBuilder sb = new StringBuilder(strLen);
     // Remove beginning and ending * globs because they're useless
+    // TODO:  ITMPI  This does not seem to be true - not sure why code was originally here!
     /*
     if (line.startsWith("*"))
     {
@@ -1324,6 +1327,7 @@ public class Helper {
     {
       switch (currentChar)
       {
+        // Wild car characters
         case '*':
           if (escaping)
             sb.append("\\*");
@@ -1338,6 +1342,7 @@ public class Helper {
             sb.append('.');
           escaping = false;
           break;
+        // Characters needing special treatment
         case '.':
         case '(':
         case ')':
@@ -1347,10 +1352,18 @@ public class Helper {
         case '$':
         case '@':
         case '%':
+        // TODO ITIMPI: Following added as special cases below seem not relevant
+        case '[':
+        case ']':
+        case '\\':
+        case '{':
+        case '}':
+        case ',':
           sb.append('\\');
           sb.append(currentChar);
           escaping = false;
           break;
+/*
         case '\\':
           if (escaping)
           {
@@ -1394,6 +1407,8 @@ public class Helper {
           else
             sb.append(",");
           break;
+*/
+        // characters that can just be passed through unchanged
         default:
           escaping = false;
           sb.append(currentChar);
