@@ -72,7 +72,7 @@ private static List<Tag>  getTagsToIgnore () {
     for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
       List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
       for (String regexTag : regextagsToIgnore) {
-        if (tag.getName().toUpperCase().matches(regexTag)) {
+        if (tag.getName().toUpperCase().matches("^" + regexTag)) {
           if (! tagsToIgnore.contains(tag)) {
             tagsToIgnore.add(tag);
           }
