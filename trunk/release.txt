@@ -75,11 +75,13 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-173: Make authors, series and tags into active links in book details
     - #c20-175: Set logging level via GUI
     - #c2o-180: Indicate on completion dialog if warnings logged
+    - #c2o-186: Problem when author surname shorter than value of split-by-letter level
+    = #c2o-189: Option for destination to only be catalog in Publish mode disabled
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
 have a requirement that might need some new feature, but you are nor sure exactly what
-that feature might be thenIt might be a good idea to first discuss them either in the
+that feature might be then it might be a good idea to first discuss them either in the
 calibre2opds forum, or the "Related Tools" section of the Calibre forum
 
 Release History

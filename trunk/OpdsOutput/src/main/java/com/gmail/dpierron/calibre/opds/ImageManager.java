@@ -34,8 +34,7 @@ public abstract class ImageManager {
   // CONSTRUCTOR
 
   ImageManager(int imageHeight) {
-    imagesToGenerate = new HashMap<File, File>();
-    timeInImages = 0;
+    reset();
     this.imageHeight = imageHeight;
 
     CachedFile imageSizeFile = CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
@@ -64,6 +63,10 @@ public abstract class ImageManager {
 
   // METHODS and PROPERTIES
 
+  public void reset () {
+    imagesToGenerate = new HashMap<File, File>();
+    timeInImages = 0;
+  }
   public final static ThumbnailManager newThumbnailManager() {
     return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
   }

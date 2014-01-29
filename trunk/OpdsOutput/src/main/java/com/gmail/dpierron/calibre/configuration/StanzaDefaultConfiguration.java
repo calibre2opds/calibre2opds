@@ -168,7 +168,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public DeviceMode getDeviceMode() {
-    return DeviceMode.Dropbox;
+    return DeviceMode.Default;
   }
 
   public boolean getCopyToDatabaseFolder() {

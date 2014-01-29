@@ -13,6 +13,9 @@ public class CoverManager extends ImageManager {
 
   // METHODS and PROPERTIES
 
+  public void reset() {
+    super.reset();
+  }
   /**
    *
    * @param book

@@ -109,10 +109,12 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       String pFilename,
       SplitOption splitOption) throws IOException {
 
-    int catalogSize;
-    int pos;
+    if (from != 0) inSubDir = true;
+    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
+    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
-    Map<String, List<Author>> mapOfAuthorsByLetter = null;
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
     boolean willSplitByLetter = false;
     String lastName = listauthors.get(0).getLastName().toUpperCase();   // Get name of first entry
@@ -123,23 +125,35 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         break;
       }
     }
+    // Check for special case were the author sort name is equal to the split level.*
+    while ( willSplitByLetter && listauthors.size() > 0
+            && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listauthors.get(0).getNameForSort().toUpperCase())) {
+      Author author = listauthors.get(0);
+      listauthors.remove(0);
+      Element element;
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+      element = getAuthor(breadcrumbs,mapOfBooksByAuthor.get(author),author);
+      assert element != null;
+      if (element != null) {
+        feed.addContent(element);
+      }
+    }
+    Map<String, List<Author>> mapOfAuthorsByLetter = null;
+    int catalogSize;
     if (willSplitByLetter) {
       mapOfAuthorsByLetter = DataModel.splitAuthorsByLetter(listauthors);
       catalogSize = 0;
-    } else
+    } else {
       catalogSize = listauthors.size();
-
-    if (from != 0) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    }
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
-    String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
     logger.debug("generating " + urlExt);
 
     // list the entries (or split them)
+
     List<Element> result;
-    if (willSplitByLetter  /*& listauthors.size() > 1*/) {
+
+    if (willSplitByLetter  /* listauthors.size() > 1*/) {
       logger.debug("splitting by letter");
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
       result = getListOfAuthorsSplitByLetter(breadcrumbs,
@@ -238,13 +252,13 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     List<Element> result = new LinkedList<Element>();
     SortedSet<String> letters = new TreeSet<String>(mapOfAuthorsByLetter.keySet());
+    Element element;
     for (String letter : letters) {
       // generate the letter file
       String letterFilename = Helper.getSplitString(baseFilename, letter, Constants.TYPE_SEPARATOR);
       String letterUrn = Helper.getSplitString(baseUrn,letter,Constants.URN_SEPARATOR);
       List<Author> authorsInThisLetter = mapOfAuthorsByLetter.get(letter);
-
-      // sort the authors list
+      assert (authorsInThisLetter.size() > 0) : "No authors for letter sequence '" + letter + "'";
       Collections.sort(authorsInThisLetter);
 
       String letterTitle;
@@ -252,55 +266,55 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         letterTitle = Localization.Main.getText("splitByLetter.author.other");
       else
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("authorword.title"),
-                                                letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
-      Element element = null;
-      // ITIMPI:  Not sure that the following check is needed if there cannot be a case of 0, so assert added to find out!
-      assert (authorsInThisLetter.size() > 0) : "No authors for letter sequence '" + letter + "'";
-      if (authorsInThisLetter.size() > 0) {
-        // try and list the items to make the summary
-        String summary = Summarizer.INSTANCE.summarizeAuthors(authorsInThisLetter);
+            letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
 
-        /*
-         *  Prepare the list of authors in any case, even if it will be skipped by SplitByAuthorInitialGoToBooks.
-         *  It'll be useful in cross references
-         */
-        logger.debug("calling getListOfBooks for the letter " + letter);
-
-        element = getSubCatalog(pBreadcrumbs,
-                                authorsInThisLetter,
-                                true,
-                                0,
-                                letterTitle,
-                                summary,
-                                letterUrn,
-                                letterFilename,
-                                checkSplitByLetter(letter));
-
-        if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
-          logger.debug("getting all books by all the authors in this letter");
-          List<Book> books = new LinkedList<Book>();
-          for (Author author : authorsInThisLetter) {
-            books.addAll(mapOfBooksByAuthor.get(author));
-          }
-          if (logger.isTraceEnabled())
-            logger.trace("getListOfAuthorsSplitByLetter:  Breadcrumbs=" + pBreadcrumbs.toString());
-
-          element = getListOfBooks(pBreadcrumbs,
-                                   books,
-                                   true,
-                                   0,                       // Starting from start
-                                   letterTitle,
-                                   summary,
-                                   letterUrn,
-                                   letterFilename,
-                                   SplitOption.DontSplit,     // Bug #716917 Do not split on letter
-                                    // #751211: Use external icons option
-                                   useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
-        }
+      // try and list the items to make the summary
+      String summary = Summarizer.INSTANCE.summarizeAuthors(authorsInThisLetter);
+      /*
+       *  Prepare the list of authors in any case, even if it will be skipped by SplitByAuthorInitialGoToBooks.
+       *  It'll be useful in cross references
+       */
+      logger.debug("calling getListOfBooks for the letter " + letter);
+      element = getSubCatalog(pBreadcrumbs,
+                              authorsInThisLetter,
+                              true,
+                              0,
+                              letterTitle,
+                              summary,
+                              letterUrn,
+                              letterFilename,
+                              checkSplitByLetter(letter));
+      assert element != null;
+      if (element != null) {
+        result.add(element);
       }
 
-      if (element != null)
-        result.add(element);
+      if (currentProfile.getSplitByAuthorInitialGoToBooks()) {
+        logger.debug("getting all books by all the authors in this letter");
+        List<Book> books = new LinkedList<Book>();
+        for (Author author : authorsInThisLetter) {
+          books.addAll(mapOfBooksByAuthor.get(author));
+        }
+        if (logger.isTraceEnabled())
+          logger.trace("getListOfAuthorsSplitByLetter:  Breadcrumbs=" + pBreadcrumbs.toString());
+
+        element = getListOfBooks(pBreadcrumbs,
+                                 books,
+                                 true,
+                                 0,                       // Starting from start
+                                 letterTitle,
+                                 summary,
+                                 letterUrn,
+                                 letterFilename,
+                                 SplitOption.DontSplit,     // Bug #716917 Do not split on letter
+                                  // #751211: Use external icons option
+                                 useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
+
+        assert element != null;
+        if (element != null) {
+          result.add(element);
+        }
+      }
     }
     return result;
   }

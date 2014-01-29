@@ -12,6 +12,7 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
@@ -530,6 +531,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
+  private String getCatalogImage (Book book, String name) {
+    return name;
+  }
   /**
    * Add cover links
    *
@@ -548,9 +552,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (coverFile.exists()) {
       // add the cover
 
-      // prepare to copy the cover file
-
-      catalogManager.addFileToTheMapOfFilesToCopy(coverFile);
+      // prepare to copy the cover file if not in default device mode
+      if (! (currentProfile.getDeviceMode().equals(DeviceMode.Default))) {
+        catalogManager.addFileToTheMapOfFilesToCopy(coverFile);
+      }
 
       // Add the Cover link
 
@@ -561,10 +566,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       FeedHelper.checkFileNameIsNewStandard(resizedCoverFile,
           CachedFileManager.INSTANCE.addCachedFile(book.getBookFolder(), coverManager.getResultFilenameOld(book)));
 
-      // prepare to copy the thumbnail if we are using them file
+      // Using Resized covers
       if (currentProfile.getCoverResize()) {
-        catalogManager.addFileToTheMapOfFilesToCopy(resizedCoverFile);
-
+        // prepare to copy the thumbnail fileif we are using them
+        if (! (currentProfile.getDeviceMode().equals(DeviceMode.Default))) {
+          catalogManager.addFileToTheMapOfFilesToCopy(resizedCoverFile);
+        }
+        // Decide whether we need to generate the resized cover image
         if (!resizedCoverFile.exists() || coverManager.hasImageSizeChanged() || resizedCoverFile.lastModified() < coverFile.lastModified()) {
           if (logger.isTraceEnabled()) {
             if (!resizedCoverFile.exists())
@@ -583,6 +591,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       } else {
         // Not using resized covers - use original cover.jpg
 
+        // Decide if we need to remove previously used resized cover images!
         if (resizedCoverFile.exists()) {
           // Safety check we never delete the Calibre cover
           if (0 == resizedCoverFile.getName().compareTo(Constants.CALIBRE_COVER_FILENAME)) {
@@ -599,11 +608,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // Change URI name to user cover.jpg
         coverUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX + book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
       }
+      // Are we storing cover images in the catalog?
       if (currentProfile.getIncludeCoversInCatalog()) {
+        // we need to generate the correct uRI for this case.
         coverUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX
                                         + Constants.IMAGES_FOLDER
                                         + "book" + Constants.FOLDER_SEPARATOR
                                         + coverManager.getResultFilename(book));
+        // ... and make sure the image is copied to the resulting catalog!
+
       }
       if (logger.isTraceEnabled())  logger.trace("addCoverLink: coverUri=" + coverUri);
       entry.addContent(FeedHelper.getCoverLink(coverUri));
@@ -623,8 +636,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // Using generated thumbnail files
 
         // prepare to copy the thumbnail file
-        catalogManager.addFileToTheMapOfFilesToCopy(thumbnailFile);
-
+        if (! (currentProfile.getDeviceMode().equals(DeviceMode.Default))) {
+          catalogManager.addFileToTheMapOfFilesToCopy(thumbnailFile);
+        }
         // generate the file if does not exist or size changed
         if (!thumbnailFile.exists() || thumbnailManager.hasImageSizeChanged() || thumbnailFile.lastModified() < coverFile.lastModified()) {
           if (logger.isTraceEnabled()) {
@@ -1257,7 +1271,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled()) logger.trace("getBookEntry: checking book in the Catalog manager");
 
     // We only need to actually generate the file if not done previously
-    if (! catalogManager.addBookEntryFile(outputFile)) {
+    if (! catalogManager.addBooksDone(book)) {
       if (logger.isDebugEnabled())  logger.debug("getBookEntry: SKIPPING generation of full book entry as already done");
     } else {
       if (logger.isTraceEnabled()) logger.trace("getBookEntry: book full entry (not yet done)");

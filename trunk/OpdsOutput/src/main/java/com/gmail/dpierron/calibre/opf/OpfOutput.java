@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.opf;
 
+import com.gmail.dpierron.calibre.cache.CachedFile;
+import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
@@ -190,7 +192,12 @@ public class OpfOutput {
     File outputFile = File.createTempFile("calibre-epub-opfoutput", ".epub");
     try {
       processEPubFile(outputFile);
-      Helper.copy(outputFile, book.getEpubFile().getFile());
+      CachedFile epubfile = book.getEpubFile().getFile();
+      Helper.copy(outputFile, epubfile);
+      // Clear any cached information for this file as we have created a new one
+      if (CachedFileManager.INSTANCE.inCache(epubfile) != null) {
+        epubfile.clearCachedInformation();
+      }
     } finally {
       outputFile.delete();
     }

@@ -13,7 +13,7 @@ import com.gmail.dpierron.tools.Helper;
 
 
 public enum DeviceMode {
-  Dropbox("CatalogFolderName", "_catalog", false,
+  Default("CatalogFolderName", "_catalog", false,
           "TargetFolder", "", true,
           "CopyToDatabaseFolder", true, true,
           "OnlyCatalogAtTarget", false, true,
@@ -60,7 +60,7 @@ public enum DeviceMode {
           return mode;
       }
     }
-    return Dropbox;
+    return Default;
   }
 
   public void setSpecificOptionsValues(PropertiesBasedConfiguration configuration) {

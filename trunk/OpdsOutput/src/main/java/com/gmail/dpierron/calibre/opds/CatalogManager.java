@@ -11,6 +11,7 @@ import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 
+import javax.print.DocFlavor;
 import java.io.File;
 import java.util.*;
 import java.util.zip.CRC32;
@@ -21,12 +22,21 @@ public class CatalogManager {
   public static BookFilter featuredBooksFilter;
   public static List<Composite<String, String>> customCatalogs;
   public static Map<String, BookFilter> customCatalogsFilters;
-  private static List<CachedFile> listOfFilesToCopy;
+  // TODO  Itimpi:  Does not seem to be needed any more1
+  /// private static List<CachedFile> listOfFilesToCopy;
+  // The list of files that need to be copied from the source
+  // library to the target library.
   private static List<String> listOfFilesPathsToCopy;
-  private static Map<String, Book> mapOfBookByPathToCopy;
+  // Images files that are to be included in the catalog
+  // For the key we use the desired file name in the catalog
+  // For the value entry is the file that needs copying
+  private static Map<String, CachedFile> mapOfImagesToCopy;
+  // TODO:  Itimpi:  Does not seem to be needed any more?
+  // private static Map<String, Book> mapOfBookByPathToCopy;
   private static Map<String, String> mapOfCatalogFolderNames;
-  private static List<File> bookEntriesFiles;
-  private static Map<String,String> mapOfCatalogImagesByBookid;
+  // List of books that have already been generated
+  // used to track if has already been done before!
+  private static List<Book> booksDone;
   private static String securityCode;
   private static String initialUrl;
 
@@ -53,11 +63,13 @@ public class CatalogManager {
     featuredBooksFilter = null;
     customCatalogs = null;
     customCatalogsFilters = null;
-    listOfFilesToCopy = new LinkedList<CachedFile>();
+    /// listOfFilesToCopy = new LinkedList<CachedFile>();
     listOfFilesPathsToCopy = new LinkedList<String>();
-    mapOfBookByPathToCopy = new HashMap<String, Book>();
+    mapOfImagesToCopy = new HashMap<String, CachedFile>();
+    // mapOfBookByPathToCopy = new HashMap<String, Book>();
     mapOfCatalogFolderNames = new HashMap<String, String>();
-    bookEntriesFiles = new LinkedList<File>();
+    // bookEntriesFiles = new LinkedList<File>();
+    booksDone = new LinkedList<Book>();
     bookDetailsCustomColumns = null;
   }
 
@@ -115,9 +127,12 @@ public class CatalogManager {
    * @param pathToCopy
    * @return
    */
+
+ /*
   public Book getBookByPathToCopy(String pathToCopy) {
     return mapOfBookByPathToCopy.get(pathToCopy);
   }
+  */
 
   /**
    *
@@ -139,8 +154,8 @@ public class CatalogManager {
     if (file == null)
       return;
 
-    if (listOfFilesToCopy.contains(file))
-      return;
+    /// if (listOfFilesToCopy.contains(file))
+    ///   return;
 
     String filePath = file.getAbsolutePath();
 
@@ -150,38 +165,32 @@ public class CatalogManager {
     }
 
     String relativePath = filePath.substring(databasePathLength);
-    listOfFilesPathsToCopy.add(relativePath);
-    mapOfBookByPathToCopy.put(relativePath, book);
-    listOfFilesToCopy.add(file);
+    if (! listOfFilesPathsToCopy.contains(relativePath))
+      listOfFilesPathsToCopy.add(relativePath);
+    // mapOfBookByPathToCopy.put(relativePath, book);
+    /// listOfFilesToCopy.add(file);
   }
   /**
-   * TODO:  Image files that need to be added to the catalog
-   * We need to know both the target name to be used and the source name
-   * @param file
+   * Add a file to the map of image files that are to be copied
+   * to the catalog (assuming this option is even set!)
    * @param book
+   * @param file
    */
-  void addFileToTheMapOfCatalogImages(CachedFile file, Book book) {
-    final String databasePath = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
-    final int databasePathLength = databasePath.length() + 1;
+  void addImageFileToTheMapOfCatalogImages(Book book, CachedFile file) {
 
-    if (file == null)
-      return;
+    assert file != null : "Program Error: attempt to add 'null' file to image map";
+    assert (file.getName().equals(Constants.THUMBNAIL_FILENAME)
+         || file.getName().equals(Constants.RESIZEDCOVER_FILENAME)
+         || file.getName().equals(Constants.CALIBRE_COVER_FILENAME)):
+          "Program Error: Unexpected name '" + file.getName() + "' when trying to add image to map";
+    String key = book.getId().toString() + Constants.TYPE_SEPARATOR + file.getName();
+    assert ! mapOfImagesToCopy.containsKey(key) : "Program Error: Already added image file " + key;
 
-    // TODO: Decide if this check is really necessary!
-    if (mapOfCatalogImagesByBookid.containsKey(book.getId().toString()))
-      return;
+    mapOfImagesToCopy.put(key, file);
+  }
 
-    String filePath = file.getAbsolutePath();
-
-    if (!filePath.startsWith(databasePath))  {
-      logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
-      return; // let's not copy files outside the database folder
-    }
-
-    String relativePath = filePath.substring(databasePathLength);
-    listOfFilesPathsToCopy.add(relativePath);
-    mapOfBookByPathToCopy.put(relativePath, book);
-    listOfFilesToCopy.add(file);
+  public Map<String,CachedFile> getMapOfImagesToCopy() {
+    return mapOfImagesToCopy;
   }
 
   /**
@@ -257,18 +266,21 @@ public class CatalogManager {
 
   /**
    * Add a book entry to the list of files for the catalog
+   * Used to track if we have done this one beafore
    *
-   * @param bookEntry
+   * @param book
    * @return true if book was added because not already there
    *         false if not added because already present
    */
-  public boolean addBookEntryFile(File bookEntry) {
-    if (bookEntriesFiles.contains(bookEntry))
+
+  public boolean addBooksDone(Book book) {
+    if (booksDone.contains(book))
       return false;
 
-    bookEntriesFiles.add(bookEntry);
+    booksDone.add(book);
     return true;
   }
+
 
   private static List<CustomColumnType> bookDetailsCustomColumns = null;
 
