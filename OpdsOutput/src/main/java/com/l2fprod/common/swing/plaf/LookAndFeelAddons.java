@@ -222,7 +222,7 @@ public class LookAndFeelAddons {
     contributedComponents.add(component);
 
     if (currentAddon != null) {
-      // make sure to initialize any addons added after the
+      // make sure to reset any addons added after the
       // LookAndFeelAddons has been installed
       component.initialize(currentAddon);
     }
@@ -290,7 +290,7 @@ public class LookAndFeelAddons {
   /**
    * With applets, if you reload the current applet, the UIManager will be
    * reinitialized (entries previously added by LookAndFeelAddons will be
-   * removed) but the addon will not reinitialize because addon initialize
+   * removed) but the addon will not reinitialize because addon reset
    * itself through the static block in components and the classes do not get
    * reloaded. This means component.updateUI will fail because it will not find
    * its UI.

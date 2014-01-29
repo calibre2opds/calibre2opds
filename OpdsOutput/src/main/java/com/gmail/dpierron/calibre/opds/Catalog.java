@@ -431,6 +431,25 @@ public class Catalog {
   }
 
   /**
+   * Sync a set of image files across to the specified target folder
+   * The images are segregated into folders according to the bookid
+   * Used when images are stored within catalog
+   *
+   * @param targetFolder
+   */
+
+  private void syncImages(File targetFolder) {
+     Map<String,CachedFile> mapOfImagesToCopy = CatalogContext.INSTANCE.catalogManager.getMapOfImagesToCopy();
+     for (Map.Entry<String,CachedFile> entry : mapOfImagesToCopy.entrySet()) {
+       File targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, entry.getKey());
+       try {
+        syncFiles(entry.getValue(),targetFile);
+       } catch (IOException e) {
+         logger.warn("Failure copy file '" + entry.getKey() + "' to catalog");
+       }
+     }
+  }
+  /**
    * -----------------------------------------------
    * Control the overall catalog generation process
    * -----------------------------------------------
@@ -531,7 +550,7 @@ public class Catalog {
       case Nas:
         callback.errorOccured(Localization.Main.getText("error.targetnotset"), null);
         return;
-      case Dropbox:
+      case Default:
         assert currentProfile.getCopyToDatabaseFolder(): "Copy to database folder MUST be set in Default mode";
         break;
       default:
@@ -553,8 +572,8 @@ public class Catalog {
             return;
           }
           break;
-        case Dropbox:
-          assert false : "Setting Target folder should be disabled in Dropbox mode";
+        case Default:
+          assert false : "Setting Target folder should be disabled in Default mode";
         default:
           assert false : "Unknown DeviceMode " + currentProfile.getDeviceMode();
       }
@@ -811,6 +830,13 @@ public class Catalog {
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
       callback.setSeriesCount("" + DataModel.INSTANCE.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
 
+
+     // Ensure objects are set to clean state (in case resused in same run)
+
+      CachedFileManager.INSTANCE.reset();
+      CatalogContext.INSTANCE.thumbnailManager.reset();
+      CatalogContext.INSTANCE.coverManager.reset();
+
       // Load up the File Cache if it exists
 
       now = System.currentTimeMillis();
@@ -826,8 +852,6 @@ public class Catalog {
         if (logger.isTraceEnabled())
           logger.trace("Loading Cache");
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
-        // CachedFileManager.INSTANCE.loadCache();
-        CachedFileManager.INSTANCE.initialize();
         CachedFileManager.INSTANCE.loadCache();
 
       } else {
@@ -966,7 +990,7 @@ public class Catalog {
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
-      if ((currentProfile.getDeviceMode() != DeviceMode.Dropbox)
+      if ((currentProfile.getDeviceMode() != DeviceMode.Default)
       && (!currentProfile.getOnlyCatalogAtTarget())){
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
@@ -1035,10 +1059,11 @@ public class Catalog {
 
       long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getGenerateFolder());
       // If we are copying to two locations need to double count
-      if (! currentProfile.getDeviceMode().equals(DeviceMode.Dropbox)
+      if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)
       &&  currentProfile.getCopyToDatabaseFolder()) {
         nbCatalogFilesToCopyToTarget += nbCatalogFilesToCopyToTarget;
       }
+      nbCatalogFilesToCopyToTarget += CatalogContext.INSTANCE.catalogManager.getMapOfImagesToCopy().size();
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -1086,8 +1111,11 @@ public class Catalog {
           targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         }
         syncFiles(generateFolder, targetCatalogFolder);
+        logger.debug("START: Copy images to Destination catalog folder");
+        syncImages(targetCatalogFolder);
+        logger.debug("COMPLETED: Copy images to Destination catalog folder");
         break;
-      case Dropbox:
+      case Default:
         // Do nothing.   In this mode we sync the catalog using the code for copying back to the library
         break;
       }
@@ -1100,6 +1128,9 @@ public class Catalog {
         File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         syncFiles(generateFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
+        logger.debug("START: Copy images to Database catalog folder");
+        syncImages(libraryCatalogFolder);
+        logger.debug("COMPLETED: Copy images to Database catalog folder");
       }
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
@@ -1165,7 +1196,7 @@ public class Catalog {
         case Nas:
           where = currentProfile.getTargetFolder().getPath();
           break;
-        case Dropbox:
+        case Default:
           File libraryCatalogFolder = new File(libraryFolder, currentProfile.getCatalogFolderName());
           where = libraryCatalogFolder.getPath();
           break;

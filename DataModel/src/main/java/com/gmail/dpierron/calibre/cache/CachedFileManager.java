@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.prefs.BackingStoreException;
 
 public enum CachedFileManager {
   INSTANCE;
@@ -28,7 +27,7 @@ public enum CachedFileManager {
   private final static String CALIBRE2OPDS_LOG_FILENAME_OLD = "calibre2opds.cache";
 
 
-  public void initialize() {
+  public void reset() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
     // loadCache();
@@ -258,6 +257,8 @@ public enum CachedFileManager {
    * N.B. the setCacheFolder() call must have been used
    */
   public void loadCache() {
+
+    reset();               // Reset cache to be empty
 
     // Check cache folder has been specified
     if (cacheFile == null) {
