@@ -75,8 +75,9 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-173: Make authors, series and tags into active links in book details
     - #c20-175: Set logging level via GUI
     - #c2o-180: Indicate on completion dialog if warnings logged
-    - #c2o-186: Problem when author surname shorter than value of split-by-letter level
-    = #c2o-189: Option for destination to only be catalog in Publish mode disabled
+    - #c2o-188: Allow custom external URLs
+    - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
+    - #c2o-190: Display author/book title sort fields don't work
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -114,6 +115,12 @@ v3.3
     - Fix: #c2o-182: Browse by Cover mode not working
     - Fix: #c2o-184: Leaves droppings in /var/tmp
     - Fix: #c2o-185: Silent batch mode does not work on Windows
+    - Fix: #c2o-186: Problem when author surname shorter than value of split-by-letter level
+    - Fix: #c2o-187: Option for destination to only be catalog in Publish mode disabled
+    - Fix: #c2o-191: Tags to omit is not working properly
+    - Fix: #c2o-192: Broken links for omitted tags in Book Details
+    - Fix: #c2o-193: Publish date as year not working
+    - New: #c2o-194: Localization for Brazilian Portuguese (pt-BR, UTF-8)
 
 v3.2 (released 6th October 2013)
     - Change: Documentation moved back to wiki on MobileRead as it is easier to maintain than is the case on WordPress. 
