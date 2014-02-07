@@ -250,6 +250,7 @@ public class Catalog {
         Helper.delete(file, true);
         if (syncLog)
           syncLogFile.printf("DELETED: %s\n", file.getName());
+        copyDeleted++;
         CachedFileManager.INSTANCE.removeCachedFile(file);
       }
       if (logger.isTraceEnabled())
@@ -462,6 +463,7 @@ public class Catalog {
     long countCovers;       // Count of image files that are generated/updated
 
     // reinitialize caches (in case of multiple calls in the same session)
+    CatalogContext.INSTANCE.reset();
     CatalogContext.INSTANCE.initialize();
     CatalogContext.INSTANCE.catalogManager.reset();
     CatalogContext.INSTANCE.callback = callback;
@@ -682,6 +684,13 @@ public class Catalog {
 
     //                  GENERATION PHASE
 
+
+    // Ensure objects are set to clean state (in case resused in same run)
+
+    CachedFileManager.INSTANCE.reset();
+    CatalogContext.INSTANCE.thumbnailManager.reset();
+    CatalogContext.INSTANCE.coverManager.reset();
+
     try {
       //  Initialise area for generating the catalog files
 
@@ -699,11 +708,9 @@ public class Catalog {
 
       callback.startReadDatabase();
       Long now = System.currentTimeMillis();
-
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
-      callback.checkIfContinueGenerating();     // check if we must continue
 
       // Database read optimizations
       // (ony read in optional databitems if weneed them later)
@@ -734,6 +741,7 @@ public class Catalog {
         }
       }
       DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId();
+      callback.checkIfContinueGenerating();     // check if we must continue
 
 
       // Prepare the feature books search query
@@ -829,13 +837,6 @@ public class Catalog {
       callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
       callback.setSeriesCount("" + DataModel.INSTANCE.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
-
-
-     // Ensure objects are set to clean state (in case resused in same run)
-
-      CachedFileManager.INSTANCE.reset();
-      CatalogContext.INSTANCE.thumbnailManager.reset();
-      CatalogContext.INSTANCE.coverManager.reset();
 
       // Load up the File Cache if it exists
 
@@ -1159,6 +1160,7 @@ public class Catalog {
         syncLogFile.println(String.format("%8d  ", copyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
         syncLogFile.println(String.format("%8d  ", copyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
         syncLogFile.println(String.format("%8d  ", copyDateMisses) + Localization.Main.getText("stats.copy.older"));
+        // syncLogFile.println(String.format("%8d  ", copyDeleted) + Localization.Main.getText("stats.copy.deleted"));
         syncLogFile.close();
       }
 
@@ -1181,6 +1183,7 @@ public class Catalog {
       logger.info(String.format("%8d  ", copyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
       logger.info(String.format("%8d  ", copyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
       logger.info(String.format("%8d  ", copyDateMisses) + Localization.Main.getText("stats.copy.older"));
+      logger.info(String.format("%8d  ", copyDeleted) + Localization.Main.getText("stats.copy.deleted"));
       logger.info("");
       if (copyToSelf != 0)
         logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));

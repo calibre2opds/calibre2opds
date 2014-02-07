@@ -20,7 +20,9 @@ public class Book implements SplitableByLetter {
   private String title;
   private String titleSort;
   private String titleWithSerieNumber;
+  private String titleSortWithSerialNumber;
   private String titleWithRating;
+  private String titleSortWithRating;
   private final String path;
   private String comment;
   private String summary;
@@ -182,6 +184,18 @@ public class Book implements SplitableByLetter {
     return titleWithSerieNumber;
   }
 
+  /**
+   * Get the title_sort with the series information appended.
+   * @return
+   */
+  public String getTitleSortWithSerialNumber() {
+    if (titleSortWithSerialNumber == null) {
+      DecimalFormat df = new DecimalFormat("####.##");
+      titleSortWithSerialNumber = df.format(getSerieIndex()) + " - " + titleSort;
+    }
+    return titleSortWithSerialNumber;
+  }
+
   public String getTitleWithRating(String message, String ratingText) {
     if (titleWithRating == null) {
       if (getRating() != BookRating.NOTRATED)
@@ -190,6 +204,16 @@ public class Book implements SplitableByLetter {
         titleWithRating = title;
     }
     return titleWithRating;
+  }
+
+  public String getTitleSortWithRating(String message, String ratingText) {
+    if (titleSortWithRating == null) {
+      if (getRating() != BookRating.NOTRATED)
+        titleSortWithRating = MessageFormat.format(message, getTitle_Sort(), ratingText);
+      else
+        titleSortWithRating = getTitle_Sort();
+    }
+    return titleSortWithRating;
   }
 
 
