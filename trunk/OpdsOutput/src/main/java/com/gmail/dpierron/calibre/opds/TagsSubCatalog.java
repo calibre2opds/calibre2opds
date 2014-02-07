@@ -64,25 +64,6 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     return result;
   }
 
-private static List<Tag> tagsToIgnore = null;
-
-private static List<Tag>  getTagsToIgnore () {
-  if (tagsToIgnore == null) {
-    tagsToIgnore = new LinkedList<Tag>();
-    for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
-      List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
-      for (String regexTag : regextagsToIgnore) {
-        if (tag.getName().toUpperCase().matches("^" + regexTag)) {
-          if (! tagsToIgnore.contains(tag)) {
-            tagsToIgnore.add(tag);
-          }
-        }
-      }
-    }
-
-  }
-  return tagsToIgnore;
-}
   /**
    * Get the list of tags we want to use
    * @return
@@ -92,7 +73,7 @@ private static List<Tag>  getTagsToIgnore () {
       tags = new LinkedList<Tag>();
       for (Book book : getBooks()) {
         for (Tag tag : book.getTags()) {
-          if (! getTagsToIgnore().contains(tag)
+          if (! CatalogContext.INSTANCE.getTagsToIgnore().contains(tag)
           &&  ! tags.contains(tag)) {
             tags.add(tag);
           }

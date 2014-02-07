@@ -738,17 +738,19 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
           for (Tag tag : book.getTags()) {
-            int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
-            // Tags for cross-references are held at top level
-            // TODO Perhaps consider whether level should be taken into account?
-            filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
-            if (nbBooks > 1) {
-              // c2o-168 - Omit Counts if MinimizeChangedFiles set
-              if (! currentProfile.getMinimizeChangedFiles()) {
-                booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+            if (! CatalogContext.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
+              int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
+              // Tags for cross-references are held at top level
+              // TODO Perhaps consider whether level should be taken into account?
+              filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
+              if (nbBooks > 1) {
+                // c2o-168 - Omit Counts if MinimizeChangedFiles set
+                if (! currentProfile.getMinimizeChangedFiles()) {
+                  booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+                }
+                entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+                    Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
               }
-              entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
-                  Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
             }
           }
         }

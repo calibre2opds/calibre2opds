@@ -2,9 +2,13 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.datamodel.Tag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,6 +38,9 @@ public enum CatalogContext {
   // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
   // desireable then it could be come a configurable option
   public static DateFormat bookDateFormat;
+  // Tags that the user has specified should not be included
+  private static List<Tag> tagsToIgnore;
+
 
   private CatalogContext() {
     initialize();
@@ -47,7 +54,8 @@ public enum CatalogContext {
     if (securityManager==null)    securityManager = new SecurityManager();
     if (currentProfile==null)     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
-    if (bookDateFormat==null)     bookDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, new Locale(currentProfile.getLanguage()));
+    if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, new Locale(currentProfile.getLanguage()));
+    getTagsToIgnore();
   }
 
   /**
@@ -63,7 +71,27 @@ public enum CatalogContext {
     currentProfile = null;
     titleDateFormat = null;
     bookDateFormat = null;
+    tagsToIgnore = null;
   }
+
+  public List<Tag>  getTagsToIgnore () {
+    if (tagsToIgnore == null) {
+      tagsToIgnore = new LinkedList<Tag>();
+      for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
+        List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
+        for (String regexTag : regextagsToIgnore) {
+          if (tag.getName().toUpperCase().matches("^" + regexTag)) {
+            if (! tagsToIgnore.contains(tag)) {
+              tagsToIgnore.add(tag);
+            }
+          }
+        }
+      }
+
+    }
+    return tagsToIgnore;
+  }
+
 
   //  The following methods have been deprecated in favour of making
   //  some global variables available.  This decision might need revisiting.
