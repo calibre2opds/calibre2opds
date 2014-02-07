@@ -125,7 +125,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         break;
       }
     }
-    // Check for special case were the author sort name is equal to the split level.*
+    // Check for special case where the author sort name is equal to the split level.*
     while ( willSplitByLetter && listauthors.size() > 0
             && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listauthors.get(0).getNameForSort().toUpperCase())) {
       Author author = listauthors.get(0);

@@ -214,7 +214,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * Get a new Series sub-catalog.
    *
    * @param pBreadcrumbs
-   * @param series              series, or nuil to derive series from books
+   * @param listSeries              series, or nuil to derive series from books
    * @param inSubDir
    * @param from
    * @param title
@@ -227,8 +227,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @throws IOException
    */
 //  public Composite<Element, String> getListOfBooks(Breadcrumbs pBreadcrumbs,
-      public Element getSubCatalog(Breadcrumbs pBreadcrumbs,
-          List<Series> series,
+    public Element getSubCatalog(Breadcrumbs pBreadcrumbs,
+          List<Series> listSeries,
           boolean inSubDir,
           int from,
           String title,
@@ -238,30 +238,38 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           SplitOption splitOption,
           boolean addTheSeriesWordToTheTitle) throws IOException {
 
-    if (series == null) series = getSeries();
-    int catalogSize = series.size();
+    if (listSeries == null) listSeries = getSeries();
     if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
-    if (summary == null) summary = catalogSize > 1 ? Localization.Main.getText("series.alphabetical", catalogSize)
-                                                   : (catalogSize == 1 ? Localization.Main.getText("series.alphabetical.single") : "");
-    if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + getCatalogLevel();
-
-    boolean willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
-    if (willSplitByLetter) {
-      catalogSize = 0;
-    } else
-      catalogSize = series.size();
-
     if (from > 0) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
-    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
 
+    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
+    // Check for special case where the author sort name is equal to the split level.*
+    boolean willSplitByLetter = (splitOption == SplitOption.SplitByLetter);
+    while ( willSplitByLetter && listSeries.size() > 0
+        && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listSeries.get(0).getName().toUpperCase())) {
+    }
+
+    int catalogSize = listSeries.size();
+    if (summary == null) summary = catalogSize > 1 ? Localization.Main.getText("series.alphabetical", catalogSize)
+                                                   : (catalogSize == 1 ? Localization.Main.getText("series.alphabetical.single") : "");
+    if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + getCatalogLevel();
+
+    willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
+    if (willSplitByLetter) {
+      catalogSize = 0;
+    } else
+      catalogSize = listSeries.size();
+
+    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
+
+
     // list the entries (or split them)
     List<Element> result = getListOfSeries(pBreadcrumbs,
-                                           series,
+                                           listSeries,
                                            inSubDir,
                                            from,
                                            title,

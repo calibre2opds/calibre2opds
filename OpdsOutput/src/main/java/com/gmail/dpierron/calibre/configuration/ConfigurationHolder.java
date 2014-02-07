@@ -128,6 +128,14 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   private StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
 
+  // Variables used to store cached values
+  // These should all be cleared on a reset
+  private List<String> tokenizedCatalogCustomColumns;
+  private List<String> regexTagsToIgnore;
+  private List<String> tokenizedTagsToMakeDeep;
+  private List<String> tokenizedBookDetailsCustomColumns;
+
+
   ConfigurationHolder(File propertiesFile) {
     super(propertiesFile);
     try {
@@ -149,9 +157,11 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void reset() {
     tokenizedTagsToMakeDeep = null;
     tokenizedBookDetailsCustomColumns = null;
+    tokenizedCatalogCustomColumns = null;
     regexTagsToIgnore = null;
 
-    StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
+    // ITIMPI:  Following line commented out as appears to be redundant!
+    // StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
     for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       String setterName = "set" + getterName.substring(3);
@@ -972,8 +982,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_TAGSTOIGNORE);
   }
 
-  private List<String> regexTagsToIgnore;
-
   public List<String> getRegExTagsToIgnore() {
     if (regexTagsToIgnore == null) {
       regexTagsToIgnore = new LinkedList<String>();
@@ -1001,16 +1009,12 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_TAGSTOMAKEDEEP);
   }
 
-  private List<String> tokenizedTagsToMakeDeep;
-
   public List<String> getTokenizedTagsToMakeDeep() {
     if (tokenizedTagsToMakeDeep == null) {
       tokenizedTagsToMakeDeep = Helper.tokenize(getTagsToMakeDeep().toUpperCase(), ",", true);
     }
     return tokenizedTagsToMakeDeep;
   }
-
-  private List<String> tokenizedBookDetailsCustomColumns;
 
   public List<String> getTokenizedBookDetailsCustomColumns() {
     if (tokenizedBookDetailsCustomColumns == null) {
@@ -1551,8 +1555,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public boolean isCatalogCustomColumnsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
   }
-
-  private List<String> tokenizedCatalogCustomColumns;
 
   public List<String> getTokenizedCatalogCustomColumns() {
     if (tokenizedCatalogCustomColumns == null) {

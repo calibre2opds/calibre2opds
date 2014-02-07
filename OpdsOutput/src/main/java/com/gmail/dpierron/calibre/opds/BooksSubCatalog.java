@@ -29,21 +29,11 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.spi.CurrencyNameProvider;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
   protected final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
-
-  // This is the date format used within the book details.
-  // At the moment it is either a fulld ate or jsut the year
-  // If users ask for more flexibility the coniguration options can be re-visited.
-  private final static DateFormat PUBLICATIONDATE_FORMAT =
-      currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
-
-  // This is the date format that is to be used in the titles for the Recent Books sub-catalog section
-  // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
-  // desireable then it could be come a configurable option
-  private final static DateFormat DATE_FORMAT = SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
 
   /**
    * @return
@@ -70,8 +60,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
   public BooksSubCatalog(List<Book> books) {
     super(books);
   }
-
-
 
   /**
    * Sort the list of books alphabetically
@@ -921,6 +909,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
+  private String getImageFilename (Book book, String type) {
+    String filename = getBoookFolderFilename(book);
+    return filename;
+  }
   /**
    * Generate a book entry in a catalog
    *
@@ -1061,7 +1053,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(pubtmp)) {
             content.addContent(JDOM.INSTANCE.element("strong")
                 .addContent(Localization.Main.getText("content.published") + ": "))
-                .addContent(PUBLICATIONDATE_FORMAT.format(book.getPublicationDate()))
+                .addContent(CatalogContext.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
                 .addContent(JDOM.INSTANCE.element("br"))
                 .addContent(JDOM.INSTANCE.element("br"));
         }
@@ -1073,7 +1065,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(addtmp)) {
           content.addContent(JDOM.INSTANCE.element("strong")
               .addContent(Localization.Main.getText("content.added") + ": "))
-              .addContent(DATE_FORMAT.format(addtmp))
+              .addContent(CatalogContext.INSTANCE.titleDateFormat.format(addtmp))
               .addContent(JDOM.INSTANCE.element("br"))
               .addContent(JDOM.INSTANCE.element("br"));
         }
@@ -1086,7 +1078,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(modtmp)) {
           content.addContent(JDOM.INSTANCE.element("strong")
               .addContent(Localization.Main.getText("content.modified") + ": "))
-              .addContent(DATE_FORMAT.format(modtmp))
+              .addContent(CatalogContext.INSTANCE.titleDateFormat.format(modtmp))
               .addContent(JDOM.INSTANCE.element("br"))
               .addContent(JDOM.INSTANCE.element("br"));
         }
@@ -1260,7 +1252,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         title = book.getTitle();
       }
     } else if (Option.contains(options, Option.INCLUDE_TIMESTAMP)) {
-      title = book.getTitle() + " [" + DATE_FORMAT.format(book.getTimestamp()) + "]";
+      title = book.getTitle() + " [" + CatalogContext.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
     }else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles()) {
       title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
     } else {
