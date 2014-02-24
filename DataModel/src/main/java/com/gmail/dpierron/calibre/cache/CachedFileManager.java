@@ -68,8 +68,6 @@ public enum CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public CachedFile addCachedFile(CachedFile cf) {
-//    if (cf.getName().endsWith("_Page"))
-//        assert true;
     String path = cf.getPath();
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
@@ -90,8 +88,6 @@ public enum CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public CachedFile addCachedFile(File f) {
-    // if (f.getName().endsWith("_Page"))
-    //   assert true;
     String path = f.getPath();
     CachedFile cf = inCache(f);
     if (cf == null) {
@@ -205,7 +201,7 @@ public enum CachedFileManager {
 
           // We are only interested in caching entries for which the CRC is known
           // as this is the expensive operation we do not want to do unnecessarily
-          if (!cf.isCrc()) {
+          if (cf.isCached() && (!cf.isCrc())) {
             if (logger.isTraceEnabled())
               logger.trace("CRC not known.  Not saving CachedFile " + key);
             ignoredCount++;

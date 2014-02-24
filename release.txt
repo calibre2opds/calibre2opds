@@ -70,7 +70,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-156: Allow Calibre Custom Column values to be treated like additional tags
     - #c2o-157: Allow Calibre Custom Column values to be used in calibre2opds search criteria
     - #c2o-158: Improve performance by avoiding generating unchanged pages
-    - #c2o-162: Option to Include cover images within the catalog
     - #c2o-165: Problem adding Custom Catalog entries (partially fixed)
     - #c2o-173: Make authors, series and tags into active links in book details
     - #c20-175: Set logging level via GUI
@@ -97,6 +96,7 @@ v3.3
     - New: #c2o-155: Allow Calibre Custom Column values to be displayed in Book Details
     - New: #c2o-160: Allow Books to be on a different URL to the catalog
     - Fix: #c2o-161: The "Language as Tag" value being inverted when saved
+    - New: #c2o-162: Option to Include cover images within the catalog
     - Fix: #c20-163: If you do multiple generation runs without reloading calibre2opds the catalogs are not correctly generated.
     - New: #c2o-164: Option to Publish only the generated catalog in Publish mode when Books URL specified
     - Fix: #c2o-166: HTML Downloads not generated if OPDS catalog not being generated

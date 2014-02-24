@@ -22,11 +22,11 @@ public class CoverManager extends ImageManager {
    * @return
    */
   @Override
-  public String getResultFilename(Book book) {
+  public String getResizedFilename(Book book) {
     return "c2o_resizedcover.jpg";
   }
 
-  public String getResultFilenameOld(Book book) {
+  public String getResizedFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     String result;
     result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + Constants.RESIZEDCOVER_FILENAME.substring(4)

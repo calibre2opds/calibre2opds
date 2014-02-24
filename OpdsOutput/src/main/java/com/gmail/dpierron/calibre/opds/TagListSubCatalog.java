@@ -5,6 +5,7 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
@@ -49,7 +50,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
 //  private Composite<Element, String> getListOfTags(
       private Element getListOfTags(
       Breadcrumbs pBreadcrumbs,
-      List<Tag> listtags,
+      List<Tag> listTags,
       boolean inSubDir,
       int from,
       String title,
@@ -58,30 +59,43 @@ public class TagListSubCatalog extends TagsSubCatalog {
       String pFilename,
       SplitOption splitOption) throws IOException {
 
+    if (from != 0) inSubDir = true;
     if (pBreadcrumbs.size() > 1) inSubDir = true;
+    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int catalogSize;
+    String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
+    logger.debug("getListOfTags: generating " + filename);
     Map<String, List<Tag>> mapOfTagsByLetter = null;
+    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
+
     if (splitOption == null) {
       splitOption = ((maxSplitLevels > 0) && (from == 0)) ? SplitOption.SplitByLetter : SplitOption.Paginate;
       if (logger.isTraceEnabled())
         logger.trace("getListOfTags: splitOption was null - set to " + splitOption);
     }
-    boolean willSplitByLetter = checkSplitByLetter(splitOption, listtags.size());
+    // andle special case where split-by-letter depth exceeds tag name length
+    if (splitOption == SplitOption.SplitByLetter) {
+      while (listTags.size() > 0
+           && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listTags.get(0).getName().toUpperCase())) {
+        Tag tag = listTags.get(0);
+        listTags.remove(0);
+        Element element;
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+        element = getTag(breadcrumbs,tag,urn,"");
+        assert element != null;
+        if (element != null) {
+          feed.addContent(element);
+        }
+      }
+    }
+    boolean willSplitByLetter = checkSplitByLetter(splitOption, listTags.size());
     if (willSplitByLetter) {
-      mapOfTagsByLetter = DataModel.splitTagsByLetter(listtags);
+      mapOfTagsByLetter = DataModel.splitTagsByLetter(listTags);
       catalogSize = 0;
     } else
-      catalogSize = listtags.size();
-
-    if (from != 0) inSubDir = true;
-    if (pBreadcrumbs.size() > 1) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+      catalogSize = listTags.size();
     int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
-
-    String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
-    logger.debug("getListOfTags: generating " + filename);
-    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-    Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
     // list the entries (or split them)
     List<Element> result;
@@ -94,10 +108,10 @@ public class TagListSubCatalog extends TagsSubCatalog {
     } else {
       logger.debug("no split by letter");
       result = new LinkedList<Element>();
-      for (int i = from; i < listtags.size(); i++) {
+      for (int i = from; i < listTags.size(); i++) {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
           Element nextLink = getListOfTags(pBreadcrumbs,
-                                           listtags,
+                                           listTags,
                                            inSubDir,
                                            i,
                                            title, summary, urn, pFilename,
@@ -105,7 +119,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
           result.add(0, nextLink);
           break;
         } else {
-          Tag tag = listtags.get(i);
+          Tag tag = listTags.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
           logger.debug("getTag:" + tag);
           Element entry = getTag(breadcrumbs, tag, urn, null);

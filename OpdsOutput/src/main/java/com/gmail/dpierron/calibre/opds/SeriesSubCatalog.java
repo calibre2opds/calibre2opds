@@ -247,10 +247,20 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
-    // Check for special case where the author sort name is equal to the split level.*
-    boolean willSplitByLetter = (splitOption == SplitOption.SplitByLetter);
-    while ( willSplitByLetter && listSeries.size() > 0
-        && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listSeries.get(0).getName().toUpperCase())) {
+    // Check for special case where the series name is equal to the split level.
+    if (splitOption == SplitOption.SplitByLetter) {
+      while (listSeries.size() > 0
+          && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listSeries.get(0).getName().toUpperCase())) {
+        Series series = listSeries.get(0);
+        listSeries.remove(0);
+        Element element;
+        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+        element = getSerie(breadcrumbs,series,urn,addTheSeriesWordToTheTitle);
+        assert element != null;
+        if (element != null) {
+          feed.addContent(element);
+        }
+      }
     }
 
     int catalogSize = listSeries.size();
@@ -258,7 +268,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                                                    : (catalogSize == 1 ? Localization.Main.getText("series.alphabetical.single") : "");
     if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + getCatalogLevel();
 
-    willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
+    boolean willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
     if (willSplitByLetter) {
       catalogSize = 0;
     } else

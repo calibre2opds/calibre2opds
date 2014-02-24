@@ -992,7 +992,7 @@ public class Catalog {
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
       if ((currentProfile.getDeviceMode() != DeviceMode.Default)
-      && (!currentProfile.getOnlyCatalogAtTarget())){
+      && (!currentProfile.getOnlyCatalogAtTarget())) {
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
         for (String pathToCopy : CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy()) {
@@ -1026,7 +1026,7 @@ public class Catalog {
         String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName()).getAbsolutePath();
         String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
-        // TODO    Look if this can be done more effeiently?  Perhaps piecemeal during sync?
+        // TODO    Look if this can be done more effeciently?  Perhaps piecemeal during sync?
         logger.debug("STARTING: Delete superfluous files from target");
         String catalogfolder = currentProfile.getCatalogFolderName();
         for (File existingTargetFile : existingTargetFiles) {

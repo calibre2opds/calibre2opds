@@ -23,10 +23,10 @@ public class ThumbnailManager extends ImageManager {
    * @return
    */
   @Override
-  String getResultFilename(Book book) {
+  String getResizedFilename(Book book) {
     return Constants.THUMBNAIL_FILENAME;
   }
-  String getResultFilenameOld(Book book) {
+  String getResizedFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     if (file != null)
       return file.getName() + Constants.JPG_EXTENSION;

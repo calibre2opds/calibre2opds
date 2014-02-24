@@ -26,8 +26,8 @@ public abstract class ImageManager {
 
   private int imageHeight = 1;
 
-  abstract String getResultFilename(Book book);
-  abstract String getResultFilenameOld(Book book);
+  abstract String getResizedFilename(Book book);
+  abstract String getResizedFilenameOld(Book book);
 
   abstract String getImageHeightDat();
 
@@ -75,9 +75,9 @@ public abstract class ImageManager {
     return new CoverManager(ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
   }
 
-  public void setImageToGenerate(File reducedCoverFile, File coverFile) {
-    if (!imagesToGenerate.containsKey(reducedCoverFile)) {
-      imagesToGenerate.put(reducedCoverFile, coverFile);
+  public void setImageToGenerate(CachedFile resizedCoverFile, CachedFile coverFile) {
+    if (!imagesToGenerate.containsKey(resizedCoverFile)) {
+      imagesToGenerate.put(resizedCoverFile, coverFile);
     }
   }
 
@@ -87,7 +87,8 @@ public abstract class ImageManager {
   }
 
   /**
-   * Get the URI for a cover image.
+   * Get the URI for a cover image
+   * (on the assumption it is in the library)
    *
    * @param book
    * @return
@@ -97,7 +98,7 @@ public abstract class ImageManager {
     if (Helper.isNullOrEmpty(uriBase)) {
       uriBase = Constants.PARENT_PATH_PREFIX + Constants.PARENT_PATH_PREFIX;
     }
-    return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResultFilename(book), true);
+    return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResizedFilename(book), true);
   }
 
   public void writeImageHeightFile() {

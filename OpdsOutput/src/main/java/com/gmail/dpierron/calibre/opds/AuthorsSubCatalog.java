@@ -116,8 +116,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
-    boolean willSplitByLetter = false;
     String lastName = listauthors.get(0).getLastName().toUpperCase();   // Get name of first entry
+    boolean willSplitByLetter = false;
     for (Author author : listauthors) {                                                   // debug
       if (! author.getLastName().toUpperCase().equals(lastName)) {
         // As long as entries are not all the same, apply the split criteria
@@ -137,6 +137,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       if (element != null) {
         feed.addContent(element);
       }
+      willSplitByLetter = checkSplitByLetter(splitOption,listauthors.size());
     }
     Map<String, List<Author>> mapOfAuthorsByLetter = null;
     int catalogSize;
