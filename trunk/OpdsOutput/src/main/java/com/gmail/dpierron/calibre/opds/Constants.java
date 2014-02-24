@@ -69,6 +69,7 @@ public class Constants {
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
+  public final static String DEFAULT_RESIZED_COVER_FILENAME = "default_cover.png";
   public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
   public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";

@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 
 import java.io.UnsupportedEncodingException;
+import java.io.File;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
@@ -531,7 +532,7 @@ public class FeedHelper {
    * @param newfile
    * @param oldfile
    */
-  public static void checkFileNameIsNewStandard (CachedFile newfile, CachedFile oldfile) {
+  public static void checkFileNameIsNewStandard (CachedFile newfile, File oldfile) {
     if (! newfile.exists() && oldfile.exists()) {
       oldfile.renameTo(newfile);
       newfile.clearCachedInformation();                 // Clear cached information

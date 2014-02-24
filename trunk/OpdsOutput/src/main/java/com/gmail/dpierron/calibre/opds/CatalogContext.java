@@ -74,6 +74,14 @@ public enum CatalogContext {
     tagsToIgnore = null;
   }
 
+  /**
+   * Get the list of tags to ignore. If it has not been done,
+   * convert the list of tags to ignore from the string
+   * representation to the appropriate object representation
+   * as this is more effecient in later processing.
+   *
+   * @return
+   */
   public List<Tag>  getTagsToIgnore () {
     if (tagsToIgnore == null) {
       tagsToIgnore = new LinkedList<Tag>();
@@ -87,7 +95,6 @@ public enum CatalogContext {
           }
         }
       }
-
     }
     return tagsToIgnore;
   }

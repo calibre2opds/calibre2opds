@@ -548,6 +548,7 @@ public class Mainframe extends javax.swing.JFrame {
     derivedState = ! (enabledNoExternalLinks || currentProfile.isWikipediaUrlReadOnly());
     txtWikipediaUrl.setEnabled(derivedState);
     lblWikipediaUrl.setEnabled(derivedState);
+    lblWikipediaUrl.setEnabled(false);  //TODO remove when support for changing title ready
     cmdWikipediaUrlReset.setEnabled((derivedState));
     derivedState = ! (enabledNoExternalLinks || currentProfile.isAmazonAuthorUrlReadOnly());
     txtAmazonAuthorUrl.setEnabled(derivedState);
@@ -894,8 +895,6 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
     chkIncludeCoversInCatalog.setEnabled(!currentProfile.isIncludeCoversInCatalogReadOnly());
     lblIncludeCoversInCatalog.setEnabled(chkIncludeCoversInCatalog.isEnabled());
-    // chkIncludeCoversInCatalog.setEnabled(false);  // TODO enable when support code ready
-    // lblIncludeCoversInCatalog.setEnabled(false);  // TODO enable when support code ready
 
     /* external links */
     txtWikipediaUrl.setText(currentProfile.getWikipediaUrl());
@@ -952,6 +951,9 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }
 
+  /**
+   * Reset GUI vlues to match the current profile
+   */
   private void resetValues() {
     String lang = currentProfile.getLanguage();
     currentProfile.reset();
@@ -960,6 +962,9 @@ public class Mainframe extends javax.swing.JFrame {
     changeLanguage();
   }
 
+  /**
+   * Save the setting values from the GUI to the configuration file
+   */
   private void storeValues() {
     setCursor(hourglassCursor);
     currentProfile.setLanguage("" + cboLang.getSelectedItem());
@@ -1104,7 +1109,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
-   * Apply localization strings to all UI elements
+   * Apply localization strings to all UI elements and set up Tooltips
    * Same tootip is applied to a label and its associated input field
    */
   private void translateTexts() {
@@ -1757,7 +1762,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblIncludeCoversInCatalog = new javax.swing.JLabel();
         chkIncludeCoversInCatalog = new javax.swing.JCheckBox();
         pnlExternalUrlsOptions = new javax.swing.JPanel();
-        lblWikipediaUrl = new javax.swing.JLabel();
         txtWikipediaUrl = new javax.swing.JTextField();
         lblAmazonAuthorUrl = new javax.swing.JLabel();
         txtAmazonAuthorUrl = new javax.swing.JTextField();
@@ -1793,6 +1797,7 @@ public class Mainframe extends javax.swing.JFrame {
         cmdLibrarythingAuthorReset = new javax.swing.JButton();
         cmdLibrarythingIsbnReset = new javax.swing.JButton();
         cmdLibrarythingTitleReset = new javax.swing.JButton();
+        lblWikipediaUrl = new javax.swing.JTextField();
         pnlCustomCatalogs = new javax.swing.JPanel();
         lblCustomDummy1 = new javax.swing.JLabel();
         lblFeaturedCatalogSavedSearchName = new javax.swing.JLabel();
@@ -3769,19 +3774,6 @@ public class Mainframe extends javax.swing.JFrame {
         });
         pnlExternalUrlsOptions.setLayout(new java.awt.GridBagLayout());
 
-        lblWikipediaUrl.setText("lblWikipediaUrl");
-        lblWikipediaUrl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
-        pnlExternalUrlsOptions.add(lblWikipediaUrl, gridBagConstraints);
-
         txtWikipediaUrl.setText("txtWikipediaUrl");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -4207,6 +4199,22 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlExternalUrlsOptions.add(cmdLibrarythingTitleReset, gridBagConstraints);
+
+        lblWikipediaUrl.setText("lblWikipediaUrl");
+        lblWikipediaUrl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
+        pnlExternalUrlsOptions.add(lblWikipediaUrl, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlExternalUrlsOptions", pnlExternalUrlsOptions);
 
@@ -5025,7 +5033,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblThumbnailheight;
     private javax.swing.JLabel lblUrlBooks;
     private javax.swing.JLabel lblWikilang;
-    private javax.swing.JLabel lblWikipediaUrl;
+    private javax.swing.JTextField lblWikipediaUrl;
     private javax.swing.JLabel lblZipTrookCatalog;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuFileExit;

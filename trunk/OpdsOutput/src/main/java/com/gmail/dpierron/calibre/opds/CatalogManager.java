@@ -154,12 +154,13 @@ public class CatalogManager {
     if (file == null)
       return;
 
-    /// if (listOfFilesToCopy.contains(file))
-    ///   return;
+    // We should never try and add the same file twice (I think!)
+    // assert ! listOfFilesPathsToCopy.contains(file);
 
     String filePath = file.getAbsolutePath();
 
-    if (!filePath.startsWith(databasePath))  {
+    if (!filePath.startsWith(databasePath)
+    && (!filePath.endsWith(Constants.DEFAULT_RESIZED_COVER_FILENAME)))  {
       logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
       return; // let's not copy files outside the database folder
     }
