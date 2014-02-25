@@ -77,6 +77,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-188: Allow custom external URLs
     - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
     - #c2o-190: Display author/book title sort fields don't work
+    - #c2o-196: ZIP version of the catalog
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you

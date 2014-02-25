@@ -1097,7 +1097,7 @@ public class Catalog {
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
           Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile);
-          // Now ensure that there is no unzipped catalog left behinf!
+          // Now ensure that there is no unzipped catalog left behind!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
           Helper.delete(targetCatalogFolder, true);
