@@ -43,9 +43,6 @@ public class Constants {
   public final static String PUBLISHERS_TYPE = "publishers";
   public final static String FEATURED_TYPE = "featured";
   public final static String CUSTOM_TYPE = "custom";
-  public final static String IMAGES_FOLDER = "images";
-  public final static String RESIZEDCOVER_FILENAME = "c2o_resizedcover.jpg";
-  public final static String THUMBNAIL_FILENAME = "c2o_thumbnail.jpg";
   public final static String XML_EXTENSION = ".xml";
   public final static String HTML_EXTENSION = ".html";
   public final static String JPG_EXTENSION = ".jpg";
@@ -69,8 +66,6 @@ public class Constants {
   public final static String TROOK_CATALOG_FILENAME = "_catalog.zip";
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
-  public final static String DEFAULT_RESIZED_COVER_FILENAME = "default_cover.png";
-  public final static String DEFAULT_RESIZED_THUMBNAIL_FILENAME = "thumbnail.png";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "default_thumbnail.png";
   public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";
   public final static String HELP_URL_CATALOGSTRUCTURE = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Catalog_Structure_Tab";

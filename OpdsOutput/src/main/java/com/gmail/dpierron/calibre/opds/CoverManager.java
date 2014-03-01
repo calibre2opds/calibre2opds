@@ -18,20 +18,23 @@ public class CoverManager extends ImageManager {
   }
   /**
    *
-   * @param book
    * @return
    */
   @Override
-  public String getResizedFilename(Book book) {
+  public String getResizedFilename() {
     return "c2o_resizedcover.jpg";
   }
 
   public String getResizedFilenameOld(Book book) {
     EBookFile file = book.getPreferredFile();
     String result;
-    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + Constants.RESIZEDCOVER_FILENAME.substring(4)
-                            : Constants.RESIZEDCOVER_FILENAME.substring(4);
+    result = (file != null) ? file.getName() + Constants.TYPE_SEPARATOR + getResizedFilename().substring(4)
+                            : getResizedFilename().substring(4);
     return result;
+  }
+
+  public String getDefaultResizedFilename() {
+    return "cover.png";
   }
 
   /**

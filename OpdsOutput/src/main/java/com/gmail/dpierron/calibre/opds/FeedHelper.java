@@ -106,7 +106,7 @@ public class FeedHelper {
   /**
    * a link to a jpeg image
    */
-  private final static String LINKTYPE_JPEG = "image/jpeg";
+  private final static String LINKTYPE_JPEG = "image/jpg";
 
   /* ---------- ELEMENTS -----------*/
 
@@ -223,12 +223,15 @@ public class FeedHelper {
     return getLinkElement(url, mimeType, RELATION_ACQUISITION, title);
   }
 
-  public static Element getCoverLink(String url) {
-    return getLinkElement(url, LINKTYPE_JPEG, RELATION_COVER, null);
-  }
-
-  public static Element getThumbnailLink(String url) {
-    return getLinkElement(url, "image/jpeg", RELATION_THUMBNAIL, null);
+  /**
+   * Add an image link (cover or thumbnail)
+   *
+   * @param url
+   * @param isCover
+   * @return
+   */
+  public static Element getImageLink(String url, boolean isCover) {
+    return getLinkElement(url, LINKTYPE_JPEG, isCover ? RELATION_COVER : RELATION_THUMBNAIL, null);
   }
 
   public static Element getFeaturedLink(String url, String title) {

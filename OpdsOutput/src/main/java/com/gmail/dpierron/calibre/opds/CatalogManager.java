@@ -27,13 +27,11 @@ public class CatalogManager {
   // The list of files that need to be copied from the source
   // library to the target library.
   private static List<String> listOfFilesPathsToCopy;
-  // Images files that are to be included in the catalog
-  // For the key we use the desired file name in the catalog
-  // For the value entry is the file that needs copying
-  private static Map<String, CachedFile> mapOfImagesToCopy;
   // TODO:  Itimpi:  Does not seem to be needed any more?
   // private static Map<String, Book> mapOfBookByPathToCopy;
   private static Map<String, String> mapOfCatalogFolderNames;
+  // List of file in catalog that are unchanged
+  private static List<CachedFile> listOfUnchangedCatalogFiles;
   // List of books that have already been generated
   // used to track if has already been done before!
   private static List<Book> booksDone;
@@ -65,12 +63,12 @@ public class CatalogManager {
     customCatalogsFilters = null;
     /// listOfFilesToCopy = new LinkedList<CachedFile>();
     listOfFilesPathsToCopy = new LinkedList<String>();
-    mapOfImagesToCopy = new HashMap<String, CachedFile>();
     // mapOfBookByPathToCopy = new HashMap<String, Book>();
     mapOfCatalogFolderNames = new HashMap<String, String>();
     // bookEntriesFiles = new LinkedList<File>();
     booksDone = new LinkedList<Book>();
     bookDetailsCustomColumns = null;
+    listOfUnchangedCatalogFiles = new LinkedList<CachedFile>();
   }
 
   public static String getSecurityCode() {
@@ -159,12 +157,14 @@ public class CatalogManager {
 
     String filePath = file.getAbsolutePath();
 
+    // TODO Might want to rework safety check into asserts!
+/*
     if (!filePath.startsWith(databasePath)
     && (!filePath.endsWith(Constants.DEFAULT_RESIZED_COVER_FILENAME)))  {
       logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
       return; // let's not copy files outside the database folder
     }
-
+*/
     String relativePath = filePath.substring(databasePathLength);
     if (! listOfFilesPathsToCopy.contains(relativePath))
       listOfFilesPathsToCopy.add(relativePath);
@@ -174,9 +174,8 @@ public class CatalogManager {
   /**
    * Add a file to the map of image files that are to be copied
    * to the catalog (assuming this option is even set!)
-   * @param book
-   * @param file
    */
+  /*
   void addImageFileToTheMapOfCatalogImages(Book book, CachedFile file) {
 
     assert file != null : "Program Error: attempt to add 'null' file to image map";
@@ -189,10 +188,7 @@ public class CatalogManager {
 
     mapOfImagesToCopy.put(key, file);
   }
-
-  public Map<String,CachedFile> getMapOfImagesToCopy() {
-    return mapOfImagesToCopy;
-  }
+  */
 
   /**
    * Get the URL that is used to reference a particular file.
@@ -312,6 +308,17 @@ public class CatalogManager {
       }
     }
     return bookDetailsCustomColumns;
+  }
+
+  /**
+   * Track the list of files that are part of the catalog,
+   * but are are unchanged since the last run
+   * @param f
+   */
+  public void addUnchangedFileToList (CachedFile f) {
+    if (! listOfUnchangedCatalogFiles.contains(f)) {
+      listOfUnchangedCatalogFiles.add(f);
+    }
   }
   /*
   Make these properties public to avoid the need for simpe get/set routines that do nothing else!

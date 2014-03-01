@@ -25,6 +25,8 @@ public interface CatalogCallbackInterface {
 
   public void endCreateTags(long milliseconds);
 
+  public void disableCreateTags();
+
   // Authors
 
   public void setAuthorCount(String summary);
@@ -32,6 +34,8 @@ public interface CatalogCallbackInterface {
   public void startCreateAuthors(long nb);
 
   public void endCreateAuthors(long milliseconds);
+
+  public void disableCreateAuthors();
 
   // Series
 
@@ -41,11 +45,15 @@ public interface CatalogCallbackInterface {
 
   public void endCreateSeries(long milliseconds);
 
+  public void disableCreateSeries();
+
   // Recent books
 
   public void startCreateRecent(long nb);
 
   public void endCreateRecent(long milliseconds);
+
+  public void disableCreateRecent();
 
   // Rated books
 
@@ -53,11 +61,15 @@ public interface CatalogCallbackInterface {
 
   public void endCreateRated(long milliseconds);
 
+  public void disableCreateRated();
+
   // All books
 
   public void startCreateAllbooks(long nb);
 
   public void endCreateAllbooks(long milliseconds);
+
+  public void disableCreateAllBooks();
 
   // Featured books
 
@@ -67,29 +79,23 @@ public interface CatalogCallbackInterface {
 
   public void endCreateFeaturedBooks(long milliseconds);
 
+  public void disableCreateFeaturedBooks();
+
   // Custom catalogs
 
   public void startCreateCustomCatalogs(long nb);
 
   public void endCreateCustomCatalogs(long milliseconds);
 
-  // Thumbnails
-
-  public void startCreateThumbnails(long nb);
-
-  public void endCreateThumbnails(long milliseconds);
-
-  // Covers
-
-  public void startCreateCovers(long nb);
-
-  public void endCreateCovers(long milliseconds);
+  public void disableCreateCustomCatalogs();
 
   // ePub metadata
 
   public void startReprocessingEpubMetadata(long nb);
 
   public void endReprocessingEpubMetadata(long milliseconds);
+
+  public void disableReprocessingEpubMetadata();
 
   public void incStepProgressIndicatorPosition();
 
@@ -100,6 +106,8 @@ public interface CatalogCallbackInterface {
   public void startCreateJavascriptDatabase(long nb);
 
   public void endCreateJavascriptDatabase(long milliseconds);
+
+  public void disableCreateJavascriptDatabase();
 
   // Copy to target
 
@@ -114,6 +122,14 @@ public interface CatalogCallbackInterface {
   public void endCopyLibToTarget(long milliseconds);
 
   public void endCopyCatToTarget(long milliseconds);
+
+  public void startZipCatalog(long nb);
+
+  public void endZipCatalog(long milliseconds);
+
+  public void disableZipCatalog();
+
+
 
   // Error
   public void errorOccured(String message, Throwable error);

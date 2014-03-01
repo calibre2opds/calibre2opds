@@ -122,6 +122,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
+  private final static String PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS = "UseThumbnsilsAsCovers";
+  private final static String PROPERTY_NAME_ZIP_CATALOG = "ZipCatalog";
+  private final static String PROPERTY_NAME_ZIP_OMIT_XML = "ZipOmitXml";
   private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
@@ -1731,7 +1734,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       return b.booleanValue();
   }
 
-
   public void setIncludeCoversInCatalog(boolean value) {
     setProperty(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG, value);
   }
@@ -1744,6 +1746,54 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
     if (b == null)
       return defaults.getIncludeCoversInCatalog();
+    else
+      return b.booleanValue();
+  }
+
+  public void setUseThumbnailsAsCovers(boolean value) {
+    setProperty(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS, value);
+  }
+
+  public boolean isUseThumbnailsAsCoversReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
+  }
+
+  public boolean getUseThumbnailsAsCovers() {
+    Boolean b = getBoolean(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
+    if (b == null)
+      return defaults.getUseThumbnailsAsCovers();
+    else
+      return b.booleanValue();
+  }
+
+  public void setZipCatalog(boolean value) {
+    setProperty(PROPERTY_NAME_ZIP_CATALOG, value);
+  }
+
+  public boolean isZipCatalogReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_ZIP_CATALOG);
+  }
+
+  public boolean getZipCatalog() {
+    Boolean b = getBoolean(PROPERTY_NAME_ZIP_CATALOG);
+    if (b == null)
+      return defaults.getZipCatalog();
+    else
+      return b.booleanValue();
+  }
+
+  public void setZipOmitXml(boolean value) {
+    setProperty(PROPERTY_NAME_ZIP_OMIT_XML, value);
+  }
+
+  public boolean isZipOmitXmlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_ZIP_OMIT_XML);
+  }
+
+  public boolean getZipOmitXml() {
+    Boolean b = getBoolean(PROPERTY_NAME_ZIP_OMIT_XML);
+    if (b == null)
+      return defaults.getZipOmitXml();
     else
       return b.booleanValue();
   }

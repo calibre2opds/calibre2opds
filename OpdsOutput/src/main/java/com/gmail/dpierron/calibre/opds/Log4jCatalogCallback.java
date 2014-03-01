@@ -125,6 +125,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void disableCreateTags() {}
+
   public void startCreateAuthors(long nb) {
     logger.info(Localization.Main.getText("info.step.authors"));
     progressStep.setMaxScale(nb);
@@ -133,6 +135,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void endCreateAuthors(long milliseconds) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
+
+  public void disableCreateAuthors() {}
 
   public void startCreateSeries(long nb) {
     logger.info(Localization.Main.getText("info.step.series"));
@@ -143,6 +147,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void disableCreateSeries() {}
+
   public void startCreateRecent(long nb) {
     logger.info(Localization.Main.getText("info.step.recent"));
     progressStep.setMaxScale(nb);
@@ -151,6 +157,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void endCreateRecent(long milliseconds) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
+
+  public void disableCreateRecent() {}
 
   public void startCreateRated(long nb) {
     logger.info(Localization.Main.getText("info.step.rated"));
@@ -161,6 +169,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void disableCreateRated() {}
+
   public void startCreateAllbooks(long nb) {
     logger.info(Localization.Main.getText("info.step.allbooks"));
     progressStep.setMaxScale(nb);
@@ -169,6 +179,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void endCreateAllbooks(long milliseconds) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
+
+  public void disableCreateAllBooks() {}
 
   public void startCreateFeaturedBooks(long nb) {
     logger.info(Localization.Main.getText("info.step.featuredbooks"));
@@ -179,6 +191,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void disableCreateFeaturedBooks() {}
+
   public void startCreateCustomCatalogs(long nb) {
     logger.info(Localization.Main.getText("info.step.customcatalogs"));
     progressStep.setMaxScale(nb);
@@ -188,23 +202,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
-  public void startCreateThumbnails(long nb) {
-    logger.info(Localization.Main.getText("info.step.thumbnails"));
-    progressStep.setMaxScale(nb);
-  }
-
-  public void endCreateThumbnails(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-  }
-
-  public void startCreateCovers(long nb) {
-    logger.info(Localization.Main.getText("info.step.covers"));
-    progressStep.setMaxScale(nb);
-  }
-
-  public void endCreateCovers(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-  }
+  public void disableCreateCustomCatalogs() {}
 
   public void startReprocessingEpubMetadata(long nb) {
     logger.info(Localization.Main.getText("info.step.reprocessingEpubMetadata"));
@@ -215,6 +213,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
+  public void disableReprocessingEpubMetadata() {}
+
   public void startCreateJavascriptDatabase(long nb) {
     logger.info(Localization.Main.getText("info.step.index"));
     progressStep.setMaxScale(nb);
@@ -223,6 +223,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void endCreateJavascriptDatabase(long milliseconds) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
+
+  public void disableCreateJavascriptDatabase() {}
 
   public void startCopyLibToTarget(long nb) {
     logger.info(Localization.Main.getText("info.step.copylib"));
@@ -233,6 +235,17 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info(Localization.Main.getText("info.step.copycat"));
     progressStep.setMaxScale(nb);
   }
+
+  public void startZipCatalog(long nb) {
+    logger.info(Localization.Main.getText("info.step.zipCatalog"));
+    progressStep.setMaxScale(nb);
+  }
+
+  public void endZipCatalog(long milliseconds) {
+    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  }
+
+  public void disableZipCatalog() {}
 
   public void incStepProgressIndicatorPosition() {
     if (startGui) {
