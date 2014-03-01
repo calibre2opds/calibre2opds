@@ -232,8 +232,22 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
   public boolean getIncludeCoversInCatalog() {
+
+
     return StanzaConstants.IncludeCoversInCatalog;
   }
+
+  public boolean getUseThumbnailsAsCovers() {
+    return StanzaConstants.UseThumbnailsAsCovers;
+  }
+  public boolean getZipCatalog() {
+    return StanzaConstants.ZipCatalog;
+  }
+
+  public boolean getZipOmitXml() {
+    return StanzaConstants.ZipOmitXml;
+  }
+
   public String getAmazonAuthorUrl() {
     return Localization.Main.getText(StanzaConstants.AMAZON_AUTHORS_URL_DEFAULT);
   }

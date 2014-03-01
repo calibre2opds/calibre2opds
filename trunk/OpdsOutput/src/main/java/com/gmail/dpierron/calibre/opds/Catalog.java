@@ -400,6 +400,11 @@ public class Catalog {
     return (opfDate > epubDate);
   }
 
+  /**
+   * TODO:  Not sure what this routine is intended for (it is not used)
+   * @param books
+   * @return
+   */
   private Element computeSummary(List<Book> books) {
     Element contentElement = JDOM.INSTANCE.element("content");
 
@@ -432,25 +437,6 @@ public class Catalog {
   }
 
   /**
-   * Sync a set of image files across to the specified target folder
-   * The images are segregated into folders according to the bookid
-   * Used when images are stored within catalog
-   *
-   * @param targetFolder
-   */
-
-  private void syncImages(File targetFolder) {
-     Map<String,CachedFile> mapOfImagesToCopy = CatalogContext.INSTANCE.catalogManager.getMapOfImagesToCopy();
-     for (Map.Entry<String,CachedFile> entry : mapOfImagesToCopy.entrySet()) {
-       File targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, entry.getKey());
-       try {
-        syncFiles(entry.getValue(),targetFile);
-       } catch (IOException e) {
-         logger.warn("Failure copy file '" + entry.getKey() + "' to catalog");
-       }
-     }
-  }
-  /**
    * -----------------------------------------------
    * Control the overall catalog generation process
    * -----------------------------------------------
@@ -459,8 +445,6 @@ public class Catalog {
    */
   public void createMainCatalog() throws IOException {
     long countMetadata;     // Count of files for which ePub metadata is updated
-    long countThumbnails;   // Count of thumbnail files that are generated/updated
-    long countCovers;       // Count of image files that are generated/updated
 
     // reinitialize caches (in case of multiple calls in the same session)
     CatalogContext.INSTANCE.reset();
@@ -477,7 +461,17 @@ public class Catalog {
     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     checkCRC = currentProfile.getMinimizeChangedFiles();
 
-
+    if (!currentProfile.getGenerateAllbooks())        callback.disableCreateAllBooks();
+    if (!currentProfile.getGenerateAuthors())         callback.disableCreateAuthors();
+    if (!currentProfile.getGenerateSeries())          callback.disableCreateSeries();
+    if (!currentProfile.getGenerateTags())            callback.disableCreateTags();
+    if (!currentProfile.getGenerateRatings())         callback.disableCreateRated();
+    if (!currentProfile.getGenerateRecent())          callback.disableCreateRecent();
+    if (Helper.isNullOrEmpty(currentProfile.getFeaturedCatalogSavedSearchName())) callback.disableCreateFeaturedBooks();
+    if (Helper.isNullOrEmpty(currentProfile.getCustomCatalogs())) callback.disableCreateCustomCatalogs();
+    if (! currentProfile.getReprocessEpubMetadata())  callback.disableReprocessingEpubMetadata();
+    if (! currentProfile.getGenerateIndex())          callback.disableCreateJavascriptDatabase();
+    if (! currentProfile.getZipCatalog())             callback.disableZipCatalog();
     /** where the catalog is eventually located */
     String where = null;
 
@@ -911,27 +905,6 @@ public class Catalog {
           "");            // icon
       levelSubCatalog = null; // Maybe not necessary - but forced free may help release resources earlier
 
-
-      logger.debug("STARTING: Generating Thumbnails");
-      int nbThumbnails = CatalogContext.INSTANCE.thumbnailManager.getNbImagesToGenerate();
-      callback.startCreateThumbnails(nbThumbnails);
-      now = System.currentTimeMillis();
-        countThumbnails = CatalogContext.INSTANCE.thumbnailManager.generateImages();
-      callback.endCreateThumbnails(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Thumbnails");
-      callback.checkIfContinueGenerating();
-
-      /* Reduced Covers */
-
-      logger.debug("STARTING: Generating Reduced Covers");
-      int nbCovers = CatalogContext.INSTANCE.thumbnailManager.getNbImagesToGenerate();
-      callback.startCreateCovers(nbCovers);
-      now = System.currentTimeMillis();
-      countCovers = CatalogContext.INSTANCE.coverManager.generateImages();
-      callback.endCreateCovers(System.currentTimeMillis() - now);
-      logger.debug("COMPLETED: Generating Reduced Covers");
-      callback.checkIfContinueGenerating();
-
       /* Javascript search database */
 
       logger.debug("STARTING: Generating Javascript database");
@@ -1064,7 +1037,6 @@ public class Catalog {
       &&  currentProfile.getCopyToDatabaseFolder()) {
         nbCatalogFilesToCopyToTarget += nbCatalogFilesToCopyToTarget;
       }
-      nbCatalogFilesToCopyToTarget += CatalogContext.INSTANCE.catalogManager.getMapOfImagesToCopy().size();
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -1077,8 +1049,6 @@ public class Catalog {
         if (TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile() != null) {
           TrookSpecificSearchDatabaseManager.INSTANCE.closeConnection();
           File destinationFile = new File(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
-          // Helper.copy(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
-
           syncFiles(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile(), destinationFile);
         }
         // Also need to make sure catalog.xml exists for Trook use
@@ -1096,7 +1066,7 @@ public class Catalog {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile);
+          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile, false);
           // Now ensure that there is no unzipped catalog left behind!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
@@ -1112,9 +1082,6 @@ public class Catalog {
           targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         }
         syncFiles(generateFolder, targetCatalogFolder);
-        logger.debug("START: Copy images to Destination catalog folder");
-        syncImages(targetCatalogFolder);
-        logger.debug("COMPLETED: Copy images to Destination catalog folder");
         break;
       case Default:
         // Do nothing.   In this mode we sync the catalog using the code for copying back to the library
@@ -1129,11 +1096,26 @@ public class Catalog {
         File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
         syncFiles(generateFolder, libraryCatalogFolder);
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
-        logger.debug("START: Copy images to Database catalog folder");
-        syncImages(libraryCatalogFolder);
-        logger.debug("COMPLETED: Copy images to Database catalog folder");
       }
+      CatalogContext.thumbnailManager.writeImageHeightFile();
+      CatalogContext.coverManager.writeImageHeightFile();
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
+      callback.checkIfContinueGenerating();
+
+      callback.startZipCatalog(nbCatalogFilesToCopyToTarget);
+      now = System.currentTimeMillis();
+      if (currentProfile.getZipCatalog()) {
+        logger.debug("STARTING: ZIP Catalog");
+        String zipFilename = currentProfile.getCatalogFolderName() + ".zip";
+        File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
+        File zipFile = new File(zipFolder, zipFilename);
+        Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
+        if (targetFolder != null  && currentProfile.getCopyToDatabaseFolder()) {
+          Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
+        }
+        logger.debug("COMPLETED: ZIP Catalog");
+      }
+      callback.endZipCatalog(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
 
       if (syncLog) {
@@ -1173,8 +1155,8 @@ public class Catalog {
       logger.info("");
       logger.info(Localization.Main.getText("stats.run.header"));
       logger.info(String.format("%8d  ", countMetadata) + Localization.Main.getText("stats.run.metadata"));
-      logger.info(String.format("%8d  ", countThumbnails) + Localization.Main.getText("stats.run.thumbnails"));
-      logger.info(String.format("%8d  ", countCovers) + Localization.Main.getText("stats.run.covers"));
+      logger.info(String.format("%8d  ", CatalogContext.INSTANCE.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
+      logger.info(String.format("%8d  ", CatalogContext.INSTANCE.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
       logger.info(String.format("%8d  ", copyExistHits) + Localization.Main.getText("stats.copy.notexist"));

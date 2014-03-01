@@ -21,13 +21,16 @@ public abstract class ImageManager {
   private final static Logger logger = Logger.getLogger(ImageManager.class);
 
   private boolean imageSizeChanged = false;
-  private Map<File, File> imagesToGenerate;
-  private long timeInImages = 0;
+  private Map<File, File> generatedImages;
 
   private int imageHeight = 1;
+  private long timeInImages;
 
-  abstract String getResizedFilename(Book book);
+  abstract String getResizedFilename();
   abstract String getResizedFilenameOld(Book book);
+  abstract String getDefaultResizedFilename();
+
+  private static int countOfImagesGenerated;
 
   abstract String getImageHeightDat();
 
@@ -64,9 +67,11 @@ public abstract class ImageManager {
   // METHODS and PROPERTIES
 
   public void reset () {
-    imagesToGenerate = new HashMap<File, File>();
+    generatedImages = new HashMap<File, File>();
+    countOfImagesGenerated = 0;
     timeInImages = 0;
   }
+
   public final static ThumbnailManager newThumbnailManager() {
     return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
   }
@@ -76,8 +81,9 @@ public abstract class ImageManager {
   }
 
   public void setImageToGenerate(CachedFile resizedCoverFile, CachedFile coverFile) {
-    if (!imagesToGenerate.containsKey(resizedCoverFile)) {
-      imagesToGenerate.put(resizedCoverFile, coverFile);
+    if (!generatedImages.containsKey(resizedCoverFile)) {
+      generateImage(coverFile,resizedCoverFile);
+      generatedImages.put(resizedCoverFile, coverFile);
     }
   }
 
@@ -96,9 +102,9 @@ public abstract class ImageManager {
   String getImageUri(Book book) {
     String uriBase = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
     if (Helper.isNullOrEmpty(uriBase)) {
-      uriBase = Constants.PARENT_PATH_PREFIX + Constants.PARENT_PATH_PREFIX;
+      uriBase = Constants.LIBRARY_PATH_PREFIX;
     }
-    return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResizedFilename(book), true);
+    return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResizedFilename(), true);
   }
 
   public void writeImageHeightFile() {
@@ -117,39 +123,88 @@ public abstract class ImageManager {
     }
   }
 
-  public long generateImages() {
-    long countFiles = 0;
-    for (Map.Entry<File, File> fileEntry : imagesToGenerate.entrySet()) {
-      File imageFile = fileEntry.getKey();
-      if (logger.isDebugEnabled())
-        logger.debug("generateImages: " + imageFile.getAbsolutePath());
-      File coverFile = fileEntry.getValue();
-      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
-      CatalogContext.INSTANCE.callback.showMessage(imageFile.getParentFile().getName() + File.separator + imageFile.getName());
-      long now = System.currentTimeMillis();
-      try {
-        CreateThumbnail ct = new CreateThumbnail(coverFile.getAbsolutePath());
-        ct.getThumbnail(imageHeight, CreateThumbnail.VERTICAL);
-        ct.saveThumbnail(imageFile, CreateThumbnail.IMAGE_JPEG);
-        // bug #732821 Ensure file added to those cached for copying
-        CachedFile cf = CachedFileManager.INSTANCE.addCachedFile(imageFile);
-        if (logger.isTraceEnabled())
-          logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
-        countFiles++;         // Update count of files processed
-      } catch (Exception e) {
-        CatalogContext.INSTANCE.callback
-            .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
-      } catch (Throwable t) {
-           logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );
-      }
-      timeInImages += (System.currentTimeMillis() - now);
+  /**
+   * Get the contents of the specified file as base64 string
+   * so that we can embed the image in the xml/html file
+   *
+   * @return
+   */
+  public static String getFileToBase64Uri (File f) {
+    final String base64code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        + "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "+/";
+
+    int length = (int)f.length();
+    int paddingCount = (3 - (length % 3)) % 3;
+
+    byte[]  data = new byte[length + 2];
+    // Preset potential padding bytes to null
+    for (int i = 0 ; i < 2; i++) {
+      data[length+(i)] = 0;
     }
-    writeImageHeightFile();
-    return countFiles;
+    try {
+      DataInputStream in = new DataInputStream(new FileInputStream(f));
+      in.readFully(data,0,length);
+      in.close();
+    } catch (EOFException eof) {
+      // Ignore this error as we got all the data!
+      // However this is still unexpected so lets log it when tracing
+      if (logger.isTraceEnabled())  logger.trace("Unexpected EOF reading " + f);
+    } catch (IOException e) {
+      // Errors are unexpected - set dummy URI if that is the case
+      logger.warn("Unable to embed cover file " + f.getAbsolutePath() + "(IO Exception " + e.getMessage() + ")");
+      return Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_THUMBNAIL_FILENAME;
+    }
+    // process 3 bytes at a time, churning out 4 output bytes
+    StringBuffer encoded = new StringBuffer("");
+    for (int i = 0; i < length; i += 3) {
+      int j = ((data[i] & 0xff) << 16) +
+              ((data[i + 1] & 0xff) << 8) +
+               (data[i + 2] & 0xff);
+      encoded = encoded.append("" + base64code.charAt((j >> 18) & 0x3f) +
+                               "" + base64code.charAt((j >> 12) & 0x3f) +
+                               "" + base64code.charAt((j >> 6) & 0x3f) +
+                               "" + base64code.charAt(j & 0x3f));
+    }
+    // Add final padding characters
+    for (int i = paddingCount ; i > 0 ; i--) {
+      data[length+(i-1)] = '=';
+    }
+    return "data:image/"
+            + f.getName().substring(f.getName().lastIndexOf('.')+1) + ";base64,"
+            + encoded.toString();
   }
 
-  public int getNbImagesToGenerate() {
-    return imagesToGenerate.size();
+  /**
+   * generate a single image file
+   * @return
+   */
+  public void generateImage(CachedFile imageFile, File coverFile) {
+    logger.debug("generateImage: " + imageFile.getAbsolutePath());
+    long now = System.currentTimeMillis();
+    try {
+      CreateThumbnail ct = new CreateThumbnail(coverFile.getAbsolutePath());
+      ct.getThumbnail(imageHeight, CreateThumbnail.VERTICAL);
+      ct.saveThumbnail(imageFile, CreateThumbnail.IMAGE_JPEG);
+      // bug #732821 Ensure file added to those cached for copying
+      CachedFile cf = CachedFileManager.INSTANCE.addCachedFile(imageFile);
+      if (logger.isTraceEnabled())
+        logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
+      countOfImagesGenerated++;         // Update count of files processed
+    } catch (Exception e) {
+      CatalogContext.INSTANCE.callback
+          .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
+    } catch (Throwable t) {
+         logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );
+    }
+    timeInImages += (System.currentTimeMillis() - now);
+    imageFile.clearCachedInformation();
+  }
+
+  public long getTimeInImages() {
+    return timeInImages;
+  }
+  public int getCountOfImagesGenerated() {
+    return countOfImagesGenerated;
   }
 
 }

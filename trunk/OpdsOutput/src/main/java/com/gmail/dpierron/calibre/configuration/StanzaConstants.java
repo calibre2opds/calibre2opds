@@ -9,7 +9,7 @@ public class StanzaConstants {
   public final static int MAX_BEFORE_PAGINATE = 25;
   public final static int MAX_BEFORE_SPLIT = 3 * MAX_BEFORE_PAGINATE;
   public final static int MAX_SPLIT_LEVELS = 1;
-  public final static int MAX_RECENT_ADDITIONS = 99999;
+  public final static int MAX_RECENT_ADDITIONS = 500;
   public final static String CATALOGFOLDER = "_catalog";
   public final static boolean ONLY_CATALOG_A_TTARGET = false;
   public final static String CATALOGTITLE = "Calibre library";
@@ -85,6 +85,9 @@ public class StanzaConstants {
   public final static boolean DisplayAuthorSortInBookDetails = false;
   public final static boolean DisplayTitleSortInBookDetails = false;
   public final static boolean IncludeCoversInCatalog = false;
+  public final static boolean UseThumbnailsAsCovers = false;
+  public final static boolean ZipCatalog = false;
+  public final static boolean ZipOmitXml = true;
   /* Strings names for default URL's in Localization files */
   public final static String AMAZON_AUTHORS_URL_DEFAULT = "config.AmazonAuthorUrl.default";
   public final static String AMAZON_ISBN_URL_DEFAULT = "config.AmazonIsbnUrl.default";

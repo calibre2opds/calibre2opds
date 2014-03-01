@@ -1141,35 +1141,55 @@ public class Helper {
   }
 
   public static void recursivelyZipFiles(File inFolder, File outZipFile) throws IOException {
-    recursivelyZipFiles(null, false, inFolder, outZipFile);
+    recursivelyZipFiles(null, false, inFolder, outZipFile, false);
   }
 
-  public static void recursivelyZipFiles(File inFolder, boolean includeNameOfOriginalFolder, File outZipFile) throws IOException {
-    recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile);
+  public static void recursivelyZipFiles(File inFolder,
+                                         boolean includeNameOfOriginalFolder,
+                                         File outZipFile,
+                                         boolean omitXmlFiles)
+                                              throws IOException {
+    recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile, omitXmlFiles);
   }
 
-  public static void recursivelyZipFiles(final String extension, boolean includeNameOfOriginalFolder, File inFolder, File outZipFile) throws IOException {
+  public static void recursivelyZipFiles(final String extension,
+                                         boolean includeNameOfOriginalFolder,
+                                         File inFolder,
+                                         File outZipFile,
+                                         boolean omitXmlFiles)
+                                              throws IOException {
     ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZipFile)));
     String relativePath = "";
     if (includeNameOfOriginalFolder)
       relativePath = inFolder.getName();
     try {
-      recursivelyZipFiles(extension, relativePath, inFolder, zipOutputStream);
+      recursivelyZipFiles(extension, relativePath, inFolder, zipOutputStream, omitXmlFiles);
     } finally {
       zipOutputStream.close();
     }
   }
 
-  private static void recursivelyZipFiles(final String extension, String currentRelativePath, File currentDir, ZipOutputStream zipOutputStream) throws
-      IOException {
+  private static void recursivelyZipFiles(final String extension,
+                                          String currentRelativePath,
+                                          File currentDir,
+                                          ZipOutputStream zipOutputStream,
+                                          final boolean omitXmlFiles)
+                                                throws IOException {
     String[] files = currentDir.list(new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
         File f = new File(dir, name);
-        if (extension == null)
+        if (extension == null
+        && (f.isFile() && omitXmlFiles && (! name.toUpperCase().endsWith(".XML")))) {
           return true;
-        else
-          return f.isDirectory() || name.endsWith(extension);
+        } else {
+          if (f.isDirectory()
+          || (extension != null && name.toUpperCase().endsWith(extension.toUpperCase()))
+          || (omitXmlFiles && (!name.toUpperCase().endsWith(".XML")))) {
+            return true;
+          }
+          return false;
+        }
       }
 
     });
@@ -1178,7 +1198,7 @@ public class Helper {
       File f = new File(currentDir, filename);
       String fileRelativePath = currentRelativePath + (Helper.isNullOrEmpty(currentRelativePath) ? "" : File.separator) + filename;
       if (f.isDirectory())
-        recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream);
+        recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream, omitXmlFiles);
       else {
         BufferedInputStream in = null;
         byte[] data = new byte[1024];

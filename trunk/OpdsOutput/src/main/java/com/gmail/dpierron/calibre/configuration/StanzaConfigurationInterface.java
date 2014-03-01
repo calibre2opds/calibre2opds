@@ -143,6 +143,12 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setIncludeCoversInCatalog(boolean value);
 
+  public void setUseThumbnailsAsCovers(boolean value);
+
+  public void setZipCatalog(boolean value);
+
+  public void setZipOmitXml(boolean value);
+
   /* external links */
   public void setWikipediaUrl(String value);
 

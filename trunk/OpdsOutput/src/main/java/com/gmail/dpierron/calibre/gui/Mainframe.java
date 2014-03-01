@@ -171,13 +171,18 @@ public class Mainframe extends javax.swing.JFrame {
     // set OPDS downloads will follow the HTML setting.  Also the
     // user can no longer toggle the OPDS download option directly.
     if (chkNogenerateopds.isSelected()) {
-       chkNogeneratehtmlfiles.setEnabled(chkNogeneratehtml.isEnabled());
-       chkNogenerateopdsfiles.setSelected(chkNogeneratehtmlfiles.isSelected());
-       chkNogenerateopdsfiles.setEnabled(false);
+      chkNogeneratehtmlfiles.setEnabled(chkNogeneratehtml.isEnabled());
+      chkNogenerateopdsfiles.setSelected(chkNogeneratehtmlfiles.isSelected());
+      chkNogenerateopdsfiles.setEnabled(false);
+      chkZipOmitXml.setSelected(false);
+      chkZipOmitXml.setEnabled(false);
     } else {
       // If  we are generating OPDS catalogs, then start by assuming that
       // both types of downloads are allowed.
       chkNogenerateopdsfiles.setEnabled(true);
+      chkZipOmitXml.setSelected(true);
+      chkZipOmitXml.setEnabled(true);
+
       // If we are not generating OPDS downloads then the HTML downloads
       // must be suppressed.
       if (chkNogenerateopdsfiles.isSelected()) {
@@ -192,12 +197,15 @@ public class Mainframe extends javax.swing.JFrame {
     if (chkNogeneratehtml.isSelected()) {
       chkNogeneratehtmlfiles.setSelected(true);
       chkNogeneratehtmlfiles.setEnabled(false);
+      chkZipOmitXml.setSelected(false);
+      chkZipOmitXml.setEnabled(false);
     } else {
       // If we are generating HTHL catalogs then HTML
       // downloads are only allowed if OPDS ones are also active
       // or we are not generating OPDS catalogs
       chkNogeneratehtmlfiles.setEnabled(chkNogenerateopds.isSelected()==true || chkNogenerateopdsfiles.isSelected()==false);
     }
+    lblZipOmitXml.setEnabled(lblZipOmitXml.isEnabled());
   }
 
   /**
@@ -717,6 +725,10 @@ public class Mainframe extends javax.swing.JFrame {
     txtMaxSplitLevels.setEnabled(!currentProfile.isMaxSplitLevelsReadOnly());
     lblMaxSplitLevels.setEnabled(!currentProfile.isMaxSplitLevelsReadOnly());
     txtBooksinrecent.setText("" + currentProfile.getBooksInRecentAdditions());
+    // #c2o-195:  Fix for large default from old configuration
+    if (getValue(txtBooksinrecent) > StanzaConstants.MAX_RECENT_ADDITIONS) {
+      txtBooksinrecent.setText(Integer.toString(StanzaConstants.MAX_RECENT_ADDITIONS));
+    }
     txtBooksinrecent.setInputVerifier(iv);
     txtBooksinrecent.setEnabled(!currentProfile.isBooksInRecentAdditionsReadOnly());
     lblBooksinrecent.setEnabled(!currentProfile.isBooksInRecentAdditionsReadOnly());
@@ -900,17 +912,15 @@ public class Mainframe extends javax.swing.JFrame {
     lblMaxMobileResolution.setEnabled(txtMaxMobileResolution.isEnabled());
     txtMaxMobileResolution.setVisible(false);   // TODO Not currently being used
     lblMaxMobileResolution.setVisible(false);   // TODO Not currently being used
-    lblZipCatalog.setEnabled(false);    // TODO Not currently being used
-    lblZipCatalog.setVisible(false);    // TODO Not currently being used
-    chkZipCatalog.setEnabled(false);    // TODO Not currently being used
-    chkZipCatalog.setVisible(false);    // TODO Not currently being used
-    lblZipOmitXml.setEnabled(false);    // TODO Not currently being used
-    lblZipOmitXml.setVisible(false);    // TODO Not currently being used
-    chkZipOmitZml.setEnabled(false);    // TODO Not currently being used
-    chkZipOmitZml.setVisible(false);    // TODO Not currently being used
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
     chkIncludeCoversInCatalog.setEnabled(!currentProfile.isIncludeCoversInCatalogReadOnly());
     lblIncludeCoversInCatalog.setEnabled(chkIncludeCoversInCatalog.isEnabled());
+    chkZipCatalog.setSelected(currentProfile.getZipCatalog());
+    chkZipCatalog.setEnabled(!currentProfile.isZipCatalogReadOnly());
+    lblZipCatalog.setEnabled(chkZipCatalog.isEnabled());
+    chkZipOmitXml.setSelected(currentProfile.getZipOmitXml());
+    chkZipOmitXml.setEnabled(!currentProfile.isZipOmitXmlReadOnly());
+    lblZipOmitXml.setEnabled(chkZipOmitXml.isEnabled());
 
     /* external links */
     txtWikipediaUrl.setText(currentProfile.getWikipediaUrl());
@@ -1100,6 +1110,8 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setMaxKeywords(i);
     currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
     currentProfile.setIncludeCoversInCatalog(chkIncludeCoversInCatalog.isSelected());
+    currentProfile.setZipCatalog(chkZipCatalog.isSelected());
+    currentProfile.setZipOmitXml(chkZipOmitXml.isSelected());
 
     // External Links
 
@@ -1355,7 +1367,7 @@ public class Mainframe extends javax.swing.JFrame {
     chkZipTrookCatalog.setToolTipText(lblZipCatalog.getToolTipText()); // NOI18N
     lblZipOmitXml.setText(Localization.Main.getText("config.ZipOmitXml.label")); // NOI18N
     lblZipOmitXml.setToolTipText(Localization.Main.getText("config.ZipOmitXml.description")); // NOI18N
-    chkZipOmitZml.setToolTipText(lblZipOmitXml.getToolTipText()); // NOI18N
+    chkZipOmitXml.setToolTipText(lblZipOmitXml.getToolTipText()); // NOI18N
     lblZipTrookCatalog.setText(Localization.Main.getText("config.ZipTrookCatalog.label")); // NOI18N
     lblZipTrookCatalog.setToolTipText(Localization.Main.getText("config.ZipTrookCatalog.description")); // NOI18N
     chkZipTrookCatalog.setToolTipText(lblZipTrookCatalog.getToolTipText()); // NOI18N
@@ -1380,6 +1392,15 @@ public class Mainframe extends javax.swing.JFrame {
     lblIncludeCoversInCatalog.setText(Localization.Main.getText("config.IncludeCoversInCatalog.label")); // NOI18N
     lblIncludeCoversInCatalog.setToolTipText(Localization.Main.getText("config.IncludeCoversInCatalog.description")); // NOI18N
     chkIncludeCoversInCatalog.setToolTipText(lblIncludeCoversInCatalog.getToolTipText()); // NOI18N
+    lblUseThumbnailAsCover.setText(Localization.Main.getText("config.UseThumbnailsAsCovers.label")); // NOI18N
+    lblUseThumbnailAsCover.setToolTipText(Localization.Main.getText("config.UseThumbnailsAsCovers.description")); // NOI18N
+    chkUseThumbnailAsCover.setToolTipText(lblUseThumbnailAsCover.getToolTipText()); // NOI18N
+    lblZipCatalog.setText(Localization.Main.getText("config.ZipCatalog.label")); // NOI18N
+    lblZipCatalog.setToolTipText(Localization.Main.getText("config.ZipCatalog.description")); // NOI18N
+    chkZipCatalog.setToolTipText(lblZipCatalog.getToolTipText()); // NOI18N
+    lblZipOmitXml.setText(Localization.Main.getText("config.ZipOmitXml.label")); // NOI18N
+    lblZipOmitXml.setToolTipText(Localization.Main.getText("config.ZipOmitXml.description")); // NOI18N
+    chkZipOmitXml.setToolTipText(lblZipOmitXml.getToolTipText()); // NOI18N
     lblCoverHeight.setText(Localization.Main.getText("config.CoverHeight.label")); // NOI18N
     lblCoverHeight.setToolTipText(Localization.Main.getText("config.CoverHeight.description")); // NOI18N
     txtCoverHeight.setToolTipText(lblCoverHeight.getToolTipText()); // NOI18N
@@ -1654,6 +1675,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkZipTrookCatalog = new javax.swing.JCheckBox();
         lblOnlyCatalogAtTarget = new javax.swing.JLabel();
         chkOnlyCatalogAtTarget = new javax.swing.JCheckBox();
+        lblCryptFilenames = new javax.swing.JLabel();
+        chkCryptFilenames = new javax.swing.JCheckBox();
         pnlCatalogStructure = new javax.swing.JPanel();
         lblNogeneratehtml = new javax.swing.JLabel();
         chkNogeneratehtml = new javax.swing.JCheckBox();
@@ -1776,16 +1799,16 @@ public class Mainframe extends javax.swing.JFrame {
         chkExternalIcons = new javax.swing.JCheckBox();
         lblMaxSplitLevels = new javax.swing.JLabel();
         txtMaxSplitLevels = new javax.swing.JTextField();
-        lblCryptFilenames = new javax.swing.JLabel();
-        chkCryptFilenames = new javax.swing.JCheckBox();
         txtTagsToMakeDeep = new javax.swing.JTextField();
         lblTagsToMakeDeep = new javax.swing.JLabel();
         lblIncludeCoversInCatalog = new javax.swing.JLabel();
         chkIncludeCoversInCatalog = new javax.swing.JCheckBox();
         lblZipCatalog = new javax.swing.JLabel();
         lblZipOmitXml = new javax.swing.JLabel();
-        chkZipOmitZml = new javax.swing.JCheckBox();
+        chkZipOmitXml = new javax.swing.JCheckBox();
         chkZipCatalog = new javax.swing.JCheckBox();
+        lblUseThumbnailAsCover = new javax.swing.JLabel();
+        chkUseThumbnailAsCover = new javax.swing.JCheckBox();
         pnlExternalUrlsOptions = new javax.swing.JPanel();
         txtWikipediaUrl = new javax.swing.JTextField();
         txtAmazonAuthorUrl = new javax.swing.JTextField();
@@ -2340,6 +2363,27 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(chkOnlyCatalogAtTarget, gridBagConstraints);
+
+        lblCryptFilenames.setText("lblCryptFilenames");
+        lblCryptFilenames.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 13;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(lblCryptFilenames, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 13;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(chkCryptFilenames, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlMainOptions", pnlMainOptions);
         pnlMainOptions.getAccessibleContext().setAccessibleName("Main Option");
@@ -3299,6 +3343,11 @@ public class Mainframe extends javax.swing.JFrame {
 
         txtBooksinrecent.setText("txtBooksinrecent");
         txtBooksinrecent.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtBooksinrecent.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBooksinrecentFocusLost(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -3711,28 +3760,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxSplitLevels, gridBagConstraints);
 
-        lblCryptFilenames.setText("lblCryptFilenames");
-        lblCryptFilenames.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(lblCryptFilenames, gridBagConstraints);
-        lblCryptFilenames.getAccessibleContext().setAccessibleName("Encrypt the filenames ");
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(chkCryptFilenames, gridBagConstraints);
-
         txtTagsToMakeDeep.setText("txtTagsToMakeDeep");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -3764,7 +3791,7 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3772,7 +3799,7 @@ public class Mainframe extends javax.swing.JFrame {
 
         chkIncludeCoversInCatalog.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3810,7 +3837,13 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(chkZipOmitZml, gridBagConstraints);
+        pnlAdvancedOptions.add(chkZipOmitXml, gridBagConstraints);
+
+        chkZipCatalog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkZipCatalogActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
@@ -3819,6 +3852,32 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkZipCatalog, gridBagConstraints);
+
+        lblUseThumbnailAsCover.setText("lblUseThumbnailAsCover");
+        lblUseThumbnailAsCover.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(lblUseThumbnailAsCover, gridBagConstraints);
+
+        chkUseThumbnailAsCover.setRequestFocusEnabled(false);
+        chkUseThumbnailAsCover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkUseThumbnailAsCoverActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(chkUseThumbnailAsCover, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlAdvancedOptions", pnlAdvancedOptions);
 
@@ -4775,107 +4834,125 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_mnuToolsResetSecurityCacheActionPerformed
 
   private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
-      debugClearLogFile();
-    }//GEN-LAST:event_mnuToolsClearLogActionPerformed
+    debugClearLogFile();
+  }//GEN-LAST:event_mnuToolsClearLogActionPerformed
 
-    private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
-     debugShowLogFile();
-    }//GEN-LAST:event_mnuToolsOpenLogActionPerformed
+  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
+   debugShowLogFile();
+  }//GEN-LAST:event_mnuToolsOpenLogActionPerformed
 
-    private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenConfigActionPerformed
-    debugShowSupportFolder();
-    }//GEN-LAST:event_mnuToolsOpenConfigActionPerformed
+  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenConfigActionPerformed
+  debugShowSupportFolder();
+  }//GEN-LAST:event_mnuToolsOpenConfigActionPerformed
 
-    private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
-        logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
-        BareBonesBrowserLaunch.openURL(Constants.FORUM_URL);
-    }//GEN-LAST:event_mnuHelpOpenForumActionPerformed
+  private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
+      BareBonesBrowserLaunch.openURL(Constants.FORUM_URL);
+  }//GEN-LAST:event_mnuHelpOpenForumActionPerformed
 
-    private void mnuHelpOpenIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenIssuesActionPerformed
-        logger.info(Localization.Main.getText("gui.menu.issueRegister") + ": " + Constants.ISSUES_URL);
-        BareBonesBrowserLaunch.openURL(Constants.ISSUES_URL);
-    }//GEN-LAST:event_mnuHelpOpenIssuesActionPerformed
+  private void mnuHelpOpenIssuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenIssuesActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.issueRegister") + ": " + Constants.ISSUES_URL);
+      BareBonesBrowserLaunch.openURL(Constants.ISSUES_URL);
+  }//GEN-LAST:event_mnuHelpOpenIssuesActionPerformed
 
-    private void mnuHelpDevelopersGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpDevelopersGuideActionPerformed
-        logger.info(Localization.Main.getText("gui.menu.developerGuide") + ": " + Constants.DEVELOPERGUIDE_URL);
-        BareBonesBrowserLaunch.openURL(Constants.DEVELOPERGUIDE_URL);
-    }//GEN-LAST:event_mnuHelpDevelopersGuideActionPerformed
+  private void mnuHelpDevelopersGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpDevelopersGuideActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.developerGuide") + ": " + Constants.DEVELOPERGUIDE_URL);
+      BareBonesBrowserLaunch.openURL(Constants.DEVELOPERGUIDE_URL);
+  }//GEN-LAST:event_mnuHelpDevelopersGuideActionPerformed
 
-    private void mnuHelpUserGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpUserGuideActionPerformed
-        logger.info(Localization.Main.getText("gui.menu.userGuide") + ": " + Constants.USERGUIDE_URL);
-        BareBonesBrowserLaunch.openURL(Constants.USERGUIDE_URL);
-    }//GEN-LAST:event_mnuHelpUserGuideActionPerformed
+  private void mnuHelpUserGuideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpUserGuideActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.userGuide") + ": " + Constants.USERGUIDE_URL);
+      BareBonesBrowserLaunch.openURL(Constants.USERGUIDE_URL);
+  }//GEN-LAST:event_mnuHelpUserGuideActionPerformed
 
-    private void mnuHelpHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpHomeActionPerformed
-        logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
-        BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
-    }//GEN-LAST:event_mnuHelpHomeActionPerformed
+  private void mnuHelpHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpHomeActionPerformed
+      logger.info(Localization.Main.getText("gui.menu.help") + ": " + Constants.HOME_URL);
+      BareBonesBrowserLaunch.openURL(Constants.HOME_URL);
+  }//GEN-LAST:event_mnuHelpHomeActionPerformed
 
-    private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerforme
-      logger.info(Localization.Main.getText("gui.menu.help") + ": " + tabHelpUrl);
-      BareBonesBrowserLaunch.openURL(tabHelpUrl);
-    }//GEN-LAST:event_cmdHelpActionPerforme
+  private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerforme
+    logger.info(Localization.Main.getText("gui.menu.help") + ": " + tabHelpUrl);
+    BareBonesBrowserLaunch.openURL(tabHelpUrl);
+  }//GEN-LAST:event_cmdHelpActionPerforme
 
-    private void pnlMainOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlMainOptionsComponentShown
-      tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
-    }//GEN-LAST:event_pnlMainOptionsComponentShown
+  private void pnlMainOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlMainOptionsComponentShown
+    tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
+  }//GEN-LAST:event_pnlMainOptionsComponentShown
 
-    private void pnlCatalogStructureComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCatalogStructureComponentShown
-      tabHelpUrl = Constants.HELP_URL_CATALOGSTRUCTURE;
-    }//GEN-LAST:event_pnlCatalogStructureComponentShown
+  private void pnlCatalogStructureComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCatalogStructureComponentShown
+    tabHelpUrl = Constants.HELP_URL_CATALOGSTRUCTURE;
+  }//GEN-LAST:event_pnlCatalogStructureComponentShown
 
-    private void pnlBookDetailsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlBookDetailsComponentShown
-      tabHelpUrl = Constants.HELP_URL_BOOKDETAILS;
-    }//GEN-LAST:event_pnlBookDetailsComponentShown
+  private void pnlBookDetailsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlBookDetailsComponentShown
+    tabHelpUrl = Constants.HELP_URL_BOOKDETAILS;
+  }//GEN-LAST:event_pnlBookDetailsComponentShown
 
-    private void pnlAdvancedOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAdvancedOptionsComponentShown
-      tabHelpUrl = Constants.HELP_URL_ADVANCED;
-    }//GEN-LAST:event_pnlAdvancedOptionsComponentShown
+  private void pnlAdvancedOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlAdvancedOptionsComponentShown
+    tabHelpUrl = Constants.HELP_URL_ADVANCED;
+  }//GEN-LAST:event_pnlAdvancedOptionsComponentShown
 
-    private void pnlExternalUrlsOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlExternalUrlsOptionsComponentShown
-      tabHelpUrl = Constants.HELP_URL_EXTERNALLINKS;
-    }//GEN-LAST:event_pnlExternalUrlsOptionsComponentShown
+  private void pnlExternalUrlsOptionsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlExternalUrlsOptionsComponentShown
+    tabHelpUrl = Constants.HELP_URL_EXTERNALLINKS;
+  }//GEN-LAST:event_pnlExternalUrlsOptionsComponentShown
 
-    private void pnlCustomCatalogsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCustomCatalogsComponentShown
-      tabHelpUrl = Constants.HELP_URL_CUSTOMCATALOGS;
-    }//GEN-LAST:event_pnlCustomCatalogsComponentShown
+  private void pnlCustomCatalogsComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCustomCatalogsComponentShown
+    tabHelpUrl = Constants.HELP_URL_CUSTOMCATALOGS;
+  }//GEN-LAST:event_pnlCustomCatalogsComponentShown
 
-    private void mnuHelpOpenLocalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenLocalizeActionPerformed
-      logger.info(Localization.Main.getText("gui.menu.help.localize") + ": " + Constants.LOCALIZE_URL);
-      BareBonesBrowserLaunch.openURL(Constants.LOCALIZE_URL);
-    }//GEN-LAST:event_mnuHelpOpenLocalizeActionPerformed
+  private void mnuHelpOpenLocalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenLocalizeActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.help.localize") + ": " + Constants.LOCALIZE_URL);
+    BareBonesBrowserLaunch.openURL(Constants.LOCALIZE_URL);
+  }//GEN-LAST:event_mnuHelpOpenLocalizeActionPerformed
 
-    private void mnuHelpOpenCustomizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenCustomizeActionPerformed
-      logger.info(Localization.Main.getText("gui.menu.help.customize") + ": " + Constants.CUSTOMIZE_URL);
-      BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
-    }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
+  private void mnuHelpOpenCustomizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenCustomizeActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.help.customize") + ": " + Constants.CUSTOMIZE_URL);
+    BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
+  }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
 
-    private void chkNoGenerateTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoGenerateTagsActionPerformed
-      chkIncludeTagCrossReferences.setEnabled(true);
-      if (chkNoGenerateTags.isSelected()) chkIncludeTagCrossReferences.setSelected(false);
-      lblIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
-      chkIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
-    }//GEN-LAST:event_chkNoGenerateTagsActionPerformed
+  private void chkNoGenerateTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoGenerateTagsActionPerformed
+    chkIncludeTagCrossReferences.setEnabled(true);
+    if (chkNoGenerateTags.isSelected()) chkIncludeTagCrossReferences.setSelected(false);
+    lblIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
+    chkIncludeTagCrossReferences.setEnabled(! chkNoGenerateTags.isSelected());
+  }//GEN-LAST:event_chkNoGenerateTagsActionPerformed
 
-    private void checkDownloads(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkDownloads
-        checkDownloads();
-    }//GEN-LAST:event_checkDownloads
+  private void checkDownloads(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkDownloads
+      checkDownloads();
+  }//GEN-LAST:event_checkDownloads
 
-    private void CheckOnlyCatalogAllowed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOnlyCatalogAllowed
-       checkOnlyCatalogAllowed();
-    }//GEN-LAST:event_CheckOnlyCatalogAllowed
+  private void CheckOnlyCatalogAllowed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckOnlyCatalogAllowed
+     checkOnlyCatalogAllowed();
+  }//GEN-LAST:event_CheckOnlyCatalogAllowed
 
-    private void checkCatalogFolderNeeded(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCatalogFolderNeeded
-      checkCatalogFolderNeeded();
-    }//GEN-LAST:event_checkCatalogFolderNeeded
+  private void checkCatalogFolderNeeded(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCatalogFolderNeeded
+    checkCatalogFolderNeeded();
+  }//GEN-LAST:event_checkCatalogFolderNeeded
 
-    private void txtUrlBooksMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUrlBooksMouseExited
-      checkOnlyCatalogAllowed();
-    }//GEN-LAST:event_txtUrlBooksMouseExited
+  private void txtUrlBooksMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUrlBooksMouseExited
+    checkOnlyCatalogAllowed();
+  }//GEN-LAST:event_txtUrlBooksMouseExited
 
-    private void lblLibrarythingIsbnUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblLibrarythingIsbnUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblLibrarythingIsbnUrlActionPerformed
+  private void lblLibrarythingIsbnUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblLibrarythingIsbnUrlActionPerformed
+      // TODO add your handling code here:
+  }//GEN-LAST:event_lblLibrarythingIsbnUrlActionPerformed
+
+  private void chkUseThumbnailAsCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseThumbnailAsCoverActionPerformed
+      // TODO add your handling code here:
+  }//GEN-LAST:event_chkUseThumbnailAsCoverActionPerformed
+
+  private void chkZipCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkZipCatalogActionPerformed
+    boolean genOptions = !chkNogenerateopds.isSelected() && !chkNogeneratehtml.isSelected();
+    lblZipOmitXml.setEnabled(chkZipCatalog.isSelected() && genOptions);
+    chkZipOmitXml.setEnabled(lblZipOmitXml.isEnabled() && genOptions);
+  }//GEN-LAST:event_chkZipCatalogActionPerformed
+
+  private void txtBooksinrecentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBooksinrecentFocusLost
+    if (getValue(txtBooksinrecent) > StanzaConstants.MAX_RECENT_ADDITIONS) {
+      String message = Localization.Main.getText("error.recentTooLarge", StanzaConstants.MAX_RECENT_ADDITIONS);
+      JOptionPane.showMessageDialog(this, message, "", JOptionPane.ERROR_MESSAGE);
+    }
+    txtBooksinrecent.setText("" + StanzaConstants.MAX_RECENT_ADDITIONS);
+  }//GEN-LAST:event_txtBooksinrecentFocusLost
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -5003,8 +5080,9 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkSortUsingTitleSort;
     private javax.swing.JCheckBox chkSplitByAuthorInitialGoToBooks;
     private javax.swing.JCheckBox chkSupressRatings;
+    private javax.swing.JCheckBox chkUseThumbnailAsCover;
     private javax.swing.JCheckBox chkZipCatalog;
-    private javax.swing.JCheckBox chkZipOmitZml;
+    private javax.swing.JCheckBox chkZipOmitXml;
     private javax.swing.JCheckBox chkZipTrookCatalog;
     private javax.swing.JButton cmdAdd;
     private javax.swing.JButton cmdAmazonIsbnReset;
@@ -5122,6 +5200,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblTargetFolder;
     private javax.swing.JLabel lblThumbnailheight;
     private javax.swing.JLabel lblUrlBooks;
+    private javax.swing.JLabel lblUseThumbnailAsCover;
     private javax.swing.JLabel lblWikilang;
     private javax.swing.JTextField lblWikipediaUrl;
     private javax.swing.JLabel lblZipCatalog;

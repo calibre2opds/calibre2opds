@@ -102,10 +102,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblCustomCatalogs.setText(Localization.Main.getText("info.step.customcatalogs")); // NOI18N
     lblIndex.setText(Localization.Main.getText("info.step.index")); // NOI18N
     lblReprocessingEpubMetadata.setText(Localization.Main.getText("info.step.reprocessingEpubMetadata")); // NOI18N
-    lblThmbnails.setText(Localization.Main.getText("info.step.thumbnails")); // NOI18N
-    lblCovers.setText(Localization.Main.getText("info.step.covers")); // NOI18N
     lblCopyLibToTarget.setText(Localization.Main.getText("info.step.copylib")); // NOI18N
     lblCopyCatToTarget.setText(Localization.Main.getText("info.step.copycat")); // NOI18N
+    lblZipCatalog.setText(Localization.Main.getText("info.step.zipCatalog")); // NOI18N
     lblFinished.setText(Localization.Main.getText("info.step.done.gui")); // NOI18N
     cmdStopGenerating.setText(Localization.Main.getText("gui.stopGeneration")); // NOI18N
   }
@@ -139,12 +138,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblAllbooksTime.setText("");
     lblFeaturedBooksTime.setText("");
     lblCustomCatalogsTime.setText("");
-    lblThumbnailsTime.setText("");
-    lblCoversTime.setText("");
     lblReprocessingEpubMetadataTime.setText("");
     lblIndexTime.setText("");
     lblCopyLibraryTime.setText("");
     lblCopyCatalogTime.setText("");
+    lblZipCatalogTime.setText("");
     lblFinishedTime.setText("");
     boldFont(lblStarted, true);
   }
@@ -194,6 +192,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblTagsTime);
   }
 
+  public void disableCreateTags() {
+    lblTags.setEnabled(false);
+  }
+
   public void startCreateAuthors(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.authors"));
@@ -205,6 +207,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     chkAuthors.setSelected(true);
     boldFont(lblAuthors, false);
     setTimeNow(lblAuthorsTime);
+  }
+
+  public void disableCreateAuthors() {
+    lblAuthors.setEnabled(false);
   }
 
   public void startCreateSeries(long nb) {
@@ -220,6 +226,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblSeriesTime);
   }
 
+  public void disableCreateSeries() {
+    lblSeries.setEnabled(false);
+  }
+
   public void startCreateRecent(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.recent"));
@@ -231,6 +241,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     chkRecent.setSelected(true);
     boldFont(lblRecent, false);
     setTimeNow(lblRecentTime);
+  }
+
+  public void disableCreateRecent() {
+    lblRecent.setEnabled(false);
   }
 
   public void startCreateRated(long nb) {
@@ -246,6 +260,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblRatingTime);
   }
 
+  public void disableCreateRated() {
+    lblRated.setEnabled(false);
+  }
+
   public void startCreateAllbooks(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.allbooks"));
@@ -257,6 +275,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     chkAllbooks.setSelected(true);
     boldFont(lblAllbooks, false);
     setTimeNow(lblAllbooksTime);
+  }
+
+  public void disableCreateAllBooks() {
+    lblAllbooks.setEnabled(false);
   }
 
   public void startCreateFeaturedBooks(long nb) {
@@ -272,6 +294,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblFeaturedBooksTime);
   }
 
+  public void disableCreateFeaturedBooks() {
+    lblFeaturedBooks.setEnabled(false);
+  }
+
   public void startCreateCustomCatalogs(long nb) {
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText("info.step.customcatalogs"));
@@ -285,30 +311,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblCustomCatalogsTime);
   }
 
-  public void startCreateThumbnails(long nb) {
-    progressStep.setMaxScale(nb);
-    logger.info(Localization.Main.getText("info.step.thumbnails"));
-    boldFont(lblThmbnails, true);
-  }
-
-  public void endCreateThumbnails(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    chkThumbnails.setSelected(true);
-    boldFont(lblThmbnails, false);
-    setTimeNow(lblThumbnailsTime);
-  }
-
-  public void startCreateCovers(long nb) {
-    progressStep.setMaxScale(nb);
-    logger.info(Localization.Main.getText("info.step.covers"));
-    boldFont(lblCovers, true);
-  }
-
-  public void endCreateCovers(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    chkCovers.setSelected(true);
-    boldFont(lblCovers, false);
-    setTimeNow(lblCoversTime);
+  public void disableCreateCustomCatalogs() {
+    lblCustomCatalogs.setEnabled(false);
   }
 
   public void startReprocessingEpubMetadata(long nb) {
@@ -325,6 +329,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblReprocessingEpubMetadataTime);
   }
 
+  public void disableReprocessingEpubMetadata () {
+    lblReprocessingEpubMetadata.setEnabled(false);
+  }
+
   public void endCreateJavascriptDatabase(long milliseconds) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
     chkIndex.setSelected(true);
@@ -337,6 +345,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     logger.info(Localization.Main.getText("info.step.index"));
     boldFont(lblIndex, true);
     lblIndexTime.setText(String.format("%tT", System.currentTimeMillis()));
+  }
+
+  public void disableCreateJavascriptDatabase() {
+    lblIndex.setEnabled(false);
   }
 
   public void setCopyLibCount(String summary){
@@ -371,6 +383,23 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     chkCopyCatToTarget.setSelected(true);
     boldFont(lblCopyCatToTarget, false);
     setTimeNow(lblCopyCatalogTime);
+  }
+
+  public void startZipCatalog(long nb) {
+    progressStep.setMaxScale(nb);
+    logger.info(Localization.Main.getText("info.step.zipCatalog"));
+    boldFont(lblZipCatalog, true);
+  }
+
+  public void endZipCatalog(long milliseconds) {
+    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+    chkZipCatalog.setSelected(true);
+    boldFont(lblZipCatalog, false);
+    setTimeNow(lblZipCatalogTime);
+  }
+
+  public void disableZipCatalog() {
+    lblZipCatalog.setEnabled(false);
   }
 
   public void endCreateMainCatalog(String where, long timeInHtml) {
@@ -518,12 +547,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         chkCustomCatalogs = new javax.swing.JCheckBox();
         lblCustomCatalogs = new javax.swing.JLabel();
         lblCustomCatalogsTime = new javax.swing.JLabel();
-        chkThumbnails = new javax.swing.JCheckBox();
-        lblThmbnails = new javax.swing.JLabel();
-        lblThumbnailsTime = new javax.swing.JLabel();
-        chkCovers = new javax.swing.JCheckBox();
-        lblCovers = new javax.swing.JLabel();
-        lblCoversTime = new javax.swing.JLabel();
         chkReprocessingEpubMetadata = new javax.swing.JCheckBox();
         lblReprocessingEpubMetadata = new javax.swing.JLabel();
         lblReprocessingEpubMetadataTime = new javax.swing.JLabel();
@@ -541,6 +564,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblFinishedTime = new javax.swing.JLabel();
         lblStepMessage = new javax.swing.JLabel();
         lblStoppingGeneration = new javax.swing.JLabel();
+        lblZipCatalog = new javax.swing.JLabel();
+        lblZipCatalogTime = new javax.swing.JLabel();
+        chkZipCatalog = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -569,7 +595,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 21;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.gridwidth = 3;
         getContentPane().add(cmdStopGenerating, gridBagConstraints);
 
@@ -823,56 +849,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblCustomCatalogsTime, gridBagConstraints);
 
-        chkThumbnails.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
-        getContentPane().add(chkThumbnails, gridBagConstraints);
-
-        lblThmbnails.setText("lblThmbnails");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
-        getContentPane().add(lblThmbnails, gridBagConstraints);
-
-        lblThumbnailsTime.setText("!");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        getContentPane().add(lblThumbnailsTime, gridBagConstraints);
-
-        chkCovers.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
-        getContentPane().add(chkCovers, gridBagConstraints);
-
-        lblCovers.setText("lblCovers");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
-        getContentPane().add(lblCovers, gridBagConstraints);
-
-        lblCoversTime.setText("!");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        getContentPane().add(lblCoversTime, gridBagConstraints);
-
         chkReprocessingEpubMetadata.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -974,9 +950,14 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         getContentPane().add(lblCopyCatalogTime, gridBagConstraints);
 
         chkFinished.setEnabled(false);
+        chkFinished.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkFinishedActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkFinished, gridBagConstraints);
@@ -984,17 +965,17 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblFinished.setText("lblFinished");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(lblFinished, gridBagConstraints);
-        lblFinished.getAccessibleContext().setAccessibleName("null");
+        lblFinished.getAccessibleContext().setAccessibleName(null);
 
         lblFinishedTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblFinishedTime, gridBagConstraints);
@@ -1006,7 +987,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblStepMessage.setPreferredSize(new java.awt.Dimension(600, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 19;
+        gridBagConstraints.gridy = 21;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(15, 5, 5, 5);
@@ -1015,10 +996,40 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblStoppingGeneration.setText("lblStoppingGeneration");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 21;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblStoppingGeneration, gridBagConstraints);
+
+        lblZipCatalog.setText("lblZipCatalog");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 19;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        getContentPane().add(lblZipCatalog, gridBagConstraints);
+
+        lblZipCatalogTime.setText("!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        getContentPane().add(lblZipCatalogTime, gridBagConstraints);
+
+        chkZipCatalog.setEnabled(false);
+        chkZipCatalog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkZipCatalogActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        getContentPane().add(chkZipCatalog, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1030,12 +1041,19 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   private void cmdStopGeneratingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmdStopGeneratingMouseClicked
   }//GEN-LAST:event_cmdStopGeneratingMouseClicked
 
+    private void chkFinishedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkFinishedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkFinishedActionPerformed
+
+    private void chkZipCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkZipCatalogActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkZipCatalogActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chkAllbooks;
     private javax.swing.JCheckBox chkAuthors;
     private javax.swing.JCheckBox chkCopyCatToTarget;
     private javax.swing.JCheckBox chkCopyLibToTarget;
-    private javax.swing.JCheckBox chkCovers;
     private javax.swing.JCheckBox chkCustomCatalogs;
     private javax.swing.JCheckBox chkDatabase;
     private javax.swing.JCheckBox chkFeaturedBooks;
@@ -1047,7 +1065,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     private javax.swing.JCheckBox chkSeries;
     private javax.swing.JCheckBox chkStarted;
     private javax.swing.JCheckBox chkTags;
-    private javax.swing.JCheckBox chkThumbnails;
+    private javax.swing.JCheckBox chkZipCatalog;
     private javax.swing.JButton cmdStopGenerating;
     private javax.swing.JProgressBar jProgressStep;
     private javax.swing.JLabel lblAllbooks;
@@ -1058,8 +1076,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     private javax.swing.JLabel lblCopyCatalogTime;
     private javax.swing.JLabel lblCopyLibToTarget;
     private javax.swing.JLabel lblCopyLibraryTime;
-    private javax.swing.JLabel lblCovers;
-    private javax.swing.JLabel lblCoversTime;
     private javax.swing.JLabel lblCustomCatalogs;
     private javax.swing.JLabel lblCustomCatalogsTime;
     private javax.swing.JLabel lblDatabase;
@@ -1084,8 +1100,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     private javax.swing.JLabel lblStoppingGeneration;
     private javax.swing.JLabel lblTags;
     private javax.swing.JLabel lblTagsTime;
-    private javax.swing.JLabel lblThmbnails;
-    private javax.swing.JLabel lblThumbnailsTime;
+    private javax.swing.JLabel lblZipCatalog;
+    private javax.swing.JLabel lblZipCatalogTime;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -162,6 +162,11 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeCoversInCatalog();
 
+  public boolean getUseThumbnailsAsCovers();
+
+  public boolean getZipCatalog();
+
+  public boolean getZipOmitXml();
 
   /* external links */
 
