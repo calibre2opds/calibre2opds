@@ -531,11 +531,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param isCover
    */
   private void addImageLink (Book book, Element entry, ImageManager iManager, boolean isresized, boolean isCover) {
+
+    String imageUri = null;         // The URI to the image at runtime
     File bookFolder = book.getBookFolder();
 
     CachedFile calibreCoverFile = CachedFileManager.INSTANCE.addCachedFile(bookFolder, Constants.CALIBRE_COVER_FILENAME);
 
-    String imageUri;              // The URI to the imae at runtime
     String catalogImageFilename;  // Name when stored in catalog
     CachedFile imageFile;         // The file that contains the image to be used
     CachedFile resizedImageFile;  // File to be used when resized images in use
@@ -613,7 +614,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // Are we storing cover images in the catalog?
 
-    if (currentProfile.getIncludeCoversInCatalog()) {
+    if (includeCoversInCatalog) {
       if (calibreCoverFile.exists()) {
         imageUri = ImageManager.getFileToBase64Uri(imageFile);
       }
@@ -623,11 +624,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
         catalogManager.addFileToTheMapOfFilesToCopy(imageFile);
       }
     }
-    if (logger.isTraceEnabled())  logger.trace("addImageLink: imageUri=" + imageUri);
+    // If we are generating a ctalog for a Nook we cache the results for use later
+    if (iManager.equals(thumbnailManager) && currentProfile.getGenerateIndex()) {
+      thumbnailManager.addBook(book, imageUri);
+    }
     entry.addContent(FeedHelper.getImageLink(imageUri,isCover));
-    // We cache Cover URI's for re-use
-    // Not needed for book covers as they are only ever used once!
-    if (! isCover) thumbnailManager.addBook(book, imageUri);
   }
 
   /**
@@ -1232,13 +1233,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled()) logger.trace("getBookEntry: checking book in the Catalog manager");
 
     // We only need to actually generate the file if not done previously
-    if (! catalogManager.addBooksDone(book)) {
+    if (book.isDone()) {
       if (logger.isDebugEnabled())  logger.debug("getBookEntry: SKIPPING generation of full book entry as already done");
     } else {
       if (logger.isTraceEnabled()) logger.trace("getBookEntry: book full entry (not yet done)");
-      // generate the book full entry
-      // generateBookFullEntryFile(pBreadcrumbs, book, filename, fullEntryUrl);
-
       // if the "all books" catalog never was generated, we'll end up with the first generated catalog's breadcrumbs ; that ain't good, I prefer linking only to main
       Breadcrumbs breadcrumbs = pBreadcrumbs;
       if (!currentProfile.getGenerateAllbooks()) {
@@ -1262,6 +1260,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // index the book
         IndexManager.INSTANCE.indexBook(book, htmlManager.getHtmlFilename(fullEntryUrl), thumbnailManager.getThumbnailUrl(book));
       }
+      book.setDone();
     }
 
     Element entry = FeedHelper.getBookEntry(title, urn, book.getLatestFileModifiedDate());

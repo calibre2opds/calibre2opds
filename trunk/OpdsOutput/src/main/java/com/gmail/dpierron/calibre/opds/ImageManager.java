@@ -136,7 +136,7 @@ public abstract class ImageManager {
     int length = (int)f.length();
     int paddingCount = (3 - (length % 3)) % 3;
 
-    byte[]  data = new byte[length + 2];
+    byte[] data = new byte[length + 2];
     // Preset potential padding bytes to null
     for (int i = 0 ; i < 2; i++) {
       data[length+(i)] = 0;
@@ -165,11 +165,13 @@ public abstract class ImageManager {
                                "" + base64code.charAt((j >> 6) & 0x3f) +
                                "" + base64code.charAt(j & 0x3f));
     }
+    data = null;        // <ay not be necessary - but lets help garbage collector
     // Add final padding characters
     for (int i = paddingCount ; i > 0 ; i--) {
-      data[length+(i-1)] = '=';
+      encoded.setCharAt(encoded.length() - i, '=');
     }
     return "data:image/"
+            // take image type from file extenson
             + f.getName().substring(f.getName().lastIndexOf('.')+1) + ";base64,"
             + encoded.toString();
   }
@@ -203,6 +205,7 @@ public abstract class ImageManager {
   public long getTimeInImages() {
     return timeInImages;
   }
+
   public int getCountOfImagesGenerated() {
     return countOfImagesGenerated;
   }

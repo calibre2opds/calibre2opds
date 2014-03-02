@@ -26,6 +26,9 @@ import org.jdom.Element;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import java.lang.management.*;
 
 // import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 
@@ -74,6 +77,90 @@ public class Catalog {
     super();
     this.callback = callback;
     CatalogContext.INSTANCE.callback = callback;
+  }
+
+  /**
+   * The ZIP routines were moved here from the Helper module as the
+   * easiest way to give access to the callback interface for
+   * providing progress information.
+   *
+   * @param inFolder
+   * @param outZipFile
+   * @throws IOException
+   */
+  public void recursivelyZipFiles(File inFolder, File outZipFile) throws IOException {
+    recursivelyZipFiles(null, false, inFolder, outZipFile, false);
+  }
+
+  public void recursivelyZipFiles(File inFolder,
+      boolean includeNameOfOriginalFolder,
+      File outZipFile,
+      boolean omitXmlFiles)
+      throws IOException {
+    recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile, omitXmlFiles);
+  }
+
+  public void recursivelyZipFiles(final String extension,
+      boolean includeNameOfOriginalFolder,
+      File inFolder,
+      File outZipFile,
+      boolean omitXmlFiles)
+      throws IOException {
+    ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZipFile)));
+    String relativePath = "";
+    if (includeNameOfOriginalFolder)
+      relativePath = inFolder.getName();
+    try {
+      recursivelyZipFiles(extension, relativePath, inFolder, zipOutputStream, omitXmlFiles);
+    } finally {
+      zipOutputStream.close();
+    }
+  }
+
+  private void recursivelyZipFiles(final String extension,
+      String currentRelativePath,
+      File currentDir,
+      ZipOutputStream zipOutputStream,
+      final boolean omitXmlFiles)
+      throws IOException {
+    String[] files = currentDir.list(new FilenameFilter() {
+
+      public boolean accept(File dir, String name) {
+        File f = new File(dir, name);
+        if (extension == null
+            && (f.isFile() && omitXmlFiles && (! name.toUpperCase().endsWith(".XML")))) {
+          return true;
+        } else {
+          if (f.isDirectory()
+              || (extension != null && name.toUpperCase().endsWith(extension.toUpperCase()))
+              || (omitXmlFiles && (!name.toUpperCase().endsWith(".XML")))) {
+            return true;
+          }
+          return false;
+        }
+      }
+
+    });
+
+    for (String filename : files) {
+      File f = new File(currentDir, filename);
+      String fileRelativePath = currentRelativePath + (Helper.isNullOrEmpty(currentRelativePath) ? "" : File.separator) + filename;
+      if (f.isDirectory()) {
+        callback.showMessage(f.getName());
+        recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream, omitXmlFiles);
+      } else {
+        BufferedInputStream in = null;
+        byte[] data = new byte[1024];
+        in = new BufferedInputStream(new FileInputStream(f), 1000);
+        zipOutputStream.putNextEntry(new ZipEntry(fileRelativePath));
+        int count;
+        while ((count = in.read(data, 0, data.length)) != -1) {
+          zipOutputStream.write(data, 0, count);
+        }
+        zipOutputStream.closeEntry();
+        callback.incStepProgressIndicatorPosition();
+      }
+    }
   }
 
   /**
@@ -471,6 +558,8 @@ public class Catalog {
     if (Helper.isNullOrEmpty(currentProfile.getCustomCatalogs())) callback.disableCreateCustomCatalogs();
     if (! currentProfile.getReprocessEpubMetadata())  callback.disableReprocessingEpubMetadata();
     if (! currentProfile.getGenerateIndex())          callback.disableCreateJavascriptDatabase();
+    if ((currentProfile.getDeviceMode() == DeviceMode.Default)
+    ||  (!currentProfile.getOnlyCatalogAtTarget()))   callback.disableCopyLibToTarget();
     if (! currentProfile.getZipCatalog())             callback.disableZipCatalog();
     /** where the catalog is eventually located */
     String where = null;
@@ -691,10 +780,16 @@ public class Catalog {
       File temp = File.createTempFile("calibre2opds", "");
       String tempPath = temp.getAbsolutePath();
       temp.delete();  // Remove file just created as we are going to create a folder there instead
+      // See if user has specified a specific location for the TEMP folder
+      String tempDirectory = System.getenv("CALIBRE2OPDS_TEMP");
+      if (Helper.isNotNullOrEmpty(tempDirectory)) {
+        tempPath = tempDirectory + Constants.FOLDER_SEPARATOR + temp.getName();
+      }
       generateFolder = new File(tempPath);
       if (logger.isTraceEnabled())logger.trace("generateFolder set to " + generateFolder);
       generateFolder.mkdir();
       generateFolder.deleteOnExit();
+      logger.info("Temporary Files folder: " + generateFolder.getAbsolutePath());
 
       // Save the location of the Catalog folder for any other component that needs to knw it
       CatalogContext.INSTANCE.catalogManager.setGenerateFolder(generateFolder);
@@ -1066,7 +1161,7 @@ public class Catalog {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile, false);
+          recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile, false);
           // Now ensure that there is no unzipped catalog left behind!
           File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
@@ -1109,7 +1204,7 @@ public class Catalog {
         String zipFilename = currentProfile.getCatalogFolderName() + ".zip";
         File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
         File zipFile = new File(zipFolder, zipFilename);
-        Helper.recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
+        recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
         if (targetFolder != null  && currentProfile.getCopyToDatabaseFolder()) {
           Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
         }
@@ -1169,6 +1264,28 @@ public class Catalog {
       logger.info("");
       if (copyToSelf != 0)
         logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));
+
+      // Now try for some memory usage statistics
+      List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
+      logger.info("Ram Usage:");
+      logger.info(String.format("   %-20s %-15s%10s%10s%10s%10s",
+                                    "NAME",
+                                    "TYPE",
+                                    "COMMITTED",
+                                    "INIT",
+                                    "MAX",
+                                    "USED"));
+      for (MemoryPoolMXBean pool : pools) {
+        MemoryUsage usage = pool.getUsage();
+        logger.info(String.format("   %-20s %-15s%10d MB%7d MB%7d MB%7d MB",
+                                    pool.getName(),
+                                    pool.getType(),
+                                    usage.getCommitted() / 1000000,
+                                    usage.getInit() / 1000000,
+                                    usage.getMax() / 1000000,
+                                    usage.getUsed() / 1000000));
+      }
+      logger.info("");
 
       // Now work put where to tell user result has been placed
 

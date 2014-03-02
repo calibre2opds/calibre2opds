@@ -34,7 +34,6 @@ public class CatalogManager {
   private static List<CachedFile> listOfUnchangedCatalogFiles;
   // List of books that have already been generated
   // used to track if has already been done before!
-  private static List<Book> booksDone;
   private static String securityCode;
   private static String initialUrl;
 
@@ -66,7 +65,6 @@ public class CatalogManager {
     // mapOfBookByPathToCopy = new HashMap<String, Book>();
     mapOfCatalogFolderNames = new HashMap<String, String>();
     // bookEntriesFiles = new LinkedList<File>();
-    booksDone = new LinkedList<Book>();
     bookDetailsCustomColumns = null;
     listOfUnchangedCatalogFiles = new LinkedList<CachedFile>();
   }
@@ -260,24 +258,6 @@ public class CatalogManager {
 //    File result = new File(catalogFileName);
     return result;
   }
-
-  /**
-   * Add a book entry to the list of files for the catalog
-   * Used to track if we have done this one beafore
-   *
-   * @param book
-   * @return true if book was added because not already there
-   *         false if not added because already present
-   */
-
-  public boolean addBooksDone(Book book) {
-    if (booksDone.contains(book))
-      return false;
-
-    booksDone.add(book);
-    return true;
-  }
-
 
   private static List<CustomColumnType> bookDetailsCustomColumns = null;
 

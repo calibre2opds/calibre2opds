@@ -915,6 +915,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeCoversInCatalog.setSelected(currentProfile.getIncludeCoversInCatalog());
     chkIncludeCoversInCatalog.setEnabled(!currentProfile.isIncludeCoversInCatalogReadOnly());
     lblIncludeCoversInCatalog.setEnabled(chkIncludeCoversInCatalog.isEnabled());
+    chkUseThumbnailAsCover.setSelected(currentProfile.getUseThumbnailsAsCovers());
+    chkUseThumbnailAsCover.setEnabled(!currentProfile.isUseThumbnailsAsCoversReadOnly());
+    lblUseThumbnailAsCover.setEnabled(chkUseThumbnailAsCover.isEnabled());
     chkZipCatalog.setSelected(currentProfile.getZipCatalog());
     chkZipCatalog.setEnabled(!currentProfile.isZipCatalogReadOnly());
     lblZipCatalog.setEnabled(chkZipCatalog.isEnabled());
@@ -1110,6 +1113,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setMaxKeywords(i);
     currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
     currentProfile.setIncludeCoversInCatalog(chkIncludeCoversInCatalog.isSelected());
+    currentProfile.setUseThumbnailsAsCovers(chkUseThumbnailAsCover.isSelected());
     currentProfile.setZipCatalog(chkZipCatalog.isSelected());
     currentProfile.setZipOmitXml(chkZipOmitXml.isSelected());
 

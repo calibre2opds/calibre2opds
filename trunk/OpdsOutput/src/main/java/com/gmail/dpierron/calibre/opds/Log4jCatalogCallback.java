@@ -236,6 +236,8 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     progressStep.setMaxScale(nb);
   }
 
+  public void disableCopyLibToTarget() {}
+
   public void startZipCatalog(long nb) {
     logger.info(Localization.Main.getText("info.step.zipCatalog"));
     progressStep.setMaxScale(nb);
