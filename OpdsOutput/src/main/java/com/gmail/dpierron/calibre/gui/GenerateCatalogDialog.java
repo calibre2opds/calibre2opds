@@ -368,6 +368,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblCopyLibraryTime);
   }
 
+  public void disableCopyLibToTarget() {
+    lblCopyLibToTarget.setEnabled(false);
+  }
+
   public void setCopyCatCount(String summary){
     lblCopyCatToTarget.setText(lblCopyCatalogTime.getText() + " (" + summary + ")");
   }

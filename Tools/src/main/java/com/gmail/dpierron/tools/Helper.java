@@ -14,8 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Locale;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class Helper {
 
@@ -1138,79 +1136,6 @@ public class Helper {
       }
     }
     return result;
-  }
-
-  public static void recursivelyZipFiles(File inFolder, File outZipFile) throws IOException {
-    recursivelyZipFiles(null, false, inFolder, outZipFile, false);
-  }
-
-  public static void recursivelyZipFiles(File inFolder,
-                                         boolean includeNameOfOriginalFolder,
-                                         File outZipFile,
-                                         boolean omitXmlFiles)
-                                              throws IOException {
-    recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile, omitXmlFiles);
-  }
-
-  public static void recursivelyZipFiles(final String extension,
-                                         boolean includeNameOfOriginalFolder,
-                                         File inFolder,
-                                         File outZipFile,
-                                         boolean omitXmlFiles)
-                                              throws IOException {
-    ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outZipFile)));
-    String relativePath = "";
-    if (includeNameOfOriginalFolder)
-      relativePath = inFolder.getName();
-    try {
-      recursivelyZipFiles(extension, relativePath, inFolder, zipOutputStream, omitXmlFiles);
-    } finally {
-      zipOutputStream.close();
-    }
-  }
-
-  private static void recursivelyZipFiles(final String extension,
-                                          String currentRelativePath,
-                                          File currentDir,
-                                          ZipOutputStream zipOutputStream,
-                                          final boolean omitXmlFiles)
-                                                throws IOException {
-    String[] files = currentDir.list(new FilenameFilter() {
-
-      public boolean accept(File dir, String name) {
-        File f = new File(dir, name);
-        if (extension == null
-        && (f.isFile() && omitXmlFiles && (! name.toUpperCase().endsWith(".XML")))) {
-          return true;
-        } else {
-          if (f.isDirectory()
-          || (extension != null && name.toUpperCase().endsWith(extension.toUpperCase()))
-          || (omitXmlFiles && (!name.toUpperCase().endsWith(".XML")))) {
-            return true;
-          }
-          return false;
-        }
-      }
-
-    });
-
-    for (String filename : files) {
-      File f = new File(currentDir, filename);
-      String fileRelativePath = currentRelativePath + (Helper.isNullOrEmpty(currentRelativePath) ? "" : File.separator) + filename;
-      if (f.isDirectory())
-        recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream, omitXmlFiles);
-      else {
-        BufferedInputStream in = null;
-        byte[] data = new byte[1024];
-        in = new BufferedInputStream(new FileInputStream(f), 1000);
-        zipOutputStream.putNextEntry(new ZipEntry(fileRelativePath));
-        int count;
-        while ((count = in.read(data, 0, data.length)) != -1) {
-          zipOutputStream.write(data, 0, count);
-        }
-        zipOutputStream.closeEntry();
-      }
-    }
   }
 
   public static String toTitleCase(String s) {

@@ -121,6 +121,8 @@ public interface CatalogCallbackInterface {
 
   public void endCopyLibToTarget(long milliseconds);
 
+  public void disableCopyLibToTarget();
+
   public void endCopyCatToTarget(long milliseconds);
 
   public void startZipCatalog(long nb);

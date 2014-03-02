@@ -52,6 +52,8 @@ public class Book implements SplitableByLetter {
   private boolean flag;
   private List<CustomColumnValue> customColumnValues;
 
+  private boolean done;
+
   private static Date ZERO;
   private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
   static {
@@ -88,6 +90,7 @@ public class Book implements SplitableByLetter {
     this.isbn = isbn;
     this.authorSort = authorSort;
     this.rating = rating;
+    done = false;
   }
 
   /**
@@ -697,5 +700,11 @@ public class Book implements SplitableByLetter {
     assert false : "setCustomColumnValue() not yet ready for use";
   }
 
+  public void setDone() {
+    done = true;
+  }
 
+  public boolean isDone() {
+    return done;
+  }
 }
