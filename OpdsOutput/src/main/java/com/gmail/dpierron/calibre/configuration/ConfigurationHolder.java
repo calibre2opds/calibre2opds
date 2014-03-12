@@ -53,6 +53,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_LANGUAGEASTAG = "LanguageAsTag";
   private final static String PROPERTY_NAME_TAGSTOIGNORE = "TagsToIgnore";
   private final static String PROPERTY_NAME_EXTERNALICONS = "ExternalIcons";
+  private final static String PROPERTY_NAME_EXTERNAL_IMAGES = "ExternalImages";
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
   private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
   private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TAGS_TO_MAKE_DEEP";
@@ -516,7 +517,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET, value);
   }
 
-
   public boolean isExternalIconsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_EXTERNALICONS);
   }
@@ -531,6 +531,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setExternalIcons(boolean externalIcons) {
     setProperty(PROPERTY_NAME_EXTERNALICONS, externalIcons);
+  }
+
+  public boolean isExternalImagesReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_EXTERNAL_IMAGES);
+  }
+
+  public boolean getExternalImages() {
+    Boolean b = getBoolean(PROPERTY_NAME_EXTERNAL_IMAGES);
+    if (b == null)
+      return defaults.getExternalImages();
+    else
+      return b.booleanValue();
+  }
+
+  public void setExternalImages(boolean b) {
+    setProperty(PROPERTY_NAME_EXTERNAL_IMAGES, b);
   }
 
   public boolean isGenerateOpdsReadOnly() {

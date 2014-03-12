@@ -21,7 +21,8 @@ public class StanzaConstants {
   public final static boolean GENERATE_HTML_DOWNLOADS = true;
   public final static boolean GENERATE_DOWNLOADS = true;
   public final static boolean MINIMIZE_CHANGED_FILES = true;
-  public final static boolean USE_EXTERNAL_ICONS = false;
+  public final static boolean USE_EXTERNAL_ICONS = true;
+  public final static boolean USE_EXTERNAL_IMAGES = true;
   public final static int THUMBNAIL_HEIGHT = 144;
   public final static boolean THUMBNAIL_GENERATE = true;
   public final static String SPLIT_TAGS_ON = "";

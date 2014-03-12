@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -198,6 +199,8 @@ public class OpfOutput {
       if (CachedFileManager.INSTANCE.inCache(epubfile) != null) {
         epubfile.clearCachedInformation();
       }
+    } catch (ZipException e ) {
+      logger.warn("Failed to process EPUB metadata for book " + book);
     } finally {
       outputFile.delete();
     }
@@ -212,7 +215,7 @@ public class OpfOutput {
     ZipOutputStream zos = null;
     try {
       try {
-        Map<String, ZipEntry> cssFilesBackupMap = new HashMap<String, ZipEntry>();
+        // Map<String, ZipEntry> cssFilesBackupMap = new HashMap<String, ZipEntry>();
         zipInputFile = new ZipFile(inputFile);
         outputFile.getParentFile().mkdirs();
         zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
@@ -346,6 +349,9 @@ public class OpfOutput {
         logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getTitle() + " (file " + inputFile + ")");
         logger.warn(je);
         throw new IOException(je);
+    } catch (ZipException z) {
+      logger.warn("ProcessePubFile: EPUB file is not valid ZIP for book: " + book.getTitle() + " (file " + inputFile + ")");
+      throw new IOException(z);
     } catch (Exception e) {
       logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getTitle() + " (file " + inputFile + ")");
       logger.warn(e);

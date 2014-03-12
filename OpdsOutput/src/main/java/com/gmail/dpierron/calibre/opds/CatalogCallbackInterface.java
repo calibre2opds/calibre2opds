@@ -155,4 +155,6 @@ public interface CatalogCallbackInterface {
   public void incrementWarnCount();
 
   public void setStopGenerating ();
+
+  public void showRamUsage(String s);
 }

@@ -87,6 +87,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   private void translateTexts() {
     setTitle(Localization.Main.getText("gui.generateProgress"));
+    lblRamUsage.setText("");
     lblStoppingGeneration.setVisible(false);
     lblStoppingGeneration.repaint();
     lblStoppingGeneration.setText(Localization.Main.getText("gui.stoppingGeneration")); // NOI18N
@@ -431,6 +432,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     progressStep.actOnMessage(message);
   }
 
+  public void showRamUsage(String message) {
+    lblRamUsage.setText(message);
+  }
+
   public void errorOccured(String message, Throwable error) {
     String msg;
     String title;
@@ -571,6 +576,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblZipCatalog = new javax.swing.JLabel();
         lblZipCatalogTime = new javax.swing.JLabel();
         chkZipCatalog = new javax.swing.JCheckBox();
+        lblRamUsage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -588,9 +594,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
         cmdStopGenerating.setText("cmdStopGenerating");
         cmdStopGenerating.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cmdStopGeneratingMouseClicked(evt);
-            }
+          public void mouseClicked(java.awt.event.MouseEvent evt) {
+            cmdStopGeneratingMouseClicked(evt);
+          }
         });
         cmdStopGenerating.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -598,9 +604,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 22;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 2;
         getContentPane().add(cmdStopGenerating, gridBagConstraints);
 
         chkStarted.setEnabled(false);
@@ -999,9 +1005,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
         lblStoppingGeneration.setText("lblStoppingGeneration");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 22;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblStoppingGeneration, gridBagConstraints);
 
@@ -1024,9 +1030,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
         chkZipCatalog.setEnabled(false);
         chkZipCatalog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkZipCatalogActionPerformed(evt);
-            }
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            chkZipCatalogActionPerformed(evt);
+          }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1034,6 +1040,15 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkZipCatalog, gridBagConstraints);
+
+        lblRamUsage.setText("lblRamUsage");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 22;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        getContentPane().add(lblRamUsage, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1090,6 +1105,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     private javax.swing.JLabel lblFinishedTime;
     private javax.swing.JLabel lblIndex;
     private javax.swing.JLabel lblIndexTime;
+    private javax.swing.JLabel lblRamUsage;
     private javax.swing.JLabel lblRated;
     private javax.swing.JLabel lblRatingTime;
     private javax.swing.JLabel lblRecent;

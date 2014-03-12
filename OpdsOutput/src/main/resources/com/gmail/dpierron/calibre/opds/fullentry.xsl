@@ -65,7 +65,7 @@
 
           <div id="leftnav">
             <a href="../index.html">
-              <img alt="home" src="../homeIwebKit.png"/>
+              <img alt="home" src="../homeIwebKit.png" />
             </a>
           </div>
         </div>
@@ -186,7 +186,7 @@
               <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.coversection"/></h2>
               <xsl:choose>
                 <xsl:when test="opds:link[@rel='http://opds-spec.org/image']">
-                  <img    width="{$coverWidth}" height="{$coverHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" />
+                  <img width="{$coverWidth}" height="{$coverHeight}" alt="{opds:title}" src="{opds:link[@rel='http://opds-spec.org/image']/@href}" />
                 </xsl:when>
                 <xsl:otherwise>
 

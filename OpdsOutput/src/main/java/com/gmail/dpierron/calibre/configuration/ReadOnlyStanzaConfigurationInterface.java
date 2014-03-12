@@ -168,6 +168,8 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getZipOmitXml();
 
+  public boolean getExternalImages();
+
   /* external links */
 
   public String getWikipediaUrl();

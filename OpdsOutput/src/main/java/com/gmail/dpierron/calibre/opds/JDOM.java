@@ -64,6 +64,7 @@ public enum JDOM {
         headerTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
       } catch (TransformerConfigurationException e) {
         logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
+        headerTransformer = null;
       }
     }
     return headerTransformer;
@@ -133,8 +134,8 @@ public enum JDOM {
         catalogTransformer.setParameter("programName", "");  // Set to empty for all pages except top level
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e);
-
-      }
+        catalogTransformer = null;
+     }
     }
     return catalogTransformer;
   }
@@ -242,8 +243,7 @@ public enum JDOM {
     return element("p", Namespace.Atom);
   }
 
-  static Tidy
-      tidyForTidyInputStream = null;
+  private Tidy tidyForTidyInputStream = null;
 
   /**
    * Routine to tidy up the HTML in the Summary field
@@ -337,13 +337,11 @@ public enum JDOM {
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (JDOMParseException j) {
-        if (logger.isDebugEnabled())
-          logger.trace("convertHtmlTextToXhtml: caught JDOMParseException in the tidy process");
-        if (logger.isTraceEnabled())
-          logger.trace( "" + j);
+        if (logger.isDebugEnabled()) logger.trace("convertHtmlTextToXhtml: caught JDOMParseException in the tidy process");
+        if (logger.isTraceEnabled()) logger.trace( "" + j);
+        tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       } catch (Exception ee) {
-        if (logger.isDebugEnabled())
-          logger.debug("convertHtmlTextToXhtml: caught exception in the tidy process", ee);
+        if (logger.isDebugEnabled()) logger.debug("convertHtmlTextToXhtml: caught exception in the tidy process", ee);
         tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       } catch (Throwable t) {
         logger.error("convertHtmlTextToXhtml: caught throwable in the tidy process", t);

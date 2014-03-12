@@ -54,6 +54,10 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.USE_EXTERNAL_ICONS;
   }
 
+  public boolean getExternalImages() {
+    return StanzaConstants.USE_EXTERNAL_IMAGES;
+  }
+
   public boolean getCoverResize() {
     return StanzaConstants.COVER_RESIZE;
   }

@@ -33,7 +33,7 @@ public enum DataModel {
   private List<Tag> listOfTags;
   private Map<String, Tag> mapOfTags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
-  private List<Tag> listofCustomTags;
+  private List<Tag> listOfCustomTags;
 
   private List<Author> listOfAuthors;
   private Map<String, Author> mapOfAuthors;
@@ -86,6 +86,8 @@ public enum DataModel {
     mapOfSavedSearches = null;
     listOfCustomColumnTypes = null;
     mapOfCustomColumnValuesByBookId = null;
+    listOfCustomTags = null;
+    listOfCustomSeries = null;
 
     // reset the database
     DatabaseManager.INSTANCE.reset();

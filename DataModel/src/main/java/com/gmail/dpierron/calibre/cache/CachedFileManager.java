@@ -26,6 +26,8 @@ public enum CachedFileManager {
   private final static String CALIBRE2OPDS_LOG_FILENAME = "c2o_cache";
   private final static String CALIBRE2OPDS_LOG_FILENAME_OLD = "calibre2opds.cache";
 
+  private long savedCount = 0;
+  private long ignoredCount = 0;
 
   public void reset() {
     cachedFilesMap = null;    // Force release any currently assigned map
@@ -165,20 +167,28 @@ public enum CachedFileManager {
 
   /**
    * Save the current cache for potential later re-use
-   * <p/>
+   * You can specify a path that should beignored so that
+   * one can avoid saving objects for the TEMP area
+   *
    * N.B. the setCacheFolder() call must have been used
    */
-  public void saveCache() {
+  public void saveCache(String pathToIgnore) {
 
     // Check Cache folder has been set
+    logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
     if (cacheFile == null) {
       if (logger.isDebugEnabled())
         logger.debug("Aborting saveCache() as cacheFile not set");
       return;
     }
 
-    long savedCount = 0;
-    long ignoredCount = 0;
+    savedCount = 0;
+    ignoredCount = 0;
+    long isDirectory = 0;
+    long pathMatch  = 0;
+    long crcNotKnown = 0;
+    long notExists = 0 ;
+    long notUsed = 0;
     // Open cache file
     ObjectOutputStream os = null;
     BufferedOutputStream bs = null;
@@ -199,33 +209,50 @@ public enum CachedFileManager {
           CachedFile cf = m.getValue();
           String key = m.getKey();
 
+          if (cf.isDirectory()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: isDirectory  Not saving CachedFile " + key);
+            notUsed++;
+            ignoredCount++;
+            isDirectory++;
+            continue;
+          }
+          // We only want to cache items that have actually been used this time
+          // around, so ignore entries that indicate cached values not used.
+          if (! cf.isCachedValidated()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: Not used.  Not saving CachedFile " + key);
+            logger.info("saveCache: Not used.  Not saving CachedFile " + key);
+            notUsed++;
+            ignoredCount++;
+            continue;
+          }
+          if (!cf.isCrc()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
+            logger.info("saveCache: CRC not known.  Not saving CachedFile " + key);
+            crcNotKnown++;
+            ignoredCount++;
+            continue;
+          }
+          // No point in caching entries for non-existent files
+          if (!cf.exists()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: Not exists.  Not saving CachedFile " + key);
+            logger.info("saveCache: Not exists.  Not saving CachedFile " + key);
+            notExists++;
+            ignoredCount++;
+            continue;
+          }
           // We are only interested in caching entries for which the CRC is known
           // as this is the expensive operation we do not want to do unnecessarily
-          if (cf.isCached() && (!cf.isCrc())) {
-            if (logger.isTraceEnabled())
-              logger.trace("CRC not known.  Not saving CachedFile " + key);
+          if (pathToIgnore != null && cf.getPath().startsWith(pathToIgnore)) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
+            // logger.info("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
             ignoredCount++;
-          } else {
-            // We only want to cache items that have actually been used this time
-            // around, so ignore entries that indicate cached values not used.
-            if (cf.isCached()) {
-              if (logger.isTraceEnabled())
-                logger.trace("Not used.  Not saving CachedFile " + key);
-              ignoredCount++;
-            } else {
-              // No point in caching entries for non-existent files
-              if (!cf.exists()) {
-                if (logger.isTraceEnabled())
-                  logger.trace("Not exists.  Not saving CachedFile " + key);
-                ignoredCount++;
-              } else {
-                os.writeObject(cf);
-                if (logger.isTraceEnabled())
-                  logger.trace("Saved " + key);
-                savedCount++;
-              }
-            }
+            pathMatch++;
+            continue;
           }
+          os.writeObject(cf);
+          if (logger.isTraceEnabled())
+            logger.trace("saveCache: Saved " + key);
+          savedCount++;
         }
       } finally {
         try {
@@ -239,17 +266,18 @@ public enum CachedFileManager {
         }
       }
     } catch (IOException e) {
-      logger.warn("Exception trying to write cache: " + e);
+      logger.warn("saveCache: Exception trying to write cache: " + e);
     }
 
-    logger.debug("Cache Entries Saved:   " + savedCount);
-    logger.debug("Cache Entries Ignored: " + ignoredCount);
-    logger.debug("COMPLETED Saving CRC cache to file " + cacheFile.getPath());
+    logger.debug("saveCache: Cache Entries Saved:   " + savedCount);
+    logger.debug("saveCache: Cache Entries Ignored: " + ignoredCount);
+    logger.info("saveCache: isDirectory=" + isDirectory + ", notUsed=" + notUsed + ", notExists=" + notExists + ", crcNotKnown=" + crcNotKnown + ", pathMatch=" + pathMatch);
+    logger.debug("saveCache: COMPLETED Saving CRC cache to file " + cacheFile.getPath());
   }
 
   /**
    * Initialize the cache if there is a saved one present
-   * <p/>
+   *
    * N.B. the setCacheFolder() call must have been used
    */
   public void loadCache() {
@@ -349,4 +377,15 @@ public enum CachedFileManager {
     cacheFile = null;
   }
 
+  public long getCacheSize() {
+    return cachedFilesMap.size();
+  }
+
+  public long getSaveCount() {
+    return savedCount;
+  }
+
+  public long getIgnoredCount() {
+    return ignoredCount;
+  }
 }

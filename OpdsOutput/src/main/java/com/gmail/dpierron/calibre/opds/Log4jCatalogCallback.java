@@ -295,6 +295,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     progressStep.actOnMessage(message);
   }
 
+  public void showRamUsage (String message) {
+    logger.debug("Ram Usage: " + message);
+  }
+
   public void checkIfContinueGenerating() throws GenerationStoppedException {
     if (!continueGenerating)
       throw new GenerationStoppedException();
