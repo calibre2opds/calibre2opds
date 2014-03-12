@@ -338,12 +338,12 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   /* Catalog Structure */
 
-  public boolean getDisplayAuthorSortInAuthorLists() {
+  public boolean getDisplayAuthorSort() {
     return StanzaConstants.DisplayAuthorSortInBookDetails;
   }
 
-  public boolean getDisplayTitleSortInBookLists() {
-    return StanzaConstants.DisplayTitleSortInBookLists;
+  public boolean getDisplayTitleSort() {
+    return StanzaConstants.DisplayTitleSort;
   }
 
   public boolean getSortUsingAuthor() {
@@ -382,14 +382,6 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   public boolean getIncludeModifiedInBookDetails() {
     return StanzaConstants.IncludeModifiedInBookDetails;
-  }
-
-  public boolean getDisplayAuthorSortInBookDetails() {
-    return StanzaConstants.DisplayAuthorSortInBookDetails;
-  }
-
-  public boolean getDisplayTitleSortInBookDetails() {
-    return StanzaConstants.DisplayTitleSortInBookDetails;
   }
 
   public String getSecurityCode() {

@@ -122,9 +122,9 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   /* Catalog Structure */
 
-  public boolean getDisplayAuthorSortInAuthorLists();
+  public boolean getDisplayAuthorSort();
 
-  public boolean getDisplayTitleSortInBookLists();
+  public boolean getDisplayTitleSort();
 
   public boolean getSortUsingAuthor();
 
@@ -145,10 +145,6 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
   public boolean getIncludeTagsInBookDetails();
 
   public boolean getIncludePublisherInBookDetails();
-
-  public boolean getDisplayAuthorSortInBookDetails();
-
-  public boolean getDisplayTitleSortInBookDetails();
 
   public boolean getIncludePublishedInBookDetails();
 

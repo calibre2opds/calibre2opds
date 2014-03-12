@@ -67,8 +67,8 @@ public class StanzaConstants {
   public final static String FeaturedCatalogSavedSearchName = "";
   public final static String CatalogCustomColumns = "";
   /* Catalog Structure */
-  public final static boolean DisplayAuthorSortInAuthorLists = true;
-  public final static boolean DisplayTitleSortInBookLists = true;
+  public final static boolean DisplayAuthorSort = true;
+  public final static boolean DisplayTitleSort = true;
   public final static boolean SortUsingAuthor = false;
   public final static boolean SortUsingTitle = false;
   public final static boolean languageAsTag = true;
