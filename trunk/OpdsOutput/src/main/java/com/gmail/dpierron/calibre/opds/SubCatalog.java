@@ -31,6 +31,7 @@ public abstract class SubCatalog {
   protected static int maxSplitLevels = currentProfile.getMaxSplitLevels();
   protected static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
   protected static boolean useExternalIcons = currentProfile.getExternalIcons();
+  protected static boolean useExternalImages = currentProfile.getExternalImages();
   protected static boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
   private static String securityCode = catalogManager.getSecurityCode();
   private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);

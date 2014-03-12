@@ -34,7 +34,7 @@ public class CoverManager extends ImageManager {
   }
 
   public String getDefaultResizedFilename() {
-    return "cover.png";
+    return "cover.jpg";
   }
 
   /**

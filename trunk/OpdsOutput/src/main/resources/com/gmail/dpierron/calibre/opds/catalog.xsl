@@ -82,7 +82,7 @@
             <xsl:otherwise>
               <div id="leftnav">
                 <a href="../index.html">
-                    <img alt="home" src="../homeIwebKit.png"/>
+                    <img alt="home" src="../homeIwebKit.png" />
                 </a>
               </div>
             </xsl:otherwise>
@@ -293,7 +293,7 @@
           <!-- search link -->
           <div class="x_menulisting" id="calibre:search">
             <div class="cover">
-              <img src="search.png"></img>
+              <img src="search.png" />
             </div>
             <div class="details">
               <a href="_search/search.html" title="Search the books">Search the books</a>

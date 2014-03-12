@@ -77,7 +77,7 @@ public class HtmlManager {
           }
 
           if (transformer == null) {
-            logger.fatal("Failed to get transformer: tProbably means XSL file invalid and failed to compile!" );
+            logger.fatal("Failed to get transformer: Probably means XSL file invalid and failed to compile!" );
           } else {
             transformer.transform(source, streamResult);
           }
@@ -127,7 +127,6 @@ public class HtmlManager {
    */
   public String getHtmlFilename(String filename) {
     assert Helper.isNotNullOrEmpty(filename) : "Program error: Attempt to create HTML filename for empty/null filename";
-    // TODO when refactoring done activate following assert to check no occurences of full path no longer present
     assert ! filename.startsWith(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName()):
               "Program Error:  filename should not include catalog folder" ;
     String htmlfilename = filename.replaceAll(Constants.XML_EXTENSION, "") + Constants.HTML_EXTENSION;
@@ -136,6 +135,4 @@ public class HtmlManager {
     }
     return htmlfilename;
   }
-
-
 }

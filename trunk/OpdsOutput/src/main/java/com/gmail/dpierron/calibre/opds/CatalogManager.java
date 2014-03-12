@@ -13,6 +13,9 @@ import com.gmail.dpierron.tools.Helper;
 
 import javax.print.DocFlavor;
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.*;
 import java.util.zip.CRC32;
 
@@ -27,10 +30,12 @@ public class CatalogManager {
   // The list of files that need to be copied from the source
   // library to the target library.
   private static List<String> listOfFilesPathsToCopy;
+  private static Map<String, CachedFile> mapOfImagesToCopy;
   // TODO:  Itimpi:  Does not seem to be needed any more?
   // private static Map<String, Book> mapOfBookByPathToCopy;
   private static Map<String, String> mapOfCatalogFolderNames;
   // List of file in catalog that are unchanged
+  // TODO - Not yet used - intended to help with optimisation
   private static List<CachedFile> listOfUnchangedCatalogFiles;
   // List of books that have already been generated
   // used to track if has already been done before!
@@ -67,6 +72,7 @@ public class CatalogManager {
     // bookEntriesFiles = new LinkedList<File>();
     bookDetailsCustomColumns = null;
     listOfUnchangedCatalogFiles = new LinkedList<CachedFile>();
+    mapOfImagesToCopy = new HashMap<String, CachedFile>();
   }
 
   public static String getSecurityCode() {
@@ -173,20 +179,22 @@ public class CatalogManager {
    * Add a file to the map of image files that are to be copied
    * to the catalog (assuming this option is even set!)
    */
-  /*
-  void addImageFileToTheMapOfCatalogImages(Book book, CachedFile file) {
+
+  void addImageFileToTheMapOfCatalogImages(String key, CachedFile file) {
 
     assert file != null : "Program Error: attempt to add 'null' file to image map";
-    assert (file.getName().equals(Constants.THUMBNAIL_FILENAME)
-         || file.getName().equals(Constants.RESIZEDCOVER_FILENAME)
+    assert (file.getName().equals("c2o_thumbnail.jpg")
+         || file.getName().equals("c2o_resizedcover.jpg")
          || file.getName().equals(Constants.CALIBRE_COVER_FILENAME)):
           "Program Error: Unexpected name '" + file.getName() + "' when trying to add image to map";
-    String key = book.getId().toString() + Constants.TYPE_SEPARATOR + file.getName();
-    assert ! mapOfImagesToCopy.containsKey(key) : "Program Error: Already added image file " + key;
-
-    mapOfImagesToCopy.put(key, file);
+    if (! mapOfImagesToCopy.containsKey(key)) {
+      mapOfImagesToCopy.put(key, file);
+    }
   }
-  */
+
+public Map<String,CachedFile> getMapOfCatalogImages() {
+  return mapOfImagesToCopy;
+}
 
   /**
    * Get the URL that is used to reference a particular file.
@@ -291,6 +299,7 @@ public class CatalogManager {
   }
 
   /**
+   * TODO  Not yet used - planned for optimisation
    * Track the list of files that are part of the catalog,
    * but are are unchanged since the last run
    * @param f
@@ -327,4 +336,52 @@ public class CatalogManager {
     customCatalogsFilters = pcustomCatalogsFilters;
   }
   */
+
+  /**
+   *
+   */
+  public static void reportInitialRamUsage() {
+    List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
+    logger.info("Ram Usage:");
+    logger.info(String.format("   %-20s %-15s%10s%10s%10s%10s",
+        "NAME",
+        "TYPE",
+        "COMMITTED",
+        "INIT",
+        "MAX",
+        "USED"));
+    for (MemoryPoolMXBean pool : pools) {
+      MemoryUsage usage = pool.getUsage();
+      logger.info(String.format("   %-20s %-15s%10d MB%7d MB%7d MB%7d MB",
+          pool.getName(),
+          pool.getType(),
+          usage.getCommitted() / (2<<20),
+          usage.getInit() / (2<<20),
+          usage.getMax() / (2<<20),
+          usage.getUsed() / (2<<20)));
+    }
+    logger.info("");
+  }
+  /**
+   * Report the RAM usage.
+   */
+  public static void reportRamUsage() {
+    List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
+    logger.info("Ram Usage:");
+    logger.info(String.format("   %-20s %-15s%10s%%10s",
+        "NAME",
+        "TYPE",
+        "MAX",
+        "USED"));
+    for (MemoryPoolMXBean pool : pools) {
+      MemoryUsage usage = pool.getUsage();
+      logger.info(String.format("   %-20s %-15s%10d MB%7d MB",
+          pool.getName(),
+          pool.getType(),
+          usage.getMax() / (2<<20),
+          usage.getUsed() / (2<<20)));
+    }
+    logger.info("");
+  }
+
 }

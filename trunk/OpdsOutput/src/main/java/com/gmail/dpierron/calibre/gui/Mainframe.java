@@ -174,14 +174,12 @@ public class Mainframe extends javax.swing.JFrame {
       chkNogeneratehtmlfiles.setEnabled(chkNogeneratehtml.isEnabled());
       chkNogenerateopdsfiles.setSelected(chkNogeneratehtmlfiles.isSelected());
       chkNogenerateopdsfiles.setEnabled(false);
-      chkZipOmitXml.setSelected(false);
+      chkZipOmitXml.setSelected(true);
       chkZipOmitXml.setEnabled(false);
     } else {
       // If  we are generating OPDS catalogs, then start by assuming that
       // both types of downloads are allowed.
       chkNogenerateopdsfiles.setEnabled(true);
-      chkZipOmitXml.setSelected(true);
-      chkZipOmitXml.setEnabled(true);
 
       // If we are not generating OPDS downloads then the HTML downloads
       // must be suppressed.
@@ -763,6 +761,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkExternalIcons.setSelected(currentProfile.getExternalIcons());
     chkExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
     lblExternalIcons.setEnabled(!currentProfile.isExternalIconsReadOnly());
+    chkExternalImages.setSelected(currentProfile.getExternalImages());
+    chkExternalImages.setEnabled(!currentProfile.isExternalImagesReadOnly());
+    lblexternalImages.setEnabled(!currentProfile.isExternalImagesReadOnly());
     chkSupressRatings.setSelected(currentProfile.getSuppressRatingsInTitles());
     chkSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
     lblSupressRatings.setEnabled(!currentProfile.isSupressRatingsInTitlesReadyOnly());
@@ -1047,6 +1048,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setZipTrookCatalog(chkZipTrookCatalog.isSelected());
     currentProfile.setMinimizeChangedFiles(chkMinimizeChangedFiles.isSelected());
     currentProfile.setExternalIcons(chkExternalIcons.isSelected());
+    currentProfile.setExternalImages(chkExternalImages.isSelected());
     currentProfile.setSuppressRatingsInTitles(chkSupressRatings.isSelected());
     currentProfile.setBrowseByCover(chkBrowseByCover.isSelected());
     currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
@@ -1248,6 +1250,9 @@ public class Mainframe extends javax.swing.JFrame {
     lblExternalIcons.setText(Localization.Main.getText("config.ExternalIcons.label")); // NOI18N
     lblExternalIcons.setToolTipText(Localization.Main.getText("config.ExternalIcons.description")); // NOI18N
     chkExternalIcons.setToolTipText(lblExternalIcons.getToolTipText()); // NOI18N
+    lblexternalImages.setText(Localization.Main.getText("config.ExternalImages.label")); // NOI18N
+    lblexternalImages.setToolTipText(Localization.Main.getText("config.ExternalImages.description")); // NOI18N
+    chkExternalImages.setToolTipText(lblexternalImages.getToolTipText()); // NOI18N
     lblNoGenerateAuthors.setText(Localization.Main.getText("config.GenerateAuthors.label")); // NOI18N
     lblNoGenerateAuthors.setToolTipText(Localization.Main.getText("config.GenerateAuthors.description")); // NOI18N
     chkNoGenerateAuthors.setToolTipText(lblNoGenerateAuthors.getToolTipText()); // NOI18N
@@ -1369,9 +1374,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblZipCatalog.setText(Localization.Main.getText("config.ZipCatalog.label")); // NOI18N
     lblZipCatalog.setToolTipText(Localization.Main.getText("config.ZipCatalog.description")); // NOI18N
     chkZipTrookCatalog.setToolTipText(lblZipCatalog.getToolTipText()); // NOI18N
-    lblZipOmitXml.setText(Localization.Main.getText("config.ZipOmitXml.label")); // NOI18N
-    lblZipOmitXml.setToolTipText(Localization.Main.getText("config.ZipOmitXml.description")); // NOI18N
-    chkZipOmitXml.setToolTipText(lblZipOmitXml.getToolTipText()); // NOI18N
     lblZipTrookCatalog.setText(Localization.Main.getText("config.ZipTrookCatalog.label")); // NOI18N
     lblZipTrookCatalog.setToolTipText(Localization.Main.getText("config.ZipTrookCatalog.description")); // NOI18N
     chkZipTrookCatalog.setToolTipText(lblZipTrookCatalog.getToolTipText()); // NOI18N
@@ -1813,6 +1815,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkZipCatalog = new javax.swing.JCheckBox();
         lblUseThumbnailAsCover = new javax.swing.JLabel();
         chkUseThumbnailAsCover = new javax.swing.JCheckBox();
+        lblexternalImages = new javax.swing.JLabel();
+        chkExternalImages = new javax.swing.JCheckBox();
         pnlExternalUrlsOptions = new javax.swing.JPanel();
         txtWikipediaUrl = new javax.swing.JTextField();
         txtAmazonAuthorUrl = new javax.swing.JTextField();
@@ -3708,13 +3712,13 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         pnlAdvancedOptions.add(lblMinimizeChangedFiles, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkMinimizeChangedFiles, gridBagConstraints);
@@ -3727,7 +3731,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(lblExternalIcons, gridBagConstraints);
@@ -3735,7 +3739,7 @@ public class Mainframe extends javax.swing.JFrame {
         chkExternalIcons.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkExternalIcons, gridBagConstraints);
@@ -3882,6 +3886,27 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkUseThumbnailAsCover, gridBagConstraints);
+
+        lblexternalImages.setText("lblexternalImages");
+        lblexternalImages.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(lblexternalImages, gridBagConstraints);
+
+        chkExternalImages.setRequestFocusEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlAdvancedOptions.add(chkExternalImages, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlAdvancedOptions", pnlAdvancedOptions);
 
@@ -5045,6 +5070,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkDisplayTitleSortInBookLists;
     private javax.swing.JCheckBox chkDontsplittags;
     private javax.swing.JCheckBox chkExternalIcons;
+    private javax.swing.JCheckBox chkExternalImages;
     private javax.swing.JCheckBox chkGenerateIndex;
     private javax.swing.JCheckBox chkIncludeAddednBookDetails1;
     private javax.swing.JCheckBox chkIncludeCoversInCatalog;
@@ -5210,6 +5236,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblZipCatalog;
     private javax.swing.JLabel lblZipOmitXml;
     private javax.swing.JLabel lblZipTrookCatalog;
+    private javax.swing.JLabel lblexternalImages;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuFileExit;
     private javax.swing.JMenuItem mnuFileGenerateCatalogs;

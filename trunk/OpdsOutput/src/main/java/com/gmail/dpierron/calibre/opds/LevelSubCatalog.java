@@ -119,7 +119,9 @@ public class LevelSubCatalog extends SubCatalog {
 
     /* All books */
 
-    if (atTopLevel)  callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
+    if (atTopLevel) {
+      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
+    }
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateAllbooks()) {
       logger.debug("STARTED: Generating All books catalog");
@@ -141,6 +143,7 @@ public class LevelSubCatalog extends SubCatalog {
       }
 
       logger.debug("COMPLETED: Generating All Books catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -170,6 +173,7 @@ public class LevelSubCatalog extends SubCatalog {
       authorsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
           feed.addContent(entry);
+      if (atTopLevel) CatalogManager.reportRamUsage();
       logger.debug("COMPLETED: Generating Authors catalog");
     }
     if (atTopLevel)  callback.endCreateAuthors(System.currentTimeMillis() - now);
@@ -190,6 +194,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (entry != null)
         feed.addContent(entry);
       logger.debug("COMPLETED: Generating tags catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel)  callback.endCreateTags(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -219,6 +224,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (entry != null)
         feed.addContent(entry);
       logger.debug("COMPLETED: Generating Series catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel)  callback.endCreateSeries(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -240,6 +246,7 @@ public class LevelSubCatalog extends SubCatalog {
         feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Recent books catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel)  callback.endCreateRecent(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -259,6 +266,7 @@ public class LevelSubCatalog extends SubCatalog {
         feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Rated books catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel)  callback.endCreateRated(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -284,6 +292,7 @@ public class LevelSubCatalog extends SubCatalog {
         }
       }
       logger.debug("COMPLETED: Generating Featured catalog");
+      if (atTopLevel) CatalogManager.reportRamUsage();
     }
     if (atTopLevel)  callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -355,6 +364,7 @@ public class LevelSubCatalog extends SubCatalog {
           callback.checkIfContinueGenerating();
         }
         logger.debug("COMPLETED: Generating custom catalogs");
+        if (atTopLevel) CatalogManager.reportRamUsage();
       }
       callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
     }

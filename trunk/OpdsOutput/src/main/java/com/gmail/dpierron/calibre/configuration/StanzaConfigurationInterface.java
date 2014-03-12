@@ -149,6 +149,8 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setZipOmitXml(boolean value);
 
+  public void setExternalImages(boolean value);
+
   /* external links */
   public void setWikipediaUrl(String value);
 

@@ -107,6 +107,7 @@ public class FeedHelper {
    * a link to a jpeg image
    */
   private final static String LINKTYPE_JPEG = "image/jpg";
+  private final static String LINKTYPE_PNG= "image/png";
 
   /* ---------- ELEMENTS -----------*/
 
@@ -231,7 +232,9 @@ public class FeedHelper {
    * @return
    */
   public static Element getImageLink(String url, boolean isCover) {
-    return getLinkElement(url, LINKTYPE_JPEG, isCover ? RELATION_COVER : RELATION_THUMBNAIL, null);
+    return getLinkElement(url,
+                          url.toUpperCase().endsWith(".PNG") ? LINKTYPE_PNG : LINKTYPE_JPEG,
+                          isCover ? RELATION_COVER : RELATION_THUMBNAIL, null);
   }
 
   public static Element getFeaturedLink(String url, String title) {

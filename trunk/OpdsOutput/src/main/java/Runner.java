@@ -83,6 +83,7 @@ public class Runner {
     }
     logger.info("");
     logger.info ("LOG LEVEL: " + levelText);
+//    logger.info ("LOG LEVEL: " + levelText + " (" + logger.getLevel().toString() + ")");
     logger.info("");
     try {
       if (args.length == 1) {

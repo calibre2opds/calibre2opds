@@ -129,7 +129,7 @@ public abstract class ImageManager {
    *
    * @return
    */
-  public static String getFileToBase64Uri (File f) {
+  public String getFileToBase64Uri (File f) {
     final String base64code = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         + "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "+/";
 
@@ -152,7 +152,7 @@ public abstract class ImageManager {
     } catch (IOException e) {
       // Errors are unexpected - set dummy URI if that is the case
       logger.warn("Unable to embed cover file " + f.getAbsolutePath() + "(IO Exception " + e.getMessage() + ")");
-      return Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_THUMBNAIL_FILENAME;
+      return Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
     }
     // process 3 bytes at a time, churning out 4 output bytes
     StringBuffer encoded = new StringBuffer("");

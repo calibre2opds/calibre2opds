@@ -599,7 +599,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // No cover from Calibre so use our default!
       // resize the default thumbnail if needed
       CachedFile resizedDefaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), iManager.getDefaultResizedFilename()));
-      CachedFile defaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_THUMBNAIL_FILENAME));
+      CachedFile defaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
+      // Separate out resized cover case
       if (!resizedDefaultCover.exists() || iManager.hasImageSizeChanged() || resizedDefaultCover.lastModified() < defaultCover.lastModified()) {
         iManager.generateImage(resizedDefaultCover, defaultCover);
       }
@@ -616,13 +617,24 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     if (includeCoversInCatalog) {
       if (calibreCoverFile.exists()) {
-        imageUri = ImageManager.getFileToBase64Uri(imageFile);
+        if (! useExternalImages && ! catalogImageFilename.equals(Constants.PARENT_PATH_PREFIX + iManager.getDefaultResizedFilename())) {
+          imageUri = iManager.getFileToBase64Uri(imageFile);
+        } else {
+          catalogManager.addImageFileToTheMapOfCatalogImages(catalogImageFilename,imageFile);
+          if (isCover) {
+            imageUri=catalogImageFilename.substring(catalogImageFilename.indexOf(Constants.FOLDER_SEPARATOR)+1);
+          } else {
+            imageUri=Constants.PARENT_PATH_PREFIX + catalogImageFilename;
+          }
+        }
       }
     } else {
       // Copy images to target if not in default mode (and not images in catalog)
-      if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
-        catalogManager.addFileToTheMapOfFilesToCopy(imageFile);
-      }
+      if (useExternalImages) {
+        if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
+          catalogManager.addFileToTheMapOfFilesToCopy(imageFile);
+        }
+        }
     }
     // If we are generating a ctalog for a Nook we cache the results for use later
     if (iManager.equals(thumbnailManager) && currentProfile.getGenerateIndex()) {
@@ -896,8 +908,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING book decoration to book " + book);
 
     // cover and thumbnail links
-    if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
-    addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers() ? thumbnailManager : coverManager,currentProfile.getCoverResize(),true);
+    if (isFullEntry) {
+      if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
+      addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers() ? thumbnailManager : coverManager,currentProfile.getCoverResize(),true);
+    }
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");
     addImageLink(book,entry,thumbnailManager,currentProfile.getThumbnailGenerate(),false);
 

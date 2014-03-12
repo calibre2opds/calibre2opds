@@ -40,7 +40,7 @@ public class ThumbnailManager extends ImageManager {
   }
 
   public String getDefaultResizedFilename () {
-    return "thumbnail.png";
+    return "thumbnail.jpg";
   }
 
   /**
@@ -48,7 +48,7 @@ public class ThumbnailManager extends ImageManager {
    * @return
    */
   @Override
-  String getImageHeightDat() {
+  public String getImageHeightDat() {
     return "c2o_thumbnailHeight.dat";
   }
 
