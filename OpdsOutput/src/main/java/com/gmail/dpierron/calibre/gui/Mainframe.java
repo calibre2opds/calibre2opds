@@ -822,8 +822,8 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogCustomColumns.setText("" + currentProfile.getCatalogCustomColumns());
     txtCatalogCustomColumns.setEnabled(!currentProfile.isCatalogCustomColumnsReadOnly());
     lblCatalogCustomColumns.setEnabled(txtCatalogCustomColumns.isEnabled());
-    lblCatalogCustomColumns.setEnabled(false);  // TODO remove to activate option
-    txtCatalogCustomColumns.setEnabled(false);  // TODO remove to activaet option
+    lblCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
+    txtCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
     txtTagsToIgnore.setText("" + currentProfile.getTagsToIgnore());
     txtTagsToIgnore.setEnabled(!currentProfile.isTagsToIgnoreReadOnly());
     lblTagsToIgnore.setEnabled(txtTagsToIgnore.isEnabled());
@@ -842,12 +842,6 @@ public class Mainframe extends javax.swing.JFrame {
     chkNogenerateallbooks.setSelected(!currentProfile.getGenerateAllbooks());
     chkNogenerateallbooks.setEnabled(!currentProfile.isGenerateAllbooksReadOnly());
     lblNogenerateallbooks.setEnabled(chkNogenerateallbooks.isEnabled());
-    chkDisplayAuthorSortInAuthorLists.setSelected(currentProfile.getDisplayAuthorSortInAuthorLists());
-    chkDisplayAuthorSortInAuthorLists.setEnabled(!currentProfile.isDisplayAuthorSortInAuthorListsReadOnly());
-    lblDisplayAuthorSortInAuthorLists.setEnabled(chkDisplayAuthorSortInAuthorLists.isEnabled());
-    chkDisplayTitleSortInBookLists.setSelected(currentProfile.getDisplayTitleSortInBookLists());
-    chkDisplayTitleSortInBookLists.setEnabled(!currentProfile.isDisplayTitleSortInBookListsReadOnly());
-    lblDisplayTitleSortInBookLists.setEnabled(chkDisplayTitleSortInBookLists.isEnabled());
     chkSortUsingAuthorSort.setSelected(currentProfile.getSortUsingAuthor());
     chkSortUsingAuthorSort.setEnabled(!currentProfile.isSortUsingAuthorReadOnly());
     lblSortUsingAuthor.setEnabled(chkSortUsingAuthorSort.isEnabled());
@@ -881,12 +875,12 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeModifiedInBookDetails.setSelected(currentProfile.getIncludeModifiedInBookDetails());
     chkIncludeModifiedInBookDetails.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
     lblIncludeModifiedInBookDetails1.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
-    chkDisplayAuthorSortInBookDetails.setSelected(currentProfile.getDisplayAuthorSortInBookDetails());
-    chkDisplayAuthorSortInBookDetails.setEnabled(!currentProfile.isDisplayAuthorSortInBookDetailsReadOnly());
-    lblDisplayAuthorSortInBookDetails.setEnabled(!currentProfile.isDisplayAuthorSortInBookDetailsReadOnly());
-    chkDisplayTitleSortInBookDetails.setSelected(currentProfile.getDisplayTitleSortInBookDetails());
-    chkDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
-    lblDisplayTitleSortInBookDetails.setEnabled(!currentProfile.isDisplayTitleSortInBookDetailsReadOnly());
+    chkDisplayAuthorSort.setSelected(currentProfile.getDisplayAuthorSort());
+    chkDisplayAuthorSort.setEnabled(!currentProfile.isDisplayAuthorSortReadOnly());
+    lblDisplayAuthorSort.setEnabled(chkDisplayAuthorSort.isEnabled());
+    chkDisplayTitleSort.setSelected(currentProfile.getDisplayTitleSort());
+    chkDisplayTitleSort.setEnabled(!currentProfile.isDisplayTitleSortReadOnly());
+    lblDisplayTitleSortI.setEnabled(chkDisplayTitleSort.isEnabled());
     txtBookDetailsCustomFields.setText(currentProfile.getBookDetailsCustomFields());
     txtBookDetailsCustomFields.setEnabled(!currentProfile.isBookDetailsCustomFieldsReadOnly());
     lblBookDetailsCustomFields.setEnabled(txtBookDetailsCustomFields.isEnabled());
@@ -1075,8 +1069,6 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
     currentProfile.setLanguageAsTag(chkLanguageAsTag.isSelected());
     currentProfile.setTagsToIgnore(txtTagsToIgnore.getText());
-    currentProfile.setDisplayAuthorSortInAuthorLists(chkDisplayAuthorSortInAuthorLists.isSelected());
-    currentProfile.setDisplayTitleSortInBookListss(chkDisplayTitleSortInBookLists.isSelected());
     currentProfile.setSortUsingAuthor(chkSortUsingAuthorSort.isSelected());
     currentProfile.setSortUsingTitle(chkSortUsingTitleSort.isSelected());
 
@@ -1090,8 +1082,8 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
     currentProfile.setIncludeAddedInBookDetails(chkIncludeAddednBookDetails1.isSelected());
     currentProfile.setIncludeModifiedInBookDetails(chkIncludeModifiedInBookDetails.isSelected());
-    currentProfile.setDisplayAuthorSortInBookDetails(chkDisplayAuthorSortInBookDetails.isSelected());
-    currentProfile.setDisplayTitleSortInBookDetails(chkDisplayTitleSortInBookDetails.isSelected());
+    currentProfile.setDisplayAuthorSort(chkDisplayAuthorSort.isSelected());
+    currentProfile.setDisplayTitleSort(chkDisplayTitleSort.isSelected());
     currentProfile.setBookDetailsCustomFields(txtBookDetailsCustomFields.getText());
     currentProfile.setBookDetailsCustomFieldsAlways(chkBookDetailsCustomFieldsAlways.isSelected());
     currentProfile.setGenerateCrossLinks(!chkNogeneratecrosslinks.isSelected());
@@ -1283,12 +1275,6 @@ public class Mainframe extends javax.swing.JFrame {
     lblNogenerateallbooks.setText(Localization.Main.getText("config.GenerateAllbooks.label")); // NOI18N
     lblNogenerateallbooks.setToolTipText(Localization.Main.getText("config.GenerateAllbooks.description")); // NOI18N
     chkNogenerateallbooks.setToolTipText(lblNogenerateallbooks.getToolTipText()); // NOI18N
-    lblDisplayAuthorSortInAuthorLists.setText(Localization.Main.getText("config.DisplayAuthorSortInAuthorLists.label")); // NOI18N
-    lblDisplayAuthorSortInAuthorLists.setToolTipText(Localization.Main.getText("config.DisplayAuthorSortInAuthorLists.description")); // NOI18N
-    chkDisplayAuthorSortInAuthorLists.setToolTipText(lblDisplayAuthorSortInAuthorLists.getToolTipText()); // NOI18N
-    lblDisplayTitleSortInBookLists.setText(Localization.Main.getText("config.DisplayTitleSortInBookLists.label")); // NOI18N
-    lblDisplayTitleSortInBookLists.setToolTipText(Localization.Main.getText("config.DisplayTitleSortInBookLists.description")); // NOI18N
-    chkDisplayTitleSortInBookLists.setToolTipText(lblDisplayTitleSortInBookLists.getToolTipText()); // NOI18N
     lblSortUsingAuthor.setText(Localization.Main.getText("config.SortUsingAuthor.label")); // NOI18N
     lblSortUsingAuthor.setToolTipText(Localization.Main.getText("config.SortUsingAuthor.description")); // NOI18N
     chkSortUsingAuthorSort.setToolTipText(lblSortUsingAuthor.getToolTipText()); // NOI18N
@@ -1322,12 +1308,12 @@ public class Mainframe extends javax.swing.JFrame {
     lblIncludeModifiedInBookDetails1.setText(Localization.Main.getText("config.IncludeModifiedInBookDetails.label")); // NOI18N
     lblIncludeModifiedInBookDetails1.setToolTipText(Localization.Main.getText("config.IncludeModifiedInBookDetails.description")); // NOI18N
     chkIncludeModifiedInBookDetails.setToolTipText(lblIncludeModifiedInBookDetails1.getToolTipText()); // NOI18N
-    lblDisplayAuthorSortInBookDetails.setText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.label")); // NOI18N
-    lblDisplayAuthorSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayAuthorSortInBookDetails.description")); // NOI18N
-    chkDisplayAuthorSortInBookDetails.setToolTipText(lblDisplayAuthorSortInBookDetails.getToolTipText()); // NOI18N
-    lblDisplayTitleSortInBookDetails.setText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.label")); // NOI18N
-    lblDisplayTitleSortInBookDetails.setToolTipText(Localization.Main.getText("config.DisplayTitleSortInBookDetails.description")); // NOI18N
-    chkDisplayTitleSortInBookDetails.setToolTipText(lblDisplayTitleSortInBookDetails.getToolTipText()); // NOI18N
+    lblDisplayAuthorSort.setText(Localization.Main.getText("config.DisplayAuthorSort.label")); // NOI18N
+    lblDisplayAuthorSort.setToolTipText(Localization.Main.getText("config.DisplayAuthorSort.description")); // NOI18N
+    chkDisplayAuthorSort.setToolTipText(lblDisplayAuthorSort.getToolTipText()); // NOI18N
+    lblDisplayTitleSortI.setText(Localization.Main.getText("config.DisplayTitleSort.label")); // NOI18N
+    lblDisplayTitleSortI.setToolTipText(Localization.Main.getText("config.DisplayTitleSort.description")); // NOI18N
+    chkDisplayTitleSort.setToolTipText(lblDisplayTitleSortI.getToolTipText()); // NOI18N
     lblBookDetailsCustomFields.setText(Localization.Main.getText("config.BookDetailsCustomFields.label")); // NOI18N
     lblBookDetailsCustomFields.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.description")); // NOI18N
     txtBookDetailsCustomFields.setToolTipText(lblBookDetailsCustomFields.getToolTipText());
@@ -1718,12 +1704,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkOrderAllBooksBySeries = new javax.swing.JCheckBox();
         lblSplitByAuthorInitialGoToBooks = new javax.swing.JLabel();
         chkSplitByAuthorInitialGoToBooks = new javax.swing.JCheckBox();
-        lblDisplayAuthorSortInAuthorLists = new javax.swing.JLabel();
-        lblDisplayTitleSortInBookLists = new javax.swing.JLabel();
         lblSortUsingAuthor = new javax.swing.JLabel();
         lblSortUsingTitle = new javax.swing.JLabel();
-        chkDisplayAuthorSortInAuthorLists = new javax.swing.JCheckBox();
-        chkDisplayTitleSortInBookLists = new javax.swing.JCheckBox();
         chkSortUsingAuthorSort = new javax.swing.JCheckBox();
         chkSortUsingTitleSort = new javax.swing.JCheckBox();
         lblLanguageAsTag = new javax.swing.JLabel();
@@ -1743,10 +1725,10 @@ public class Mainframe extends javax.swing.JFrame {
         lblIncludeModifiedInBookDetails1 = new javax.swing.JLabel();
         chkIncludeModifiedInBookDetails = new javax.swing.JCheckBox();
         chkIncludePublishedInBookDetails = new javax.swing.JCheckBox();
-        lblDisplayAuthorSortInBookDetails = new javax.swing.JLabel();
-        lblDisplayTitleSortInBookDetails = new javax.swing.JLabel();
-        chkDisplayAuthorSortInBookDetails = new javax.swing.JCheckBox();
-        chkDisplayTitleSortInBookDetails = new javax.swing.JCheckBox();
+        lblDisplayAuthorSort = new javax.swing.JLabel();
+        lblDisplayTitleSortI = new javax.swing.JLabel();
+        chkDisplayAuthorSort = new javax.swing.JCheckBox();
+        chkDisplayTitleSort = new javax.swing.JCheckBox();
         lblNogeneratecrosslinks = new javax.swing.JLabel();
         chkNogeneratecrosslinks = new javax.swing.JCheckBox();
         lblNogenerateexternallinks = new javax.swing.JLabel();
@@ -2796,32 +2778,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkSplitByAuthorInitialGoToBooks, gridBagConstraints);
 
-        lblDisplayAuthorSortInAuthorLists.setText("lblDisplayAuthorSortInAuthorLists");
-        lblDisplayAuthorSortInAuthorLists.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(lblDisplayAuthorSortInAuthorLists, gridBagConstraints);
-
-        lblDisplayTitleSortInBookLists.setText("lblDisplayTitleSortInBookLists");
-        lblDisplayTitleSortInBookLists.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(lblDisplayTitleSortInBookLists, gridBagConstraints);
-
         lblSortUsingAuthor.setText("lblSortUsingAuthor");
         lblSortUsingAuthor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -2829,7 +2785,7 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -2843,7 +2799,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblSortUsingTitle, gridBagConstraints);
@@ -2854,26 +2810,10 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(chkDisplayAuthorSortInAuthorLists, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(chkDisplayTitleSortInBookLists, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkSortUsingAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -3055,8 +2995,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludePublishedInBookDetails, gridBagConstraints);
 
-        lblDisplayAuthorSortInBookDetails.setText("lblDisplayAuthorSortInBookDetails");
-        lblDisplayAuthorSortInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblDisplayAuthorSort.setText("lblDisplayAuthorSort");
+        lblDisplayAuthorSort.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -3066,33 +3006,32 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblDisplayAuthorSortInBookDetails, gridBagConstraints);
-        lblDisplayAuthorSortInBookDetails.getAccessibleContext().setAccessibleName("");
+        pnlBookDetails.add(lblDisplayAuthorSort, gridBagConstraints);
+        lblDisplayAuthorSort.getAccessibleContext().setAccessibleName("");
 
-        lblDisplayTitleSortInBookDetails.setText("lblDisplayTitleSortInBookDetails");
-        lblDisplayTitleSortInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblDisplayTitleSortI.setText("lblDisplayTitleSortI");
+        lblDisplayTitleSortI.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblDisplayTitleSortInBookDetails, gridBagConstraints);
+        pnlBookDetails.add(lblDisplayTitleSortI, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkDisplayAuthorSortInBookDetails, gridBagConstraints);
+        pnlBookDetails.add(chkDisplayAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkDisplayTitleSortInBookDetails, gridBagConstraints);
+        pnlBookDetails.add(chkDisplayTitleSort, gridBagConstraints);
 
         lblNogeneratecrosslinks.setText("lblNogeneratecrosslinks");
         lblNogeneratecrosslinks.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -5064,10 +5003,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkBrowseByCoverWithoutSplit;
     private javax.swing.JCheckBox chkCopyToDatabaseFolder;
     private javax.swing.JCheckBox chkCryptFilenames;
-    private javax.swing.JCheckBox chkDisplayAuthorSortInAuthorLists;
-    private javax.swing.JCheckBox chkDisplayAuthorSortInBookDetails;
-    private javax.swing.JCheckBox chkDisplayTitleSortInBookDetails;
-    private javax.swing.JCheckBox chkDisplayTitleSortInBookLists;
+    private javax.swing.JCheckBox chkDisplayAuthorSort;
+    private javax.swing.JCheckBox chkDisplayTitleSort;
     private javax.swing.JCheckBox chkDontsplittags;
     private javax.swing.JCheckBox chkExternalIcons;
     private javax.swing.JCheckBox chkExternalImages;
@@ -5158,10 +5095,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblDeviceMode;
     private javax.swing.JLabel lblDeviceNAS;
     private javax.swing.JLabel lblDeviceNook;
-    private javax.swing.JLabel lblDisplayAuthorSortInAuthorLists;
-    private javax.swing.JLabel lblDisplayAuthorSortInBookDetails;
-    private javax.swing.JLabel lblDisplayTitleSortInBookDetails;
-    private javax.swing.JLabel lblDisplayTitleSortInBookLists;
+    private javax.swing.JLabel lblDisplayAuthorSort;
+    private javax.swing.JLabel lblDisplayTitleSortI;
     private javax.swing.JLabel lblDonate;
     private javax.swing.JLabel lblExternalIcons;
     private javax.swing.JLabel lblFeaturedCatalogSavedSearchName;

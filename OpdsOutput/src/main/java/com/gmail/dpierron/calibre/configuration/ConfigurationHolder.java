@@ -1,7 +1,6 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.opds.CatalogContext;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Composite;
@@ -101,8 +100,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_CUSTOMCATALOGS = "CustomCatalogs";
   private final static String PROPERTY_NAME_CATALOGCUSTOMCOLUMNS = "CatalogCustomColumns";
   /* Catalog Structure */
-  private final static String PROPERTY_NAME_DisplayAuthorSortInAuthorLists = "DisplayAuthorSortInAuthorLists";
-  private final static String PROPERTY_NAME_DisplayTitleSortInBookLists = "DisplayTitleSortInBookLists";
   private final static String PROPERTY_NAME_SortUsingAuthor = "SortUsingAuthor";
   private final static String PROPERTY_NAME_SortUsingTitle = "SortUsingTitle";
   /* Book Details */
@@ -116,8 +113,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
   private final static String PROPERTY_NAME_IncludeAddedInBookDetailst = "IncludeAddedInBookDetailst";
   private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
-  private final static String PROPERTY_NAME_DisplayAuthorSortInBookDetails = "DisplayAuthorSortInBookDetailst";
-  private final static String PROPERTY_NAME_DisplayTitleSortInBookDetails = "DisplayTitleSortInBookDetails";
+  private final static String PROPERTY_NAME_DisplayAuthorSort = "DisplayAuthorSort";
+  private final static String PROPERTY_NAME_DisplayTitleSort = "DisplayTitleSort";
   private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
   private final static String PROPERTY_NAME_BookDetailsCustomFieldsAlways = "BookDetailsCustomFieldsAlways";
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
@@ -1619,36 +1616,32 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
   }
 
-  public boolean isDisplayAuthorSortInAuthorListsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSortInAuthorLists);
+  public boolean isDisplayAuthorSortIsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
   }
 
-  public boolean getDisplayAuthorSortInAuthorLists() {
-    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSortInAuthorLists);
+  public boolean getDisplayAuthorSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSort);
     if (b == null)
-      return defaults.getDisplayAuthorSortInAuthorLists();
+      return defaults.getDisplayAuthorSort();
     else
       return b.booleanValue();
   }
 
-  public void setDisplayAuthorSortInAuthorLists(boolean value) {
-    setProperty(PROPERTY_NAME_DisplayAuthorSortInAuthorLists, value);
+  public void setDisplayAuthorSort(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayAuthorSort, value);
   }
 
-  public boolean isDisplayTitleSortInBookListsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSortInBookLists);
-  }
-
-  public boolean getDisplayTitleSortInBookLists() {
-    Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSortInBookLists);
+  public boolean getDisplayTitleSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSort);
     if (b == null)
-      return defaults.getDisplayTitleSortInBookLists();
+      return defaults.getDisplayTitleSort();
     else
       return b.booleanValue();
   }
 
-  public void setDisplayTitleSortInBookListss(boolean value) {
-    setProperty(PROPERTY_NAME_DisplayTitleSortInBookLists, value);
+  public void setDisplayTitleSort(boolean value) {
+    setProperty(PROPERTY_NAME_DisplayTitleSort, value);
   }
 
   public boolean isSortUsingAuthorReadOnly() {
@@ -1862,38 +1855,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       return b.booleanValue();
   }
 
-  public boolean isDisplayAuthorSortInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSortInBookDetails);
+  public boolean isDisplayAuthorSortReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
   }
 
-  public boolean getDisplayAuthorSortInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSortInBookDetails);
-    if (b == null)
-      return defaults.getDisplayAuthorSortInBookDetails();
-    else
-      return b.booleanValue();
+  public boolean isDisplayTitleSortReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSort);
   }
-
-  public void setDisplayAuthorSortInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_DisplayAuthorSortInBookDetails, value);
-  }
-
-  public boolean isDisplayTitleSortInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSortInBookDetails);
-  }
-
-  public boolean getDisplayTitleSortInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSortInBookDetails);
-    if (b == null)
-      return defaults.getDisplayTitleSortInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setDisplayTitleSortInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_DisplayTitleSortInBookDetails, value);
-  }
-
 
   public String getSecurityCode() {
     String s = getProperty(PROPERTY_NAME_SecurityCode);

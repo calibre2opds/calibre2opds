@@ -25,6 +25,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.text.Collator;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -922,8 +923,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (book.hasAuthor()) {
       for (Author author : book.getAuthors()) {
         if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   author " + author);
+        // #c2o-190
+        String name = currentProfile.getDisplayAuthorSort() ? author.getSort() : author.getName();
         Element authorElement = JDOM.INSTANCE.element("author")
-            .addContent(JDOM.INSTANCE.element("name").addContent(author.getName()))
+            .addContent(JDOM.INSTANCE.element("name").addContent(name))
             .addContent(JDOM.INSTANCE.element("uri")
                 .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
         entry.addContent(authorElement);
@@ -961,8 +964,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     // series
     if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
-      if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   series " + book.getSeries().getName() + "[" + book.getSerieIndex() + "]");
-      Element categoryElement = FeedHelper.getCategoryElement(book.getSeries().getName());
+      String seriesName = book.getSeries().getName();
+      if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   series " + seriesName + "[" + book.getSerieIndex() + "]");
+      Element categoryElement = FeedHelper.getCategoryElement(seriesName);
       entry.addContent(categoryElement);
     }
 
@@ -1228,19 +1232,20 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: generating " + filename);
 
     // construct the contextual title (including the date, or the series, or the rating)
-    String title;
+    // #c2o_190
+    String title = currentProfile.getDisplayTitleSort() ? book.getTitle_Sort() : book.getTitle();
     if (Option.contains(options, Option.INCLUDE_SERIE_NUMBER)) {
       if (book.getSerieIndex() != 0) {
-        title = book.getTitleWithSerieNumber();
-      } else {
-        title = book.getTitle();
+        DecimalFormat df = new DecimalFormat("####.##");
+        title = df.format(book.getSerieIndex()) + " - " + title;
+
       }
     } else if (Option.contains(options, Option.INCLUDE_TIMESTAMP)) {
-      title = book.getTitle() + " [" + CatalogContext.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
-    }else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles()) {
-      title = book.getTitleWithRating(Localization.Main.getText("bookentry.rated"), LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
-    } else {
-      title = book.getTitle();
+      title = title + " [" + CatalogContext.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
+    } else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles()) {
+      if (book.getRating() != BookRating.NOTRATED) {
+        title = MessageFormat.format(Localization.Main.getText("bookentry.rated"), title,  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
+      }
     }
     String urn = "calibre:book:" + book.getId();
 

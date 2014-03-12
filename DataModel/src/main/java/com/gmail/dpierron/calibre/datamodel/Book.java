@@ -19,10 +19,7 @@ public class Book implements SplitableByLetter {
   private final String uuid;
   private String title;
   private String titleSort;
-  private String titleWithSerieNumber;
-  private String titleSortWithSerialNumber;
-  private String titleWithRating;
-  private String titleSortWithRating;
+  private boolean titleSortSameAsTitle;
   private final String path;
   private String comment;
   private String summary;
@@ -78,7 +75,13 @@ public class Book implements SplitableByLetter {
     this.id = id;
     this.uuid = uuid;
     setTitle(title);
-    this.titleSort = title_sort;
+    // Space optimisation to avoid storing title sort when identical to title
+    if (title_sort.equals(this.title)) {
+      titleSortSameAsTitle=true;
+    } else {
+      titleSortSameAsTitle = false;
+      this.titleSort = title_sort;
+    }
     this.path = path;
     this.serieIndex = serieIndex;
     this.timestamp = timestamp;
@@ -115,8 +118,6 @@ public class Book implements SplitableByLetter {
    * @param value
    */
   private void setTitle(String value) {
-    titleWithRating = null;
-    titleWithSerieNumber = null;
     title = value;
     // clean up
     if (Helper.isNotNullOrEmpty(title)) {
@@ -140,11 +141,17 @@ public class Book implements SplitableByLetter {
    * It is normally set by Calibre autoamtically, but it can be cleared
    * by users and may not be set by older versions of Calibre.  In these
    * cases we fall back to using the (mandatory) title field and issue a warning
+   *
+   * NOTE:  As a space optimisation we do not store title_sort if identical to title.
    * @return
    */
   public String getTitle_Sort() {
+    if (titleSortSameAsTitle) {
+      logger.trace("getTitle_Sort: Title_Sort same as Title for book '" + getTitle() + "'");
+      return title;
+    }
     if (Helper.isNullOrEmpty(titleSort)) {
-      logger.warn("Title_Sort not set - using Title for book '" + getTitle() + "'");
+      logger.warn("getTitle_Sort: Title_Sort not set - using Title for book '" + getTitle() + "'");
       titleSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
     }
     return titleSort;
@@ -173,50 +180,6 @@ public class Book implements SplitableByLetter {
 
   public String getIsbn() {
     return (isbn == null ? "" : isbn);
-  }
-
-  /**
-   * Get the title with the series information appended.
-   * @return
-   */
-  public String getTitleWithSerieNumber() {
-    if (titleWithSerieNumber == null) {
-      DecimalFormat df = new DecimalFormat("####.##");
-      titleWithSerieNumber = df.format(getSerieIndex()) + " - " + title;
-    }
-    return titleWithSerieNumber;
-  }
-
-  /**
-   * Get the title_sort with the series information appended.
-   * @return
-   */
-  public String getTitleSortWithSerialNumber() {
-    if (titleSortWithSerialNumber == null) {
-      DecimalFormat df = new DecimalFormat("####.##");
-      titleSortWithSerialNumber = df.format(getSerieIndex()) + " - " + titleSort;
-    }
-    return titleSortWithSerialNumber;
-  }
-
-  public String getTitleWithRating(String message, String ratingText) {
-    if (titleWithRating == null) {
-      if (getRating() != BookRating.NOTRATED)
-        titleWithRating = MessageFormat.format(message, getTitle(), ratingText);
-      else
-        titleWithRating = title;
-    }
-    return titleWithRating;
-  }
-
-  public String getTitleSortWithRating(String message, String ratingText) {
-    if (titleSortWithRating == null) {
-      if (getRating() != BookRating.NOTRATED)
-        titleSortWithRating = MessageFormat.format(message, getTitle_Sort(), ratingText);
-      else
-        titleSortWithRating = getTitle_Sort();
-    }
-    return titleSortWithRating;
   }
 
 
@@ -499,6 +462,10 @@ public class Book implements SplitableByLetter {
     return tags;
   }
 
+  /**
+   * Get the list of eBook files associated with this book.
+   * @return
+   */
   public List<EBookFile> getFiles() {
     if (!filesSorted) {
       if (files != null && files.size() > 1) {
