@@ -99,19 +99,6 @@
           </xsl:if>
         </div>
 
-        <xsl:choose>
-          <xsl:when test="string-length($programName) > 0">
-            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-              Browser not compatible.
-            </iframe>
-          </xsl:when>
-          <xsl:otherwise>
-            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-              Browser not compatible.
-            </iframe>
-          </xsl:otherwise>
-        </xsl:choose>
-
 
         <div class="desktop">
           <ul id="breadcrumb">
@@ -304,11 +291,20 @@
           </div>
         </xsl:if>
         <!-- on the main page, let's talk -->
-        <p/>
-        <p/>
-        <p/>
-        <p/>
         <hr/>
+        <xsl:choose>
+          <xsl:when test="string-length($programName) > 0">
+            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
+              Browser not compatible.
+            </iframe>
+          </xsl:when>
+          <xsl:otherwise>
+            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
+              Browser not compatible.
+            </iframe>
+          </xsl:otherwise>
+        </xsl:choose>
+
         <div class="thanks">
         <small>
           <br/><xsl:value-of select="$programName"/> v <xsl:value-of select="$programVersion"/>

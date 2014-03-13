@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -47,6 +48,8 @@ public enum JDOM {
         setParametersOnCatalog(headerTransformer);
         headerTransformer.setParameter("programName", Constants.PROGNAME);
         headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
+        // Add book count if not generating ALl Books (which gives count if present)
+        headerTransformer.setParameter("bookCount", ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks() ? "" :  "(" + Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) + ")");
         headerTransformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
         headerTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
         headerTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
