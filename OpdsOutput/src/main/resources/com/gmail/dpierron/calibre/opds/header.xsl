@@ -11,6 +11,7 @@
   <xsl:param name="thumbHeight">125</xsl:param>
   <xsl:param name="generateDownloads">true</xsl:param>
   <xsl:param name="browseByCover">false</xsl:param>
+  <xsl:param name="bookCount"/>
   <xsl:param name="i18n.and"/>
   <xsl:param name="i18n.dateGenerated"/>
   <xsl:param name="i18n.backToMain"/>
@@ -19,7 +20,6 @@
   <xsl:param name="i18n.links"/>
   <xsl:param name="i18n.downloadfile"/>
   <xsl:param name="i18n.downloadsection"/>
-
   <xsl:param name="i18n.relatedsection"/>
   <xsl:param name="i18n.linksection"/>
   <xsl:param name="intro.goal"/>
@@ -38,6 +38,7 @@
     <p class="dateGenerated">
       <small>
         <xsl:value-of select="$i18n.dateGenerated"/>
+        <xsl:value-of select="$bookCount"/>
       </small>
     </p>
   </xsl:template>
