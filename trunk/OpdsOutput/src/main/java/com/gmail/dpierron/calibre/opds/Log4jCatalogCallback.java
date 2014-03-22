@@ -4,6 +4,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.ReadOnlyStanzaConfigurationInterface;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+
 
 public class Log4jCatalogCallback implements CatalogCallbackInterface {
   private final static Logger logger = Logger.getLogger(Catalog.class);
@@ -63,8 +66,18 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
         if (result instanceof Boolean) {
           result = LocalizationHelper.INSTANCE.getYesOrNo((Boolean) result);
         }
-        String optionName = getterName.substring(3);
-        dumpOption(optionName, result);
+        // Check for special case of Custom Catalogs!
+        if (result instanceof List) {
+           for (int i = 0 ; i < ((List) result).size() ; i++) {
+             assert ((List)result).get(i) instanceof Composite;
+             Composite<String,String> c = ((List<Composite<String,String>>)result).get(i);
+             String OptionName =  Helper.pad(Localization.Main.getText("gui.tab6") + " [" + (i+1) + "]", ' ', 50) + " : ";
+             logger.info(OptionName + c.getFirstElement() + " (" + c.getSecondElement().toString() + ")");
+           }
+        } else {
+            String optionName = getterName.substring(3);
+            dumpOption(optionName, result);
+        }
       } catch (IllegalAccessException e) {
         logger.warn("", e);
       } catch (InvocationTargetException e) {

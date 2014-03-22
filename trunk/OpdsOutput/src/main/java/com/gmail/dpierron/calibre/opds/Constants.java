@@ -48,15 +48,6 @@ public class Constants {
   public final static String JPG_EXTENSION = ".jpg";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
   public final static String AUTHORNAME = "David Pierron";
-  public final static String CALIBRE2OPDS_COM = "http://calibre2opds.com";
-  public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
-  public final static String HOME_URL = "http://calibre2opds.com/";
-  public final static String USERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2Opds_Index";
-  public final static String DEVELOPERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop";
-  public final static String LOCALIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize";
-  public final static String CUSTOMIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize";
-  public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
-  public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
   public final static String PAGE_DELIM = "_Page_";
   public final static String PAGE_ONE_XML = "_Page_1.xml";
   public final static String INITIAL_URL = "index";
@@ -67,13 +58,48 @@ public class Constants {
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
   public final static String DEFAULT_IMAGE_FILENAME = "default_image.jpg";
+  // URL's for links from Help menu
+  public final static String HOME_URL = "http://calibre2opds.com/";
+  public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
+  public final static String USERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2Opds_Index";
+  public final static String DEVELOPERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop";
+  public final static String LOCALIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize";
+  public final static String CUSTOMIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize";
+  public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
+  public final static String FORUM_URL = "https://getsatisfaction.com/calibre2opds/";
+  // URL's into documentation to provide context sensitive help
   public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";
   public final static String HELP_URL_CATALOGSTRUCTURE = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Catalog_Structure_Tab";
   public final static String HELP_URL_BOOKDETAILS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Details_Tab";
   public final static String HELP_URL_ADVANCED = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Advanced_Tab";
   public final static String HELP_URL_EXTERNALLINKS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Links_tab";
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
-  public final static Collection<String> CUSTOM_COLUMN_TYPES_SUPPORTED = Arrays.asList("text", "comments", "float", "int", "bool", "rating", "datetime", "enumeration");
+  public final static String HELP_URL_SEARCH = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Search_Criteria";
+  // Prefixes that are recognized as valid for external links to custom catalogs
+  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_URLS = Arrays.asList("http://",
+                                                                                         "https://",
+                                                                                         "opds://",
+                                                                                         "opds:http://",
+                                                                                         "opds:https://");
+  // Prefix used is a search field to indicate a Saved search
+  public final static String CUSTOMCATALOG_SEARCH_SAVED = "saved:";
+  // Keywords that are valid in searches(and thus as prefixes to search fields in GUI)
+  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_NAMES = Arrays.asList("authors:",
+                                                                                          "langugages",
+                                                                                          "publisher",
+                                                                                          "rating",
+                                                                                          "series",
+                                                                                          "tags");
+  // List of custom column types we think we support!
+  public final static Collection<String> CUSTOM_COLUMN_TYPES_SUPPORTED = Arrays.asList("text",
+                                                                                      "comments",
+                                                                                      "float",
+                                                                                      "int",
+                                                                                      "bool",
+                                                                                      "rating",
+                                                                                      "datetime",
+                                                                                      "enumeration");
+  // List of curstom column types that are known to not be supported (theren may be others we do jot know about)
   public final static Collection<String> CUSTOM_COLUMN_TYPES_UNSUPPORTED = Arrays.asList("series");
 
   // List of file resources that are embedded in binary, and need copying to final catalog as files

@@ -1611,6 +1611,7 @@ public class Mainframe extends javax.swing.JFrame {
    private void addCustomCatalog() {
      customCatalogTableModel.addCustomCatalog();
      tblCustomCatalogs.revalidate();
+     tblCustomCatalogs.repaint();
    }
 
    /**

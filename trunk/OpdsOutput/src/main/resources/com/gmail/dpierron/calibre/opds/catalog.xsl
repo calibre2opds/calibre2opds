@@ -1,4 +1,4 @@
-<xsl:stylesheet exclude-result-prefixes="opds" version="1.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet exclude-result-prefixes="opds" version="2.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <!--
   catalog.xsl:    This is the transformation applied to the catalog files to produce the HTML version
                   In OPDS terms these are the files that are of type "feed2"
@@ -261,7 +261,17 @@
           <tr>
             <td width="{$thumbWidth}"/>
             <td width="10px"/>
+            <!-- TODO Test version trying to get function call to work
+                      Intent is to geneate better navigation than 'next' button -->
+            <!--
+            <xsl:variable name="url">opds:link[@rel='next']/@href</xsl:variable>
+            <xsl:variable name="title">opds:link[@rel='next']/@title</xsl:variable>
+            <xsl:value-of select="multiPage(@url,@title)"/>?
+            -->
+            <!-- TODO  Original version
+            -->
             <td>
+              <xsl:variable name="url"></xsl:variable>
               <div class="buttonwrapper">
                 <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')}">
                   <span>
@@ -270,11 +280,8 @@
                 </a>
               </div>
             </td>
-            <!-- Lets add some new code here for 'go to page'
-            <td>Page</td>
-            -->
           </tr>
-      </xsl:if>
+        </xsl:if>
       <xsl:if test="string-length($programName) > 0">
         <xsl:if test="$generateIndex = 'true'">
           <!-- search link -->
@@ -306,34 +313,34 @@
         </xsl:choose>
 
         <div class="thanks">
-        <small>
-          <br/><xsl:value-of select="$programName"/> v <xsl:value-of select="$programVersion"/>
-          <br/>
-          <br/><xsl:value-of select="$intro.goal"/>
-          <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
-              <xsl:value-of select="$intro.wiki.url"/></a>
-          <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
-              <xsl:value-of select="$intro.userguide"/> </a>
-          <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
-              <xsl:value-of select="$intro.developerguide"/> </a>
-          <br/><br/><xsl:value-of select="$intro.team.title"/>
-          <ul>
-            <li>
-              <xsl:value-of select="$intro.team.list1"/>
-            </li>
-            <li>
-              <xsl:value-of select="$intro.team.list2"/>
-            </li>
-            <li>
-              <xsl:value-of select="$intro.team.list3"/>
-            </li>
-            <li>
-              <xsl:value-of select="$intro.team.list4"/>
-            </li>
-          </ul>
-          <xsl:value-of select="$intro.thanks.1"/>
-          <br/><xsl:value-of select="$intro.thanks.2"/>
-        </small>
+          <small>
+            <br/><xsl:value-of select="$programName"/> v <xsl:value-of select="$programVersion"/>
+            <br/>
+            <br/><xsl:value-of select="$intro.goal"/>
+            <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
+                <xsl:value-of select="$intro.wiki.url"/></a>
+            <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
+                <xsl:value-of select="$intro.userguide"/> </a>
+            <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
+                <xsl:value-of select="$intro.developerguide"/> </a>
+            <br/><br/><xsl:value-of select="$intro.team.title"/>
+            <ul>
+              <li>
+                <xsl:value-of select="$intro.team.list1"/>
+              </li>
+              <li>
+                <xsl:value-of select="$intro.team.list2"/>
+              </li>
+              <li>
+                <xsl:value-of select="$intro.team.list3"/>
+              </li>
+              <li>
+                <xsl:value-of select="$intro.team.list4"/>
+              </li>
+            </ul>
+            <xsl:value-of select="$intro.thanks.1"/>
+            <br/><xsl:value-of select="$intro.thanks.2"/>
+          </small>
         </div>
       </xsl:if>
 
@@ -346,4 +353,22 @@
       </body>
     </html>
   </xsl:template>
+
+  <!-- Function to try and implement improved navigation for multi-page sets -->
+  <!-- TODO NOT YET READY FOR USE -->
+  <xsl:function name="multiPage">
+    <xsl:param name="url"/>
+    <xsl:param name="title"/>
+    <td>
+      <div class="buttonwrapper">
+        <!-- <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')}"> -->
+        <a class="ovalbutton" href="{concat(substring-before($url, '.xml'), '.html')}">
+          <span>
+            <!-- <xsl:value-of "$titleopds:link[@rel='next']/@title"/> -->
+            <xsl:value-of select="@title"/>
+          </span>
+        </a>
+      </div>
+    </td>
+  </xsl:function>
 </xsl:stylesheet>
