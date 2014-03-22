@@ -91,6 +91,7 @@ public class StanzaConstants {
   public final static boolean ZipOmitXml = true;
   /* Strings names for default URL's in Localization files */
   public final static String AMAZON_AUTHORS_URL_DEFAULT = "config.AmazonAuthorUrl.default";
+  public final static String AMAZON_AUTHORS_URL_DEFAULT_TITLE = "config.AmazonAuthorUrl.defaultTitle";
   public final static String AMAZON_ISBN_URL_DEFAULT = "config.AmazonIsbnUrl.default";
   public final static String AMAZON_TITLE_URL_DEFAULT = "config.AmazonTitleUrl.default";
   public final static String GOODREADS_AUTHOR_URL_DEFAULT = "config.GoodreadAuthorUrl.default";

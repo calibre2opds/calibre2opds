@@ -390,6 +390,13 @@ public enum Database {
     return result;
   }
 
+  /**
+   * TODO Experiment with cost of reading comments on demand for each book
+   * TODO Might be worth it to reduce runtime RAM usage?
+   * TODO Write out somw statistics to work out possible gain.
+   * @return
+   */
+
   public Map<String, List<String>> listCommentsByBookId() {
     Map<String, List<String>> result = new HashMap<String, List<String>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_COMMENTS.getStatement();
@@ -409,6 +416,7 @@ public enum Database {
       logger.error("listCommentsByBookId: " + e);
       sqlException += (2^14);
     }
+    logger.info("Number of comments=" + result.size() + ", Total Size="+ result.toString().length());
     return result;
   }
 

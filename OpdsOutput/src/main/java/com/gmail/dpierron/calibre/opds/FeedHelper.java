@@ -360,7 +360,7 @@ public class FeedHelper {
   /* ---------- PRIVATE -----------*/
 
   private static Element getFeedAuthorElement() {
-    return getFeedAuthorElement(Constants.AUTHORNAME, Constants.CALIBRE2OPDS_COM, Constants.AUTHOREMAIL);
+    return getFeedAuthorElement(Constants.AUTHORNAME, Constants.HOME_URL, Constants.AUTHOREMAIL);
   }
 
   private static Element getFeedAuthorElement(String name, String uri, String email) {

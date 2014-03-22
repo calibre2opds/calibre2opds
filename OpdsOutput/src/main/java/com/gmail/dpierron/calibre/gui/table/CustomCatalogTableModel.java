@@ -51,7 +51,7 @@ public class CustomCatalogTableModel implements TableModel {
    * Add a new line to the Custom catalog table
    */
   public void addCustomCatalog() {
-    customCatalogs.add(new Composite<String, String>("", "")); // add a new line
+    customCatalogs.add(new Composite<String, String>("--title--", "--value--")); // add a new line
     fireTableChangedEvent(new TableModelEvent(this));
   }
 

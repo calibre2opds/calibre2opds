@@ -38,6 +38,8 @@ public enum DatabaseRequest {
   BOOKS_PUBLISHERS("select book, publisher from books_publishers_link"),
   BOOKS_DATA("select book, format, name from data"),
   BOOKS_COMMENTS("select book, text from comments"),
+  // TODO Request to read single comment if this is worth it for RAM usage optimization
+  //  BOOKS_COMMENT("select book, text from comments WHERE id=?"),
   BOOKS_LANGUAGES("select book, lang_code from books_languages_link where book = :bookId"),
   SAVED_SEARCHES("select val from preferences where key='saved_searches'"),
   CUSTOM_COLUMN_DEFINITION("select id, label, name, datatype,is_multiple, normalized from custom_columns"),
@@ -73,6 +75,7 @@ public enum DatabaseRequest {
 
   /**
    * Special case used in custom columns where we need to add an id to the table name
+   * or to access particular tables by their id.
    * @param id
    * @return
    * @throws RuntimeException

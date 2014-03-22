@@ -312,7 +312,8 @@ public class LevelSubCatalog extends SubCatalog {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
-          if (Helper.isNotNullOrEmpty(customCatalogTitle)  && (Helper.isNotNullOrEmpty(customCatalogsFilters))) {
+          if (Helper.isNotNullOrEmpty(customCatalogTitle)
+          && (Helper.isNotNullOrEmpty(customCatalogsFilters))) {
             BookFilter customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
             if (customCatalogBookFilter != null) {
               // custom catalog

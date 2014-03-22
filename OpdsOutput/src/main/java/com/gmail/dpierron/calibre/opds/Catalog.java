@@ -134,8 +134,13 @@ public class Catalog {
           if (f.isDirectory()
               || (extension != null && name.toUpperCase().endsWith(extension.toUpperCase()))
               || (!omitXmlFiles)
+              // We bonly accept XML files if omitXmlFiles setting is not set
               || (omitXmlFiles && (!name.toUpperCase().endsWith(".XML")))) {
             return true;
+          }
+          // We need to increment progress for XML files we are ignoring
+          if (f.isFile() && (name.toUpperCase().endsWith(".XML"))) {
+            callback.incStepProgressIndicatorPosition();
           }
           return false;
         }
@@ -147,7 +152,7 @@ public class Catalog {
       File f = new File(currentDir, filename);
       String fileRelativePath = currentRelativePath + (Helper.isNullOrEmpty(currentRelativePath) ? "" : File.separator) + filename;
       if (f.isDirectory()) {
-        callback.showMessage(f.getName());
+        callback.showMessage("Folder: " + f.getName());
         recursivelyZipFiles(extension, fileRelativePath, f, zipOutputStream, omitXmlFiles);
       } else {
         BufferedInputStream in = null;
