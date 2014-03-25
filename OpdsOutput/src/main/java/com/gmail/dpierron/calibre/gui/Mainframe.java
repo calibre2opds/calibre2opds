@@ -100,6 +100,31 @@ public class Mainframe extends javax.swing.JFrame {
     tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth((int)(width * .075));    // Delete button
   }
 
+  /**
+   * Check a field that is meant to contain a serach term
+   *
+   * @param title
+   * @param searchText
+   * @return
+   */
+  private boolean validateSearch (String title, String searchText) {
+    if (searchText.toUpperCase().startsWith(Constants.CUSTOMCATALOG_SEARCH_SAVED.toUpperCase())) {
+      return true;
+    }
+    for (String val : Constants.CUSTOMCATALOG_SEARCH_FIELD_NAMES) {
+      if (searchText.toUpperCase().startsWith(val.toUpperCase())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   *  check a field that defines a Custom Catalog
+   */
+  private boolean validateCustomCatalog(String title, String value) {
+    return false;
+  }
   private void processEpubMetadataOfAllBooks() {
     // question
     String message = Localization.Main.getText("gui.confirm.tools.processEpubMetadataOfAllBooks");
@@ -477,7 +502,6 @@ public class Mainframe extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
     logger.info(Localization.Main.getText("info.loadProfile", profileName));
-    customCatalogTableModel.reset();
     loadValues();
   }
 
@@ -1609,6 +1633,7 @@ public class Mainframe extends javax.swing.JFrame {
    }
 
    private void addCustomCatalog() {
+     assert customCatalogTableModel.equals(tblCustomCatalogs.getModel());
      customCatalogTableModel.addCustomCatalog();
      tblCustomCatalogs.revalidate();
      tblCustomCatalogs.repaint();

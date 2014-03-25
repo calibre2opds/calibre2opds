@@ -313,8 +313,13 @@ public class LevelSubCatalog extends SubCatalog {
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
           if (Helper.isNotNullOrEmpty(customCatalogTitle)
-          && (Helper.isNotNullOrEmpty(customCatalogsFilters))) {
-            BookFilter customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
+          && (! customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_TITLE))
+          // && (Helper.isNotNullOrEmpty(customCatalogsFilters))
+          && (! customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_SEARCH))) {
+            BookFilter customCatalogBookFilter = null;
+            if (customCatalogsFilters != null) {
+              customCatalogsFilters.get(customCatalogTitle);
+            }
             if (customCatalogBookFilter != null) {
               // custom catalog
               if (logger.isDebugEnabled())
@@ -349,13 +354,34 @@ public class LevelSubCatalog extends SubCatalog {
                 }
               }
             } else {
+
               // external catalog
+
               if (logger.isDebugEnabled())
                 logger.debug("STARTED: Adding external link " + title);
 
               String externalLinkUrl = customCatalog.getSecondElement();
-              entry = FeedHelper.getExternalLinkEntry(customCatalogTitle, "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
-                  currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
+              boolean opdsLink = false;
+              if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
+                externalLinkUrl = externalLinkUrl.substring("OPDSURL:".length());
+                opdsLink = true;;
+              } else if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
+                externalLinkUrl = externalLinkUrl.substring("HTMLURL:.".length());
+                opdsLink = false;
+              } else if (externalLinkUrl.toUpperCase().endsWith(".XML") || externalLinkUrl.toUpperCase().startsWith("OPDS://")) {
+                opdsLink = true;
+                // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
+                if (externalLinkUrl.toUpperCase().startsWith("OPDS://HTTP")) {
+                  externalLinkUrl = externalLinkUrl.substring(7);
+                }
+              }
+
+              entry = FeedHelper.getExternalLinkEntry(customCatalogTitle,
+                                                      Localization.Main.getText("content.externalLink"),
+                                                      opdsLink,
+                                                      "urn:calibre2opds:externalLink" + (pos++),
+                                                      externalLinkUrl,
+                                                      currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
               if (entry != null)
                 feed.addContent(entry);
             }

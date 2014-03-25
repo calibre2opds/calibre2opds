@@ -871,17 +871,17 @@ public class Catalog {
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
         CatalogContext.INSTANCE.catalogManager.customCatalogsFilters = new HashMap<String, BookFilter>();
-        for (Composite<String, String> customCatalog : customCatalogs) {
+nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
           String customCatalogSearch = customCatalog.getSecondElement();
           if (Helper.isNotNullOrEmpty(customCatalogTitle) && Helper.isNotNullOrEmpty(customCatalogSearch)) {
             // skip http external catalogs (c2o-13)
-            if (customCatalogSearch.toUpperCase().startsWith("HTTP://")
-                || customCatalogSearch.toUpperCase().startsWith("HTTPS://")
-                ||customCatalogSearch.toUpperCase().startsWith("OPDS://"))
-              continue;
-            
+            for (String urlPrefix : Constants.CUSTOMCATALOG_SEARCH_FIELD_URLS) {
+              if (customCatalogSearch.toUpperCase().startsWith(urlPrefix.toUpperCase())) {
+                continue nextCC;
+              }
+            }
             BookFilter customCatalogFilter = null;
             try {
               customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);

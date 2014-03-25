@@ -2,9 +2,14 @@ package com.gmail.dpierron.calibre.opds;
 /**
  * Constants used internally within the Calibre2opds program
  * Assembled here to help with making them visible and easy to change.
+ * Note that some of these may not be true constants as they can be
+ * generated at runtime (particularily localized ones) but do not change
+ * once they have been genrated.
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
+import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
+import sun.util.resources.LocaleNames_is;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,6 +21,8 @@ public class Constants {
   public final static String PROGVERSION = "3.3 beta";
   public final static String BZR_VERSION = getBzrVersion();
   public final static String CALIBRE_METADATA_DB_= "metadata.db";
+  public final static String NO = Localization.Main.getText("boolean.no");
+  public final static String YES = Localization.Main.getText("boolean.yes");
   public final static String PROGTITLE = PROGNAME + " " + PROGVERSION;
   public final static String LOGFILE_FOLDER = "log";
   public final static String LOGFILE_NAME = "calibre2opds.log";
@@ -76,11 +83,15 @@ public class Constants {
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
   public final static String HELP_URL_SEARCH = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Search_Criteria";
   // Prefixes that are recognized as valid for external links to custom catalogs
-  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_URLS = Arrays.asList("http://",
+  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_URLS = Arrays.asList("OpdsURL:",
+                                                                                         "HtmlURL:",
+                                                                                         "http://",
                                                                                          "https://",
                                                                                          "opds://",
                                                                                          "opds:http://",
                                                                                          "opds:https://");
+  public final static String CUSTOMCATALOG_DEFAULT_TITLE = Localization.Main.getText("default.title");
+  public final static String CUSTOMCATALOG_DEFAULT_SEARCH = Localization.Main.getText("default.value");
   // Prefix used is a search field to indicate a Saved search
   public final static String CUSTOMCATALOG_SEARCH_SAVED = "saved:";
   // Keywords that are valid in searches(and thus as prefixes to search fields in GUI)
@@ -150,6 +161,16 @@ public class Constants {
       "_search/media/images/sort_desc_disabled.png",
       "_search/media/js/jquery.dataTables.min.js",
       "_search/media/js/jquery.js",};
+
+  public final static String OPDS_ELEMENT_FEED = "feed";
+  public final static String OPDS_ELEMENT_ENTRY = "entry";
+  public final static String OPDS_ELEMENT_LINK = "link";
+  public final static String OPDS_ELEMENT_AUTHOR = "author";
+  public final static String OPDS_ELEMENT_NAME = "name";
+  public final static String OPDS_ELEMENT_URI = "uri";
+  public final static String OPDS_ELEMENT_EMAIL = "email";
+  public final static String HTML_ELEMENT_BREAK = "br";
+  public final static String HTML_ELEMENT_STRONG = "strong";
 
   public static String getBzrVersion() {
     String vcsVersion = "";
