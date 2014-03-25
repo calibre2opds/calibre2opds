@@ -273,7 +273,7 @@
             <td>
               <xsl:variable name="url"></xsl:variable>
               <div class="buttonwrapper">
-                <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')}">
+                <a class="ovalbutton" href="concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')">
                   <span>
                     <xsl:value-of select="opds:link[@rel='next']/@title"/>
                   </span>

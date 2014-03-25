@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.gui.table;
 
+import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Composite;
 
@@ -23,10 +24,6 @@ public class CustomCatalogTableModel implements TableModel {
     }
   }
 
-  public void reset() {
-    listeners = null;
-    customCatalogs = null;
-  }
   /**
    * Get the Custom catalogs String representation
    * (used to load the GUI control values)
@@ -51,11 +48,12 @@ public class CustomCatalogTableModel implements TableModel {
    * Add a new line to the Custom catalog table
    */
   public void addCustomCatalog() {
-    customCatalogs.add(new Composite<String, String>("--title--", "--value--")); // add a new line
+    customCatalogs.add(new Composite<String, String>(Constants.CUSTOMCATALOG_DEFAULT_TITLE, Constants.CUSTOMCATALOG_DEFAULT_SEARCH)); // add a new line
     fireTableChangedEvent(new TableModelEvent(this));
   }
 
   private void fireTableChangedEvent(TableModelEvent event) {
+    assert listeners != null && listeners.size() > 0;
     for (TableModelListener listener : listeners) {
       listener.tableChanged(event);
     }

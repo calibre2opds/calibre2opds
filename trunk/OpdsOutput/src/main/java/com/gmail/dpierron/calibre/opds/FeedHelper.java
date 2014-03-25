@@ -121,7 +121,7 @@ public class FeedHelper {
    * @return a 'feed' element
    */
   public static Element getFeedRootElement(Breadcrumbs breadcrumbs, String pTitle, String urn, String urlExt, boolean inSubDir) {
-    Element feed = getAtomElement(true, "feed", pTitle, urn, null, LINKTYPE_NAVIGATION, null, true, null);
+    Element feed = getAtomElement(true,Constants.OPDS_ELEMENT_FEED, pTitle, urn, null, LINKTYPE_NAVIGATION, null, true, null);
 
     // updated tag
     Element updated = getUpdatedTag();
@@ -148,7 +148,7 @@ public class FeedHelper {
       String filename,
       String pSummary,
       String icon) {
-    Element result = getAtomElement(false, "entry", pTitle, urn, filename, pSummary, false, icon);
+    Element result = getAtomElement(false, Constants.OPDS_ELEMENT_ENTRY, pTitle, urn, filename, pSummary, false, icon);
     // add updated
     result.addContent(getUpdatedTag());
     return result;
@@ -163,7 +163,7 @@ public class FeedHelper {
    * @return
    */
   public static Element getBookEntry(String pTitle, String urn, long timestamp) {
-    Element result = getAtomElement(false, "entry", pTitle, urn, null, null, null, (String) null, false, null);
+    Element result = getAtomElement(false, Constants.OPDS_ELEMENT_ENTRY, pTitle, urn, null, null, null, (String) null, false, null);
     // add updated
     result.addContent(getUpdatedTag(timestamp));
     return result;
@@ -180,23 +180,15 @@ public class FeedHelper {
    * @return
    */
   public static Element getAboutEntry(String title, String urn, String url, String summary, String icon) {
-    Element result = getAtomElement(false, "entry", title, urn, url, LINKTYPE_HTML, summary, true, icon);
+    Element result = getAtomElement(false, Constants.OPDS_ELEMENT_ENTRY, title, urn, url, LINKTYPE_HTML, summary, true, icon);
     // add updated
     result.addContent(getUpdatedTag());
     return result;
   }
 
-  public static Element getExternalLinkEntry(String title, String urn, String url, String icon) {
-    String linkType;
-    if (url.toUpperCase().endsWith(".XML") ||url.toUpperCase().startsWith("OPDS://")) {
-      linkType = LINKTYPE_NAVIGATION;
-      // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
-      if (url.toUpperCase().startsWith("OPDS://HTTP"))
-        url = url.substring(7);
-    } else
-      linkType = LINKTYPE_HTML;
-
-    Element result = getAtomElement(false, "entry", title, urn, url, linkType, "", false, icon);
+  public static Element getExternalLinkEntry(String title, String summary, boolean opdsLink, String urn, String url, String icon) {
+    Element result = getAtomElement(false, Constants.OPDS_ELEMENT_ENTRY, title, urn, url,
+                                    opdsLink ? LINKTYPE_NAVIGATION : LINKTYPE_HTML, summary, false, icon);
     // add updated
     result.addContent(getUpdatedTag());
     return result;
@@ -364,13 +356,13 @@ public class FeedHelper {
   }
 
   private static Element getFeedAuthorElement(String name, String uri, String email) {
-    Element author = JDOM.INSTANCE.element("author");
+    Element author = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_AUTHOR);
     if (Helper.isNotNullOrEmpty(author))
-      author.addContent(JDOM.INSTANCE.element("name").addContent(name));
+      author.addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_NAME).addContent(name));
     if (Helper.isNotNullOrEmpty(uri))
-      author.addContent(JDOM.INSTANCE.element("uri").addContent(uri));
+      author.addContent(JDOM.INSTANCE.element( Constants.OPDS_ELEMENT_URI).addContent(uri));
     if (Helper.isNotNullOrEmpty(email))
-      author.addContent(JDOM.INSTANCE.element("email").addContent(email));
+      author.addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_EMAIL).addContent(email));
     return author;
   }
 
@@ -433,7 +425,7 @@ public class FeedHelper {
    * @return
    */
   public static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
-    Element link = JDOM.INSTANCE.element("link");
+    Element link = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_LINK);
     if (urlType != null && urlRelation != null && urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
       // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)
       if (! url.startsWith("../"))
