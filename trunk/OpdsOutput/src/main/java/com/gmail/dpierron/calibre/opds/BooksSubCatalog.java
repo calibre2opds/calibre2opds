@@ -19,7 +19,6 @@ import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
-import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 

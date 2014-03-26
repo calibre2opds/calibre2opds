@@ -318,10 +318,45 @@ public class LevelSubCatalog extends SubCatalog {
           && (! customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_SEARCH))) {
             BookFilter customCatalogBookFilter = null;
             if (customCatalogsFilters != null) {
-              customCatalogsFilters.get(customCatalogTitle);
+              customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);
             }
-            if (customCatalogBookFilter != null) {
-              // custom catalog
+            if (customCatalogBookFilter == null) {
+
+              // external catalog
+
+              if (logger.isDebugEnabled())
+                logger.debug("STARTED: Adding external link " + title);
+
+              String externalLinkUrl = customCatalog.getSecondElement();
+              boolean opdsLink = false;
+              if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
+                externalLinkUrl = externalLinkUrl.substring("OPDSURL:".length());
+                opdsLink = true;
+                ;
+              } else if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
+                externalLinkUrl = externalLinkUrl.substring("HTMLURL:.".length());
+                opdsLink = false;
+              } else if (externalLinkUrl.toUpperCase().endsWith(".XML") || externalLinkUrl.toUpperCase().startsWith("OPDS://")) {
+                opdsLink = true;
+                // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
+                if (externalLinkUrl.toUpperCase().startsWith("OPDS://HTTP")) {
+                  externalLinkUrl = externalLinkUrl.substring(7);
+                }
+              }
+              // Now add the external link to the feed
+              entry = FeedHelper.getExternalLinkEntry(customCatalogTitle,
+                                                      Localization.Main.getText("content.externalLink"),
+                                                      opdsLink,
+                                                      "urn:calibre2opds:externalLink" + (pos++),
+                                                      externalLinkUrl,
+                                                      currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
+              if (entry != null) {
+                feed.addContent(entry);
+              }
+            } else {
+
+              // internal custom catalog (search based)
+
               if (logger.isDebugEnabled())
                 logger.debug("STARTED: Generating custom catalog " + title);
               List<Book> customCatalogBooks = FilterHelper.filter(customCatalogBookFilter, getBooks());
@@ -339,7 +374,7 @@ public class LevelSubCatalog extends SubCatalog {
                   customSubCatalog.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, null));
                   customSubCatalog.setCatalogBaseFilename(catalogManager.getInitialUr());
                   String customFilename = customSubCatalog.getCatalogBaseFolderFileName();
-                  String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+                  String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1 || inSubDir);
                   Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
                   entry = customSubCatalog.getCatalog(custombreadcrumbs, null,    // No further filter at this point
                       inSubDir,    // Custom catalogs always in subDir
@@ -353,37 +388,6 @@ public class LevelSubCatalog extends SubCatalog {
                   }
                 }
               }
-            } else {
-
-              // external catalog
-
-              if (logger.isDebugEnabled())
-                logger.debug("STARTED: Adding external link " + title);
-
-              String externalLinkUrl = customCatalog.getSecondElement();
-              boolean opdsLink = false;
-              if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
-                externalLinkUrl = externalLinkUrl.substring("OPDSURL:".length());
-                opdsLink = true;;
-              } else if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
-                externalLinkUrl = externalLinkUrl.substring("HTMLURL:.".length());
-                opdsLink = false;
-              } else if (externalLinkUrl.toUpperCase().endsWith(".XML") || externalLinkUrl.toUpperCase().startsWith("OPDS://")) {
-                opdsLink = true;
-                // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
-                if (externalLinkUrl.toUpperCase().startsWith("OPDS://HTTP")) {
-                  externalLinkUrl = externalLinkUrl.substring(7);
-                }
-              }
-
-              entry = FeedHelper.getExternalLinkEntry(customCatalogTitle,
-                                                      Localization.Main.getText("content.externalLink"),
-                                                      opdsLink,
-                                                      "urn:calibre2opds:externalLink" + (pos++),
-                                                      externalLinkUrl,
-                                                      currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
-              if (entry != null)
-                feed.addContent(entry);
             }
           }
           callback.incStepProgressIndicatorPosition();

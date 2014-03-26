@@ -9,7 +9,6 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import sun.util.resources.LocaleNames_is;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
