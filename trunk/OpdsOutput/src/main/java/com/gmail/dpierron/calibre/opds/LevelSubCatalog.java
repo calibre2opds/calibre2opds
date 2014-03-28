@@ -19,6 +19,7 @@ import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.IOException;
 import java.util.List;
@@ -95,9 +96,9 @@ public class LevelSubCatalog extends SubCatalog {
 
     boolean atTopLevel = (pBreadcrumbs.size() == 1 && getCatalogLevel().length() == 0);
 
-    CatalogCallbackInterface callback = CatalogContext.INSTANCE.callback; // Cache for efficiency
+    CatalogCallbackInterface callback = CatalogManager.INSTANCE.callback; // Cache for efficiency
 
-    String urlExt = catalogManager.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, inSubDir || pBreadcrumbs.size() > 1);
     Breadcrumbs breadcrumbs = inSubDir ? Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt)  : pBreadcrumbs;
 
@@ -275,9 +276,9 @@ public class LevelSubCatalog extends SubCatalog {
     // TODO:  Decide if this should be restricted to top level catalog - currentl assuming yes?
 
     now = System.currentTimeMillis();
-    if (CatalogContext.INSTANCE.catalogManager.featuredBooksFilter != null) {
+    if (CatalogManager.INSTANCE.featuredBooksFilter != null) {
       logger.debug("STARTED: Generating Featured catalog");
-      List<Book> featuredBooks = FilterHelper.filter(CatalogContext.INSTANCE.catalogManager.featuredBooksFilter, getBooks());
+      List<Book> featuredBooks = FilterHelper.filter(CatalogManager.INSTANCE.featuredBooksFilter, getBooks());
       if (featuredBooks.size() == 0) {
         logger.warn("No books found for Featured Books section");
       } else {
@@ -307,7 +308,7 @@ public class LevelSubCatalog extends SubCatalog {
         logger.debug("STARTED: Generating custom catalogs");
         int pos = 1;
         callback.startCreateCustomCatalogs(customCatalogs.size());
-        Map<String, BookFilter> customCatalogsFilters = CatalogContext.INSTANCE.catalogManager.customCatalogsFilters;
+        Map<String, BookFilter> customCatalogsFilters = CatalogManager.INSTANCE.customCatalogsFilters;
         for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
@@ -329,19 +330,23 @@ public class LevelSubCatalog extends SubCatalog {
 
               String externalLinkUrl = customCatalog.getSecondElement();
               boolean opdsLink = false;
-              if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
-                externalLinkUrl = externalLinkUrl.substring("OPDSURL:".length());
+              if (externalLinkUrl.toUpperCase().startsWith(Constants.CUSTOMCATALOG_OPDSURL.toUpperCase())) {
+                externalLinkUrl = externalLinkUrl.substring(Constants.CUSTOMCATALOG_OPDSURL.length());
                 opdsLink = true;
                 ;
-              } else if (externalLinkUrl.toUpperCase().startsWith("OPDSURL:")) {
-                externalLinkUrl = externalLinkUrl.substring("HTMLURL:.".length());
+              } else if (externalLinkUrl.toUpperCase().startsWith(Constants.CUSTOMCATALOG_HTMLURL.toUpperCase())) {
+                externalLinkUrl = externalLinkUrl.substring(Constants.CUSTOMCATALOG_HTMLURL.length());
                 opdsLink = false;
-              } else if (externalLinkUrl.toUpperCase().endsWith(".XML") || externalLinkUrl.toUpperCase().startsWith("OPDS://")) {
+              } else if (externalLinkUrl.toUpperCase().endsWith(".XML") || externalLinkUrl.toUpperCase().startsWith(Constants.CUSTOMCATALOG_OPDSURL.toUpperCase())) {
                 opdsLink = true;
                 // Strip off the OPDS part if it precedes a HTTP type URL as this is a special case
-                if (externalLinkUrl.toUpperCase().startsWith("OPDS://HTTP")) {
-                  externalLinkUrl = externalLinkUrl.substring(7);
+                if (externalLinkUrl.toUpperCase().startsWith(Constants.CUSTOMCATALOG_OPDSHTTP.toUpperCase())) {
+                  externalLinkUrl = externalLinkUrl.substring(Constants.CUSTOMCATALOG_OPDS.length());
                 }
+              }
+              // Remove any quotes surrounding yje URL
+              if ((externalLinkUrl.length() > 2) && externalLinkUrl.startsWith("") && externalLinkUrl.endsWith("")) {
+                externalLinkUrl = externalLinkUrl.substring(1, externalLinkUrl.length()-2);
               }
               // Now add the external link to the feed
               entry = FeedHelper.getExternalLinkEntry(customCatalogTitle,
@@ -363,7 +368,9 @@ public class LevelSubCatalog extends SubCatalog {
               if (customCatalogBooks.size() == 0) {
                 logger.warn("No books found for custom catalog " + customCatalogTitle);
               } else {
-                if (Helper.isNotNullOrEmpty(customCatalogBooks)) {
+                if (Helper.isNullOrEmpty(customCatalogBooks)) {
+                  logger.warn("Custom Catalog '" + customCatalogTitle + "' not generated as 0 bo0oks match criteria");
+                } else {
                   LevelSubCatalog customSubCatalog = new LevelSubCatalog(customCatalogBooks, customCatalogTitle);
                   customSubCatalog.setCatalogType(Constants.CUSTOM_TYPE);
                   customSubCatalog.setCatalogFolder(Constants.CUSTOM_TYPE);
@@ -372,9 +379,9 @@ public class LevelSubCatalog extends SubCatalog {
                   // Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
                   // customSubCatalog.setCatalogLevel(custombreadcrumbs);
                   customSubCatalog.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, null));
-                  customSubCatalog.setCatalogBaseFilename(catalogManager.getInitialUr());
+                  customSubCatalog.setCatalogBaseFilename(CatalogManager.INSTANCE.getInitialUr());
                   String customFilename = customSubCatalog.getCatalogBaseFolderFileName();
-                  String customUrl = catalogManager.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1 || inSubDir);
+                  String customUrl = CatalogManager.INSTANCE.getCatalogFileUrl(customFilename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1 || inSubDir);
                   Breadcrumbs custombreadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, customCatalogTitle, customUrl);
                   entry = customSubCatalog.getCatalog(custombreadcrumbs, null,    // No further filter at this point
                       inSubDir,    // Custom catalogs always in subDir
@@ -388,11 +395,10 @@ public class LevelSubCatalog extends SubCatalog {
                   }
                 }
               }
+              customCatalogBooks = null;
             }
           }
           callback.incStepProgressIndicatorPosition();
-
-          callback.checkIfContinueGenerating();
         }
         logger.debug("COMPLETED: Generating custom catalogs");
         if (atTopLevel) CatalogManager.reportRamUsage();
@@ -407,7 +413,7 @@ public class LevelSubCatalog extends SubCatalog {
     } else {
       createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog);
     }
-    return FeedHelper.getCatalogEntry(title, urn, catalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
+    return FeedHelper.getCatalogEntry(title, urn, CatalogManager.INSTANCE.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
 
   }
 }

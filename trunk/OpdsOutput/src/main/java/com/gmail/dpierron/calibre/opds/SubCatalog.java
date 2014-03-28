@@ -21,19 +21,15 @@ import java.util.zip.CRC32;
 public abstract class SubCatalog {
   // cache some widely used objects.
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
-  protected static CatalogManager catalogManager = CatalogContext.INSTANCE.catalogManager; // cache as optimization
-  protected static HtmlManager htmlManager = CatalogContext.INSTANCE.htmlManager;
-  protected static ImageManager coverManager = CatalogContext.INSTANCE.coverManager;
-  protected static ThumbnailManager thumbnailManager = CatalogContext.INSTANCE.thumbnailManager;
-  protected static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
-  // Get some non-mutable configuration options once for efffeciency that are used in subcatalog variants
-  protected static int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
-  protected static int maxSplitLevels = currentProfile.getMaxSplitLevels();
-  protected static int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
-  protected static boolean useExternalIcons = currentProfile.getExternalIcons();
-  protected static boolean useExternalImages = currentProfile.getExternalImages();
-  protected static boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
-  private static String securityCode = catalogManager.getSecurityCode();
+  protected ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  // Get some non-mutable configuration options once for efffeciency that are used widely in subcatalog variants
+  protected int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
+  protected int maxSplitLevels = currentProfile.getMaxSplitLevels();
+  protected int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
+  protected boolean useExternalIcons = currentProfile.getExternalIcons();
+  protected boolean useExternalImages = currentProfile.getExternalImages();
+  protected boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
+  private static String securityCode = CatalogManager.INSTANCE.getSecurityCode();
   private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
   private static CRC32 crc32;
 
@@ -702,7 +698,7 @@ public abstract class SubCatalog {
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
     assert Helper.isNotNullOrEmpty(outputFilename): "Program error: Attempt to create XML file for empty/null filename";
-    assert ! outputFilename.startsWith(catalogManager.getGenerateFolder().toString()):
+    assert ! outputFilename.startsWith(CatalogManager.INSTANCE.getGenerateFolder().toString()):
              "Program Error:  filename should not include catalog folder (" + outputFilename + ")";
     // int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
     // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
@@ -716,7 +712,7 @@ public abstract class SubCatalog {
     if (! xmlfilename.endsWith(Constants.XML_EXTENSION)) {
       xmlfilename += Constants.XML_EXTENSION;
     }
-    File outputFile = catalogManager.storeCatalogFile(xmlfilename);
+    File outputFile = CatalogManager.INSTANCE.storeCatalogFile(xmlfilename);
     // Avoid creating files that already exist.
     // (if xml file exists then HTML one will as well)
     if (outputFile.exists()) {
@@ -747,6 +743,6 @@ public abstract class SubCatalog {
     }
 
     //  generate corresponding HTML file
-  htmlManager.generateHtmlFromDOM(document, outputFile, feedType);
+    CatalogManager.INSTANCE.htmlManager.generateHtmlFromDOM(document, outputFile, feedType);
   }
 }

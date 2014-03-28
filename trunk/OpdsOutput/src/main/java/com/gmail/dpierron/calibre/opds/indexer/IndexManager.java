@@ -2,7 +2,7 @@ package com.gmail.dpierron.calibre.opds.indexer;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.opds.CatalogContext;
+import com.gmail.dpierron.calibre.opds.CatalogManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public enum IndexManager {
   public void exportToJavascript() throws IOException {
     Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), "_search");
+    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJavascript(searchFolder);
   }
@@ -41,7 +41,7 @@ public enum IndexManager {
   public void exportToJSON() throws IOException {
     Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), "_search");
+    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJSON(searchFolder);
   }
@@ -49,7 +49,7 @@ public enum IndexManager {
   public void exportToJavascriptArrays() throws IOException {
     Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), "_search");
+    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
     searchFolder = new File(searchFolder, "database");
     searchFolder.mkdirs();
     index2.exportToJavascriptArrays(searchFolder);

@@ -170,7 +170,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
     if (willSplitByLetter) {
       // split the series list by letter
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
       result = getListOfSeriesSplitByLetter(breadcrumbs,
                                             mapOfSeriesByLetter,
                                             inSubDir,
@@ -197,7 +197,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           break;
         } else {
           Series serie = series.get(i);
-          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
           Element entry = getSerie(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
@@ -244,7 +244,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case where the series name is equal to the split level.
@@ -296,7 +296,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    String urlInItsSubfolder = optimizeCatalogURL(CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages)
@@ -424,11 +424,11 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + serie);
 
-    CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     // We want to avoid incrementing the progress bar if we are not doing
     // the top level series sub-catalog
     if ( !(isInDeepLevel() || (getCatalogFolder().startsWith(Constants.AUTHOR_TYPE))))
-      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksBySerie().get(serie);
     if (Helper.isNullOrEmpty(books))

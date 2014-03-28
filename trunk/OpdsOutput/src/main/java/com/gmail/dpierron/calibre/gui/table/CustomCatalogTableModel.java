@@ -42,6 +42,7 @@ public class CustomCatalogTableModel implements TableModel {
    */
   public void setCustomCatalogs(List<Composite<String, String>> customCatalogs) {
     this.customCatalogs = customCatalogs;
+    fireTableChangedEvent(new TableModelEvent(this));
   }
 
   /**

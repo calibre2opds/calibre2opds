@@ -112,7 +112,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     if (from != 0) inSubDir = true;
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
@@ -203,7 +203,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
+    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {
@@ -358,9 +358,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + author);
 
-    CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
-      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List listOfBooksInSeries = new LinkedList<Book>();
     List listOfBooksNotInSeries = new LinkedList<Book>();
@@ -393,7 +393,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     String title = author.getSort();
     String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
-    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
 
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(authorbooks);

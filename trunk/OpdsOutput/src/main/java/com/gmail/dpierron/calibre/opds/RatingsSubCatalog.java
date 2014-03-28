@@ -111,7 +111,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
     String summary = Localization.Main.getText("rating.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
 
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir */);
 
     // list the entries (or split them)
@@ -128,7 +128,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     feed.addContent(result);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
-    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element result2 = FeedHelper.getCatalogEntry(title,
                                                  urn,
                                                  urlInItsSubfolder,

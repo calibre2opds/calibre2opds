@@ -171,7 +171,7 @@ public enum CachedFileManager {
     // Check Cache folder has been set
     logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
     if (cacheFile == null) {
-      if (logger.isDebugEnabled())    logger.debug("Aborting saveCache() as cacheFile not set");
+      logger.debug("Aborting saveCache() as cacheFile not set");
       return;
     }
 
