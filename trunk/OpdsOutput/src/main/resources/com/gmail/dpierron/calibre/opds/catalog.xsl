@@ -219,6 +219,7 @@
                 <xsl:variable name="url">
                   <xsl:choose>
                     <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
+                      <!-- TODO External links that are OPDS links and end with xml need extension changed to html for HTML catalogs -->
                       <xsl:value-of select="opds:link/@href" />
                     </xsl:when>
                     <xsl:otherwise>
@@ -297,21 +298,23 @@
               </div>
             </div>
           </xsl:if>
-          <!-- on the main page, let's talk -->
-          <hr/>
-          <xsl:choose>
-            <xsl:when test="string-length($programName) > 0">
-              <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-                Browser not compatible.
-              </iframe>
-            </xsl:when>
-            <xsl:otherwise>
-              <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-                Browser not compatible.
-              </iframe>
-            </xsl:otherwise>
-          </xsl:choose>
+        </xsl:if>
+        <hr/>
 
+        <xsl:choose>
+          <xsl:when test="string-length($programName) > 0">
+            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
+              Browser not compatible.
+            </iframe>
+          </xsl:when>
+          <xsl:otherwise>
+            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
+              Browser not compatible.
+            </iframe>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:if test="string-length($programName) > 0">
           <div class="thanks">
             <small>
               <br/><xsl:value-of select="$programName"/> v <xsl:value-of select="$programVersion"/>

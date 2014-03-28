@@ -53,30 +53,19 @@ public enum JDOM {
     sb = null;
   }
 
+  /**
+   * Set the paremeters for creating the header.html file
+   *
+   * @return
+   */
   public Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
         headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
-        headerTransformer.setParameter("programName", Constants.PROGNAME);
-        headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
+        setIntroParameters(headerTransformer);
         // Add book count if not generating ALl Books (which gives count if present)
-        headerTransformer.setParameter("bookCount", ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks() ? "" :  "(" + Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) + ")");
-        headerTransformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
-        headerTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
-        headerTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
-        headerTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
-        headerTransformer.setParameter("intro.userguide", Localization.Main.getText("gui.menu.help.userGuide"));
-        headerTransformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
-        headerTransformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
-        headerTransformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL);
-        headerTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
-        headerTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
-        headerTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
-        headerTransformer.setParameter("intro.team.list3", Localization.Main.getText("intro.team.list3"));
-        headerTransformer.setParameter("intro.team.list4", Localization.Main.getText("intro.team.list4"));
-        headerTransformer.setParameter("intro.thanks.1", Localization.Main.getText("intro.thanks.1"));
-        headerTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
+        headerTransformer.setParameter("bookCount", ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateAllbooks() ? "" :  " (" + Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) + ")");
       } catch (TransformerConfigurationException e) {
         logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
         headerTransformer = null;
@@ -155,6 +144,11 @@ public enum JDOM {
     return catalogTransformer;
   }
 
+  /**
+   * Transformer used on a Book fulle entry.
+   *
+   * @return
+   */
   public Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
@@ -168,34 +162,52 @@ public enum JDOM {
     return bookFullEntryTransformer;
   }
 
+  /**
+   * set the transformer that is used for the top level page.
+   *
+   * @return
+   */
   public Transformer getMainCatalogTransformer() {
     if (mainTransformer == null) {
       try {
         mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(mainTransformer);
-        mainTransformer.setParameter("programName", Constants.PROGNAME);
-        mainTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
-        mainTransformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
-        mainTransformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
-        mainTransformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
-        mainTransformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
-        mainTransformer.setParameter("intro.userguide", Localization.Main.getText("gui.menu.help.userGuide"));
-        mainTransformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
-        mainTransformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
-        mainTransformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL);
-        mainTransformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
-        mainTransformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
-        mainTransformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
-        mainTransformer.setParameter("intro.team.list3", Localization.Main.getText("intro.team.list3"));
-        mainTransformer.setParameter("intro.team.list4", Localization.Main.getText("intro.team.list4"));
-        mainTransformer.setParameter("intro.thanks.1", Localization.Main.getText("intro.thanks.1"));
-        mainTransformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
+        setIntroParameters(mainTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e);
         mainTransformer = null;
       }
     }
     return mainTransformer;
+  }
+
+  /**
+   * Set parameters that reate to the 'about' information for calibre2opds
+   *
+   * @param transformer
+   * @return
+   */
+  private Transformer setIntroParameters (Transformer transformer) {
+    if (transformer != null) {
+        transformer.setParameter("programName", Constants.PROGNAME);
+        transformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
+        transformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
+        transformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
+        transformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
+        transformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
+        transformer.setParameter("intro.userguide", Localization.Main.getText("gui.menu.help.userGuide"));
+        transformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
+        transformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
+        transformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL);
+        transformer.setParameter("intro.team.title", Localization.Main.getText("intro.team.title"));
+        transformer.setParameter("intro.team.list1", Localization.Main.getText("intro.team.list1"));
+        transformer.setParameter("intro.team.list2", Localization.Main.getText("intro.team.list2"));
+        transformer.setParameter("intro.team.list3", Localization.Main.getText("intro.team.list3"));
+        transformer.setParameter("intro.team.list4", Localization.Main.getText("intro.team.list4"));
+        transformer.setParameter("intro.thanks.1", Localization.Main.getText("intro.thanks.1"));
+        transformer.setParameter("intro.thanks.2", Localization.Main.getText("intro.thanks.2"));
+    }
+    return transformer;
   }
 
   public TransformerFactory getTransformerFactory() {
