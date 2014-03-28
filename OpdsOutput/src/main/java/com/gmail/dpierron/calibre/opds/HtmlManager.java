@@ -39,10 +39,6 @@ public class HtmlManager {
     return timeInHtml;
   }
 
-  public void generateHtmlFromDOM(Document document, File outputFile) throws IOException {
-    generateHtmlFromDOM(document, outputFile, FeedType.Catalog);
-  }
-
   public void generateHtmlFromDOM(Document document, File outputFile, FeedType feedType) throws IOException {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;

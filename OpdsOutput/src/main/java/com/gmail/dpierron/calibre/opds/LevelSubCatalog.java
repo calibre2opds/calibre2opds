@@ -19,7 +19,6 @@ import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
-import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.IOException;
 import java.util.List;
@@ -345,7 +344,7 @@ public class LevelSubCatalog extends SubCatalog {
                 }
               }
               // Remove any quotes surrounding yje URL
-              if ((externalLinkUrl.length() > 2) && externalLinkUrl.startsWith("") && externalLinkUrl.endsWith("")) {
+              if ((externalLinkUrl.length() > 2) && externalLinkUrl.startsWith("\"") && externalLinkUrl.endsWith("\"")) {
                 externalLinkUrl = externalLinkUrl.substring(1, externalLinkUrl.length()-2);
               }
               // Now add the external link to the feed
