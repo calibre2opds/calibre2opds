@@ -82,12 +82,16 @@ public class Constants {
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
   public final static String HELP_URL_SEARCH = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Search_Criteria";
   // Prefixes that are recognized as valid for external links to custom catalogs
-  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_URLS = Arrays.asList("OpdsURL:",
-                                                                                         "HtmlURL:",
+  public final static String CUSTOMCATALOG_OPDSURL = "OpdsURL:";
+  public final static String CUSTOMCATALOG_HTMLURL = "HtmlURL:";
+  public final static String CUSTOMCATALOG_OPDS = "opds://";
+  public final static String CUSTOMCATALOG_OPDSHTTP = "opds:http://";
+  public final static Collection<String> CUSTOMCATALOG_SEARCH_FIELD_URLS = Arrays.asList(CUSTOMCATALOG_OPDSURL,
+                                                                                         CUSTOMCATALOG_HTMLURL,
                                                                                          "http://",
                                                                                          "https://",
-                                                                                         "opds://",
-                                                                                         "opds:http://",
+                                                                                         CUSTOMCATALOG_OPDS,
+                                                                                         CUSTOMCATALOG_OPDSHTTP,
                                                                                          "opds:https://");
   public final static String CUSTOMCATALOG_DEFAULT_TITLE = Localization.Main.getText("default.title");
   public final static String CUSTOMCATALOG_DEFAULT_SEARCH = Localization.Main.getText("default.value");

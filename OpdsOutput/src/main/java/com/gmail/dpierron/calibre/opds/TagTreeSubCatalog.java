@@ -63,7 +63,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     }
     int maxPages = Summarizer.INSTANCE.getPageNumber(itemsCount);
 
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     List<Element> result = new LinkedList<Element>();
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
@@ -85,7 +85,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename, inSubDir);
+    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename, inSubDir);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {

@@ -269,7 +269,7 @@ public class FeedHelper {
     // add a "start" link to the catalog main page
 
     String startUrl = (folder.length() == 0 ? Constants.CURRENT_PATH_PREFIX : Constants.PARENT_PATH_PREFIX)
-                      + CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
+                      + CatalogManager.INSTANCE.getInitialUr() + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
     feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
 

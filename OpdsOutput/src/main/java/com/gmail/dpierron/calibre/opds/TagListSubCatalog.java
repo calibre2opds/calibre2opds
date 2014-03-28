@@ -66,7 +66,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
     logger.debug("getListOfTags: generating " + filename);
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    String urlExt = optimizeCatalogURL(CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
     if (splitOption == null) {
@@ -134,7 +134,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
 
     feed.addContent(result);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
-    String urlNext = catalogManager.getCatalogFileUrl(filename + Constants.PAGE_DELIM + (pageNumber+1) + Constants.XML_EXTENSION, inSubDir);
+    String urlNext = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.PAGE_DELIM + (pageNumber+1) + Constants.XML_EXTENSION, inSubDir);
 
     Element entry;
     if (from > 0) {

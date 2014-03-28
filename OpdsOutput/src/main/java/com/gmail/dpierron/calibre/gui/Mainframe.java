@@ -968,6 +968,7 @@ public class Mainframe extends javax.swing.JFrame {
     txtFeaturedCatalogSavedSearchName.setEnabled(!currentProfile.isFeaturedCatalogSavedSearchNameReadOnly());
     lblFeaturedCatalogSavedSearchName.setEnabled(!currentProfile.isFeaturedCatalogSavedSearchNameReadOnly());
     customCatalogTableModel.setCustomCatalogs(currentProfile.getCustomCatalogs());
+    tblCustomCatalogs.setModel(customCatalogTableModel);
     tblCustomCatalogs.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
     pnlCustomCatalogsTableButtons.setEnabled(!currentProfile.isCustomCatalogsReadOnly());
     tblCustomCatalogs.revalidate();         // Force a redraw of table contents

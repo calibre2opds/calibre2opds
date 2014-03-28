@@ -5,16 +5,11 @@ package com.gmail.dpierron.calibre.opds;
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.database.Database;
-import com.gmail.dpierron.calibre.database.DatabaseManager;
-import com.gmail.dpierron.calibre.database.DatabaseRequest;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -73,7 +68,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       tags = new LinkedList<Tag>();
       for (Book book : getBooks()) {
         for (Tag tag : book.getTags()) {
-          if (! CatalogContext.INSTANCE.getTagsToIgnore().contains(tag)
+          if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)
           &&  ! tags.contains(tag)) {
             tags.add(tag);
           }
@@ -177,9 +172,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + tag);
 
-    CatalogContext.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
-      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksByTag().get(tag);
     if (Helper.isNullOrEmpty(books))

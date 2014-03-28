@@ -216,7 +216,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // generate the book list files
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
 
     Element feed;
     feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir */);
@@ -251,10 +251,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       result = new LinkedList<Element>();
       String progressText = Breadcrumbs.getProgressText(breadcrumbs);
       progressText += " (" + Summarizer.INSTANCE.getBookWord(listbooks.size()) + ")";
-      CatalogContext.INSTANCE.callback.showMessage(progressText.toString());
+      CatalogManager.INSTANCE.callback.showMessage(progressText.toString());
       for (int i = from; i < listbooks.size(); i++) {
         // check if we must continue
-        CatalogContext.INSTANCE.callback.checkIfContinueGenerating();
+        CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
 
         // See if we need to do the next page
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
@@ -304,7 +304,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
-    String urlInItsSubfolder = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     if (from > 0) {
       String titleNext;
       if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
@@ -496,9 +496,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: prepare to copy the ebook file " + file.getName());
       // TODO ITIMPI  Why is EPUB treated as a special case?
       if (file.getFormat() == EBookFormat.EPUB)
-        catalogManager.addFileToTheMapOfFilesToCopy(file.getFile(), book);
+        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile(), book);
       else
-        catalogManager.addFileToTheMapOfFilesToCopy(file.getFile());
+        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile());
       // Allowm for books on specific URL (#c2o-160)
       String prefix = currentProfile.getUrlBooks();
       if (Helper.isNullOrEmpty(prefix)) {
@@ -562,7 +562,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled()) {
             if (!resizedImageFile.exists()) {
               logger.trace("addImageLink: resizedImage set to be generated (not already existing)");
-            } else if (coverManager.hasImageSizeChanged()) {
+            } else if (CatalogManager.INSTANCE.coverManager.hasImageSizeChanged()) {
               logger.trace("addImageLink: resizedImage set to be generated (image size changed)");
             } else if (resizedImageFile.lastModified() < calibreCoverFile.lastModified()) {
               logger.trace("addImageLink: resizedImage set to be generated (new cover)");
@@ -599,8 +599,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     } else {
       // No cover from Calibre so use our default!
       // resize the default thumbnail if needed
-      CachedFile resizedDefaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), iManager.getDefaultResizedFilename()));
-      CachedFile defaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(catalogManager.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
+      CachedFile resizedDefaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), iManager.getDefaultResizedFilename()));
+      CachedFile defaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
       // Separate out resized cover case
       if (!resizedDefaultCover.exists() || iManager.hasImageSizeChanged() || resizedDefaultCover.lastModified() < defaultCover.lastModified()) {
         iManager.generateImage(resizedDefaultCover, defaultCover);
@@ -610,7 +610,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       imageFile = resizedDefaultCover;
       catalogImageFilename = Constants.PARENT_PATH_PREFIX
           + iManager.getDefaultResizedFilename();
-      catalogManager.addFileToTheMapOfFilesToCopy(imageFile);
+      CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
       if (isCover) logger.warn("addImageLink: No cover.jpg file in Calibre library for book " + book);
     }
 
@@ -621,7 +621,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (! useExternalImages && ! catalogImageFilename.equals(Constants.PARENT_PATH_PREFIX + iManager.getDefaultResizedFilename())) {
           imageUri = iManager.getFileToBase64Uri(imageFile);
         } else {
-          catalogManager.addImageFileToTheMapOfCatalogImages(catalogImageFilename,imageFile);
+          CatalogManager.INSTANCE.addImageFileToTheMapOfCatalogImages(catalogImageFilename,imageFile);
           if (isCover) {
             imageUri=catalogImageFilename.substring(catalogImageFilename.indexOf(Constants.FOLDER_SEPARATOR)+1);
           } else {
@@ -633,13 +633,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Copy images to target if not in default mode (and not images in catalog)
       if (useExternalImages) {
         if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
-          catalogManager.addFileToTheMapOfFilesToCopy(imageFile);
+          CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
         }
         }
     }
     // If we are generating a ctalog for a Nook we cache the results for use later
-    if (iManager.equals(thumbnailManager) && currentProfile.getGenerateIndex()) {
-      thumbnailManager.addBook(book, imageUri);
+    if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
+      CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
     }
     entry.addContent(FeedHelper.getImageLink(imageUri,isCover));
   }
@@ -666,7 +666,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           // Series for cross-references are always held at top level
           // TODO Perhaps consider whether level should be taken into account?
           filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(book.getSeries()) + Constants.PAGE_ONE_XML;
-          entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+          entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.series", book.getSerieIndex(), book.getSeries().getName())));
         }
       }
@@ -685,7 +685,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             // Authors for cross-references are always held at top level !
             // TODO Perhaps consider whether level should be taken into account?
             filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
-            entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+            entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.author", booksText, author.getName())));
           }
         }
@@ -697,7 +697,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(book.getTags())) {
           if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
           for (Tag tag : book.getTags()) {
-            if (! CatalogContext.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
+            if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
               int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
               // Tags for cross-references are held at top level
               // TODO Perhaps consider whether level should be taken into account?
@@ -707,7 +707,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
                 if (! currentProfile.getMinimizeChangedFiles()) {
                   booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
                 }
-                entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+                entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
                     Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
               }
             }
@@ -726,7 +726,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           }
           // Ratings are held at level
           filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, book.getRating().getId().toString()) + Constants.PAGE_ONE_XML;
-          entry.addContent(FeedHelper.getRelatedLink(catalogManager.getCatalogFileUrl(filename, true),
+          entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
               Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()))));
         }
       }
@@ -911,10 +911,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // cover and thumbnail links
     if (isFullEntry) {
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
-      addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers() ? thumbnailManager : coverManager,currentProfile.getCoverResize(),true);
+      addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers()
+                    ? CatalogManager.INSTANCE.thumbnailManager
+                    : CatalogManager.INSTANCE.coverManager,currentProfile.getCoverResize(),true);
     }
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");
-    addImageLink(book,entry,thumbnailManager,currentProfile.getThumbnailGenerate(),false);
+    addImageLink(book,entry,CatalogManager.INSTANCE.thumbnailManager,currentProfile.getThumbnailGenerate(),false);
 
 
     // acquisition links
@@ -1041,7 +1043,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(pubtmp)) {
             content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.published") + ": "))
-                .addContent(CatalogContext.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
+                .addContent(CatalogManager.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
                 .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
                 .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
         }
@@ -1053,7 +1055,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(addtmp)) {
           content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.added") + ": "))
-              .addContent(CatalogContext.INSTANCE.titleDateFormat.format(addtmp))
+              .addContent(CatalogManager.INSTANCE.titleDateFormat.format(addtmp))
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
         }
@@ -1066,7 +1068,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (Helper.isNotNullOrEmpty(modtmp)) {
           content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.modified") + ": "))
-              .addContent(CatalogContext.INSTANCE.titleDateFormat.format(modtmp))
+              .addContent(CatalogManager.INSTANCE.titleDateFormat.format(modtmp))
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
         }
@@ -1074,7 +1076,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // See if any Custom Column values to be included
 
-      List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogContext.INSTANCE.catalogManager.getBookDetailsCustomColumns();
+      List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogManager.INSTANCE.getBookDetailsCustomColumns();
       if (bookDetailsCustomColumnTypes != null && bookDetailsCustomColumnTypes.size() > 0) {
         List<CustomColumnValue> values = DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId().get(book.getId().toString());
         for (CustomColumnType columnType : bookDetailsCustomColumnTypes) {
@@ -1220,11 +1222,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
     String filename = getBookFolderFilename(book);
-    String fullEntryUrl = catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
-    File outputFile = catalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
+    String fullEntryUrl = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
+    File outputFile = CatalogManager.INSTANCE.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
     if (!isInDeepLevel() && isBookTheStepUnit() && !getCatalogFolder().startsWith(Constants.AUTHOR_TYPE))
-      CatalogContext.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry:" + book);
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: pBreadcrumbs " + pBreadcrumbs.toString());
@@ -1240,7 +1242,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       }
     } else if (Option.contains(options, Option.INCLUDE_TIMESTAMP)) {
-      title = title + " [" + CatalogContext.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
+      title = title + " [" + CatalogManager.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
     } else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles()) {
       if (book.getRating() != BookRating.NOTRATED) {
         title = MessageFormat.format(Localization.Main.getText("bookentry.rated"), title,  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
@@ -1276,7 +1278,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getGenerateIndex()) {
         logger.debug("getBookEntry: indexing book");
         // index the book
-        IndexManager.INSTANCE.indexBook(book, htmlManager.getHtmlFilename(fullEntryUrl), thumbnailManager.getThumbnailUrl(book));
+        IndexManager.INSTANCE.indexBook(book, CatalogManager.INSTANCE.htmlManager.getHtmlFilename(fullEntryUrl), CatalogManager.INSTANCE.thumbnailManager.getThumbnailUrl(book));
       }
       book.setDone();
     }

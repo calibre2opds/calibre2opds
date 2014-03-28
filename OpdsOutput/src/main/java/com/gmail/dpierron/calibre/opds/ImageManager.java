@@ -193,7 +193,7 @@ public abstract class ImageManager {
         logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
       countOfImagesGenerated++;         // Update count of files processed
     } catch (Exception e) {
-      CatalogContext.INSTANCE.callback
+      CatalogManager.INSTANCE.callback
           .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
     } catch (Throwable t) {
          logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );

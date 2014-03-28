@@ -1,6 +1,6 @@
 package com.gmail.dpierron.calibre.thumbnails;
 
-import com.gmail.dpierron.calibre.opds.CatalogContext;
+import com.gmail.dpierron.calibre.opds.CatalogManager;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import org.apache.log4j.Logger;
 
@@ -32,7 +32,7 @@ public class CreateThumbnail {
         // I don't give a tiny rat's ass
       }
       if (!isImageLoaded())
-        CatalogContext.INSTANCE.callback.errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName), null);
+        CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName), null);
     }
   }
 
@@ -93,9 +93,9 @@ public class CreateThumbnail {
         }
       }
       if (exception != null)
-        CatalogContext.INSTANCE.callback.errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()), exception);
+        CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()), exception);
     } else {
-      CatalogContext.INSTANCE.callback.errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
+      CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
     }
   }
 }

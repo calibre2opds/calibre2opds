@@ -28,7 +28,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.lang.management.*;
 
 // import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 
@@ -37,29 +36,29 @@ public class Catalog {
 
   private static final Logger logger = Logger.getLogger(Catalog.class);
   // Some Copying stats to accumulate
-  private static long copyExistHits;     // Count of Files that are copied because target does not exist
-  private static long copyLengthHits;    // Count of files that are copied because lengths differ
-  private static long copyDateMisses;    // Count of files that  are not copied because source older
-  private static long copyCrcHits;       // Count of files that are copied because CRC different
-  private static long copyCrcMisses;     // Count of files copied because CRC same
-  private static long copyCrcUnchecked;  // Count of files copied because CRC check suppressed
-  private static long copyToSelf;        // Count of cases where copy to self requested
-  private static long copyDeleted;       // Count of files/folders deleted during copy process
+  private long copyExistHits;     // Count of Files that are copied because target does not exist
+  private long copyLengthHits;    // Count of files that are copied because lengths differ
+  private long copyDateMisses;    // Count of files that  are not copied because source older
+  private long copyCrcHits;       // Count of files that are copied because CRC different
+  private long copyCrcMisses;     // Count of files copied because CRC same
+  private long copyCrcUnchecked;  // Count of files copied because CRC check suppressed
+  private long copyToSelf;        // Count of cases where copy to self requested
+  private long copyDeleted;       // Count of files/folders deleted during copy process
 
   // Values read once from configuration that are used repeatedly
-  private static ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
-  private static boolean checkCRC = currentProfile.getMinimizeChangedFiles();
+  private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  private boolean checkCRC = currentProfile.getMinimizeChangedFiles();
 
   private CatalogCallbackInterface callback;        // GUI handling routine
 
   //----------------------------------------------
-  private static final boolean syncFilesDetail = false; // Set to true to get more details on syncFiles process
+  private final boolean syncFilesDetail = false; // Set to true to get more details on syncFiles process
   //----------------------------------------------     (If set false, code is optimised out by compiler)
   //-----------------------------------------
-  private static final boolean syncLog = true;      // Set to true to get a log of the file copy process
+  private final boolean syncLog = true;      // Set to true to get a log of the file copy process
   //-----------------------------------------         (If set false, code is optimised out by compiler)
 
-  private static PrintWriter syncLogFile;           // File to be used for the Sync log
+  private PrintWriter syncLogFile;           // File to be used for the Sync log
 
   // The following are used to simplify code and to avoid continually referring to the profile
   private File generateFolder = null;     // Location where catalog is generated
@@ -76,7 +75,7 @@ public class Catalog {
   public Catalog(CatalogCallbackInterface callback) {
     super();
     this.callback = callback;
-    CatalogContext.INSTANCE.callback = callback;
+    CatalogManager.INSTANCE.callback = callback;
   }
 
   /**
@@ -515,7 +514,7 @@ public class Catalog {
     * @param targetFolder
     */
   private void syncImages(CachedFile targetFolder) {
-    Map<String,CachedFile> mapOfImagesToCopy = CatalogContext.INSTANCE.catalogManager.getMapOfCatalogImages();
+    Map<String,CachedFile> mapOfImagesToCopy = CatalogManager.INSTANCE.getMapOfCatalogImages();
     for (Map.Entry<String,CachedFile> entry : mapOfImagesToCopy.entrySet()) {
       CachedFile targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, entry.getKey());
       try {
@@ -531,7 +530,7 @@ public class Catalog {
    * Control the overall catalog generation process
    * -----------------------------------------------
    *
-   * @throws IOException
+   * @throws java.io.IOException
    */
   public void createMainCatalog() throws IOException {
     long countMetadata;     // Count of files for which ePub metadata is updated
@@ -539,10 +538,10 @@ public class Catalog {
     CatalogManager.reportInitialRamUsage();
 
     // reinitialize caches (in case of multiple calls in the same session)
-    CatalogContext.INSTANCE.reset();
-    CatalogContext.INSTANCE.initialize();
-    CatalogContext.INSTANCE.catalogManager.reset();
-    CatalogContext.INSTANCE.callback = callback;
+    // CatalogManager.INSTANCE.catalogManager.reset();
+    CatalogManager.INSTANCE.reset();
+    CatalogManager.INSTANCE.initialize();
+    CatalogManager.INSTANCE.callback = callback;
 
     Localization.Main.reloadLocalizations();
     Localization.Enum.reloadLocalizations();
@@ -749,7 +748,7 @@ public class Catalog {
     }
     logger.trace("catalogParentFolder set to " + catalogParentFolder);
     // Set catalog folder (remembering to add TROOK extension if in Nook mode)
-    File catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+    File catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
 //                                + ((currentProfile.getDeviceMode() == DeviceMode.Nook ? Constants.TROOK_FOLDER_EXTENSION + "/" + Constants.NOOK_CATALOG_FOLDERNAME : "")));
     if (logger.isTraceEnabled())
       logger.trace("New catalog to be generated at " + catalogFolder.getPath());
@@ -776,8 +775,8 @@ public class Catalog {
     // Ensure objects are set to clean state (in case resused in same run)
 
     CachedFileManager.INSTANCE.reset();
-    CatalogContext.INSTANCE.thumbnailManager.reset();
-    CatalogContext.INSTANCE.coverManager.reset();
+    CatalogManager.INSTANCE.thumbnailManager.reset();
+    CatalogManager.INSTANCE.coverManager.reset();
 
     CatalogManager.reportRamUsage();
 
@@ -799,7 +798,7 @@ public class Catalog {
       logger.info("Temporary Files folder: " + generateFolder.getAbsolutePath());
 
       // Save the location of the Catalog folder for any other component that needs to knw it
-      CatalogContext.INSTANCE.catalogManager.setGenerateFolder(generateFolder);
+      CatalogManager.INSTANCE.setGenerateFolder(generateFolder);
       callback.startCreateMainCatalog();
 
       callback.startReadDatabase();
@@ -859,18 +858,17 @@ public class Catalog {
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-            callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+            callback.endCreateMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
             return;
           }
         }
       }
-      CatalogContext.INSTANCE.catalogManager.featuredBooksFilter = featuredBookFilter;
+      CatalogManager.INSTANCE.featuredBooksFilter = featuredBookFilter;
       callback.checkIfContinueGenerating();      // check if we must continue
 
       // Prepare the Custom catalogs search query
       List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
-        CatalogContext.INSTANCE.catalogManager.customCatalogsFilters = new HashMap<String, BookFilter>();
 nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
           String customCatalogTitle = customCatalog.getFirstElement();
@@ -895,13 +893,13 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
             if (customCatalogFilter == null) {
               // an error occured, let's ask the user if he wants to abort
               if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-                callback.endCreateMainCatalog(null, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+                callback.endCreateMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
                 return;
               }
               // TODO Set something to suppress this custom catalog entry at generate stage!
               //      Currently an entry is generated to a none-existent URL
             } else {
-              CatalogContext.INSTANCE.catalogManager.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
+              CatalogManager.INSTANCE.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
             }
           }
         }
@@ -999,7 +997,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs
       levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!
       levelSubCatalog.setCatalogFolder("");         // Force to top level!
-      levelSubCatalog.setCatalogBaseFilename(levelSubCatalog.catalogManager.getInitialUr());
+      levelSubCatalog.setCatalogBaseFilename(CatalogManager.INSTANCE.getInitialUr());
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
                                 "dummy.xml");
       levelSubCatalog.getCatalog(
@@ -1067,7 +1065,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       // (and books, if the target folder is set) to the destination folder
 
       // if the target folder is set, copy/sync Files from the library there
-      int nbFilesToCopyToTarget = CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy().size();
+      int nbFilesToCopyToTarget = CatalogManager.INSTANCE.getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // In modes other than default mode we make a copy of all the ebook
@@ -1076,7 +1074,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       && (!currentProfile.getOnlyCatalogAtTarget())) {
         logger.debug("STARTING: syncFiles eBook files to target");
         now = System.currentTimeMillis();
-        for (String pathToCopy : CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy()) {
+        for (String pathToCopy : CatalogManager.INSTANCE.getListOfFilesPathsToCopy()) {
           callback.checkIfContinueGenerating();
           CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
           CachedFile targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, pathToCopy);
@@ -1089,7 +1087,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         // delete the target folders that were not in the source list (minus the catalog folder, of course)
         logger.debug("STARTING: Build list of files to delete from target");
         Set<File> usefulTargetFiles = new TreeSet<File>();
-        List<String> sourceFiles = new LinkedList<String>(CatalogContext.INSTANCE.catalogManager.getListOfFilesPathsToCopy());
+        List<String> sourceFiles = new LinkedList<String>(CatalogManager.INSTANCE.getListOfFilesPathsToCopy());
         for (String sourceFile : sourceFiles) {
           callback.checkIfContinueGenerating();
           File targetFile = new File(targetFolder, sourceFile);
@@ -1104,7 +1102,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         logger.debug("STARTED: Creating list of files on target");
         List<File> existingTargetFiles = Helper.listFilesIn(targetFolder);
         logger.debug("COMPLETED: Creating list of files on target");
-        String targetCatalogFolderPath = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName()).getAbsolutePath();
+        String targetCatalogFolderPath = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName()).getAbsolutePath();
         String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
         // TODO    Look if this can be done more effeciently?  Perhaps piecemeal during sync?
@@ -1139,13 +1137,13 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       callback.endCopyLibToTarget(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
 
-      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogContext.INSTANCE.catalogManager.getGenerateFolder());
+      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogManager.INSTANCE.getGenerateFolder());
       // If we are copying to two locations need to double count
       if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)
       &&  currentProfile.getCopyToDatabaseFolder()) {
         nbCatalogFilesToCopyToTarget += nbCatalogFilesToCopyToTarget;
       }
-      nbCatalogFilesToCopyToTarget += CatalogContext.INSTANCE.catalogManager.getMapOfCatalogImages().size();
+      nbCatalogFilesToCopyToTarget += CatalogManager.INSTANCE.getMapOfCatalogImages().size();
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
@@ -1163,9 +1161,9 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         }
         // Also need to make sure catalog.xml exists for Trook use
         // Use index.xml already generated
-        File indexFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/index.xml");
+        File indexFile = new File(generateFolder, "/" + CatalogManager.INSTANCE.getCatalogFolderName() + "/index.xml");
         // replicate it to catalog.xml
-        File catalogFile = new File(generateFolder, "/" + CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/catalog.xml");
+        File catalogFile = new File(generateFolder, "/" + CatalogManager.INSTANCE.getCatalogFolderName() + "/catalog.xml");
         if (logger.isTraceEnabled())
           logger.trace("copy '" + indexFile + "' to '" + catalogFile + "'");
         syncFiles(new CachedFile(indexFile.getAbsolutePath()), new CachedFile(catalogFile.getAbsolutePath()));
@@ -1176,9 +1174,9 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), true, targetCatalogZipFile, false);
+          recursivelyZipFiles(CatalogManager.INSTANCE.getGenerateFolder(), true, targetCatalogZipFile, false);
           // Now ensure that there is no unzipped catalog left behind!
-          File targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+          File targetCatalogFolder = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
           Helper.delete(targetCatalogFolder, true);
           break;
@@ -1189,7 +1187,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         if (currentProfile.getOnlyCatalogAtTarget()) {
           targetCatalogFolder = targetFolder;
         } else {
-          targetCatalogFolder = new File(targetFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+          targetCatalogFolder = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName());
         }
         syncFiles(new CachedFile(generateFolder.getAbsolutePath()), new CachedFile(targetCatalogFolder.getAbsolutePath()));
         logger.debug("START: Copy images to Destination catalog folder");
@@ -1206,15 +1204,15 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-        File libraryCatalogFolder = new File(libraryFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+        File libraryCatalogFolder = new File(libraryFolder, CatalogManager.INSTANCE.getCatalogFolderName());
         syncFiles(new CachedFile(generateFolder.getAbsolutePath()) , new CachedFile(libraryCatalogFolder.getAbsolutePath()));
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
         logger.debug("START: Copy images to Database catalog folder");
         syncImages(new CachedFile(libraryCatalogFolder.getAbsolutePath()));
         logger.debug("COMPLETED: Copy images to Database catalog folder");
       }
-      CatalogContext.thumbnailManager.writeImageHeightFile();
-      CatalogContext.coverManager.writeImageHeightFile();
+      CatalogManager.thumbnailManager.writeImageHeightFile();
+      CatalogManager.coverManager.writeImageHeightFile();
       callback.endCopyCatToTarget(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
 
@@ -1226,7 +1224,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
         File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
         File zipFile = new File(zipFolder, zipFilename);
         zipFile.delete();     // Remove any existing ZIP file
-        recursivelyZipFiles(CatalogContext.INSTANCE.catalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
+        recursivelyZipFiles(CatalogManager.INSTANCE.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
         if (targetFolder != null  && currentProfile.getCopyToDatabaseFolder()) {
           Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
         }
@@ -1273,8 +1271,8 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       logger.info("");
       logger.info(Localization.Main.getText("stats.run.header"));
       logger.info(String.format("%8d  ", countMetadata) + Localization.Main.getText("stats.run.metadata"));
-      logger.info(String.format("%8d  ", CatalogContext.INSTANCE.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
-      logger.info(String.format("%8d  ", CatalogContext.INSTANCE.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
+      logger.info(String.format("%8d  ", CatalogManager.INSTANCE.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
+      logger.info(String.format("%8d  ", CatalogManager.INSTANCE.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
       logger.info(String.format("%8d  ", copyExistHits) + Localization.Main.getText("stats.copy.notexist"));
@@ -1339,7 +1337,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
       else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
-        callback.endCreateMainCatalog(where, CatalogContext.INSTANCE.htmlManager.getTimeInHtml());
+        callback.endCreateMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
       CatalogManager.reportRamUsage();
     }
   }
@@ -1380,7 +1378,7 @@ nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
           // If this option set, then catalog going to be at supplied level
           catalogFolder = catalogParentFolder;
         } else {
-          catalogFolder = new File(catalogParentFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName());
+          catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
         }
         // We treat catalog folder as not existing as being equivalent to
         // catalog existing as there is no problem with over-writing.

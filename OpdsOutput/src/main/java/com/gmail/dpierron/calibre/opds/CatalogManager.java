@@ -1,30 +1,33 @@
 package com.gmail.dpierron.calibre.opds;
 
+/**
+ * Class to store context about the current Catalog that is being generated,
+ * and to provide methods for manipulating Catalog information.
+ */
 import com.gmail.dpierron.calibre.cache.CachedFile;
+import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 
-import javax.print.DocFlavor;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.zip.CRC32;
 
-public class CatalogManager {
+public enum CatalogManager {
+  INSTANCE;
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
   private static File generateFolder;
   public static BookFilter featuredBooksFilter;
-  public static List<Composite<String, String>> customCatalogs;
-  public static Map<String, BookFilter> customCatalogsFilters;
   // TODO  Itimpi:  Does not seem to be needed any more1
   /// private static List<CachedFile> listOfFilesToCopy;
   // The list of files that need to be copied from the source
@@ -39,12 +42,31 @@ public class CatalogManager {
   private static List<CachedFile> listOfUnchangedCatalogFiles;
   // List of books that have already been generated
   // used to track if has already been done before!
-  private static String securityCode;
-  private static String initialUrl;
+  private String securityCode;
+  private String initialUrl;
 
+  public static HtmlManager htmlManager;
+  public static ThumbnailManager thumbnailManager;
+  public static ImageManager coverManager;
+  public static CatalogCallbackInterface callback;
+  public static SecurityManager securityManager;
+  public static ConfigurationManager configurationManager;
+  public static ConfigurationHolder currentProfile;
+  // This is the date format used within the book details.
+  // At the moment it is either a full date or jsut the year
+  // If users ask for more flexibility the coniguration options can be re-visited.
+  public static DateFormat titleDateFormat;
+  // This is the date format that is to be used in the titles for the Recent Books sub-catalog section
+  // It is currently a hard-coded format.   If there is user feedback suggestion that variations are
+  // desireable then it could be come a configurable option
+  public static DateFormat bookDateFormat;
+  // Tags that the user has specified should not be included
+  private static List<Tag> tagsToIgnore;
+  public static Map<String, BookFilter> customCatalogsFilters;
 
-  public CatalogManager() {
-    super();
+  // public CatalogManager() {
+  public void initialize() {
+    // super();
     // Avoid superflous settings of static object!
     securityCode = ConfigurationManager.INSTANCE.getCurrentProfile().getSecurityCode();
     if (Helper.isNullOrEmpty(securityCode)) {
@@ -58,13 +80,24 @@ public class CatalogManager {
     initialUrl = securityCode;
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
+  // }
+
+  // public void initialize() {
+    if (htmlManager == null)      htmlManager = new HtmlManager();
+    if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
+    if (coverManager==null)       coverManager = ImageManager.newCoverManager();
+    if (securityManager==null)    securityManager = new SecurityManager();
+    if (currentProfile==null)     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
+    if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, new Locale(currentProfile.getLanguage()));
+    if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
+    getTagsToIgnore();
   }
+
 
   public void reset() {
     generateFolder = null;
     featuredBooksFilter = null;
-    customCatalogs = null;
-    customCatalogsFilters = null;
     /// listOfFilesToCopy = new LinkedList<CachedFile>();
     listOfFilesPathsToCopy = new LinkedList<String>();
     // mapOfBookByPathToCopy = new HashMap<String, Book>();
@@ -73,13 +106,23 @@ public class CatalogManager {
     bookDetailsCustomColumns = null;
     listOfUnchangedCatalogFiles = new LinkedList<CachedFile>();
     mapOfImagesToCopy = new HashMap<String, CachedFile>();
+    htmlManager = null;
+    thumbnailManager = null;
+    coverManager = null;
+    securityManager = null;
+    currentProfile = null;
+    titleDateFormat = null;
+    bookDateFormat = null;
+    tagsToIgnore = null;
+    customCatalogsFilters = null;
+    JDOM.INSTANCE.reset();
   }
 
-  public static String getSecurityCode() {
+  public String getSecurityCode() {
     return securityCode;
   }
 
-  public static String getInitialUr() {
+  public String getInitialUr() {
     return initialUrl;
   }
   /**
@@ -336,6 +379,30 @@ public Map<String,CachedFile> getMapOfCatalogImages() {
     customCatalogsFilters = pcustomCatalogsFilters;
   }
   */
+  /**
+   * Get the list of tags to ignore. If it has not been done,
+   * convert the list of tags to ignore from the string
+   * representation to the appropriate object representation
+   * as this is more effecient in later processing.
+   *
+   * @return
+   */
+  public List<Tag>  getTagsToIgnore () {
+    if (tagsToIgnore == null) {
+      tagsToIgnore = new LinkedList<Tag>();
+      for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
+        List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
+        for (String regexTag : regextagsToIgnore) {
+          if (tag.getName().toUpperCase().matches("^" + regexTag)) {
+            if (! tagsToIgnore.contains(tag)) {
+              tagsToIgnore.add(tag);
+            }
+          }
+        }
+      }
+    }
+    return tagsToIgnore;
+  }
 
   /**
    *

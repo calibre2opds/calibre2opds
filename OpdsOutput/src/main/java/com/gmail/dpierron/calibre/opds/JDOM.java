@@ -41,6 +41,18 @@ public enum JDOM {
   private Transformer mainTransformer;
   private SAXBuilder sb;
 
+  public void reset() {
+    factory = null;
+    outputter = null;
+    serializer = null;
+    transformerFactory = null;
+    bookFullEntryTransformer = null;
+    catalogTransformer = null;
+    headerTransformer = null;
+    mainTransformer = null;
+    sb = null;
+  }
+
   public Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
