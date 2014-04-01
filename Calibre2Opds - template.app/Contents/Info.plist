@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>JavaApplicationStub</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Calibre2Opds v3.3</string>
+	<string>Calibre2Opds v3.4</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -28,10 +28,10 @@
 	<dict>
 		<key>ClassPath</key>
 		<array>
-			<string>$JAVAROOT/OpdsOutput-3.3-SNAPSHOT.jar</string>
-			<string>$JAVAROOT/CalibreQueryLanguage-3.3-SNAPSHOT.jar</string>
-			<string>$JAVAROOT/DataModel-3.3-SNAPSHOT.jar</string>
-			<string>$JAVAROOT/Tools-3.3-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/OpdsOutput-3.4-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/CalibreQueryLanguage-3.4-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/DataModel-3.4-SNAPSHOT.jar</string>
+			<string>$JAVAROOT/Tools-3.4-SNAPSHOT.jar</string>
 			<string>$JAVAROOT/antlr-2.7.7.jar</string>
 			<string>$JAVAROOT/antlr-runtime-3.1.3.jar</string>
 			<string>$JAVAROOT/jdom-1.1.jar</string>
