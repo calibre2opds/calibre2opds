@@ -5,7 +5,7 @@
 # as this script, but we need to allow for the case of testing where they
 # are actually in the location this script was invoked from!
 
-c2o_jar=OpdsOutput-3.3-SNAPSHOT.jar
+c2o_jar=OpdsOutput-3.4-SNAPSHOT.jar
 
 #  We set stack limits explicitly here to get consistency across systems
 # -Xms<value> define starting size

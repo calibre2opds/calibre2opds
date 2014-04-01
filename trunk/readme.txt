@@ -1,4 +1,4 @@
-                     README for Calibre2Opds v3.3
+                     README for Calibre2Opds v3.4
                      ------------------------------
 
 Generate OPDS and HTML catalogs from your Calibre ebooks database

@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.3
+                    RELEASE NOTES for Calibre2Opds v3.4
                     -----------------------------------
 
 Documentation
@@ -90,6 +90,9 @@ The following shows the Calibre2Opds releases in reverse chronological order (so
 is at the top) showing main changes and bug fixes.  The bug number references are to those
 that have been recorded in the Issue tracker.
 
+v3.4
+
+
 v3.3 (1st April 2014)
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,
                but are instead generated (if required) when creating the book details page
@@ -129,7 +132,7 @@ v3.3 (1st April 2014)
     = Fix: #c2o-197: Unable to add a new custom catalog entry (in 3.3 beta)
     - Fix: #c2o-198: Allow Relative URL's to be used for Custom catalogs.
     - Fix: #x2o-199: Custom Catalog entries not logged correctly
-    3.Fix: #c2o-201: 3.3 beta rev 272; 404 error select 'next page' 
+    -.Fix: #c2o-201: 3.3 beta rev 272; 404 error select 'next page'
     
 
 v3.2 (released 6th October 2013)

@@ -19,5 +19,5 @@ fi
 # -Xmx<value> defines maximum size
 # -Xss<value> defines stack size
 # It is possible that for very large libraries this may not be enough - we will have to see.
-java -Xms128m -Xmx1024m -cp ./OpdsOutput-3.3-SNAPSHOT.jar Cli $*
+java -Xms128m -Xmx1024m -cp ./OpdsOutput-3.4-SNAPSHOT.jar Cli $*
 cd $old
