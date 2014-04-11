@@ -678,6 +678,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (book.hasAuthor()) {
           if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the author page link(s)");
           for (Author author : book.getAuthors()) {
+            String authorName = author.getName();
+            // Check for author names that do not get internal links.
+            if (authorName.toUpperCase().equals("UNKNOWN")
+            || authorName.toUpperCase().equals("VARIOUS")) {
+              continue;
+            }
             // c2o-168 - Omit Counts if MinimizeChangedFiles set
             if (! currentProfile.getMinimizeChangedFiles()) {
               booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
@@ -686,7 +692,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             // TODO Perhaps consider whether level should be taken into account?
             filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
             entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
-                Localization.Main.getText("bookentry.author", booksText, author.getName())));
+                Localization.Main.getText("bookentry.author", booksText, authorName)));
           }
         }
       }
