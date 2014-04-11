@@ -416,7 +416,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
                                                        true,
                                                        0,         // from start
                                                        title,
-                                                       summary,
+                                                       null,      // summary not needed as only single series?
                                                        urn,
                                                        null,      // filename derived from catalog properties
                                                        SplitOption.Paginate,
@@ -426,20 +426,20 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
       // Make a link to the "allbooks entry" for this author
       sortBooksByTitle(authorbooks);
-      AllBooksSubCatalog booksSubcatalog = new AllBooksSubCatalog(authorbooks);
-      booksSubcatalog.setCatalogLevel(getCatalogLevel());
-      booksSubcatalog.setCatalogFolder(filename);
-      booksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
-      Element entry = booksSubcatalog.getListOfBooks(breadcrumbs,
+      AllBooksSubCatalog allbooksSubcatalog = new AllBooksSubCatalog(authorbooks);
+      allbooksSubcatalog.setCatalogLevel(getCatalogLevel());
+      allbooksSubcatalog.setCatalogFolder(filename);
+      allbooksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
+      Element entry = allbooksSubcatalog.getListOfBooks(breadcrumbs,
                                                       null,           // derived from catalog properties
                                                       true,
                                                       0,              // from start
                                                       Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getName()),
-                                                      booksSubcatalog.getSummary(),
-                                                      booksSubcatalog.getUrn(),
-                                                      booksSubcatalog.getCatalogBaseFolderFileName(),
+                                                      allbooksSubcatalog.getSummary(),
+                                                      allbooksSubcatalog.getUrn(),
+                                                      allbooksSubcatalog.getCatalogBaseFolderFileName(),
                                                       SplitOption.Paginate, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
-      booksSubcatalog = null;     // May not be necessary - but allowe earlier release of resources
+      allbooksSubcatalog = null;     // May not be necessary - but allowe earlier release of resources
       firstElements.add(0,entry); // Add at start (in front of Series list)
 
       // Reset books to list non-series books

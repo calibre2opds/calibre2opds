@@ -221,7 +221,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Element feed;
     feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir */);
     // Update breadcrumbs ready for next iteration
-    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+    Breadcrumbs breadcrumbs;
+    // #c2o-204 breadrumbs should already be correct if listing firt page of books for an author.
+    if (from ==0 && getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
+      breadcrumbs = pBreadcrumbs;
+    } else {
+      breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+    }
 
     // list the books (or split them)
     List<Element> result;

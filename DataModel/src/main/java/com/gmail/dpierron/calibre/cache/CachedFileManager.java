@@ -187,10 +187,12 @@ public enum CachedFileManager {
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
     try {
+      // Experience has shown that saving the cache to a network drie is slow.
+      // We therfore save to the local temp folder and moe the rsult instead as being faster.
+      File temp = File.createTempFile("calibre2opds", "");
       try {
-        assert cacheFile != null : "saveCache: cacheFile should never be null at this point";
-        logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
-        fs = new FileOutputStream(cacheFile);       // Open File
+        logger.debug("STARTED Saving CRC cache to file " + temp.getPath());
+        fs = new FileOutputStream(temp);       // Open File
         assert fs != null: "saveCache: fs should never be null at this point";
         bs = new BufferedOutputStream(fs);          // Add buffering
         assert bs != null: "saveCache: bs should never be null at this point";
@@ -245,7 +247,11 @@ public enum CachedFileManager {
         try {
           if (os != null) os.close();
           if (bs != null) bs.close();
-          if (fs != null) fs.close();
+          if (fs != null) {
+            fs.close();
+            Helper.copy(temp, cacheFile);
+            temp.delete();
+          }
         } catch (IOException e) {
           // Do nothing - we ignore an error at this point
           // Having said that, an error here is a bit unexpected so lets log it when testing
