@@ -92,6 +92,7 @@ that have been recorded in the Issue tracker.
 
 v3.4
 
+    - Fix:  #c2o-204: Problem navigating to author from an author series in HTML catalog
 
 v3.3 (1st April 2014)
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

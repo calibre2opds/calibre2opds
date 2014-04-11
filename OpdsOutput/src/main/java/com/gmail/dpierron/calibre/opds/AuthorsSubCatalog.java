@@ -393,7 +393,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     String title = author.getSort();
     String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
-    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.PAGE_ONE_XML, true));
 
     // try and list the items to make the summary
     String summary = Summarizer.INSTANCE.summarizeBooks(authorbooks);
@@ -411,9 +411,16 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       seriesSubCatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
       seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId()
                                               + Constants.TYPE_SEPARATOR + Constants.SERIE_TYPE);
-      firstElements = seriesSubCatalog.getListOfSeries(pBreadcrumbs, null,      // series derived from catalog books
-          true, 0, title, summary, urn, null,      // filename derived from catalog properties
-          SplitOption.Paginate, true);
+      firstElements = seriesSubCatalog.getListOfSeries(breadcrumbs,
+                                                       null,      // series derived from catalog books
+                                                       true,
+                                                       0,         // from start
+                                                       title,
+                                                       summary,
+                                                       urn,
+                                                       null,      // filename derived from catalog properties
+                                                       SplitOption.Paginate,
+                                                       true);
 
       seriesSubCatalog = null;    // May not be necessary, but allow earlier release of resources
 
@@ -424,8 +431,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       booksSubcatalog.setCatalogFolder(filename);
       booksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
       Element entry = booksSubcatalog.getListOfBooks(breadcrumbs,
-                                                      null,          // derived from catalog properties
-                                                      true, 0,       // from start
+                                                      null,           // derived from catalog properties
+                                                      true,
+                                                      0,              // from start
                                                       Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getName()),
                                                       booksSubcatalog.getSummary(),
                                                       booksSubcatalog.getUrn(),

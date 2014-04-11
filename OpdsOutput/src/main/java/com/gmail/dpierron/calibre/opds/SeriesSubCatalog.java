@@ -197,7 +197,13 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           break;
         } else {
           Series serie = series.get(i);
-          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+          Breadcrumbs breadcrumbs;
+          // #c2o-204:  If we are getting the series for an author then the breadcrumbs are already correct.
+          if (this.getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
+            breadcrumbs = pBreadcrumbs;
+          } else {
+            breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+          }
           Element entry = getSerie(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
