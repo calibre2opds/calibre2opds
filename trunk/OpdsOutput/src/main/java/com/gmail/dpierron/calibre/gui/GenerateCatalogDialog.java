@@ -594,9 +594,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
         cmdStopGenerating.setText("cmdStopGenerating");
         cmdStopGenerating.addMouseListener(new java.awt.event.MouseAdapter() {
-          public void mouseClicked(java.awt.event.MouseEvent evt) {
-            cmdStopGeneratingMouseClicked(evt);
-          }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cmdStopGeneratingMouseClicked(evt);
+            }
         });
         cmdStopGenerating.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -787,7 +787,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         chkAllbooks.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkAllbooks, gridBagConstraints);
@@ -795,7 +795,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblAllbooks.setText("lblAllbooks");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
@@ -804,7 +804,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblAllbooksTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblAllbooksTime, gridBagConstraints);
@@ -812,7 +812,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         chkFeaturedBooks.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkFeaturedBooks, gridBagConstraints);
@@ -820,7 +820,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblFeaturedBooks.setText("lblFeaturedBooks");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
@@ -829,7 +829,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblFeaturedBooksTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblFeaturedBooksTime, gridBagConstraints);
@@ -1030,9 +1030,9 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
         chkZipCatalog.setEnabled(false);
         chkZipCatalog.addActionListener(new java.awt.event.ActionListener() {
-          public void actionPerformed(java.awt.event.ActionEvent evt) {
-            chkZipCatalogActionPerformed(evt);
-          }
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkZipCatalogActionPerformed(evt);
+            }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

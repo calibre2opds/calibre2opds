@@ -670,10 +670,10 @@ public class Mainframe extends javax.swing.JFrame {
 
     cboLang.setModel(new DefaultComboBoxModel(LocalizationHelper.INSTANCE.getAvailableLocalizations()));
     cboLang.setSelectedItem(currentProfile.getLanguage());
-    lblCurrentProfile.setText(Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName() + "       "));
-    lblCurrentProfile.setFont(lblCurrentProfile.getFont().deriveFont(Font.BOLD));
+    String title = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION)
+        + " - " + Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName());
+    setTitle(title); // NOI18N
 
-    lblCurrentProfile.setToolTipText(Localization.Main.getText("config.profile.description"));
     File f = currentProfile.getDatabaseFolder();
     if (f == null || !f.exists())
       f = new File(".");
@@ -1165,8 +1165,6 @@ public class Mainframe extends javax.swing.JFrame {
    */
   private void translateTexts() {
     // main window
-    String title = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION);
-    setTitle(title); // NOI18N
     lblBottom0.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
     lblBottom0.setFont(lblBottom0.getFont().deriveFont(Font.BOLD));
     cmdCancel.setText(Localization.Main.getText("gui.close")); // NOI18N
@@ -1883,7 +1881,6 @@ public class Mainframe extends javax.swing.JFrame {
         cmdGenerate = new javax.swing.JButton();
         cmdHelp = new javax.swing.JButton();
         pnlTitle = new javax.swing.JPanel();
-        lblCurrentProfile = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuFileSave = new javax.swing.JMenuItem();
@@ -4550,13 +4547,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         pnlMain.add(pnlTitle, gridBagConstraints);
 
-        lblCurrentProfile.setText("lblCurrentProfile");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        pnlMain.add(lblCurrentProfile, gridBagConstraints);
-
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
         mnuFile.setText("mnuFile");
@@ -5114,7 +5104,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblCopyToDatabaseFolder;
     private javax.swing.JLabel lblCoverHeight;
     private javax.swing.JLabel lblCryptFilenames;
-    private javax.swing.JLabel lblCurrentProfile;
     private javax.swing.JLabel lblCustomDummy1;
     private javax.swing.JLabel lblCustomDummy2;
     private javax.swing.JLabel lblDatabaseFolder;
