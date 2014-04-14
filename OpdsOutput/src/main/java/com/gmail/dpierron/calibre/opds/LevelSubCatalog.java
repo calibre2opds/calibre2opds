@@ -117,35 +117,30 @@ public class LevelSubCatalog extends SubCatalog {
       }
     }
 
-    /* All books */
+    /* Featured catalog */
+    // TODO:  Decide if this should be restricted to top level catalog - currentl assuming yes?
 
-    if (atTopLevel) {
-      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
-    }
     now = System.currentTimeMillis();
-    if (currentProfile.getGenerateAllbooks()) {
-      logger.debug("STARTED: Generating All books catalog");
-      AllBooksSubCatalog allBooksSubCatalog = new AllBooksSubCatalog(stuffToFilterOut, getBooks());
-      allBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-      String allBooksSummary = "";
-      if (allBooksSubCatalog.getBooks().size() > 1)
-        allBooksSummary = Localization.Main.getText("allbooks.alphabetical", getBooks().size());
-      else if (getBooks().size() == 1)
-        allBooksSummary = Localization.Main.getText("allbooks.alphabetical.single");
-      entry = allBooksSubCatalog.getListOfBooks(breadcrumbs, getBooks(), getCatalogLevel().length() > 0, 0,          // from start
-          Localization.Main.getText("allbooks.title"), allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
-          allBooksSubCatalog.getCatalogBaseFolderFileName(), SplitOption.SplitByLetter,
-          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
-      allBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-
-      if (entry != null) {
-        feed.addContent(entry);
+    if (CatalogManager.INSTANCE.featuredBooksFilter != null) {
+      logger.debug("STARTED: Generating Featured catalog");
+      List<Book> featuredBooks = FilterHelper.filter(CatalogManager.INSTANCE.featuredBooksFilter, getBooks());
+      if (featuredBooks.size() == 0) {
+        logger.warn("No books found for Featured Books section");
+      } else {
+        callback.setFeaturedCount("" + featuredBooks.size() + " " + Localization.Main.getText("bookword.title"));
+        FeaturedBooksSubCatalog featuredBooksSubCatalog = new FeaturedBooksSubCatalog(featuredBooks);
+        if (atTopLevel)  callback.startCreateFeaturedBooks(featuredBooks.size());
+        featuredBooksSubCatalog.setCatalogLevel(getCatalogLevel());
+        Element featuredCEntry = featuredBooksSubCatalog.getFeaturedCatalog(breadcrumbs, inSubDir);
+        featuredBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
+        if (featuredCEntry != null) {
+          feed.addContent(featuredCEntry);
+        }
       }
-
-      logger.debug("COMPLETED: Generating All Books catalog");
+      logger.debug("COMPLETED: Generating Featured catalog");
       if (atTopLevel) CatalogManager.reportRamUsage();
     }
-    if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
 
     /* Authors */
@@ -271,32 +266,36 @@ public class LevelSubCatalog extends SubCatalog {
     if (atTopLevel)  callback.endCreateRated(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
 
-    /* Featured catalog */
-    // TODO:  Decide if this should be restricted to top level catalog - currentl assuming yes?
+    /* All books */
 
+    if (atTopLevel) {
+      callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
+    }
     now = System.currentTimeMillis();
-    if (CatalogManager.INSTANCE.featuredBooksFilter != null) {
-      logger.debug("STARTED: Generating Featured catalog");
-      List<Book> featuredBooks = FilterHelper.filter(CatalogManager.INSTANCE.featuredBooksFilter, getBooks());
-      if (featuredBooks.size() == 0) {
-        logger.warn("No books found for Featured Books section");
-      } else {
-        callback.setFeaturedCount("" + featuredBooks.size() + " " + Localization.Main.getText("bookword.title"));
-        FeaturedBooksSubCatalog featuredBooksSubCatalog = new FeaturedBooksSubCatalog(featuredBooks);
-        if (atTopLevel)  callback.startCreateFeaturedBooks(featuredBooks.size());
-        featuredBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-        Element featuredCEntry = featuredBooksSubCatalog.getFeaturedCatalog(breadcrumbs, inSubDir);
-        featuredBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
-        if (featuredCEntry != null) {
-          feed.addContent(featuredCEntry);
-        }
+    if (currentProfile.getGenerateAllbooks()) {
+      logger.debug("STARTED: Generating All books catalog");
+      AllBooksSubCatalog allBooksSubCatalog = new AllBooksSubCatalog(stuffToFilterOut, getBooks());
+      allBooksSubCatalog.setCatalogLevel(getCatalogLevel());
+      String allBooksSummary = "";
+      if (allBooksSubCatalog.getBooks().size() > 1)
+        allBooksSummary = Localization.Main.getText("allbooks.alphabetical", getBooks().size());
+      else if (getBooks().size() == 1)
+        allBooksSummary = Localization.Main.getText("allbooks.alphabetical.single");
+      entry = allBooksSubCatalog.getListOfBooks(breadcrumbs, getBooks(), getCatalogLevel().length() > 0, 0,          // from start
+          Localization.Main.getText("allbooks.title"), allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
+          allBooksSubCatalog.getCatalogBaseFolderFileName(), SplitOption.SplitByLetter,
+          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
+      allBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
+
+      if (entry != null) {
+        feed.addContent(entry);
       }
-      logger.debug("COMPLETED: Generating Featured catalog");
+
+      logger.debug("COMPLETED: Generating All Books catalog");
       if (atTopLevel) CatalogManager.reportRamUsage();
     }
-    if (atTopLevel)  callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
+    if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
-
 
     /* Custom catalogs */
 
