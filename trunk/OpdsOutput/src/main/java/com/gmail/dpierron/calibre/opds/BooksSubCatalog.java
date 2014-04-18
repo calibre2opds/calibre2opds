@@ -78,6 +78,26 @@ public abstract class BooksSubCatalog extends SubCatalog {
     });
   }
 
+  void sortBooksByAuthorAndTitle(List<Book> books) {
+    Collections.sort(books, new Comparator<Book>() {
+
+      public int compare(Book o1, Book o2) {
+        String s1 = o1.getAuthorSort();
+        String s2 = o2.getAuthorSort();
+        if (! s1.equals(s2)) {
+           return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
+        }
+        // If authors equal compare on title.
+        if (currentProfile.getSortUsingTitle())  {
+          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
+        } else {
+          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
+        }
+      }
+
+    });
+  }
+
   /**
    * Function to sort books by timestamp (last modified)
    *
@@ -1259,6 +1279,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (book.getRating() != BookRating.NOTRATED) {
         title = MessageFormat.format(Localization.Main.getText("bookentry.rated"), title,  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
       }
+    }
+    // #c2o-212
+    // Special handling for the listof books within a tag1
+    if (currentProfile.getSortTagsByAuthor() && getCatalogType().equals(Constants.TAGS_TYPE)) {
+      title = (currentProfile.getDisplayAuthorSort() ? book.getAuthorSort() : book.getListOfAuthors()) + " - " + title;
     }
     String urn = "calibre:book:" + book.getId();
 

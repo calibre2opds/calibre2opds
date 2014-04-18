@@ -12,6 +12,7 @@
 package com.gmail.dpierron.calibre.gui;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.opds.CatalogManager;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 
@@ -59,6 +60,8 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
             new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), newProfile + ConfigurationManager.PROFILES_SUFFIX));
         loadProfiles();
       }
+      // TODO #c2o-10:  If current profile is the one renamed then need to refresh main screen
+      // if (ConfigurationManager.INSTANCE.getCurrentProfile().getp)
     }
   }
 

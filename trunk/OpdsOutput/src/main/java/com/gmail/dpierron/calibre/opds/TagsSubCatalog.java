@@ -218,6 +218,14 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       if (logger.isDebugEnabled())
         logger.debug("getTag: making a simple book list for tag " + tag);
       logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
+      // #c2o-212  Sort tag books by author
+      if (currentProfile.getSortTagsByAuthor()) {
+        sortBooksByAuthorAndTitle(books);
+      }
+      if (currentProfile.getTagBooksNoSplit() && splitOption == SplitOption.SplitByLetter) {
+        splitOption = SplitOption.Paginate;
+      }
+
       return getListOfBooks(pBreadcrumbs,
                             books,
                             true,               // Always in sub-dir for tag
