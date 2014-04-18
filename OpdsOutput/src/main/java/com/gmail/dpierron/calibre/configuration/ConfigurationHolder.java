@@ -102,6 +102,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   /* Catalog Structure */
   private final static String PROPERTY_NAME_SortUsingAuthor = "SortUsingAuthor";
   private final static String PROPERTY_NAME_SortUsingTitle = "SortUsingTitle";
+  private final static String PROPERTY_NAME_SortTagsByAuthor = "SortTagsByAuthor";
+  private final static String PROPERTY_NAME_TagBooksNoSplit = "TagBooksNoSplit";
   /* Book Details */
   private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
   private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
@@ -1660,8 +1662,36 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SortUsingAuthor, value);
   }
 
-  public boolean isSortUsingTitleReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
+  public boolean isSortTagsByAuthorReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortTagsByAuthor);
+  }
+
+  public boolean getSortTagsByAuthor() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortTagsByAuthor);
+    if (b == null)
+      return defaults.getSortTagsByAuthor();
+    else
+      return b.booleanValue();
+  }
+
+  public void setTagBooksNoSplit(boolean value) {
+    setProperty(PROPERTY_NAME_TagBooksNoSplit, value);
+  }
+
+  public boolean isTagBooksNoSplitReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_TagBooksNoSplit);
+  }
+
+  public boolean getTagBooksNoSplit() {
+    Boolean b = getBoolean(PROPERTY_NAME_TagBooksNoSplit);
+    if (b == null)
+      return defaults.getTagBooksNoSplit();
+    else
+      return b.booleanValue();
+  }
+
+  public void setSortTagsByAuthor(boolean value) {
+    setProperty(PROPERTY_NAME_SortTagsByAuthor, value);
   }
 
   public boolean getSortUsingTitle() {
@@ -1674,6 +1704,10 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setSortUsingTitle(boolean value) {
     setProperty(PROPERTY_NAME_SortUsingTitle, value);
+  }
+
+  public boolean isSortUsingTitleReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
   }
   /*
    Book Details

@@ -77,6 +77,11 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-188: Allow custom external URLs
     - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalo
     - #c2o-200: Improve GUI validation for Custom Catalogs
+    - #c2o-205: Destination folder uses Default value instead of the per-profile one
+    - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
+    - #c2o-208: Add rel="prev" links on the XML files and back to previous page on HTML files
+    - #c2o-209: Add a "boolean" column to create selected custom searches/external URL before internal ones
+    - #c2o-210: If the loaded Profile is renamed then it should be reloaded.
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -92,7 +97,8 @@ that have been recorded in the Issue tracker.
 
 v3.4
 
-    - Fix:  #c2o-204: Problem navigating to author from an author series in HTML catalog
+    - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
+    - Change: #c2o-207: Show current profile name in the window's title
 
 v3.3 (1st April 2014)
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

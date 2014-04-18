@@ -132,6 +132,10 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getTagsToIgnore();
 
+  public boolean getSortTagsByAuthor();
+
+  public boolean getTagBooksNoSplit();
+
   /* Book Details */
 
   public boolean getGenerateCrossLinks();

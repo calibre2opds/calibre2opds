@@ -72,6 +72,8 @@ public class StanzaConstants {
   public final static boolean SortUsingAuthor = false;
   public final static boolean SortUsingTitle = false;
   public final static boolean languageAsTag = true;
+  public final static boolean SortTagsByAuthor = false;
+  public final static boolean TagBooksNoSplit = false;
   /* Book Details */
   public final static boolean generateExternalLinks = true;
   public final static boolean generateCrossLinks = true;

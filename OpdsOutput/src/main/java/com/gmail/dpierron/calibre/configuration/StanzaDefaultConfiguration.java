@@ -346,6 +346,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.DisplayTitleSort;
   }
 
+  public boolean getTagBooksNoSplit() {  return StanzaConstants.TagBooksNoSplit;  }
+
   public boolean getSortUsingAuthor() {
     return StanzaConstants.SortUsingAuthor;
   }
@@ -353,6 +355,8 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   public boolean getSortUsingTitle() {
     return StanzaConstants.SortUsingTitle;
   }
+
+  public boolean getSortTagsByAuthor() {return StanzaConstants.SortTagsByAuthor; }
 
   /* Book Details */
 

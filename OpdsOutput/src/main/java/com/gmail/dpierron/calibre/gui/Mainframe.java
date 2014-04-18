@@ -24,6 +24,7 @@ import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
 import com.l2fprod.common.swing.JDirectoryChooser;
+import javafx.scene.control.*;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -37,6 +38,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -682,16 +685,15 @@ public class Mainframe extends javax.swing.JFrame {
     txtDatabaseFolder.setEnabled(!currentProfile.isDatabaseFolderReadOnly());
     lblDatabaseFolder.setEnabled(!currentProfile.isDatabaseFolderReadOnly());
 
-    f = currentProfile.getTargetFolder();
-    if (f == null || !f.exists())
-      txtTargetFolder.setText("");
-    else
-      txtTargetFolder.setText(f.getAbsolutePath());
-    cmdSetTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
-    txtTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
     lblTargetFolder.setEnabled(!currentProfile.isTargetFolderReadOnly());
+    cmdSetTargetFolder.setEnabled(lblTargetFolder.isEnabled());
+    txtTargetFolder.setEnabled(!lblTargetFolder.isEnabled());
+    f = currentProfile.getTargetFolder();
+    txtTargetFolder.setText((f == null || !f.exists()) ? "" : f.getAbsolutePath());
     // c2o-77 Ensure that Target Folder cannot be entered in default mode
-    txtTargetFolder.setEnabled(currentProfile.getDeviceMode() != DeviceMode.Default);
+    if (currentProfile.getDeviceMode() == DeviceMode.Default) {
+      txtTargetFolder.setEnabled(false);
+    }
     cmdSetTargetFolder.setEnabled(txtTargetFolder.isEnabled());
     chkCopyToDatabaseFolder.setSelected(currentProfile.getCopyToDatabaseFolder());
     chkCopyToDatabaseFolder.setEnabled(!currentProfile.isCopyToDatabaseFolderReadOnly());
@@ -872,6 +874,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkSortUsingTitleSort.setSelected(currentProfile.getSortUsingTitle());
     chkSortUsingTitleSort.setEnabled(!currentProfile.isSortUsingTitleReadOnly());
     lblSortUsingTitle.setEnabled(chkSortUsingTitleSort.isEnabled());
+    chkSortTagsByAuthor.setSelected(currentProfile.getSortTagsByAuthor());
+    chkSortTagsByAuthor.setEnabled(!currentProfile.isSortTagsByAuthorReadOnly());
+    lblSortTagsByAuthor.setEnabled(chkSortTagsByAuthor.isEnabled());
 
     // Book Details
 
@@ -893,9 +898,9 @@ public class Mainframe extends javax.swing.JFrame {
     chkPublishedDateAsYear.setSelected(currentProfile.getPublishedDateAsYear());
     chkPublishedDateAsYear.setEnabled(!currentProfile.isPublishedDateAsYearReadOnly());
     lblPublishedDateAsYear.setEnabled(!currentProfile.isPublishedDateAsYearReadOnly());
-    chkIncludeAddednBookDetails1.setSelected(currentProfile.getIncludeAddedInBookDetails());
-    chkIncludeAddednBookDetails1.setEnabled(!currentProfile.isIncludeAddedInBookDetailsReadOnly());
-    lblIncludeAddedInBookDetails2.setEnabled(!currentProfile.isIncludeAddedInBookDetailsReadOnly());
+    chkIncludeAddednBookDetails.setSelected(currentProfile.getIncludeAddedInBookDetails());
+    chkIncludeAddednBookDetails.setEnabled(!currentProfile.isIncludeAddedInBookDetailsReadOnly());
+    lblIncludeAddedInBookDetails.setEnabled(!currentProfile.isIncludeAddedInBookDetailsReadOnly());
     chkIncludeModifiedInBookDetails.setSelected(currentProfile.getIncludeModifiedInBookDetails());
     chkIncludeModifiedInBookDetails.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
     lblIncludeModifiedInBookDetails1.setEnabled(!currentProfile.isIncludeModifiedInBookDetailsReadOnly());
@@ -1011,22 +1016,28 @@ public class Mainframe extends javax.swing.JFrame {
     changeLanguage();
   }
 
+  private String getFolderNameToStore()  {
+    assert false: "Not yet ready for use";
+    return "";
+  }
   /**
    * Save the setting values from the GUI to the configuration file
    */
   private void storeValues() {
     setCursor(hourglassCursor);
     currentProfile.setLanguage("" + cboLang.getSelectedItem());
+    String s = txtDatabaseFolder.getText();
     File f = new File(txtDatabaseFolder.getText());
     if (f.exists())
       currentProfile.setDatabaseFolder(f);
-    String s = txtTargetFolder.getText();
+    s = txtTargetFolder.getText();
     if (Helper.isNotNullOrEmpty(s)) {
       f = new File(s);
       if (f.exists())
         currentProfile.setTargetFolder(f);
-    } else
+    } else {
       currentProfile.setTargetFolder(null);
+    }
     currentProfile.setCopyToDatabaseFolder(chkCopyToDatabaseFolder.isSelected());
     currentProfile.setOnlyCatalogAtTarget((chkOnlyCatalogAtTarget.isSelected()));
     currentProfile.setReprocessEpubMetadata(chkReprocessEpubMetadata.isSelected());
@@ -1093,6 +1104,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setGenerateRatings(!chkNogenerateratings.isSelected());
     currentProfile.setGenerateAllbooks(!chkNogenerateallbooks.isSelected());
     currentProfile.setLanguageAsTag(chkLanguageAsTag.isSelected());
+    currentProfile.setSortTagsByAuthor((chkSortTagsByAuthor.isSelected()));
     currentProfile.setTagsToIgnore(txtTagsToIgnore.getText());
     currentProfile.setSortUsingAuthor(chkSortUsingAuthorSort.isSelected());
     currentProfile.setSortUsingTitle(chkSortUsingTitleSort.isSelected());
@@ -1105,7 +1117,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setIncludePublisherInBookDetails(chkIncludePublisherInBookDetails.isSelected());
     currentProfile.setIncludePublishedInBookDetails(chkIncludePublishedInBookDetails.isSelected());
     currentProfile.setPublishedDateAsYear(chkPublishedDateAsYear.isSelected());
-    currentProfile.setIncludeAddedInBookDetails(chkIncludeAddednBookDetails1.isSelected());
+    currentProfile.setIncludeAddedInBookDetails(chkIncludeAddednBookDetails.isSelected());
     currentProfile.setIncludeModifiedInBookDetails(chkIncludeModifiedInBookDetails.isSelected());
     currentProfile.setDisplayAuthorSort(chkDisplayAuthorSort.isSelected());
     currentProfile.setDisplayTitleSort(chkDisplayTitleSort.isSelected());
@@ -1160,6 +1172,30 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
+   * set the localization text for a gui item, and also the tooltip text
+   * Assumes that text in localization finishes with ".label" and tooltip with ".description"
+   *
+   * @param guiLabel          // Set this to the field to apply the text to
+   * @param guiValue          // Set to NULL if no such field
+   * @param localizationName  // The string in the localization file (without .label/.description)
+   *                          // For tabbed panes assumes that the last character of lcalization indicates index
+   */
+  private void setTranslateTexts(JComponent guiLabel,JComponent guiValue,  String localizationName){
+    if (guiLabel instanceof JButton ) {
+      ((JButton) guiLabel).setText(Localization.Main.getText(localizationName + ".label")); // NOI18N
+    } else if (guiLabel instanceof JLabel) {
+      ((JLabel) guiLabel).setText(Localization.Main.getText(localizationName + ".label")); // NOI18N
+    } else if (guiLabel instanceof JTextField) {
+      ((JTextField) guiLabel).setText(Localization.Main.getText(localizationName + ".label")); // NOI18N
+    } else if (guiLabel instanceof JTabbedPane) {
+      ((JTabbedPane) guiLabel).setTitleAt(-1 + localizationName.charAt(localizationName.length()-1), Localization.Main.getText(localizationName + ".label")); // NOI18N
+    } else {
+      assert false: "setTranslateTexta:  Cannot handle the typefor" + localizationName;
+    }
+    guiLabel.setToolTipText(Localization.Main.getText(localizationName + ".description")); // NOI18N
+    if (guiValue != null) guiValue.setToolTipText(guiLabel.getToolTipText()); // NOI18N
+  }
+  /**
    * Apply localization strings to all UI elements and set up Tooltips
    * Same tootip is applied to a label and its associated input field
    */
@@ -1167,27 +1203,23 @@ public class Mainframe extends javax.swing.JFrame {
     // main window
     lblBottom0.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
     lblBottom0.setFont(lblBottom0.getFont().deriveFont(Font.BOLD));
-    cmdCancel.setText(Localization.Main.getText("gui.close")); // NOI18N
-    cmdCancel.setToolTipText(Localization.Main.getText("gui.close.description")); // NOI18N
-    cmdSave.setText(Localization.Main.getText("gui.save")); // NOI18N
-    cmdSave.setToolTipText(Localization.Main.getText("gui.save.description")); // NOI18N
-    cmdGenerate.setText(Localization.Main.getText("gui.generate")); // NOI18N
-    cmdGenerate.setToolTipText(Localization.Main.getText("gui.generate.description")); // NOI18N
-    cmdReset.setText(Localization.Main.getText("gui.reset"));
-    cmdReset.setToolTipText(Localization.Main.getText("gui.reset.description"));
-    cmdHelp.setText(Localization.Main.getText("gui.help"));
-    cmdHelp.setToolTipText(Localization.Main.getText("gui.help.description"));
-    tabOptionsTabs.setTitleAt(0, Localization.Main.getText("gui.tab1"));
+    setTranslateTexts(cmdCancel, null, "gui.close"); // NOI18N
+    setTranslateTexts(cmdSave, null, "gui.save"); // NOI18N
+    setTranslateTexts(cmdGenerate, null, "gui.generate"); // NOI18N
+    setTranslateTexts(cmdReset, null, "gui.reset");
+    setTranslateTexts(cmdHelp, null, "gui.help");
+    // setTranslateTexts(tabOptionsTabs, null, "gui.tab1");
+    tabOptionsTabs.setTitleAt(0, Localization.Main.getText("gui.tab1/label"));
     tabOptionsTabs.setToolTipTextAt(0, Localization.Main.getText("gui.tab1.description"));
-    tabOptionsTabs.setTitleAt(1, Localization.Main.getText("gui.tab2"));
+    tabOptionsTabs.setTitleAt(1, Localization.Main.getText("gui.tab2.label"));
     tabOptionsTabs.setToolTipTextAt(1, Localization.Main.getText("gui.tab2.description"));
-    tabOptionsTabs.setTitleAt(2, Localization.Main.getText("gui.tab3"));
+    tabOptionsTabs.setTitleAt(2, Localization.Main.getText("gui.tab3.label"));
     tabOptionsTabs.setToolTipTextAt(2, Localization.Main.getText("gui.tab3.description"));
-    tabOptionsTabs.setTitleAt(3, Localization.Main.getText("gui.tab4"));
+    tabOptionsTabs.setTitleAt(3, Localization.Main.getText("gui.tab4.label"));
     tabOptionsTabs.setToolTipTextAt(3, Localization.Main.getText("gui.tab4.description"));
-    tabOptionsTabs.setTitleAt(4, Localization.Main.getText("gui.tab5"));
+    tabOptionsTabs.setTitleAt(4, Localization.Main.getText("gui.tab5.label"));
     tabOptionsTabs.setToolTipTextAt(4, Localization.Main.getText("gui.tab5.description"));
-    tabOptionsTabs.setTitleAt(5, Localization.Main.getText("gui.tab6"));
+    tabOptionsTabs.setTitleAt(5, Localization.Main.getText("gui.tab6.label"));
     tabOptionsTabs.setToolTipTextAt(5, Localization.Main.getText("gui.tab6.description"));
     lblDeviceDropbox.setToolTipText(
         Localization.Main.getText("config.DeviceMode.dropbox.description1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.description2"));
@@ -1199,322 +1231,128 @@ public class Mainframe extends javax.swing.JFrame {
 
     // main options
 
-    lblLang.setText(Localization.Main.getText("config.Language.label")); // NOI18N
-    lblLang.setToolTipText(Localization.Main.getText("config.Language.description")); // NOI18N
-    cboLang.setToolTipText(lblLang.getToolTipText()); // NOI18N
-    lblDatabaseFolder.setText(Localization.Main.getText("config.DatabaseFolder.label")); // NOI18N
-    lblDatabaseFolder.setToolTipText(Localization.Main.getText("config.DatabaseFolder.description")); // NOI18N
-    txtDatabaseFolder.setToolTipText(lblDatabaseFolder.getToolTipText()); // NOI18N
-    lblTargetFolder.setText(Localization.Main.getText("config.TargetFolder.label")); // NOI18N
-    lblTargetFolder.setToolTipText(Localization.Main.getText("config.TargetFolder.description")); // NOI18N
-    txtTargetFolder.setToolTipText(lblTargetFolder.getToolTipText()); // NOI18N
-    lblCopyToDatabaseFolder.setText(Localization.Main.getText("config.CopyToDatabaseFolder.label")); // NOI18N
-    lblCopyToDatabaseFolder.setToolTipText(Localization.Main.getText("config.CopyToDatabaseFolder.description")); // NOI18N
-    chkCopyToDatabaseFolder.setToolTipText(lblCopyToDatabaseFolder.getToolTipText()); // NOI18N
-    lblOnlyCatalogAtTarget.setText(Localization.Main.getText("config.OnlyCatalogAtTarget.label")); // NOI18N
-    lblOnlyCatalogAtTarget.setToolTipText(Localization.Main.getText("config.OnlyCatalogAtTarget.description")); // NOI18N
-    chkOnlyCatalogAtTarget.setToolTipText(lblOnlyCatalogAtTarget.getToolTipText()); // NOI18N
-    lblReprocessEpubMetadata.setText(Localization.Main.getText("config.ReprocessEpubMetadata.label")); // NOI18N
-    lblReprocessEpubMetadata.setToolTipText(Localization.Main.getText("config.ReprocessEpubMetadata.description")); // NOI18N
-    chkReprocessEpubMetadata.setToolTipText(lblReprocessEpubMetadata.getToolTipText()); // NOI18N
-    lblCatalogFolder.setText(Localization.Main.getText("config.CatalogFolderName.label")); // NOI18N
-    lblCatalogFolder.setToolTipText(Localization.Main.getText("config.CatalogFolderName.description")); // NOI18N
-    txtCatalogFolder.setToolTipText(lblCatalogFolder.getToolTipText()); // NOI18N
-    lblUrlBooks.setText(Localization.Main.getText("config.UrlBooks.label")); // NOI18N
-    lblUrlBooks.setToolTipText(Localization.Main.getText("config.UrlBooks.description")); // NOI18N
-    txtUrlBooks.setToolTipText(lblUrlBooks.getToolTipText()); // NOI18N
-    lblCatalogTitle.setText(Localization.Main.getText("config.CatalogTitle.label")); // NOI18N
-    lblCatalogTitle.setToolTipText(Localization.Main.getText("config.CatalogTitle.description")); // NOI18N
-    txtCatalogTitle.setToolTipText(lblCatalogTitle.getToolTipText()); // NOI18N
-    lblSplittagson.setText(Localization.Main.getText("config.SplitTagsOn.label")); // NOI18N
-    lblSplittagson.setToolTipText(Localization.Main.getText("config.SplitTagsOn.description")); // NOI18N
-    chkDontsplittags.setText(Localization.Main.getText("config.SplitTagsOn.splitbyletter")); // NOI18N
-    lblCatalogFilter.setText(Localization.Main.getText("config.CatalogFilter.label")); // NOI18N
-    lblCatalogFilter.setToolTipText(Localization.Main.getText("config.CatalogFilter.description")); // NOI18N
-    txtCatalogFilter.setToolTipText(lblCatalogFilter.getToolTipText()); // NOI18N
-    lblWikilang.setText(Localization.Main.getText("config.WikipediaLanguage.label")); // NOI18N
-    lblWikilang.setToolTipText(Localization.Main.getText("config.WikipediaLanguage.description")); // NOI18N
-    txtWikilang.setToolTipText(lblWikilang.getToolTipText()); // NOI18N
+    setTranslateTexts(lblLang, cboLang, "config.Language"); // NOI18N
+    setTranslateTexts(lblDatabaseFolder, txtDatabaseFolder, "config.DatabaseFolder"); // NOI18N
+    setTranslateTexts(lblTargetFolder, txtTargetFolder, "config.TargetFolder"); // NOI18N
+    setTranslateTexts(lblCopyToDatabaseFolder, chkCopyToDatabaseFolder, "config.CopyToDatabaseFolder"); // NOI18N
+    setTranslateTexts(lblOnlyCatalogAtTarget, chkOnlyCatalogAtTarget, "config.OnlyCatalogAtTarget"); // NOI18N
+    setTranslateTexts(lblReprocessEpubMetadata, chkReprocessEpubMetadata, "config.ReprocessEpubMetadata"); // NOI18N
+    setTranslateTexts(lblCatalogFolder, txtCatalogFolder, "config.CatalogFolderName"); // NOI18N
+    setTranslateTexts(lblUrlBooks, txtUrlBooks, "config.UrlBooks"); // NOI18N
+    setTranslateTexts(lblCatalogTitle, txtCatalogTitle, "config.CatalogTitle"); // NOI18N
+    setTranslateTexts(lblSplittagson, chkDontsplittags, "config.SplitTagsOn"); // NOI18N
+    setTranslateTexts(lblCatalogFilter, txtCatalogFilter, "config.CatalogFilter"); // NOI18N
+    setTranslateTexts(lblWikilang, txtWikilang, "config.WikipediaLanguage"); // NOI18N
 
     // catalog structure options
 
-    lblNogenerateopds.setText(Localization.Main.getText("config.GenerateOpds.label")); // NOI18N
-    lblNogenerateopds.setToolTipText(Localization.Main.getText("config.GenerateOpds.description")); // NOI18N
-    chkNogenerateopds.setToolTipText(lblNogenerateopds.getToolTipText()); // NOI18N
-    lblNogeneratehtml.setText(Localization.Main.getText("config.GenerateHtml.label")); // NOI18N
-    lblNogeneratehtml.setToolTipText(Localization.Main.getText("config.GenerateHtml.description")); // NOI18N
-    chkNogeneratehtml.setToolTipText(lblNogeneratehtml.getToolTipText()); // NOI18N
-    lblNogeneratehtmlfiles.setText(Localization.Main.getText("config.GenerateHtmlDownloads.label")); // NOI18N
-    lblNogeneratehtmlfiles.setToolTipText(Localization.Main.getText("config.GenerateHtmlDownloads.description")); // NOI18N
-    chkNogeneratehtmlfiles.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
-    lblBrowseByCover.setText(Localization.Main.getText("config.BrowseByCover.label")); // NOI18N
-    lblBrowseByCover.setToolTipText(Localization.Main.getText("config.BrowseByCover.description")); // NOI18N
-    chkBrowseByCover.setToolTipText(lblBrowseByCover.getToolTipText()); // NOI18N
-    lblBrowseByCoverWithoutSplit.setText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.label")); // NOI18N
-    lblBrowseByCoverWithoutSplit.setToolTipText(Localization.Main.getText("config.BrowseByCoverWithoutSplit.description")); // NOI18N
-    chkBrowseByCoverWithoutSplit.setToolTipText(lblBrowseByCoverWithoutSplit.getToolTipText()); // NOI18N
-    lblLanguageAsTag.setText(Localization.Main.getText("config.LanguageAsTag.label")); // NOI18N
-    lblLanguageAsTag.setToolTipText(Localization.Main.getText("config.LanguageAsTag.description")); // NOI18N
-    chkLanguageAsTag.setToolTipText(lblLanguageAsTag.getToolTipText()); // NOI18N
-    lblNoIncludeAboutLink.setText(Localization.Main.getText("config.IncludeAboutLink.label")); // NOI18N
-    lblNoIncludeAboutLink.setToolTipText(Localization.Main.getText("config.IncludeAboutLink.description")); // NOI18N
-    chkNoIncludeAboutLink.setToolTipText(lblNoIncludeAboutLink.getToolTipText()); // NOI18N
-    lblNogenerateopdsfiles.setText(Localization.Main.getText("config.GenerateOpdsDownloads.label")); // NOI18N
-    lblNogenerateopdsfiles.setToolTipText(Localization.Main.getText("config.GenerateOpdsDownloads.description")); // NOI18N
-    chkNogenerateopdsfiles.setToolTipText(lblNogenerateopdsfiles.getToolTipText()); // NOI18N
-    lblExternalIcons.setText(Localization.Main.getText("config.ExternalIcons.label")); // NOI18N
-    lblExternalIcons.setToolTipText(Localization.Main.getText("config.ExternalIcons.description")); // NOI18N
-    chkExternalIcons.setToolTipText(lblExternalIcons.getToolTipText()); // NOI18N
-    lblexternalImages.setText(Localization.Main.getText("config.ExternalImages.label")); // NOI18N
-    lblexternalImages.setToolTipText(Localization.Main.getText("config.ExternalImages.description")); // NOI18N
-    chkExternalImages.setToolTipText(lblexternalImages.getToolTipText()); // NOI18N
-    lblNoGenerateAuthors.setText(Localization.Main.getText("config.GenerateAuthors.label")); // NOI18N
-    lblNoGenerateAuthors.setToolTipText(Localization.Main.getText("config.GenerateAuthors.description")); // NOI18N
-    chkNoGenerateAuthors.setToolTipText(lblNoGenerateAuthors.getToolTipText()); // NOI18N
-    lblNoGenerateTags.setText(Localization.Main.getText("config.GenerateTags.label")); // NOI18N
-    lblNoGenerateTags.setToolTipText(Localization.Main.getText("config.GenerateTags.description")); // NOI18N
-    chkNoGenerateTags.setToolTipText(lblNoGenerateTags.getToolTipText()); // NOI18N
-    lblTagsToIgnore.setText(Localization.Main.getText("config.TagsToIgnore.label")); // NOI18N
-    lblTagsToIgnore.setToolTipText(Localization.Main.getText("config.TagsToIgnore.description")); // NOI18N
-    txtTagsToIgnore.setToolTipText(lblTagsToIgnore.getToolTipText()); // NOI18N
-    lblCatalogCustomColumns.setText(Localization.Main.getText("config.CatalogCustomColumns.label"));
-    lblCatalogCustomColumns.setToolTipText(Localization.Main.getText("config.CatalogCustomColumns.description"));
-    lblTagsToMakeDeep.setText(Localization.Main.getText("config.TagsToMakeDeep.label")); // NOI18N
-    txtCatalogCustomColumns.setToolTipText(lblCatalogCustomColumns.getToolTipText());
-    lblTagsToMakeDeep.setToolTipText(Localization.Main.getText("config.TagsToMakeDeep.description")); // NOI18N
-    txtTagsToMakeDeep.setToolTipText(lblTagsToMakeDeep.getToolTipText()); // NOI18N
-    lblNoGenerateSeries.setText(Localization.Main.getText("config.GenerateSeries.label")); // NOI18N
-    lblNoGenerateSeries.setToolTipText(Localization.Main.getText("config.GenerateSeries.description")); // NOI18N
-    chkNoGenerateSeries.setToolTipText(lblNoGenerateSeries.getToolTipText()); // NOI18N
-    lblNogeneraterecent.setText(Localization.Main.getText("config.GenerateRecent.label")); // NOI18N
-    lblNogeneraterecent.setToolTipText(Localization.Main.getText("config.GenerateRecent.description")); // NOI18N
-    chkNogeneraterecent.setToolTipText(lblNogeneraterecent.getToolTipText()); // NOI18N
-    lblNogenerateratings.setText(Localization.Main.getText("config.GenerateRatings.label")); // NOI18N
-    lblNogenerateratings.setToolTipText(Localization.Main.getText("config.GenerateRatings.description")); // NOI18N
-    chkNogenerateratings.setToolTipText(lblNogenerateratings.getToolTipText()); // NOI18N
-    lblSupressRatings.setText(Localization.Main.getText("config.SuppressRatingsInTitles.label")); // NOI18N
-    lblSupressRatings.setToolTipText(Localization.Main.getText("config.SuppressRatingsInTitles.description")); // NOI18N
-    chkSupressRatings.setToolTipText(lblSupressRatings.getToolTipText()); // NOI18N
-    lblNogenerateallbooks.setText(Localization.Main.getText("config.GenerateAllbooks.label")); // NOI18N
-    lblNogenerateallbooks.setToolTipText(Localization.Main.getText("config.GenerateAllbooks.description")); // NOI18N
-    chkNogenerateallbooks.setToolTipText(lblNogenerateallbooks.getToolTipText()); // NOI18N
-    lblSortUsingAuthor.setText(Localization.Main.getText("config.SortUsingAuthor.label")); // NOI18N
-    lblSortUsingAuthor.setToolTipText(Localization.Main.getText("config.SortUsingAuthor.description")); // NOI18N
-    chkSortUsingAuthorSort.setToolTipText(lblSortUsingAuthor.getToolTipText()); // NOI18N
-    lblSortUsingTitle.setText(Localization.Main.getText("config.SortUsingTitle.label")); // NOI18N
-    lblSortUsingTitle.setToolTipText(Localization.Main.getText("config.SortUsingTitle.description")); // NOI18N
-    chkSortUsingTitleSort.setToolTipText(lblSortUsingTitle.getToolTipText()); // NOI18N
+    setTranslateTexts(lblNogenerateopds, chkNogenerateopds, "config.GenerateOpds"); // NOI18N
+    setTranslateTexts(lblNogeneratehtml, chkNogeneratehtml, "config.GenerateHtml"); // NOI18N
+    setTranslateTexts(lblNogenerateopdsfiles, chkNogenerateopdsfiles, "config.GenerateOpdsDownloads"); // NOI18N
+    setTranslateTexts(lblNogeneratehtmlfiles, chkNogenerateopdsfiles, "config.GenerateHtmlDownloads"); // NOI18N
+    setTranslateTexts(lblBrowseByCover, chkBrowseByCover, "config.BrowseByCover"); // NOI18N
+    setTranslateTexts(lblBrowseByCoverWithoutSplit, chkBrowseByCoverWithoutSplit, "config.BrowseByCoverWithoutSplit"); // NOI18N
+    setTranslateTexts(lblLanguageAsTag, chkLanguageAsTag, "config.LanguageAsTag"); // NOI18N
+    setTranslateTexts(lblNoIncludeAboutLink, chkNoIncludeAboutLink, "config.IncludeAboutLink"); // NOI18N
+    setTranslateTexts(lblExternalIcons, chkExternalIcons, "config.ExternalIcons"); // NOI18N
+    setTranslateTexts(lblexternalImages, chkExternalImages, "config.ExternalImages"); // NOI18N
+    setTranslateTexts(lblNoGenerateAuthors, chkNoGenerateAuthors, "config.GenerateAuthors"); // NOI18N
+    setTranslateTexts(lblNoGenerateTags, chkNoGenerateTags, "config.GenerateTags"); // NOI18N
+    setTranslateTexts(lblTagsToIgnore, txtTagsToIgnore, "config.TagsToIgnore"); // NOI18N
+    setTranslateTexts(lblCatalogCustomColumns, txtCatalogCustomColumns, "config.CatalogCustomColumns");
+    setTranslateTexts(lblTagsToMakeDeep, txtTagsToMakeDeep, "config.TagsToMakeDeep"); // NOI18N
+    setTranslateTexts(lblNoGenerateSeries, chkNoGenerateSeries, "config.GenerateSeries"); // NOI18N
+    setTranslateTexts(lblNogeneraterecent, chkNogeneraterecent, "config.GenerateRecent"); // NOI18N
+    setTranslateTexts(lblNogenerateratings, chkNogenerateratings, "config.GenerateRatings"); // NOI18N
+    setTranslateTexts(lblSupressRatings, chkSupressRatings, "config.SuppressRatingsInTitles"); // NOI18N
+    setTranslateTexts(lblNogenerateallbooks, chkSupressRatings, "config.GenerateAllbooks"); // NOI18N
+    setTranslateTexts(lblSortTagsByAuthor, chkSortTagsByAuthor, "config.SortTagsByAuthor"); // NOI18N
+    setTranslateTexts(lblTagBooksNoSplit, chkTagBooksDoNotSplit, "config.TagBooksNoSplit"); // NOI18N
+    setTranslateTexts(lblSortUsingAuthor, chkSortUsingAuthorSort, "config.SortUsingAuthor"); // NOI18N
+    setTranslateTexts(lblSortUsingTitle, chkSortUsingTitleSort, "config.SortUsingTitle"); // NOI18N
 
     // Book Details Options
 
-    lblIncludeSeriesInBookDetails.setText(Localization.Main.getText("config.IncludeSeriesInBookDetails.label")); // NOI18N
-    lblIncludeSeriesInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeSeriesInBookDetails.description")); // NOI18N
-    chkIncludeSeriesInBookDetails.setToolTipText(lblIncludeSeriesInBookDetails.getToolTipText()); // NOI18N
-    lblIncludeRatingInBookDetails.setText(Localization.Main.getText("config.IncludeRatingInBookDetails.label")); // NOI18N
-    lblIncludeRatingInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeRatingInBookDetails.description")); // NOI18N
-    chkIncludeRatingInBookDetails1.setToolTipText(lblIncludeRatingInBookDetails.getToolTipText()); // NOI18N
-    lblIncludeTagsInBookDetails.setText(Localization.Main.getText("config.IncludeTagsInBookDetails.label")); // NOI18N
-    lblIncludeTagsInBookDetails.setToolTipText(Localization.Main.getText("config.IncludeTagsInBookDetails.description")); // NOI18N
-    chkIncludeTagsInBookDetails.setToolTipText(lblIncludeTagsInBookDetails.getToolTipText()); // NOI18N
-    lblIncludePublisherInBookDetails.setText(Localization.Main.getText("config.IncludePublisherInBookDetails.label")); // NOI18N
-    lblIncludePublisherInBookDetails.setToolTipText(Localization.Main.getText("config.IncludePublisherInBookDetails.description")); // NOI18N
-    chkIncludePublisherInBookDetails.setToolTipText(lblIncludePublishedInBookDetails.getToolTipText()); // NOI18N
-    lblIncludePublishedInBookDetails.setText(Localization.Main.getText("config.IncludePublishedInBookDetails.label")); // NOI18N
-    lblIncludePublishedInBookDetails.setToolTipText(Localization.Main.getText("config.IncludePublishedInBookDetails.description")); // NOI18N
-    chkIncludePublishedInBookDetails.setToolTipText(lblIncludePublishedInBookDetails.getToolTipText()); // NOI18N
-    lblPublishedDateAsYear.setText(Localization.Main.getText("config.PublishedDateAsYear.label")); // NOI18N
-    lblPublishedDateAsYear.setToolTipText(Localization.Main.getText("config.PublishedDateAsYear.description")); // NOI18N
-    chkPublishedDateAsYear.setToolTipText(lblPublishedDateAsYear.getToolTipText()); // NOI18N
-    lblIncludeAddedInBookDetails2.setText(Localization.Main.getText("config.IncludeAddedInBookDetails.label")); // NOI18N
-    lblIncludeAddedInBookDetails2.setToolTipText(Localization.Main.getText("config.IncludeAddedInBookDetails.description")); // NOI18N
-    chkIncludeAddednBookDetails1.setToolTipText(lblIncludeAddedInBookDetails2.getToolTipText()); // NOI18N
-    lblIncludeModifiedInBookDetails1.setText(Localization.Main.getText("config.IncludeModifiedInBookDetails.label")); // NOI18N
-    lblIncludeModifiedInBookDetails1.setToolTipText(Localization.Main.getText("config.IncludeModifiedInBookDetails.description")); // NOI18N
-    chkIncludeModifiedInBookDetails.setToolTipText(lblIncludeModifiedInBookDetails1.getToolTipText()); // NOI18N
-    lblDisplayAuthorSort.setText(Localization.Main.getText("config.DisplayAuthorSort.label")); // NOI18N
-    lblDisplayAuthorSort.setToolTipText(Localization.Main.getText("config.DisplayAuthorSort.description")); // NOI18N
-    chkDisplayAuthorSort.setToolTipText(lblDisplayAuthorSort.getToolTipText()); // NOI18N
-    lblDisplayTitleSortI.setText(Localization.Main.getText("config.DisplayTitleSort.label")); // NOI18N
-    lblDisplayTitleSortI.setToolTipText(Localization.Main.getText("config.DisplayTitleSort.description")); // NOI18N
-    chkDisplayTitleSort.setToolTipText(lblDisplayTitleSortI.getToolTipText()); // NOI18N
-    lblBookDetailsCustomFields.setText(Localization.Main.getText("config.BookDetailsCustomFields.label")); // NOI18N
-    lblBookDetailsCustomFields.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.description")); // NOI18N
-    txtBookDetailsCustomFields.setToolTipText(lblBookDetailsCustomFields.getToolTipText());
+    setTranslateTexts(lblIncludeSeriesInBookDetails, chkIncludeSeriesInBookDetails, "config.IncludeSeriesInBookDetails"); // NOI18N
+    setTranslateTexts(lblIncludeRatingInBookDetails, chkIncludeRatingInBookDetails1, "config.IncludeRatingInBookDetails"); // NOI18N
+    setTranslateTexts(lblIncludeTagsInBookDetails, lblIncludeTagsInBookDetails, "config.IncludeTagsInBookDetails"); // NOI18N
+    setTranslateTexts(lblIncludePublisherInBookDetails, chkIncludeSeriesInBookDetails, "config.IncludePublisherInBookDetails"); // NOI18N
+    setTranslateTexts(lblIncludePublishedInBookDetails, chkIncludePublisherInBookDetails, "config.IncludePublishedInBookDetails"); // NOI18N
+    setTranslateTexts(lblPublishedDateAsYear, chkPublishedDateAsYear, "config.PublishedDateAsYear"); // NOI18N
+    setTranslateTexts(lblIncludeAddedInBookDetails, chkIncludeAddednBookDetails, "config.IncludeAddedInBookDetails"); // NOI18N
+    setTranslateTexts(lblIncludeModifiedInBookDetails1, chkIncludeModifiedInBookDetails, "config.IncludeModifiedInBookDetails"); // NOI18N
+    setTranslateTexts(lblDisplayAuthorSort, chkDisplayAuthorSort, "config.DisplayAuthorSort"); // NOI18N
+    setTranslateTexts(lblDisplayTitleSortI, chkDisplayTitleSort, "config.DisplayTitleSort"); // NOI18N
+    setTranslateTexts(lblBookDetailsCustomFields, txtBookDetailsCustomFields, "config.BookDetailsCustomFields.label"); // NOI18N
     chkBookDetailsCustomFieldsAlways.setToolTipText(Localization.Main.getText("config.BookDetailsCustomFields.checkbox")); // NOI18N
-    lblNogenerateexternallinks.setText(Localization.Main.getText("config.GenerateExternalLinks.label")); // NOI18N
-    lblNogenerateexternallinks.setToolTipText(Localization.Main.getText("config.GenerateExternalLinks.description")); // NOI18N
-    chkNogenerateexternallinks.setToolTipText(lblNogeneratehtmlfiles.getToolTipText()); // NOI18N
-    lblNogeneratecrosslinks.setText(Localization.Main.getText("config.GenerateCrossLinks.label")); // NOI18N
-    lblNogeneratecrosslinks.setToolTipText(Localization.Main.getText("config.GenerateCrossLinks.description")); // NOI18N
-    chkNogeneratecrosslinks.setToolTipText(lblNogeneratecrosslinks.getToolTipText()); // NOI18N
-    lblIncludeTagCrossReferences.setText(Localization.Main.getText("config.IncludeTagCrossReferences.label")); // NOI18N
-    lblIncludeTagCrossReferences.setToolTipText(Localization.Main.getText("config.IncludeTagCrossReferences.description")); // NOI18N
-    chkIncludeTagCrossReferences.setToolTipText(lblIncludeTagCrossReferences.getToolTipText()); // NOI18N
+    setTranslateTexts(lblNogenerateexternallinks, chkNogenerateexternallinks, "config.GenerateExternalLinks"); // NOI18N
+    setTranslateTexts(lblNogeneratecrosslinks, chkNogeneratecrosslinks, "config.GenerateCrossLinks"); // NOI18N
+    setTranslateTexts(lblIncludeTagCrossReferences, chkIncludeTagCrossReferences, "config.IncludeTagCrossReferences"); // NOI18N
 
     // advanced customization options
 
-    lblIncludeformat.setText(Localization.Main.getText("config.IncludedFormatsList.label")); // NOI18N
-    lblIncludeformat.setToolTipText(Localization.Main.getText("config.IncludedFormatsList.description")); // NOI18N
-    txtIncludeformat.setToolTipText(lblIncludeformat.getToolTipText()); // NOI18N
-    lblMaxbeforepaginate.setText(Localization.Main.getText("config.MaxBeforePaginate.label")); // NOI18N
-    lblMaxbeforepaginate.setToolTipText(Localization.Main.getText("config.MaxBeforePaginate.description")); // NOI18N
-    txtMaxbeforepaginate.setToolTipText(lblMaxbeforepaginate.getToolTipText()); // NOI18N
-    lblMaxbeforesplit.setText(Localization.Main.getText("config.MaxBeforeSplit.label")); // NOI18N
-    lblMaxbeforesplit.setToolTipText(Localization.Main.getText("config.MaxBeforeSplit.description")); // NOI18N
-    txtMaxbeforesplit.setToolTipText(lblMaxbeforesplit.getToolTipText()); // NOI18N
-    lblMaxSplitLevels.setText(Localization.Main.getText("config.MaxSplitLevels.label")); // NOI18N
-    lblMaxSplitLevels.setToolTipText(Localization.Main.getText("config.MaxSplitLevels.description")); // NOI18N
-    txtMaxSplitLevels.setToolTipText(lblMaxSplitLevels.getToolTipText()); // NOI18N
-    lblBooksinrecent.setText(Localization.Main.getText("config.BooksInRecentAdditions.label")); // NOI18N
-    lblBooksinrecent.setToolTipText(Localization.Main.getText("config.BooksInRecentAdditions.description")); // NOI18N
-    txtBooksinrecent.setToolTipText(lblBooksinrecent.getToolTipText()); // NOI18N
-    lblMaxsummarylength.setText(Localization.Main.getText("config.MaxSummaryLength.label")); // NOI18N
-    lblMaxsummarylength.setToolTipText(Localization.Main.getText("config.MaxSummaryLength.description")); // NOI18N
-    txtMaxsummarylength.setToolTipText(lblMaxsummarylength.getToolTipText()); // NOI18N
-    lblMaxBookSummaryLength.setText(Localization.Main.getText("config.MaxBookSummaryLength.label")); // NOI18N
-    lblMaxBookSummaryLength.setToolTipText(Localization.Main.getText("config.MaxBookSummaryLength.description")); // NOI18N
-    txtMaxBookSummaryLength.setToolTipText(lblMaxBookSummaryLength.getToolTipText()); // NOI18N
-    lblIncludeemptybooks.setText(Localization.Main.getText("config.IncludeBooksWithNoFile.label")); // NOI18N
-    lblIncludeemptybooks.setToolTipText(Localization.Main.getText("config.IncludeBooksWithNoFile.description")); // NOI18N
-    chkIncludeemptybooks.setToolTipText(lblIncludeemptybooks.getToolTipText()); // NOI18N
-    lblIncludeOnlyOneFile.setText(Localization.Main.getText("config.IncludeOnlyOneFile.label")); // NOI18N
-    lblIncludeOnlyOneFile.setToolTipText(Localization.Main.getText("config.IncludeOnlyOneFile.description")); // NOI18N
-    chkIncludeOnlyOneFile.setToolTipText(lblIncludeOnlyOneFile.getToolTipText()); // NOI18N
-    lblZipCatalog.setText(Localization.Main.getText("config.ZipCatalog.label")); // NOI18N
-    lblZipCatalog.setToolTipText(Localization.Main.getText("config.ZipCatalog.description")); // NOI18N
-    chkZipTrookCatalog.setToolTipText(lblZipCatalog.getToolTipText()); // NOI18N
-    lblZipTrookCatalog.setText(Localization.Main.getText("config.ZipTrookCatalog.label")); // NOI18N
-    lblZipTrookCatalog.setToolTipText(Localization.Main.getText("config.ZipTrookCatalog.description")); // NOI18N
-    chkZipTrookCatalog.setToolTipText(lblZipTrookCatalog.getToolTipText()); // NOI18N
-    lblNoShowSeries.setText(Localization.Main.getText("config.ShowSeriesInAuthorCatalog.label")); // NOI18N
-    lblNoShowSeries.setToolTipText(Localization.Main.getText("config.ShowSeriesInAuthorCatalog.description")); // NOI18N
-    chkNoShowSeries.setToolTipText(lblNoShowSeries.getToolTipText()); // NOI18N
-    lblOrderAllBooksBySeries.setText(Localization.Main.getText("config.OrderAllBooksBySeries.label")); // NOI18N
-    lblOrderAllBooksBySeries.setToolTipText(Localization.Main.getText("config.OrderAllBooksBySeries.description")); // NOI18N
-    chkOrderAllBooksBySeries.setToolTipText(lblOrderAllBooksBySeries.getToolTipText()); // NOI18N
-    lblSplitByAuthorInitialGoToBooks.setText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.label")); // NOI18N
-    lblSplitByAuthorInitialGoToBooks.setToolTipText(Localization.Main.getText("config.SplitByAuthorInitialGoToBooks.description")); // NOI18N
-    chkSplitByAuthorInitialGoToBooks.setToolTipText(lblSplitByAuthorInitialGoToBooks.getToolTipText()); // NOI18N
-    lblNoThumbnailGenerate.setText(Localization.Main.getText("config.ThumbnailGenerate.label")); // NOI18N
-    lblNoThumbnailGenerate.setToolTipText(Localization.Main.getText("config.ThumbnailGenerate.description")); // NOI18N
-    chkNoThumbnailGenerate.setToolTipText(lblNoThumbnailGenerate.getToolTipText()); // NOI18N
-    lblThumbnailheight.setText(Localization.Main.getText("config.ThumbnailHeight.label")); // NOI18N
-    lblThumbnailheight.setToolTipText(Localization.Main.getText("config.ThumbnailHeight.description")); // NOI18N
-    txtThumbnailheight.setToolTipText(lblThumbnailheight.getToolTipText()); // NOI18N
-    lblNoCoverResize.setText(Localization.Main.getText("config.CoverResize.label")); // NOI18N
-    lblNoCoverResize.setToolTipText(Localization.Main.getText("config.CoverResize.description")); // NOI18N
-    chkNoCoverResize.setToolTipText(lblNoCoverResize.getToolTipText()); // NOI18N
-    lblIncludeCoversInCatalog.setText(Localization.Main.getText("config.IncludeCoversInCatalog.label")); // NOI18N
-    lblIncludeCoversInCatalog.setToolTipText(Localization.Main.getText("config.IncludeCoversInCatalog.description")); // NOI18N
-    chkIncludeCoversInCatalog.setToolTipText(lblIncludeCoversInCatalog.getToolTipText()); // NOI18N
-    lblUseThumbnailAsCover.setText(Localization.Main.getText("config.UseThumbnailsAsCovers.label")); // NOI18N
-    lblUseThumbnailAsCover.setToolTipText(Localization.Main.getText("config.UseThumbnailsAsCovers.description")); // NOI18N
-    chkUseThumbnailAsCover.setToolTipText(lblUseThumbnailAsCover.getToolTipText()); // NOI18N
-    lblZipCatalog.setText(Localization.Main.getText("config.ZipCatalog.label")); // NOI18N
-    lblZipCatalog.setToolTipText(Localization.Main.getText("config.ZipCatalog.description")); // NOI18N
-    chkZipCatalog.setToolTipText(lblZipCatalog.getToolTipText()); // NOI18N
-    lblZipOmitXml.setText(Localization.Main.getText("config.ZipOmitXml.label")); // NOI18N
-    lblZipOmitXml.setToolTipText(Localization.Main.getText("config.ZipOmitXml.description")); // NOI18N
-    chkZipOmitXml.setToolTipText(lblZipOmitXml.getToolTipText()); // NOI18N
-    lblCoverHeight.setText(Localization.Main.getText("config.CoverHeight.label")); // NOI18N
-    lblCoverHeight.setToolTipText(Localization.Main.getText("config.CoverHeight.description")); // NOI18N
-    txtCoverHeight.setToolTipText(lblCoverHeight.getToolTipText()); // NOI18N
-    lblMinBooksToMakeDeepLevel.setText(Localization.Main.getText("config.MinBooksToMakeDeepLevel.label")); // NOI18N
-    lblMinBooksToMakeDeepLevel.setToolTipText(Localization.Main.getText("config.MinBooksToMakeDeepLevel.description")); // NOI18N
-    txtMinBooksToMakeDeepLevel.setToolTipText(lblMinBooksToMakeDeepLevel.getToolTipText()); // NOI18N
-    lblMaxMobileResolution.setText(Localization.Main.getText("config.MaxMobileResolution.label")); // NOI18N
-    lblMaxMobileResolution.setToolTipText(Localization.Main.getText("config.MaxMobileResolution.description")); // NOI18N
-    txtMaxMobileResolution.setToolTipText(lblMaxMobileResolution.getToolTipText()); // NOI18N
-    lblMinimizeChangedFiles.setText(Localization.Main.getText("config.MinimizeChangedFiles.label")); // NOI18N
-    lblMinimizeChangedFiles.setToolTipText(Localization.Main.getText("config.MinimizeChangedFiles.description")); // NOI18N
-    chkMinimizeChangedFiles.setToolTipText(lblMinimizeChangedFiles.getToolTipText()); // NOI18N
-    lblCryptFilenames.setText(Localization.Main.getText("config.CryptFilenames.label")); // NOI18N
-    lblCryptFilenames.setToolTipText(Localization.Main.getText("config.CryptFilenames.description")); // NOI18N
-    chkCryptFilenames.setToolTipText(lblCryptFilenames.getToolTipText()); // NOI18N
-    lblGenerateIndex.setText(Localization.Main.getText("config.GenerateIndex.label")); // NOI18N
-    lblGenerateIndex.setToolTipText(Localization.Main.getText("config.GenerateIndex.description")); // NOI18N
-    chkGenerateIndex.setToolTipText(lblGenerateIndex.getToolTipText()); // NOI18N
+    setTranslateTexts(lblIncludeformat, txtIncludeformat, "config.IncludedFormatsList"); // NOI18N
+    setTranslateTexts(lblMaxbeforepaginate, txtMaxbeforepaginate, "config.MaxBeforePaginate"); // NOI18N
+    setTranslateTexts(lblMaxbeforesplit, txtMaxbeforepaginate, "config.MaxBeforeSplit"); // NOI18N
+    setTranslateTexts(lblMaxSplitLevels, txtMaxSplitLevels, "config.MaxSplitLevels"); // NOI18N
+    setTranslateTexts(lblBooksinrecent, txtBooksinrecent, "config.BooksInRecentAdditions"); // NOI18N
+    setTranslateTexts(lblMaxsummarylength, txtMaxsummarylength, "config.MaxSummaryLength"); // NOI18N
+    setTranslateTexts(lblMaxBookSummaryLength, txtMaxbeforepaginate, "config.MaxBookSummaryLength"); // NOI18
+    setTranslateTexts(lblIncludeemptybooks, chkIncludeemptybooks, "config.IncludeBooksWithNoFile"); // NOI18N
+    setTranslateTexts(lblIncludeOnlyOneFile, chkIncludeOnlyOneFile, "config.IncludeOnlyOneFile"); // NOI18N
+    setTranslateTexts(lblZipTrookCatalog, chkZipTrookCatalog, "config.ZipTrookCatalog"); // NOI18N
+    setTranslateTexts(lblNoShowSeries, chkNoShowSeries, "config.ShowSeriesInAuthorCatalog"); // NOI18N
+    setTranslateTexts(lblOrderAllBooksBySeries, chkOrderAllBooksBySeries, "config.OrderAllBooksBySeries"); // NOI18N
+    setTranslateTexts(lblSplitByAuthorInitialGoToBooks, chkSplitByAuthorInitialGoToBooks, "config.SplitByAuthorInitialGoToBooks"); // NOI18N
+    setTranslateTexts(lblNoThumbnailGenerate, chkNoThumbnailGenerate, "config.ThumbnailGenerate"); // NOI18N
+    setTranslateTexts(lblThumbnailheight, txtThumbnailheight, "config.ThumbnailHeight"); // NOI18N
+    setTranslateTexts(lblNoCoverResize, chkNoCoverResize, "config.CoverResize"); // NOI18N
+    setTranslateTexts(lblIncludeCoversInCatalog, chkIncludeCoversInCatalog, "config.IncludeCoversInCatalog"); // NOI18N
+    setTranslateTexts(lblUseThumbnailAsCover, chkUseThumbnailAsCover, "config.UseThumbnailsAsCovers"); // NOI18N
+    setTranslateTexts(lblZipCatalog, chkZipCatalog, "config.ZipCatalog"); // NOI18N
+    setTranslateTexts(lblZipOmitXml, chkZipOmitXml, "config.ZipOmitXml"); // NOI18N
+    setTranslateTexts(lblCoverHeight, txtCoverHeight, "config.CoverHeight"); // NOI18N
+    setTranslateTexts(lblMinBooksToMakeDeepLevel, txtMinBooksToMakeDeepLevel, "config.MinBooksToMakeDeepLevel"); // NOI18N
+    setTranslateTexts(lblMaxMobileResolution, txtMaxMobileResolution, "config.MaxMobileResolution"); // NOI18N
+    setTranslateTexts(lblMinimizeChangedFiles, chkMinimizeChangedFiles, "config.MinimizeChangedFiles"); // NOI18N
+    setTranslateTexts(lblCryptFilenames, chkCryptFilenames, "config.CryptFilenames"); // NOI18N
+    setTranslateTexts(lblGenerateIndex, chkGenerateIndex, "config.GenerateIndex"); // NOI18N
+    setTranslateTexts(lblMaxKeywords, txtMaxKeywords, "config.MaxKeywords"); // NOI18N
+    setTranslateTexts(lblIndexComments, chkIndexComments, "config.IndexComments"); // NOI18N
+    setTranslateTexts(lblIndexFilterAlgorithm, cboIndexFilterAlgorithm, "config.IndexFilterAlgorithm"); // NOI18N
 
     // external links
 
-    lblWikipediaUrl.setText(Localization.Main.getText("config.WikipediaUrl.label")); // NOI18N
-    lblWikipediaUrl.setToolTipText(Localization.Main.getText("config.WikipediaUrl.description")); // NOI18N
-    txtWikipediaUrl.setToolTipText(lblWikipediaUrl.getToolTipText()); // NOI18N
-    cmdWikipediaUrlReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdWikipediaUrlReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblAmazonAuthorUrl.setText(Localization.Main.getText("config.AmazonAuthorUrl.label")); // NOI18N
-    lblAmazonAuthorUrl.setToolTipText(Localization.Main.getText("config.AmazonAuthorUrl.description")); // NOI18N
-    txtAmazonAuthorUrl.setToolTipText(lblAmazonAuthorUrl.getToolTipText()); // NOI18N
-    cmdAmazonUrlReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdAmazonUrlReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblAmazonIsbnUrl.setText(Localization.Main.getText("config.AmazonIsbnUrl.label")); // NOI18N
-    lblAmazonIsbnUrl.setToolTipText(Localization.Main.getText("config.AmazonIsbnUrl.description")); // NOI18N
-    txtAmazonIsbnUrl.setToolTipText(lblAmazonIsbnUrl.getToolTipText()); // NOI18N
-    cmdAmazonIsbnReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdAmazonIsbnReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblAmazonTitleUrl.setText(Localization.Main.getText("config.AmazonTitleUrl.label")); // NOI18N
-    lblAmazonTitleUrl.setToolTipText(Localization.Main.getText("config.AmazonTitleUrl.description")); // NOI18N
-    txtAmazonTitleUrl.setToolTipText(lblAmazonTitleUrl.getToolTipText()); // NOI18N
-    cmdAmazonTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdAmazonTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblGoodreadAuthorUrl.setText(Localization.Main.getText("config.GoodreadAuthorUrl.label")); // NOI18N
-    lblGoodreadAuthorUrl.setToolTipText(Localization.Main.getText("config.GoodreadAuthorUrl.description")); // NOI18N
-    txtGoodreadAuthorUrl.setToolTipText(lblGoodreadAuthorUrl.getToolTipText()); // NOI18N
-    cmdGoodreadAuthorReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdGoodreadAuthorReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblGoodreadIsbnUrl.setText(Localization.Main.getText("config.GoodreadIsbnUrl.label")); // NOI18N
-    lblGoodreadIsbnUrl.setToolTipText(Localization.Main.getText("config.GoodreadIsbnUrl.description")); // NOI18N
-    txtGoodreadIsbnUrl.setToolTipText(lblGoodreadIsbnUrl.getToolTipText()); // NOI18N
-    cmdGoodreadIsbnReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdGoodreadIsbnReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblGoodreadTitleUrl.setText(Localization.Main.getText("config.GoodreadTitleUrl.label")); // NOI18N
-    lblGoodreadTitleUrl.setToolTipText(Localization.Main.getText("config.GoodreadTitleUrl.description")); // NOI18N
-    txtGoodreadTitleUrl.setToolTipText(lblGoodreadTitleUrl.getToolTipText()); // NOI18N
-    cmdGoodreadTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdGoodreadTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblGoodreadReviewIsbnUrl.setText(Localization.Main.getText("config.GoodreadReviewIsbnUrl.label")); // NOI18N
-    lblGoodreadReviewIsbnUrl.setToolTipText(Localization.Main.getText("config.GoodreadReviewIsbnUrl.description")); // NOI18N
-    txtGoodreadReviewIsbnUrl.setToolTipText(lblGoodreadReviewIsbnUrl.getToolTipText()); // NOI18N
-    cmdGoodreadReviewReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdGoodreadReviewReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblIsfdbAuthorUrl.setText(Localization.Main.getText("config.IsfdbAuthorUrl.label")); // NOI18N
-    lblIsfdbAuthorUrl.setToolTipText(Localization.Main.getText("config.IsfdbAuthorUrl.description")); // NOI18N
-    txtIsfdbAuthorUrl.setToolTipText(lblIsfdbAuthorUrl.getToolTipText()); // NOI18N
-    cmdIsfdbAuthorReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdIsfdbAuthorReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblLibrarythingAuthorUrl.setText(Localization.Main.getText("config.LibrarythingAuthorUrl.label")); // NOI18N
-    lblLibrarythingAuthorUrl.setToolTipText(Localization.Main.getText("config.LibrarythingAuthorUrl.description")); // NOI18N
-    txtLibrarythingAuthorUrl.setToolTipText(lblLibrarythingAuthorUrl.getToolTipText()); // NOI18N
-    cmdLibrarythingAuthorReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdLibrarythingAuthorReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblLibrarythingIsbnUrl.setText(Localization.Main.getText("config.LibrarythingIsbnUrl.label")); // NOI18N
-    lblLibrarythingIsbnUrl.setToolTipText(Localization.Main.getText("config.LibrarythingIsbnUrl.description")); // NOI18N
-    txtLibrarythingIsbnUrl.setToolTipText(lblLibrarythingIsbnUrl.getToolTipText()); // NOI18N
-    cmdLibrarythingIsbnReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdLibrarythingIsbnReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
-    lblLibrarythingTitleUrl.setText(Localization.Main.getText("config.LibrarythingTitleUrl.label")); // NOI18N
-    lblLibrarythingTitleUrl.setToolTipText(Localization.Main.getText("config.LibrarythingTitleUrl.description")); // NOI18N
-    txtLibrarythingTitleUrl.setToolTipText(lblLibrarythingTitleUrl.getToolTipText()); // NOI18N
-    lblMaxKeywords.setText(Localization.Main.getText("config.MaxKeywords.label")); // NOI18N
-    lblMaxKeywords.setToolTipText(Localization.Main.getText("config.MaxKeywords.description")); // NOI18N
-    lblIndexComments.setText(Localization.Main.getText("config.IndexComments.label")); // NOI18N
-    lblIndexComments.setToolTipText(Localization.Main.getText("config.IndexComments.description")); // NOI18N
-    chkIndexComments.setToolTipText(lblIndexComments.getToolTipText()); // NOI18N
-    lblIndexFilterAlgorithm.setText(Localization.Main.getText("config.IndexFilterAlgorithm.label")); // NOI18N
-    lblIndexFilterAlgorithm.setToolTipText(Localization.Main.getText("config.IndexFilterAlgorithm.description")); // NOI18N
-    cboIndexFilterAlgorithm.setToolTipText(lblIndexFilterAlgorithm.getToolTipText()); // NOI18N
-    cmdLibrarythingTitleReset.setText(Localization.Main.getText("config.Reset.label")); // NOI18N
-    cmdLibrarythingTitleReset.setToolTipText(Localization.Main.getText("config.Reset.description")); // NOI18N
+    setTranslateTexts(lblWikipediaUrl, txtWikipediaUrl, "config.WikipediaUrl"); // NOI18N
+    setTranslateTexts(cmdWikipediaUrlReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblAmazonAuthorUrl, txtAmazonAuthorUrl, "config.AmazonAuthorUrl"); // NOI18N
+    setTranslateTexts(cmdAmazonUrlReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblAmazonIsbnUrl, txtAmazonIsbnUrl, "config.AmazonIsbnUrl"); // NOI18N
+    setTranslateTexts(cmdAmazonIsbnReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblAmazonTitleUrl, txtAmazonTitleUrl, "config.AmazonTitleUrl"); // NOI18N
+    setTranslateTexts(cmdAmazonTitleReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblGoodreadAuthorUrl, txtGoodreadAuthorUrl, "config.GoodreadAuthorUrl"); // NOI18N
+    setTranslateTexts(cmdGoodreadAuthorReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblGoodreadIsbnUrl, txtGoodreadIsbnUrl, "config.GoodreadIsbnUrl"); // NOI18N
+    setTranslateTexts(cmdGoodreadIsbnReset, null, "config.Reset.label"); // NOI18N
+    setTranslateTexts(lblGoodreadTitleUrl, txtGoodreadTitleUrl, "config.GoodreadTitleUrl"); // NOI18N
+    setTranslateTexts(cmdGoodreadTitleReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblGoodreadReviewIsbnUrl, txtGoodreadReviewIsbnUrl, "config.GoodreadReviewIsbnUrl"); // NOI18N
+    setTranslateTexts(cmdGoodreadReviewReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblIsfdbAuthorUrl, txtIsfdbAuthorUrl, "config.IsfdbAuthorUrl"); // NOI18N
+    setTranslateTexts(cmdIsfdbAuthorReset, null, "config.Reset.label"); // NOI18N
+    setTranslateTexts(lblLibrarythingAuthorUrl, txtLibrarythingAuthorUrl, "config.LibrarythingAuthorUrl"); // NOI18N
+    setTranslateTexts(cmdLibrarythingAuthorReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblLibrarythingIsbnUrl, txtLibrarythingAuthorUrl, "config.LibrarythingIsbnUrl"); // NOI18N
+    setTranslateTexts(cmdLibrarythingIsbnReset, null, "config.Reset"); // NOI18N
+    setTranslateTexts(lblLibrarythingTitleUrl, txtLibrarythingTitleUrl, "config.LibrarythingTitleUrl.label"); // NOI18N
+    setTranslateTexts(cmdLibrarythingTitleReset, null, "config.Reset"); // NOI18N
 
     // Custom catalogs
 
-    cmdAdd.setText(Localization.Main.getText("gui.add")); // NOI18N
-    lblFeaturedCatalogTitle.setText(Localization.Main.getText("config.FeaturedCatalogTitle.label")); // NOI18N
-    lblFeaturedCatalogTitle.setToolTipText(Localization.Main.getText("config.FeaturedCatalogTitle.description")); // NOI18N
-    txtFeaturedCatalogTitle.setToolTipText(lblFeaturedCatalogTitle.getToolTipText()); // NOI18N
-    lblFeaturedCatalogSavedSearchName.setText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.label")); // NOI18N
-    lblFeaturedCatalogSavedSearchName.setToolTipText(Localization.Main.getText("config.FeaturedCatalogSavedSearchName.description")); // NOI18N
-    txtFeaturedCatalogSavedSearchName.setToolTipText(lblFeaturedCatalogSavedSearchName.getToolTipText()); // NOI18N
+    setTranslateTexts(cmdAdd, null, "gui.add"); // NOI18N
+    setTranslateTexts(lblFeaturedCatalogTitle, txtFeaturedCatalogTitle, "config.FeaturedCatalogTitle"); // NOI18N
+    setTranslateTexts(lblFeaturedCatalogSavedSearchName, txtFeaturedCatalogSavedSearchName, "config.FeaturedCatalogSavedSearchName"); // NOI18N
 
     // menus
 
@@ -1739,6 +1577,10 @@ public class Mainframe extends javax.swing.JFrame {
         txtTagsToIgnore = new javax.swing.JTextField();
         lblCatalogCustomColumns = new javax.swing.JLabel();
         txtCatalogCustomColumns = new javax.swing.JTextField();
+        lblSortTagsByAuthor = new javax.swing.JLabel();
+        chkSortTagsByAuthor = new javax.swing.JCheckBox();
+        lblTagBooksNoSplit = new javax.swing.JLabel();
+        chkTagBooksDoNotSplit = new javax.swing.JCheckBox();
         javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
@@ -1760,8 +1602,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkNogenerateexternallinks = new javax.swing.JCheckBox();
         chkPublishedDateAsYear = new javax.swing.JCheckBox();
         lblPublishedDateAsYear = new javax.swing.JLabel();
-        lblIncludeAddedInBookDetails2 = new javax.swing.JLabel();
-        chkIncludeAddednBookDetails1 = new javax.swing.JCheckBox();
+        lblIncludeAddedInBookDetails = new javax.swing.JLabel();
+        chkIncludeAddednBookDetails = new javax.swing.JCheckBox();
         lblIncludeRatingInBookDetails = new javax.swing.JLabel();
         chkIncludeRatingInBookDetails1 = new javax.swing.JCheckBox();
         txtBookDetailsCustomFields = new javax.swing.JTextField();
@@ -2874,7 +2716,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(lblTagsToIgnore, gridBagConstraints);
@@ -2882,7 +2724,7 @@ public class Mainframe extends javax.swing.JFrame {
         txtTagsToIgnore.setText("txtTagsToIgnore");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -2914,6 +2756,44 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(txtCatalogCustomColumns, gridBagConstraints);
+
+        lblSortTagsByAuthor.setText("lblSortTagsByAuthor");
+        lblSortTagsByAuthor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblSortTagsByAuthor, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkSortTagsByAuthor, gridBagConstraints);
+
+        lblTagBooksNoSplit.setText("lblTagBooksNoSplit");
+        lblTagBooksNoSplit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(lblTagBooksNoSplit, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCatalogStructure.add(chkTagBooksDoNotSplit, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
@@ -3125,9 +3005,9 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblPublishedDateAsYear, gridBagConstraints);
 
-        lblIncludeAddedInBookDetails2.setText("lblIncludeAddedInBookDetails");
-        lblIncludeAddedInBookDetails2.setOpaque(true);
-        lblIncludeAddedInBookDetails2.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblIncludeAddedInBookDetails.setText("lblIncludeAddedInBookDetails");
+        lblIncludeAddedInBookDetails.setOpaque(true);
+        lblIncludeAddedInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -3137,13 +3017,13 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeAddedInBookDetails2, gridBagConstraints);
+        pnlBookDetails.add(lblIncludeAddedInBookDetails, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkIncludeAddednBookDetails1, gridBagConstraints);
+        pnlBookDetails.add(chkIncludeAddednBookDetails, gridBagConstraints);
 
         lblIncludeRatingInBookDetails.setText("lblIncludeRatingInBookDetails");
         lblIncludeRatingInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -5026,7 +4906,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkExternalIcons;
     private javax.swing.JCheckBox chkExternalImages;
     private javax.swing.JCheckBox chkGenerateIndex;
-    private javax.swing.JCheckBox chkIncludeAddednBookDetails1;
+    private javax.swing.JCheckBox chkIncludeAddednBookDetails;
     private javax.swing.JCheckBox chkIncludeCoversInCatalog;
     private javax.swing.JCheckBox chkIncludeModifiedInBookDetails;
     private javax.swing.JCheckBox chkIncludeOnlyOneFile;
@@ -5060,10 +4940,12 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkOrderAllBooksBySeries;
     private javax.swing.JCheckBox chkPublishedDateAsYear;
     private javax.swing.JCheckBox chkReprocessEpubMetadata;
+    private javax.swing.JCheckBox chkSortTagsByAuthor;
     private javax.swing.JCheckBox chkSortUsingAuthorSort;
     private javax.swing.JCheckBox chkSortUsingTitleSort;
     private javax.swing.JCheckBox chkSplitByAuthorInitialGoToBooks;
     private javax.swing.JCheckBox chkSupressRatings;
+    private javax.swing.JCheckBox chkTagBooksDoNotSplit;
     private javax.swing.JCheckBox chkUseThumbnailAsCover;
     private javax.swing.JCheckBox chkZipCatalog;
     private javax.swing.JCheckBox chkZipOmitXml;
@@ -5122,7 +5004,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField lblGoodreadIsbnUrl;
     private javax.swing.JLabel lblGoodreadReviewIsbnUrl;
     private javax.swing.JTextField lblGoodreadTitleUrl;
-    private javax.swing.JLabel lblIncludeAddedInBookDetails2;
+    private javax.swing.JLabel lblIncludeAddedInBookDetails;
     private javax.swing.JLabel lblIncludeCoversInCatalog;
     private javax.swing.JLabel lblIncludeModifiedInBookDetails1;
     private javax.swing.JLabel lblIncludeOnlyOneFile;
@@ -5171,11 +5053,13 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblOrderAllBooksBySeries;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;
+    private javax.swing.JLabel lblSortTagsByAuthor;
     private javax.swing.JLabel lblSortUsingAuthor;
     private javax.swing.JLabel lblSortUsingTitle;
     private javax.swing.JLabel lblSplitByAuthorInitialGoToBooks;
     private javax.swing.JLabel lblSplittagson;
     private javax.swing.JLabel lblSupressRatings;
+    private javax.swing.JLabel lblTagBooksNoSplit;
     private javax.swing.JLabel lblTagsToIgnore;
     private javax.swing.JLabel lblTagsToMakeDeep;
     private javax.swing.JLabel lblTargetFolder;
