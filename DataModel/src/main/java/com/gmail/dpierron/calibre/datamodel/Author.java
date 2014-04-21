@@ -12,6 +12,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   private String sort;
   private String guessedLastName;
   private String nameForSort;
+  private boolean done = false;
 
   public Author(String id, String name, String sort) {
     super();
@@ -135,5 +136,11 @@ public class Author implements SplitableByLetter, Comparable<Author> {
     }
   }
 
+  public void setDone() {
+    done = true;
+  }
 
+  public boolean isDone () {
+    return done;
+  }
 }

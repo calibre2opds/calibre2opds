@@ -6,6 +6,7 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
   private final String id;
   private String name;
   private final String sort;
+  private boolean done;
 
   public Publisher(String id, String name, String sort) {
     super();
@@ -57,5 +58,11 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
     }
   }
 
+  public void setDone() {
+    done = true;
+  }
 
+  public boolean isDone() {
+    return done;
+  }
 }

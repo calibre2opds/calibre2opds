@@ -7,6 +7,10 @@ package com.gmail.dpierron.calibre.configuration;
  * Allows the following to be specified:
  * - The default value for the property for this mode
  * - Whether the item is locked against allowing to change the value
+ *
+ * Note that any fields that are defined as being used here must be
+ * define in the ReadOnlySyanzaConfigurationInterface and have a
+ * 'isReadOnly type method defined in ConfigurationHolder.
  */
 
 import com.gmail.dpierron.tools.Helper;

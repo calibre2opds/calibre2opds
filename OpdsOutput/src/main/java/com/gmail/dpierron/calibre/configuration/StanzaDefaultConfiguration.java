@@ -30,11 +30,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
       return StanzaConstants.CATALOGTITLE;
   }
 
-  public int getMaxBeforePaginate() {
+  public Integer getMaxBeforePaginate() {
     return StanzaConstants.MAX_BEFORE_PAGINATE;
   }
 
-  public int getBooksInRecentAdditions() {
+  public Integer getBooksInRecentAdditions() {
     return StanzaConstants.MAX_RECENT_ADDITIONS;
   }
 
@@ -66,7 +66,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.THUMBNAIL_GENERATE;
   }
 
-  public int getThumbnailHeight() {
+  public Integer getThumbnailHeight() {
     return StanzaConstants.THUMBNAIL_HEIGHT;
   }
 
@@ -91,20 +91,18 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.suppressRatingsInTitles;
   }
 
-  public boolean getGenerateDownloads() {
-    return StanzaConstants.GENERATE_DOWNLOADS;
-  }
+  public Integer getMaxBeforeSplit() {  return StanzaConstants.MAX_BEFORE_SPLIT;  }
 
-  public int getMaxBeforeSplit() {
-    return StanzaConstants.MAX_BEFORE_SPLIT;
-  }
-
-  public int getMaxSplitLevels() {
+  public Integer getMaxSplitLevels() {
     return StanzaConstants.MAX_SPLIT_LEVELS;
   }
 
   public String getSplitTagsOn() {
     return StanzaConstants.SPLIT_TAGS_ON;
+  }
+
+  public boolean getDontSplitTagsOn() {
+    return StanzaConstants.DontSplitTagsOn;
   }
 
   public boolean getIncludeBooksWithNoFile() {
@@ -131,11 +129,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.CatalogFilter;
   }
 
-  public int getMaxSummaryLength() {
+  public Integer getMaxSummaryLength() {
     return StanzaConstants.MAX_SUMMARY_LENGTH;
   }
 
-  public int getMaxBookSummaryLength() {
+  public Integer getMaxBookSummaryLength() {
     return StanzaConstants.MAX_BOOK_SUMMARY_LENGTH;
   }
 
@@ -207,15 +205,15 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.browseByCoverWithoutSplit;
   }
 
-  public int getMinBooksToMakeDeepLevel() {
+  public Integer getMinBooksToMakeDeepLevel() {
     return StanzaConstants.minBooksToMakeDeepLevel;
   }
 
-  public int getCoverHeight() {
+  public Integer getCoverHeight() {
     return StanzaConstants.CoverHeight;
   }
 
-  public int getMaxMobileResolution() {
+  public Integer getMaxMobileResolution() {
     return StanzaConstants.MAX_MOBILE_RESOLUTION;
   }
 
@@ -308,7 +306,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.IndexComments;
   }
 
-  public int getMaxKeywords() {
+  public Integer getMaxKeywords() {
     return StanzaConstants.MaxKeywords;
   }
 

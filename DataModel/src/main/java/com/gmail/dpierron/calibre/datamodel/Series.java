@@ -7,6 +7,7 @@ public class Series implements SplitableByLetter {
   private final String id;
   private final String name;
   private final String sort;
+  boolean done = false;
 
   public Series(String id, String name, String sort) {
     super();
@@ -43,5 +44,13 @@ public class Series implements SplitableByLetter {
 
   public String getTitleToSplitByLetter() {
     return getName();
+  }
+
+  public void setDone() {
+    done = true;
+  }
+
+  public boolean isDone() {
+    return done;
   }
 }

@@ -29,6 +29,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   private Map<Author, List<Book>> mapOfBooksByAuthor;     // Cached information for efficency
   private List<Author> authors;                           // Cached information for efficiency
 
+  // CONSTRUCTORS
 
   public AuthorsSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);

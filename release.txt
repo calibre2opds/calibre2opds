@@ -99,6 +99,8 @@ v3.4
 
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
     - Change: #c2o-207: Show current profile name in the window's title
+    - New:    #c2o-212: Option to sort books within a tag by author and then title 
+    - New:    #c2o-213: Option to suppress split-by-letter within a tag 
 
 v3.3 (1st April 2014)
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

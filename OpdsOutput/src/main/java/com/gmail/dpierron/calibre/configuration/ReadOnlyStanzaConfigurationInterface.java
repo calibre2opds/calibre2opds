@@ -32,11 +32,11 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getCopyToDatabaseFolder();
 
-  public int getMaxBeforePaginate();
+  public Integer getMaxBeforePaginate();
 
-  public int getMaxSplitLevels();
+  public Integer getMaxSplitLevels();
 
-  public int getBooksInRecentAdditions();
+  public Integer getBooksInRecentAdditions();
 
   public String getWikipediaLanguage();
 
@@ -44,7 +44,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getThumbnailGenerate();
 
-  public int getThumbnailHeight();
+  public Integer getThumbnailHeight();
 
   public boolean getSuppressRatingsInTitles();
 
@@ -52,9 +52,11 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIncludeTagCrossReferences();
 
-  public int getMaxBeforeSplit();
+  public Integer getMaxBeforeSplit();
 
   public String getSplitTagsOn();
+
+  public boolean getDontSplitTagsOn();
 
   public boolean getIncludeBooksWithNoFile();
 
@@ -66,9 +68,9 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getCatalogFilter();
 
-  public int getMaxSummaryLength();
+  public Integer getMaxSummaryLength();
 
-  public int getMaxBookSummaryLength();
+  public Integer getMaxBookSummaryLength();
 
   public boolean getGenerateAuthors();
 
@@ -104,11 +106,11 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getTagsToMakeDeep();
 
-  public int getMinBooksToMakeDeepLevel();
+  public Integer getMinBooksToMakeDeepLevel();
 
   public boolean getCoverResize();
 
-  public int getCoverHeight();
+  public Integer getCoverHeight();
 
   public boolean getIncludeOnlyOneFile();
 
@@ -116,7 +118,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getReprocessEpubMetadata();
 
-  public int getMaxMobileResolution();
+  public Integer getMaxMobileResolution();
 
   public String getUrlBooks();
 
@@ -198,7 +200,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public boolean getIndexComments();
 
-  public int getMaxKeywords();
+  public Integer getMaxKeywords();
 
   public Index.FilterHintType getIndexFilterAlgorithm();
 

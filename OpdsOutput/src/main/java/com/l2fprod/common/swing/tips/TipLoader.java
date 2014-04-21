@@ -34,10 +34,10 @@ public class TipLoader {
    * <p/>
    * <pre>
    *  tip.1.name=First Tip
-   *  tip.1.description=This is the description
+   *  tip.1.tooltip=This is the description
    *
    *  tip.2.name=Second Tip
-   *  tip.2.description=&lt;html&gt;This is an html description
+   *  tip.2.tooltip=&lt;html&gt;This is an html description
    * </pre>
    *
    * @param props
@@ -52,7 +52,7 @@ public class TipLoader {
       String nameKey = "tip." + count + ".name";
       String nameValue = props.getProperty(nameKey);
 
-      String descriptionKey = "tip." + count + ".description";
+      String descriptionKey = "tip." + count + ".tooltip";
       String descriptionValue = props.getProperty(descriptionKey);
 
       if (nameValue != null && descriptionValue == null) {

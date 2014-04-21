@@ -1354,7 +1354,7 @@ red 2px solid; BORDER-RIGHT: red 2px solid
 	BORDER-BOTTOM: red 2px solid; BORDER-LEFT: red 2px solid; BORDER-TOP: =
 red 2px solid; BORDER-RIGHT: red 2px solid
 }
-.form-item .description {
+.form-item .tooltip {
 	FONT-SIZE: 0.85em
 }
 .form-item LABEL {
@@ -1750,7 +1750,7 @@ Content-Location: http://www.lexcycle.com/modules/user/user.css?t
 #user-admin-buttons {
 	FLOAT: left; MARGIN-LEFT: 0.5em; CLEAR: right
 }
-#user-admin-settings FIELDSET .description {
+#user-admin-settings FIELDSET .tooltip {
 	PADDING-BOTTOM: 0.5em; FONT-SIZE: 0.85em
 }
 .profile {
@@ -1988,7 +1988,7 @@ Content-Type: application/octet-stream
 Content-Transfer-Encoding: quoted-printable
 Content-Location: http://www.lexcycle.com/modules/forum/forum.css?t
 
-#forum .description {
+#forum .tooltip {
 	MARGIN: 0.5em; FONT-SIZE: 0.9em
 }
 #forum TD.created {
@@ -2373,10 +2373,10 @@ SPAN.form-required {
 SPAN.submitted {
 	COLOR: #595959; FONT-SIZE: 0.92em
 }
-.description {
+.tooltip {
 	COLOR: #595959; FONT-SIZE: 0.92em
 }
-.description {
+.tooltip {
 	LINE-HEIGHT: 150%; MARGIN-BOTTOM: 0.75em; COLOR: #595959
 }
 .messages {
@@ -2970,10 +2970,10 @@ PADDING-TOP: 1em
 	PADDING-BOTTOM: 1em; BACKGROUND-COLOR: transparent; PADDING-LEFT: 1em; =
 PADDING-RIGHT: 1em; BACKGROUND-POSITION: 0px 0.75em; PADDING-TOP: 0px
 }
-*:first-child + HTML FIELDSET > .description {
+*:first-child + HTML FIELDSET > .tooltip {
 	PADDING-TOP: 1em
 }
-*:first-child + HTML FIELDSET .fieldset-wrapper .description {
+*:first-child + HTML FIELDSET .fieldset-wrapper .tooltip {
 	PADDING-TOP: 1em
 }
 FIELDSET LEGEND {
@@ -3033,7 +3033,7 @@ DIV.admin-panel {
 	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: =
 0px; PADDING-TOP: 0px
 }
-DIV.admin-panel .description {
+DIV.admin-panel .tooltip {
 	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: =
 0px; PADDING-TOP: 0px
 }
@@ -3076,7 +3076,7 @@ DIV.admin-panel {
 BACKGROUND: url(gradient-inner.png) #ffffff repeat-x 0px 0px; =
 PADDING-TOP: 1em
 }
-DIV.admin-panel .description {
+DIV.admin-panel .tooltip {
 	MARGIN-BOTTOM: 1.5em
 }
 DIV.admin-panel DL {
