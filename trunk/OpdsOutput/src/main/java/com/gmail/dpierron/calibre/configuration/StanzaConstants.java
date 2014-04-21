@@ -6,10 +6,10 @@ import com.gmail.dpierron.calibre.opds.indexer.Index;
 public class StanzaConstants {
 
   // options default values
-  public final static int MAX_BEFORE_PAGINATE = 25;
-  public final static int MAX_BEFORE_SPLIT = 3 * MAX_BEFORE_PAGINATE;
-  public final static int MAX_SPLIT_LEVELS = 1;
-  public final static int MAX_RECENT_ADDITIONS = 500;
+  public final static Integer MAX_BEFORE_PAGINATE = 25;
+  public final static Integer MAX_BEFORE_SPLIT = 3 * MAX_BEFORE_PAGINATE;
+  public final static Integer MAX_SPLIT_LEVELS = 1;
+  public final static Integer MAX_RECENT_ADDITIONS = 500;
   public final static String CATALOGFOLDER = "_catalog";
   public final static boolean ONLY_CATALOG_A_TTARGET = false;
   public final static String CATALOGTITLE = "Calibre library";
@@ -23,14 +23,14 @@ public class StanzaConstants {
   public final static boolean MINIMIZE_CHANGED_FILES = true;
   public final static boolean USE_EXTERNAL_ICONS = true;
   public final static boolean USE_EXTERNAL_IMAGES = true;
-  public final static int THUMBNAIL_HEIGHT = 144;
+  public final static Integer THUMBNAIL_HEIGHT = 144;
   public final static boolean THUMBNAIL_GENERATE = true;
   public final static String SPLIT_TAGS_ON = "";
   public final static boolean INCLUDEBOOKSWITHNOFILE = false;
   public final static boolean CRYPT_FILENAMES = false;
   public final static boolean SHOWSERIESINAUTHORCATALOG = true;
-  public final static int MAX_SUMMARY_LENGTH = 30;
-  public final static int MAX_BOOK_SUMMARY_LENGTH = 250;
+  public final static Integer MAX_SUMMARY_LENGTH = 30;
+  public final static Integer MAX_BOOK_SUMMARY_LENGTH = 250;
   public final static String CatalogFilter = "";
   public final static boolean GENERATE_AUTHORS = true;
   public final static boolean GENERATE_TAGS = true;
@@ -52,20 +52,21 @@ public class StanzaConstants {
   public final static boolean browseByCoverWithoutSplit = true;
   public static final int minBooksToMakeDeepLevel = 50;
   public final static boolean COVER_RESIZE = true;
-  public static final int CoverHeight = 550;
+  public static final Integer CoverHeight = 550;
   public final static boolean IncludeOnlyOneFile = false;
   public final static boolean ZipTrookCatalog = false;
   public final static boolean ReprocessEpubMetadata = false;
   public final static boolean OrderAllBooksBySeries = true;
-  public final static int MAX_MOBILE_RESOLUTION = 960;
+  public final static Integer MAX_MOBILE_RESOLUTION = 960;
   public final static boolean GenerateIndex = false;
   public final static boolean IndexComments = true;
-  public final static int MaxKeywords = -1; // don't filter
+  public final static Integer MaxKeywords = -1; // don't filter
   public final static Index.FilterHintType IndexFilterAlgorithm = Index.FilterHintType.RemoveMedian;
   public final static String UrlBooks = "";
   public final static String FeaturedCatalogTitle = "Featured books";
   public final static String FeaturedCatalogSavedSearchName = "";
   public final static String CatalogCustomColumns = "";
+  public final static boolean DontSplitTagsOn = true;
   /* Catalog Structure */
   public final static boolean DisplayAuthorSort = true;
   public final static boolean DisplayTitleSort = true;

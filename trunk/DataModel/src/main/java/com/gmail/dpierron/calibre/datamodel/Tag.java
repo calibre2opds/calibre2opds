@@ -9,6 +9,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   private final String id;
   private final String name;
   private String[] partsOfTag;
+  private boolean done = false;
 
   public Tag(String id, String name) {
     super();
@@ -62,5 +63,11 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
       return super.equals(obj);
   }
 
+  public void setDone() {
+    done = true;
+  }
 
+  public boolean isDone() {
+    return done;
+  }
 }

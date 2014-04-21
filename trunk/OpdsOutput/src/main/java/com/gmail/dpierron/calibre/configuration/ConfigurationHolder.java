@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
+import com.l2fprod.common.beans.editor.IntegerPropertyEditor;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -44,8 +45,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATEOPDSDOWNLOADS = "GenerateOpdsDownloads";
   private final static String PROPERTY_NAME_GENERATEHTMLDOWNLOADS = "GenerateHtmlDownloads";
   private final static String PROPERTY_NAME_SUPRESSRATINGSINTITLES = "SuppressRatingsInTitles";
-  private final static String PROPERTY_NAME_GENERATEDOWNLOADS = "GenerateDownloads";
   private final static String PROPERTY_NAME_SPLITTAGSON = "SplitTagsOn";
+  private final static String PROPERTY_NAME_DontSpltTagsOn = "DontSplitTagsOn";
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
@@ -243,20 +244,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setDatabaseFolder(File databaseFolder) {
     DataModel.INSTANCE.reset(); // reset the datamodel when the database changes !
-    setProperty(PROPERTY_NAME_DATABASEFOLDER, getUniversalPath(databaseFolder));
-  }
-
-  private String getUniversalPath(File file) {
-    if (file == null)
-      return null;
-    String universalPath = file.getAbsolutePath();
-    //if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
-    //  universalPath = file.toURI().getPath();
-    //  int pos = universalPath.indexOf(':');
-    //  if (pos >= 0 && pos + 1 < universalPath.length())
-    //    universalPath = universalPath.substring(pos + 1);
-    //}
-    return universalPath;
+    setProperty(PROPERTY_NAME_DATABASEFOLDER, databaseFolder.getAbsolutePath());
   }
 
   public boolean isTargetFolderReadOnly() {
@@ -272,7 +260,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public void setTargetFolder(File targetFolder) {
-    setProperty(PROPERTY_NAME_TARGETFOLDER, getUniversalPath(targetFolder));
+    setProperty(PROPERTY_NAME_TARGETFOLDER, targetFolder.getAbsolutePath());
   }
 
   public boolean isLanguageReadOnly() {
@@ -343,12 +331,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXBEFOREPAGINATE);
   }
 
-  public int getMaxBeforePaginate() {
+  public Integer getMaxBeforePaginate() {
     Integer i = getInteger(PROPERTY_NAME_MAXBEFOREPAGINATE);
-    if (i == null)
-      return defaults.getMaxBeforePaginate();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMaxBeforePaginate() : i;
   }
 
   public void setMaxBeforePaginate(int maxBeforePaginate) {
@@ -359,15 +344,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXBEFORESPLIT);
   }
 
-  public int getMaxBeforeSplit() {
+  public Integer getMaxBeforeSplit() {
     Integer i = getInteger(PROPERTY_NAME_MAXBEFORESPLIT);
-    if (i == null)
-      return defaults.getMaxBeforeSplit();
-    else
-    if (i < 1)        // Ensure value is never less than 1
-      return 1;
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMaxBeforeSplit() : ((i < 1) ? 1 : i);
   }
 
   public void setMaxBeforeSplit(int maxBeforeSplit) {
@@ -378,12 +357,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXSPLITLEVELS);
   }
 
-  public int getMaxSplitLevels() {
+  public Integer getMaxSplitLevels() {
     Integer i = getInteger(PROPERTY_NAME_MAXSPLITLEVELS);
-    if (i == null)
-      return defaults.getMaxSplitLevels();
-    else
-      return i.intValue();
+    return (i == null) ?defaults.getMaxSplitLevels() : i;
   }
 
   public void setMaxSplitLevels(int maxSplitLevels) {
@@ -394,12 +370,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXMOBILERESOLUTION);
   }
 
-  public int getMaxMobileResolution() {
+  public Integer getMaxMobileResolution() {
     Integer i = getInteger(PROPERTY_NAME_MAXMOBILERESOLUTION);
-    if (i == null)
-      return defaults.getMaxMobileResolution();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMaxMobileResolution() : i;
   }
 
   public void setMaxMobileResolution(int maxMobileResolution) {
@@ -410,12 +383,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_BOOKSINRECENTADDITIONS);
   }
 
-  public int getBooksInRecentAdditions() {
+  public Integer getBooksInRecentAdditions() {
     Integer i = getInteger(PROPERTY_NAME_BOOKSINRECENTADDITIONS);
-    if (i == null)
-      return defaults.getBooksInRecentAdditions();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getBooksInRecentAdditions() : i;
   }
 
   public void setBooksInRecentAdditions(int booksInRecentAdditions) {
@@ -660,22 +630,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
       return b.booleanValue();
   }
 
-  public boolean isGenerateDownloadsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATEDOWNLOADS);
-  }
-
-  public boolean getGenerateDownloads() {
-    Boolean b = getBoolean(PROPERTY_NAME_GENERATEDOWNLOADS);
-    if (b == null)
-      return defaults.getGenerateDownloads();
-    else
-      return b.booleanValue();
-  }
-
-  public void setGenerateDownloads(boolean generateDownloads) {
-    setProperty(PROPERTY_NAME_GENERATEDOWNLOADS, generateDownloads);
-  }
-
   public boolean isThumbnailGenerateReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_THUMBNAILGENERATE);
   }
@@ -696,12 +650,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_THUMBNAILHEIGHT);
   }
 
-  public int getThumbnailHeight() {
+  public Integer getThumbnailHeight() {
     Integer i = getInteger(PROPERTY_NAME_THUMBNAILHEIGHT);
-    if (i == null)
-      return defaults.getThumbnailHeight();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getThumbnailHeight() : i;
   }
 
   public void setThumbnailHeight(int thumbnailHeight) {
@@ -722,6 +673,22 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public void setSplitTagsOn(String splitTagsOn) {
     setProperty(PROPERTY_NAME_SPLITTAGSON, splitTagsOn);
+  }
+
+  public boolean isDontSplitTagsOnReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DontSpltTagsOn);
+  }
+
+  public boolean getDontSplitTagsOn() {
+    Boolean b = getBoolean(PROPERTY_NAME_DontSpltTagsOn);
+    if (b == null)
+      return defaults.getDontSplitTagsOn();
+    else
+      return b.booleanValue();
+  }
+
+  public void setDontSpltTagsOn(boolean dontSplitTagsOn) {
+    setProperty(PROPERTY_NAME_DontSpltTagsOn, dontSplitTagsOn);
   }
 
   public boolean isIncludeBooksWithNoFileReadOnly() {
@@ -792,12 +759,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXSUMMARYLENGTH);
   }
 
-  public int getMaxSummaryLength() {
+  public Integer getMaxSummaryLength() {
     Integer i = getInteger(PROPERTY_NAME_MAXSUMMARYLENGTH);
-    if (i == null)
-      return defaults.getMaxSummaryLength();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMaxSummaryLength() : i;
   }
 
   public void setMaxSummaryLength(int value) {
@@ -812,12 +776,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
   }
 
-  public int getMaxBookSummaryLength() {
+  public Integer getMaxBookSummaryLength() {
     Integer i = getInteger(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
-    if (i == null)
-      return defaults.getMaxBookSummaryLength();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMaxBookSummaryLength() : i;
   }
 
   public boolean isGenerateAuthorsReadOnly() {
@@ -1071,12 +1032,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_MINBOOKSTOMAKEDEEPLEVEL);
   }
 
-  public int getMinBooksToMakeDeepLevel() {
+  public Integer getMinBooksToMakeDeepLevel() {
     Integer i = getInteger(PROPERTY_NAME_MINBOOKSTOMAKEDEEPLEVEL);
-    if (i == null)
-      return defaults.getMinBooksToMakeDeepLevel();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getMinBooksToMakeDeepLevel() : i;
   }
 
   public void setMinBooksToMakeDeepLevel(int value) {
@@ -1120,12 +1078,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_COVERHEIGHT);
   }
 
-  public int getCoverHeight() {
+  public Integer getCoverHeight() {
     Integer i = getInteger(PROPERTY_NAME_COVERHEIGHT);
-    if (i == null)
-      return defaults.getCoverHeight();
-    else
-      return i.intValue();
+    return (i == null) ? defaults.getCoverHeight() : i;
   }
 
   public void setCoverHeight(int value) {
@@ -1421,12 +1376,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return isPropertyReadOnly(PROPERTY_NAME_INDEXCOMMENTS);
   }
 
-  public int getMaxKeywords() {
+  public Integer getMaxKeywords() {
     Integer i = getInteger(PROPERTY_NAME_MAXKEYWORDS);
-    if (i == null)
-      return defaults.getMaxKeywords();
-    else
-      return i.intValue();
+    return (i == null) ?defaults.getMaxKeywords() : i;
   }
 
   public void setMaxKeywords(int value) {

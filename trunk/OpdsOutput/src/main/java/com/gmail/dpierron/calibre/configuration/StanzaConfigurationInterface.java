@@ -55,13 +55,13 @@ public interface StanzaConfigurationInterface extends ReadOnlyStanzaConfiguratio
 
   public void setSuppressRatingsInTitles(boolean value);
 
-  public void setGenerateDownloads(boolean value);
-
   public void setMaxBeforeSplit(int value);
 
   public void setMaxSplitLevels(int value);
 
   public void setSplitTagsOn(String value);
+
+  public void setDontSpltTagsOn(boolean value);
 
   public void setIncludeBooksWithNoFile(boolean value);
 

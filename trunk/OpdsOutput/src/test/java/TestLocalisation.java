@@ -34,7 +34,7 @@ public class TestLocalisation {
         String labelKey = "config." + optionName + ".label";
         String label = Localization.Main.getText(labelKey);
         assertTrue(language + "->" + labelKey, Helper.isNotNullOrEmpty(label) && !label.equals(labelKey));
-        String descriptionKey = "config." + optionName + ".description";
+        String descriptionKey = "config." + optionName + ".tooltip";
         String description = Localization.Main.getText(descriptionKey);
         assertTrue(language + "->" + descriptionKey, Helper.isNotNullOrEmpty(description) && !description.equals(descriptionKey));
       }

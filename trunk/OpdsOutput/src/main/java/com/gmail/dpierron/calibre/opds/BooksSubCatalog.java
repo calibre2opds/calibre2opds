@@ -510,7 +510,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param entry
    */
   private void addAcquisitionLinks(Book book, Element entry) {
-    if (!currentProfile.getGenerateDownloads()) {
+    if (!currentProfile.getGenerateOpdsDownloads()) {
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: exit: download links suppressed");
       return;
     }

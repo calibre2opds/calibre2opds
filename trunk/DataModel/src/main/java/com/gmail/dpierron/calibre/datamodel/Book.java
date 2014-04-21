@@ -49,7 +49,7 @@ public class Book implements SplitableByLetter {
   private boolean flag;
   private List<CustomColumnValue> customColumnValues;
 
-  private boolean done;
+  private boolean done = false;
 
   private static Date ZERO;
   private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);

@@ -498,7 +498,7 @@ public class PropertySheetPanel extends JPanel implements PropertySheet, Propert
     public ToggleDescriptionAction() {
       super("toggleDescription", IconPool.shared().get(PropertySheet.class.getResource("icons/description.gif")));
       putValue(Action.SHORT_DESCRIPTION,
-          ResourceManager.get(PropertySheet.class).getString("PropertySheetPanel.description.shortDescription"));
+          ResourceManager.get(PropertySheet.class).getString("PropertySheetPanel.tooltip.shortDescription"));
     }
 
     public void actionPerformed(ActionEvent e) {
