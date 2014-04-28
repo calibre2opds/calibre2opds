@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import javax.swing.*;
+import javax.swing.text.StringContent;
 import java.lang.reflect.*;
 
 public class guiField {
@@ -125,76 +126,64 @@ public class guiField {
       return;
     }
 
+    String getMethodName = "get" + methodBase;
     String setMethodName = "set" + methodBase;
+    Method getMethod;
+    Method setMethod = null;
+    Object paramType = null;
     Class[] paramTypes = new Class[1];
     try {
-      // Text fields
-      if (guiValue instanceof JTextField) {
-        String s = ((JTextField) guiValue).getText();
-        assert s != null : "storeValue:  Unexpected null return reading value of " + guiValue.getName();
-        if (minimum == 0 && maximum == 0) {
-          paramTypes[0] = String.class;
-          try {
-            Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-            setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), s);
-          } catch (NoSuchMethodException e1) {
-            try {
+      getMethod = ConfigurationHolder.class.getDeclaredMethod(getMethodName);
+      paramType = getMethod.getReturnType();
+      paramTypes[0] = paramType.getClass();
+      setMethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
+    } catch (NoSuchMethodException e1) {
+      logger.error("storeValue:  unhandled parameter type for  '" + setMethodName + "'");
+    } finally {
+      if (setMethod == null) {
+        logger.error("Unable to get method " + setMethodName);
+      } else try {
+          // Text fields
+        if (guiValue instanceof JTextField) {
+          String s = ((JTextField) guiValue).getText();
+          assert s != null : "storeValue:  Unexpected null return reading value of " + guiValue.getName();
+          if (minimum == 0 && maximum == 0) {
+            if (paramType instanceof String) {
+              setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), s);
+            } else if (paramType instanceof File) {
               // This catches the case where the text field relates to a file/folder
-              paramTypes[0] = File.class;
-              Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-              setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), Helper.isNullOrEmpty(s) ? null : new File(s));
-            } catch (NoSuchMethodException e2) {
-              try {
-                // This catches the case where the text field relates to a file/folder
-                paramTypes[0] = Integer.class;
-                Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-                setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), Integer.getInteger(s));
-              } catch (NoSuchMethodException e3) {
-                try {
-                  // This catches the case where the text field relates to a file/folder
-                  paramTypes[0] = int.class;
-                  Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-                  setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), Integer.getInteger(s));
-                } catch (NoSuchMethodException e4) {
-                  logger.error("storeValue:  unhandled parameter type for  '" + setMethodName + "'");
-                }
-              }
+              setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), Helper.isNullOrEmpty(s) ? null : new File(s));
+            } else if (paramType instanceof Integer) {
+              setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), Integer.getInteger(s));
             }
+          } else {
+            assert (paramType instanceof Integer);
+            Integer i = getValue(s);
+            setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), i);
           }
-        } else {
-          paramTypes[0] = Integer.class;
-          Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-          int i = getValue(s);
-          if (i > minimum) {
-            setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), i);
-          }
-        }
-      // Checkboxes
-      } else if (guiValue instanceof JCheckBox) {
-        paramTypes[0] = boolean.class;
-        Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-        setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), ((JCheckBox) guiValue).isSelected());
-      // Combo boxes
-      } else if (guiValue instanceof JComboBox) {
-        paramTypes[0] = String.class;
-        Method setmethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-        setmethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), ((JComboBox) guiValue).getSelectedItem());
-      } else {
-        logger.error("storeValue: gui value oBject type not recognised for " + guiLabel);
-      }
 
-    } catch (final SecurityException e) {
-      int dummy = 2;
-    } catch (final NoSuchMethodException e) {
-      logger.error("storeValue:  Method '" + setMethodName + "' not found");
-    } catch (final IllegalArgumentException e) {
-      int dummy = 4;
-    } catch (final IllegalAccessException e) {
-      int dummy = 5;
-    } catch (final InvocationTargetException e) {
-      int dummy = 6;
-    } catch (Exception e) {
-      int dummy = 1;
+        } else if (guiValue instanceof JCheckBox) {
+          Boolean b = ((JCheckBox) guiValue).isSelected();
+          setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), negate ?  !b : b);
+
+        } else if (guiValue instanceof JComboBox) {
+          setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), ((JComboBox) guiValue).getSelectedItem());
+
+        } else {
+          logger.error("storeValue: gui value oBject type not recognised for " + guiLabel);
+        }
+      // None of the following should happen except in development - but lets play safe!
+      } catch (final SecurityException e) {
+        int dummy = 2;
+      } catch (final IllegalArgumentException e) {
+        int dummy = 4;
+      } catch (final IllegalAccessException e) {
+        int dummy = 5;
+      } catch (final InvocationTargetException e) {
+        int dummy = 6;
+      } catch (Exception e) {
+        int dummy = 1;
+      }
     }
   }
 
@@ -230,15 +219,16 @@ public class guiField {
     String isReadOnlyMethodName = "is" + methodBase + "ReadOnly";
     try {
       Method method = ConfigurationHolder.class.getDeclaredMethod(getMethodName);
+      Object returnType = method.getReturnType();
       // Text fields
       if (guiValue instanceof JTextField) {
         String s;
-        if (String.class.equals(method.getReturnType())) {
+        if (String.class.equals(returnType)) {
           s = (String) method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
-        } else if (Integer.class.equals(method.getReturnType())) {
+        } else if (Integer.class.equals(returnType)) {
           Integer i = (Integer) (method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile()));
           s = i.toString();
-        } else if (File.class.equals(method.getReturnType())) {
+        } else if (File.class.equals(returnType)) {
           File f = (File) method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
           s = (f==null ? "" : f.getAbsolutePath());
         } else {
@@ -256,7 +246,7 @@ public class guiField {
       // Check boxes
       } else if (guiValue instanceof JCheckBox) {
         Boolean b = (Boolean) method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
-        ((JCheckBox)guiValue).setSelected(negate ? b : !b);
+        ((JCheckBox)guiValue).setSelected(negate ? !b : b);
       } else if (guiValue instanceof JComboBox) {
         String s = (String) method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
         ((JComboBox) guiValue).setSelectedItem(s);

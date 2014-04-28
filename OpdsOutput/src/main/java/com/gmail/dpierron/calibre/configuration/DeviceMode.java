@@ -67,17 +67,11 @@ public enum DeviceMode {
     return Default;
   }
 
-  public void setSpecificOptionsValues(PropertiesBasedConfiguration configuration) {
+  public void setModeSpecificOptions(PropertiesBasedConfiguration configuration) {
     for (int i = 0; i < options.length; i += 3) {
       String optionName = (String) options[i];
       Object optionValue = options[i + 1];
       configuration.setProperty(optionName, optionValue);
-    }
-  }
-
-  public void setSpecificOptionsReadOnly(PropertiesBasedConfiguration configuration) {
-    for (int i = 0; i < options.length; i += 3) {
-      String optionName = (String) options[i];
       Boolean readOnly = (Boolean) options[i + 2];
       configuration.setPropertyReadOnly(optionName, readOnly);
     }

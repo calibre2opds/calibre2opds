@@ -2,14 +2,13 @@ package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
-import com.gmail.dpierron.tools.Composite;
 
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-public class StanzaDefaultConfiguration extends DefaultConfiguration implements ReadOnlyStanzaConfigurationInterface {
+public class StanzaDefaultConfiguration extends DefaultConfiguration implements GetConfigurationInterface {
 
   public String getLanguage() {
     return Locale.getDefault().getLanguage();
@@ -19,9 +18,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.CATALOGFOLDER;
   }
 
-  public boolean getOnlyCatalogAtTarget() {
-    return StanzaConstants.ONLY_CATALOG_A_TTARGET;
-  }
+  public Boolean getOnlyCatalogAtTarget() { return StanzaConstants.ONLY_CATALOG_A_TTARGET; }
 
   public String getCatalogTitle() {
     if (Localization.Main.isInitialized())
@@ -46,23 +43,23 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.INCLUDEDFORMATS;
   }
 
-  public boolean getMinimizeChangedFiles() {
+  public Boolean getMinimizeChangedFiles() {
     return StanzaConstants.MINIMIZE_CHANGED_FILES;
   }
 
-  public boolean getExternalIcons() {
+  public Boolean getExternalIcons() {
     return StanzaConstants.USE_EXTERNAL_ICONS;
   }
 
-  public boolean getExternalImages() {
+  public Boolean getExternalImages() {
     return StanzaConstants.USE_EXTERNAL_IMAGES;
   }
 
-  public boolean getCoverResize() {
+  public Boolean getCoverResize() {
     return StanzaConstants.COVER_RESIZE;
   }
 
-  public boolean getThumbnailGenerate() {
+  public Boolean getThumbnailGenerate() {
     return StanzaConstants.THUMBNAIL_GENERATE;
   }
 
@@ -71,23 +68,23 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
   }
 
 
-  public boolean getGenerateOpds() {
+  public Boolean getGenerateOpds() {
     return StanzaConstants.GENERATE_OPDS;
   }
 
-  public boolean getGenerateHtml() {
+  public Boolean getGenerateHtml() {
     return StanzaConstants.GENERATE_HTML;
   }
 
-  public boolean getGenerateOpdsDownloads() {
+  public Boolean getGenerateOpdsDownloads() {
     return StanzaConstants.GENERATE_OPDS_DOWNLOADS;
   }
 
-  public boolean getGenerateHtmlDownloads() {
+  public Boolean getGenerateHtmlDownloads() {
     return StanzaConstants.GENERATE_HTML_DOWNLOADS;
   }
 
-  public boolean getSuppressRatingsInTitles() {
+  public Boolean getSuppressRatingsInTitles() {
     return StanzaConstants.suppressRatingsInTitles;
   }
 
@@ -101,27 +98,27 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.SPLIT_TAGS_ON;
   }
 
-  public boolean getDontSplitTagsOn() {
+  public Boolean getDontSplitTagsOn() {
     return StanzaConstants.DontSplitTagsOn;
   }
 
-  public boolean getIncludeBooksWithNoFile() {
+  public Boolean getIncludeBooksWithNoFile() {
     return StanzaConstants.INCLUDEBOOKSWITHNOFILE;
   }
 
-  public boolean getCryptFilenames() {
+  public Boolean getCryptFilenames() {
     return StanzaConstants.CRYPT_FILENAMES;
   }
 
-  public boolean getShowSeriesInAuthorCatalog() {
+  public Boolean getShowSeriesInAuthorCatalog() {
     return StanzaConstants.SHOWSERIESINAUTHORCATALOG;
   }
 
-  public boolean getGenerateCrossLinks() {
+  public Boolean getGenerateCrossLinks() {
     return StanzaConstants.generateCrossLinks;
   }
 
-  public boolean getGenerateExternalLinks() {
+  public Boolean getGenerateExternalLinks() {
     return StanzaConstants.generateExternalLinks;
   }
 
@@ -137,11 +134,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.MAX_BOOK_SUMMARY_LENGTH;
   }
 
-  public boolean getGenerateAuthors() {
+  public Boolean getGenerateAuthors() {
     return StanzaConstants.GENERATE_AUTHORS;
   }
 
-  public boolean getGenerateTags() {
+  public Boolean getGenerateTags() {
     return StanzaConstants.GENERATE_TAGS;
   }
 
@@ -149,19 +146,19 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.TAGS_TO_IGNOREp;
   }
 
-  public boolean getGenerateSeries() {
+  public Boolean getGenerateSeries() {
     return StanzaConstants.GENERATE_SERIES;
   }
 
-  public boolean getGenerateRecent() {
+  public Boolean getGenerateRecent() {
     return StanzaConstants.GENERATE_RECENT;
   }
 
-  public boolean getGenerateRatings() {
+  public Boolean getGenerateRatings() {
     return StanzaConstants.GENERATE_RATINGS;
   }
 
-  public boolean getGenerateAllbooks() {
+  public Boolean getGenerateAllbooks() {
     return StanzaConstants.GENERATE_ALLBOOKS;
   }
 
@@ -173,27 +170,27 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return DeviceMode.Default;
   }
 
-  public boolean getCopyToDatabaseFolder() {
+  public Boolean getCopyToDatabaseFolder() {
     return StanzaConstants.COPYTODATABASEFOLDER;
   }
 
-  public boolean getBrowseByCover() {
+  public Boolean getBrowseByCover() {
     return StanzaConstants.NTOWSE_BY_COVER;
   }
 
-  public boolean getLanguageAsTag() {
+  public Boolean getLanguageAsTag() {
     return StanzaConstants.languageAsTag;
   }
 
-  public boolean getSplitByAuthorInitialGoToBooks() {
+  public Boolean getSplitByAuthorInitialGoToBooks() {
     return StanzaConstants.splitByAuthorInitialGoToBooks;
   }
 
-  public boolean getIncludeAboutLink() {
+  public Boolean getIncludeAboutLink() {
     return StanzaConstants.INCLUDE_ABOUT_LINK;
   }
 
-  public boolean getPublishedDateAsYear() {
+  public Boolean getPublishedDateAsYear() {
     return StanzaConstants.publishedDateAsYear;
   }
 
@@ -201,7 +198,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.TAGS_TO_MAKE_DEEP;
   }
 
-  public boolean getBrowseByCoverWithoutSplit() {
+  public Boolean getBrowseByCoverWithoutSplit() {
     return StanzaConstants.browseByCoverWithoutSplit;
   }
 
@@ -217,36 +214,33 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.MAX_MOBILE_RESOLUTION;
   }
 
-  public boolean getIncludeOnlyOneFile() {
+  public Boolean getIncludeOnlyOneFile() {
     return StanzaConstants.IncludeOnlyOneFile;
   }
 
-  public boolean getZipTrookCatalog() {
+  public Boolean getZipTrookCatalog() {
     return StanzaConstants.ZipTrookCatalog;
   }
 
-  public boolean getReprocessEpubMetadata() {
+  public Boolean getReprocessEpubMetadata() {
     return StanzaConstants.ReprocessEpubMetadata;
   }
 
-  public boolean getOrderAllBooksBySeries() {
+  public Boolean getOrderAllBooksBySeries() {
     return StanzaConstants.OrderAllBooksBySeries;
   }
 
-  public boolean getIncludeCoversInCatalog() {
+  public Boolean getIncludeCoversInCatalog() { return StanzaConstants.IncludeCoversInCatalog; }
 
-
-    return StanzaConstants.IncludeCoversInCatalog;
-  }
-
-  public boolean getUseThumbnailsAsCovers() {
+  public Boolean getUseThumbnailsAsCovers() {
     return StanzaConstants.UseThumbnailsAsCovers;
   }
-  public boolean getZipCatalog() {
+
+  public Boolean getZipCatalog() {
     return StanzaConstants.ZipCatalog;
   }
 
-  public boolean getZipOmitXml() {
+  public Boolean getZipOmitXml() {
     return StanzaConstants.ZipOmitXml;
   }
 
@@ -298,11 +292,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return Localization.Main.getText(StanzaConstants.WIKIPEDIA_URL_DEFAULT);
   }
 
-  public boolean getGenerateIndex() {
+  public Boolean getGenerateIndex() {
     return StanzaConstants.GenerateIndex;
   }
 
-  public boolean getIndexComments() {
+  public Boolean getIndexComments() {
     return StanzaConstants.IndexComments;
   }
 
@@ -326,9 +320,7 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.FeaturedCatalogSavedSearchName;
   }
 
-  public List<Composite<String, String>> getCustomCatalogs() {
-    return new Vector<Composite<String, String>>();
-  }
+  public List<CustomCatalogEntry> getCustomCatalogs() {return new Vector<CustomCatalogEntry>();  }
 
   public String getCatalogCustomColumns() {
     return StanzaConstants.CatalogCustomColumns;
@@ -336,53 +328,53 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
 
   /* Catalog Structure */
 
-  public boolean getDisplayAuthorSort() {
+  public Boolean getDisplayAuthorSort() {
     return StanzaConstants.DisplayAuthorSortInBookDetails;
   }
 
-  public boolean getDisplayTitleSort() {
+  public Boolean getDisplayTitleSort() {
     return StanzaConstants.DisplayTitleSort;
   }
 
-  public boolean getTagBooksNoSplit() {  return StanzaConstants.TagBooksNoSplit;  }
+  public Boolean getTagBooksNoSplit() {  return StanzaConstants.TagBooksNoSplit;  }
 
-  public boolean getSortUsingAuthor() {
+  public Boolean getSortUsingAuthor() {
     return StanzaConstants.SortUsingAuthor;
   }
 
-  public boolean getSortUsingTitle() {
+  public Boolean getSortUsingTitle() {
     return StanzaConstants.SortUsingTitle;
   }
 
-  public boolean getSortTagsByAuthor() {return StanzaConstants.SortTagsByAuthor; }
+  public Boolean getSortTagsByAuthor() {return StanzaConstants.SortTagsByAuthor; }
 
   /* Book Details */
 
-  public boolean getIncludeSeriesInBookDetails() {
+  public Boolean getIncludeSeriesInBookDetails() {
     return StanzaConstants.includeSeriesInBookDetails;
   }
 
-  public boolean getIncludeRatingInBookDetails() {
+  public Boolean getIncludeRatingInBookDetails() {
     return StanzaConstants.includeRatingInBookDetails;
   }
 
-  public boolean getIncludeTagsInBookDetails() {
+  public Boolean getIncludeTagsInBookDetails() {
     return StanzaConstants.includeTagsInBookDetails;
   }
 
-  public boolean getIncludePublisherInBookDetails() {
+  public Boolean getIncludePublisherInBookDetails() {
     return StanzaConstants.includePublisherInBookDetails;
   }
 
-  public boolean getIncludePublishedInBookDetails() {
+  public Boolean getIncludePublishedInBookDetails() {
     return StanzaConstants.includePublishedInBookDetails;
   }
 
-  public boolean getIncludeAddedInBookDetails() {
+  public Boolean getIncludeAddedInBookDetails() {
     return StanzaConstants.IncludeAddedInBookDetails;
   }
 
-  public boolean getIncludeModifiedInBookDetails() {
+  public Boolean getIncludeModifiedInBookDetails() {
     return StanzaConstants.IncludeModifiedInBookDetails;
   }
 
@@ -394,11 +386,11 @@ public class StanzaDefaultConfiguration extends DefaultConfiguration implements 
     return StanzaConstants.BOOK_DETAILS_CUSTOM_FIELDS;
   }
 
-  public boolean getBookDetailsCustomFieldsAlways() {
+  public Boolean getBookDetailsCustomFieldsAlways() {
     return StanzaConstants.BOOK_DETAILS_CUSTOM_FIELDS_ALWAYS;
   }
 
-  public boolean getIncludeTagCrossReferences () {
+  public Boolean getIncludeTagCrossReferences () {
     return StanzaConstants.INCLUDE_TAG_CROSS_REFERENCES;
   }
 }

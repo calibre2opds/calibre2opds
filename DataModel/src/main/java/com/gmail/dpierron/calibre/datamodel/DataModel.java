@@ -295,6 +295,7 @@ public enum DataModel {
         }
       }
     }
+
     return mapOfBooksByAuthor;
   }
 

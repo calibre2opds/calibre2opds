@@ -3,9 +3,7 @@ package com.gmail.dpierron.calibre.configuration;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
-import com.l2fprod.common.beans.editor.IntegerPropertyEditor;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -22,9 +20,14 @@ import java.util.regex.Pattern;
 public class ConfigurationHolder extends PropertiesBasedConfiguration implements StanzaConfigurationInterface {
 
   final static String PROPERTY_NAME_VERSIONCHIP = "VERSIONCHIP";
-  final static Pattern PATTERN_CUSTOMCATALOG = Pattern.compile("\\[customCatalog\\](.+?)\\[/customCatalog\\]");
-  final static Pattern PATTERN_CUSTOMCATALOG_TITLE = Pattern.compile("\\[title\\](.+?)\\[/title\\]");
-  final static Pattern PATTERN_CUSTOMCATALOG_SEARCH = Pattern.compile("\\[search\\](.+?)\\[/search\\]");
+  final static String PATTERN_CUSTOMCATALOG_ID = "customCatalog";
+  final static String PATTERN_CUSTOMCATALOG_TITLE_ID = "title";
+  final static String PATTERN_CUSTOMCATALOG_SEARCH_ID = "search";
+  final static String PATTERN_CUSTOMCATALOG_ATTOP_ID = "attop";
+  final static Pattern PATTERN_CUSTOMCATALOG = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_ID + "\\]");
+  final static Pattern PATTERN_CUSTOMCATALOG_TITLE = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_TITLE_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_TITLE_ID + "\\]");
+  final static Pattern PATTERN_CUSTOMCATALOG_SEARCH = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "\\]");
+  final static Pattern PATTERN_CUSTOMCATALOG_ATTOP = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "\\]");
 
   private final static String PROPERTY_NAME_DATABASEFOLDER = "DatabaseFolder";
   private final static String PROPERTY_NAME_TARGETFOLDER = "TargetFolder";
@@ -164,9 +167,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     tokenizedCatalogCustomColumns = null;
     regexTagsToIgnore = null;
 
-    // ITIMPI:  Following line commented out as appears to be redundant!
-    // StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
-    for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
+    StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
+    for (Method getter : GetConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       String setterName = "set" + getterName.substring(3);
       //try {
@@ -187,16 +189,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setDeviceMode(getDeviceMode());
   }
 
-  public boolean isObsolete() {
+  public Boolean isObsolete() {
     // check for the version chip
     String versionChip = getProperty(PROPERTY_NAME_VERSIONCHIP);
     if (versionChip == null) {
       return false;
     } else {
-      if (versionChip.compareTo(Constants.CONFIGURATION_COMPATIBILITY_VERSIONCHIP) == -1) {
-        return true;
-      } else
-        return false;
+      return (versionChip.compareTo(Constants.CONFIGURATION_COMPATIBILITY_VERSIONCHIP) == -1) ? true : false;
     }
   }
 
@@ -213,754 +212,540 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public DeviceMode getDeviceMode() {
     String s = getProperty(PROPERTY_NAME_DEVICEMODE);
-    if (s == null)
-      return defaults.getDeviceMode();
-    else
-      return DeviceMode.fromName(s);
+    return (s == null) ? defaults.getDeviceMode() : DeviceMode.fromName(s);
   }
-
   public void setDeviceMode(DeviceMode mode) {
     setProperty(PROPERTY_NAME_DEVICEMODE, mode);
     if (mode != null) {
       resetReadOnly();
-      mode.setSpecificOptionsReadOnly(this);
-      mode.setSpecificOptionsValues(this);
+      mode.setModeSpecificOptions(this);
     } else {
       reset();
     }
   }
 
-  public boolean isDatabaseFolderReadOnly() {
+  public Boolean isDatabaseFolderReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_DATABASEFOLDER);
   }
-
   public File getDatabaseFolder() {
     String s = getProperty(PROPERTY_NAME_DATABASEFOLDER);
-    if (Helper.isNotNullOrEmpty(s))
-      return new File(s);
-    else
-      return null;
+    return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
   }
-
   public void setDatabaseFolder(File databaseFolder) {
     DataModel.INSTANCE.reset(); // reset the datamodel when the database changes !
-    setProperty(PROPERTY_NAME_DATABASEFOLDER, databaseFolder.getAbsolutePath());
+    setProperty(PROPERTY_NAME_DATABASEFOLDER, Helper.isNullOrEmpty(databaseFolder) ? "" : databaseFolder.getAbsolutePath());
   }
 
-  public boolean isTargetFolderReadOnly() {
+  public Boolean isTargetFolderReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_TARGETFOLDER);
   }
-
   public File getTargetFolder() {
     String s = getProperty(PROPERTY_NAME_TARGETFOLDER);
-    if (Helper.isNotNullOrEmpty(s))
-      return new File(s);
-    else
-      return null;
+    return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
   }
-
   public void setTargetFolder(File targetFolder) {
-    setProperty(PROPERTY_NAME_TARGETFOLDER, targetFolder.getAbsolutePath());
+    setProperty(PROPERTY_NAME_TARGETFOLDER, Helper.isNullOrEmpty(targetFolder) ? 2 : targetFolder.getAbsolutePath());
   }
 
-  public boolean isLanguageReadOnly() {
+  public Boolean isLanguageReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_LANGUAGE);
   }
-
   public String getLanguage() {
     String s = getProperty(PROPERTY_NAME_LANGUAGE);
-    if (Helper.isNullOrEmpty(s))
-      return defaults.getLanguage();
-    else
-      return s;
+    return (Helper.isNullOrEmpty(s)) ? defaults.getLanguage() : s;
   }
-
   public void setLanguage(String language) {
     setProperty(PROPERTY_NAME_LANGUAGE, language);
   }
 
-  public boolean isWikipediaLanguageReadOnly() {
+  public Boolean isWikipediaLanguageReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_WIKIPEDIALANGUAGE);
   }
-
   public String getWikipediaLanguage() {
     String s = getProperty(PROPERTY_NAME_WIKIPEDIALANGUAGE);
-    if (s == null)
-      return defaults.getWikipediaLanguage();
-    else
-      return s;
+    return (s == null) ? defaults.getWikipediaLanguage() : s;
   }
-
   public void setWikipediaLanguage(String wikipediaLanguage) {
     setProperty(PROPERTY_NAME_WIKIPEDIALANGUAGE, wikipediaLanguage);
   }
 
-  public boolean isCatalogFolderNameReadOnly() {
+  public Boolean isCatalogFolderNameReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGFOLDERNAME);
   }
-
   public String getCatalogFolderName() {
     String s = getProperty(PROPERTY_NAME_CATALOGFOLDERNAME);
-    if (s == null)
-      return defaults.getCatalogFolderName();
-    else
-      return s;
+    return (s == null) ? defaults.getCatalogFolderName() : s;
   }
-
   public void setCatalogFolderName(String catalogFolderName) {
     setProperty(PROPERTY_NAME_CATALOGFOLDERNAME, catalogFolderName);
   }
 
-  public boolean isCatalogTitleReadOnly() {
+  public Boolean isCatalogTitleReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGTITLE);
   }
-
   public String getCatalogTitle() {
     String s = getProperty(PROPERTY_NAME_CATALOGTITLE);
-    if (s == null)
-      return defaults.getCatalogTitle();
-    else
-      return s;
+    return (s == null) ? defaults.getCatalogTitle() : s;
   }
-
   public void setCatalogTitle(String catalogTitle) {
     setProperty(PROPERTY_NAME_CATALOGTITLE, catalogTitle);
   }
 
-  public boolean isMaxBeforePaginateReadOnly() {
+  public Boolean isMaxBeforePaginateReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXBEFOREPAGINATE);
   }
-
   public Integer getMaxBeforePaginate() {
     Integer i = getInteger(PROPERTY_NAME_MAXBEFOREPAGINATE);
     return (i == null) ? defaults.getMaxBeforePaginate() : i;
   }
-
-  public void setMaxBeforePaginate(int maxBeforePaginate) {
+  public void setMaxBeforePaginate(Integer maxBeforePaginate) {
     setProperty(PROPERTY_NAME_MAXBEFOREPAGINATE, maxBeforePaginate);
   }
 
-  public boolean isMaxBeforeSplitReadOnly() {
+  public Boolean isMaxBeforeSplitReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXBEFORESPLIT);
   }
-
   public Integer getMaxBeforeSplit() {
     Integer i = getInteger(PROPERTY_NAME_MAXBEFORESPLIT);
     return (i == null) ? defaults.getMaxBeforeSplit() : ((i < 1) ? 1 : i);
   }
-
-  public void setMaxBeforeSplit(int maxBeforeSplit) {
+  public void setMaxBeforeSplit(Integer maxBeforeSplit) {
     setProperty(PROPERTY_NAME_MAXBEFORESPLIT, maxBeforeSplit);
   }
 
-  public boolean isMaxSplitLevelsReadOnly() {
+  public Boolean isMaxSplitLevelsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXSPLITLEVELS);
   }
-
   public Integer getMaxSplitLevels() {
     Integer i = getInteger(PROPERTY_NAME_MAXSPLITLEVELS);
     return (i == null) ?defaults.getMaxSplitLevels() : i;
   }
-
-  public void setMaxSplitLevels(int maxSplitLevels) {
+  public void setMaxSplitLevels(Integer maxSplitLevels) {
     setProperty(PROPERTY_NAME_MAXSPLITLEVELS, maxSplitLevels);
   }
 
-  public boolean isMaxMobileResolutionReadOnly() {
+  public Boolean isMaxMobileResolutionReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXMOBILERESOLUTION);
   }
-
   public Integer getMaxMobileResolution() {
     Integer i = getInteger(PROPERTY_NAME_MAXMOBILERESOLUTION);
     return (i == null) ? defaults.getMaxMobileResolution() : i;
   }
-
-  public void setMaxMobileResolution(int maxMobileResolution) {
+  public void setMaxMobileResolution(Integer maxMobileResolution) {
     setProperty(PROPERTY_NAME_MAXMOBILERESOLUTION, maxMobileResolution);
   }
 
-  public boolean isBooksInRecentAdditionsReadOnly() {
+  public Boolean isBooksInRecentAdditionsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_BOOKSINRECENTADDITIONS);
   }
-
   public Integer getBooksInRecentAdditions() {
     Integer i = getInteger(PROPERTY_NAME_BOOKSINRECENTADDITIONS);
     return (i == null) ? defaults.getBooksInRecentAdditions() : i;
   }
-
-  public void setBooksInRecentAdditions(int booksInRecentAdditions) {
+  public void setBooksInRecentAdditions(Integer booksInRecentAdditions) {
     setProperty(PROPERTY_NAME_BOOKSINRECENTADDITIONS, booksInRecentAdditions);
   }
 
-  public boolean isIncludedFormatsListReadOnly() {
+  public Boolean isIncludedFormatsListReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INCLUDEDFORMATSLIST);
   }
-
   public String getIncludedFormatsList() {
     String s = getProperty(PROPERTY_NAME_INCLUDEDFORMATSLIST);
-    if (s == null)
-      return defaults.getIncludedFormatsList();
-    else
-      return s;
+    return (s == null) ? defaults.getIncludedFormatsList() : s;
   }
-
   public void setIncludedFormatsList(String includedFormatsList) {
     setProperty(PROPERTY_NAME_INCLUDEDFORMATSLIST, includedFormatsList);
   }
 
-  public boolean isBookDetailsCustomFieldsReadOnly() {
+  public Boolean isBookDetailsCustomFieldsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_BookDetailsCustomFields);
   }
-
   public String getBookDetailsCustomFields() {
     String s = getProperty(PROPERTY_NAME_BookDetailsCustomFields);
-    if (s == null)
-      return defaults.getBookDetailsCustomFields();
-    else
-      return s;
+    return (s == null) ? defaults.getBookDetailsCustomFields() : s;
   }
-
   public void setBookDetailsCustomFields(String fieldList) {
     setProperty(PROPERTY_NAME_BookDetailsCustomFields, fieldList);
   }
 
-
-  public boolean getBookDetailsCustomFieldsAlways() {
-    Boolean b = getBoolean(PROPERTY_NAME_BookDetailsCustomFieldsAlways);
-    if (b == null)
-      return defaults.getBookDetailsCustomFieldsAlways();
-    else
-      return b.booleanValue();
+  public Boolean isBookDetailsCustomFieldsAlwaysReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_BookDetailsCustomFieldsAlways);
   }
-
-  public void setBookDetailsCustomFieldsAlways(boolean value) {
+  public Boolean getBookDetailsCustomFieldsAlways() {
+    Boolean b = getBoolean(PROPERTY_NAME_BookDetailsCustomFieldsAlways);
+    return (b == null) ? defaults.getBookDetailsCustomFieldsAlways() : b;
+  }
+  public void setBookDetailsCustomFieldsAlways(Boolean value) {
     setProperty(PROPERTY_NAME_BookDetailsCustomFieldsAlways, value);
   }
 
-  public boolean isIncludeTagCrossReferencesReadOnly() {
+  public Boolean isIncludeTagCrossReferencesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_IncludeTagCrossReferences);
   }
-
-  public boolean getIncludeTagCrossReferences() {
+  public Boolean getIncludeTagCrossReferences() {
     Boolean b = getBoolean(PROPERTY_NAME_IncludeTagCrossReferences);
-    if (b == null)
-      return defaults.getIncludeTagCrossReferences();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIncludeTagCrossReferences() : b;
   }
-
-  public void setIncludeTagCrossReferences(boolean value) {
+  public void setIncludeTagCrossReferences(Boolean value) {
     setProperty(PROPERTY_NAME_IncludeTagCrossReferences, value);
   }
 
-
-  public boolean isMinimizeChangedFilesReadOnly() {
+  public Boolean isMinimizeChangedFilesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MINIMIZECHANGEDFILES);
   }
-
-  public boolean getMinimizeChangedFiles() {
+  public Boolean getMinimizeChangedFiles() {
     Boolean b = getBoolean(PROPERTY_NAME_MINIMIZECHANGEDFILES);
-    if (b == null)
-      return defaults.getMinimizeChangedFiles();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getMinimizeChangedFiles() : b;
   }
-
-  public void setMinimizeChangedFiles(boolean minimizeChangedFiles) {
+  public void setMinimizeChangedFiles(Boolean minimizeChangedFiles) {
     setProperty(PROPERTY_NAME_MINIMIZECHANGEDFILES, minimizeChangedFiles);
   }
 
-  public boolean isOnlyCatalogAtTargetReadOnly() {
+  public Boolean isOnlyCatalogAtTargetReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET);
   }
-
-  public boolean getOnlyCatalogAtTarget() {
+  public Boolean getOnlyCatalogAtTarget() {
     Boolean b = getBoolean(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET);
-    if (b == null)
-      return defaults.getOnlyCatalogAtTarget();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getOnlyCatalogAtTarget() : b;
   }
-
-  public void setOnlyCatalogAtTarget(boolean value) {
+  public void setOnlyCatalogAtTarget(Boolean value) {
     setProperty(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET, value);
   }
 
-  public boolean isExternalIconsReadOnly() {
+  public Boolean isExternalIconsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_EXTERNALICONS);
   }
-
-  public boolean getExternalIcons() {
+  public Boolean getExternalIcons() {
     Boolean b = getBoolean(PROPERTY_NAME_EXTERNALICONS);
-    if (b == null)
-      return defaults.getExternalIcons();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getExternalIcons() : b;
   }
-
-  public void setExternalIcons(boolean externalIcons) {
+  public void setExternalIcons(Boolean externalIcons) {
     setProperty(PROPERTY_NAME_EXTERNALICONS, externalIcons);
   }
 
-  public boolean isExternalImagesReadOnly() {
+  public Boolean isExternalImagesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_EXTERNAL_IMAGES);
   }
-
-  public boolean getExternalImages() {
+  public Boolean getExternalImages() {
     Boolean b = getBoolean(PROPERTY_NAME_EXTERNAL_IMAGES);
-    if (b == null)
-      return defaults.getExternalImages();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getExternalImages() : b;
   }
-
-  public void setExternalImages(boolean b) {
+  public void setExternalImages(Boolean b) {
     setProperty(PROPERTY_NAME_EXTERNAL_IMAGES, b);
   }
 
-  public boolean isGenerateOpdsReadOnly() {
+  public Boolean isGenerateOpdsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEOPDS);
   }
-
-  public boolean getGenerateOpds() {
+  public Boolean getGenerateOpds() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEOPDS);
-    if (b == null)
-      return defaults.getGenerateOpds();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateOpds() : b;
   }
-
-  public void setGenerateOpds(boolean value) {
+  public void setGenerateOpds(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEOPDS, value);
   }
 
-  public boolean isGenerateHtmlReadOnly() {
+  public Boolean isGenerateHtmlReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEHTML);
   }
-
-  public boolean getGenerateHtml() {
+  public Boolean getGenerateHtml() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEHTML);
-    if (b == null)
-      return defaults.getGenerateHtml();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateHtml() : b;
   }
-
-  public void setGenerateHtml(boolean getGenerateHtml) {
+  public void setGenerateHtml(Boolean getGenerateHtml) {
     setProperty(PROPERTY_NAME_GENERATEHTML, getGenerateHtml);
   }
 
-  public boolean isGenerateOpdsDownloadsReadOnly() {
+  public Boolean isGenerateOpdsDownloadsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEOPDSDOWNLOADS);
   }
-
-  public boolean getGenerateOpdsDownloads() {
+  public Boolean getGenerateOpdsDownloads() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEOPDSDOWNLOADS);
-    if (b == null)
-      return defaults.getGenerateOpdsDownloads();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateOpdsDownloads() : b;
   }
-
-  public void setGenerateOpdsDownloads(boolean getGenerateOpdsDownloads) {
+  public void setGenerateOpdsDownloads(Boolean getGenerateOpdsDownloads) {
     setProperty(PROPERTY_NAME_GENERATEOPDSDOWNLOADS, getGenerateOpdsDownloads);
   }
 
-  public boolean isGenerateHtmlDownloadsReadOnly() {
+  public Boolean isGenerateHtmlDownloadsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEHTMLDOWNLOADS);
   }
-
-  public boolean getGenerateHtmlDownloads() {
+  public Boolean getGenerateHtmlDownloads() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEHTMLDOWNLOADS);
-    if (b == null)
-      return defaults.getGenerateHtmlDownloads();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateHtmlDownloads() : b;
   }
-
-  public void setGenerateHtmlDownloads(boolean getGenerateHtmlDownloads) {
+  public void setGenerateHtmlDownloads(Boolean getGenerateHtmlDownloads) {
     setProperty(PROPERTY_NAME_GENERATEHTMLDOWNLOADS, getGenerateHtmlDownloads);
   }
 
-  public void setPublishedDateAsYear(boolean value) {
+  public void setPublishedDateAsYear(Boolean value) {
     setProperty(PROPERTY_NAME_PUBLISHEDDATEASYEAR, value);
   }
-
-  public boolean isPublishedDateAsYearReadOnly() {
+  public Boolean isPublishedDateAsYearReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_PUBLISHEDDATEASYEAR);
   }
-
-  public boolean getPublishedDateAsYear() {
+  public Boolean getPublishedDateAsYear() {
     Boolean b = getBoolean(PROPERTY_NAME_PUBLISHEDDATEASYEAR);
-    if (b == null)
-      return defaults.getPublishedDateAsYear();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getPublishedDateAsYear() : b;
   }
 
-  public void setLanguageAsTag(boolean value) {
+  public void setLanguageAsTag(Boolean value) {
     setProperty(PROPERTY_NAME_LANGUAGEASTAG, value);
   }
-
-  public boolean isLanguageAsTagReadOnly() {
+  public Boolean isLanguageAsTagReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_LANGUAGEASTAG);
   }
-
-  public boolean getLanguageAsTag() {
+  public Boolean getLanguageAsTag() {
     Boolean b = getBoolean(PROPERTY_NAME_LANGUAGEASTAG);
-    if (b == null)
-      return defaults.getLanguageAsTag();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getLanguageAsTag() : b;
   }
 
-  public void setSuppressRatingsInTitles(boolean supressRatingsInTitles) {
+  public void setSuppressRatingsInTitles(Boolean supressRatingsInTitles) {
     setProperty(PROPERTY_NAME_SUPRESSRATINGSINTITLES, supressRatingsInTitles);
   }
-
-  public boolean isSupressRatingsInTitlesReadyOnly() {
+  public Boolean isSupressRatingsInTitlesReadyOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SUPRESSRATINGSINTITLES);
   }
-
-  public boolean getSuppressRatingsInTitles() {
+  public Boolean getSuppressRatingsInTitles() {
     Boolean b = getBoolean(PROPERTY_NAME_SUPRESSRATINGSINTITLES);
-    if (b == null)
-      return defaults.getSuppressRatingsInTitles();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getSuppressRatingsInTitles() : b;
   }
 
-  public boolean isThumbnailGenerateReadOnly() {
+  public Boolean isThumbnailGenerateReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_THUMBNAILGENERATE);
   }
-
-  public boolean getThumbnailGenerate() {
+  public Boolean getThumbnailGenerate() {
     Boolean b = getBoolean(PROPERTY_NAME_THUMBNAILGENERATE);
-    if (b == null)
-      return defaults.getThumbnailGenerate();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getThumbnailGenerate() : b;
   }
-
-  public void setThumbnailGenerate(boolean thumbnailGenerate) {
+  public void setThumbnailGenerate(Boolean thumbnailGenerate) {
     setProperty(PROPERTY_NAME_THUMBNAILGENERATE, thumbnailGenerate);
   }
 
-  public boolean isThumbnailHeightReadOnly() {
+  public Boolean isThumbnailHeightReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_THUMBNAILHEIGHT);
   }
-
   public Integer getThumbnailHeight() {
     Integer i = getInteger(PROPERTY_NAME_THUMBNAILHEIGHT);
     return (i == null) ? defaults.getThumbnailHeight() : i;
   }
-
-  public void setThumbnailHeight(int thumbnailHeight) {
+  public void setThumbnailHeight(Integer thumbnailHeight) {
     setProperty(PROPERTY_NAME_THUMBNAILHEIGHT, thumbnailHeight);
   }
 
-  public boolean isSplitTagsOnReadOnly() {
+  public Boolean isSplitTagsOnReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SPLITTAGSON);
   }
-
   public String getSplitTagsOn() {
     String s = getProperty(PROPERTY_NAME_SPLITTAGSON);
-    if (s == null)
-      return defaults.getSplitTagsOn();
-    else
-      return s;
+    return (s == null) ? defaults.getSplitTagsOn() : s;
   }
-
   public void setSplitTagsOn(String splitTagsOn) {
     setProperty(PROPERTY_NAME_SPLITTAGSON, splitTagsOn);
   }
 
-  public boolean isDontSplitTagsOnReadOnly() {
+  public Boolean isDontSplitTagsOnReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_DontSpltTagsOn);
   }
-
-  public boolean getDontSplitTagsOn() {
+  public Boolean getDontSplitTagsOn() {
     Boolean b = getBoolean(PROPERTY_NAME_DontSpltTagsOn);
-    if (b == null)
-      return defaults.getDontSplitTagsOn();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getDontSplitTagsOn() : b;
   }
-
-  public void setDontSpltTagsOn(boolean dontSplitTagsOn) {
+  public void setDontSplitTagsOn(Boolean dontSplitTagsOn) {
     setProperty(PROPERTY_NAME_DontSpltTagsOn, dontSplitTagsOn);
   }
 
-  public boolean isIncludeBooksWithNoFileReadOnly() {
+  public Boolean isIncludeBooksWithNoFileReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE);
   }
-
-  public boolean getIncludeBooksWithNoFile() {
+  public Boolean getIncludeBooksWithNoFile() {
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE);
-    if (b == null)
-      return defaults.getIncludeBooksWithNoFile();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIncludeBooksWithNoFile() : b;
   }
-
-  public void setIncludeBooksWithNoFile(boolean value) {
+  public void setIncludeBooksWithNoFile(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE, value);
   }
 
-  public boolean isCryptFilenamesReadOnly() {
+  public Boolean isCryptFilenamesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CRYPTFILENAMES);
   }
-
-  public boolean getCryptFilenames() {
+  public Boolean getCryptFilenames() {
     Boolean b = getBoolean(PROPERTY_NAME_CRYPTFILENAMES);
-    if (b == null)
-      return defaults.getCryptFilenames();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getCryptFilenames() : b;
   }
-
-  public void setCryptFilenames(boolean value) {
+  public void setCryptFilenames(Boolean value) {
     setProperty(PROPERTY_NAME_CRYPTFILENAMES, value);
   }
 
-  public boolean isShowSeriesInAuthorCatalogReadOnly() {
+  public Boolean isShowSeriesInAuthorCatalogReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG);
   }
-
-  public boolean getShowSeriesInAuthorCatalog() {
+  public Boolean getShowSeriesInAuthorCatalog() {
     Boolean b = getBoolean(PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG);
-    if (b == null)
-      return defaults.getShowSeriesInAuthorCatalog();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getShowSeriesInAuthorCatalog() : b;
   }
-
-  public void setShowSeriesInAuthorCatalog(boolean value) {
+  public void setShowSeriesInAuthorCatalog(Boolean value) {
     setProperty(PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG, value);
   }
 
-  public boolean isCatalogFilterReadOnly() {
+  public Boolean isCatalogFilterReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGFILTER);
   }
-
   public String getCatalogFilter() {
     String s = getProperty(PROPERTY_NAME_CATALOGFILTER);
-    if (s == null)
-      return defaults.getCatalogFilter();
-    else
-      return s;
+    return (s == null) ? defaults.getCatalogFilter() : s;
   }
-
   public void setCatalogFilter(String value) {
     setProperty(PROPERTY_NAME_CATALOGFILTER, value);
   }
 
-  public boolean isMaxSummaryLengthReadOnly() {
+  public Boolean isMaxSummaryLengthReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXSUMMARYLENGTH);
   }
-
   public Integer getMaxSummaryLength() {
     Integer i = getInteger(PROPERTY_NAME_MAXSUMMARYLENGTH);
     return (i == null) ? defaults.getMaxSummaryLength() : i;
   }
-
-  public void setMaxSummaryLength(int value) {
+  public void setMaxSummaryLength(Integer value) {
     setProperty(PROPERTY_NAME_MAXSUMMARYLENGTH, value);
   }
 
-  public void setMaxBookSummaryLength(int value) {
+  public void setMaxBookSummaryLength(Integer value) {
     setProperty(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH, value);
   }
-
-  public boolean isMaxBookSummaryLengthReadOnly() {
+  public Boolean isMaxBookSummaryLengthReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
   }
-
   public Integer getMaxBookSummaryLength() {
     Integer i = getInteger(PROPERTY_NAME_MAXBOOKSUMMARYLENGTH);
     return (i == null) ? defaults.getMaxBookSummaryLength() : i;
   }
 
-  public boolean isGenerateAuthorsReadOnly() {
+  public Boolean isGenerateAuthorsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEAUTHORS);
   }
-
-  public boolean getGenerateAuthors() {
+  public Boolean getGenerateAuthors() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEAUTHORS);
-    if (b == null)
-      return defaults.getGenerateAuthors();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateAuthors() : b;
   }
-
-  public void setGenerateAuthors(boolean value) {
+  public void setGenerateAuthors(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEAUTHORS, value);
   }
 
-  public boolean isGenerateTagsReadOnly() {
+  public Boolean isGenerateTagsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATETAGS);
   }
-
-  public boolean getGenerateTags() {
+  public Boolean getGenerateTags() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATETAGS);
-    if (b == null)
-      return defaults.getGenerateTags();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateTags() : b;
   }
-
-  public void setGenerateTags(boolean value) {
+  public void setGenerateTags(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATETAGS, value);
   }
 
-  public boolean isGenerateSeriesReadOnly() {
+  public Boolean isGenerateSeriesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATESERIES);
   }
-
-  public boolean getGenerateSeries() {
+  public Boolean getGenerateSeries() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATESERIES);
-    if (b == null)
-      return defaults.getGenerateSeries();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateSeries() : b;
   }
-
-  public void setGenerateSeries(boolean value) {
+  public void setGenerateSeries(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATESERIES, value);
   }
 
-  public boolean isGenerateRecentReadOnly() {
+  public Boolean isGenerateRecentReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATERECENT);
   }
-
-  public boolean getGenerateRecent() {
+  public Boolean getGenerateRecent() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATERECENT);
-    if (b == null)
-      return defaults.getGenerateRecent();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateRecent() : b;
   }
-
-  public void setGenerateRecent(boolean value) {
+  public void setGenerateRecent(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATERECENT, value);
   }
 
-  public boolean isGenerateRatingsReadOnly() {
+  public Boolean isGenerateRatingsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATERATINGS);
   }
-
-  public boolean getGenerateRatings() {
+  public Boolean getGenerateRatings() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATERATINGS);
-    if (b == null)
-      return defaults.getGenerateRatings();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateRatings() : b;
   }
-
-  public void setGenerateRatings(boolean value) {
+  public void setGenerateRatings(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATERATINGS, value);
   }
 
-  public boolean isGenerateAllbooksReadOnly() {
+  public Boolean isGenerateAllbooksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEALLBOOKS);
   }
-
-  public boolean getGenerateAllbooks() {
+  public Boolean getGenerateAllbooks() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEALLBOOKS);
-    if (b == null)
-      return defaults.getGenerateAllbooks();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateAllbooks() : b;
   }
-
-  public void setGenerateAllbooks(boolean value) {
+  public void setGenerateAllbooks(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEALLBOOKS, value);
   }
-  public boolean isGenerateIndexReadOnly() {
+
+  public Boolean isGenerateIndexReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEALLBOOKS);
   }
-
-  public boolean getGenerateIndex() {
+  public Boolean getGenerateIndex() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEINDEX);
-    if (b == null)
-      return defaults.getGenerateAllbooks();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateAllbooks() : b;
   }
-
-  public void setGenerateIndex(boolean value) {
+  public void setGenerateIndex(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEINDEX, value);
   }
 
-
-  public boolean isCopyToDatabaseFolderReadOnly() {
+  public Boolean isCopyToDatabaseFolderReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_COPYTODATABASEFOLDER);
   }
 
-  public boolean getCopyToDatabaseFolder() {
+  public Boolean getCopyToDatabaseFolder() {
     Boolean b = getBoolean(PROPERTY_NAME_COPYTODATABASEFOLDER);
-    if (b == null)
-      return defaults.getCopyToDatabaseFolder();
-    else
-      return b.booleanValue();
+    return (b == null)? defaults.getCopyToDatabaseFolder() : b;
   }
-
-  public void setCopyToDatabaseFolder(boolean value) {
+  public void setCopyToDatabaseFolder(Boolean value) {
     setProperty(PROPERTY_NAME_COPYTODATABASEFOLDER, value);
   }
 
-  public boolean isBrowseByCoverReadOnly() {
+  public Boolean isBrowseByCoverReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_BROWSEBYCOVER);
   }
-
-  public boolean getBrowseByCover() {
+  public Boolean getBrowseByCover() {
     Boolean b = getBoolean(PROPERTY_NAME_BROWSEBYCOVER);
-    if (b == null)
-      return defaults.getBrowseByCover();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getBrowseByCover() : b;
   }
 
-  public void setBrowseByCover(boolean value) {
+  public void setBrowseByCover(Boolean value) {
     setProperty(PROPERTY_NAME_BROWSEBYCOVER, value);
   }
-
-  public boolean isSplitByAuthorInitialGoToBooksReadOnly() {
+  public Boolean isSplitByAuthorInitialGoToBooksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SPLITBYAUTHORINITIALGOTOBOOK);
   }
-
-  public boolean getSplitByAuthorInitialGoToBooks() {
+  public Boolean getSplitByAuthorInitialGoToBooks() {
     Boolean b = getBoolean(PROPERTY_NAME_SPLITBYAUTHORINITIALGOTOBOOK);
-    if (b == null)
-      return defaults.getSplitByAuthorInitialGoToBooks();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getSplitByAuthorInitialGoToBooks() : b;
   }
 
-  public void setSplitByAuthorInitialGoToBooks(boolean value) {
+  public void setSplitByAuthorInitialGoToBooks(Boolean value) {
     setProperty(PROPERTY_NAME_SPLITBYAUTHORINITIALGOTOBOOK, value);
   }
-
-  public boolean isIncludeAboutLinkReadOnly() {
+  public Boolean isIncludeAboutLinkReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INCLUDEABOUTLINK);
   }
-
-  public boolean getIncludeAboutLink() {
+  public Boolean getIncludeAboutLink() {
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDEABOUTLINK);
-    if (b == null)
-      return defaults.getIncludeAboutLink();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIncludeAboutLink() : b;
   }
 
-  public void setIncludeAboutLink(boolean value) {
+  public void setIncludeAboutLink(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEABOUTLINK, value);
   }
-
-  public boolean isTagsToIgnoreReadOnly() {
+  public Boolean isTagsToIgnoreReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_TAGSTOIGNORE);
   }
-
   public List<String> getRegExTagsToIgnore() {
     if (regexTagsToIgnore == null) {
       regexTagsToIgnore = new LinkedList<String>();
@@ -971,21 +756,16 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return regexTagsToIgnore;
   }
 
+  public Boolean isTagsToMakeDeepReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_TAGSTOMAKEDEEP);
+  }
   public String getTagsToIgnore() {
     String s = getProperty(PROPERTY_NAME_TAGSTOIGNORE);
-    if (s == null)
-      return defaults.getTagsToIgnore();
-    else
-      return s;
+    return (s == null) ? defaults.getTagsToIgnore() : s;
   }
-
   public void setTagsToIgnore(String value) {
     setProperty(PROPERTY_NAME_TAGSTOIGNORE, value);
     regexTagsToIgnore = null;
-  }
-
-  public boolean isTagsToMakeDeepReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_TAGSTOMAKEDEEP);
   }
 
   public List<String> getTokenizedTagsToMakeDeep() {
@@ -1017,363 +797,258 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public String getTagsToMakeDeep() {
     String s = getProperty(PROPERTY_NAME_TAGSTOMAKEDEEP);
-    if (s == null)
-      return defaults.getTagsToMakeDeep();
-    else
-      return s;
+    return (s == null) ? defaults.getTagsToMakeDeep() : s;
   }
-
   public void setTagsToMakeDeep(String value) {
     setProperty(PROPERTY_NAME_TAGSTOMAKEDEEP, value);
     tokenizedTagsToMakeDeep = null;
   }
 
-  public boolean isMinBooksToMakeDeepLevelReadOnly() {
+  public Boolean isMinBooksToMakeDeepLevelReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MINBOOKSTOMAKEDEEPLEVEL);
   }
-
   public Integer getMinBooksToMakeDeepLevel() {
     Integer i = getInteger(PROPERTY_NAME_MINBOOKSTOMAKEDEEPLEVEL);
     return (i == null) ? defaults.getMinBooksToMakeDeepLevel() : i;
   }
-
-  public void setMinBooksToMakeDeepLevel(int value) {
+  public void setMinBooksToMakeDeepLevel(Integer value) {
     setProperty(PROPERTY_NAME_MINBOOKSTOMAKEDEEPLEVEL, value);
   }
 
-  public boolean isBrowseByCoverWithoutSplitReadOnly() {
+  public Boolean isBrowseByCoverWithoutSplitReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_BROWSEBYCOVERWITHOUTSPLIT);
   }
-
-  public boolean getBrowseByCoverWithoutSplit() {
+  public Boolean getBrowseByCoverWithoutSplit() {
     Boolean b = getBoolean(PROPERTY_NAME_BROWSEBYCOVERWITHOUTSPLIT);
-    if (b == null)
-      return defaults.getBrowseByCoverWithoutSplit();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getBrowseByCoverWithoutSplit() : b;
   }
-
-  public void setBrowseByCoverWithoutSplit(boolean value) {
+  public void setBrowseByCoverWithoutSplit(Boolean value) {
     setProperty(PROPERTY_NAME_BROWSEBYCOVERWITHOUTSPLIT, value);
   }
 
-
-  public boolean isCoverResizeReadOnly() {
+  public Boolean isCoverResizeReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_COVERRESIZE);
   }
-
-  public boolean getCoverResize() {
+  public Boolean getCoverResize() {
     Boolean b = getBoolean(PROPERTY_NAME_COVERRESIZE);
-    if (b == null)
-      return defaults.getThumbnailGenerate();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getThumbnailGenerate() : b;
   }
-
-  public void setCoverResize(boolean coverResize) {
+  public void setCoverResize(Boolean coverResize) {
     setProperty(PROPERTY_NAME_COVERRESIZE, coverResize);
   }
 
-  public boolean isCoverHeightReadOnly() {
+  public Boolean isCoverHeightReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_COVERHEIGHT);
   }
-
   public Integer getCoverHeight() {
     Integer i = getInteger(PROPERTY_NAME_COVERHEIGHT);
     return (i == null) ? defaults.getCoverHeight() : i;
   }
 
-  public void setCoverHeight(int value) {
+  public void setCoverHeight(Integer value) {
     setProperty(PROPERTY_NAME_COVERHEIGHT, value);
   }
 
-  public boolean isIncludeOnlyOneFileReadOnly() {
+  public Boolean isIncludeOnlyOneFileReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INCLUDEONLYONEFILE);
   }
-
-  public boolean getIncludeOnlyOneFile() {
+  public Boolean getIncludeOnlyOneFile() {
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDEONLYONEFILE);
-    if (b == null)
-      return defaults.getIncludeOnlyOneFile();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIncludeOnlyOneFile() : b;
   }
-
-  public void setIncludeOnlyOneFile(boolean value) {
+  public void setIncludeOnlyOneFile(Boolean value) {
     setProperty(PROPERTY_NAME_ZIPTROOKCATALOG, value);
   }
 
-  public boolean isZipTrookCatalogReadOnly() {
+  public Boolean isZipTrookCatalogReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_ZIPTROOKCATALOG);
   }
-
-  public boolean getZipTrookCatalog() {
+  public Boolean getZipTrookCatalog() {
     Boolean b = getBoolean(PROPERTY_NAME_ZIPTROOKCATALOG);
-    if (b == null)
-      return defaults.getZipTrookCatalog();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getZipTrookCatalog() : b;
   }
-
-  public void setZipTrookCatalog(boolean value) {
+  public void setZipTrookCatalog(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEONLYONEFILE, value);
   }
 
-  public boolean isReprocessEpubMetadataReadOnly() {
+  public Boolean isReprocessEpubMetadataReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_REPROCESSEPUBMETADATA);
   }
-
-  public boolean getReprocessEpubMetadata() {
+  public Boolean getReprocessEpubMetadata() {
     Boolean b = getBoolean(PROPERTY_NAME_REPROCESSEPUBMETADATA);
-    if (b == null)
-      return defaults.getReprocessEpubMetadata();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getReprocessEpubMetadata() : b;
   }
-
-  public void setReprocessEpubMetadata(boolean value) {
+  public void setReprocessEpubMetadata(Boolean value) {
     setProperty(PROPERTY_NAME_REPROCESSEPUBMETADATA, value);
   }
 
-  public boolean isOrderAllBooksBySeriesReadOnly() {
+  public Boolean isOrderAllBooksBySeriesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_ORDERALLBOOKSBYSERIES);
   }
-
-  public boolean getOrderAllBooksBySeries() {
+  public Boolean getOrderAllBooksBySeries() {
     Boolean b = getBoolean(PROPERTY_NAME_ORDERALLBOOKSBYSERIES);
-    if (b == null)
-      return defaults.getOrderAllBooksBySeries();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getOrderAllBooksBySeries() : b;
   }
-
-  public void setOrderAllBooksBySeries(boolean value) {
+  public void setOrderAllBooksBySeries(Boolean value) {
     setProperty(PROPERTY_NAME_ORDERALLBOOKSBYSERIES, value);
   }
 
   /* external links */
+
+  public Boolean isWikipediaUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_WIKIPEDIAURL);
+  }
   public String getWikipediaUrl() {
     String s = getProperty(PROPERTY_NAME_WIKIPEDIAURL);
-    if (s == null)
-      return defaults.getWikipediaUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getWikipediaUrl() : s;
   }
-
   public void setWikipediaUrl(String value) {
     setProperty(PROPERTY_NAME_WIKIPEDIAURL, value);
   }
 
-  public boolean isWikipediaUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_WIKIPEDIAURL);
+  public Boolean isAmazonAuthorUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_AMAZONAUTHORURL);
   }
-
   public String getAmazonAuthorUrl() {
     String s = getProperty(PROPERTY_NAME_AMAZONAUTHORURL);
-    if (s == null)
-      return defaults.getAmazonAuthorUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getAmazonAuthorUrl() : s;
   }
-
   public void setAmazonAuthorUrl(String value) {
     setProperty(PROPERTY_NAME_AMAZONAUTHORURL, value);
   }
 
-  public boolean isAmazonAuthorUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_AMAZONAUTHORURL);
+  public Boolean isAmazonIsbnUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_AMAZONISBNURL);
   }
-
   public String getAmazonIsbnUrl() {
     String s = getProperty(PROPERTY_NAME_AMAZONISBNURL);
-    if (s == null)
-      return defaults.getAmazonIsbnUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getAmazonIsbnUrl() : s;
   }
-
   public void setAmazonIsbnUrl(String value) {
     setProperty(PROPERTY_NAME_AMAZONISBNURL, value);
   }
 
-  public boolean isAmazonIsbnUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_AMAZONISBNURL);
+  public Boolean isAmazonTitleUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_AMAZONTITLEURL);
   }
-
   public String getAmazonTitleUrl() {
     String s = getProperty(PROPERTY_NAME_AMAZONTITLEURL);
-    if (s == null)
-      return defaults.getAmazonTitleUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getAmazonTitleUrl() : s;
   }
-
   public void setAmazonTitleUrl(String value) {
     setProperty(PROPERTY_NAME_AMAZONTITLEURL, value);
   }
 
-  public boolean isAmazonTitleUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_AMAZONTITLEURL);
+  public Boolean isGoodreadAuthorUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GOODREADAUTHORURL);
   }
-
   public String getGoodreadAuthorUrl() {
     String s = getProperty(PROPERTY_NAME_GOODREADAUTHORURL);
-    if (s == null)
-      return defaults.getGoodreadAuthorUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getGoodreadAuthorUrl() : s;
   }
-
   public void setGoodreadAuthorUrl(String value) {
     setProperty(PROPERTY_NAME_GOODREADAUTHORURL, value);
   }
 
-  public boolean isGoodreadAuthorUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GOODREADAUTHORURL);
+  public Boolean isGoodreadIsbnUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GOODREADISBNURL);
   }
-
   public String getGoodreadIsbnUrl() {
     String s = getProperty(PROPERTY_NAME_GOODREADISBNURL);
-    if (s == null)
-      return defaults.getGoodreadIsbnUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getGoodreadIsbnUrl() : s;
   }
-
   public void setGoodreadIsbnUrl(String value) {
     setProperty(PROPERTY_NAME_GOODREADISBNURL, value);
   }
 
-  public boolean isGoodreadIsbnUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GOODREADISBNURL);
+  public Boolean isGoodreadTitleUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GOODREADTITLEURL);
   }
-
   public String getGoodreadTitleUrl() {
     String s = getProperty(PROPERTY_NAME_GOODREADTITLEURL);
-    if (s == null)
-      return defaults.getGoodreadTitleUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getGoodreadTitleUrl() : s;
   }
-
   public void setGoodreadTitleUrl(String value) {
     setProperty(PROPERTY_NAME_GOODREADTITLEURL, value);
   }
 
-  public boolean isGoodreadTitleUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GOODREADTITLEURL);
+  public Boolean isGoodreadReviewIsbnUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_GOODREADREVIEWISBNURL);
   }
-
   public String getGoodreadReviewIsbnUrl() {
     String s = getProperty(PROPERTY_NAME_GOODREADREVIEWISBNURL);
-    if (s == null)
-      return defaults.getGoodreadReviewIsbnUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getGoodreadReviewIsbnUrl() : s;
   }
-
   public void setGoodreadReviewIsbnUrl(String value) {
     setProperty(PROPERTY_NAME_GOODREADREVIEWISBNURL, value);
   }
 
-  public boolean isGoodreadReviewIsbnUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GOODREADREVIEWISBNURL);
-  }
 
+  public Boolean isIsfdbAuthorUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_ISFDBAUTHORURL);
+  }
   public String getIsfdbAuthorUrl() {
     String s = getProperty(PROPERTY_NAME_ISFDBAUTHORURL);
-    if (s == null)
-      return defaults.getIsfdbAuthorUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getIsfdbAuthorUrl() : s;
   }
-
   public void setIsfdbAuthorUrl(String value) {
     setProperty(PROPERTY_NAME_ISFDBAUTHORURL, value);
   }
 
-  public boolean isIsfdbAuthorUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_ISFDBAUTHORURL);
+  public Boolean isLibrarythingAuthorUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGAUTHORURL);
   }
-
   public String getLibrarythingAuthorUrl() {
     String s = getProperty(PROPERTY_NAME_LIBRARYTHINGAUTHORURL);
-    if (s == null)
-      return defaults.getLibrarythingAuthorUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getLibrarythingAuthorUrl() : s;
   }
-
   public void setLibrarythingAuthorUrl(String value) {
     setProperty(PROPERTY_NAME_LIBRARYTHINGAUTHORURL, value);
   }
 
-  public boolean isLibrarythingAuthorUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGAUTHORURL);
+  public Boolean isLibrarythingIsbnUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGISBNURL);
   }
-
   public String getLibrarythingIsbnUrl() {
     String s = getProperty(PROPERTY_NAME_LIBRARYTHINGISBNURL);
-    if (s == null)
-      return defaults.getLibrarythingIsbnUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getLibrarythingIsbnUrl() : s;
   }
-
   public void setLibrarythingIsbnUrl(String value) {
     setProperty(PROPERTY_NAME_LIBRARYTHINGISBNURL, value);
   }
 
-  public boolean isLibrarythingIsbnUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGISBNURL);
+  public Boolean isLibrarythingTitleUrlReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGTITLEURL);
   }
-
   public String getLibrarythingTitleUrl() {
     String s = getProperty(PROPERTY_NAME_LIBRARYTHINGTITLEURL);
-    if (s == null)
-      return defaults.getLibrarythingTitleUrl();
-    else
-      return s;
+    return (s == null) ? defaults.getLibrarythingTitleUrl() : s;
   }
-
   public void setLibrarythingTitleUrl(String value) {
     setProperty(PROPERTY_NAME_LIBRARYTHINGTITLEURL, value);
   }
 
-  public boolean isLibrarythingTitleUrlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_LIBRARYTHINGTITLEURL);
+  public Boolean isIndexFilterAlgorithmReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INDEXFILTERALGORITHM);
   }
-
   public Index.FilterHintType getIndexFilterAlgorithm() {
     String s = getProperty(PROPERTY_NAME_INDEXFILTERALGORITHM);
-    if (s == null)
-      return defaults.getIndexFilterAlgorithm();
-    else
-      return Index.FilterHintType.valueOf(s);
+    return (s == null) ? defaults.getIndexFilterAlgorithm() :Index.FilterHintType.valueOf(s);
   }
-
   public void setIndexFilterAlgorithm(Index.FilterHintType value) {
     setProperty(PROPERTY_NAME_INDEXFILTERALGORITHM, value);
   }
 
-  public boolean isIndexFilterAlgorithmReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INDEXFILTERALGORITHM);
-  }
-
-  public boolean getIndexComments() {
+  public Boolean getIndexComments() {
     Boolean b = getBoolean(PROPERTY_NAME_INDEXCOMMENTS);
-    if (b == null)
-      return defaults.getIndexComments();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIndexComments() : b;
   }
 
-  public void setIndexComments(boolean value) {
-    setProperty(PROPERTY_NAME_INDEXCOMMENTS, value);
-  }
-
-  public boolean isIndexCommentsReadOnly() {
+  public Boolean isIndexCommentsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INDEXCOMMENTS);
+  }
+  public void setIndexComments(Boolean value) {
+    setProperty(PROPERTY_NAME_INDEXCOMMENTS, value);
   }
 
   public Integer getMaxKeywords() {
@@ -1381,15 +1056,15 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return (i == null) ?defaults.getMaxKeywords() : i;
   }
 
-  public void setMaxKeywords(int value) {
+  public void setMaxKeywords(Integer value) {
     setProperty(PROPERTY_NAME_MAXKEYWORDS, value);
   }
 
-  public boolean isMaxKeywordsReadOnly() {
+  public Boolean isMaxKeywordsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_MAXKEYWORDS);
   }
 
-  public boolean isUrlBooksReadOnly() {
+  public Boolean isUrlBooksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_URLBOOKS);
   }
 
@@ -1425,7 +1100,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_URLBOOKS, value);
   }
 
-  public boolean isFeaturedCatalogSavedSearchNameReadOnly() {
+  public Boolean isFeaturedCatalogSavedSearchNameReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME);
   }
 
@@ -1441,7 +1116,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_FEATUREDCATALOGSAVEDSEARCHNAME, value);
   }
 
-  public boolean isFeaturedCatalogTitleReadOnly() {
+  public Boolean isFeaturedCatalogTitleReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_FEATUREDCATALOGTITLE);
   }
 
@@ -1457,12 +1132,12 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_FEATUREDCATALOGTITLE, value);
   }
 
-  public boolean isCustomCatalogsReadOnly() {
+  public Boolean isCustomCatalogsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CUSTOMCATALOGS);
   }
 
-  public List<Composite<String, String>> getCustomCatalogs() {
-    List<Composite<String, String>> result = new LinkedList<Composite<String, String>>();
+  public List<CustomCatalogEntry> getCustomCatalogs() {
+    List<CustomCatalogEntry> result = new LinkedList<CustomCatalogEntry>();
     String s = getProperty(PROPERTY_NAME_CUSTOMCATALOGS);
     try {
       if (Helper.isNotNullOrEmpty(s)) {
@@ -1473,10 +1148,17 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
           String title = titleMatcher.find() ? titleMatcher.group() : null;
           Matcher searchMatcher = PATTERN_CUSTOMCATALOG_SEARCH.matcher(string);
           String search = searchMatcher.find() ? searchMatcher.group() : null;
+          Matcher atTopMatcher = PATTERN_CUSTOMCATALOG_ATTOP.matcher(string);
+          String atTopString = atTopMatcher.find() ? atTopMatcher.group() : null;
           if (Helper.isNotNullOrEmpty(title) && Helper.isNotNullOrEmpty(search)) {
             title = title.substring(7, title.length() - 8);
             search = search.substring(8, search.length() - 9);
-            result.add(new Composite<String, String>(title, search));
+            Boolean atTop = false;
+            if (Helper.isNotNullOrEmpty(atTopString)) {
+              atTopString = atTopString.substring(7, atTopString.length() - 8);
+              atTop = atTopString.equals("true") ? true : false;
+            }
+            result.add(new CustomCatalogEntry(title, search, atTop));
           }
         }
       }
@@ -1487,22 +1169,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return result;
   }
 
-  public void setCustomCatalogs(List<Composite<String, String>> value) {
+  public void setCustomCatalogs(List<CustomCatalogEntry> values) {
     String s;
     StringBuffer mainsb = new StringBuffer();
-    if (Helper.isNotNullOrEmpty(value)) {
-      for (Composite<String, String> composite : value) {
-        String s1 = composite.getFirstElement() == null ? "" : composite.getFirstElement().toString();
-        String s2 = composite.getSecondElement() == null ? "" : composite.getSecondElement().toString();
+    if (Helper.isNotNullOrEmpty(values)) {
+      for ( CustomCatalogEntry value : values) {
         StringBuffer sb = new StringBuffer();
-        sb.append("[customCatalog]");
-        sb.append("[title]");
-        sb.append(s1);
-        sb.append("[/title]");
-        sb.append("[search]");
-        sb.append(s2);
-        sb.append("[/search]");
-        sb.append("[/customCatalog]");
+        sb.append("[" + PATTERN_CUSTOMCATALOG_ID + "]");
+        sb.append("[" + PATTERN_CUSTOMCATALOG_TITLE_ID + "]");
+        sb.append(value.getLabel() == null ? "" : value.getLabel());
+        sb.append("[/" + PATTERN_CUSTOMCATALOG_TITLE_ID + "]");
+        sb.append("[" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "]");
+        sb.append(value.getValue() == null ? "" : value.getValue());
+        sb.append("[/" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "]");
+        sb.append("[" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "]");
+        sb.append(value.getAtTop().toString());
+        sb.append("[/" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "]");
+        sb.append("[/" + PATTERN_CUSTOMCATALOG_ID + "]");
         mainsb.append(sb.toString());
       }
       s = mainsb.toString();
@@ -1512,17 +1195,14 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   public String getCatalogCustomColumns() {
     String s = getProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
-    if (s == null)
-      return defaults.getCatalogCustomColumns();
-    else
-      return s;
+    return (s == null) ? defaults.getCatalogCustomColumns() : s;
   }
 
   public void setCatalogCustomColumns(String value) {
     setProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS, value);
   }
 
-  public boolean isCatalogCustomColumnsReadOnly() {
+  public Boolean isCatalogCustomColumnsReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
   }
 
@@ -1538,325 +1218,192 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Catalog Structure
    */
 
-  public boolean isGenerateExternalLinksReadOnly() {
+  public Boolean isGenerateExternalLinksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATEEXTERNALLINKS);
   }
-
-  public boolean getGenerateExternalLinks() {
+  public Boolean getGenerateExternalLinks() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEEXTERNALLINKS);
-    if (b == null)
-      return defaults.getGenerateExternalLinks();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateExternalLinks() : b;
   }
-
-  public void setGenerateExternalLinks(boolean value) {
+  public void setGenerateExternalLinks(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEEXTERNALLINKS, value);
   }
 
-  public boolean isGenerateCrossLinksReadOnly() {
+  public Boolean isGenerateCrossLinksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GENERATECROSSLINKS);
   }
-
-  public boolean getGenerateCrossLinks() {
+  public Boolean getGenerateCrossLinks() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATECROSSLINKS);
-    if (b == null)
-      return defaults.getGenerateCrossLinks();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getGenerateCrossLinks() : b;
   }
 
-  public void setGenerateCrossLinks(boolean value) {
+  public Boolean isDisplayAuthorSortIsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
+  }
+  public Boolean getDisplayAuthorSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSort);
+    return (b == null) ? defaults.getDisplayAuthorSort() : b;
+  }
+  public void setGenerateCrossLinks(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
   }
 
-  public boolean isDisplayAuthorSortIsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
-  }
-
-  public boolean getDisplayAuthorSort() {
-    Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSort);
-    if (b == null)
-      return defaults.getDisplayAuthorSort();
-    else
-      return b.booleanValue();
-  }
-
-  public void setDisplayAuthorSort(boolean value) {
-    setProperty(PROPERTY_NAME_DisplayAuthorSort, value);
-  }
-
-  public boolean getDisplayTitleSort() {
+  public Boolean getDisplayTitleSort() {
     Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSort);
-    if (b == null)
-      return defaults.getDisplayTitleSort();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getDisplayTitleSort() : b;
   }
-
-  public void setDisplayTitleSort(boolean value) {
+  public void setDisplayTitleSort(Boolean value) {
     setProperty(PROPERTY_NAME_DisplayTitleSort, value);
   }
 
-  public boolean isSortUsingAuthorReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthor);
-  }
 
-  public boolean getSortUsingAuthor() {
+  public Boolean isSortUsingAuthorReadOnly() { return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthor); }
+  public Boolean getSortUsingAuthor() {
     Boolean b = getBoolean(PROPERTY_NAME_SortUsingAuthor);
-    if (b == null)
-      return defaults.getSortUsingAuthor();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getSortUsingAuthor() : b;
   }
+  public void setDisplayAuthorSort(Boolean value) { setProperty(PROPERTY_NAME_DisplayAuthorSort, value); }
 
-  public void setSortUsingAuthor(boolean value) {
+  public Boolean isSortTagsByAuthorReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_SortTagsByAuthor);
+  }
+  public Boolean getSortTagsByAuthor() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortTagsByAuthor);
+    return (b == null) ? defaults.getSortTagsByAuthor() : b;
+  }
+  public void setSortUsingAuthor(Boolean value) {
     setProperty(PROPERTY_NAME_SortUsingAuthor, value);
   }
 
-  public boolean isSortTagsByAuthorReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortTagsByAuthor);
+  public Boolean isTagBooksNoSplitReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_TagBooksNoSplit);
   }
-
-  public boolean getSortTagsByAuthor() {
-    Boolean b = getBoolean(PROPERTY_NAME_SortTagsByAuthor);
-    if (b == null)
-      return defaults.getSortTagsByAuthor();
-    else
-      return b.booleanValue();
+  public Boolean getTagBooksNoSplit() {
+    Boolean b = getBoolean(PROPERTY_NAME_TagBooksNoSplit);
+    return (b == null) ? defaults.getTagBooksNoSplit() : b;
   }
-
-  public void setTagBooksNoSplit(boolean value) {
+  public void setTagBooksNoSplit(Boolean value) {
     setProperty(PROPERTY_NAME_TagBooksNoSplit, value);
   }
 
-  public boolean isTagBooksNoSplitReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_TagBooksNoSplit);
-  }
-
-  public boolean getTagBooksNoSplit() {
-    Boolean b = getBoolean(PROPERTY_NAME_TagBooksNoSplit);
-    if (b == null)
-      return defaults.getTagBooksNoSplit();
-    else
-      return b.booleanValue();
-  }
-
-  public void setSortTagsByAuthor(boolean value) {
+  public void setSortTagsByAuthor(Boolean value) {
     setProperty(PROPERTY_NAME_SortTagsByAuthor, value);
   }
-
-  public boolean getSortUsingTitle() {
+  public Boolean getSortUsingTitle() {
     Boolean b = getBoolean(PROPERTY_NAME_SortUsingTitle);
-    if (b == null)
-      return defaults.getSortUsingTitle();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getSortUsingTitle() : b;
   }
-
-  public void setSortUsingTitle(boolean value) {
+  public void setSortUsingTitle(Boolean value) {
     setProperty(PROPERTY_NAME_SortUsingTitle, value);
   }
 
-  public boolean isSortUsingTitleReadOnly() {
+  public Boolean isSortUsingTitleReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
   }
-  /*
-   Book Details
-  */
 
-  public void setIncludeSeriesInBookDetails(boolean value) {
+  //  Book Details
+
+  public Boolean getIncludeSeriesInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludeSeriesInBookDetails() : b;
+  }
+  public void setIncludeSeriesInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS, value);
   }
 
-  public boolean isIncludeSeriesInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
+  public Boolean getIncludeRatingInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludeRatingInBookDetails() : b;
   }
-
-  public boolean getIncludeSeriesInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludeSeriesInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludeRatingInBookDetails(boolean value) {
+  public void setIncludeRatingInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS, value);
   }
 
-  public boolean isIncludeRatingInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS);
+  public Boolean getIncludeTagsInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludeTagsInBookDetails() : b;
   }
-
-  public boolean getIncludeRatingInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludeRatingInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludeTagsInBookDetails(boolean value) {
+  public void setIncludeTagsInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS, value);
   }
 
-  public boolean isIncludeTagsInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
+  public Boolean getIncludePublisherInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludePublisherInBookDetails() : b;
   }
-
-  public boolean getIncludeTagsInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludeTagsInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludePublisherInBookDetails(boolean value) {
+  public void setIncludePublisherInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS, value);
   }
 
-  public boolean isIncludePublisherInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
+  public Boolean isIncludeCoversInCatalogReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
   }
-
-  public boolean getIncludePublisherInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHERINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludePublisherInBookDetails();
-    else
-      return b.booleanValue();
+  public Boolean getIncludeCoversInCatalog() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
+    return (b == null) ? defaults.getIncludeCoversInCatalog() : b;
   }
-
-  public void setIncludeCoversInCatalog(boolean value) {
+  public void setIncludeCoversInCatalog(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG, value);
   }
 
-  public boolean isIncludeCoversInCatalogReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
+  public Boolean isUseThumbnailsAsCoversReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
   }
-
-  public boolean getIncludeCoversInCatalog() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG);
-    if (b == null)
-      return defaults.getIncludeCoversInCatalog();
-    else
-      return b.booleanValue();
+  public Boolean getUseThumbnailsAsCovers() {
+    Boolean b = getBoolean(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
+    return (b == null) ? defaults.getUseThumbnailsAsCovers() : b;
   }
-
-  public void setUseThumbnailsAsCovers(boolean value) {
+  public void setUseThumbnailsAsCovers(Boolean value) {
     setProperty(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS, value);
   }
 
-  public boolean isUseThumbnailsAsCoversReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
+  public Boolean isZipCatalogReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_ZIP_CATALOG);
   }
-
-  public boolean getUseThumbnailsAsCovers() {
-    Boolean b = getBoolean(PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS);
-    if (b == null)
-      return defaults.getUseThumbnailsAsCovers();
-    else
-      return b.booleanValue();
+  public Boolean getZipCatalog() {
+    Boolean b = getBoolean(PROPERTY_NAME_ZIP_CATALOG);
+    return (b == null) ? defaults.getZipCatalog() : b;
   }
-
-  public void setZipCatalog(boolean value) {
+  public void setZipCatalog(Boolean value) {
     setProperty(PROPERTY_NAME_ZIP_CATALOG, value);
   }
 
-  public boolean isZipCatalogReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_ZIP_CATALOG);
+  public Boolean getZipOmitXml() {
+    Boolean b = getBoolean(PROPERTY_NAME_ZIP_OMIT_XML);
+    return (b == null) ?defaults.getZipOmitXml() : b;
   }
-
-  public boolean getZipCatalog() {
-    Boolean b = getBoolean(PROPERTY_NAME_ZIP_CATALOG);
-    if (b == null)
-      return defaults.getZipCatalog();
-    else
-      return b.booleanValue();
-  }
-
-  public void setZipOmitXml(boolean value) {
+  public void setZipOmitXml(Boolean value) {
     setProperty(PROPERTY_NAME_ZIP_OMIT_XML, value);
   }
 
-  public boolean isZipOmitXmlReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_ZIP_OMIT_XML);
+  public Boolean getIncludePublishedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludePublishedInBookDetails() : b;
   }
-
-  public boolean getZipOmitXml() {
-    Boolean b = getBoolean(PROPERTY_NAME_ZIP_OMIT_XML);
-    if (b == null)
-      return defaults.getZipOmitXml();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludePublishedInBookDetails(boolean value) {
+  public void setIncludePublishedInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS, value);
   }
 
-  public boolean isIncludePublishedInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
+  public Boolean getIncludeAddedInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeAddedInBookDetailst);
+    return (b == null) ? defaults.getIncludeAddedInBookDetails() : b;
   }
-
-  public boolean getIncludePublishedInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS);
-    if (b == null)
-      return defaults.getIncludePublishedInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludeAddedInBookDetails(boolean value) {
+  public void setIncludeAddedInBookDetails(Boolean value) {
     setProperty(PROPERTY_NAME_IncludeAddedInBookDetailst, value);
   }
 
-  public boolean isIncludeAddedInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_IncludeAddedInBookDetailst);
-  }
-
-  public boolean getIncludeAddedInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_IncludeAddedInBookDetailst);
-    if (b == null)
-      return defaults.getIncludeAddedInBookDetails();
-    else
-      return b.booleanValue();
-  }
-
-  public void setIncludeModifiedInBookDetails(boolean value) {
-    setProperty(PROPERTY_NAME_IncludeModifiedInBookDetailst, value);
-  }
-
-  public boolean isIncludeModifiedInBookDetailsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_IncludeModifiedInBookDetailst);
-  }
-
-  public boolean getIncludeModifiedInBookDetails() {
+  public Boolean getIncludeModifiedInBookDetails() {
     Boolean b = getBoolean(PROPERTY_NAME_IncludeModifiedInBookDetailst);
-    if (b == null)
-      return defaults.getIncludeModifiedInBookDetails();
-    else
-      return b.booleanValue();
+    return (b == null) ? defaults.getIncludeModifiedInBookDetails() : b;
   }
-
-  public boolean isDisplayAuthorSortReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
-  }
-
-  public boolean isDisplayTitleSortReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayTitleSort);
+  public void setIncludeModifiedInBookDetails(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeModifiedInBookDetailst, value);
   }
 
   public String getSecurityCode() {
     String s = getProperty(PROPERTY_NAME_SecurityCode);
-    if (Helper.isNullOrEmpty(s))
-      return defaults.getSecurityCode();
-    else
-      return s;
+    return Helper.isNullOrEmpty(s) ? defaults.getSecurityCode() : s;
   }
-
   public void setSecurityCode(String code) {
     setProperty(PROPERTY_NAME_SecurityCode, code);
   }

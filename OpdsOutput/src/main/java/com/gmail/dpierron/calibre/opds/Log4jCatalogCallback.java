@@ -1,7 +1,8 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.ReadOnlyStanzaConfigurationInterface;
+import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
+import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Composite;
@@ -59,7 +60,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
    */
   public void dumpOptions() {
     logger.info("");
-    for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
+    for (Method getter : GetConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       try {
         Object result = getter.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
@@ -69,10 +70,10 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
         // Check for special case of Custom Catalogs!
         if (result instanceof List) {
            for (int i = 0 ; i < ((List) result).size() ; i++) {
-             assert ((List)result).get(i) instanceof Composite;
-             Composite<String,String> c = ((List<Composite<String,String>>)result).get(i);
-             String OptionName =  Helper.pad(Localization.Main.getText("gui.tab6") + " [" + (i+1) + "]", ' ', 50) + " : ";
-             logger.info(OptionName + c.getFirstElement() + " (" + c.getSecondElement().toString() + ")");
+             assert ((List)result).get(i) instanceof CustomCatalogEntry;
+             CustomCatalogEntry c = ((List<CustomCatalogEntry>)result).get(i);
+             String OptionName =  Helper.pad(Localization.Main.getText("gui.tab6.label") + " [" + (i+1) + "], " + c.getAtTop().toString(), ' ', 50) + " : ";
+             logger.info(OptionName + c.getLabel() + " (" + c.getValue().toString() + "), " + c.getAtTop().toString());
            }
         } else {
             String optionName = getterName.substring(3);

@@ -4,6 +4,7 @@ import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
+import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
@@ -867,12 +868,12 @@ public class Catalog {
       callback.checkIfContinueGenerating();      // check if we must continue
 
       // Prepare the Custom catalogs search query
-      List<Composite<String, String>> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
+      List<CustomCatalogEntry> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
-nextCC: for (Composite<String, String> customCatalog : customCatalogs) {
+nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
-          String customCatalogTitle = customCatalog.getFirstElement();
-          String customCatalogSearch = customCatalog.getSecondElement();
+          String customCatalogTitle = customCatalog.getLabel();
+          String customCatalogSearch = customCatalog.getValue();
           if (Helper.isNotNullOrEmpty(customCatalogTitle) && Helper.isNotNullOrEmpty(customCatalogSearch)) {
             // skip http external catalogs (c2o-13)
             for (String urlPrefix : Constants.CUSTOMCATALOG_SEARCH_FIELD_URLS) {

@@ -16,7 +16,7 @@ import com.gmail.dpierron.tools.Composite;
 import java.io.File;
 import java.util.List;
 
-public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurationInterface {
+public interface GetConfigurationInterface extends ReadOnlyConfigurationInterface {
 
   public DeviceMode getDeviceMode();
 
@@ -28,9 +28,9 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public File getTargetFolder();
 
-  public boolean getOnlyCatalogAtTarget();
+  public Boolean getOnlyCatalogAtTarget();
 
-  public boolean getCopyToDatabaseFolder();
+  public Boolean getCopyToDatabaseFolder();
 
   public Integer getMaxBeforePaginate();
 
@@ -42,29 +42,29 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getIncludedFormatsList();
 
-  public boolean getThumbnailGenerate();
+  public Boolean getThumbnailGenerate();
 
   public Integer getThumbnailHeight();
 
-  public boolean getSuppressRatingsInTitles();
+  public Boolean getSuppressRatingsInTitles();
 
   public String getBookDetailsCustomFields();
 
-  public boolean getIncludeTagCrossReferences();
+  public Boolean getIncludeTagCrossReferences();
 
   public Integer getMaxBeforeSplit();
 
   public String getSplitTagsOn();
 
-  public boolean getDontSplitTagsOn();
+  public Boolean getDontSplitTagsOn();
 
-  public boolean getIncludeBooksWithNoFile();
+  public Boolean getIncludeBooksWithNoFile();
 
-  public boolean getCryptFilenames();
+  public Boolean getCryptFilenames();
 
-  public boolean getShowSeriesInAuthorCatalog();
+  public Boolean getShowSeriesInAuthorCatalog();
 
-  public boolean getIncludeAboutLink();
+  public Boolean getIncludeAboutLink();
 
   public String getCatalogFilter();
 
@@ -72,51 +72,51 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public Integer getMaxBookSummaryLength();
 
-  public boolean getGenerateAuthors();
+  public Boolean getGenerateAuthors();
 
-  public boolean getGenerateTags();
+  public Boolean getGenerateTags();
 
-  public boolean getGenerateSeries();
+  public Boolean getGenerateSeries();
 
-  public boolean getGenerateRecent();
+  public Boolean getGenerateRecent();
 
-  public boolean getGenerateRatings();
+  public Boolean getGenerateRatings();
 
-  public boolean getGenerateAllbooks();
+  public Boolean getGenerateAllbooks();
 
-  public boolean getGenerateIndex();
+  public Boolean getGenerateIndex();
 
-  public boolean getGenerateOpds();
+  public Boolean getGenerateOpds();
 
-  public boolean getGenerateHtml();
+  public Boolean getGenerateHtml();
 
-  public boolean getGenerateOpdsDownloads();
+  public Boolean getGenerateOpdsDownloads();
 
-  public boolean getGenerateHtmlDownloads();
+  public Boolean getGenerateHtmlDownloads();
 
-  public boolean getBrowseByCover();
+  public Boolean getBrowseByCover();
 
-  public boolean getBrowseByCoverWithoutSplit();
+  public Boolean getBrowseByCoverWithoutSplit();
 
-  public boolean getMinimizeChangedFiles();
+  public Boolean getMinimizeChangedFiles();
 
-  public boolean getSplitByAuthorInitialGoToBooks();
+  public Boolean getSplitByAuthorInitialGoToBooks();
 
-  public boolean getLanguageAsTag();
+  public Boolean getLanguageAsTag();
 
   public String getTagsToMakeDeep();
 
   public Integer getMinBooksToMakeDeepLevel();
 
-  public boolean getCoverResize();
+  public Boolean getCoverResize();
 
   public Integer getCoverHeight();
 
-  public boolean getIncludeOnlyOneFile();
+  public Boolean getIncludeOnlyOneFile();
 
-  public boolean getZipTrookCatalog();
+  public Boolean getZipTrookCatalog();
 
-  public boolean getReprocessEpubMetadata();
+  public Boolean getReprocessEpubMetadata();
 
   public Integer getMaxMobileResolution();
 
@@ -124,53 +124,53 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   /* Catalog Structure */
 
-  public boolean getDisplayAuthorSort();
+  public Boolean getDisplayAuthorSort();
 
-  public boolean getDisplayTitleSort();
+  public Boolean getDisplayTitleSort();
 
-  public boolean getSortUsingAuthor();
+  public Boolean getSortUsingAuthor();
 
-  public boolean getSortUsingTitle();
+  public Boolean getSortUsingTitle();
 
   public String getTagsToIgnore();
 
-  public boolean getSortTagsByAuthor();
+  public Boolean getSortTagsByAuthor();
 
-  public boolean getTagBooksNoSplit();
+  public Boolean getTagBooksNoSplit();
 
   /* Book Details */
 
-  public boolean getGenerateCrossLinks();
+  public Boolean getGenerateCrossLinks();
 
-  public boolean getGenerateExternalLinks();
+  public Boolean getGenerateExternalLinks();
 
-  public boolean getIncludeSeriesInBookDetails();
+  public Boolean getIncludeSeriesInBookDetails();
 
-  public boolean getIncludeRatingInBookDetails();
+  public Boolean getIncludeRatingInBookDetails();
 
-  public boolean getIncludeTagsInBookDetails();
+  public Boolean getIncludeTagsInBookDetails();
 
-  public boolean getIncludePublisherInBookDetails();
+  public Boolean getIncludePublisherInBookDetails();
 
-  public boolean getIncludePublishedInBookDetails();
+  public Boolean getIncludePublishedInBookDetails();
 
-  public boolean getPublishedDateAsYear();
+  public Boolean getPublishedDateAsYear();
 
-  public boolean getIncludeAddedInBookDetails();
+  public Boolean getIncludeAddedInBookDetails();
 
-  public boolean getIncludeModifiedInBookDetails();
+  public Boolean getIncludeModifiedInBookDetails();
 
   /*  Advanced */
 
-  public boolean getIncludeCoversInCatalog();
+  public Boolean getIncludeCoversInCatalog();
 
-  public boolean getUseThumbnailsAsCovers();
+  public Boolean getUseThumbnailsAsCovers();
 
-  public boolean getZipCatalog();
+  public Boolean getZipCatalog();
 
-  public boolean getZipOmitXml();
+  public Boolean getZipOmitXml();
 
-  public boolean getExternalImages();
+  public Boolean getExternalImages();
 
   /* external links */
 
@@ -198,7 +198,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getLibrarythingTitleUrl();
 
-  public boolean getIndexComments();
+  public Boolean getIndexComments();
 
   public Integer getMaxKeywords();
 
@@ -208,7 +208,7 @@ public interface ReadOnlyStanzaConfigurationInterface extends ReadOnlyConfigurat
 
   public String getFeaturedCatalogSavedSearchName();
 
-  public List<Composite<String, String>> getCustomCatalogs();
+  public List<CustomCatalogEntry> getCustomCatalogs();
 
   public String getCatalogCustomColumns();
 
