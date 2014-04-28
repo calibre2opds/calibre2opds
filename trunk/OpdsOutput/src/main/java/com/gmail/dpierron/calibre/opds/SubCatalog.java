@@ -75,7 +75,7 @@ public abstract class SubCatalog {
       crc32 = new CRC32();
   }
 
-  public SubCatalog () {
+  public SubCatalog() {
     // Do nothing special!
     if (crc32 == null)
       crc32 = new CRC32();
@@ -96,20 +96,23 @@ public abstract class SubCatalog {
   /**
    * Get the current catalog level for this catalog instance
    * If we are not in a sub-level this will be empty
+   *
    * @return
    */
-  public String getCatalogLevel () {
+  public String getCatalogLevel() {
     if (catalogLevel == null) {
-      catalogLevel = "" ;
+      catalogLevel = "";
     }
     return catalogLevel;
   }
+
   /**
    * Set the catalog level for this particular catalog instance
    * It is only set for catalogs that are not top-level ones
+   *
    * @param newlevel
    */
-  public void setCatalogLevel (String newlevel) {
+  public void setCatalogLevel(String newlevel) {
     assert newlevel != null;
     catalogLevel = newlevel;
     catalogFolderBaseFilename = null;
@@ -120,9 +123,10 @@ public abstract class SubCatalog {
    * set the Catalog Level based on the breadcrumbs to this point
    * This is used when a complete set of sub-catalogs are required.
    * TODO assumes that the breadcrumbs are unique - this assumption needs validation
+   *
    * @param breadcrumbs
    */
-  public void setCatalogLevel (Breadcrumbs breadcrumbs) {
+  public void setCatalogLevel(Breadcrumbs breadcrumbs) {
     assert (breadcrumbs != null);
     setCatalogLevel(encryptString(breadcrumbs.toString()));
     setOptimizUrlPrefix();
@@ -135,7 +139,7 @@ public abstract class SubCatalog {
    * @param data
    * @return
    */
-  private static String encryptString (String data) {
+  private static String encryptString(String data) {
     crc32.reset();
     crc32.update(data.getBytes());
     return Long.toHexString(crc32.getValue());
@@ -147,36 +151,41 @@ public abstract class SubCatalog {
    * that is derived from the actual filename, and then the
    * filename in the clear is added.  This should mean that
    * catalogs are easy to read while the filenames are hard to guess.
-   *
+   * <p/>
    * As a special case we need to separate out the foldername
    * (if present) and only encrypt the filename part.
    *
    * @param filename
    * @return
    */
-  private static String encryptFilename (String filename) {
-    if (securityCode.length() == 0) return filename;  // Do nothing if encryption not active
+  private static String encryptFilename(String filename) {
+    if (securityCode.length() == 0)
+      return filename;  // Do nothing if encryption not active
     int pos = filename.indexOf(Constants.SECURITY_SEPARATOR);
     if (pos != -1) {
       int dummy = 1;
     }
     return encryptString(filename) + Constants.SECURITY_SEPARATOR + filename.substring(pos + 1);
   }
+
   /**
    * Get the current level and if necessary add the prefix if not empty
    *
    * @return
    */
   private String getCatalogPrefix() {
-    if (catalogLevel == null) catalogLevel = "";
+    if (catalogLevel == null)
+      catalogLevel = "";
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + catalogLevel;
-    if (catalogLevel.length() > 0) result += Constants.LEVEL_SEPARATOR;
+    if (catalogLevel.length() > 0)
+      result += Constants.LEVEL_SEPARATOR;
     return result;
   }
 
   /**
    * Get the current catalog type.
    * If it has never been set we assume an empty string
+   *
    * @return
    */
   public String getCatalogType() {
@@ -189,9 +198,10 @@ public abstract class SubCatalog {
    * Set the catalog type.
    * This would normally only be used for special catalog types as the main
    * ones will have set this to a final value as part of class initialisation
+   *
    * @param type
    */
-  public void setCatalogType (String type) {
+  public void setCatalogType(String type) {
     assert (type != null);
     catalogType = catalogFolder = catalogBaseFilename = type;
     catalogFolderBaseFilename = null;
@@ -201,30 +211,30 @@ public abstract class SubCatalog {
   /**
    * Get the folder for this sub-catalog
    *
-   * @return  The foldername for this catalog
+   * @return The foldername for this catalog
    */
-  public String getCatalogFolder () {
+  public String getCatalogFolder() {
     if (Helper.isNullOrEmpty(catalogFolder)) {
       catalogFolder = getCatalogFolder(getCatalogType());
     }
 
     //  Debugging asserts - could be removed if not wanted
-    assert catalogFolder.indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-           "Program error: catalogFolder contains SECURITY_SEPARATOR (" + catalogFolder + ")";
+    assert catalogFolder.indexOf(Constants.SECURITY_SEPARATOR) == -1 : "Program error: catalogFolder contains SECURITY_SEPARATOR (" + catalogFolder + ")";
     // assert catalogFolder.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
     //       "Program error: catalogFolder contains LEVEL_SEPARATOR (" + catalogFolder + ")";
 
     return catalogFolder;
   }
+
   /**
    * Get the full folder name for the given folder type
    * Needs to take into account any level we may be working at
    * and also any secutiry code that might be active.
    *
-   * @param foldertype    // The type (ignoring level) of folder we want
-   * @return              // The folder name including any level and security prefix if type not empty
+   * @param foldertype // The type (ignoring level) of folder we want
+   * @return // The folder name including any level and security prefix if type not empty
    */
-  public String getCatalogFolder (String foldertype) {
+  public String getCatalogFolder(String foldertype) {
     assert (foldertype != null);
     if (foldertype.length() == 0) {
       return foldertype;
@@ -239,35 +249,13 @@ public abstract class SubCatalog {
    * sub-catalog types such as 'books' and 'author' which are always
    * at the top level.
    *
-   * @return            The catalog name preceded with any security infomation, but no level
+   * @return The catalog name preceded with any security infomation, but no level
    */
   public String getCatalogFolderWithSecurityNoLevel() {
     assert Helper.isNotNullOrEmpty(catalogType) : "Program Error catalogType not set";
     return getCatalogFolderWithSecurityNoLevel(catalogType);
   }
-    /**
-     * Get the catalog folder for the given type with the name derived
-     * from type.  It should have the security prefix the catalog name
-     * but omit any level information.   This is primarily used for the
-     * sub-catalog types such as 'books' and 'author' which are always
-     * at the top level.
-     *
-     * @param foldertype  The catalog 'type'
-     * @return            The catalog name preceded with any security infomation, but no level
-     */
-  public String getCatalogFolderWithSecurityNoLevel (String foldertype) {
-    assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
 
-    // Debugging asserts  - could be removed if not wanted
-    int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
-    assert result.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-        "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
-    assert result.indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-        "Program error: Unexpected LEVEL_SEPARATOR (" + result + ")";
-
-    return result + foldertype;
-  }
   /**
    * Get the catalog folder for the given type with the name derived
    * from type.  It should have the security prefix the catalog name
@@ -275,20 +263,40 @@ public abstract class SubCatalog {
    * sub-catalog types such as 'books' and 'author' which are always
    * at the top level.
    *
-   * @param foldertype  The catalog 'type'
-   * @return            The catalog name preceded with any security infomation, but no level
+   * @param foldertype The catalog 'type'
+   * @return The catalog name preceded with any security infomation, but no level
    */
-  public String getCatalogFolderWithLevelAndSecurity (String foldertype) {
+  public String getCatalogFolderWithSecurityNoLevel(String foldertype) {
+    assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
+    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
+
+    // Debugging asserts  - could be removed if not wanted
+    int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
+    assert result.substring(pos + 1).indexOf(Constants.SECURITY_SEPARATOR) == -1 : "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
+    assert result.indexOf(Constants.LEVEL_SEPARATOR) == -1 : "Program error: Unexpected LEVEL_SEPARATOR (" + result + ")";
+
+    return result + foldertype;
+  }
+
+  /**
+   * Get the catalog folder for the given type with the name derived
+   * from type.  It should have the security prefix the catalog name
+   * but omit any level information.   This is primarily used for the
+   * sub-catalog types such as 'books' and 'author' which are always
+   * at the top level.
+   *
+   * @param foldertype The catalog 'type'
+   * @return The catalog name preceded with any security infomation, but no level
+   */
+  public String getCatalogFolderWithLevelAndSecurity(String foldertype) {
     assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
 
     // Debugging asserts - could be removed if not wanted
     int pos = result.indexOf(Constants.SECURITY_SEPARATOR) + 1;
-    assert result.substring(pos).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
-        "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
+    assert result.substring(pos).indexOf(Constants.SECURITY_SEPARATOR) == -1 : "Program error: Two occurences of SECURITY_SEPARATOR (" + result + ")";
     pos = result.indexOf(Constants.LEVEL_SEPARATOR);
-    assert result.substring(pos).indexOf(Constants.LEVEL_SEPARATOR) == -1 :
-        "Program error: Two occurences of LEVEL_SEPARATOR (" + result + ")";
+    assert result.substring(pos).indexOf(Constants.LEVEL_SEPARATOR) == -1 : "Program error: Two occurences of LEVEL_SEPARATOR (" + result + ")";
 
     return result;
   }
@@ -297,37 +305,35 @@ public abstract class SubCatalog {
    * Set the folder to be used
    * It is always stored decoded and without any trailing slash
    * There should also not be any security code present - if so remove it.
-   *
+   * <p/>
    * NOTE: For convenience we also allow a full folder.filename path
-   *       to be passed in and then we extract the folder part.
-   * @param folder  folder name to set
+   * to be passed in and then we extract the folder part.
+   *
+   * @param folder folder name to set
    */
-  public void setCatalogFolder (String folder) {
+  public void setCatalogFolder(String folder) {
     assert folder != null;
 
     int pos = folder.indexOf(Constants.FOLDER_SEPARATOR);
     if (pos != -1) {
-      folder = folder.substring(0,pos);
-      assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-          "Program Error: Unexpected occurence of FOLDER_SEPARATOR (folder=" + folder + ")";
+      folder = folder.substring(0, pos);
+      assert folder.indexOf(Constants.FOLDER_SEPARATOR) == -1 : "Program Error: Unexpected occurence of FOLDER_SEPARATOR (folder=" + folder + ")";
     }
 
     pos = folder.indexOf(Constants.SECURITY_SEPARATOR);
     if (pos != -1) {
-      assert (folder.substring(0,pos).equals(securityCode)) :
-          "Program Error:  Security Code does not seem to match expected value (folder=" + folder + ")";
-      assert folder.indexOf(Constants.SECURITY_SEPARATOR, pos+1) == -1 :
-          "Program error: Unexpected Second Occurencs of SECURITY_SEPARATOR (folder=" + folder + ")";        ;
-      folder = folder.substring(pos+1);
+      assert (folder.substring(0, pos).equals(securityCode)) : "Program Error:  Security Code does not seem to match expected value (folder=" + folder + ")";
+      assert folder.indexOf(Constants.SECURITY_SEPARATOR, pos + 1) == -1 : "Program error: Unexpected Second Occurencs of SECURITY_SEPARATOR (folder=" +
+          folder + ")";
+      ;
+      folder = folder.substring(pos + 1);
     }
 
     pos = folder.indexOf(Constants.LEVEL_SEPARATOR);
     if (pos != -1) {
-      assert (folder.substring(0,pos).equals(catalogLevel)) :
-          "Program Error:  Catalog level does not seem to match expected value  (folder=" + folder + ")";
-      assert folder.indexOf(Constants.LEVEL_SEPARATOR, pos+1) == -1 :
-          "Program error: Unexpected second occurencs of LEVEL_SEPARATOR (folder=" + folder + ")";
-      folder = folder.substring(pos+1);
+      assert (folder.substring(0, pos).equals(catalogLevel)) : "Program Error:  Catalog level does not seem to match expected value  (folder=" + folder + ")";
+      assert folder.indexOf(Constants.LEVEL_SEPARATOR, pos + 1) == -1 : "Program error: Unexpected second occurencs of LEVEL_SEPARATOR (folder=" + folder + ")";
+      folder = folder.substring(pos + 1);
     }
 
     catalogFolder = folder;
@@ -340,25 +346,25 @@ public abstract class SubCatalog {
    * @param folder
    * @param id
    */
-  public void setCatalogFolderSplit (String folder, String id) {
-    setCatalogFolder(folder + Constants.TYPE_SEPARATOR + (int)(Long.valueOf(id)/1000));
+  public void setCatalogFolderSplit(String folder, String id) {
+    setCatalogFolder(folder + Constants.TYPE_SEPARATOR + (int) (Long.valueOf(id) / 1000));
   }
+
   /**
    * Get the Current Catalog Base filename
-   *
+   * <p/>
    * If both the folder name, catalog type and catalog level are not set we treat
    * this as a special case and add in the security code.
    *
    * @return
    */
-  public String getCatalogBasefilename () {
+  public String getCatalogBasefilename() {
     if (catalogBaseFilename == null) {
       catalogBaseFilename = getCatalogType();
     }
 
     // Debugging assert - could be removed if not wanted
-    assert catalogBaseFilename.indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-            "Program Error:  Unexpected FOLDER_SEPARATOR (" + catalogBaseFilename + ")";
+    assert catalogBaseFilename.indexOf(Constants.FOLDER_SEPARATOR) == -1 : "Program Error:  Unexpected FOLDER_SEPARATOR (" + catalogBaseFilename + ")";
 
     if (catalogLevel.length() == 0 && catalogFolder.length() == 0 && catalogType.length() == 0) {
       // The special case for top level
@@ -372,22 +378,21 @@ public abstract class SubCatalog {
   /**
    * Set the base filename to be used for this catalog.
    * Only needed when it cannot be derived automatically from the type
-   *
+   * <p/>
    * NOTE:  The name is always stored 'in the clear' so any security code
-   *        or level type information needs removing.
+   * or level type information needs removing.
    *
    * @param name
    */
-  public void setCatalogBaseFilename (String name) {
-    assert Helper.isNotNullOrEmpty(name) : "Program Error: invalid name parameter (" + name +")";
+  public void setCatalogBaseFilename(String name) {
+    assert Helper.isNotNullOrEmpty(name) : "Program Error: invalid name parameter (" + name + ")";
     // We want to skip over any leading folder name
     int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
 
     // Debugging assert - could be removed if not wanted
-    assert name.substring(pos+1).indexOf(Constants.FOLDER_SEPARATOR) == -1 :
-            "Program Error: Multiple FOLDER_SEPARATORS found (" + name + ")";
+    assert name.substring(pos + 1).indexOf(Constants.FOLDER_SEPARATOR) == -1 : "Program Error: Multiple FOLDER_SEPARATORS found (" + name + ")";
     if (pos != -1) {
-      name = name.substring(pos+1);     // Remove the folder part
+      name = name.substring(pos + 1);     // Remove the folder part
     }
     // We also want to remove any leading occurrence of security code
     if (securityCode.length() > 0 && name.startsWith(securityCodeAndSeparator)) {
@@ -395,7 +400,7 @@ public abstract class SubCatalog {
     }
     // Finally we want to remove any existing encryption string
     pos = name.indexOf(Constants.SECURITY_SEPARATOR);
-    name = name.substring(pos+1);
+    name = name.substring(pos + 1);
     catalogBaseFilename = name;
     catalogFolderBaseFilename = null;
   }
@@ -407,14 +412,14 @@ public abstract class SubCatalog {
    *
    * @return
    */
-  public String getCatalogBaseFolderFileName () {
+  public String getCatalogBaseFolderFileName() {
     if (catalogFolderBaseFilename == null) {
       // Special case of empty folder and level (as used for index files!)
-      if (catalogFolder.length() == 0  & catalogLevel.length() == 0) {
+      if (catalogFolder.length() == 0 & catalogLevel.length() == 0) {
         catalogFolderBaseFilename = getCatalogBasefilename();
       } else {
         catalogFolderBaseFilename = getCatalogPrefix() + getCatalogFolder();  // This will include security/level prefixes
-        catalogFolderBaseFilename += Constants.FOLDER_SEPARATOR +  encryptFilename(getCatalogBasefilename());
+        catalogFolderBaseFilename += Constants.FOLDER_SEPARATOR + encryptFilename(getCatalogBasefilename());
       }
     }
 
@@ -425,6 +430,7 @@ public abstract class SubCatalog {
 
     return catalogFolderBaseFilename;
   }
+
   /**
    * Get the folder/file name based on the type parameter
    * Level is added from the current object as require .
@@ -432,33 +438,34 @@ public abstract class SubCatalog {
    *
    * @return
    */
-  public String getCatalogBaseFolderFileName (String type) {
+  public String getCatalogBaseFolderFileName(String type) {
     assert Helper.isNotNullOrEmpty(type);
     String folder = getCatalogFolder(type);
     return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(type);
   }
 
-  public String getCatalogBaseFolderFileNameNoLevel (String type) {
+  public String getCatalogBaseFolderFileNameNoLevel(String type) {
     assert Helper.isNotNullOrEmpty(type);
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
-    if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
+    if (result.length() > 0)
+      result += Constants.FOLDER_SEPARATOR;
     return result + encryptFilename(type);
   }
 
-    /**
-     * Get the full base folder/filename including the speified id.
-     * It will get the level/security information from the current catalog properties.
-     *
-     * @param id
-     * @return
-     */
-  public String getCatalogBaseFolderFileNameId (String id) {
+  /**
+   * Get the full base folder/filename including the speified id.
+   * It will get the level/security information from the current catalog properties.
+   *
+   * @param id
+   * @return
+   */
+  public String getCatalogBaseFolderFileNameId(String id) {
     String name = getCatalogBaseFolderFileName();
     int pos = name.indexOf(Constants.FOLDER_SEPARATOR);
     String folder = "";
     if (pos != -1) {
-      folder = name.substring(0, pos+1);
-      name = name.substring(pos+1);
+      folder = name.substring(0, pos + 1);
+      name = name.substring(pos + 1);
     }
     String result = encryptFilename(name + Constants.TYPE_SEPARATOR + id);
     return folder + result;
@@ -473,7 +480,7 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  public String getCatalogBaseFolderFileNameId (String type, String id) {
+  public String getCatalogBaseFolderFileNameId(String type, String id) {
     String folder = getCatalogFolder(type);
     return folder + ((folder.length() != 0) ? Constants.FOLDER_SEPARATOR : "") + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
   }
@@ -482,21 +489,21 @@ public abstract class SubCatalog {
    * Get the full base folder/filename for the given type and id
    * It will get the level information from the current catalog properties.
    * Security information will also be added as required.
-   *
-   *  To keep the number of files in a single folder down (which can affect
-   *  perforance we store a maximum of 1000 book id;s in a single folder
-   *  (although in practise it is likely to be slightly less due to gaps
-   *  in the Calibre Id sequence after books have been deleted/altered/merged.
+   * <p/>
+   * To keep the number of files in a single folder down (which can affect
+   * perforance we store a maximum of 1000 book id;s in a single folder
+   * (although in practise it is likely to be slightly less due to gaps
+   * in the Calibre Id sequence after books have been deleted/altered/merged.
    *
    * @param type
    * @param id
    * @return
    */
-  public String getCatalogBaseFolderFileNameIdSplit (String type, String id, int splitSize) {
+  public String getCatalogBaseFolderFileNameIdSplit(String type, String id, int splitSize) {
     String filename = getCatalogBaseFolderFileNameId(type, id);
     int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
     assert pos != -1;
-    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / splitSize)) + filename.substring(pos);
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long) (Long.parseLong(id) / splitSize)) + filename.substring(pos);
     return filename;
   }
 
@@ -510,9 +517,10 @@ public abstract class SubCatalog {
    * @param id
    * @return
    */
-  private static String getCatalogBaseFolderFileNameIdNoLevel (String type, String id) {
+  private static String getCatalogBaseFolderFileNameIdNoLevel(String type, String id) {
     String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
-    if (result.length() > 0) result += Constants.FOLDER_SEPARATOR;
+    if (result.length() > 0)
+      result += Constants.FOLDER_SEPARATOR;
     result = result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
     return result;
   }
@@ -522,20 +530,20 @@ public abstract class SubCatalog {
    * Security information will be added, but no level information.
    * This is intended for entry types that are always at the top level
    * (such as books)
-   *
-   *  To keep the number of files in a single folder down (which can affect
-   *  perforance we store a maximum of 1000 book id;s in a single folder
-   *  (although in practise it is likely to be slightly less due to gaps
-   *  in the Calibre Id sequence after books have been deleted/altered/merged.
+   * <p/>
+   * To keep the number of files in a single folder down (which can affect
+   * perforance we store a maximum of 1000 book id;s in a single folder
+   * (although in practise it is likely to be slightly less due to gaps
+   * in the Calibre Id sequence after books have been deleted/altered/merged.
    *
    * @param id
    * @return
    */
-  public static String getCatalogBaseFolderFileNameIdNoLevelSplit (String type, String id, int splitSize) {
+  public static String getCatalogBaseFolderFileNameIdNoLevelSplit(String type, String id, int splitSize) {
     String filename = getCatalogBaseFolderFileNameIdNoLevel(type, id);
     int pos = filename.indexOf(Constants.FOLDER_SEPARATOR);
     assert pos != -1;
-    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long)(Long.parseLong(id) / splitSize)) + filename.substring(pos);
+    filename = filename.substring(0, pos) + Constants.TYPE_SEPARATOR + ((long) (Long.parseLong(id) / splitSize)) + filename.substring(pos);
     return filename;
   }
 
@@ -545,20 +553,20 @@ public abstract class SubCatalog {
    * @param inSubDir
    * @return
    */
-  protected String getIconPrefix (boolean inSubDir)  {
+  protected String getIconPrefix(boolean inSubDir) {
     return inSubDir ? Constants.PARENT_PATH_PREFIX : Constants.CURRENT_PATH_PREFIX;
   }
 
   /**
    * Optimise the URN to simplify them if pointing to files in sthe currentcatalog folder
-   *
+   * <p/>
    * NOTE:  We should never optimize breadcrumb URL's as we do not know ehere they are called from
    *
-   * @param url       the unoptimised URL
-   * @return          the optimized URL
+   * @param url the unoptimised URL
+   * @return the optimized URL
    */
-  public String optimizeCatalogURL (String url) {
-    assert optimizeUrlPrefix != null :  "Program Error:  optimizeUrlPrefix should not be null!";
+  public String optimizeCatalogURL(String url) {
+    assert optimizeUrlPrefix != null : "Program Error:  optimizeUrlPrefix should not be null!";
     // See if start is pointing back to current folder?
     if (url.startsWith(optimizeUrlPrefix)) {
       // If so we can strip the folder name part
@@ -566,7 +574,8 @@ public abstract class SubCatalog {
       assert url.length() > pos : "Program Error: URL only has prefix!";
       //TODO  Activate the following code if trace shows would achieve expected results
       if (logger.isTraceEnabled())
-        logger.trace("should be able to optimize following URL: " + url + ", (folder=" + getCatalogFolder() +") to " + Constants.CURRENT_PATH_PREFIX + url.substring(pos) );
+        logger.trace("should be able to optimize following URL: " + url + ", (folder=" + getCatalogFolder() + ") to " + Constants.CURRENT_PATH_PREFIX +
+            url.substring(pos));
       // return Constants.CURRENT_PATH_PREFIX + url.substring(pos);
     }
     return url;
@@ -594,6 +603,7 @@ public abstract class SubCatalog {
   List<Book> getBooks() {
     return books;
   }
+
   /**
    * Get the list of stuff acting as a filter for this sub-catalog
    *
@@ -602,6 +612,7 @@ public abstract class SubCatalog {
   List<Object> getStuffToFilterOut() {
     return stuffToFilterOut;
   }
+
   /**
    * Get the list of stuff to filter out extended by new values
    *
@@ -642,13 +653,13 @@ public abstract class SubCatalog {
   /**
    * Extract the folder part of the filename
    *
-   * @param   pCatalogFileName
+   * @param pCatalogFileName
    * @return
    */
   public String getFolderName(String pCatalogFileName) {
     assert (Helper.isNotNullOrEmpty(pCatalogFileName)) : "Program Error: empty filename!";
     int pos = pCatalogFileName.indexOf(Constants.FOLDER_SEPARATOR);
-    return (pos == -1) ? pCatalogFileName : pCatalogFileName.substring(0,pos);
+    return (pos == -1) ? pCatalogFileName : pCatalogFileName.substring(0, pos);
   }
 
   /**
@@ -658,10 +669,8 @@ public abstract class SubCatalog {
    * @param count
    * @return
    */
-  public Boolean checkSplitByLetter (SplitOption splitOption, int count) {
-    return (splitOption == SplitOption.SplitByLetter)
-            && (maxSplitLevels > 0)
-            && count > maxBeforeSplit;
+  public Boolean checkSplitByLetter(SplitOption splitOption, int count) {
+    return (splitOption == SplitOption.SplitByLetter) && (maxSplitLevels > 0) && count > maxBeforeSplit;
   }
 
   /**
@@ -671,7 +680,7 @@ public abstract class SubCatalog {
    * @param splitLetters
    * @return
    */
-  public SplitOption checkSplitByLetter (String splitLetters) {
+  public SplitOption checkSplitByLetter(String splitLetters) {
     return splitLetters.length() < maxSplitLevels ? SplitOption.SplitByLetter : SplitOption.Paginate;
   }
 
@@ -688,18 +697,18 @@ public abstract class SubCatalog {
    * Create the XML and HTML files (as required by configuration parameters) from
    * the XML document that has just been created.
    *
-   * @param feed            The feed that is to be used to generate the output files
-   * @param outputFilename  The name of the output file.
-   * @param feedType        The type of file that is to be generated
-   * @throws IOException    Any exception would be unexpected, but it is always theoretically possible!
+   * @param feed           The feed that is to be used to generate the output files
+   * @param outputFilename The name of the output file.
+   * @param feedType       The type of file that is to be generated
+   * @throws IOException Any exception would be unexpected, but it is always theoretically possible!
    */
   public void createFilesFromElement(Element feed, String outputFilename, HtmlManager.FeedType feedType) throws IOException {
 
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
-    assert Helper.isNotNullOrEmpty(outputFilename): "Program error: Attempt to create XML file for empty/null filename";
-    assert ! outputFilename.startsWith(CatalogManager.INSTANCE.getGenerateFolder().toString()):
-             "Program Error:  filename should not include catalog folder (" + outputFilename + ")";
+    assert Helper.isNotNullOrEmpty(outputFilename) : "Program error: Attempt to create XML file for empty/null filename";
+    assert !outputFilename.startsWith(CatalogManager.INSTANCE.getGenerateFolder().toString()) : "Program Error:  filename should not include catalog folder (" +
+        outputFilename + ")";
     // int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
     // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
     //    "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
@@ -709,7 +718,7 @@ public abstract class SubCatalog {
 
 
     String xmlfilename = outputFilename;
-    if (! xmlfilename.endsWith(Constants.XML_EXTENSION)) {
+    if (!xmlfilename.endsWith(Constants.XML_EXTENSION)) {
       xmlfilename += Constants.XML_EXTENSION;
     }
     File outputFile = CatalogManager.INSTANCE.storeCatalogFile(xmlfilename);
@@ -717,7 +726,7 @@ public abstract class SubCatalog {
     // (if xml file exists then HTML one will as well)
     if (outputFile.exists()) {
       logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
-//      if (logger.isTraceEnabled()) logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
+      //      if (logger.isTraceEnabled()) logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
       return;
     }
 
@@ -725,7 +734,7 @@ public abstract class SubCatalog {
     // TODO  Check if there might be a cheaper way to do this not using DOM?
     String test = feed.toString();
     Document document = new Document();
-    document.addContent (feed);
+    document.addContent(feed);
 
     // write the XML file
     // (unless the user has suppressed the OPDS catalogs)
@@ -736,7 +745,7 @@ public abstract class SubCatalog {
         JDOM.INSTANCE.getOutputter().output(document, fos);
       } catch (RuntimeException e) {
         logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
-      }  finally {
+      } finally {
         if (fos != null)
           fos.close();
       }

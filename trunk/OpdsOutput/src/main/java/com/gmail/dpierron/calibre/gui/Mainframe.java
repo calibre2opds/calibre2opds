@@ -37,8 +37,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -80,6 +78,7 @@ public class Mainframe extends javax.swing.JFrame {
     tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
     loadValues();
     translateTexts();
+
   }
   private void initGuiFields() {
     /**
@@ -143,7 +142,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblUrlBooks, txtUrlBooks, "config.UrlBooks", "UrlBooks"),
       new guiField(lblCatalogTitle, txtCatalogTitle, "config.CatalogTitle", "CatalogTitle"),
       new guiField(lblSplittagson, txtSplittagson, "config.SplitTagsOn", "SplitTagsOn", true),
-      new guiField(null, chkDontsplittags, "config.SplitTagsOn.splitbyletter", "DontSplitTagsOn"),
+      new guiField(chkDontsplittags, chkDontsplittags, "config.DontSplitTagsOn", "DontSplitTagsOn"),
       new guiField(lblCatalogFilter, txtCatalogFilter, "config.CatalogFilter", "CatalogFilter"),
       new guiField(lblWikilang, txtWikilang, "config.WikipediaLanguage", "WikipediaLanguage"),
       new guiField(lblCryptFilenames, chkCryptFilenames, "config.CryptFilenames", "CryptFilenames"),
@@ -253,7 +252,7 @@ public class Mainframe extends javax.swing.JFrame {
 
       // Custom catalogs
 
-      new guiField(cmdAdd, null, "gui.add"),
+      new guiField(cmdAdd, null, "config.CustomCatalogAdd"),
       new guiField(lblFeaturedCatalogTitle, txtFeaturedCatalogTitle, "config.FeaturedCatalogTitle", "FeaturedCatalogTitle"),
       new guiField(lblFeaturedCatalogSavedSearchName, txtFeaturedCatalogSavedSearchName, "config.FeaturedCatalogSavedSearchName", "FeaturedCatalogSavedSearchName"),
 
@@ -295,14 +294,29 @@ public class Mainframe extends javax.swing.JFrame {
         customCatalogTableModel.deleteCustomCatalog(modelRow);
       }
     };
+    // add a button to the custom catalogs table
+    /*
+    Action check = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        int modelRow = Integer.valueOf(e.getActionCommand());
+        customCatalogTableModel.checkCustomCatalog(modelRow);
+      }
+    };
+    */
 
-    ButtonColumn buttonColumn = new ButtonColumn(tblCustomCatalogs, delete, 2);
+    // CheckboxColumn checkboxColumn = new CheckboxColumn(tblCustomCatalogs, null, 2);
+    // checkboxColumn.setMnemonic(KeyEvent.VK_C);
+    ButtonColumn buttonColumn = new ButtonColumn(tblCustomCatalogs, delete, 3);
     buttonColumn.setMnemonic(KeyEvent.VK_D);
 
-    int width = 550; //tblCustomCatalogs.getWidth();
-    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .25));
-    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .65));
-    tblCustomCatalogs.getColumnModel().getColumn(2).setPreferredWidth((int)(width * .075));    // Delete button
+    Dimension d = tabOptionsTabs.getPreferredSize();
+    int width = (int) d.getWidth() - 24;
+    tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .2));
+    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .6));
+    tblCustomCatalogs.getColumnModel().getColumn(2).setMinWidth(40);    // Checkbox
+    tblCustomCatalogs.getColumnModel().getColumn(2).setMaxWidth(40);    // Checkbox
+    tblCustomCatalogs.getColumnModel().getColumn(3).setPreferredWidth((int)(width * .10));    // Delete button
+    tblCustomCatalogs.getColumnModel().getColumn(3).setMaxWidth(80);    // Delete
   }
 
   /**
@@ -874,6 +888,8 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
     lblIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
 
+    DeviceMode.fromName(currentProfile.getDeviceMode().toString()).setModeSpecificOptions(currentProfile);
+
     // Invoke standard field processing
 
     for (guiField g : guiFields) g.loadValue();
@@ -953,10 +969,9 @@ public class Mainframe extends javax.swing.JFrame {
 
     for (guiField g : guiFields) g.storeValue();
 
-    currentProfile.setCustomCatalogs(customCatalogTableModel.getCustomCatalogs());
-
     // Field types not (yet) handled by guiField
 
+    currentProfile.setCustomCatalogs(customCatalogTableModel.getCustomCatalogs());
     currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
 
     setCursor(normalCursor);
@@ -970,21 +985,20 @@ public class Mainframe extends javax.swing.JFrame {
     // main window
     lblBottom0.setText(Localization.Main.getText("gui.label.clickToDescribe")); // NOI18N
     lblBottom0.setFont(lblBottom0.getFont().deriveFont(Font.BOLD));
-    // setTranslateTexts(tabOptionsTabs, null, "gui.tab1");
+
     lblDeviceDropbox.setToolTipText(
         Localization.Main.getText("config.DeviceMode.dropbox.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.tooltip2"));
     lblDeviceNAS.setToolTipText(
         Localization.Main.getText("config.DeviceMode.nas.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nas.tooltip2"));
     lblDeviceNook.setToolTipText(
         Localization.Main.getText("config.DeviceMode.nook.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nook.tooltip2"));
-    adaptInterfaceToDeviceSpecificMode(currentProfile.getDeviceMode());
-    // menus
 
     // Do translations that are handled by guiFields table
 
     for (guiField f : guiFields) f.translateTexts();
 
     // `Additional translations  (if any)
+    adaptInterfaceToDeviceSpecificMode(currentProfile.getDeviceMode());
 
   }
 
@@ -999,6 +1013,9 @@ public class Mainframe extends javax.swing.JFrame {
       JOptionPane.showMessageDialog(this, label.getToolTipText(), Localization.Main.getText("gui.tooltip"), JOptionPane.INFORMATION_MESSAGE);
   }
 
+  /**
+   *
+   */
    private void showSetDatabaseFolderDialog() {
      JDirectoryChooser chooser = new JDirectoryChooser();
      chooser.setShowingCreateDirectory(false);
@@ -1013,6 +1030,11 @@ public class Mainframe extends javax.swing.JFrame {
        txtDatabaseFolder.setText(f.getAbsolutePath());
    }
 
+  /**
+   *
+   * @param targetFolder
+   * @return
+   */
    private boolean setDatabaseFolder(String targetFolder) {
      File newFolder = new File(targetFolder);
      if (newFolder.exists()) {
@@ -1047,6 +1069,11 @@ public class Mainframe extends javax.swing.JFrame {
        txtTargetFolder.setText(f.getAbsolutePath());
    }
 
+  /**
+   *
+   * @param targetFolder
+   * @return
+   */
    private boolean setTargetFolder(String targetFolder) {
      File newFolder = new File(targetFolder);
      if (!newFolder.exists()) {
@@ -1936,6 +1963,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         pnlCatalogStructure.add(lblBrowseByCoverWithoutSplit, gridBagConstraints);
         lblBrowseByCoverWithoutSplit.getAccessibleContext().setAccessibleName("Do not split by letter in \"Browse by Cover\" mode");
 
@@ -3938,7 +3966,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;

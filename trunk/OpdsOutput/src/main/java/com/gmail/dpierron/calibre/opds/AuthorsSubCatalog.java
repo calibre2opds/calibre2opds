@@ -133,7 +133,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       listauthors.remove(0);
       Element element;
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-      element = getAuthor(breadcrumbs,mapOfBooksByAuthor.get(author),author);
+      element = getAuthorEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author));
       assert element != null;
       if (element != null) {
         feed.addContent(element);
@@ -185,13 +185,11 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           // Get a specific author
           Author author = listauthors.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-          logger.debug("getAuthor:" + author);
+          logger.debug("getAuthorEntry:" + author);
           // AuthorEntry authorEntry = new AuthorEntry (mapOfBooksByAuthor.get(author), author);
           // Element entry = authorEntry.getSubCatalogEntry(breadcrumbs, true).getFirstElement();
 
-          Element entry = getAuthor(breadcrumbs,
-                                    mapOfBooksByAuthor.get(author),
-                                    author) ;
+          Element entry = getAuthorEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author)) ;
           if (entry != null) {
             result.add(entry);
             logger.debug("adding author to the TROOK database:" + author);
@@ -353,9 +351,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @param author
    * @return
    */
-  private Element getAuthor(Breadcrumbs pBreadcrumbs,
-                                  List<Book> authorbooks,
-                                  Author author) throws IOException  {
+  private Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + author);
 
@@ -390,7 +386,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     }
 
     String filename = getAuthorFolderFilenameWithLevel(author);
-    logger.debug("getAuthor:generating " + filename);
+    logger.debug("getAuthorEntry:generating " + filename);
 
     String title = author.getSort();
     String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
@@ -461,8 +457,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     sortBooksByTitle(morebooks);
 
     logger.debug("calling getListOfBooks with " + morebooks.size() + " books");
-    logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
+    logger.trace("getAuthorEntry  Breadcrumbs=" + pBreadcrumbs.toString());
 
+    author.setDone();
     return getListOfBooks(pBreadcrumbs,
                           morebooks,
                           true,           // Always in subDir

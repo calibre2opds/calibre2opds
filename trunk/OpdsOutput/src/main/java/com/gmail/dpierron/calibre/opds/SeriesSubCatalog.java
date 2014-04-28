@@ -204,7 +204,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           } else {
             breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
           }
-          Element entry = getSerie(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
+          Element entry = getSeriesEntrt(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
             TrookSpecificSearchDatabaseManager.INSTANCE.addSeries(serie, entry);
@@ -261,7 +261,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         listSeries.remove(0);
         Element element;
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        element = getSerie(breadcrumbs,series,urn,addTheSeriesWordToTheTitle);
+        element = getSeriesEntrt(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
         assert element != null;
         if (element != null) {
           feed.addContent(element);
@@ -421,11 +421,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getSerie(
-      Breadcrumbs pBreadcrumbs,
-      Series serie,
-      String baseurn,
-      boolean addTheSeriesWordToTheTitle) throws IOException {
+  private Element getSeriesEntrt(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
 
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + serie);

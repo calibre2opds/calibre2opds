@@ -137,8 +137,7 @@ public class Runner {
     String standardLevel = ".info";
     File home = ConfigurationManager.getDefaultConfigurationDirectory();
     System.setProperty("calibre2opds.home", home.getAbsolutePath());
-    if (home == null)
-      return;
+    if (home == null)    return;
     String defaultOutFileName = "log/log4j.properties";
     File log4jConfig = null;
     for (String level : levels) {

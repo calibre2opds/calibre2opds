@@ -1,4 +1,4 @@
-import com.gmail.dpierron.calibre.configuration.ReadOnlyStanzaConfigurationInterface;
+import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
@@ -22,7 +22,7 @@ public class TestLocalisation {
     List<String> languages = LocalizationHelper.INSTANCE.getAvailableLocalizations();
     for (String language : languages) {
       Localization.Main.reloadLocalizations(language);
-      for (Method getter : ReadOnlyStanzaConfigurationInterface.class.getMethods()) {
+      for (Method getter : GetConfigurationInterface.class.getMethods()) {
         String getterName = getter.getName();
         String optionName = getterName.substring(3);
         // skip DeviceMode
