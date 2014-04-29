@@ -102,7 +102,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * This reoutine is called recursively to generate each file (page or split level)
    *
    * @param pBreadcrumbs
-   * @param series                      // Series to process.  Set to null if not known to take from catalog properties
+   * @param listSeries                      // Series to process.  Set to null if not known to take from catalog properties
    * @param from                        // Start point - set to 0 if not known
    * @param title
    * @param summary
@@ -116,7 +116,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
   public List<Element> getListOfSeries(
       Breadcrumbs pBreadcrumbs,
-      List<Series> series,        //  The list of series to be processed.
+      List<Series> listSeries,        //  The list of series to be processed.
       boolean inSubDir,
       int from,                   // Start point - set to 0 if not known
       String title,
@@ -127,7 +127,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       boolean addTheSeriesWordToTheTitle) throws IOException {
 
     // Set if not specified from catalog properties
-    if (series == null) series = getSeries();
+    if (listSeries == null) listSeries = getSeries();
     if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
 
     Map<String, List<Series>> mapOfSeriesByLetter = null;
@@ -150,16 +150,16 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
       default:
         if (logger.isTraceEnabled())
-          logger.trace("getListOfSeries: splitOption=" + splitOption + ", series.size()=" + series.size() + ", MaxBeforeSplit==" +
+          logger.trace("getListOfSeries: splitOption=" + splitOption + ", series.size()=" + listSeries.size() + ", MaxBeforeSplit==" +
               maxBeforeSplit);
-        willSplitByLetter = (maxSplitLevels != 0) &&  (series.size() > maxBeforeSplit);
+        willSplitByLetter = (maxSplitLevels != 0) &&  (listSeries.size() > maxBeforeSplit);
         break;
     }
     if (logger.isTraceEnabled())
       logger.trace("getListOfSeries:  willSplitByLetter=" + willSplitByLetter);
 
     if (willSplitByLetter) {
-      mapOfSeriesByLetter = DataModel.splitSeriesByLetter(series);
+      mapOfSeriesByLetter = DataModel.splitSeriesByLetter(listSeries);
     }
 
     if (from > 0) inSubDir = true;
@@ -181,11 +181,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     } else {
       // list the series list
       result = new LinkedList<Element>();
-      for (int i = from; i < series.size(); i++) {
+      for (int i = from; i < listSeries.size(); i++) {
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+          // TODO #c2o-208   Add Previous, First and Last links if needed
           Element nextLink =
               getSubCatalog(pBreadcrumbs,
-                            series,
+                            listSeries,
                             true /*inSubDir*/,      // Must be in subDir if paginating!
                             i,
                             title,
@@ -196,7 +197,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           result.add(0, nextLink);
           break;
         } else {
-          Series serie = series.get(i);
+          Series serie = listSeries.get(i);
           Breadcrumbs breadcrumbs;
           // #c2o-204:  If we are getting the series for an author then the breadcrumbs are already correct.
           if (this.getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
@@ -204,7 +205,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           } else {
             breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
           }
-          Element entry = getSeriesEntrt(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
+          Element entry = getSeriesEntry(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
             TrookSpecificSearchDatabaseManager.INSTANCE.addSeries(serie, entry);
@@ -261,7 +262,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         listSeries.remove(0);
         Element element;
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        element = getSeriesEntrt(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
+        element = getSeriesEntry(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
         assert element != null;
         if (element != null) {
           feed.addContent(element);
@@ -421,7 +422,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  private Element getSeriesEntrt(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
+  public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
 
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + serie);

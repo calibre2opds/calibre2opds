@@ -75,14 +75,14 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c20-175: Set logging level via GUI
     - #c2o-180: Indicate on completion dialog if warnings logged
     - #c2o-188: Allow custom external URLs
-    - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalo
+    - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
     - #c2o-200: Improve GUI validation for Custom Catalogs
     - #c2o-205: Destination folder uses Default value instead of the per-profile one
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
     - #c2o-208: Add rel="prev" links on the XML files and back to previous page on HTML files
-    - #c2o-209: Add a "boolean" column to create selected custom searches/external URL before internal ones
     - #c2o-210: If the loaded Profile is renamed then it should be reloaded.
-    - #c2o-214:  Cross links for author do not work if Authors catalog not generated
+    - #c2o-214: Cross links for author do not work if Authors catalog not generated
+    - #c2o-215: Provide more control over which cross-reference types should be generated
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -97,11 +97,12 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 v3.4
-
+    - Change: Chekbox for generating external links moved to tab defining them as more logical place.
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
     - Change: #c2o-207: Show current profile name in the program window's title
                         (removed from main screen as this would now be redundant)
-    - New:    #c2o-212: Option to sort books within a tag by author and then title 
+    - New:    #c2o-209: Add a "boolean" column to promote selected custom searches/external URL before internal ones
+    - New:    #c2o-212: Option to sort books within a tag by author and then title
     - New:    #c2o-213: Option to suppress split-by-letter within a tag 
 
 v3.3 (1st April 2014)

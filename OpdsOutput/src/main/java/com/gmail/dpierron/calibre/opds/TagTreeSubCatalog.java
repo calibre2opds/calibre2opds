@@ -7,7 +7,6 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.RootTreeNode;
 import com.gmail.dpierron.tools.TreeNode;
@@ -118,7 +117,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       logger.debug("it's a leaf, consisting of a single tag : make a list of books");
       Tag tag = (Tag) level.getData();
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
-      Element entry = getTag(pBreadcrumbs, tag, urn, level.getId());
+      Element entry = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
       return entry;
     } else {

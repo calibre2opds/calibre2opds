@@ -5,11 +5,9 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -82,7 +80,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
         listTags.remove(0);
         Element element;
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        element = getTag(breadcrumbs,tag,urn,"");
+        element = getTagEntry(breadcrumbs, tag, urn, "");
         assert element != null;
         if (element != null) {
           feed.addContent(element);
@@ -121,8 +119,8 @@ public class TagListSubCatalog extends TagsSubCatalog {
         } else {
           Tag tag = listTags.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-          logger.debug("getTag:" + tag);
-          Element entry = getTag(breadcrumbs, tag, urn, null);
+          logger.debug("getTagEntry:" + tag);
+          Element entry = getTagEntry(breadcrumbs, tag, urn, null);
           if (entry != null) {
             logger.debug("adding tag to the TROOK database:" + tag);
             result.add(entry);
