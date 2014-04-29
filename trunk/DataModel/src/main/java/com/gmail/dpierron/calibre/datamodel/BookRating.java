@@ -10,6 +10,7 @@ public enum BookRating {
 
   private final int value;
   private final char charEquivalent;
+  private boolean done = false;
 
   private BookRating(int value, char charEquivalent) {
     this.value = value;
@@ -40,4 +41,7 @@ public enum BookRating {
     }
     return NOTRATED;
   }
+
+  public void setDone() { done = true;}
+  public boolean isDone() { return done; }
 }

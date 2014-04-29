@@ -10,9 +10,7 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.Icons;
-import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.datamodel.Option;
+import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
@@ -445,6 +443,61 @@ public class LevelSubCatalog extends SubCatalog {
       createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.Catalog);
     } else {
       createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog);
+    }
+
+    // #c2o-214
+    // A check to see that all cross-refrence targets have been generated
+    // The only reason they would not have been is that the relevant section was suppressed
+
+    if (atTopLevel && currentProfile.getGenerateCrossLinks()) {
+      for (Book book : getBooks()) {
+        if (book.isDone() || !book.hasAuthor())  continue;
+        for (Author author : book.getAuthors()) {
+          if (author.isDone())  continue;
+          List<Book>  authorBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author);
+          if (authorBooks.size() < 2) continue;
+          AuthorsSubCatalog authorsSubCatalog = new AuthorsSubCatalog(authorBooks);
+          authorsSubCatalog.setCatalogLevel(getCatalogLevel());
+          try {
+            authorsSubCatalog.getAuthorEntry(pBreadcrumbs, author, DataModel.INSTANCE.getMapOfBooksByAuthor().get(author));
+          } catch (Exception e) {
+            logger.error("Error when generating author from book cross-link");
+          }
+        }
+        Series series = book.getSeries();
+        if (series != null && ! series.isDone()) {
+          SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(DataModel.INSTANCE.getMapOfBooksBySeries().get(series));
+          seriesSubCatalog.setCatalogLevel(getCatalogLevel());
+          try {
+            seriesSubCatalog.getSeriesEntry(pBreadcrumbs, series, null, false);
+          } catch (Exception e) {
+            logger.error("Error when generating Series from book cross-link");
+          }
+        }
+        if (currentProfile.getGenerateTags() && currentProfile.getIncludeTagCrossReferences()) {
+          for (Tag tag : book.getTags()) {
+            if (tag.isDone())
+              continue;
+            TagsSubCatalog tagsSubCatalog = new TagListSubCatalog(DataModel.INSTANCE.getMapOfBooksByTag().get(tag));
+            tagsSubCatalog.setCatalogLevel(getCatalogLevel());
+            try {
+              tagsSubCatalog.getTagEntry(null, tag, null, null);
+            } catch (Exception e) {
+              logger.error("Error when generating tag from book cross-link");
+            }
+          }
+        }
+        BookRating rating = book.getRating();
+        if (rating != null && !rating.isDone()) {
+          RatingsSubCatalog ratingSubCatalog = new RatingsSubCatalog(DataModel.INSTANCE.getMapOfBooksByRating().get(rating));
+          ratingSubCatalog.setCatalogLevel(getCatalogLevel());
+          try {
+            ratingSubCatalog.getRatingEntry(null, rating, null);
+          } catch (Exception e) {
+            logger.error("Error when generating rating '" + rating.getValue() + "' from book cross-link");
+          }
+        }
+      }
     }
     return FeedHelper.getCatalogEntry(title, urn, CatalogManager.INSTANCE.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
 

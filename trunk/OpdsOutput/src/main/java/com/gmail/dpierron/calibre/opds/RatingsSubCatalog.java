@@ -6,7 +6,6 @@ import com.gmail.dpierron.calibre.datamodel.BookRating;
 import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -68,7 +67,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     return mapOfBooksByRating;
   }
 
-  private Element getRatedBooks(Breadcrumbs pBreadcrumbs, BookRating rating, String baseurn) throws IOException {
+  public Element getRatingEntry(Breadcrumbs pBreadcrumbs, BookRating rating, String baseurn) throws IOException {
     List<Book> books = getMapOfBooksByRating().get(rating);
     if (Helper.isNullOrEmpty(books))
       return null;
@@ -99,6 +98,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
                                     splitOption,
                                     // #751211: Use external icons option
                                     useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING);
+    rating.setDone();
     return result;
   }
 
@@ -120,7 +120,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     for (int i = 0; i < BookRating.sortedRatings().length; i++) {
       BookRating rating = BookRating.sortedRatings()[i];
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-      Element entry = getRatedBooks(breadcrumbs, rating, urn);
+      Element entry = getRatingEntry(breadcrumbs, rating, urn);
       if (entry != null)
         result.add(entry);
     }

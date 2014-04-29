@@ -169,6 +169,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       for (int i = from; i < listauthors.size(); i++) {
         if ((splitOption != SplitOption.DontSplitNorPaginate)
         && ((i - from) >= maxBeforePaginate)) {
+          // TODO #c2o-208   Add Previous, First and Last links if needed
           // Get a new page
           Element nextLink = getSubCatalog(pBreadcrumbs,
                                            listauthors,
@@ -347,11 +348,11 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   /**
    *
    * @param pBreadcrumbs
-   * @param authorbooks
    * @param author
+   * @param authorbooks
    * @return
    */
-  private Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
+  public Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + author);
 

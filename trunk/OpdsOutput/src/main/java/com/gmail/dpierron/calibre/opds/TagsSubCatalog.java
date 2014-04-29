@@ -165,10 +165,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-  Element getTag(Breadcrumbs pBreadcrumbs,
-                 Tag tag,
-                 String baseurn,
-                 String titleWhenCategorized) throws IOException {
+  public Element getTagEntry(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + tag);
 
@@ -196,9 +193,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       // specify that this is a deep level
       String summary = Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(books.size()));
       if (logger.isDebugEnabled())
-        logger.debug("getTag: Making a deep level for tag " + tag);
+        logger.debug("getTagEntry: Making a deep level for tag " + tag);
       if (logger.isDebugEnabled())
-        logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
+        logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       // String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
       // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null);
       LevelSubCatalog level = new LevelSubCatalog(books, title);
@@ -216,8 +213,8 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeBooks(books);
       if (logger.isDebugEnabled())
-        logger.debug("getTag: making a simple book list for tag " + tag);
-      logger.trace("getTag:  Breadcrumbs=" + pBreadcrumbs.toString());
+        logger.debug("getTagEntry: making a simple book list for tag " + tag);
+      logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       // #c2o-212  Sort tag books by author
       if (currentProfile.getSortTagsByAuthor()) {
         sortBooksByAuthorAndTitle(books);
