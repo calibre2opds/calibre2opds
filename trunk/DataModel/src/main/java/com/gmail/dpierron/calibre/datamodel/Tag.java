@@ -10,6 +10,7 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   private final String name;
   private String[] partsOfTag;
   private boolean done = false;
+  private boolean referenced = false;
 
   public Tag(String id, String name) {
     super();
@@ -66,8 +67,14 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   public void setDone() {
     done = true;
   }
-
   public boolean isDone() {
     return done;
+  }
+
+  public void setReferenced() {
+    referenced = true;
+  }
+  public boolean isReferenced() {
+    return referenced;
   }
 }

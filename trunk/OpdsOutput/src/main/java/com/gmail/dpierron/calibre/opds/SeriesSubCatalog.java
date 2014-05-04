@@ -476,6 +476,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                                         ? getIconPrefix(true) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES,
                                     null,
                                     Option.INCLUDE_SERIE_NUMBER);
+    serie.setDone();
     return result;
   }
 }

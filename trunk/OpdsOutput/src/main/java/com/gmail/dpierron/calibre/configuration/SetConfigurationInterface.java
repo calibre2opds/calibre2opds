@@ -13,7 +13,7 @@ package com.gmail.dpierron.calibre.configuration;
 import java.io.File;
 import java.util.List;
 
-public interface StanzaConfigurationInterface extends GetConfigurationInterface {
+public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setLanguage(String value);
 
@@ -36,8 +36,6 @@ public interface StanzaConfigurationInterface extends GetConfigurationInterface 
   public void setBookDetailsCustomFields(String value);
 
   public void setBookDetailsCustomFieldsAlways(Boolean b);
-
-  public void setIncludeTagCrossReferences(Boolean value);
 
   public void setThumbnailGenerate(Boolean value);
 
@@ -108,6 +106,16 @@ public interface StanzaConfigurationInterface extends GetConfigurationInterface 
   public void setIncludeAddedInBookDetails(Boolean value);
 
   public void setIncludeModifiedInBookDetails(Boolean value);
+
+  public void setSingleBookCrossReferences(Boolean value);
+
+  public void setIncludeAuthorCrossReferences(Boolean value);
+
+  public void setIncludeSerieCrossReferences(Boolean value);
+
+  public void setIncludeTagCrossReferences(Boolean value);
+
+  public void setIncludeRatingCrossReferences(Boolean value);
 
   public void setGenerateIndex(Boolean value);
 

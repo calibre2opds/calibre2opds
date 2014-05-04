@@ -20,9 +20,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 public class LevelSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(LevelSubCatalog.class);
@@ -449,56 +447,101 @@ public class LevelSubCatalog extends SubCatalog {
     // A check to see that all cross-refrence targets have been generated
     // The only reason they would not have been is that the relevant section was suppressed
 
-    if (atTopLevel && currentProfile.getGenerateCrossLinks()) {
-      for (Book book : getBooks()) {
-        if (book.isDone() || !book.hasAuthor())  continue;
-        for (Author author : book.getAuthors()) {
-          if (author.isDone())  continue;
-          List<Book>  authorBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author);
-          if (authorBooks.size() < 2) continue;
-          AuthorsSubCatalog authorsSubCatalog = new AuthorsSubCatalog(authorBooks);
-          authorsSubCatalog.setCatalogLevel(getCatalogLevel());
-          try {
-            authorsSubCatalog.getAuthorEntry(pBreadcrumbs, author, DataModel.INSTANCE.getMapOfBooksByAuthor().get(author));
-          } catch (Exception e) {
-            logger.error("Error when generating author from book cross-link");
-          }
+    boolean foundreference;
+    do {
+      foundreference = false;
+      if (!atTopLevel || !currentProfile.getGenerateCrossLinks()){
+        break;
+      }
+      for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+        if (book.isDone() || !book.isReferenced()) {
+          continue;
         }
-        Series series = book.getSeries();
-        if (series != null && ! series.isDone()) {
-          SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(DataModel.INSTANCE.getMapOfBooksBySeries().get(series));
-          seriesSubCatalog.setCatalogLevel(getCatalogLevel());
-          try {
-            seriesSubCatalog.getSeriesEntry(pBreadcrumbs, series, null, false);
-          } catch (Exception e) {
-            logger.error("Error when generating Series from book cross-link");
-          }
-        }
-        if (currentProfile.getGenerateTags() && currentProfile.getIncludeTagCrossReferences()) {
-          for (Tag tag : book.getTags()) {
-            if (tag.isDone())
-              continue;
-            TagsSubCatalog tagsSubCatalog = new TagListSubCatalog(DataModel.INSTANCE.getMapOfBooksByTag().get(tag));
-            tagsSubCatalog.setCatalogLevel(getCatalogLevel());
-            try {
-              tagsSubCatalog.getTagEntry(null, tag, null, null);
-            } catch (Exception e) {
-              logger.error("Error when generating tag from book cross-link");
-            }
-          }
-        }
-        BookRating rating = book.getRating();
-        if (rating != null && !rating.isDone()) {
-          RatingsSubCatalog ratingSubCatalog = new RatingsSubCatalog(DataModel.INSTANCE.getMapOfBooksByRating().get(rating));
-          ratingSubCatalog.setCatalogLevel(getCatalogLevel());
-          try {
-            ratingSubCatalog.getRatingEntry(null, rating, null);
-          } catch (Exception e) {
-            logger.error("Error when generating rating '" + rating.getValue() + "' from book cross-link");
-          }
+        List<Book> books = Arrays.asList(book);
+        BooksSubCatalog booksSubCatalog = new BooksSubCatalog(books) {};
+        booksSubCatalog.setCatalogLevel(getCatalogLevel());
+        try {
+          booksSubCatalog.getBookEntry(pBreadcrumbs, book);
+          foundreference = true;
+          assert book.isDone();
+        } catch (Exception e) {
+          logger.error("Error when generating author from book cross-link");
+          book.setDone();
         }
       }
-    }
+      for (Author author : DataModel.INSTANCE.getListOfAuthors()) {
+        if (author.isDone() || !author.isReferenced()) {
+          continue;
+        }
+        List<Book> authorBooks = DataModel.INSTANCE.getMapOfBooksByAuthor().get(author);
+        if (authorBooks.size() < 2 && !currentProfile.getSingleBookCrossReferences())
+          continue;
+        AuthorsSubCatalog authorsSubCatalog = new AuthorsSubCatalog(authorBooks);
+        authorsSubCatalog.setCatalogLevel(getCatalogLevel());
+        try {
+          authorsSubCatalog.getAuthorEntry(pBreadcrumbs, author, DataModel.INSTANCE.getMapOfBooksByAuthor().get(author));
+          foundreference = true;
+          assert author.isDone();
+        } catch (Exception e) {
+          logger.error("Error when generating author from book cross-link");
+          author.setDone();
+        }
+      }
+      for(Series series : DataModel.INSTANCE.getListOfSeries()){
+        if (series.isDone() || ! series.isReferenced()) {
+          continue;
+        }
+        SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(DataModel.INSTANCE.getMapOfBooksBySeries().get(series));
+        seriesSubCatalog.setCatalogLevel(getCatalogLevel());
+        try {
+          seriesSubCatalog.getSeriesEntry(pBreadcrumbs, series, null, false);
+          foundreference = true;
+          assert series.isDone();
+        } catch (Exception e) {
+          logger.error("Error when generating Series from book cross-link");
+          series.setDone();
+        }
+      }
+
+      for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
+        if (tag.isDone() || !tag.isReferenced()) {
+          continue;
+        }
+        List<Book> tagBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag);
+        if (tagBooks.size() < 2 && !currentProfile.getSingleBookCrossReferences()) {
+          continue;
+        }
+        TagsSubCatalog tagsSubCatalog = new TagListSubCatalog(DataModel.INSTANCE.getMapOfBooksByTag().get(tag));
+        tagsSubCatalog.setCatalogLevel(getCatalogLevel());
+        try {
+          tagsSubCatalog.getTagEntry(null, tag, null, null);
+          foundreference = true;
+          assert tag.isDone();
+        } catch (Exception e) {
+          logger.error("Error when generating tag from book cross-link");
+          tag.setDone();
+        }
+      }
+
+/*
+        for (BookRating rating : DataModel.INSTANCE.getlistof= book.getRating();
+          if (!rating.isDone() || isRatingCrossReferences(book)) {
+            if (! rating.isReferenced()) break;
+            List<Book> ratingBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(rating);
+            if (isRatingCrossReferences(book)) {
+              break;
+            }
+            RatingsSubCatalog ratingSubCatalog = new RatingsSubCatalog(DataModel.INSTANCE.getMapOfBooksByRating().get(rating));
+            ratingSubCatalog.setCatalogLevel(getCatalogLevel());
+            try {
+              ratingSubCatalog.getRatingEntry(null, rating, null);
+            } catch (Exception e) {
+              logger.error("Error when generating rating '" + rating.getValue() + "' from book cross-link");
+            }
+          }
+*/
+    } while (foundreference);
+
     return FeedHelper.getCatalogEntry(title, urn, CatalogManager.INSTANCE.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
 
   }

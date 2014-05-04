@@ -9,10 +9,7 @@ package com.gmail.dpierron.calibre.gui;
  * you should not make any changes that invalidate its use by the Netbeans one.
  */
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.configuration.StanzaConstants;
+import com.gmail.dpierron.calibre.configuration.*;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.gui.table.ButtonColumn;
 import com.gmail.dpierron.calibre.gui.table.CustomCatalogTableModel;
@@ -25,6 +22,7 @@ import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
 import com.l2fprod.common.swing.JDirectoryChooser;
 import org.apache.log4j.Logger;
+import sun.security.krb5.Config;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -188,11 +186,11 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblBookDetailsCustomFields, txtBookDetailsCustomFields, "config.BookDetailsCustomFields", "BookDetailsCustomFields"),
       new guiField(null, chkBookDetailsCustomFieldsAlways, "config.BookDetailsCustomFieldsAlways", "BookDetailsCustomFieldsAlways"),
       new guiField(lblNogeneratecrosslinks, chkNogeneratecrosslinks, "config.GenerateCrossLinks", "GenerateCrossLinks", true),
-      new guiField(lblSingleBookCrossReferences, chkSingleBookCrossReferences, "config.SingleBookCrossReferences"),
-      new guiField(lblIncludeAuthorCrossReferences, chkIncludeAuthorCrossReferences, "config.IncludeAuthorCrossReferences"),
-      new guiField(lblIncludeSerieCrossReferences, chkIncludeSerieCrossReferences, "config.IncludeSerieCrossReferences"),
-      new guiField(lblIncludeTagCrossReferences, chkIncludeTagCrossReferences, "config.IncludeTagCrossReferences"),
-      new guiField(lblIncludeRatingCrossReferences, chkIncludeRatingCrossReferences, "config.IncludeRatingCrossReferences"),
+      new guiField(lblSingleBookCrossReferences, chkSingleBookCrossReferences, "config.SingleBookCrossReferences", "SingleBookCrossReferences"),
+      new guiField(lblIncludeAuthorCrossReferences, chkIncludeAuthorCrossReferences, "config.IncludeAuthorCrossReferences", "IncludeAuthorCrossReferences"),
+      new guiField(lblIncludeSerieCrossReferences, chkIncludeSerieCrossReferences, "config.IncludeSerieCrossReferences", "IncludeSerieCrossReferences"),
+      new guiField(lblIncludeTagCrossReferences, chkIncludeTagCrossReferences, "config.IncludeTagCrossReferences", "IncludeTagCrossReferences"),
+      new guiField(lblIncludeRatingCrossReferences, chkIncludeRatingCrossReferences, "config.IncludeRatingCrossReferences", "IncludeRatingCrossReferences"),
 
               // advanced customization options
 
@@ -200,7 +198,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblMaxbeforepaginate, txtMaxbeforepaginate, "config.MaxBeforePaginate", "MaxBeforePaginate", 0, 99999),
       new guiField(lblMaxbeforesplit, txtMaxbeforesplit, "config.MaxBeforeSplit", "MaxBeforeSplit",0, 99999),
       new guiField(lblMaxSplitLevels, txtMaxSplitLevels, "config.MaxSplitLevels", "MaxSplitLevels", 0,8),
-      new guiField(lblBooksinrecent, txtBooksinrecent, "config.BooksInRecentAdditions", "BooksInRecentAdditions", 0, StanzaConstants.MAX_RECENT_ADDITIONS),
+      new guiField(lblBooksinrecent, txtBooksinrecent, "config.BooksInRecentAdditions", "BooksInRecentAdditions", 0, 500),
       new guiField(lblMaxsummarylength, txtMaxsummarylength, "config.MaxSummaryLength", "MaxSummaryLength", 0, 99999),
       new guiField(lblMaxBookSummaryLength, txtMaxBookSummaryLength, "config.MaxBookSummaryLength", "MaxBookSummaryLength", 0, 99999),
       new guiField(lblIncludeemptybooks, chkIncludeemptybooks, "config.IncludeBooksWithNoFile", "IncludeBooksWithNoFile"),
@@ -1262,18 +1260,18 @@ public class Mainframe extends javax.swing.JFrame {
         chkIncludeRatingInBookDetails = new javax.swing.JCheckBox();
         txtBookDetailsCustomFields = new javax.swing.JTextField();
         lblBookDetailsCustomFields = new javax.swing.JLabel();
-        chkIncludeTagCrossReferences = new javax.swing.JCheckBox();
-        lblIncludeTagCrossReferences = new javax.swing.JLabel();
         chkBookDetailsCustomFieldsAlways = new javax.swing.JCheckBox();
-        lblIncludeRatingCrossReferences = new javax.swing.JLabel();
-        lblIncludeSerieCrossReferences = new javax.swing.JLabel();
-        chkIncludeRatingCrossReferences = new javax.swing.JCheckBox();
-        chkIncludeSerieCrossReferences = new javax.swing.JCheckBox();
-        chkIncludeAuthorCrossReferences = new javax.swing.JCheckBox();
-        lblIncludeAuthorCrossReferences = new javax.swing.JLabel();
         lblSingleBookCrossReferences = new javax.swing.JLabel();
         chkSingleBookCrossReferences = new javax.swing.JCheckBox();
-        jInternalFrame1 = new javax.swing.JInternalFrame();
+        pnlCrossReferences = new javax.swing.JPanel();
+        chkIncludeAuthorCrossReferences = new javax.swing.JCheckBox();
+        lblIncludeAuthorCrossReferences = new javax.swing.JLabel();
+        chkIncludeTagCrossReferences = new javax.swing.JCheckBox();
+        lblIncludeTagCrossReferences = new javax.swing.JLabel();
+        lblIncludeRatingCrossReferences = new javax.swing.JLabel();
+        lblIncludeSerieCrossReferences = new javax.swing.JLabel();
+        chkIncludeSerieCrossReferences = new javax.swing.JCheckBox();
+        chkIncludeRatingCrossReferences = new javax.swing.JCheckBox();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2714,92 +2712,12 @@ public class Mainframe extends javax.swing.JFrame {
         pnlBookDetails.add(lblBookDetailsCustomFields, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkIncludeTagCrossReferences, gridBagConstraints);
-
-        lblIncludeTagCrossReferences.setText("lblIncludeTagCrossReferences");
-        lblIncludeTagCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeTagCrossReferences, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkBookDetailsCustomFieldsAlways, gridBagConstraints);
-
-        lblIncludeRatingCrossReferences.setText("lblIncludeRatingCrossReferences");
-        lblIncludeRatingCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeRatingCrossReferences, gridBagConstraints);
-
-        lblIncludeSerieCrossReferences.setText("lblIncludeSerieCrossReferences");
-        lblIncludeSerieCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeSerieCrossReferences, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkIncludeRatingCrossReferences, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkIncludeSerieCrossReferences, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(chkIncludeAuthorCrossReferences, gridBagConstraints);
-
-        lblIncludeAuthorCrossReferences.setText("lblIncludeAuthorCrossReferences");
-        lblIncludeAuthorCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeAuthorCrossReferences, gridBagConstraints);
 
         lblSingleBookCrossReferences.setText("lblSingleBookCrossReferences");
         lblSingleBookCrossReferences.setToolTipText("");
@@ -2822,8 +2740,96 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkSingleBookCrossReferences, gridBagConstraints);
 
-        jInternalFrame1.setVisible(true);
-        pnlBookDetails.add(jInternalFrame1, new java.awt.GridBagConstraints());
+        pnlCrossReferences.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(chkIncludeAuthorCrossReferences, gridBagConstraints);
+
+        lblIncludeAuthorCrossReferences.setText("lblIncludeAuthorCrossReferences");
+        lblIncludeAuthorCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(lblIncludeAuthorCrossReferences, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(chkIncludeTagCrossReferences, gridBagConstraints);
+
+        lblIncludeTagCrossReferences.setText("lblIncludeTagCrossReferences");
+        lblIncludeTagCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(lblIncludeTagCrossReferences, gridBagConstraints);
+
+        lblIncludeRatingCrossReferences.setText("lblIncludeRatingCrossReferences");
+        lblIncludeRatingCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(lblIncludeRatingCrossReferences, gridBagConstraints);
+
+        lblIncludeSerieCrossReferences.setText("lblIncludeSerieCrossReferences");
+        lblIncludeSerieCrossReferences.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(lblIncludeSerieCrossReferences, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(chkIncludeSerieCrossReferences, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCrossReferences.add(chkIncludeRatingCrossReferences, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridwidth = 6;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        pnlBookDetails.add(pnlCrossReferences, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4018,9 +4024,9 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlExternalUrlsOptions.add(chkNogenerateexternallinks, gridBagConstraints);
 
@@ -4435,51 +4441,51 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_chkNoThumbnailGenerateActionPerformed
 
   private void cmdAmazonUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonUrlResetActionPerformed
-    txtAmazonAuthorUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_AUTHORS_URL_DEFAULT));
+    txtAmazonAuthorUrl.setText((new DefaultConfigurationSettings()).getAmazonAuthorUrl());
   }//GEN-LAST:event_cmdAmazonUrlResetActionPerformed
 
   private void cmdAmazonIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonIsbnResetActionPerformed
-    txtAmazonIsbnUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_ISBN_URL_DEFAULT));
+    txtAmazonIsbnUrl.setText((new DefaultConfigurationSettings()).getAmazonIsbnUrl());
   }//GEN-LAST:event_cmdAmazonIsbnResetActionPerformed
 
   private void cmdAmazonTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonTitleResetActionPerformed
-    txtAmazonTitleUrl.setText(Localization.Main.getText(StanzaConstants.AMAZON_TITLE_URL_DEFAULT));
+    txtAmazonTitleUrl.setText((new DefaultConfigurationSettings()).getAmazonTitleUrl());
   }//GEN-LAST:event_cmdAmazonTitleResetActionPerformed
 
   private void cmdGoodreadAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadAuthorResetActionPerformed
-    txtGoodreadAuthorUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_AUTHOR_URL_DEFAULT));
+    txtGoodreadAuthorUrl.setText((new DefaultConfigurationSettings()).getGoodreadAuthorUrl());
   }//GEN-LAST:event_cmdGoodreadAuthorResetActionPerformed
 
   private void cmdGoodreadIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadIsbnResetActionPerformed
-    txtGoodreadIsbnUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_ISBN_URL_DEFAULT));
+    txtGoodreadIsbnUrl.setText((new DefaultConfigurationSettings()).getGoodreadIsbnUrl());
   }//GEN-LAST:event_cmdGoodreadIsbnResetActionPerformed
 
   private void cmdGoodreadTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadTitleResetActionPerformed
-    txtGoodreadTitleUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_TITLE_URL_DEFAULT));
+    txtGoodreadTitleUrl.setText((new DefaultConfigurationSettings()).getGoodreadTitleUrl());
   }//GEN-LAST:event_cmdGoodreadTitleResetActionPerformed
 
   private void cmdGoodreadReviewResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGoodreadReviewResetActionPerformed
-    txtGoodreadReviewIsbnUrl.setText(Localization.Main.getText(StanzaConstants.GOODREADS_REVIEW_URL_DEFAULT));
+    txtGoodreadReviewIsbnUrl.setText((new DefaultConfigurationSettings()).getGoodreadReviewIsbnUrl());
   }//GEN-LAST:event_cmdGoodreadReviewResetActionPerformed
 
   private void cmdIsfdbAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdIsfdbAuthorResetActionPerformed
-    txtIsfdbAuthorUrl.setText(Localization.Main.getText(StanzaConstants.ISFDB_AUTHOR_URL_DEFAULT));
+    txtIsfdbAuthorUrl.setText((new DefaultConfigurationSettings()).getIsfdbAuthorUrl());
   }//GEN-LAST:event_cmdIsfdbAuthorResetActionPerformed
 
   private void cmdLibrarythingAuthorResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingAuthorResetActionPerformed
-    txtLibrarythingAuthorUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_AUTHOR_URL_DEFAULT));
+    txtLibrarythingAuthorUrl.setText((new DefaultConfigurationSettings()).getLibrarythingAuthorUrl());
   }//GEN-LAST:event_cmdLibrarythingAuthorResetActionPerformed
 
   private void cmdLibrarythingIsbnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingIsbnResetActionPerformed
-    txtLibrarythingIsbnUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_ISBN_URL_DEFAULT));
+    txtLibrarythingIsbnUrl.setText((new DefaultConfigurationSettings()).getLibrarythingIsbnUrl());
   }//GEN-LAST:event_cmdLibrarythingIsbnResetActionPerformed
 
   private void cmdLibrarythingTitleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLibrarythingTitleResetActionPerformed
-    txtLibrarythingTitleUrl.setText(Localization.Main.getText(StanzaConstants.LIBRARYTHING_TITLE_URL_DEFAULT));
+    txtLibrarythingTitleUrl.setText((new DefaultConfigurationSettings()).getLibrarythingTitleUrl());
   }//GEN-LAST:event_cmdLibrarythingTitleResetActionPerformed
 
   private void cmdWikipediaUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdWikipediaUrlResetActionPerformed
-    txtWikipediaUrl.setText(Localization.Main.getText(StanzaConstants.WIKIPEDIA_URL_DEFAULT));
+    txtWikipediaUrl.setText((new DefaultConfigurationSettings()).getWikipediaUrl());
   }//GEN-LAST:event_cmdWikipediaUrlResetActionPerformed
 
   private void chkGenerateIndexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkGenerateIndexActionPerformed
@@ -4615,11 +4621,12 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_chkZipCatalogActionPerformed
 
   private void txtBooksinrecentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBooksinrecentFocusLost
-    if (getValue(txtBooksinrecent) > StanzaConstants.MAX_RECENT_ADDITIONS) {
-      String message = Localization.Main.getText("error.recentTooLarge", StanzaConstants.MAX_RECENT_ADDITIONS);
+    DefaultConfigurationSettings defaults = new DefaultConfigurationSettings();
+    if (getValue(txtBooksinrecent) > defaults.getBooksInRecentAdditions()) {
+      String message = Localization.Main.getText("error.recentTooLarge", defaults.getBooksInRecentAdditions());
       JOptionPane.showMessageDialog(this, message, "", JOptionPane.ERROR_MESSAGE);
+      txtBooksinrecent.setText("" + defaults.getBooksInRecentAdditions());
     }
-    txtBooksinrecent.setText("" + StanzaConstants.MAX_RECENT_ADDITIONS);
   }//GEN-LAST:event_txtBooksinrecentFocusLost
 
     private void lblAmazonTitleUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAmazonTitleUrlActionPerformed
@@ -4801,7 +4808,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JButton cmdSetDatabaseFolder;
     private javax.swing.JButton cmdSetTargetFolder;
     private javax.swing.JButton cmdWikipediaUrlReset;
-    private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JTextField lblAmazonAuthorUrl;
     private javax.swing.JTextField lblAmazonIsbnUrl;
@@ -4933,6 +4939,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JPanel pnlBottom;
     private javax.swing.JPanel pnlButtons;
     private javax.swing.JPanel pnlCatalogStructure;
+    private javax.swing.JPanel pnlCrossReferences;
     private javax.swing.JPanel pnlCustomCatalogs;
     private javax.swing.JPanel pnlCustomCatalogsTableButtons;
     private javax.swing.JPanel pnlExternalUrlsOptions;

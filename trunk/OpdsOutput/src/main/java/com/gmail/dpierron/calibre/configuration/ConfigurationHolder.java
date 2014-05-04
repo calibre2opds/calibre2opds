@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConfigurationHolder extends PropertiesBasedConfiguration implements StanzaConfigurationInterface {
+public class ConfigurationHolder extends PropertiesBasedConfiguration implements SetConfigurationInterface {
 
   final static String PROPERTY_NAME_VERSIONCHIP = "VERSIONCHIP";
   final static String PATTERN_CUSTOMCATALOG_ID = "customCatalog";
@@ -109,8 +109,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_SortTagsByAuthor = "SortTagsByAuthor";
   private final static String PROPERTY_NAME_TagBooksNoSplit = "TagBooksNoSplit";
   /* Book Details */
-  private final static String PROPERTY_NAME_GENERATEEXTERNALLINKS = "GenerateExternalLinks";
-  private final static String PROPERTY_NAME_GENERATECROSSLINKS = "GenerateCrossLinks";
   private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
   private final static String PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS = "IncludeRatingInBookDetails";
   private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
@@ -123,7 +121,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_DisplayTitleSort = "DisplayTitleSort";
   private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
   private final static String PROPERTY_NAME_BookDetailsCustomFieldsAlways = "BookDetailsCustomFieldsAlways";
+  private final static String PROPERTY_NAME_GenerateCrossLinks = "GenerateCrossLinks";
+  private final static String PROPERTY_NAME_SingleBookCrossReferences = "SingleBookCrossReferences";
+  private final static String PROPERTY_NAME_IncludeAuthorCrossReferences = "IncludeAuthorCrossReferences";
+  private final static String PROPERTY_NAME_IncludeSerieCrossReferences = "IncludeSerieCrossReferences";
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
+  private final static String PROPERTY_NAME_IncludeRatingCrossReferences = "IncludeRatingCrossReferences";
+  private final static String PROPERTY_NAME_GenerateExternalLinks = "GenerateExternalLinks";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
   private final static String PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS = "UseThumbnsilsAsCovers";
@@ -133,7 +137,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
 
   final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
 
-  private StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
+  private DefaultConfigurationSettings defaults = new DefaultConfigurationSettings();
 
   // Variables used to store cached values
   // These should all be cleared on a reset
@@ -167,7 +171,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     tokenizedCatalogCustomColumns = null;
     regexTagsToIgnore = null;
 
-    StanzaDefaultConfiguration defaults = new StanzaDefaultConfiguration();
+    DefaultConfigurationSettings defaults = new DefaultConfigurationSettings();
     for (Method getter : GetConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       String setterName = "set" + getterName.substring(3);
@@ -244,7 +248,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
   }
   public void setTargetFolder(File targetFolder) {
-    setProperty(PROPERTY_NAME_TARGETFOLDER, Helper.isNullOrEmpty(targetFolder) ? 2 : targetFolder.getAbsolutePath());
+    setProperty(PROPERTY_NAME_TARGETFOLDER, Helper.isNullOrEmpty(targetFolder) ? "" : targetFolder.getAbsolutePath());
   }
 
   public Boolean isLanguageReadOnly() {
@@ -379,20 +383,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_BookDetailsCustomFieldsAlways, value);
   }
 
-  public Boolean isIncludeTagCrossReferencesReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_IncludeTagCrossReferences);
-  }
-  public Boolean getIncludeTagCrossReferences() {
-    Boolean b = getBoolean(PROPERTY_NAME_IncludeTagCrossReferences);
-    return (b == null) ? defaults.getIncludeTagCrossReferences() : b;
-  }
-  public void setIncludeTagCrossReferences(Boolean value) {
-    setProperty(PROPERTY_NAME_IncludeTagCrossReferences, value);
-  }
-
-  public Boolean isMinimizeChangedFilesReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_MINIMIZECHANGEDFILES);
-  }
   public Boolean getMinimizeChangedFiles() {
     Boolean b = getBoolean(PROPERTY_NAME_MINIMIZECHANGEDFILES);
     return (b == null) ? defaults.getMinimizeChangedFiles() : b;
@@ -1197,13 +1187,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     String s = getProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
     return (s == null) ? defaults.getCatalogCustomColumns() : s;
   }
-
   public void setCatalogCustomColumns(String value) {
     setProperty(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS, value);
-  }
-
-  public Boolean isCatalogCustomColumnsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_CATALOGCUSTOMCOLUMNS);
   }
 
   public List<String> getTokenizedCatalogCustomColumns() {
@@ -1213,40 +1198,74 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return tokenizedCatalogCustomColumns;
   }
 
-
   /*
     Catalog Structure
    */
 
-  public Boolean isGenerateExternalLinksReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATEEXTERNALLINKS);
-  }
   public Boolean getGenerateExternalLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GENERATEEXTERNALLINKS);
+    Boolean b = getBoolean(PROPERTY_NAME_GenerateExternalLinks);
     return (b == null) ? defaults.getGenerateExternalLinks() : b;
   }
   public void setGenerateExternalLinks(Boolean value) {
-    setProperty(PROPERTY_NAME_GENERATEEXTERNALLINKS, value);
+    setProperty(PROPERTY_NAME_GenerateExternalLinks, value);
   }
 
   public Boolean isGenerateCrossLinksReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATECROSSLINKS);
+    return isPropertyReadOnly(PROPERTY_NAME_GenerateCrossLinks);
   }
   public Boolean getGenerateCrossLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GENERATECROSSLINKS);
+    Boolean b = getBoolean(PROPERTY_NAME_GenerateCrossLinks);
     return (b == null) ? defaults.getGenerateCrossLinks() : b;
   }
-
-  public Boolean isDisplayAuthorSortIsReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DisplayAuthorSort);
+  public void setGenerateCrossLinks(Boolean value) {
+    setProperty(PROPERTY_NAME_GenerateCrossLinks, value);
   }
+
+  public Boolean getSingleBookCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_SingleBookCrossReferences);
+    return (b == null) ? defaults.getGenerateCrossLinks() : b;
+  }
+  public void setSingleBookCrossReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_SingleBookCrossReferences, value);
+  }
+
+  public Boolean getIncludeAuthorCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeAuthorCrossReferences);
+    return (b == null) ? defaults.getGenerateCrossLinks() : b;
+  }
+  public void setIncludeAuthorCrossReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeAuthorCrossReferences, value);
+  }
+
+  public Boolean getIncludeSerieCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeSerieCrossReferences);
+    return (b == null) ? defaults.getGenerateCrossLinks() : b;
+  }
+  public void setIncludeSerieCrossReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeSerieCrossReferences, value);
+  }
+
+  public Boolean getIncludeTagCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeTagCrossReferences);
+    return (b == null) ? defaults.getIncludeTagCrossReferences() : b;
+  }
+  public void setIncludeTagCrossReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeTagCrossReferences, value);
+  }
+
+  public Boolean getIncludeRatingCrossReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeRatingCrossReferences);
+    return (b == null) ? defaults.getIncludeTagCrossReferences() : b;
+  }
+  public void setIncludeRatingCrossReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeRatingCrossReferences, value);
+  }
+
   public Boolean getDisplayAuthorSort() {
     Boolean b = getBoolean(PROPERTY_NAME_DisplayAuthorSort);
     return (b == null) ? defaults.getDisplayAuthorSort() : b;
   }
-  public void setGenerateCrossLinks(Boolean value) {
-    setProperty(PROPERTY_NAME_GENERATECROSSLINKS, value);
-  }
+  public void setDisplayAuthorSort(Boolean value) { setProperty(PROPERTY_NAME_DisplayAuthorSort, value); }
 
   public Boolean getDisplayTitleSort() {
     Boolean b = getBoolean(PROPERTY_NAME_DisplayTitleSort);
@@ -1262,7 +1281,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Boolean b = getBoolean(PROPERTY_NAME_SortUsingAuthor);
     return (b == null) ? defaults.getSortUsingAuthor() : b;
   }
-  public void setDisplayAuthorSort(Boolean value) { setProperty(PROPERTY_NAME_DisplayAuthorSort, value); }
 
   public Boolean isSortTagsByAuthorReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_SortTagsByAuthor);

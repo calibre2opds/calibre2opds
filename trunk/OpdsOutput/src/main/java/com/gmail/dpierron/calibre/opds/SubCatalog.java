@@ -6,7 +6,7 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -754,4 +754,71 @@ public abstract class SubCatalog {
     //  generate corresponding HTML file
     CatalogManager.INSTANCE.htmlManager.generateHtmlFromDOM(document, outputFile, feedType);
   }
+
+  /*
+   * Decide if a Series cross-reference should be generated for this book
+   *
+   * Takes into account if this is the only book and the relevant setting
+   */
+  protected boolean isSeriesCrossreferences(Book book) {
+    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeSerieCrossReferences()) {
+      return false;
+    }
+    Series series = book.getSeries();
+    if (series == null) {
+      return false;
+    }
+
+    if (currentProfile.getSingleBookCrossReferences()
+        ||  DataModel.INSTANCE.getMapOfBooksBySeries().get(series).size() > 1) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Decide if an Author cross-reference should be generated for this book
+   *
+   * Does not take into account whether an author has a single book
+   */
+  protected boolean isAuthorCrossReferences(Book book) {
+    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeAuthorCrossReferences()) {
+      return false;
+    }
+    return book.hasAuthor();
+  }
+
+  /**
+   * Decide if Tag cross-references should be generated for this book
+   *
+   * Does not take into account whether a tag has a single book
+   */
+  protected boolean isTagCrossReferences(Book book) {
+    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeTagCrossReferences()) {
+      return false;
+    }
+    return (book.getTags() != null);
+  }
+
+  /**
+   *
+   * Takes into account if this is the only book and the relevant setting
+   * Decide if Ratings cross-reference should be generated for this book
+   */
+  protected boolean isRatingCrossReferences(Book book) {
+    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeRatingCrossReferences()) {
+      return false;
+    }
+    BookRating rating = book.getRating();
+    if (rating == null) {
+      return false;
+    }
+    if (currentProfile.getSingleBookCrossReferences()
+        ||  DataModel.INSTANCE.getMapOfBooksByRating().get(rating).size() > 1) {
+      return true;
+    }
+    return false;
+  }
+
 }

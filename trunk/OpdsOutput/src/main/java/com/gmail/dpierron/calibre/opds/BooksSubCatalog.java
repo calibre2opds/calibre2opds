@@ -689,70 +689,67 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     // add the series link
     // (but only if we generate a series catalog)
-    if (currentProfile.getGenerateSeries()) {
+    if (isSeriesCrossreferences(book)) {
       Series serie = book.getSeries();
-      if (serie != null && DataModel.INSTANCE.getMapOfBooksBySeries().get(serie).size() > 1) {
-        if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
-        // Series for cross-references are always held at top level
-        // TODO Perhaps consider whether level should be taken into account?
-        filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(serie) + Constants.PAGE_ONE_XML;
-        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
-            Localization.Main.getText("bookentry.series", book.getSerieIndex(), serie.getName())));
-      }
+      if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the series link");
+      // Series for cross-references are always held at top level
+      // TODO Perhaps consider whether level should be taken into account?
+      filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(serie) + Constants.PAGE_ONE_XML;
+      entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+          Localization.Main.getText("bookentry.series", book.getSerieIndex(), serie.getName())));
+      serie.setReferenced();
     }
 
     String booksText = Localization.Main.getText("bookword.title");
     // add the author page link(s)
     // (but only if we generate an authors catalog)
-    if (currentProfile.getGenerateAuthors()) {
-      if (book.hasAuthor()) {
-        if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the author page link(s)");
-        for (Author author : book.getAuthors()) {
-          String authorName = author.getName();
-          // Check for author names that do not get internal links.
-          if (authorName.toUpperCase().equals("UNKNOWN")
-          || authorName.toUpperCase().equals("VARIOUS")) {
-            continue;
-          }
-          // c2o-168 - Omit Counts if MinimizeChangedFiles set
-          if (! currentProfile.getMinimizeChangedFiles()) {
-            booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
-          }
-          // Authors for cross-references are always held at top level !
-          // TODO Perhaps consider whether level should be taken into account?
-          filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
-          entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
-              Localization.Main.getText("bookentry.author", booksText, authorName)));
+    if (isAuthorCrossReferences(book)) {
+      if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the author page link(s)");
+      for (Author author : book.getAuthors()) {
+        String authorName = author.getName();
+        // Check for author names that do not get internal links.
+        if (authorName.toUpperCase().equals("UNKNOWN")
+        || authorName.toUpperCase().equals("VARIOUS")) {
+          continue;
         }
+        // c2o-168 - Omit Counts if MinimizeChangedFiles set
+        if (! currentProfile.getMinimizeChangedFiles()) {
+          booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
+        }
+        // Authors for cross-references are always held at top level !
+        // TODO Perhaps consider whether level should be taken into account?
+        filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
+        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+            Localization.Main.getText("bookentry.author", booksText, authorName)));
+        author.setReferenced();
       }
     }
 
     // add the tags links
     // (but only if we generate a tags catalog)
-    if (currentProfile.getGenerateTags() && currentProfile.getIncludeTagCrossReferences()) {
-      if (Helper.isNotNullOrEmpty(book.getTags())) {
-        if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
-        for (final Tag tag : book.getTags()) {
-          if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
-            int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
-            // Tags for cross-references are held at top level
-            // TODO Perhaps consider whether level should be taken into account?
-            filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
-            if (nbBooks > 1) {
-              // c2o-168 - Omit Counts if MinimizeChangedFiles set
-              if (! currentProfile.getMinimizeChangedFiles()) {
-                booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
-              }
-              entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
-                  Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
+    if (isTagCrossReferences(book)) {
+      if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
+      for (final Tag tag : book.getTags()) {
+        if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
+          int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
+          // Tags for cross-references are held at top level
+          // TODO Perhaps consider whether level should be taken into account?
+          filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
+          if (nbBooks > 1) {
+            // c2o-168 - Omit Counts if MinimizeChangedFiles set
+            if (! currentProfile.getMinimizeChangedFiles()) {
+              booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
             }
+            entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+                Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
+            tag.setReferenced();
           }
         }
       }
     }
 
     // add the ratings links
-    if (currentProfile.getGenerateRatings() && book.getRating() != BookRating.NOTRATED) {
+    if (isRatingCrossReferences(book)) {
       if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the ratings links");
       int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
       if (nbBooks > 1) {
@@ -765,6 +762,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, rating.getId().toString()) + Constants.PAGE_ONE_XML;
         entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
             Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.INSTANCE.getEnumConstantHumanName(rating))));
+        rating.setReferenced();
       }
     }
   }
@@ -1332,6 +1330,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // add a full entry link to the partial entry
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: add a full entry link to the partial entry");
     entry.addContent(FeedHelper.getFullEntryLink(fullEntryUrl));
+    book.setReferenced();
 
     return entry;
   }
