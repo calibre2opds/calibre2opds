@@ -50,6 +50,7 @@ public class Book implements SplitableByLetter {
   private List<CustomColumnValue> customColumnValues;
 
   private boolean done = false;
+  private boolean referenced = false;
 
   private static Date ZERO;
   private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
@@ -670,8 +671,14 @@ public class Book implements SplitableByLetter {
   public void setDone() {
     done = true;
   }
-
   public boolean isDone() {
     return done;
+  }
+
+  public void setReferenced() {
+    referenced = true;
+  }
+  public boolean isReferenced() {
+    return referenced;
   }
 }

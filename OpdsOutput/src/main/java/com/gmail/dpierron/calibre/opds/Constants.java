@@ -81,6 +81,8 @@ public class Constants {
   public final static String HELP_URL_EXTERNALLINKS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Book_Links_tab";
   public final static String HELP_URL_CUSTOMCATALOGS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Custom_Catalogs_Tab";
   public final static String HELP_URL_SEARCH = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Search_Criteria";
+
+
   // Prefixes that are recognized as valid for external links to custom catalogs
   public final static String CUSTOMCATALOG_OPDSURL = "OpdsURL:";
   public final static String CUSTOMCATALOG_HTMLURL = "HtmlURL:";

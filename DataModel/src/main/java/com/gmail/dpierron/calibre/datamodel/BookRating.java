@@ -11,6 +11,7 @@ public enum BookRating {
   private final int value;
   private final char charEquivalent;
   private boolean done = false;
+  private boolean referenced = false;
 
   private BookRating(int value, char charEquivalent) {
     this.value = value;
@@ -44,4 +45,7 @@ public enum BookRating {
 
   public void setDone() { done = true;}
   public boolean isDone() { return done; }
+
+  public void setReferenced() { referenced = true;}
+  public boolean isReferenced() { return referenced; }
 }

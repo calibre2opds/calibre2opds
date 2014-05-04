@@ -50,7 +50,15 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public String getBookDetailsCustomFields();
 
+  public Boolean getSingleBookCrossReferences();
+
+  public Boolean getIncludeAuthorCrossReferences();
+
+  public Boolean getIncludeSerieCrossReferences();
+
   public Boolean getIncludeTagCrossReferences();
+
+  public Boolean getIncludeRatingCrossReferences();
 
   public Integer getMaxBeforeSplit();
 
