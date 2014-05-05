@@ -131,19 +131,11 @@ public class TagListSubCatalog extends TagsSubCatalog {
     }
 
     feed.addContent(result);
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
-    String urlNext = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.PAGE_DELIM + (pageNumber+1) + Constants.XML_EXTENSION, inSubDir);
 
     Element entry;
-    if (from > 0) {
-      String titleNext;
-      if (pageNumber != maxPages)
-        titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
-      else
-        titleNext = Localization.Main.getText("title.lastpage");
-
-      entry = FeedHelper.getNextLink(urlExt, titleNext);
-    } else {
+      entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
+      createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+      if (from == 0) {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());
       if (title.equals("Science Fiction")) {
@@ -152,7 +144,6 @@ public class TagListSubCatalog extends TagsSubCatalog {
       entry = FeedHelper.getCatalogEntry(title, urn, urlExt, summary,
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
-//    return new Composite<Element, String>(entry, urlExt);
     return entry;
   }
 

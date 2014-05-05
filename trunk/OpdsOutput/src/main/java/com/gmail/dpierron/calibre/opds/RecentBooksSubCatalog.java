@@ -66,6 +66,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
                                     // #751211: Use external icons option
                                     useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RECENT : Icons.ICON_RECENT, null,     // No first element
                                     Option.INCLUDE_TIMESTAMP);
+
     return result;
   }
 

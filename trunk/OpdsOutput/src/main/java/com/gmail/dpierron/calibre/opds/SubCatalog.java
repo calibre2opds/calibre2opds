@@ -7,6 +7,7 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
+import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
@@ -821,4 +822,57 @@ public abstract class SubCatalog {
     return false;
   }
 
+  /**
+   * #c2o-208
+   * Create additional links for a paginated set depending on
+   * - the current pages
+   * - the maximum page count
+   *
+   * A Prev link is created if currenta page > 1
+   * A Last link is created if (max pages - current page) > 2
+   * A First link is created if Current Page > 2
+   *
+   * NOTE:  This is always called on pages AFTRER the first,
+   *        to provide the links to be inserted into the previous page
+   *
+   * @param filename    Base filename for the URL.
+   * @param pageNumber  current page number
+   * @param maxPages    maximum pages in the set.
+   */
+  public Element createPaginateLinks (Element feed, String filename, int pageNumber, int maxPages) {
+
+    int pos = filename.lastIndexOf(Constants.XML_EXTENSION);
+    if (pos > 0)  filename = filename.substring(0,pos);
+    pos = filename.lastIndexOf(Constants.TYPE_SEPARATOR);
+    assert pos > 0;
+    assert Integer.toString(pageNumber).equals((filename.substring(pos + 1)));
+    filename = filename.substring(0,pos + 1);
+
+      // Prev link
+    if (pageNumber > 1) {
+        feed.addContent(FeedHelper.getNavigationLink(filename + (pageNumber-1) + Constants.XML_EXTENSION,
+                                                     FeedHelper.RELATION_PREV,
+                                                     Localization.Main.getText("title.prevpage", pageNumber-1, maxPages)));
+    }
+    // First link
+    if (pageNumber > 2) {
+      feed.addContent(FeedHelper.getNavigationLink(filename + "1" + Constants.XML_EXTENSION,
+                                                   FeedHelper.RELATION_FIRST,
+                                                   Localization.Main.getText("title.firstpage", 1, maxPages)));
+    }
+    // Last link
+    if ((maxPages - pageNumber) > 1) {
+      feed.addContent(FeedHelper.getNavigationLink(filename + maxPages + Constants.XML_EXTENSION,
+                                                   FeedHelper.RELATION_LAST,
+                                                   Localization.Main.getText("title.lastpage", maxPages, maxPages)));
+    }
+
+    // Next link
+    // It is always one page out because of the way the result is used
+    if (pageNumber == 1)  return null;
+    return FeedHelper.getNavigationLink(filename + (pageNumber) + Constants.XML_EXTENSION,
+                                        FeedHelper.RELATION_NEXT,
+                                        Localization.Main.getText("title.nextpage", pageNumber, maxPages));
+
+  }
 }

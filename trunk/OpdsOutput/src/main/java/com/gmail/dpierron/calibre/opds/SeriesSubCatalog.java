@@ -133,8 +133,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Map<String, List<Series>> mapOfSeriesByLetter = null;
     List<Element> result;
 
-    if (logger.isTraceEnabled())
-      logger.trace("getListOfSeries: title=" + title);
+    if (logger.isTraceEnabled()) logger.trace("getListOfSeries: title=" + title);
     boolean willSplitByLetter;
 
     if (null == splitOption)
@@ -195,6 +194,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                             pFilename,
                             splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, addTheSeriesWordToTheTitle);
           result.add(0, nextLink);
+          int maxPages = Summarizer.INSTANCE.getPageNumber(listSeries.size());
           break;
         } else {
           Series serie = listSeries.get(i);
@@ -233,7 +233,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    * @throws IOException
    */
-//  public Composite<Element, String> getListOfBooks(Breadcrumbs pBreadcrumbs,
     public Element getSubCatalog(Breadcrumbs pBreadcrumbs,
           List<Series> listSeries,
           boolean inSubDir,
@@ -299,25 +298,16 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     // add the entries to the feed
     feed.addContent(result);
 
-    // Write to files
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
     String urlInItsSubfolder = optimizeCatalogURL(CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
-    if (from > 0) {
-      String titleNext;
-      if (pageNumber != maxPages)
-        titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);
-      else
-        titleNext = Localization.Main.getText("title.lastpage");
-
-      entry = FeedHelper.getNextLink(urlInItsSubfolder, titleNext);
-    } else {
+    entry = createPaginateLinks(feed, urlInItsSubfolder, pageNumber, maxPages);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    if (from == 0) {
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES);
     }
-//    return new Composite<Element, String>(entry, urlInItsSubfolder);
     return entry;
   }
 

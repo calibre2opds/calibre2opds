@@ -323,26 +323,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // if needed, add the first elements to the feed
     if (Helper.isNotNullOrEmpty(firstElements))
       feed.addContent(firstElements);
-
     // add the book entries to the feed
     feed.addContent(result);
 
-    // create the output files
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
-
     Element entry;
     String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
-    if (from > 0) {
-      String titleNext;
-      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
-        titleNext = Localization.Main.getText("title.lastpage");
-      }
 
-      entry = FeedHelper.getNextLink(urlExt, titleNext);
-    } else {
+    entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    if (from == 0) {
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
     }
-
     return entry;
   }
 
