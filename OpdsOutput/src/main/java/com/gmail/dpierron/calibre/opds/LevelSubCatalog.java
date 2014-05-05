@@ -138,8 +138,13 @@ public class LevelSubCatalog extends SubCatalog {
               }
             }
             // Remove any quotes surrounding yje URL
-            if ((externalLinkUrl.length() > 2) && externalLinkUrl.startsWith("\"") && externalLinkUrl.endsWith("\"")) {
-              externalLinkUrl = externalLinkUrl.substring(1, externalLinkUrl.length() - 2);
+            if (externalLinkUrl.length() > 2) {
+              if (externalLinkUrl.startsWith("\"")) {
+                externalLinkUrl = externalLinkUrl.substring(1);
+              }
+              if (externalLinkUrl.endsWith("\"")) {
+                externalLinkUrl = externalLinkUrl.substring(0, externalLinkUrl.length()-1);
+              }
             }
             // Now add the external link to the feed
             entry = FeedHelper.getExternalLinkEntry(customCatalogTitle, Localization.Main.getText("content.externalLink"), opdsLink,

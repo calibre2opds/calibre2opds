@@ -187,16 +187,13 @@ public enum CachedFileManager {
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
     try {
-      // Experience has shown that saving the cache to a network drie is slow.
-      // We therfore save to the local temp folder and moe the rsult instead as being faster.
-      File temp = File.createTempFile("calibre2opds", "");
       try {
-        logger.debug("STARTED Saving CRC cache to file " + temp.getPath());
-        fs = new FileOutputStream(temp);       // Open File
+        logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
+        fs = new FileOutputStream(cacheFile);         // Open File
         assert fs != null: "saveCache: fs should never be null at this point";
-        bs = new BufferedOutputStream(fs);          // Add buffering
+        bs = new BufferedOutputStream(fs,512 * 1024); // Add buffering
         assert bs != null: "saveCache: bs should never be null at this point";
-        os = new ObjectOutputStream(bs);            // Add object handling
+        os = new ObjectOutputStream(bs);              // Add object handling
         assert os != null: "saveCache: os should never be null at this point";
 
         // Write out the cache entries
@@ -247,11 +244,8 @@ public enum CachedFileManager {
         try {
           if (os != null) os.close();
           if (bs != null) bs.close();
-          if (fs != null) {
-            fs.close();
-            Helper.copy(temp, cacheFile);
-            temp.delete();
-          }
+          if (fs != null) fs.close();
+
         } catch (IOException e) {
           // Do nothing - we ignore an error at this point
           // Having said that, an error here is a bit unexpected so lets log it when testing
@@ -288,15 +282,18 @@ public enum CachedFileManager {
       return;
     }
     // Open Cache file
-    ObjectInputStream os;
-    FileInputStream fs;
-    BufferedInputStream bs;
+    ObjectInputStream os = null;
+    FileInputStream fs = null;
+    BufferedInputStream bs = null;
     long loadedCount = 0;
     try {
       logger.info("STARTED Loading CRC cache from file " + cacheFile.getPath());
-      fs = new FileInputStream(cacheFile);   // Open file
-      bs = new BufferedInputStream(fs);      // Add buffering
-      os = new ObjectInputStream(bs);        // And now object handling
+      fs = new FileInputStream(cacheFile);          // Open file
+      assert fs != null: "loadCache: fs should never be null at this point";
+      bs = new BufferedInputStream(fs, 512 * 1024); // Add buffering
+      assert bs != null: "loadCache: bs should never be null at this point";
+      os = new ObjectInputStream(bs);               // And now object handling
+      assert os != null: "loadCache: os should never be null at this point";
     } catch (IOException e) {
       logger.warn("Aborting loadCache() as cache file failed to open");
       // Abort any cache loading

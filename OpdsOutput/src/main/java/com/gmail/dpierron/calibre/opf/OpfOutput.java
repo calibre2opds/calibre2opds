@@ -218,7 +218,7 @@ public class OpfOutput {
         // Map<String, ZipEntry> cssFilesBackupMap = new HashMap<String, ZipEntry>();
         zipInputFile = new ZipFile(inputFile);
         outputFile.getParentFile().mkdirs();
-        zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+        zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile), 512 *1024));
         Enumeration entries = zipInputFile.entries();
         while (entries.hasMoreElements()) {
           Object o = entries.nextElement();
@@ -288,7 +288,7 @@ public class OpfOutput {
                           newEntry.setMethod(ZipEntry.DEFLATED);
                           zos.putNextEntry(newEntry);
                           byte[] data = new byte[1024];
-                          in2 = new BufferedInputStream(new FileInputStream(getDefaultCss()), 1024);
+                          in2 = new BufferedInputStream(new FileInputStream(getDefaultCss()), 512 * 1024);
                           int count;
                           while ((count = in2.read(data, 0, data.length)) != -1) {
                             zos.write(data, 0, count);
@@ -319,7 +319,7 @@ public class OpfOutput {
                     }
                     zos.putNextEntry(newEntry);
                     byte[] data = new byte[1024];
-                    in = new BufferedInputStream(inputStream, 1024);
+                    in = new BufferedInputStream(inputStream, 512 * 1024);
                     int count;
                     while ((count = in.read(data, 0, data.length)) != -1) {
                       zos.write(data, 0, count);
