@@ -50,7 +50,19 @@ public class FeedHelper {
   /**
    * The following page in a paginated Acquisition Feed
    */
-  private final static String RELATION_NEXT = "next";
+  public final static String RELATION_NEXT = "next";
+  /**
+   * The previous page in a paginated Acquisition Feed
+   */
+  public final static String RELATION_PREV = "prev";
+  /**
+   * The first page in a paginated Acquisition Feed
+   */
+  public final static String RELATION_FIRST = "first";
+  /**
+   * The last page in a paginated Acquisition Feed
+   */
+  public final static String RELATION_LAST = "last";
 
   /**
    * Atom relation for an alternate link - only used for full entry links (see LINKTYPE_FULLENTRY)
@@ -196,8 +208,10 @@ public class FeedHelper {
 
   /* ---------- LINKS -----------*/
 
-  public static Element getNextLink(String filename, String title) {
-    return getLinkElement(filename, LINKTYPE_NAVIGATION, RELATION_NEXT, title);
+  public static Element getNavigationLink(String url, String navType, String title)  { return getLinkElement(url, LINKTYPE_NAVIGATION, navType, title); }
+
+  public static Element getNextLink(String url, String title) {
+    return getLinkElement(url, LINKTYPE_NAVIGATION, RELATION_NEXT, title);
   }
 
   public static Element getFullEntryLink(String url) {
@@ -426,7 +440,9 @@ public class FeedHelper {
    */
   public static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
     Element link = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_LINK);
-    if (urlType != null && urlRelation != null && urlType.equals(LINKTYPE_NAVIGATION) && urlRelation.equals(RELATION_NEXT)) {
+    if (urlType != null && urlRelation != null
+    && urlType.equals(LINKTYPE_NAVIGATION)
+    && (urlRelation.equals(RELATION_NEXT) || urlRelation.equals(RELATION_PREV) || urlRelation.equals(RELATION_FIRST) || urlRelation.equals(RELATION_LAST))) {
       // Next URL's mean we are already in a folder, so ensure we go up a level as part of the URL (c2o-104)
       if (! url.startsWith("../"))
           url = "../" + url;

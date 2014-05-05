@@ -81,21 +81,12 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     }
 
     feed.addContent(result);
-    createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
 
     Element entry;
     String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename, inSubDir);
-    if (from > 0) {
-      String titleNext;
-      if (pageNumber != maxPages) {titleNext = Localization.Main.getText("title.nextpage", pageNumber, maxPages);} else {
-        titleNext = Localization.Main.getText("title.lastpage");
-      }
-
-      entry = FeedHelper.getNextLink(urlExt, titleNext);
-    } else {
-      if (title.equals("Science Fiction")) {
-        int x = 1;
-      }
+    entry = createPaginateLinks(feed, urlExt, pageNumber, maxPages);
+    createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
+    if (from == 0) {
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);

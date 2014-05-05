@@ -258,7 +258,7 @@
             </xsl:choose>
           </xsl:for-each>
         </div>
-        <xsl:if test="opds:link[@rel='next']">
+        <xsl:if test="opds:link[@rel='next'] or opds:link[@rel='prev']">
           <tr>
             <td width="{$thumbWidth}"/>
             <td width="10px"/>
@@ -274,11 +274,34 @@
             -->
             <td>
               <div class="buttonwrapper">
-                <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')}">
-                  <span>
-                    <xsl:value-of select="opds:link[@rel='next']/@title"/>
-                  </span>
-                </a>
+                <xsl:if test="opds:link[@rel='first']">
+                  <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='first']/@href, '.xml'), '.html')}">
+                    <span>
+                      <xsl:value-of select="opds:link[@rel='first']/@title"/>
+                    </span>
+                  </a>
+                </xsl:if>
+                <xsl:if test="opds:link[@rel='prev']">
+                  <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='prev']/@href, '.xml'), '.html')}">
+                    <span>
+                      <xsl:value-of select="opds:link[@rel='prev']/@title"/>
+                    </span>
+                  </a>
+                </xsl:if>
+                <xsl:if test="opds:link[@rel='next']">
+                  <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='next']/@href, '.xml'), '.html')}">
+                    <span>
+                      <xsl:value-of select="opds:link[@rel='next']/@title"/>
+                    </span>
+                  </a>
+                </xsl:if>
+                <xsl:if test="opds:link[@rel='last']">
+                  <a class="ovalbutton" href="{concat(substring-before(opds:link[@rel='last']/@href, '.xml'), '.html')}">
+                    <span>
+                      <xsl:value-of select="opds:link[@rel='last']/@title"/>
+                    </span>
+                  </a>
+                </xsl:if>
               </div>
             </td>
           </tr>
