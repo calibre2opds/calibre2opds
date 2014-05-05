@@ -6,8 +6,6 @@ package com.gmail.dpierron.calibre.configuration;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.io.File;
 import java.util.List;
