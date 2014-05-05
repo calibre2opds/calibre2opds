@@ -68,6 +68,10 @@ public class Catalog {
   private File libraryFolder = null;      // Folder holding the Calibre library
   private String catalogFolderName = null;//Name of the catalog folder (not including path)
 
+  private static int msgCount = 0;
+  private final int MSGCOUNT_INTERVAL = 100;    // Interval between forcing sync update
+
+
   /**
    * Constructor setting callback interface for GUI
    *
@@ -157,7 +161,7 @@ public class Catalog {
       } else {
         BufferedInputStream in = null;
         byte[] data = new byte[1024];
-        in = new BufferedInputStream(new FileInputStream(f), 1000);
+        in = new BufferedInputStream(new FileInputStream(f), 512 * 1024);
         zipOutputStream.putNextEntry(new ZipEntry(fileRelativePath));
         int count;
         while ((count = in.read(data, 0, data.length)) != -1) {
@@ -180,7 +184,6 @@ public class Catalog {
    * @throws IOException
    */
   private void syncFiles(CachedFile src, CachedFile dst) throws IOException {
-
 
     if (logger.isTraceEnabled())
       logger.trace("syncFiles (" + src + "," + dst + ")");
@@ -248,6 +251,7 @@ public class Catalog {
          displayText = displayText.substring(generateFolder.getName().length()+1);
       }
       callback.showMessage(displayText);
+      msgCount = 0;
 
       // Create any missing target directories
       if (!dst.exists()) {
@@ -431,6 +435,12 @@ public class Catalog {
           }
         }
       }
+      // Periiodically update progress even if nothing being copied
+      msgCount++;
+      if (copyflag || msgCount > MSGCOUNT_INTERVAL) {
+        callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
+        msgCount = 0;
+      }
       // Copy the file if we have decided that we need to do so
       if (copyflag) {
         // TODO:  It might be faster and more efficient to use a rename/move if it can
@@ -438,7 +448,12 @@ public class Catalog {
         //        (which will be the case if generating files locally)
         //        N.B.  This also assumes the file is not needed again!
 
-        callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
+        if (msgCount != 0) {
+          callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
+          msgCount = 0;
+        }
+        msgCount++;
+
         if (syncFilesDetail && logger.isDebugEnabled())
           logger.debug("Copying file " + src.getName() + " to " + dst.getAbsolutePath());
         try {
