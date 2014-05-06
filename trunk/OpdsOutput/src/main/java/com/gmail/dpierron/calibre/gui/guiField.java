@@ -76,7 +76,7 @@ public class guiField {
     if (labelText.equals(localizationKey))  labelText = "";
     String tooltipText = Localization.Main.getText(localizationKey + ".tooltip");
     // Allow for tooltips not lways being supplied
-    if (labelText.endsWith(".tooltip"))  tooltipText = "";
+    if (tooltipText.endsWith(".tooltip"))  tooltipText = "";
 
     // Apply localisation to the designated 'label' field
     if (guiLabel != null) {

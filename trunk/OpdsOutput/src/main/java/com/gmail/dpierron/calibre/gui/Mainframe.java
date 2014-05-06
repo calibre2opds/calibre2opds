@@ -278,6 +278,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(mnuHelpOpenLocalize, null, "gui.menu.help.localize"),
       new guiField(mnuHelpOpenCustomize, null, "gui.menu.help.customize"),
       new guiField(mnuToolsResetSecurityCache, null, "gui.menu.tools.resetEncrypted"),
+      new guiField(mnuToolsConfigLog,null,"gui.menu.tools.logConfig"),
       new guiField(mnuToolsOpenLog,null,  "gui.menu.tools.logFile"),
       new guiField(mnuToolsClearLog, null, "gui.menu.tools.logClear"),
       new guiField(mnuToolsOpenConfig, null, "gui.menu.tools.configFolder"),
@@ -599,6 +600,15 @@ public class Mainframe extends javax.swing.JFrame {
     fd.setVisible(true);
     // Do nothing with result
     parent.dispose();
+  }
+
+  /**
+   * Start up the dialog for configuring the log settings
+   */
+  private void configLogFile() {
+    ConfigureLoggingDialog dialog = new ConfigureLoggingDialog(Mainframe.this, true);
+    dialog.setLocationRelativeTo(Mainframe.this);
+    dialog.setVisible(true);
   }
 
   private void debugShowLogFile() {
@@ -1397,6 +1407,7 @@ public class Mainframe extends javax.swing.JFrame {
         mnuTools = new javax.swing.JMenu();
         mnuToolsprocessEpubMetadataOfAllBooks = new javax.swing.JMenuItem();
         mnuToolsResetSecurityCache = new javax.swing.JMenuItem();
+        mnuToolsConfigLog = new javax.swing.JMenuItem();
         mnuToolsOpenLog = new javax.swing.JMenuItem();
         mnuToolsClearLog = new javax.swing.JMenuItem();
         mnuToolsOpenConfig = new javax.swing.JMenuItem();
@@ -4230,6 +4241,19 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsResetSecurityCache);
 
+        mnuToolsConfigLog.setText("mnuToolsConfigLog");
+        mnuToolsConfigLog.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mnuToolsConfigLogMouseClicked(evt);
+            }
+        });
+        mnuToolsConfigLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsConfigLogActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsConfigLog);
+
         mnuToolsOpenLog.setText("mnuToolsOpenLog");
         mnuToolsOpenLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4454,11 +4478,15 @@ public class Mainframe extends javax.swing.JFrame {
     debugClearLogFile();
   }//GEN-LAST:event_mnuToolsClearLogActionPerformed
 
-  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
-   debugShowLogFile();
+  private void mnuToolsConfigLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsConfigLogActionPerformed
+   configLogFile();
+  }//GEN-LAST:event_mnuToolsConfigLogActionPerformed
+
+  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsConfigLogActionPerformed
+    debugShowLogFile();
   }//GEN-LAST:event_mnuToolsOpenLogActionPerformed
 
-  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenConfigActionPerformed
+  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
   debugShowSupportFolder();
   }//GEN-LAST:event_mnuToolsOpenConfigActionPerformed
 
@@ -4584,6 +4612,10 @@ public class Mainframe extends javax.swing.JFrame {
     private void lblLibrarythingTitleUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblLibrarythingTitleUrlActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_lblLibrarythingTitleUrlActionPerformed
+
+    private void mnuToolsConfigLogMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuToolsConfigLogMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuToolsConfigLogMouseClicked
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4863,6 +4895,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenu mnuProfiles;
     private javax.swing.JMenu mnuTools;
     private javax.swing.JMenuItem mnuToolsClearLog;
+    private javax.swing.JMenuItem mnuToolsConfigLog;
     private javax.swing.JMenuItem mnuToolsOpenConfig;
     private javax.swing.JMenuItem mnuToolsOpenLog;
     private javax.swing.JMenuItem mnuToolsResetSecurityCache;
