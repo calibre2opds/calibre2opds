@@ -92,6 +92,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
     cmdNew.setText(Localization.Main.getText("gui.profile.new"));
     cmdRename.setText(Localization.Main.getText("gui.profile.rename"));
     cmdDelete.setText((Localization.Main.getText("gui.profile.delete")));
+    cmdClose.setText((Localization.Main.getText("gui.profile.close")));
   }
   /**
    * This method is called from within the constructor to
@@ -111,6 +112,8 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
         cmdNew = new javax.swing.JButton();
         cmdRename = new javax.swing.JButton();
         cmdDelete = new javax.swing.JButton();
+        pnlButtons1 = new javax.swing.JPanel();
+        cmdClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(Localization.Main.getText("gui.menu.profiles.manage")); // NOI18N
@@ -147,11 +150,24 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
             }
         });
         pnlButtons.add(cmdDelete);
-        cmdDelete.getAccessibleContext().setAccessibleName("null");
+        cmdDelete.getAccessibleContext().setAccessibleName(null);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(pnlButtons, gridBagConstraints);
+
+        cmdClose.setText("cmdClose");
+        cmdClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdCloseActionPerformed(evt);
+            }
+        });
+        pnlButtons1.add(cmdClose);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(pnlButtons1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -184,6 +200,10 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
     loadProfiles();
   }//GEN-LAST:event_cmdNewActionPerformed
 
+    private void cmdCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCloseActionPerformed
+      // TODO add your handling code here:
+    }//GEN-LAST:event_cmdCloseActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -202,11 +222,13 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdClose;
     private javax.swing.JButton cmdDelete;
     private javax.swing.JButton cmdNew;
     private javax.swing.JButton cmdRename;
     private javax.swing.JList lstProfiles;
     private javax.swing.JPanel pnlButtons;
+    private javax.swing.JPanel pnlButtons1;
     private javax.swing.JScrollPane scrProfiles;
     // End of variables declaration//GEN-END:variables
 
