@@ -27,8 +27,9 @@ public class EBookFormat implements Comparable<EBookFormat> {
   private final static EBookFormat CHM = new EBookFormat("CHM", "application/x-chm");
   private final static EBookFormat AZW3 = new EBookFormat("AZW3", "application/octet-stream");
   private final static EBookFormat KF8 = new EBookFormat("KF8", "application/octet-stream");
+  private final static EBookFormat DJVU = new EBookFormat("DJVU", "image/vnd.djvu");
 
-  private final static EBookFormat[] values = {EPUB, TXT, ZIP, HTMLZ, PRC, PDB, AZW, MOBI, LRF, LRX, FB2, RAR, PDF, RTF, LIT, DOC, DOCX, CBR, CBZ, CHM, AZW3, KF8, };
+  private final static EBookFormat[] values = {EPUB, TXT, ZIP, HTMLZ, PRC, PDB, AZW, MOBI, LRF, LRX, FB2, RAR, PDF, RTF, LIT, DOC, DOCX, CBR, CBZ, CHM, AZW3, KF8, DJVU };
 
   private String mime;
   private final String name;
