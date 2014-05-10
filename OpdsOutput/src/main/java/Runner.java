@@ -1,3 +1,4 @@
+import com.gmail.dpierron.calibre.configuration.Configuration;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.test.TestDataModel;
 import com.gmail.dpierron.calibre.gui.Mainframe;
@@ -58,6 +59,7 @@ public class Runner {
     Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
     Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
 
+    ConfigurationManager.setGuiMode(startGui);
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
     ConfigurationManager.addStartupLogMessage("");
@@ -187,13 +189,11 @@ public class Runner {
 
     // Configure and watch
     PropertyConfigurator.configureAndWatch(log4jConfig.getAbsolutePath(), 3000);
-    List<String> startupLogMessages = ConfigurationManager.INSTANCE.getStartupLogMessages();
-    if (startupLogMessages != null) {
-      for ( String s : startupLogMessages) {
+    if (ConfigurationManager.INSTANCE.getStartupLogMessages() != null) {
+      for ( String s : ConfigurationManager.INSTANCE.getStartupLogMessages()) {
         logger.info(s);
       }
-      startupLogMessages.clear();
-      startupLogMessages = null;
+      ConfigurationManager.INSTANCE.clearStartupLogMessages();
     }
   }
 }
