@@ -96,7 +96,7 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 Rev 385
+v3.4 Rev 390
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
     - Fix:    #c2o-205: Destination folder uses Default value instead of the per-profile one
@@ -109,6 +109,8 @@ v3.4 Rev 385
     - Fix:    #c2o-214: Cross links for author do not work if Authors catalog not generated
     - New:    #c2o-215: Provide more control over which cross-reference types should be generated
     - Fix:    #c2o-216: Cannot change value for Maximum entries in recent catalog
+    - fix:    #c2o-217: Wrong default location for creating new Configuration folders
+    - New:    #c2o-218: Add support for DJVU downloads
 
 v3.3 (1st April 2014) Rev 374
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,
