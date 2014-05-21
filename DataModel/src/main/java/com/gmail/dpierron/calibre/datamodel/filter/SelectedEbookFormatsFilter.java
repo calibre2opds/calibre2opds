@@ -15,7 +15,7 @@ public class SelectedEbookFormatsFilter implements BookFilter {
   public SelectedEbookFormatsFilter(String includedFormatsList, boolean includeBooksWithNoFile) {
     includedFormats = new LinkedList<EBookFormat>();
     if (Helper.isNullOrEmpty(includedFormatsList) || "ALL".equalsIgnoreCase(includedFormatsList))
-      includedFormats = Arrays.asList(EBookFormat.values());
+      includedFormats = EBookFormat.getSupportedFormats();
     else {
       List<String> list = Helper.tokenize(includedFormatsList, ",", true);
       int priority = list.size();

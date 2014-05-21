@@ -1,13 +1,12 @@
 package com.gmail.dpierron.calibre.configuration;
 
-import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
+import com.gmail.dpierron.calibre.datamodel.EBookFormat;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.JDOM;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.junit.runner.Runner;
 
 import javax.swing.*;
 import java.io.*;
@@ -33,6 +32,8 @@ public enum ConfigurationManager {
   private static PropertiesBasedConfiguration defaultConfiguration;
   private static Locale configLocale = null;
   private static boolean guiMode = false;
+  // Listof formats that are used in the current profile
+  private static List<EBookFormat> profileFormats = null;
 
   PropertiesBasedConfiguration getDefaultConfiguration() {
     if (defaultConfiguration == null) {
@@ -340,21 +341,6 @@ public enum ConfigurationManager {
     }
     return ins;
   }
-  
-  // ITIMPI:  Method does not appear to be used anywhere!
-/*
-  public File getConfigurationFile() {
-    File configurationFolder = getConfigurationDirectory();
-
-    if (configurationFolder != null && configurationFolder.exists()) {
-      // found the user home, let's check for the configuration file
-      String filename = PROFILE_FILENAME;
-      return new File(configurationFolder, filename);
-    } else
-      return null;
-
-  }
-*/
 
   public boolean isHacksEnabled() {
     return Helper.isNotNullOrEmpty(System.getenv("CALIBRE2OPDS_HACKSENABLED"));
@@ -428,7 +414,60 @@ public enum ConfigurationManager {
     return configLocale;
   }
 
+  /**
+   * set the whether we are running in GUI mode or not.
+   *
+   * This setting is used under certain dtartup error conditions to
+   * determine whether we pp up an error dialog or simply log the error
+   * @param b
+   */
   public static void setGuiMode(boolean b) {
     guiMode = b;
+  }
+
+  /**
+   * get the list of supported ebook formats.
+   *
+   * We use the funcyion that can read from a iser
+   * configuration file (if present), and if that
+   * is not present the default resource file
+   *
+   * @return
+   */
+  public void initialiseListOfSupportedEbookFormats () {
+
+    if (EBookFormat.getSupportedFormats() != null) {
+      return;
+    }
+    List<EBookFormat> supportedFormats = new LinkedList<EBookFormat>();
+    InputStream is = getResourceAsStream(Constants.MIMETYPES_FILENAME);
+    assert is != null;
+    Scanner scanner = new Scanner(is);
+    String line;
+    try {
+      while (scanner.hasNextLine()) {
+        line = scanner.nextLine();
+        // Ignore blank lines and those starting with #
+        if (line.length() == 0 || line.charAt(0) == '#') {
+          continue;
+        }
+        // Split any line into format identifier and mime type
+        Scanner lineScanner = new Scanner (line);
+        String formatType = null;
+        if (lineScanner.hasNext()) formatType = lineScanner.next();
+        String mimeType = null;
+        if (lineScanner.hasNext()) mimeType = lineScanner.next();
+        if (Helper.isNullOrEmpty(formatType) || Helper.isNullOrEmpty(mimeType)) {
+          logger.error("Invalid line in Mimetypes file '" + line + "'");
+          continue;
+        }
+        supportedFormats.add(new EBookFormat(formatType,mimeType));
+      }
+      scanner.close();
+      is.close();
+    } catch (Exception e) {
+      // Error reading the file
+    }
+    EBookFormat.setSupportedFormats(supportedFormats);
   }
 }

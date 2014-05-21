@@ -210,7 +210,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void endCreateAuthors(long milliseconds) {
-    endStage(milliseconds, lblAuthors, lblAuthorsTime,chkAllbooks);
+    endStage(milliseconds, lblAuthors, lblAuthorsTime,chkAuthors);
   }
 
   public void disableCreateAuthors() {

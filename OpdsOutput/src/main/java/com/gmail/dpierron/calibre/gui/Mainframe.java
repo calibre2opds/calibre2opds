@@ -11,6 +11,7 @@ package com.gmail.dpierron.calibre.gui;
 
 import com.gmail.dpierron.calibre.configuration.*;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
+import com.gmail.dpierron.calibre.datamodel.EBookFormat;
 import com.gmail.dpierron.calibre.gui.table.ButtonColumn;
 import com.gmail.dpierron.calibre.gui.table.CustomCatalogTableModel;
 import com.gmail.dpierron.calibre.opds.Catalog;
@@ -323,7 +324,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
-   * Check a field that is meant to contain a serach term
+   * Check a field that is meant to contain a search term
    *
    * @param title
    * @param searchText
@@ -403,7 +404,9 @@ public class Mainframe extends javax.swing.JFrame {
     new ReprocessEpubMetadataDialog(this, true, removeCss, restoreCss, defaultCss, onlyForTag).start();
   }
 
-
+  /**
+   *
+   */
   private void computeBrowseByCoverWithoutSplitVisibility() {
     boolean visible = chkBrowseByCover.isSelected();
     chkBrowseByCoverWithoutSplit.setVisible(visible);
@@ -521,6 +524,10 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm.setVisible(generateIndex);
   }
 
+  /**
+   * Enable/disables GUI fiels that are mode specific
+   * @param mode
+   */
   private void adaptInterfaceToDeviceSpecificMode(DeviceMode mode) {
     Border RED_BORDER = new LineBorder(Color.red,2);
     switch (mode) {
@@ -563,9 +570,18 @@ public class Mainframe extends javax.swing.JFrame {
     mnuFileSave.setEnabled(true);
   }
 
+  /**
+   *
+   * @param mode
+   */
   private void setDeviceSpecificMode(DeviceMode mode) {
-    currentProfile.setDeviceMode(mode);
-    adaptInterfaceToDeviceSpecificMode(mode);
+    DeviceMode currentMode = currentProfile.getDeviceMode();
+    // If switching modes, then some values may need their values forced to be mode specific
+    if (currentMode != mode) {
+      currentProfile.setDeviceMode(mode);
+      adaptInterfaceToDeviceSpecificMode(mode);
+      DeviceMode.fromName(currentProfile.getDeviceMode().toString()).setModeSpecificOptions(currentProfile);
+    }
     loadValues();
   }
 
@@ -732,6 +748,7 @@ public class Mainframe extends javax.swing.JFrame {
           JOptionPane.showMessageDialog(Mainframe.this, s, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
         }
       };
+      new Thread(runnable).start();
       new Thread(runnable).start();
     }
   }
@@ -917,8 +934,6 @@ public class Mainframe extends javax.swing.JFrame {
     cboIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
     lblIndexFilterAlgorithm.setEnabled(!currentProfile.isIndexFilterAlgorithmReadOnly());
 
-    DeviceMode.fromName(currentProfile.getDeviceMode().toString()).setModeSpecificOptions(currentProfile);
-
     // Invoke standard field processing
 
     for (guiField g : guiFields) g.loadValue();
@@ -988,6 +1003,10 @@ public class Mainframe extends javax.swing.JFrame {
     changeLanguage();
   }
 
+  /**
+   *
+   * @return
+   */
   private String getFolderNameToStore()  {
     assert false: "Not yet ready for use";
     return "";
@@ -1019,8 +1038,8 @@ public class Mainframe extends javax.swing.JFrame {
 
     lblDeviceDropbox.setToolTipText(
         Localization.Main.getText("config.DeviceMode.dropbox.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.tooltip2"));
-    lblDeviceNAS.setToolTipText(
-        Localization.Main.getText("config.DeviceMode.nas.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nas.tooltip2"));
+    lblDeviceNAS.setToolTipText(Localization.Main.getText("config.DeviceMode.nas.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nas" +
+        ".tooltip2"));
     lblDeviceNook.setToolTipText(
         Localization.Main.getText("config.DeviceMode.nook.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nook.tooltip2"));
 
@@ -1081,6 +1100,9 @@ public class Mainframe extends javax.swing.JFrame {
      return false;
    }
 
+  /**
+   *
+   */
    private void showSetTargetFolderDialog() {
      JDirectoryChooser chooser = new JDirectoryChooser();
      chooser.setShowingCreateDirectory(true);
@@ -1118,24 +1140,41 @@ public class Mainframe extends javax.swing.JFrame {
      return true;
    }
 
+  /**
+   *
+   */
    private void openLogFolder() {
      // Do nothing yet
    }
 
+  /**
+   *
+   */
    private void saveConfiguration() {
      storeValues();
      String message = Localization.Main.getText("gui.info.saved");
      JOptionPane.showMessageDialog(this, message, "", JOptionPane.OK_OPTION);
    }
 
+
+  /**
+   *
+   */
    private void exitProgram() {
      System.exit(0);
    }
 
+  /**
+   *
+   * @return
+   */
    private TableModel getTblCustomCatalogsModel() {
      return customCatalogTableModel;
    }
 
+  /**
+   * Add a new entry to the custom Catalog table
+   */
    private void addCustomCatalog() {
      assert customCatalogTableModel.equals(tblCustomCatalogs.getModel());
      customCatalogTableModel.addCustomCatalog();

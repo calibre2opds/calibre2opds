@@ -1,18 +1,40 @@
-EPUB, application/epub+zip
-TXT, text/plain
-ZIP, application/zip
-PRC, text/prc+xml
-PDB, application/pdb
-MOBI,application/x-mobipocket-ebook
-LRF, application/x-sony-bbeb
-LRX, application/x-bbeb-book
-FB2, text/fb2
-RAR, application/rar
-PDF, application/pdf
-RTF, text/rtf
-LIT, application/x-ms-reader
-DOC, application/msword
-CBR, application/x-cbr
-CBZ, application/x-cbz
-CHM, application/x-chm
-AZW, application/octet-stream
+# This file defines the list of formats that Calibre2opds supports,
+# and the associated mime types for downloading purposes.
+#
+# The first value defines the format (recognised by its file extension)
+# The second value defines the mime type that will be set for download links.
+#
+# blank lines and lines starting with # are treated as comments and skipped over.
+# You can also include comments on the same line a an entry after the format and
+# mime type and they will also be ignored.
+#
+# The user can add additional formats and mime types by adding additional entries to this file.
+# A copy of the currnt default file built into calibre2opds is placed at the root of the
+# generated catalog.  Any customised version of this file should be placed into one of the
+# loctions defined in the customization section of the online documentation at:
+# http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize#Where_should_customized_files_be_located
+
+EPUB  application/epub+zip
+TXT   text/plain
+ZIP   application/zip
+HTMLZ application/zip
+PRC   application/x-mobipocket
+PDB   application/pdb
+AZW   application/octet-stream
+MOBI  application/x-mobipocket-ebook
+LRF   application/x-sony-bbeb
+LRX   application/x-bbeb-book
+FB2   text/fb2
+RAR   application/rar
+PDF   application/pdf
+RTF   text/rtf
+LIT   application/x-ms-reader
+DOC   application/msword
+DOCX  application/msword
+CBR   application/x-cbr
+CBZ   application/x-cbz
+CHM   application/x-chm
+AZW3  application/octet-stream
+KF8   application/octet-stream
+DJVU  image/vnd.djvu"
+
