@@ -95,7 +95,7 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 Rev 390
+v3.4 Rev 392
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
     - New:    #c2o-93:  Make supported formats and Mime type extendable by users
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
