@@ -42,10 +42,10 @@ Java changes to support GUI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - The following changes need to be made in the .java file corresponding to the .form file
   This will typically be Mainframe.java
-  - translateTexts()        Entries need to be added to apply localization
-  - popupExplanation()      Entries need to be added to display any tooltip on clicking on the label.
-  - loadValues()            Entries need to be added to load any fields
-  - storeValues()           Entries need to be added to save any fields
+  There is a table at the strt of mainframe.java of type GuiField that defines entries for each
+  GUI field to handle:
+  - Localisation of labels andtooltips
+  - Method names to be used for loading/storing configuration items
 
 Note that it may often be easier to do the work to get a new option added to the
 configuration options before doing the GUI related Java work
@@ -54,10 +54,13 @@ Java changes to support new configuration option
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 It is likely that the reason the GUI is being edited is to support a new configuration option.
 The following specifies the steps needed to get the option added
-- StanzaConstants.java        Add entry for field and give its default value
+- DefaultConfigurationSettins.java
+                              Add entry for field and give its default value
 - ConfigurationHolder.java:   Add an entry for the constant name in the configuration properties file
                               Add appropriate get/set routines
-- ReadOnlyStanzaConfigurationInterface.java
-                              If field to be logged, add get routine to those defined for this interface
-- StanzaDefaultConfiguration.java
+- GetConfigurationInterface.java
+                              Add get routine to those defined for this interface
+- SetConfigurationInterface.java
+                              Add set routine to those defined for this interface
+- DefaultConfigurationSettings.java
                               Add get method to return default value for property
