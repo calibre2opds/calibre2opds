@@ -118,6 +118,7 @@ public class Constants {
   // List of curstom column types that are known to not be supported (theren may be others we do jot know about)
   public final static Collection<String> CUSTOM_COLUMN_TYPES_UNSUPPORTED = Arrays.asList("series");
 
+  public final static String MIMETYPES_FILENAME = "mimetypes.txt";
   // List of file resources that are embedded in binary, and need copying to final catalog as files
   public final static String[] FILE_RESOURCES = {
       ".skip",                // Special dummy file for Nook catalogs
@@ -133,6 +134,7 @@ public class Constants {
       "bc_bg.png",
       "bc_separator.png",
       "home.png",
+      MIMETYPES_FILENAME,
       DEFAULT_IMAGE_FILENAME,
       // External image files for catalog sections
       Icons.ICONFILE_RECENT,

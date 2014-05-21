@@ -21,15 +21,13 @@ public enum DeviceMode {
           "TargetFolder", "", true,
           "CopyToDatabaseFolder", true, true,
           "OnlyCatalogAtTarget", false, true,
-          "ZipTrookCatalog", false, true,
-          "ReprocessEpubMetadata", false, false),
+          "ZipTrookCatalog", false, true),
 
   Nas("CatalogFolderName", "_catalog", false,
       "TargetFolder", ".", false,
       "CopyToDatabaseFolder", false, false,
       "OnlyCatalogAtTarget", false, false,
-      "ZipTrookCatalog", false, true,
-      "ReprocessEpubMetadata", false, false),
+      "ZipTrookCatalog", false, true),
 
   Nook( "CatalogFolderName", "Calibre", false,
         "IncludedFormatsList", "EPUB,PDB,PDF", false,
@@ -44,8 +42,8 @@ public enum DeviceMode {
         "CopyToDatabaseFolder", false, false,
         "OnlyCatalogAtTarget", false, true,
         "IncludeAboutLink", false, false,
-        "ZipTrookCatalog", false, false,
-        "ReprocessEpubMetadata", false, false);
+        "ZipTrookCatalog", false, false
+  );
 
   Object[] options;
 
@@ -67,12 +65,20 @@ public enum DeviceMode {
     return Default;
   }
 
+  /**
+   * This is used to set options that need to be forced for mode specific settings
+   * @param configuration
+   */
   public void setModeSpecificOptions(PropertiesBasedConfiguration configuration) {
     for (int i = 0; i < options.length; i += 3) {
       String optionName = (String) options[i];
       Object optionValue = options[i + 1];
-      configuration.setProperty(optionName, optionValue);
       Boolean readOnly = (Boolean) options[i + 2];
+      // Decide if we need to force a value
+      if ((readOnly == true)
+      || (readOnly == false && configuration.isPropertyReadOnly(optionName) == true) ){
+        configuration.setProperty(optionName, optionValue);
+      }
       configuration.setPropertyReadOnly(optionName, readOnly);
     }
   }

@@ -3,9 +3,14 @@ package com.gmail.dpierron.calibre.datamodel;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 public class EBookFormat implements Comparable<EBookFormat> {
   public final static EBookFormat EPUB = new EBookFormat("EPUB", "application/epub+zip");
+  /*
   private final static EBookFormat TXT = new EBookFormat("TXT", "text/plain");
   private final static EBookFormat ZIP = new EBookFormat("ZIP", "application/zip");
   private final static EBookFormat HTMLZ = new EBookFormat("HTMLZ", "application/zip");
@@ -30,29 +35,19 @@ public class EBookFormat implements Comparable<EBookFormat> {
   private final static EBookFormat DJVU = new EBookFormat("DJVU", "image/vnd.djvu");
 
   private final static EBookFormat[] values = {EPUB, TXT, ZIP, HTMLZ, PRC, PDB, AZW, MOBI, LRF, LRX, FB2, RAR, PDF, RTF, LIT, DOC, DOCX, CBR, CBZ, CHM, AZW3, KF8, DJVU };
+  */
 
+  // List of formats that are recognised by Calibre2opds as valid formats
+  // Initialised from the mimetypes file/resource
+  private static List<EBookFormat> supportedFormats;
   private String mime;
   private final String name;
 
-  private EBookFormat(String name, String mime) {
-    this(name);
-    this.mime = mime;
-    setupFormats();
-  }
-
-  private EBookFormat(String name) {
+  public EBookFormat(String name, String mime) {
     this.name = name;
-    setupFormats();
+    this.mime = mime;
   }
 
-  /**
-   * Initialise format list and associated mime types from resource
-   */
-  private void setupFormats() {
-    if (values== null) {
-      FileInputStream is;
-    }
-  }
   private int priority = -1;
 
   public int getPriority() {
@@ -65,18 +60,6 @@ public class EBookFormat implements Comparable<EBookFormat> {
 
   public String getMime() {
     return mime;
-  }
-
-  public static EBookFormat[] values() {
-    return values;
-  }
-
-  public static EBookFormat fromFormat(String sFormat) {
-    for (EBookFormat format : values()) {
-      if (format.name.equalsIgnoreCase(sFormat))
-        return format;
-    }
-    return null;
   }
 
   public int compareTo(EBookFormat o) {
@@ -96,5 +79,28 @@ public class EBookFormat implements Comparable<EBookFormat> {
 
   public String getName() {
     return name;
+  }
+
+
+  public static EBookFormat fromFormat(String sFormat) {
+    for (EBookFormat format : supportedFormats) {
+      if (format.getName().equalsIgnoreCase(sFormat))
+        return format;
+    }
+    return null;
+  }
+
+  public static List<EBookFormat> getSupportedFormats () {
+    return supportedFormats;
+  }
+
+  /**
+   * Set the list of supported formats.
+   * This list should be initialied by the ConfigurationManager
+   *
+   * @param formatList
+   */
+  public static void setSupportedFormats(List<EBookFormat> formatList) {
+    supportedFormats = formatList;
   }
 }

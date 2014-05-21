@@ -195,5 +195,6 @@ public class Runner {
       }
       ConfigurationManager.INSTANCE.clearStartupLogMessages();
     }
+    ConfigurationManager.INSTANCE.initialiseListOfSupportedEbookFormats();
   }
 }
