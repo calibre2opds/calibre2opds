@@ -99,7 +99,7 @@
           </xsl:if>
         </div>
 
-
+        <!-- Menu bar -->
         <div class="desktop">
           <ul id="breadcrumb">
             <xsl:for-each select="opds:link[@rel='breadcrumb']">
@@ -107,14 +107,13 @@
                 <a href="{concat(substring-before(@href, '.xml'), '.html')}" title="{@title}">
                   <xsl:value-of select="@title"/>
                 </a>
-            </li>
-          </xsl:for-each>
+              </li>
+            </xsl:for-each>
             <li>
-                <xsl:value-of select="opds:title"/>
+              <xsl:value-of select="opds:title"/>
             </li>
           </ul>
         </div>
-
 
         <xsl:variable name="mainDivClassName">
           <xsl:choose>
@@ -169,40 +168,38 @@
                         <xsl:value-of select="opds:title"/>
                         </a>
                         <br/>
-                          <small>
-                            <em>
-                  <xsl:for-each select="opds:author">
-                    <xsl:variable name="uri">
-                      <xsl:value-of select="opds:uri"/>
-                    </xsl:variable>
-                    <xsl:if test="string-length(.) > 0">
-                      <xsl:choose>
-                        <xsl:when test="position() = 1">
-                          <xsl:element name="a">
-                            <xsl:attribute name="href">
-                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
-                            </xsl:attribute>
-                            <xsl:value-of select="opds:name"/>
-                          </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <small>
-                            <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
-                          </small>
-                          <xsl:element name="a">
-                            <xsl:attribute name="href">
-                              <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
-                            </xsl:attribute>
-                            <xsl:value-of select="opds:name"/>
-                          </xsl:element>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </xsl:if>
-                  </xsl:for-each>
-                        </em></small>
-
-
-
+                        <small>
+                          <em>
+                            <xsl:for-each select="opds:author">
+                              <xsl:variable name="uri">
+                                <xsl:value-of select="opds:uri"/>
+                              </xsl:variable>
+                              <xsl:if test="string-length(.) > 0">
+                                <xsl:choose>
+                                  <xsl:when test="position() = 1">
+                                    <xsl:element name="a">
+                                      <xsl:attribute name="href">
+                                        <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                                      </xsl:attribute>
+                                      <xsl:value-of select="opds:name"/>
+                                    </xsl:element>
+                                  </xsl:when>
+                                  <xsl:otherwise>
+                                    <small>
+                                      <xsl:value-of select="concat(' ',$i18n.and,' ')"/>
+                                    </small>
+                                    <xsl:element name="a">
+                                      <xsl:attribute name="href">
+                                        <xsl:value-of select="concat(substring-before($uri, '.xml'),'.html')"/>
+                                      </xsl:attribute>
+                                      <xsl:value-of select="opds:name"/>
+                                    </xsl:element>
+                                  </xsl:otherwise>
+                                </xsl:choose>
+                              </xsl:if>
+                            </xsl:for-each>
+                          </em>
+                        </small>
 
                         <xsl:if test="string-length(opds:summary) > 1">
                           <br/>
@@ -212,7 +209,7 @@
                         </xsl:if>
                       </div>
                     </div>
-                    </xsl:if>
+                  </xsl:if>
                 </div>
               </xsl:when>
               <xsl:otherwise>

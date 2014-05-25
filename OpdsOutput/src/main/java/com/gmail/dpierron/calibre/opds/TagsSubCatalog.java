@@ -152,7 +152,11 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getTagFolderFilenameWithLevel (Tag tag) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
+    if (currentProfile.getDontSplitTagsOn()) {
+      return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
+    } else {
+      return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
+    }
   }
 
   /**
@@ -169,6 +173,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + tag);
 
+    if (tag.getId().equals("2")) {
+      int dummy = 1;
+    }
     CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
       CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();

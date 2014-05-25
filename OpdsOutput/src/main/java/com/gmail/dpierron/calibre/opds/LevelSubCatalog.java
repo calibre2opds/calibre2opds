@@ -1,11 +1,6 @@
 package com.gmail.dpierron.calibre.opds;
 /**
  * Generate a complete sub-catalog level
- *
- * TODO:  Make the  necessary changes to use this class from the Catalog class
- *        That would have the benefit of keeping all understanding about generating
- *        a level in a single place.   However it would need to take into account
- *        how progress is reported unless this can be generalised better!
  */
 
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
@@ -33,38 +28,6 @@ public class LevelSubCatalog extends SubCatalog {
     this.title = title;
     setStuffToFilterOut(new Vector<Object>() {{add("dummy");}}); // needed to make SubCatalog.isInDeepLevel() know that we're a deep level
   }
-
-  /**
-   * Create a custom sub-catalog
-   * TODO:  ITIMPI perhaps this should be in its own class?  Is it necessary?
-   *
-   * @param pBreadcrumbs
-   * @return
-   * @throws IOException
-   */
-
- /*
-  public Composite<Element, String> getSubCatalogEntry(Breadcrumbs pBreadcrumbs,
-                                                       boolean inSubDir) throws IOException {
-    if (Helper.isNullOrEmpty(getBooks()))
-      return null;
-
-    if (logger.isDebugEnabled())
-      logger.debug("creating level " + title);
-    if (logger.isTraceEnabled())
-      logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-
-    String filename = getCatalogBaseFolderFileName();
-    String urlExt = catalogManager.getCatalogFileUrl(filename, true);
-    String urn = "calibre:" + getGenerateFolder() + Constants.URN_SEPARATOR + getCatalogLevel();
-
-    // specify that this is a deep level
-    String summary = Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
-    Element entry = getListOfBooks(pBreadcrumbs, getStuffToFilterOut(), inSubDir, summary, urn, null,
-        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_CUSTOM : Icons.ICON_CUSTOM);
-    return new Composite<Element, String>(entry, urlExt);
-  }
- */
 
   /**
    *   Generation of Custom catalogs is broken into its own routine as
@@ -321,11 +284,14 @@ public class LevelSubCatalog extends SubCatalog {
     now = System.currentTimeMillis();
     if (currentProfile.getGenerateTags()) {
       logger.debug("STARTED: Generating tags catalog");
-      TagsSubCatalog tagssubCatalog = (Helper.isNotNullOrEmpty(currentProfile.getSplitTagsOn()))
-                                  ? new TagTreeSubCatalog(stuffToFilterOut, getBooks())
-                                  : new TagListSubCatalog(stuffToFilterOut, getBooks());
+      String SplitTagsOn = currentProfile.getSplitTagsOn();
+      TagsSubCatalog tagssubCatalog = (currentProfile.getDontSplitTagsOn()
+                                       || Helper.isNullOrEmpty(currentProfile.getSplitTagsOn()))
+                                  ? new TagListSubCatalog(stuffToFilterOut, getBooks())
+                                  : new TagTreeSubCatalog(stuffToFilterOut, getBooks());
       tagssubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = tagssubCatalog.getCatalog(breadcrumbs, pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
+      entry = tagssubCatalog.getCatalog(breadcrumbs,
+                                        pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
       tagssubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
         feed.addContent(entry);

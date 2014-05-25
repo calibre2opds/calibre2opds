@@ -258,7 +258,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void endCreateAllbooks(long milliseconds) {
-    endStage(milliseconds, lblAllbooks, lblRecentTime, chkAllbooks);
+    endStage(milliseconds, lblAllbooks, lblAllbooksTime, chkAllbooks);
   }
 
   public void disableCreateAllBooks() {
