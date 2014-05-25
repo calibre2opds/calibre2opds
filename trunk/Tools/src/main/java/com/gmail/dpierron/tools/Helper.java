@@ -1236,7 +1236,8 @@ public class Helper {
     int pos = baseString.lastIndexOf(splitSeparator);
     if (pos > 0) {
       String checkPart = baseString.substring(pos);
-      if (encodedSplitText.toString().startsWith(checkPart)) {
+      if (! encodedSplitText.toString().equals(checkPart)
+          && encodedSplitText.toString().startsWith(checkPart)) {
          return baseString.substring(0,pos) + encodedSplitText.toString();
       }
     }

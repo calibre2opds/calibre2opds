@@ -405,6 +405,34 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
+   * Do some validation on the options to split tags.
+   *
+   * If the option is disabled, but the txt field is empty then set it
+   * to the default value (this will auto-correct legacy cases)
+   *
+   * Ptherwise give error mesages if the field is empty or eet to comma
+   */
+  private boolean checkSplitTagsOn(boolean warn) {
+    if (chkDontsplittags.isSelected()) {
+      if (txtSplittagson.getText().equals("")) {
+        txtSplittagson.setText(".");
+      }
+    } else {
+      if (txtSplittagson.getText().equals("")) {
+        String message = Localization.Main.getText("config.SplitTagsOnEmpty.error");
+        JOptionPane.showMessageDialog(this, message,"", JOptionPane.ERROR_MESSAGE);
+        return false;
+      }
+      if (warn && txtSplittagson.getText().equals(",")) {
+        String message = Localization.Main.getText("config.SplitTagsOnComma.warn");
+        JOptionPane.showMessageDialog(this, message,"", JOptionPane.WARNING_MESSAGE);
+        return false;
+      }
+    }
+    txtSplittagson.setEnabled(! chkDontsplittags.isSelected());
+    return true;
+  }
+  /**
    *
    */
   private void computeBrowseByCoverWithoutSplitVisibility() {
@@ -486,10 +514,6 @@ public class Mainframe extends javax.swing.JFrame {
     txtCatalogFolder.setEnabled(lblCatalogFolder.isEnabled());
   }
 
-  private void actOnDontsplittagsActionPerformed() {
-    actOnDontsplittagsActionPerformed(chkDontsplittags.isSelected());
-  }
-
   /**
    * Enable/disable the sub-selections for cross-references depending on master setting
    */
@@ -505,13 +529,6 @@ public class Mainframe extends javax.swing.JFrame {
     chkIncludeTagCrossReferences.setEnabled(state);
     lblIncludeRatingCrossReferences.setEnabled(state);
     chkIncludeRatingCrossReferences.setEnabled(state);
-  }
-
-  private void actOnDontsplittagsActionPerformed(boolean dontsplit) {
-    if (dontsplit)
-      txtSplittagson.setText(null);
-    txtSplittagson.setEnabled(!dontsplit);
-    chkDontsplittags.setSelected(dontsplit);
   }
 
   private void actOnGenerateIndexActionPerformed() {
@@ -701,6 +718,9 @@ public class Mainframe extends javax.swing.JFrame {
    */
   private void generateCatalog() {
 
+    if (! checkSplitTagsOn(false)) {
+      return;
+    }
     storeValues();
 
     catalogDialog = new GenerateCatalogDialog(this, true);
@@ -953,6 +973,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     checkDownloads();
     checkCrossReferencesEnabled();
+    checkSplitTagsOn(false);
 
     lblCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
     txtCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
@@ -1015,6 +1036,7 @@ public class Mainframe extends javax.swing.JFrame {
    * Save the setting values from the GUI to the configuration file
    */
   private void storeValues() {
+    checkSplitTagsOn(false);
     setCursor(hourglassCursor);
 
     for (guiField g : guiFields) g.storeValue();
@@ -1761,6 +1783,16 @@ public class Mainframe extends javax.swing.JFrame {
 
         txtSplittagson.setText("txtSplittagson");
         txtSplittagson.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtSplittagson.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSplittagsonActionPerformed(evt);
+            }
+        });
+        txtSplittagson.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSplittagsonFocusLost(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -4521,13 +4553,13 @@ public class Mainframe extends javax.swing.JFrame {
    configLogFile();
   }//GEN-LAST:event_mnuToolsConfigLogActionPerformed
 
-  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsConfigLogActionPerformed
+  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {                                                  
     debugShowLogFile();
-  }//GEN-LAST:event_mnuToolsOpenLogActionPerformed
+  }                                               
 
-  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenLogActionPerformed
+  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {                                                
   debugShowSupportFolder();
-  }//GEN-LAST:event_mnuToolsOpenConfigActionPerformed
+  }                                                  
 
   private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
       logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
@@ -4656,6 +4688,14 @@ public class Mainframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_mnuToolsConfigLogMouseClicked
 
+    private void txtSplittagsonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSplittagsonActionPerformed
+      checkSplitTagsOn(true);
+    }//GEN-LAST:event_txtSplittagsonActionPerformed
+
+    private void txtSplittagsonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSplittagsonFocusLost
+      checkSplitTagsOn(true);
+    }//GEN-LAST:event_txtSplittagsonFocusLost
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -4669,7 +4709,7 @@ public class Mainframe extends javax.swing.JFrame {
   }// GEN-LAST:event_cboLangActionPerformed
 
   private void chkDontsplittagsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_chkDontsplittagsActionPerformed
-    actOnDontsplittagsActionPerformed();
+    checkSplitTagsOn(true);
   }// GEN-LAST:event_chkDontsplittagsActionPerformed
 
   private void cmdResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdResetActionPerformed

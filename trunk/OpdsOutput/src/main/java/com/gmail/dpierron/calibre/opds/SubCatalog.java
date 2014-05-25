@@ -845,7 +845,10 @@ public abstract class SubCatalog {
     if (pos > 0)  filename = filename.substring(0,pos);
     pos = filename.lastIndexOf(Constants.TYPE_SEPARATOR);
     assert pos > 0;
-    assert Integer.toString(pageNumber).equals((filename.substring(pos + 1)));
+    // assert Integer.toString(pageNumber).equals((filename.substring(pos + 1)));
+    if (! Integer.toString(pageNumber).equals((filename.substring(pos + 1)))) {
+      int dummy = 1;
+    }
     filename = filename.substring(0,pos + 1);
 
       // Prev link

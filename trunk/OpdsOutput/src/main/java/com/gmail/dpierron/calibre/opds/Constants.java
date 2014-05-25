@@ -43,6 +43,7 @@ public class Constants {
   public final static String SERIES_TYPE = "series";
   public final static String TAG_TYPE = "tag";
   public final static String TAGS_TYPE = "tags";
+  public final static String TAGTREE_TYPE = "tagtree";
   public final static String RATED_TYPE = "rated";
   public final static String RECENT_TYPE = "recent";
   public final static String PUBLISHER_TYPE = "publisher";

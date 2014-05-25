@@ -49,7 +49,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_GENERATEHTMLDOWNLOADS = "GenerateHtmlDownloads";
   private final static String PROPERTY_NAME_SUPRESSRATINGSINTITLES = "SuppressRatingsInTitles";
   private final static String PROPERTY_NAME_SPLITTAGSON = "SplitTagsOn";
-  private final static String PROPERTY_NAME_DontSpltTagsOn = "DontSplitTagsOn";
+  private final static String PROPERTY_NAME_NO_SPLITTAGSON = "DontSplitTagsOn";
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
   private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
@@ -59,7 +59,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_EXTERNAL_IMAGES = "ExternalImages";
   private final static String PROPERTY_NAME_SHOWSERIESINAUTHORCATALOG = "ShowSeriesInAuthorCatalog";
   private final static String PROPERTY_NAME_CATALOGFILTER = "CatalogFilter";
-  private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TAGS_TO_MAKE_DEEP";
+  private final static String PROPERTY_NAME_TAGSTOMAKEDEEP = "TagsToMakeDeep";
   private final static String PROPERTY_NAME_MAXSUMMARYLENGTH = "MaxSummaryLength";
   private final static String PROPERTY_NAME_MAXBOOKSUMMARYLENGTH = "MaxBookSummaryLength";
   private final static String PROPERTY_NAME_GENERATEAUTHORS = "GenerateAuthors";
@@ -535,14 +535,14 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public Boolean isDontSplitTagsOnReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_DontSpltTagsOn);
+    return isPropertyReadOnly(PROPERTY_NAME_NO_SPLITTAGSON);
   }
   public Boolean getDontSplitTagsOn() {
-    Boolean b = getBoolean(PROPERTY_NAME_DontSpltTagsOn);
+    Boolean b = getBoolean(PROPERTY_NAME_NO_SPLITTAGSON);
     return (b == null) ? defaults.getDontSplitTagsOn() : b;
   }
   public void setDontSplitTagsOn(Boolean dontSplitTagsOn) {
-    setProperty(PROPERTY_NAME_DontSpltTagsOn, dontSplitTagsOn);
+    setProperty(PROPERTY_NAME_NO_SPLITTAGSON, dontSplitTagsOn);
   }
 
   public Boolean isIncludeBooksWithNoFileReadOnly() {
