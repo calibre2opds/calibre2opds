@@ -173,9 +173,6 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + tag);
 
-    if (tag.getId().equals("2")) {
-      int dummy = 1;
-    }
     CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
       CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
@@ -184,7 +181,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     if (Helper.isNullOrEmpty(books))
       return null;
 
-    // Tags are held at the level (i.e. not the top level)
+    // Tags are held at each level (i.e. not the top level)
     String filename = getTagFolderFilenameWithLevel(tag);
     String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
     String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();

@@ -140,7 +140,7 @@ public abstract class SubCatalog {
    * @param data
    * @return
    */
-  private static String encryptString(String data) {
+  protected static String encryptString(String data) {
     crc32.reset();
     crc32.update(data.getBytes());
     return Long.toHexString(crc32.getValue());

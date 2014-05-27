@@ -33,13 +33,13 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
   public AuthorsSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
-    setCatalogType(Constants.AUTHORS_TYPE);
+    setCatalogType(Constants.AUTHORLIST_TYPE);
     initMapOfBooksByAuthor();          // Force initialisation
   }
 
   public AuthorsSubCatalog(List<Book> books) {
     super(books);
-    setCatalogType(Constants.AUTHORS_TYPE);
+    setCatalogType(Constants.AUTHORLIST_TYPE);
     initMapOfBooksByAuthor();          // Force initialisation
   }
 
@@ -401,7 +401,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       seriesSubCatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
       seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId()
-                                              + Constants.TYPE_SEPARATOR + Constants.SERIE_TYPE);
+                                              + Constants.TYPE_SEPARATOR + Constants.SERIES_TYPE);
       firstElements = seriesSubCatalog.getListOfSeries(breadcrumbs,
                                                        null,      // series derived from catalog books
                                                        true,
