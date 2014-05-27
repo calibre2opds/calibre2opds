@@ -36,5 +36,5 @@ CBZ   application/x-cbz
 CHM   application/x-chm
 AZW3  application/octet-stream
 KF8   application/octet-stream
-DJVU  image/vnd.djvu"
+DJVU  image/vnd.djvu
 

@@ -1275,7 +1275,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     // #c2o-212
     // Special handling for the listof books within a tag1
-    if (currentProfile.getSortTagsByAuthor() && getCatalogType().equals(Constants.TAGS_TYPE)) {
+    if (currentProfile.getSortTagsByAuthor() && getCatalogType().equals(Constants.TAGLIST_TYPE)) {
       title = (currentProfile.getDisplayAuthorSort() ? book.getAuthorSort() : book.getListOfAuthors()) + " - " + title;
     }
     String urn = "calibre:book:" + book.getId();

@@ -1007,7 +1007,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       //      Standard sub-catalogs for a folder level
 
-      //      Element main = FeedHelper.getFeedRootElement(null, title, Constants.INITIAL_URN, urlExt);
       logger.debug("Starter generating top level catalog");
       LevelSubCatalog levelSubCatalog = new LevelSubCatalog(books,currentProfile.getCatalogTitle());
       levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs

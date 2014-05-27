@@ -21,12 +21,12 @@ public class TagListSubCatalog extends TagsSubCatalog {
 
   public TagListSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
-    setCatalogType(Constants.TAGS_TYPE);
+    setCatalogType(Constants.TAGLIST_TYPE);
   }
 
   public TagListSubCatalog(List<Book> books) {
     super(books);
-    setCatalogType(Constants.TAGS_TYPE);
+    setCatalogType(Constants.TAGLIST_TYPE);
   }
 
 

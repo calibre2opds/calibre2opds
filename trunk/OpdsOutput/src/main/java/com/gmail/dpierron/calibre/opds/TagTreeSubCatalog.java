@@ -1,7 +1,9 @@
 package com.gmail.dpierron.calibre.opds;
 /**
  *  Class for defining a new tree set of levels based on a tag,
- *  with tags possibly split by a defined character
+ *  with tags possibly split by a defined character.  This is
+ *  a way f implementing what are known as hierarchical tags
+ *  in Calibre.
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
@@ -26,17 +28,21 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
   public TagTreeSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
-    setCatalogType(Constants.TAGTREE_TYPE);    // Not sure this will ever be used!
+    setCatalogType(Constants.TAGTREE_TYPE);
   }
 
   public TagTreeSubCatalog(List<Book> books) {
     super(books);
-    setCatalogType(Constants.TAGTREE_TYPE);    // Not sure this will ever be used!
+    setCatalogType(Constants.TAGTREE_TYPE);
   }
 
   //  METHODS
 
   /**
+   * Generate a tag tree for the current level
+   *
+   * The actual tag associated with a node is stored
+   * as data information
    *
    * @param pBreadcrumbs
    * @return
@@ -46,9 +52,12 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
   Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     Element result;
     logger.debug("compute the tree of tags");
+    String splitTagsOn = currentProfile.getSplitTagsOn();
+    assert Helper.isNotNullOrEmpty(splitTagsOn);
     TreeNode root = new RootTreeNode();
+    // Work through the tags creating the tree
     for (Tag tag : getTags()) {
-      String[] partsOfTag = tag.getPartsOfTag(currentProfile.getSplitTagsOn());
+      String[] partsOfTag = tag.getPartsOfTag(splitTagsOn);
       TreeNode currentPositionInTree = root;
       for (int i = 0; i < partsOfTag.length; i++) {
         String partOfTag = partsOfTag[i];
@@ -60,6 +69,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
         } else
           currentPositionInTree = nextPositionInTree;
       }
+      // Mark the tag this node uses
       currentPositionInTree.setData(tag);
     }
     // browse the tree, removing unneeded levels (single childs up to the leafs)
@@ -74,6 +84,11 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
   /**
    * Trim un-needed nodes from the tree.
    *
+   * We assume that any node that only has a single
+   * child can effectively have the child collapsed
+   * into the parent node. This will stop us generating
+   * a series of pages that only have a single entry.
+   *
    * NOTE:  It is written as a free-standing routine so it cn be called recursively.
    *
    * @param node
@@ -81,9 +96,9 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @return
    */
   private TreeNode removeUnNeededLevelsInTree(TreeNode node, TreeNode removedParent) {
-    if (removedParent != null)
+    if (removedParent != null) {
       node.setId(removedParent.getId() + currentProfile.getSplitTagsOn() + node.getId());
-
+    }
     if (node.getData() != null) {
       // this is a leaf
       return node;
@@ -94,9 +109,10 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       if (childNode.getData() == null && childNode.getChildren().size() <= 1) {
         if (childNode.getChildren().size() == 0) {
           // useless node
-          // TODO:  ITIMPI:  Feel there should be something done here/
+          // TODO:  ITIMPI:  Feel there should be something done here if this condition can really ever occurr
+          int dummy = 1;        // TODO See if we really ever get here!
         } else {
-          // useless level
+          // useless level so remove it
           TreeNode newChild = removeUnNeededLevelsInTree(childNode.getChildren().get(0), childNode);
           if (newChild != null) {
             newChild.setParent(node);
@@ -112,7 +128,8 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
   }
 
   /**
-   * Initial entry point to a list of tags
+   * Initial entry point to creating a list of tags
+   *
    * @param pBreadcrumbs
    * @param level
    * @return
@@ -136,7 +153,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
 
   /**
-   * Get the entries for a given level in the tree.
+   * Get the psgrd of entries for a given level in the tree.
    *
    * @param pBreadcrumbs
    * @param level
@@ -146,20 +163,20 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    */
   private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
 
-    boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0));
+    boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0) || pBreadcrumbs.size() > 1);
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int itemsCount = level.getChildren().size();
 
-    String filename = getCatalogBaseFolderFileName();
-    filename = filename + Constants.TYPE_SEPARATOR
-                + pBreadcrumbs.getFilename() + Constants.TYPE_SEPARATOR + level.getGuid()
-                + Constants.PAGE_DELIM + pageNumber;
+    String filename = getCatalogBaseFolderFileName()
+                      + Constants.TYPE_SEPARATOR + encryptString(pBreadcrumbs.toString())
+                      + Constants.PAGE_DELIM + pageNumber;
     logger.debug("getLevelOfTreeNode,int: generating " + filename);
 
     boolean onRoot = (level.isRoot());
 
+    // TODO Might want to make the title include all 'parts' ?
     String title = (onRoot ? Localization.Main.getText("tags.title") : level.getId());
-    String urn = Constants.INITIAL_URN_PREFIX + getCatalogType() + Constants.URN_SEPARATOR + level.getGuid();
+    String urn = Constants.INITIAL_URN_PREFIX + getCatalogType() + Constants.URN_SEPARATOR + encryptString(pBreadcrumbs.toString());
     String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
 
     String summary = "";
@@ -195,7 +212,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     feed.addContent(result);
 
     Element entry;
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename, inSubDir);
+    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     entry = createPaginateLinks(feed, urlExt, pageNumber, maxPages);
     createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
     if (from == 0) {

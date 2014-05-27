@@ -47,6 +47,7 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
    * TODO:  Decide if this method may now be no longer needed with the new naming system.
    * @return
    */
+/*
   public String getFilename() {
     StringBuffer result = new StringBuffer();
     Breadcrumb lastElement = null;
@@ -69,13 +70,20 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
     }
     return result.toString();
   }
+*/
 
+  /**
+   * Convert the breadcrumbs ro a string with / between elements
+   *
+   * @return
+   */
   public String toString() {
     return Helper.concatenateList("/", this);
   }
 
   /**
    * Create the string to be displayed as the progress message
+   * Tries to some optimisation to keep message length down.
    *
    * @param breadcrumbs
    * @return
@@ -97,7 +105,6 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
         progressText.append("/");
       }
       progressText.append(thisElement);
-
     }
     return progressText.toString();
   }

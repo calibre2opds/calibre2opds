@@ -31,7 +31,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
   public SeriesSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     super(stuffToFilterOut, books);
-    setCatalogType(Constants.SERIES_TYPE);
+    setCatalogType(Constants.SERIESLIST_TYPE);
   }
 
   /**
@@ -41,7 +41,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    */
   public SeriesSubCatalog(List<Book> books) {
     super(books);
-    setCatalogType(Constants.SERIES_TYPE);
+    setCatalogType(Constants.SERIESLIST_TYPE);
   }
 
   /**
@@ -272,7 +272,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     int catalogSize = listSeries.size();
     if (summary == null) summary = catalogSize > 1 ? Localization.Main.getText("series.alphabetical", catalogSize)
                                                    : (catalogSize == 1 ? Localization.Main.getText("series.alphabetical.single") : "");
-    if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIES_TYPE + getCatalogLevel();
+    if (urn == null)  urn = Constants.INITIAL_URN_PREFIX + Constants.URN_SEPARATOR + Constants.SERIESLIST_TYPE + getCatalogLevel();
 
     boolean willSplitByLetter = checkSplitByLetter(splitOption, catalogSize);
     if (willSplitByLetter) {
@@ -389,7 +389,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getSeriesFolderFilenameNoLevel(Series serie) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIE_TYPE, serie.getId(), 1000);
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIES_TYPE, serie.getId(), 1000);
   }
 
   /**
@@ -400,7 +400,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getSeriesFolderFilenameWithLevel(Series serie) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.SERIE_TYPE, serie.getId(), 1000);
+    return getCatalogBaseFolderFileNameIdSplit(Constants.SERIES_TYPE, serie.getId(), 1000);
   }
   /**
    * List the books that belong to the given series
@@ -440,7 +440,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String title = serie.getName();
     if (addTheSeriesWordToTheTitle)
       title = Localization.Main.getText("content.series") + ": " + title;
-    String urn = baseurn + Constants.SERIE_TYPE + Constants.URN_SEPARATOR + serie.getId();
+    String urn = baseurn + Constants.SERIES_TYPE + Constants.URN_SEPARATOR + serie.getId();
     // We need to determine if we are generating a serie within an author?
     // If we are we want the file to be in the author folder
     // if we are not then we want it at the top level

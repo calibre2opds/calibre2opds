@@ -91,16 +91,17 @@ public class Mainframe extends javax.swing.JFrame {
      *
      * Field 1  Mandatory   Field to which the label localisation should be applied
      *                      Can be set to null if no label localization required
-     * Field 1  Mandatory   Field in which value stored.  Can be same as field 1.
+     * Field 2  Mandatory   Field in which value stored )if relevant).  Can be same as field 1.
      *                      Also has tooltip localisation applied if .tooltip version of Field 3 found
-     *                      Can be null for fields that do not hild stored configuration values
-     * Field 2  Mandatory   Key for finding localization string.  Any .label/.tooltip suffix is omitted
+     *                      so set field 1 to null if only tooltip to be set up.
+     *                      Can be null for fields that do not held stored configuration values
+     * Field 3  Mandatory   Key for finding localization string.  Any .label/.tooltip suffix is omitted
      *                      Can optionally have the .label added to the key in localization file
      *                      If key with .tooltip found in localization file this is assumed to be a tooltip
      *
      * Field 4  Optional    Base name of the methods for loading/storing the the values in Field 2
      *                      If the field only needs localisation, but not storing in the configuration
-     *                      file then then there will be no method defined
+     *                      file then then there will be no method defined so only fields 1 to 3 defined.
      *
      * Field 5  Optional    For checkboxes only.  Indicate is displayed field is negated from config value
      *
@@ -129,6 +130,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(cmdGenerate, null, "gui.generate"),
       new guiField(cmdReset, null, "gui.reset"),
       new guiField(cmdHelp, null, "gui.help"),
+      new guiField(null, lblProfile, "config.profile"),
 
       // main options
 
@@ -939,10 +941,6 @@ public class Mainframe extends javax.swing.JFrame {
       }
     };
 
-    String title = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION)
-        + " - " + Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName());
-    setTitle(title);
-
     // Localizations that need completing before calling default processing
 
     cboLang.setModel(new DefaultComboBoxModel(LocalizationHelper.INSTANCE.getAvailableLocalizations()));
@@ -1001,6 +999,11 @@ public class Mainframe extends javax.swing.JFrame {
     loadProfiles();
     checkDownloads();
     checkOnlyCatalogAllowed();
+
+    String profile=Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName());
+    String title = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION) + " - " + profile;
+    setTitle(title);
+    lblProfile.setText(profile);
     pack();
   }
 
@@ -1071,7 +1074,6 @@ public class Mainframe extends javax.swing.JFrame {
 
     // `Additional translations  (if any)
     adaptInterfaceToDeviceSpecificMode(currentProfile.getDeviceMode());
-
   }
 
   /**
@@ -1459,6 +1461,7 @@ public class Mainframe extends javax.swing.JFrame {
         cmdGenerate = new javax.swing.JButton();
         cmdHelp = new javax.swing.JButton();
         pnlTitle = new javax.swing.JPanel();
+        lblProfile = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuFileSave = new javax.swing.JMenuItem();
@@ -1532,6 +1535,11 @@ public class Mainframe extends javax.swing.JFrame {
         lblDeviceMode.setText("lblDeviceMode1");
         lblDeviceMode.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lblDeviceMode.setRequestFocusEnabled(false);
+        lblDeviceMode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1548,7 +1556,7 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
@@ -4178,7 +4186,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
@@ -4260,6 +4268,24 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         pnlMain.add(pnlTitle, gridBagConstraints);
+
+        lblProfile.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        lblProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblProfile.setText("lblProfile");
+        lblProfile.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblProfile.setRequestFocusEnabled(false);
+        lblProfile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 5);
+        pnlMain.add(lblProfile, gridBagConstraints);
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
@@ -4935,6 +4961,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblNogeneraterecent;
     private javax.swing.JLabel lblOnlyCatalogAtTarget;
     private javax.swing.JLabel lblOrderAllBooksBySeries;
+    private javax.swing.JLabel lblProfile;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;
     private javax.swing.JLabel lblSingleBookCrossReferences;
