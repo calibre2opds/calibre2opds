@@ -1,4 +1,4 @@
-package com.gmail.dpierron.calibre.opds;
+package com.gmail.dpierron.calibre.gui;
 
 /**
  * Thrown when the code detects that the user has stopped the generation

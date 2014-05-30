@@ -3,9 +3,10 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
+import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
+import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -263,6 +264,12 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
 
   public void disableZipCatalog() {}
 
+  public void setProgressMax (long maxSteps) {
+    if (startGui) {
+      checkIfContinueGenerating();
+      progressStep.setMaxVisible(maxSteps);
+    }
+  }
   public void incStepProgressIndicatorPosition() {
     if (startGui) {
       checkIfContinueGenerating();

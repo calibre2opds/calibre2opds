@@ -22,17 +22,19 @@ author/					Folder for Files for each author
 	author_nn_ss_Page_nn	      Files listing book for a given series for that author
 	author_nn_allbooks_Page_nn  Files listing all books for the given author
 
+
 book/					  folder for details about individual books
 	book_nn				File for a book with id nn
 	
-serie/					Folder for files for each series
+series/					Folder for files for each series
                 At the moment this is always a top level entry - not subidivided by level
-	serie_nn_Page_nn
+	series_nn_Page_nn
+
 
 tag/					  Folder for files for each tag
                 There is one of these for each level so that tag books are level dependent
 	tag_nn_Page_nn Files giving books for a specific tag
-	
+
 
 Sub-catalogs:
 ~~~~~~~~~~~~
@@ -40,16 +42,19 @@ allbooks/				Folder for allbooks sub-catalog split by letter/page
 	allbooks_XX_Page_nn		Files for allbooks split-by-level
 					Entries point to books in the book/ folder
 					
-authors/				Folder for authors sub-catalog split by letter/page
-	authors_XX_Page_nn		Files for the author-by-level where XX indicates the split level 
+authorlist/				Folder for authors sub-catalog split by letter/page
+	authorlist_XX_Page_nn		Files for the author-by-level where XX indicates the split level 
 					Point to author_nn_Page_1 entries in the author/ folder
 					
-series/					Folder for series sub-catalog split by letter/page
-	series_XX_Page_nn
+serieslist/				Folder for series sub-catalog split by letter/page
+	serieslist_XX_Page_nn
 	
-tags/					Folder for tags sub-catalog split by letter/page
-	tags_XX_Page_nn			Files for tags split by letter
+taglist/				Folder for tags sub-catalog split by letter/page (when SplitTagsOn disabled)
+	taglist_XX_Page_nn		Files for tags split by letter
 	
+tagtree/				Folder for tag order by tree (when SplitTagsOn enabled)
+	tagtree_XXXXXX_Page_nn		Fiels for tags organised by catgorie.  XXXXXX is unique per category
+
 rated/					Folder for rated books sub-catalog. 
 	rated_XXXX_Page_nn		Files for the list of books at given rating levels (XXX is rating)
 	

@@ -8,6 +8,7 @@ import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
+import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
@@ -57,7 +58,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.trace("ENDED: No Custom Catalogs set");
     } else {
       int pos = 1;
-      CatalogManager.INSTANCE.callback.startCreateCustomCatalogs(customCatalogs.size());
+      CatalogManager.callback.startCreateCustomCatalogs(customCatalogs.size());
       Map<String, BookFilter> customCatalogsFilters = CatalogManager.INSTANCE.customCatalogsFilters;
       for (CustomCatalogEntry customCatalog : customCatalogs) {
         CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
@@ -162,7 +163,7 @@ public class LevelSubCatalog extends SubCatalog {
       }
       logger.debug("COMPLETED: Generating custom catalogs");
       if (atTopLevel)
-        CatalogManager.reportRamUsage();
+        CatalogManager.recordRamUsage("After generating Custom Catalogs");
     }
     CatalogManager.INSTANCE.callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
   }
@@ -237,7 +238,7 @@ public class LevelSubCatalog extends SubCatalog {
         }
       }
       logger.debug("COMPLETED: Generating Featured catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Featured Catalog");
     }
     if (atTopLevel)  callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -272,7 +273,7 @@ public class LevelSubCatalog extends SubCatalog {
       authorsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
           feed.addContent(entry);
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After Generating Author Catalog");
       logger.debug("COMPLETED: Generating Authors catalog");
     }
     if (atTopLevel)  callback.endCreateAuthors(System.currentTimeMillis() - now);
@@ -296,7 +297,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (entry != null)
         feed.addContent(entry);
       logger.debug("COMPLETED: Generating tags catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Tags catalog");
     }
     if (atTopLevel)  callback.endCreateTags(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -326,7 +327,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (entry != null)
         feed.addContent(entry);
       logger.debug("COMPLETED: Generating Series catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Series catalog");
     }
     if (atTopLevel)  callback.endCreateSeries(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -348,7 +349,7 @@ public class LevelSubCatalog extends SubCatalog {
         feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Recent books catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Recent catalog");
     }
     if (atTopLevel)  callback.endCreateRecent(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -368,7 +369,7 @@ public class LevelSubCatalog extends SubCatalog {
         feed.addContent(entry);
       }
       logger.debug("COMPLETED: Generating Rated books catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Ratings catalog");
     }
     if (atTopLevel)  callback.endCreateRated(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
@@ -399,7 +400,7 @@ public class LevelSubCatalog extends SubCatalog {
       }
 
       logger.debug("COMPLETED: Generating All Books catalog");
-      if (atTopLevel) CatalogManager.reportRamUsage();
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating All Books sub-catalog");
     }
     if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
     callback.checkIfContinueGenerating();
