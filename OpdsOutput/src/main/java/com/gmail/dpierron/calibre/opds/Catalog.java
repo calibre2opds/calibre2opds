@@ -16,11 +16,12 @@ import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
+import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
+import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
-import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -551,7 +552,7 @@ public class Catalog {
   public void createMainCatalog() throws IOException {
     long countMetadata;     // Count of files for which ePub metadata is updated
 
-    CatalogManager.reportInitialRamUsage();
+    CatalogManager.recordRamUsage("Initial");
 
     // reinitialize caches (in case of multiple calls in the same session)
     // CatalogManager.INSTANCE.catalogManager.reset();
@@ -794,7 +795,7 @@ public class Catalog {
     CatalogManager.INSTANCE.thumbnailManager.reset();
     CatalogManager.INSTANCE.coverManager.reset();
 
-    CatalogManager.reportRamUsage();
+    CatalogManager.recordRamUsage("Start of Generation");
 
     try {
       //  Initialise area for generating the catalog files
@@ -823,7 +824,7 @@ public class Catalog {
       DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
       logger.info("COMPLETED preloading Datamodel");
-      CatalogManager.reportRamUsage();
+      CatalogManager.recordRamUsage("After loading DataModel");
 
       // Database read optimizations
       // (ony read in optional databitems if weneed them later)
@@ -945,7 +946,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       }
       callback.checkIfContinueGenerating();
 
-      CatalogManager.reportRamUsage();
+      CatalogManager.recordRamUsage("After loading database");
       callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));
       callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
@@ -975,7 +976,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         CachedFileManager.INSTANCE.deleteCache();
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
-      CatalogManager.reportRamUsage();
+      CatalogManager.recordRamUsage("After deleting cache");
 
       callback.checkIfContinueGenerating();
 
@@ -1256,7 +1257,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       now = System.currentTimeMillis();
       logger.info(Localization.Main.getText("info.step.savingcache") + " " + CachedFileManager.INSTANCE.getCacheSize());
       callback.showMessage(Localization.Main.getText("info.step.savingcache"));
-      CachedFileManager.INSTANCE.saveCache(generateFolder.getPath());
+      CachedFileManager.INSTANCE.saveCache(generateFolder.getPath(), callback);
       logger.info(Localization.Main.getText("info.step.savedcache", CachedFileManager.INSTANCE.getSaveCount(), CachedFileManager.INSTANCE.getIgnoredCount()));
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
 
@@ -1353,7 +1354,8 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
         callback.endCreateMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
-      CatalogManager.reportRamUsage();
+      CatalogManager.recordRamUsage("End of Generate Run");
+      CatalogManager.reportRamUsage("Summary");
     }
   }
 

@@ -55,7 +55,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       }
 
     }
-
     @Override
     public ProgressIndicator setMaxVisible(long maxVisible) {
       super.setMaxVisible(maxVisible);
@@ -64,6 +63,21 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       return this;
     }
   };
+
+
+  /**
+   * Initialise the progress indicator
+   *
+   * @param max
+   */
+  public void setProgressMax(long max) {
+    progressStep.setMaxScale(max);
+  }
+
+  public void incStepProgressIndicatorPosition() {
+    checkIfContinueGenerating();
+    progressStep.incPosition();
+  }
 
   /**
    * Creates new form GenerateCatalogDialog
@@ -367,11 +381,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       logger.info(message);
       JOptionPane.showMessageDialog(this, message);
     }
-  }
-
-  public void incStepProgressIndicatorPosition() {
-    checkIfContinueGenerating();
-    progressStep.incPosition();
   }
 
   public void showMessage(String message) {

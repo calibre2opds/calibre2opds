@@ -11,6 +11,7 @@ package com.gmail.dpierron.calibre.cache;
  * runs if it can be avoided.
  */
 
+import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -166,7 +167,7 @@ public enum CachedFileManager {
    *
    * N.B. the setCacheFolder() call must have been used
    */
-  public void saveCache(String pathToIgnore) {
+  public void saveCache(String pathToIgnore, CatalogCallbackInterface callback) {
 
     // Check Cache folder has been set
     logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
@@ -186,6 +187,9 @@ public enum CachedFileManager {
     ObjectOutputStream os = null;
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
+    if (callback != null ) {
+      callback.setProgressMax(cachedFilesMap.entrySet().size());
+    }
     try {
       try {
         logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
@@ -198,6 +202,9 @@ public enum CachedFileManager {
 
         // Write out the cache entries
         for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
+          if (callback != null) {
+            callback.incStepProgressIndicatorPosition();
+          }
           CachedFile cf = m.getValue();
           String key = m.getKey();
 

@@ -13,6 +13,7 @@ import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
+import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.File;
@@ -68,6 +69,7 @@ public enum CatalogManager {
   public void initialize() {
     // super();
     // Avoid superflous settings of static object!
+
     securityCode = ConfigurationManager.INSTANCE.getCurrentProfile().getSecurityCode();
     if (Helper.isNullOrEmpty(securityCode)) {
       Random generator = new Random(System.currentTimeMillis());
@@ -404,12 +406,21 @@ public Map<String,CachedFile> getMapOfCatalogImages() {
     return tagsToIgnore;
   }
 
+  // Collect some information about the RAM usage while running
+  private static String ramPoolMeasurement[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static String ramPoolName[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static String ramPoolType[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static long ramPoolCommitted[] = new long[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static long ramPoolInit[] = new long[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static long ramPoolMax[] = new long[ManagementFactory.getMemoryPoolMXBeans().size()];
+  private static long ramPoolUsed[] = new long[ManagementFactory.getMemoryPoolMXBeans().size()];
+
   /**
-   *
+   * Provide an end-of-run summary of RAM usage
    */
-  public static void reportInitialRamUsage() {
-    List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
-    logger.info("Ram Usage:");
+  public static void reportRamUsage(String measurementPoint) {
+    logger.info("");
+    logger.info("Java VM RAM Usage " + measurementPoint);
     logger.info(String.format("   %-20s %-15s%10s%10s%10s%10s",
         "NAME",
         "TYPE",
@@ -417,38 +428,64 @@ public Map<String,CachedFile> getMapOfCatalogImages() {
         "INIT",
         "MAX",
         "USED"));
-    for (MemoryPoolMXBean pool : pools) {
-      MemoryUsage usage = pool.getUsage();
+    for (int i = 0 ; i < ramPoolType.length; i++) {
       logger.info(String.format("   %-20s %-15s%10d MB%7d MB%7d MB%7d MB",
-          pool.getName(),
-          pool.getType(),
-          usage.getCommitted() / (2<<20),
-          usage.getInit() / (2<<20),
-          usage.getMax() / (2<<20),
-          usage.getUsed() / (2<<20)));
+          ramPoolName[i],
+          ramPoolType[i],
+          ramPoolCommitted[i] / (2<<20),
+          ramPoolInit[i] / (2<<20),
+          ramPoolMax[i] / (2<<20),
+          ramPoolUsed[i] / (2<<20)));
     }
     logger.info("");
   }
   /**
-   * Report the RAM usage.
+   * Record the RAM usage at the specified measuring point.
+   *
+   * If in a debug mode we also output to log file, otherwise
+   * just accumlate results.
    */
-  public static void reportRamUsage() {
+  public static void recordRamUsage(String measurementPoint) {
     List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
-    logger.info("Ram Usage:");
-    logger.info(String.format("   %-20s %-15s%10s%%10s",
-        "NAME",
-        "TYPE",
-        "MAX",
-        "USED"));
-    for (MemoryPoolMXBean pool : pools) {
-      MemoryUsage usage = pool.getUsage();
-      logger.info(String.format("   %-20s %-15s%10d MB%7d MB",
-          pool.getName(),
-          pool.getType(),
-          usage.getMax() / (2<<20),
-          usage.getUsed() / (2<<20)));
+    if (ramPoolName.length != pools.size()) {
+      //  This is safety check - not sure it can really happen
+      logger.error("Unexpected change in number of RAM areas (was " + ramPoolName.length + ", now " + pools.size());
+    } else {
+      for (int i = 0; i < pools.size() ; i++) {
+        MemoryPoolMXBean pool = pools.get(i);
+        if (ramPoolName[i] == null)
+          ramPoolName[i] = pool.getName();
+        if (ramPoolType[i] == null)
+          ramPoolType[i] = pool.getType().toString();
+        if (! ramPoolName[i].equals(pool.getName())) {
+          logger.error("Mismatch on RAM Pool " + i + " name (expected " + ramPoolName[i] + ", got " + pool.getName() + "0" );
+        } else {
+          MemoryUsage usage = pool.getUsage();
+          if (usage.getCommitted() > ramPoolCommitted[i])
+            ramPoolCommitted[i] = usage.getCommitted();
+          if (usage.getInit() > ramPoolInit[i])
+            ramPoolInit[i] = usage.getInit();
+          if (usage.getMax() > ramPoolMax[i])
+            ramPoolMax[i] = usage.getMax();
+          if (usage.getUsed() > ramPoolUsed[i])
+            ramPoolUsed[i] = usage.getUsed();
+          if (logger.isDebugEnabled()) {
+            if (i == 0) {
+              logger.info("");
+              logger.info("Java VM RAM Usage " + measurementPoint);
+              logger.info(String.format("   %-20s %-15s%10s%10s%10s%10s", "NAME", "TYPE", "COMMITTED", "INIT", "MAX", "USED"));
+            }
+            logger.info(String.format("   %-20s %-15s%10d MB%7d MB%7d MB%7d MB",
+                                      pool.getName(),
+                                      pool.getType().toString(),
+                                      usage.getCommitted() / (2 << 20),
+                                      usage.getInit() / (2 << 20),
+                                      usage.getMax() / (2 << 20),
+                                      usage.getUsed() / (2 << 20)));
+            logger.info("");
+          }
+        }
+      }
     }
-    logger.info("");
   }
-
 }

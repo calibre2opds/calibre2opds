@@ -1,7 +1,23 @@
-package com.gmail.dpierron.calibre.opds;
+package com.gmail.dpierron.calibre.gui;
 
+/**
+ * Method that provides ways of interacting with the GUI
+ *
+ * This interface is defined in the DataModel package so that classes
+ * in this package can interact with the GUI components that are
+ * instantiated within the OpdsOuputput pckage.    It is oone this
+ * way to avoid circular references.
+ */
+
+import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
 
 public interface CatalogCallbackInterface {
+
+  //  Progrees Indicator
+
+  public void setProgressMax(long max);
+
+  public void incStepProgressIndicatorPosition();
 
   // main catalog
   public void startCreateMainCatalog();
@@ -97,8 +113,6 @@ public interface CatalogCallbackInterface {
 
   public void disableReprocessingEpubMetadata();
 
-  public void incStepProgressIndicatorPosition();
-
   public void showMessage(String message);
 
   // Javascript database
@@ -146,7 +160,7 @@ public interface CatalogCallbackInterface {
   public int askUser(String message, String... possibleAnswers);
 
   /**
-   * @throws GenerationStoppedException if the user has specified that he wants to stop the generation
+   * @throws com.gmail.dpierron.calibre.gui.GenerationStoppedException if the user has specified that he wants to stop the generation
    */
   public void checkIfContinueGenerating() throws GenerationStoppedException;
 
