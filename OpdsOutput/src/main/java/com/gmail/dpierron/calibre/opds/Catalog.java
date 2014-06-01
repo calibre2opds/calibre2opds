@@ -875,7 +875,7 @@ public class Catalog {
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-            callback.endCreateMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+            callback.endCreatedMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
             return;
           }
         }
@@ -910,7 +910,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
             if (customCatalogFilter == null) {
               // an error occured, let's ask the user if he wants to abort
               if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-                callback.endCreateMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+                callback.endCreatedMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
                 return;
               }
               // TODO Set something to suppress this custom catalog entry at generate stage!
@@ -951,6 +951,9 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
       callback.setSeriesCount("" + DataModel.INSTANCE.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
+      int recentSize = DataModel.INSTANCE.getListOfBooks().size();
+      if (recentSize > currentProfile.getBooksInRecentAdditions()) recentSize = currentProfile.getBooksInRecentAdditions();
+      callback.setRecentCount("" + recentSize + " " + Localization.Main.getText("bookword.title"));
 
       // Load up the File Cache if it exists
 
@@ -1249,6 +1252,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       callback.endZipCatalog(System.currentTimeMillis() - now);
       callback.checkIfContinueGenerating();
 
+      callback.startCreatedMainCatalog();
       if (syncLog) {
         logger.info("Sync Log: " + ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
       }
@@ -1353,7 +1357,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
-        callback.endCreateMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+        callback.endCreatedMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
       CatalogManager.recordRamUsage("End of Generate Run");
       CatalogManager.reportRamUsage("Summary");
     }

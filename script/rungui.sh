@@ -1,5 +1,6 @@
 #!/bin/sh
-# Script to start calibre2opds in GUI mnode
+# Script to start calibre2opds in GUI mnode on Unix-like systems such
+# as Linux and Mac
 #
 # Normally we expect the calibre2opds binaries to be in the same location
 # as this script, but we need to allow for the case of testing where they
@@ -7,16 +8,17 @@
 
 c2o_jar=OpdsOutput-3.4-SNAPSHOT.jar
 
-#  We set stack limits explicitly here to get consistency across systems
+#  We set Java VM stack limits explicitly here to get consistency across systems
 # -Xms<value> define starting size
 # -Xmx<value> defines maximum size
 # -Xss<value> defines stack size
 # It is possible that for very large libraries this may not be enough - we will have to see.
-c2o_opts="-Xms128m -Xmx512m"
+c2o_opts="-Xms128m -Xmx1024m"
 
 old=`pwd`
 scriptdir=`dirname "$0"`
 
+# Check we know how to run from where binaries are located
 if [ ! -f $c2o_jar ]; then
   if [ ! -f $scriptdir/$c2o_jar ]; then
     echo "ERROR: calibre2opds binaries not found"
@@ -27,7 +29,7 @@ fi
 
 # The next few lines are to help with running in Portable mode with minimal user setup required
 
-if [ "$CALIBRE2OPDS_CONFIG" == "" ]; then
+if [ "$CALIBRE2OPDS_CONFIG" = "" ]; then
   if [ -d $scriptdir/Calibre2OpdsConfig ]; then
     CALIBRE2OPDS_CONFIG=Calibre2OpdsConfig
     export CALIBRE2OPDS_CONFIG
@@ -36,15 +38,12 @@ fi
 
 echo "Starting calibre2opds"
 
-#  We set stack limits explicitly here to get consistency across systems
-# -Xms<value> define starting size
-# -Xmx<value> defines maximum size
-# -Xss<value> defines stack size
+#  We run in foreground if assertions active, background if not
 if [ "$1" == "-enableassertions" -o "$old" != "$scriptdir" ]; then
-  echo java -Xms128m -Xmx1024m $c2o_opts $1 -cp $c2o_jar Gui
-  java -Xms128m -Xmx1024m $c2o_opts $1 -cp $c2o_jar Gui $*
+  echo java $c2o_opts $1 -cp $c2o_jar Gui
+  java $c2o_opts $1 -cp $c2o_jar Gui $*
 else
-  echo java -Xms128m -Xmx1024m $c2o_opts -cp $c2o_jar Gui
-  java -Xms128m -Xmx1024m $c2o_opts -cp $c2o_jar Gui >/dev/null &
+  echo java $c2o_opts -cp $c2o_jar Gui
+  java $c2o_opts -cp $c2o_jar Gui >/dev/null &
 fi
 cd $old

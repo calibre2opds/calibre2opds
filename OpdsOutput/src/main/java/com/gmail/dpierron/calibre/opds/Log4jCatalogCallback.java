@@ -93,7 +93,11 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     // do nothing
   }
 
-  public void endCreateMainCatalog(String where, long timeInHtml) {
+  public void startCreatedMainCatalog() {
+    // do nothing
+  }
+
+  public void endCreatedMainCatalog(String where, long timeInHtml) {
     progressStep.reset();
     if (timeInHtml > 1000)
       logger.info(Localization.Main.getText("info.html.donein", timeInHtml / 1000));
@@ -122,6 +126,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   public void setFeaturedCount(String s) {
     return;
   }
+  public void setRecentCount(String s) { return; }
 
   public void setCopyLibCount(String s) {
     // do nothing
@@ -314,10 +319,6 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
 
   public void showMessage(String message) {
     progressStep.actOnMessage(message);
-  }
-
-  public void showRamUsage (String message) {
-    logger.debug("Ram Usage: " + message);
   }
 
   public void checkIfContinueGenerating() throws GenerationStoppedException {

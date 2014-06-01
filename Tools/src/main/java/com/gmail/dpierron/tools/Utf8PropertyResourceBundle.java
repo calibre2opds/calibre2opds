@@ -18,7 +18,7 @@ public class Utf8PropertyResourceBundle extends ResourceBundle {
    * 
    * @see java.util.ResourceBundle#getKeys()
    */
-  public Enumeration getKeys() {
+  public Enumeration<String> getKeys() {
     return bundle.getKeys();
   }
 

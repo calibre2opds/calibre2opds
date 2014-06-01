@@ -71,6 +71,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
    * @param max
    */
   public void setProgressMax(long max) {
+    progressStep.setMaxVisible(max);
     progressStep.setMaxScale(max);
   }
 
@@ -101,7 +102,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   private void translateTexts() {
     setTitle(Localization.Main.getText("gui.generateProgress"));
-    lblRamUsage.setText("");
     lblStoppingGeneration.setVisible(false);
     lblStoppingGeneration.repaint();
     lblStoppingGeneration.setText(Localization.Main.getText("gui.stoppingGeneration")); // NOI18N
@@ -220,11 +220,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void startCreateAuthors(long nb) {
-    startStage(nb, lblAllbooks, "info.step.authors");
+    startStage(nb, lblAuthors, "info.step.authors");
   }
 
   public void endCreateAuthors(long milliseconds) {
-    endStage(milliseconds, lblAuthors, lblAuthorsTime,chkAuthors);
+    endStage(milliseconds, lblAuthors, lblAuthorsTime, chkAuthors);
   }
 
   public void disableCreateAuthors() {
@@ -239,12 +239,16 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     endStage(milliseconds, lblSeries, lblSeriesTime, chkSeries);
   }
 
+  public void setRecentCount(String summary){
+    lblRecent.setText(lblRecent.getText() + " (" + summary + ")");
+  }
+
   public void disableCreateSeries() {
     lblSeries.setEnabled(false);
   }
 
   public void startCreateRecent(long nb) {
-    startStage(nb, lblRecent,"info.step.recent");
+    startStage(nb, lblRecent, "info.step.recent");
   }
 
   public void endCreateRecent(long milliseconds) {
@@ -346,7 +350,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void setCopyCatCount(String summary){
-    lblCopyCatToTarget.setText(lblCopyCatalogTime.getText() + " (" + summary + ")");
+    lblCopyCatToTarget.setText(lblCopyCatToTarget.getText() + " (" + summary + ")");
   }
 
   public void startCopyCatToTarget(long nb) {
@@ -369,26 +373,30 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblZipCatalog.setEnabled(false);
   }
 
-  public void endCreateMainCatalog(String where, long timeInHtml) {
+
+  public void startCreatedMainCatalog() {
+    startStage(100,lblFinished,"info.step.done");
+  }
+
+  public void endCreatedMainCatalog(String where, long timeInHtml) {
     endStage(timeInHtml, lblFinished, lblFinishedTime, chkFinished);
     if (where != null) {
       String message = Localization.Main.getText("info.step.done", where);
       logger.info(message);
       JOptionPane.showMessageDialog(this, message);
-    }
-    if (getWarnCount() != 0) {
-      String message = Localization.Main.getText("info.completedWithWarnings", getWarnCount()) ;
-      logger.info(message);
-      JOptionPane.showMessageDialog(this, message);
+    } else {
+      if (getWarnCount() != 0) {
+        String message = Localization.Main.getText("info.completedWithWarnings", getWarnCount());
+        logger.info(message);
+        JOptionPane.showMessageDialog(this, message);
+      } else {
+        // TODO Decide if we should do anything her - currently ignoring!
+      }
     }
   }
 
   public void showMessage(String message) {
     progressStep.actOnMessage(message);
-  }
-
-  public void showRamUsage(String message) {
-    lblRamUsage.setText(message);
   }
 
   public void errorOccured(String message, Throwable error) {
@@ -531,7 +539,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblZipCatalog = new javax.swing.JLabel();
         lblZipCatalogTime = new javax.swing.JLabel();
         chkZipCatalog = new javax.swing.JCheckBox();
-        lblRamUsage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -935,7 +942,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(lblFinished, gridBagConstraints);
-        lblFinished.getAccessibleContext().setAccessibleName(null);
+        lblFinished.getAccessibleContext().setAccessibleName("null");
 
         lblFinishedTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -996,15 +1003,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkZipCatalog, gridBagConstraints);
 
-        lblRamUsage.setText("lblRamUsage");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 22;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
-        getContentPane().add(lblRamUsage, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1060,7 +1058,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     private javax.swing.JLabel lblFinishedTime;
     private javax.swing.JLabel lblIndex;
     private javax.swing.JLabel lblIndexTime;
-    private javax.swing.JLabel lblRamUsage;
     private javax.swing.JLabel lblRated;
     private javax.swing.JLabel lblRatingTime;
     private javax.swing.JLabel lblRecent;

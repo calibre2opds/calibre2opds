@@ -22,7 +22,9 @@ public interface CatalogCallbackInterface {
   // main catalog
   public void startCreateMainCatalog();
 
-  public void endCreateMainCatalog(String where, long timeInHtml);
+  public void startCreatedMainCatalog();
+
+  public void endCreatedMainCatalog(String where, long timeInHtml);
 
   // show options
   public void dumpOptions();
@@ -64,6 +66,8 @@ public interface CatalogCallbackInterface {
   public void disableCreateSeries();
 
   // Recent books
+
+  public void setRecentCount(String summary);
 
   public void startCreateRecent(long nb);
 
@@ -169,6 +173,4 @@ public interface CatalogCallbackInterface {
   public void incrementWarnCount();
 
   public void setStopGenerating ();
-
-  public void showRamUsage(String s);
 }
