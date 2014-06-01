@@ -26,6 +26,10 @@ public enum Database {
   private static final DateFormat SQLITE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private static int sqlException = 0;    // Set to bit dependent value to allow for multiple different exception points
 
+  /**
+   *
+   * @return
+   */
   public List<Tag> listTags() {
     List<Tag> result = new LinkedList<Tag>();
     PreparedStatement statement = DatabaseRequest.ALL_TAGS.getStatement();
@@ -41,6 +45,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public boolean test() {
     PreparedStatement statement = DatabaseRequest.TEST.getStatement();
     try {
@@ -54,6 +62,10 @@ public enum Database {
     }
   }
 
+  /**
+   *
+   * @return
+   */
   public Composite<Map<String, Language>, Map<String, Language>> getMapsOfLanguages() {
     Map<String, Language> mapOfLanguagesById = new HashMap<String, Language>();
     Map<String, Language> mapOfLanguagesByIsoCode = new HashMap<String, Language>();
@@ -78,6 +90,10 @@ public enum Database {
     return new Composite<Map<String, Language>, Map<String, Language>>(mapOfLanguagesById, mapOfLanguagesByIsoCode);
   }
 
+  /**
+   *
+   * @return
+   */
   public List<Book> listBooks() {
     List<Book> result = new LinkedList<Book>();
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
@@ -203,6 +219,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public List<Author> listAuthors() {
     List<Author> result = new LinkedList<Author>();
     List<String> ids = new LinkedList<String>();
@@ -223,6 +243,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public List<Publisher> listPublishers() {
     List<Publisher> result = new LinkedList<Publisher>();
     List<String> ids = new LinkedList<String>();
@@ -243,6 +267,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public List<Series> listSeries() {
     List<Series> result = new LinkedList<Series>();
     List<String> ids = new LinkedList<String>();
@@ -263,6 +291,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<EBookFile>> listFilesByBookId() {
     Map<String, List<EBookFile>> result = new HashMap<String, List<EBookFile>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_DATA.getStatement();
@@ -286,6 +318,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Author>> listAuthorsByBookId() {
     Map<String, List<Author>> result = new HashMap<String, List<Author>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_AUTHORS.getStatement();
@@ -312,6 +348,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Publisher>> listPublishersByBookId() {
     Map<String, List<Publisher>> result = new HashMap<String, List<Publisher>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_PUBLISHERS.getStatement();
@@ -338,6 +378,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Tag>> listTagsByBookId() {
     Map<String, List<Tag>> result = new HashMap<String, List<Tag>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_TAGS.getStatement();
@@ -364,6 +408,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Series>> listSeriesByBookId() {
     Map<String, List<Series>> result = new HashMap<String, List<Series>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_SERIES.getStatement();
@@ -420,6 +468,10 @@ public enum Database {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, String> getMapOfSavedSearches() {
     final String MIDDLE_DELIMITER = "\": \"";
     Map<String, String> result = new HashMap<String, String>();

@@ -187,9 +187,7 @@ public enum CachedFileManager {
     ObjectOutputStream os = null;
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
-    if (callback != null ) {
-      callback.setProgressMax(cachedFilesMap.entrySet().size());
-    }
+    if (callback != null ) callback.setProgressMax(cachedFilesMap.entrySet().size());
     try {
       try {
         logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
@@ -202,9 +200,7 @@ public enum CachedFileManager {
 
         // Write out the cache entries
         for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
-          if (callback != null) {
-            callback.incStepProgressIndicatorPosition();
-          }
+          if (callback != null) callback.incStepProgressIndicatorPosition();
           CachedFile cf = m.getValue();
           String key = m.getKey();
 
@@ -222,6 +218,7 @@ public enum CachedFileManager {
             ignoredCount++;
             continue;
           }
+          // No point in caching information if CRC not known
           if (!cf.isCrc()) {
             if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
             crcNotKnown++;

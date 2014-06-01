@@ -501,6 +501,10 @@ public class Book implements SplitableByLetter {
     filesSorted = false;
   }
 
+  /**
+   *
+   * @param file
+   */
   public void addFile(EBookFile file) {
     files.add(file);
     epubFileComputed = false;

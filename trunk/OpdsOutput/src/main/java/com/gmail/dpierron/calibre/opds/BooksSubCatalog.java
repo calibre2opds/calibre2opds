@@ -513,11 +513,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // prepare to copy the ebook file
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: prepare to copy the ebook file " + file.getName());
       // TODO ITIMPI  Why is EPUB treated as a special case?
-      if (file.getFormat() == EBookFormat.EPUB)
-        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile(), book);
-      else
-        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile());
-      // Allowm for books on specific URL (#c2o-160)
+      CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile(),
+                                                          (file.getFormat() == EBookFormat.EPUB) ? book : null);
+      // Allow for books on specific URL (#c2o-160)
       String prefix = currentProfile.getUrlBooks();
       if (Helper.isNullOrEmpty(prefix)) {
         prefix = Constants.PARENT_PATH_PREFIX + Constants.PARENT_PATH_PREFIX ;
@@ -653,7 +651,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
           CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
         }
-        }
+      }
     }
     // If we are generating a ctalog for a Nook we cache the results for use later
     if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {

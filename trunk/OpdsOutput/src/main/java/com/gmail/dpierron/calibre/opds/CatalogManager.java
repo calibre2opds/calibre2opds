@@ -217,6 +217,8 @@ public enum CatalogManager {
     String relativePath = filePath.substring(databasePathLength);
     if (! listOfFilesPathsToCopy.contains(relativePath))
       listOfFilesPathsToCopy.add(relativePath);
+    // TODO  Work out if this following line is ever needed
+    // TODO  If not we can eliminate the version that passed in book as a parameter
     // mapOfBookByPathToCopy.put(relativePath, book);
     /// listOfFilesToCopy.add(file);
   }
