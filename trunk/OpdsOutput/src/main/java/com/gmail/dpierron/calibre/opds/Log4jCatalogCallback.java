@@ -1,5 +1,8 @@
 package com.gmail.dpierron.calibre.opds;
 
+/*
+ *  Calss that is used when in batch mode for logging information on progress
+ */
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
@@ -17,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-
 public class Log4jCatalogCallback implements CatalogCallbackInterface {
   private final static Logger logger = Logger.getLogger(Catalog.class);
   private final static String doNot = Localization.Main.getText("config.negate");
@@ -27,6 +29,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
   ProgressIndicator progressStep = new ProgressIndicator().setIndicator('*');
   protected boolean continueGenerating = true;
   private boolean startGui = true;
+  private long stageStart;
 
   /**
    * Dump the value for the given option to the log file
@@ -89,205 +92,217 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     logger.info("");
   }
 
-  public void startCreateMainCatalog() {
-    // do nothing
+
+  public void setStartGui (boolean startGui) {
+    this.startGui = startGui;
   }
 
-  public void startCreatedMainCatalog() {
-    // do nothing
+  // ---------------------------
+  //  CatalogCallBackInterface
+  // --------------------------
+  long stageStartTime;
+
+  private void startStage(long nb, String localizationKey) {
+    stageStartTime = System.currentTimeMillis();
+    logger.info(Localization.Main.getText(localizationKey));
+    progressStep.setMaxScale(nb);
   }
 
-  public void endCreatedMainCatalog(String where, long timeInHtml) {
-    progressStep.reset();
+  private void endStage(String localizationKey) {
+    logger.info(Localization.Main.getText("info.step.donein",  System.currentTimeMillis() - stageStartTime));
+    stageStartTime = System.currentTimeMillis();
+    progressStep.reset();       // Not sure this is necessary!
+  }
+
+  private void setCount(String summary)  {
+    logger.info(summary);
+  }
+
+  public void startInitializeMainCatalog() {
+    startStage(0, "info.step.started");
+  }
+
+  public void endInitializeMainCatalog() {
+    endStage("info.step.started");
+  }
+
+  public void startFinalizeMainCatalog() {
+    startStage(0 ,"info.step.done");
+  }
+
+  public void endFinalizeMainCatalog(String where, long timeInHtml) {
+    endStage("info.step.done");
     if (timeInHtml > 1000)
       logger.info(Localization.Main.getText("info.html.donein", timeInHtml / 1000));
-
     logger.info(Localization.Main.getText("info.step.done", where));
   }
 
   public void startReadDatabase() {
-    logger.info(Localization.Main.getText("info.step.database"));
+    startStage(0, "info.step.database");
   }
 
-  public void endReadDatabase(long milliseconds, String summary) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    logger.info(Localization.Main.getText(summary));
+  public void endReadDatabase(String summary) {
+    // logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+    endStage(summary);
   }
 
   public void setAuthorCount(String s) {
-    return;
+    setCount(s);
   }
   public void setSeriesCount(String s) {
-    return;
+    setCount(s);
   }
   public void setTagCount(String s) {
-    return;
+    setCount(s);
   }
   public void setFeaturedCount(String s) {
-    return;
+    setCount(s);
   }
-  public void setRecentCount(String s) { return; }
+  public void setRecentCount(String s) { setCount(s); }
 
   public void setCopyLibCount(String s) {
-    // do nothing
+    setCount(s);
   }
 
   public void setCopyCatCount(String s) {
-    // do nothing
+    setCount(s);
   }
 
   public void startCreateTags(long nb) {
-    logger.info(Localization.Main.getText("info.step.tags"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.tags");
   }
 
-  public void endCreateTags(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateTags() {
+    endStage("info.step.tags");
   }
 
   public void disableCreateTags() {}
 
   public void startCreateAuthors(long nb) {
-    logger.info(Localization.Main.getText("info.step.authors"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.authors");
   }
 
-  public void endCreateAuthors(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateAuthors() {
+    endStage("info.step.authors");
   }
 
   public void disableCreateAuthors() {}
 
   public void startCreateSeries(long nb) {
-    logger.info(Localization.Main.getText("info.step.series"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.series");
   }
 
-  public void endCreateSeries(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateSeries() {
+    endStage("info.step.series");
   }
 
   public void disableCreateSeries() {}
 
   public void startCreateRecent(long nb) {
-    logger.info(Localization.Main.getText("info.step.recent"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.recent");
   }
 
-  public void endCreateRecent(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateRecent() {
+    endStage("info.step.recent");
   }
 
   public void disableCreateRecent() {}
 
   public void startCreateRated(long nb) {
-    logger.info(Localization.Main.getText("info.step.rated"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.rated");
   }
 
-  public void endCreateRated(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateRated() {
+    endStage("info.step.rated");
   }
 
   public void disableCreateRated() {}
 
   public void startCreateAllbooks(long nb) {
-    logger.info(Localization.Main.getText("info.step.allbooks"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.allbooks");
   }
 
-  public void endCreateAllbooks(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateAllbooks() {
+    endStage("info.step.allbooks");
   }
 
   public void disableCreateAllBooks() {}
 
   public void startCreateFeaturedBooks(long nb) {
-    logger.info(Localization.Main.getText("info.step.featuredbooks"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.featuredbooks");
   }
 
-  public void endCreateFeaturedBooks(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateFeaturedBooks() {
+    endStage("info.step.featuredbooks");
   }
 
   public void disableCreateFeaturedBooks() {}
 
   public void startCreateCustomCatalogs(long nb) {
-    logger.info(Localization.Main.getText("info.step.customcatalogs"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.customcatalogs");
   }
 
-  public void endCreateCustomCatalogs(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateCustomCatalogs() {
+    endStage("info.step.customcatalogs");
   }
 
   public void disableCreateCustomCatalogs() {}
 
   public void startReprocessingEpubMetadata(long nb) {
-    logger.info(Localization.Main.getText("info.step.reprocessingEpubMetadata"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.reprocessingEpubMetadata");
   }
 
-  public void endReprocessingEpubMetadata(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endReprocessingEpubMetadata() {
+    endStage("info.step.reprocessingEpubMetadata");
   }
 
   public void disableReprocessingEpubMetadata() {}
 
   public void startCreateJavascriptDatabase(long nb) {
-    logger.info(Localization.Main.getText("info.step.index"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.index");
   }
 
-  public void endCreateJavascriptDatabase(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endCreateJavascriptDatabase() {
+    endStage("info.step.index");
   }
 
   public void disableCreateJavascriptDatabase() {}
 
   public void startCopyLibToTarget(long nb) {
-    logger.info(Localization.Main.getText("info.step.copylib"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.copylib");
+  }
+
+  public void endCopyLibToTarget() {
+    endStage("info.step.copylib");
   }
 
   public void startCopyCatToTarget(long nb) {
-    logger.info(Localization.Main.getText("info.step.copycat"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.copycat");
+  }
+
+  public void endCopyCatToTarget() {
+    endStage("info.step.copycat");
   }
 
   public void disableCopyLibToTarget() {}
 
   public void startZipCatalog(long nb) {
-    logger.info(Localization.Main.getText("info.step.zipCatalog"));
-    progressStep.setMaxScale(nb);
+    startStage(nb, "info.step.zipCatalog");
   }
 
-  public void endZipCatalog(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
+  public void endZipCatalog() {
+    endStage("info.step.zipCatalog");
   }
 
   public void disableZipCatalog() {}
 
-  public void setProgressMax (long maxSteps) {
-    if (startGui) {
-      checkIfContinueGenerating();
-      progressStep.setMaxVisible(maxSteps);
-    }
-  }
+  public void setProgressMax (long maxSteps) {  }
+
   public void incStepProgressIndicatorPosition() {
     if (startGui) {
       checkIfContinueGenerating();
       progressStep.incPosition();
     }
-  }
-
-  public void endCopyLibToTarget(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-  }
-
-  public void endCopyCatToTarget(long milliseconds) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
   }
 
   public void errorOccured(String message, Throwable error) {
@@ -338,11 +353,6 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     return;
   }
 
-  public void setStopGenerating () {
-
-  };
-
-  public void setStartGui (boolean startGui) {
-    this.startGui = startGui;
-  }
+  public void setStopGenerating() {};
+  public void clearStopGenerating() {};
 }

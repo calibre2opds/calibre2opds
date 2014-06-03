@@ -19,21 +19,23 @@ public interface CatalogCallbackInterface {
 
   public void incStepProgressIndicatorPosition();
 
-  // main catalog
-  public void startCreateMainCatalog();
-
-  public void startCreatedMainCatalog();
-
-  public void endCreatedMainCatalog(String where, long timeInHtml);
-
   // show options
   public void dumpOptions();
+
+  // main catalog
+  public void startInitializeMainCatalog();
+
+  public void endInitializeMainCatalog();
+
+  public void startFinalizeMainCatalog();
+
+  public void endFinalizeMainCatalog(String where, long timeInHtml);
 
   // database
 
   public void startReadDatabase();
 
-  public void endReadDatabase(long milliseconds, String summary);
+  public void endReadDatabase(String summary);
 
   // Tags
 
@@ -41,7 +43,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateTags(long nb);
 
-  public void endCreateTags(long milliseconds);
+  public void endCreateTags();
 
   public void disableCreateTags();
 
@@ -51,7 +53,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateAuthors(long nb);
 
-  public void endCreateAuthors(long milliseconds);
+  public void endCreateAuthors();
 
   public void disableCreateAuthors();
 
@@ -61,7 +63,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateSeries(long nb);
 
-  public void endCreateSeries(long milliseconds);
+  public void endCreateSeries();
 
   public void disableCreateSeries();
 
@@ -71,7 +73,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateRecent(long nb);
 
-  public void endCreateRecent(long milliseconds);
+  public void endCreateRecent();
 
   public void disableCreateRecent();
 
@@ -79,7 +81,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateRated(long nb);
 
-  public void endCreateRated(long milliseconds);
+  public void endCreateRated();
 
   public void disableCreateRated();
 
@@ -87,7 +89,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateAllbooks(long nb);
 
-  public void endCreateAllbooks(long milliseconds);
+  public void endCreateAllbooks();
 
   public void disableCreateAllBooks();
 
@@ -97,7 +99,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateFeaturedBooks(long nb);
 
-  public void endCreateFeaturedBooks(long milliseconds);
+  public void endCreateFeaturedBooks();
 
   public void disableCreateFeaturedBooks();
 
@@ -105,7 +107,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateCustomCatalogs(long nb);
 
-  public void endCreateCustomCatalogs(long milliseconds);
+  public void endCreateCustomCatalogs();
 
   public void disableCreateCustomCatalogs();
 
@@ -113,7 +115,7 @@ public interface CatalogCallbackInterface {
 
   public void startReprocessingEpubMetadata(long nb);
 
-  public void endReprocessingEpubMetadata(long milliseconds);
+  public void endReprocessingEpubMetadata();
 
   public void disableReprocessingEpubMetadata();
 
@@ -123,7 +125,7 @@ public interface CatalogCallbackInterface {
 
   public void startCreateJavascriptDatabase(long nb);
 
-  public void endCreateJavascriptDatabase(long milliseconds);
+  public void endCreateJavascriptDatabase();
 
   public void disableCreateJavascriptDatabase();
 
@@ -137,15 +139,15 @@ public interface CatalogCallbackInterface {
 
   public void startCopyCatToTarget(long nb);
 
-  public void endCopyLibToTarget(long milliseconds);
+  public void endCopyLibToTarget();
 
   public void disableCopyLibToTarget();
 
-  public void endCopyCatToTarget(long milliseconds);
+  public void endCopyCatToTarget();
 
   public void startZipCatalog(long nb);
 
-  public void endZipCatalog(long milliseconds);
+  public void endZipCatalog();
 
   public void disableZipCatalog();
 
@@ -172,5 +174,6 @@ public interface CatalogCallbackInterface {
   public int getWarnCount();
   public void incrementWarnCount();
 
-  public void setStopGenerating ();
+  public void setStopGenerating();
+  public void clearStopGenerating();
 }

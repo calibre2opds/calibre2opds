@@ -51,6 +51,8 @@ public class Mainframe extends javax.swing.JFrame {
   // IMPORTANT:  We need to update this cached copy if the profile ever gets changed!
   private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
   private guiField[] guiFields;
+  private File  SyncLogFile = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+
 
   /**
    * Creates new form Mainframe
@@ -283,6 +285,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(mnuToolsResetSecurityCache, null, "gui.menu.tools.resetEncrypted"),
       new guiField(mnuToolsConfigLog,null,"gui.menu.tools.logConfig"),
       new guiField(mnuToolsOpenLog,null,  "gui.menu.tools.logFile"),
+      new guiField(mnuToolsOpenSyncLog,null,  "gui.menu.tools.syncFile"),
       new guiField(mnuToolsClearLog, null, "gui.menu.tools.logClear"),
       new guiField(mnuToolsOpenConfig, null, "gui.menu.tools.configFolder"),
       // Should always be last entry in case it triggers re-localisation to new language
@@ -1074,6 +1077,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     // `Additional translations  (if any)
     adaptInterfaceToDeviceSpecificMode(currentProfile.getDeviceMode());
+    mnuToolsOpenSyncLog.setVisible(SyncLogFile.exists());
   }
 
   /**
@@ -1472,8 +1476,9 @@ public class Mainframe extends javax.swing.JFrame {
         mnuToolsprocessEpubMetadataOfAllBooks = new javax.swing.JMenuItem();
         mnuToolsResetSecurityCache = new javax.swing.JMenuItem();
         mnuToolsConfigLog = new javax.swing.JMenuItem();
-        mnuToolsOpenLog = new javax.swing.JMenuItem();
         mnuToolsClearLog = new javax.swing.JMenuItem();
+        mnuToolsOpenLog = new javax.swing.JMenuItem();
+        mnuToolsOpenSyncLog = new javax.swing.JMenuItem();
         mnuToolsOpenConfig = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpDonate = new javax.swing.JMenuItem();
@@ -4351,6 +4356,14 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsConfigLog);
 
+        mnuToolsClearLog.setText("mnuToolsClearLog");
+        mnuToolsClearLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsClearLogActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsClearLog);
+
         mnuToolsOpenLog.setText("mnuToolsOpenLog");
         mnuToolsOpenLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4359,13 +4372,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsOpenLog);
 
-        mnuToolsClearLog.setText("mnuToolsClearLog");
-        mnuToolsClearLog.addActionListener(new java.awt.event.ActionListener() {
+        mnuToolsOpenSyncLog.setText("mnuToolsOpenSyncLog");
+        mnuToolsOpenSyncLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuToolsClearLogActionPerformed(evt);
+                mnuToolsOpenSyncLogActionPerformed(evt);
             }
         });
-        mnuTools.add(mnuToolsClearLog);
+        mnuTools.add(mnuToolsOpenSyncLog);
 
         mnuToolsOpenConfig.setText("mnuToolsOpenConfig");
         mnuToolsOpenConfig.addActionListener(new java.awt.event.ActionListener() {
@@ -4581,7 +4594,15 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {                                                  
     debugShowLogFile();
-  }                                               
+  }
+
+  private void mnuToolsOpenSyncLogActionPerformed(java.awt.event.ActionEvent evt) {
+    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+    if (f.exists()) {
+      logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + f.getPath());
+      debugShowFile(f);
+    }
+  }
 
   private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {                                                
   debugShowSupportFolder();
@@ -5004,6 +5025,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuToolsConfigLog;
     private javax.swing.JMenuItem mnuToolsOpenConfig;
     private javax.swing.JMenuItem mnuToolsOpenLog;
+    private javax.swing.JMenuItem mnuToolsOpenSyncLog;
     private javax.swing.JMenuItem mnuToolsResetSecurityCache;
     private javax.swing.JMenuItem mnuToolsprocessEpubMetadataOfAllBooks;
     private javax.swing.JPanel pnlAdvancedOptions;

@@ -186,8 +186,7 @@ public class Catalog {
    */
   private void syncFiles(CachedFile src, CachedFile dst) throws IOException {
 
-    if (logger.isTraceEnabled())
-      logger.trace("syncFiles (" + src + "," + dst + ")");
+    if (logger.isTraceEnabled()) logger.trace("syncFiles (" + src + "," + dst + ")");
 
     callback.incStepProgressIndicatorPosition();
 
@@ -203,23 +202,14 @@ public class Catalog {
       // Calibre while a generate is running then the book will be missing when we get
       // around to trying to copy it.   We will silently ignore such cases although a wrning
       // message is added to the log file.
-      //
-      // If the file that is missing is a .html or a .xml file then this is more serious as
-      // it suggest a file has gone missing that we created earlier in the generation process.
-      //
-      // There have also been some suggestions tha tthere might be a mismatch between the real
-      // state of the file and the cached state.  If so this is likely to be a program logic
-      // fault so we want to get details to help with diagnostics
-
-      File f = new File(src.getAbsolutePath());
-      if (f.exists() != false) {
-        logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
-        return;
-      }
+      src.clearCachedInformation();
+    }
+    if (src.exists()) {
+      logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
+    } else {
       // If we get here at least the cached state agrees with the real state!
       // If it is missing .xml or .html file then this is still a significant issue
-      if (src.getName().endsWith(Constants.XML_EXTENSION)
-      || src.getName().endsWith(Constants.HTML_EXTENSION)) {
+      if (! src.isDirectory()) {
         logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
         return;
       }
@@ -234,8 +224,7 @@ public class Catalog {
     if (src.getAbsolutePath().equalsIgnoreCase(dst.getAbsolutePath())) {
       // Lets add them to stats so we know it happens!
       copyToSelf++;
-      if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
+      if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
       return;
     }
 
@@ -244,8 +233,7 @@ public class Catalog {
     //-----------------------------------------------------------------------------
 
     if (src.isDirectory()) {
-      if (logger.isTraceEnabled())
-        logger.trace("Directory " + src.getName() + " Processing Started");
+      if (logger.isTraceEnabled()) logger.trace("Directory " + src.getName() + " Processing Started");
       String displayText = src.getParentFile().getName() + File.separator + src.getName();
       // Improve message by removing name of TEMP folder from start
       if (displayText.startsWith(generateFolder.getName())) {
@@ -256,13 +244,17 @@ public class Catalog {
 
       // Create any missing target directories
       if (!dst.exists()) {
-        if (logger.isTraceEnabled())
-          logger.trace("Directory " + dst.getName() + " Create missing target");
-        if (syncLog)
-          syncLogFile.printf("CREATED: %s\n", dst.getName());
-        if (dst.getName().endsWith("_Page"))
-          assert false;
+        dst.clearCachedInformation();
+      }
+      if (!dst.exists()) {
+        if (logger.isTraceEnabled()) logger.trace("Directory " + dst.getName() + " Create missing target");
+        if (syncLog) {
+          syncLogFile.printf("CREATED: %s", dst.getName());
+          syncLogFile.println();
+        }
+        assert ! dst.getName().endsWith("_Page");   // Legacy check for error conditions
         dst.mkdirs();
+        dst.clearCachedInformation();
       }
 
       //  Sanity check - target should be a directory
@@ -299,22 +291,21 @@ public class Catalog {
           if ((src.getName().endsWith(Constants.XML_EXTENSION))
           && (currentProfile.getGenerateOpds() == true)) {
             // XML files never needed if not generating OPDS catalog
-            if (logger.isTraceEnabled())
-              logger.trace("No OPDS catalog so delete " + src.getAbsolutePath());
+            if (logger.isTraceEnabled()) logger.trace("No OPDS catalog so delete " + src.getAbsolutePath());
           } else {
             // remove entry from list of deletion candidates
             // as we are going to over-write it
              targetNotInSourceFiles.remove(destFile);
-            if (CachedFileManager.INSTANCE.inCache(destFile) == null)
+            if (CachedFileManager.INSTANCE.inCache(destFile) == null) {
               destFile = CachedFileManager.INSTANCE.addCachedFile(destFile);
+            }
           }
         } else {
           // If the target does not exist, then we need to do
           // nothing about deleting the file.   However not sure
           // what this means in terms of application logic if we
           // actually get to this point!
-          if (logger.isTraceEnabled())
-            logger.trace("Directory " + src.getAbsolutePath() + " Unexpected missing target" + dst.getName());
+          if (logger.isTraceEnabled()) logger.trace("Directory " + src.getAbsolutePath() + " Unexpected missing target" + dst.getName());
           CachedFileManager.INSTANCE.removeCachedFile(destFile);
         }
         // copy across the file
@@ -323,13 +314,14 @@ public class Catalog {
       // Now actually remove the files that are still in the list of removal candidates
       for (File file : targetNotInSourceFiles) {
         Helper.delete(file, true);
-        if (syncLog)
-          syncLogFile.printf("DELETED: %s\n", file.getName());
+        if (syncLog) {
+          syncLogFile.printf("DELETED: %s", file.getName());
+          syncLogFile.println();
+        }
         copyDeleted++;
         CachedFileManager.INSTANCE.removeCachedFile(file);
       }
-      if (logger.isTraceEnabled())
-        logger.trace("Directory " + src.getName() + " Processing completed");
+      if (logger.isTraceEnabled()) logger.trace("Directory " + src.getName() + " Processing completed");
     } // End of Directory section
 
     //-----------------------------------------------------------------------------------
@@ -345,47 +337,45 @@ public class Catalog {
       if (!currentProfile.getGenerateOpds()) {
         if (src.getName().endsWith(Constants.XML_EXTENSION)) {
           int dummy = 1;
-          if (dst.exists()) {
-            if (syncFilesDetail && logger.isTraceEnabled())
-              logger.trace("File " + dst.getAbsolutePath() + ": Deleted as XML file and no OPDS catalog required");
-          } else {
-            if (syncFilesDetail && logger.isTraceEnabled())
-              logger.trace("File " + src.getAbsolutePath() + ": Ignored as XML file and no OPDS catalog required");
-          }
+          if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + dst.getAbsolutePath()+ ": "
+                                                          + (dst.exists() ? ": Deleted as XML file and no OPDS catalog required"
+                                                                          : ": Ignored as XML file and no OPDS catalog required"));
           CachedFileManager.INSTANCE.removeCachedFile(src);
           CachedFileManager.INSTANCE.removeCachedFile(dst);
           return;
         }
       }
 
-      if (syncFilesDetail && logger.isTraceEnabled())
-        logger.trace("File " + src.getName() + ": Checking to see if should be copied");
+      if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Checking to see if should be copied");
 
       // Files that do not exist on target always need copying
       // ... so we only need to check other cases
       if (!dst.exists()) {
-        if (syncFilesDetail && logger.isTraceEnabled())
-          logger.trace("File " + src.getName() + ": Copy as target is missing");
+        dst.clearCachedInformation();
+      }
+      if (!dst.exists()) {
+        if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as target is missing");
         copyExistHits++;
         copyflag = true;
-        if (syncLog)
-          syncLogFile.printf("COPIED (New file): %s\n", dst.getName());
+        if (syncLog) {
+          syncLogFile.printf("COPIED (New file): %s", dst.getName());
+          syncLogFile.println();
+        }
         dst.clearCachedInformation();
       } else {
 
-        if (syncFilesDetail && logger.isTraceEnabled())
-          logger.trace("File " + src.getName() + ": .. exists on target");
+        if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. exists on target");
         // Target present, so check lengths
         if (src.length() != dst.length()) {
-          if (logger.isTraceEnabled())
-            logger.trace("File " + src.getName() + ": Copy as size changed");
+          if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as size changed");
           copyLengthHits++;
           copyflag = true;
-          if (syncLog)
+          if (syncLog) {
             syncLogFile.printf("COPIED (length changed): %s\n", src.getName());
+            syncLogFile.println();
+          }
         } else {
-          if (syncFilesDetail && logger.isTraceEnabled())
-            logger.trace("File " + src.getName() + ": .. size same on source and target");
+          if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. size same on source and target");
 
           // Size unchanged, so check dates
           // TODO  There could be some issues if the date/time on the target
@@ -395,42 +385,48 @@ public class Catalog {
           //       time being we are assuming this is not an issue.
           if (src.lastModified() <= dst.lastModified()) {
             // Target newer than source
-            if (logger.isTraceEnabled())
-              logger.trace("File " + src.getName() + ": Skip Copy as source is not newer");
+            if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip Copy as source is not newer");
             copyDateMisses++;
             copyflag = false;
-            if (syncLog)
+            if (syncLog) {
               syncLogFile.printf("NOT COPIED (Source not newer): %s\n", dst.getName());
+              syncLogFile.println();
+            }
           } else {
-            if (syncFilesDetail && logger.isTraceEnabled())
-              logger.trace("File " + src.getName() + ": .. source is newer");
+            if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. source is newer");
             // Source newer, but same size so see if CRC check to be done
             if (!checkCRC) {
-              if (logger.isTraceEnabled())
-                logger.trace("File " + src.getName() + ": Copy as CRC check not active");
-              if (dst.isCrc())
-                if (logger.isTraceEnabled())
-                  logger.trace("File " + src.getName() + "CRC entry invalidated");
-              dst.clearCrc();
+              if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as CRC check not active");
+/*
+              if (dst.isCrc()) {
+                if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + "CRC entry invalidated");
+                // TODO Not sure this is really needed.  Maybe handled autmatically already
+                dst.clearCachedCrc();
+              }
+*/
               copyCrcUnchecked++;
               copyflag = true;
-              if (syncLog)
+              if (syncLog) {
                 syncLogFile.printf("COPIED (CRC check not active): %s\n", src.getName());
+                syncLogFile.println();
+              }
             } else {
               if (src.getCrc() != dst.getCrc()) {
-                if (logger.isTraceEnabled())
-                  logger.trace("File " + src.getName() + ": Copy as CRC's different");
+                if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as CRC's different");
                 copyCrcHits++;
                 copyflag = true;
-                if (syncLog)
+                if (syncLog) {
                   syncLogFile.printf("COPIED (CRC changed): %s\n", src.getName());
+                  syncLogFile.println();
+                }
               } else {
-                if (logger.isTraceEnabled())
-                  logger.trace("File " + src.getName() + ": Skip copy as CRC's match");
+                if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip copy as CRC's match");
                 copyCrcMisses++;
                 copyflag = false;
-                if (syncLog)
+                if (syncLog) {
                   syncLogFile.printf("NOT COPIED (CRC same): %s\n", src.getName());
+                  syncLogFile.println();
+                }
               }
             }
           }
@@ -455,12 +451,10 @@ public class Catalog {
         }
         msgCount++;
 
-        if (syncFilesDetail && logger.isDebugEnabled())
-          logger.debug("Copying file " + src.getName() + " to " + dst.getAbsolutePath());
+        if (syncFilesDetail && logger.isDebugEnabled()) logger.debug("Copying file " + src.getName() + " to " + dst.getAbsolutePath());
         try {
           Helper.copy(src, dst);
-          dst.exists();        // Dummy call to check cache value as used!
-          dst.setCrc(src.getCrc());
+          dst.setCachedValues(true, src.lastModified(), src.length(), src.getCrc(), src.isDirectory());
         } catch (java.io.FileNotFoundException e) {
           // We ignore failed attempts to copy a file, although we log them
           // This allows for the user to have made changes to the library while
@@ -552,13 +546,17 @@ public class Catalog {
   public void createMainCatalog() throws IOException {
     long countMetadata;     // Count of files for which ePub metadata is updated
 
+    callback.startInitializeMainCatalog();
     CatalogManager.recordRamUsage("Initial");
 
-    // reinitialize caches (in case of multiple calls in the same session)
+    // reinitialize objects/caches (in case of multiple calls in the same session)
     // CatalogManager.INSTANCE.catalogManager.reset();
     CatalogManager.INSTANCE.reset();
     CatalogManager.INSTANCE.initialize();
     CatalogManager.INSTANCE.callback = callback;
+    CatalogManager.INSTANCE.thumbnailManager.reset();
+    CatalogManager.INSTANCE.coverManager.reset();
+    CachedFileManager.INSTANCE.reset();
 
     Localization.Main.reloadLocalizations();
     Localization.Enum.reloadLocalizations();
@@ -637,7 +635,7 @@ public class Catalog {
       callback.errorOccured(Localization.Main.getText("error.nocatalog"), null);
       return;
     }
-    // THere we aso add some checks against unusual values in the catalog value  )c2o-91)
+    // There we aso add some checks against unusual values in the catalog value  )c2o-91)
     if (catalogFolderName.startsWith("/")
     ||  catalogFolderName.startsWith("\\")
     ||  catalogFolderName.startsWith("../")
@@ -789,12 +787,6 @@ public class Catalog {
     //                  GENERATION PHASE
 
 
-    // Ensure objects are set to clean state (in case resused in same run)
-
-    CachedFileManager.INSTANCE.reset();
-    CatalogManager.INSTANCE.thumbnailManager.reset();
-    CatalogManager.INSTANCE.coverManager.reset();
-
     CatalogManager.recordRamUsage("Start of Generation");
 
     try {
@@ -816,10 +808,52 @@ public class Catalog {
 
       // Save the location of the Catalog folder for any other component that needs to knw it
       CatalogManager.INSTANCE.setGenerateFolder(generateFolder);
-      callback.startCreateMainCatalog();
+
+      // Load up the File Cache if it exists
+
+      switch (currentProfile.getDeviceMode()) {
+        case Nook:
+          CachedFileManager.INSTANCE.setCacheFolder(targetFolder);
+          break;
+        default:
+          CachedFileManager.INSTANCE.setCacheFolder(catalogFolder);
+          break;
+      }
+      long loadCacheStart = System.currentTimeMillis();
+      if (checkCRC) {
+        if (logger.isTraceEnabled())
+          logger.trace("Loading Cache");
+        callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
+        CachedFileManager.INSTANCE.loadCache();
+        logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
+
+      } else {
+        if (logger.isTraceEnabled())
+          logger.trace("Deleting Cache");
+        CachedFileManager.INSTANCE.deleteCache();
+      }
+      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
+      CatalogManager.recordRamUsage("After lading (and deleting cache");
+
+      // copy the resource files to the catalog folder
+      // We check in the following order:
+      //  - Configuration folder
+      //  - Install folder
+      //  - built-in resource
+
+      logger.debug("STARTED: Copying Resource files");
+      for (String resource : Constants.FILE_RESOURCES) {
+        callback.checkIfContinueGenerating();
+        InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
+        //        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
+        File resourceFile = new File(generateFolder, resource);
+        Helper.copy(resourceStream, resourceFile);
+        logger.trace("Copying Resource " + resource);
+      }
+      logger.debug("COMPLETED: Copying Resource files");
+      callback.endInitializeMainCatalog();
 
       callback.startReadDatabase();
-      Long now = System.currentTimeMillis();
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
@@ -875,7 +909,7 @@ public class Catalog {
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-            callback.endCreatedMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+            callback.endFinalizeMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
             return;
           }
         }
@@ -910,7 +944,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
             if (customCatalogFilter == null) {
               // an error occured, let's ask the user if he wants to abort
               if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-                callback.endCreatedMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+                callback.endFinalizeMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
                 return;
               }
               // TODO Set something to suppress this custom catalog entry at generate stage!
@@ -944,44 +978,14 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       } else {
         logger.info("Database loaded: " + books.size() + " books");
       }
-      callback.checkIfContinueGenerating();
-
       CatalogManager.recordRamUsage("After loading database");
-      callback.endReadDatabase(System.currentTimeMillis() - now, Summarizer.INSTANCE.getBookWord(books.size()));
+
       callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
       callback.setSeriesCount("" + DataModel.INSTANCE.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
       int recentSize = DataModel.INSTANCE.getListOfBooks().size();
       if (recentSize > currentProfile.getBooksInRecentAdditions()) recentSize = currentProfile.getBooksInRecentAdditions();
       callback.setRecentCount("" + recentSize + " " + Localization.Main.getText("bookword.title"));
-
-      // Load up the File Cache if it exists
-
-      now = System.currentTimeMillis();
-      switch (currentProfile.getDeviceMode()) {
-        case Nook:
-          CachedFileManager.INSTANCE.setCacheFolder(targetFolder);
-          break;
-        default:
-          CachedFileManager.INSTANCE.setCacheFolder(catalogFolder);
-          break;
-      }
-      if (checkCRC) {
-        if (logger.isTraceEnabled())
-          logger.trace("Loading Cache");
-        callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
-        CachedFileManager.INSTANCE.loadCache();
-        logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
-
-      } else {
-        if (logger.isTraceEnabled())
-          logger.trace("Deleting Cache");
-        CachedFileManager.INSTANCE.deleteCache();
-      }
-      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
-      CatalogManager.recordRamUsage("After deleting cache");
-
-      callback.checkIfContinueGenerating();
 
 
       // prepare the Trook specific search database
@@ -990,24 +994,8 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         TrookSpecificSearchDatabaseManager.INSTANCE.setDatabaseFile(new File(generateFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME));
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
+      callback.endReadDatabase(Summarizer.INSTANCE.getBookWord(books.size()));
 
-      // copy the resource files to the catalog folder
-      // We check in the following order:
-      //  - Configuration folder
-      //  - Install folder
-      //  - built-in resource
-
-      logger.debug("STARTED: Copying Resource files");
-      for (String resource : Constants.FILE_RESOURCES) {
-        callback.checkIfContinueGenerating();
-        InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
-//        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
-        File resourceFile = new File(generateFolder, resource);
-        Helper.copy(resourceStream, resourceFile);
-        logger.trace("Copying Resource " + resource);
-      }
-      logger.debug("COMPLETED: Copying Resource files");
-      callback.checkIfContinueGenerating();
 
       //      Standard sub-catalogs for a folder level
 
@@ -1034,10 +1022,9 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.debug("STARTING: Generating Javascript database");
       long nbKeywords = IndexManager.INSTANCE.size();
       callback.startCreateJavascriptDatabase(nbKeywords);
-      now = System.currentTimeMillis();
       if (currentProfile.getGenerateIndex())
         IndexManager.INSTANCE.exportToJavascriptArrays();
-      callback.endCreateJavascriptDatabase(System.currentTimeMillis() - now);
+      callback.endCreateJavascriptDatabase();
       logger.debug("COMPLETED: Generating Javascript database");
       callback.checkIfContinueGenerating();
 
@@ -1045,7 +1032,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       logger.debug("STARTING: Processing ePub Metadata");
       callback.startReprocessingEpubMetadata(DataModel.INSTANCE.getListOfBooks().size());
-      now = System.currentTimeMillis();
       countMetadata = 0;
       if (currentProfile.getReprocessEpubMetadata()) {
         for (Book book : DataModel.INSTANCE.getListOfBooks()) {
@@ -1063,7 +1049,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
           }
         }
       }
-      callback.endReprocessingEpubMetadata(System.currentTimeMillis() - now);
+      callback.endReprocessingEpubMetadata();
       logger.debug("COMPLETED: Processing ePub Metadata");
       callback.checkIfContinueGenerating();
 
@@ -1086,13 +1072,11 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       // if the target folder is set, copy/sync Files from the library there
       int nbFilesToCopyToTarget = CatalogManager.INSTANCE.getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
-      now = System.currentTimeMillis();
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
       if ((currentProfile.getDeviceMode() != DeviceMode.Default)
       && (!currentProfile.getOnlyCatalogAtTarget())) {
         logger.debug("STARTING: syncFiles eBook files to target");
-        now = System.currentTimeMillis();
         for (String pathToCopy : CatalogManager.INSTANCE.getListOfFilesPathsToCopy()) {
           callback.checkIfContinueGenerating();
           CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
@@ -1142,8 +1126,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                   callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
                   Helper.delete(existingTargetFile, true);
 
-                  if (syncLog)
-                    syncLogFile.printf("DELETED: %s\n", existingTargetFile);
+                  if (syncLog) {
+                    syncLogFile.printf("DELETED: %s", existingTargetFile);
+                    syncLogFile.println();
+                  }
                   // Ensure no longer in cache
                   CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
                 }
@@ -1153,7 +1139,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         }
         logger.debug("COMPLETED: Delete superfluous files from target");
       }
-      callback.endCopyLibToTarget(System.currentTimeMillis() - now);
+      callback.endCopyLibToTarget();
       callback.checkIfContinueGenerating();
 
       long nbCatalogFilesToCopyToTarget = Helper.count(CatalogManager.INSTANCE.getGenerateFolder());
@@ -1164,7 +1150,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       }
       nbCatalogFilesToCopyToTarget += CatalogManager.INSTANCE.getMapOfCatalogImages().size();
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
-      now = System.currentTimeMillis();
       // Now need to decide about the catalog and associated files
       // In particular there are some Nook mode specific files
       // In Nook mode we do not need to copy the catalog files if we have a ZIP'ed copy
@@ -1232,11 +1217,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       }
       CatalogManager.thumbnailManager.writeImageHeightFile();
       CatalogManager.coverManager.writeImageHeightFile();
-      callback.endCopyCatToTarget(System.currentTimeMillis() - now);
+      callback.endCopyCatToTarget();
       callback.checkIfContinueGenerating();
 
       callback.startZipCatalog(nbCatalogFilesToCopyToTarget);
-      now = System.currentTimeMillis();
       if (currentProfile.getZipCatalog()) {
         logger.debug("STARTING: ZIP Catalog");
         String zipFilename = ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle() + ".zip";
@@ -1249,21 +1233,21 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         }
         logger.debug("COMPLETED: ZIP Catalog");
       }
-      callback.endZipCatalog(System.currentTimeMillis() - now);
+      callback.endZipCatalog();
       callback.checkIfContinueGenerating();
 
-      callback.startCreatedMainCatalog();
+      callback.startFinalizeMainCatalog();
       if (syncLog) {
         logger.info("Sync Log: " + ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
       }
       // Save the CRC cache to the catalog folder
       // We always do this even if CRC Checking not enabled
-      now = System.currentTimeMillis();
+      long saveCacheStart= System.currentTimeMillis();
       logger.info(Localization.Main.getText("info.step.savingcache") + " " + CachedFileManager.INSTANCE.getCacheSize());
       callback.showMessage(Localization.Main.getText("info.step.savingcache"));
       CachedFileManager.INSTANCE.saveCache(generateFolder.getPath(), callback);
       logger.info(Localization.Main.getText("info.step.savedcache", CachedFileManager.INSTANCE.getSaveCount(), CachedFileManager.INSTANCE.getIgnoredCount()));
-      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
+      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - saveCacheStart));
 
       callback.checkIfContinueGenerating();
 
@@ -1344,20 +1328,20 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.error(" ");
     } finally {
       // make sure the temp files are deleted whatever happens
-      long now = System.currentTimeMillis();
+      long deleteFilesStart = System.currentTimeMillis();
       logger.info(Localization.Main.getText("info.step.deletingfiles"));
       if (generateFolder != null ) {
         callback.showMessage(Localization.Main.getText("info.step.deletingfiles"));
-        callback.setStopGenerating();
+        callback.clearStopGenerating();
         Helper.delete(generateFolder, false);
       }
-      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - now));
+      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - deleteFilesStart));
       if (generationStopped)
         callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
       else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
-        callback.endCreatedMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+        callback.endFinalizeMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
       CatalogManager.recordRamUsage("End of Generate Run");
       CatalogManager.reportRamUsage("Summary");
     }
