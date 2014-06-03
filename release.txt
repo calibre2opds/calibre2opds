@@ -96,13 +96,14 @@ Usefule links for tracking changes are:
   Change History: http://code.google.com/p/calibre2opds/source/list
 
 v3.4 beta Rev 292
+    - Change: Some of the filenames in the generated catalog have changed their structure.
+              (not really visible to users except that first run with this release may take slightly longer than expected)
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
     - New:    #c2o-93:  Make supported formats and Mime type extendable by users.  Details at:
               http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize#Extend_list_of_supported_formats
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
     - Fix:    #c2o-205: Destination folder uses Default value instead of the per-profile one
     - Change: #c2o-207: Show current profile name in the program window's title
-                        (removed from main screen as this would now be redundant)
     - New:    #c2o-208: Add rel="prev" links on the XML files and back to previous page on HTML files
     - New:    #c2o-209: Add a "boolean" column to promote selected custom searches/external URL before internal ones
     - New:    #c2o-212: Option to sort books within a tag by author and then title

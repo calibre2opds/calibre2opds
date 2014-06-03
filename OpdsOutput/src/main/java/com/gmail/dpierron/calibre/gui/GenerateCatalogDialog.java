@@ -26,6 +26,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   private final static Logger logger = Logger.getLogger(Catalog.class);
   private Log4jCatalogCallback delegate = new Log4jCatalogCallback();
   protected boolean continueGenerating = true;
+  private Long stageStartTime;
+
 
   // step progress indicator
   ProgressIndicator progressStep = new ProgressIndicator() {
@@ -136,13 +138,41 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     label.setText(String.format("%tT", System.currentTimeMillis()));
   }
 
-  public void startCreateMainCatalog() {
-    logger.info(Localization.Main.getText("info.step.started"));
+
+  private void startStage(long nb, JLabel label, String localizationKey) {
+    stageStartTime = System.currentTimeMillis();
+    progressStep.setMaxScale(nb);
+    logger.info(Localization.Main.getText(localizationKey));
+    boldFont(label, true);
+  }
+
+  private void endStage(JLabel label, JLabel time, JCheckBox chkBox) {
+    logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - stageStartTime));
+    System.currentTimeMillis();   // Probably redundant as set when starting stage!
+    if (label.isEnabled()) chkBox.setSelected(true);
+    boldFont(label, false);
+    if (label.isEnabled()) setTimeNow(time);
+    checkIfContinueGenerating();
+  }
+
+  /**
+   * Called when a stage will not be relevant to this generate run
+   *
+   * @param check
+   * @param label
+   * @param time
+   */
+  private void disableStage(JCheckBox check, JLabel label, JLabel time) {
+    check.setEnabled(false);
+    label.setEnabled(false);
+    time.setEnabled(false);
+  }
+
+  public void startInitializeMainCatalog() {
     cmdStopGenerating.setVisible(true);
     cmdStopGenerating.repaint();
     lblStoppingGeneration.setVisible(false);
     lblStoppingGeneration.repaint();
-    progressStep.reset();
     lblStartedTime.setText("");
     lblDatabaseTime.setText("");
     lblAuthorsTime.setText("");
@@ -160,49 +190,24 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblZipCatalogTime.setText("");
     lblFinishedTime.setText("");
     boldFont(lblStarted, true);
+    startStage(100, lblStarted,"info.step.started");
   }
 
-  private void startStage(long nb, JLabel label, String localizationKey) {
-    progressStep.setMaxScale(nb);
-    logger.info(Localization.Main.getText(localizationKey, label));
-    boldFont(label, true);
+  public void endInitializeMainCatalog() {
+    endStage(lblStarted, lblStartedTime, chkStarted);
   }
-
-  private void endStage(long milliseconds, JLabel label, JLabel time, JCheckBox chkBox) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    if (label.isEnabled()) chkBox.setSelected(true);
-    boldFont(label, false);
-    if (label.isEnabled()) setTimeNow(time);
-  }
-
-  /**
-   * Called when a stage will not be relevant to this generate run
-   *
-   * @param check
-   * @param label
-   * @param time
-   */
-  private void disableStage(JCheckBox check, JLabel label, JLabel time) {
-    check.setEnabled(false);
-    label.setEnabled(false);
-    time.setEnabled(false);
-  }
-
 
   public void startReadDatabase() {
-    logger.info(Localization.Main.getText("info.step.database"));
+    startStage(100, lblStarted, "info.step.database");
     chkStarted.setSelected(true);
     setTimeNow(lblStartedTime);
     boldFont(lblStarted, false);
     boldFont(lblDatabase, true);
   }
 
-  public void endReadDatabase(long milliseconds, String summary) {
-    logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    chkDatabase.setSelected(true);
-    boldFont(lblDatabase, false);
+  public void endReadDatabase(String summary) {
     lblDatabase.setText(lblDatabase.getText() + " (" + summary + ")");
-    setTimeNow(lblDatabaseTime);
+    endStage(lblDatabase, lblDatabaseTime, chkDatabase);
   }
 
   public void setAuthorCount(String summary){
@@ -213,8 +218,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblAuthors, "info.step.authors");
   }
 
-  public void endCreateAuthors(long milliseconds) {
-    endStage(milliseconds, lblAuthors, lblAuthorsTime, chkAuthors);
+  public void endCreateAuthors() {
+    endStage(lblAuthors, lblAuthorsTime, chkAuthors);
   }
 
   public void disableCreateAuthors() {
@@ -237,8 +242,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblTags, "info.step.tags");
   }
 
-  public void endCreateTags(long milliseconds) {
-    endStage(milliseconds, lblTags, lblTagsTime, chkTags);
+  public void endCreateTags() {
+    endStage(lblTags, lblTagsTime, chkTags);
   }
 
   public void disableCreateTags() {
@@ -249,8 +254,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblSeries, "info.step.series");
   }
 
-  public void endCreateSeries(long milliseconds) {
-    endStage(milliseconds, lblSeries, lblSeriesTime, chkSeries);
+  public void endCreateSeries() {
+    endStage(lblSeries, lblSeriesTime, chkSeries);
   }
 
   public void setRecentCount(String summary){
@@ -265,8 +270,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblRecent, "info.step.recent");
   }
 
-  public void endCreateRecent(long milliseconds) {
-    endStage(milliseconds, lblRecent, lblRecentTime, chkRecent);
+  public void endCreateRecent() {
+    endStage(lblRecent, lblRecentTime, chkRecent);
   }
 
   public void disableCreateRecent() {
@@ -277,8 +282,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblRated, "info.step.rated");
   }
 
-  public void endCreateRated(long milliseconds) {
-    endStage(milliseconds, lblRated, lblRatingTime, chkRated);
+  public void endCreateRated() {
+    endStage(lblRated, lblRatingTime, chkRated);
   }
 
   public void disableCreateRated() {
@@ -289,8 +294,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblAllbooks, "info.step.allbooks");
   }
 
-  public void endCreateAllbooks(long milliseconds) {
-    endStage(milliseconds, lblAllbooks, lblAllbooksTime, chkAllbooks);
+  public void endCreateAllbooks() {
+    endStage(lblAllbooks, lblAllbooksTime, chkAllbooks);
   }
 
   public void disableCreateAllBooks() {
@@ -301,8 +306,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblFeaturedBooks, "info.step.featuredbooks");
   }
 
-  public void endCreateFeaturedBooks(long milliseconds) {
-    endStage(milliseconds, lblFeaturedBooks, lblFeaturedBooksTime, chkFeaturedBooks);
+  public void endCreateFeaturedBooks() {
+    endStage(lblFeaturedBooks, lblFeaturedBooksTime, chkFeaturedBooks);
   }
 
   public void disableCreateFeaturedBooks() {
@@ -313,8 +318,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblCustomCatalogs, "info.step.customcatalogs");
   }
 
-  public void endCreateCustomCatalogs(long milliseconds) {
-    endStage(milliseconds, lblCustomCatalogs, lblCustomCatalogsTime, chkCustomCatalogs);
+  public void endCreateCustomCatalogs() {
+    endStage(lblCustomCatalogs, lblCustomCatalogsTime, chkCustomCatalogs);
   }
 
   public void disableCreateCustomCatalogs() {
@@ -325,16 +330,16 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblReprocessingEpubMetadata, "info.step.reprocessingEpubMetadata");
   }
 
-  public void endReprocessingEpubMetadata(long milliseconds) {
-    endStage(milliseconds, lblReprocessingEpubMetadata, lblReprocessingEpubMetadataTime, chkReprocessingEpubMetadata);
+  public void endReprocessingEpubMetadata() {
+    endStage(lblReprocessingEpubMetadata, lblReprocessingEpubMetadataTime, chkReprocessingEpubMetadata);
   }
 
   public void disableReprocessingEpubMetadata () {
     disableStage(chkReprocessingEpubMetadata, lblReprocessingEpubMetadata, lblReprocessingEpubMetadataTime);
   }
 
-  public void endCreateJavascriptDatabase(long milliseconds) {
-    endStage(milliseconds, lblIndex, lblIndexTime, chkIndex);
+  public void endCreateJavascriptDatabase() {
+    endStage(lblIndex, lblIndexTime, chkIndex);
   }
 
   public void startCreateJavascriptDatabase(long nb) {
@@ -353,8 +358,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblCopyLibToTarget, "info.step.copylib");
   }
 
-  public void endCopyLibToTarget(long milliseconds) {
-    endStage(milliseconds, lblCopyLibToTarget, lblCopyLibraryTime, chkCopyLibToTarget);
+  public void endCopyLibToTarget() {
+    endStage(lblCopyLibToTarget, lblCopyLibraryTime, chkCopyLibToTarget);
   }
 
   public void disableCopyLibToTarget() {
@@ -369,28 +374,29 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     startStage(nb, lblCopyCatToTarget, "info.step.copycat");
   }
 
-  public void endCopyCatToTarget(long milliseconds) {
-    endStage(milliseconds, lblCopyCatToTarget, lblCopyCatalogTime, chkCopyCatToTarget);
+  public void endCopyCatToTarget() {
+    endStage(lblCopyCatToTarget, lblCopyCatalogTime, chkCopyCatToTarget);
   }
 
   public void startZipCatalog(long nb) {
     startStage(nb,lblZipCatalog,"info.step.zipCatalog");
   }
 
-  public void endZipCatalog(long milliseconds) {
-    endStage(milliseconds, lblZipCatalog, lblZipCatalogTime, chkZipCatalog);
+  public void endZipCatalog() {
+    endStage(lblZipCatalog, lblZipCatalogTime, chkZipCatalog);
   }
 
   public void disableZipCatalog() {
     disableStage(chkZipCatalog, lblZipCatalog, lblZipCatalogTime);
   }
 
-  public void startCreatedMainCatalog() {
+  public void startFinalizeMainCatalog() {
     startStage(100,lblFinished,"info.step.done");
   }
 
-  public void endCreatedMainCatalog(String where, long timeInHtml) {
-    endStage(timeInHtml, lblFinished, lblFinishedTime, chkFinished);
+  public void endFinalizeMainCatalog(String where, long timeInHtml) {
+    endStage(lblFinished, lblFinishedTime, chkFinished);
+    logger.info("Time generating HTML was " + timeInHtml + "milliseconds");
     if (where != null) {
       String message = Localization.Main.getText("info.step.done", where);
       logger.info(message);
@@ -452,10 +458,15 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     cmdStopGenerating.repaint();
   }
   public void setStopGenerating () {
-    setCmdStopGeneratingVisbile(false);
-    lblStoppingGeneration.repaint();
+    clearStopGenerating();
     continueGenerating = false;
   }
+
+  public void clearStopGenerating() {
+    setCmdStopGeneratingVisbile(false);
+    lblStoppingGeneration.repaint();
+  }
+
   private void actionStopGenerating() {
     setCmdStopGeneratingVisbile(false);
     int n = JOptionPane.showConfirmDialog(this, Localization.Main.getText("gui.stopGeneration.confirm"), "", JOptionPane.OK_CANCEL_OPTION);

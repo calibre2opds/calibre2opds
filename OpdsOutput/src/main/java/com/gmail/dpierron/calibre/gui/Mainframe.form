@@ -70,6 +70,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsConfigLogActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mnuToolsClearLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mnuToolsClearLog"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsClearLogActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenLog">
               <Properties>
                 <Property name="text" type="java.lang.String" value="mnuToolsOpenLog"/>
@@ -78,12 +86,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenLogActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mnuToolsClearLog">
+            <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenSyncLog">
               <Properties>
-                <Property name="text" type="java.lang.String" value="mnuToolsClearLog"/>
+                <Property name="text" type="java.lang.String" value="mnuToolsOpenSyncLog"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsClearLogActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenSyncLogActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenConfig">

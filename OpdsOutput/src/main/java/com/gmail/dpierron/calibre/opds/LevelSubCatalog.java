@@ -22,7 +22,6 @@ public class LevelSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(LevelSubCatalog.class);
 
   private String title;
-  private long now;
 
   public LevelSubCatalog(List<Book> books, String title) {
     super(books);
@@ -52,7 +51,6 @@ public class LevelSubCatalog extends SubCatalog {
       logger.trace("EXIT:  Not at top level");
       return;
     }
-    now = System.currentTimeMillis();
     List<CustomCatalogEntry> customCatalogs = currentProfile.getCustomCatalogs();
     if (Helper.isNullOrEmpty(customCatalogs)) {
       logger.trace("ENDED: No Custom Catalogs set");
@@ -165,7 +163,7 @@ public class LevelSubCatalog extends SubCatalog {
       if (atTopLevel)
         CatalogManager.recordRamUsage("After generating Custom Catalogs");
     }
-    CatalogManager.INSTANCE.callback.endCreateCustomCatalogs(System.currentTimeMillis() - now);
+    CatalogManager.INSTANCE.callback.endCreateCustomCatalogs();
   }
 
   /**
@@ -220,7 +218,6 @@ public class LevelSubCatalog extends SubCatalog {
     /* Featured catalog */
     // TODO:  Decide if this should be restricted to top level catalog - currentl assuming yes?
 
-    now = System.currentTimeMillis();
     if (CatalogManager.INSTANCE.featuredBooksFilter != null) {
       logger.debug("STARTED: Generating Featured catalog");
       List<Book> featuredBooks = FilterHelper.filter(CatalogManager.INSTANCE.featuredBooksFilter, getBooks());
@@ -240,7 +237,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating Featured catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Featured Catalog");
     }
-    if (atTopLevel)  callback.endCreateFeaturedBooks(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateFeaturedBooks();
     callback.checkIfContinueGenerating();
 
 
@@ -252,7 +249,6 @@ public class LevelSubCatalog extends SubCatalog {
 
     logger.debug("STARTED: Generating Authors catalog");
     if (atTopLevel)  callback.startCreateAuthors(DataModel.INSTANCE.getListOfAuthors().size());
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateAuthors()) {
       AuthorsSubCatalog authorsSubCatalog = new AuthorsSubCatalog(stuffToFilterOut, getBooks());
       authorsSubCatalog.setCatalogLevel(getCatalogLevel());
@@ -276,13 +272,12 @@ public class LevelSubCatalog extends SubCatalog {
       if (atTopLevel) CatalogManager.recordRamUsage("After Generating Author Catalog");
       logger.debug("COMPLETED: Generating Authors catalog");
     }
-    if (atTopLevel)  callback.endCreateAuthors(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateAuthors();
     callback.checkIfContinueGenerating();
 
     /* Tags */
 
     if (atTopLevel)  callback.startCreateTags(DataModel.INSTANCE.getListOfTags().size());
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateTags()) {
       logger.debug("STARTED: Generating tags catalog");
       String SplitTagsOn = currentProfile.getSplitTagsOn();
@@ -299,13 +294,12 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating tags catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Tags catalog");
     }
-    if (atTopLevel)  callback.endCreateTags(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateTags();
     callback.checkIfContinueGenerating();
 
     /* Series */
 
     if (atTopLevel)  callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateSeries()) {
       // bug c20-81  Need to allow for (perhaps unlikely) case where no books in library have a series entry set
       logger.debug("STARTED: Generating Series catalog");
@@ -329,7 +323,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating Series catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Series catalog");
     }
-    if (atTopLevel)  callback.endCreateSeries(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateSeries();
     callback.checkIfContinueGenerating();
 
     /* Recent books */
@@ -338,7 +332,6 @@ public class LevelSubCatalog extends SubCatalog {
       int nbRecentBooks = Math.min(currentProfile.getBooksInRecentAdditions(), DataModel.INSTANCE.getListOfBooks().size());
       callback.startCreateRecent(nbRecentBooks);
     }
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateRecent()) {
       logger.debug("STARTED: Generating Recent books catalog");
       RecentBooksSubCatalog recentBooksSubCatalog = new RecentBooksSubCatalog(stuffToFilterOut, getBooks());
@@ -351,13 +344,12 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating Recent books catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Recent catalog");
     }
-    if (atTopLevel)  callback.endCreateRecent(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateRecent();
     callback.checkIfContinueGenerating();
 
     /* Rated books */
 
     if (atTopLevel)  callback.startCreateRated(DataModel.INSTANCE.getListOfBooks().size());
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateRatings()) {
       logger.debug("STARTED: Generating Rated books catalog");
       RatingsSubCatalog ratingsSubCatalog = new RatingsSubCatalog(stuffToFilterOut,getBooks());
@@ -371,7 +363,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating Rated books catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Ratings catalog");
     }
-    if (atTopLevel)  callback.endCreateRated(System.currentTimeMillis() - now);
+    if (atTopLevel)  callback.endCreateRated();
     callback.checkIfContinueGenerating();
 
     /* All books */
@@ -379,7 +371,6 @@ public class LevelSubCatalog extends SubCatalog {
     if (atTopLevel) {
       callback.startCreateAllbooks(DataModel.INSTANCE.getListOfBooks().size());
     }
-    now = System.currentTimeMillis();
     if (currentProfile.getGenerateAllbooks()) {
       logger.debug("STARTED: Generating All books catalog");
       AllBooksSubCatalog allBooksSubCatalog = new AllBooksSubCatalog(stuffToFilterOut, getBooks());
@@ -402,7 +393,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("COMPLETED: Generating All Books catalog");
       if (atTopLevel) CatalogManager.recordRamUsage("After generating All Books sub-catalog");
     }
-    if (atTopLevel) callback.endCreateAllbooks(System.currentTimeMillis() - now);
+    if (atTopLevel) callback.endCreateAllbooks();
     callback.checkIfContinueGenerating();
 
     generateCustomCatalogs(pBreadcrumbs, feed, atTopLevel, inSubDir, false);

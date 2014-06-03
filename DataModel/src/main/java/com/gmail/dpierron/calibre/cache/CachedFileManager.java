@@ -210,18 +210,19 @@ public enum CachedFileManager {
             ignoredCount++;
             continue;
           }
+          // We are only interested in caching entries for which the CRC is known
+          // as this is the expensive operation we do not want to do unnecessarily
+          if (pathToIgnore != null && cf.getPath().startsWith(pathToIgnore)) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
+            pathMatch++;
+            ignoredCount++;
+            continue;
+          }
           // We only want to cache items that have actually been used this time
           // around, so ignore entries that indicate cached values not used.
           if (! cf.isCachedValidated()) {
             if (logger.isTraceEnabled()) logger.trace("saveCache: Not used.  Not saving CachedFile " + key);
             notUsed++;
-            ignoredCount++;
-            continue;
-          }
-          // No point in caching information if CRC not known
-          if (!cf.isCrc()) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
-            crcNotKnown++;
             ignoredCount++;
             continue;
           }
@@ -232,11 +233,10 @@ public enum CachedFileManager {
             ignoredCount++;
             continue;
           }
-          // We are only interested in caching entries for which the CRC is known
-          // as this is the expensive operation we do not want to do unnecessarily
-          if (pathToIgnore != null && cf.getPath().startsWith(pathToIgnore)) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
-            pathMatch++;
+          // No point in caching information if CRC not known
+          if (!cf.isCrc()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
+            crcNotKnown++;
             ignoredCount++;
             continue;
           }
@@ -262,7 +262,7 @@ public enum CachedFileManager {
 
     logger.debug("saveCache: Cache Entries Saved:   " + savedCount);
     logger.debug("saveCache: Cache Entries Ignored: " + ignoredCount);
-    logger.info("saveCache: isDirectory=" + isDirectory + ", notUsed=" + notUsed + ", notExists=" + notExists + ", crcNotKnown=" + crcNotKnown + ", pathMatch=" + pathMatch);
+    logger.debug("saveCache: isDirectory=" + isDirectory + ", notUsed=" + notUsed + ", notExists=" + notExists + ", crcNotKnown=" + crcNotKnown + ", pathMatch=" + pathMatch);
     logger.debug("saveCache: COMPLETED Saving CRC cache to file " + cacheFile.getPath());
   }
 
@@ -306,22 +306,23 @@ public enum CachedFileManager {
 
     // Read in entries from cache
     try {
-      try {
         for (; ; ) {
           CachedFile cf;
           cf = (CachedFile) os.readObject();
 
           String path = cf.getPath();
-          if (logger.isTraceEnabled())   logger.trace("Loaded cached object " + path);
+          if (logger.isTraceEnabled())
+            logger.trace("Loaded cached object " + path);
           loadedCount++;
           CachedFile cf2 = inCache(cf);
           if (cf2 == null) {
             // Not in cache, so simply add it and
             // set indicator that values not yet checked
-            cf.setCached();
-            cf.setChanged(true);    // Assume changed unless we find otherwise
             addCachedFile(cf);
-            if (logger.isTraceEnabled())  logger.trace("added entry to cache");
+            cf.clearCacheValidated();
+            cf.setChanged(true);    // Assume changed unless we find otherwise
+            if (logger.isTraceEnabled())
+              logger.trace("added entry to cache");
           } else {
             // Already in cache (can this happen?), so we
             // need to determine what values (if any) can
@@ -329,23 +330,31 @@ public enum CachedFileManager {
             logger.debug("Entry already in cache - ignore cached entry for now");
           }
         }
-      } finally {
-        // Close cache file
-        if (os != null) os.close();
-        if (bs != null) bs.close();
-        if (fs != null) fs.close();
+      } catch (ClassNotFoundException cnfe) {
+        logger.warn("Cache file not loaded +\n" + cnfe);
+      } catch (java.io.InvalidClassException ic) {
+        logger.debug("Cache ignored as CachedFile class changed since it was created");
+        // Should just mean that CachedFile class was changed so old cache invalid
+      } catch (java.io.EOFException io) {
+        logger.trace("End of Cache file encountered");
+        // Do nothing else - this is expected
+      } catch (IOException e) {
+        // This is to catch any currently unexpected error cnditions
+        logger.warn("Exception trying to read cache: " + e);
+      } catch (Exception e) {
+        logger.warn("Cache file not loaded +\n" + e);
+    } finally {
+      // Close cache file
+      try {
+        if (os != null)
+          os.close();
+        if (bs != null)
+          bs.close();
+        if (fs != null)
+          fs.close();
+      } catch (Exception e) {
+        // do nothing
       }
-    } catch (java.io.EOFException io) {
-      logger.trace("End of Cache file encountered");
-      // Do nothing else - this is expected
-    } catch (java.io.InvalidClassException ic) {
-      logger.debug("Cache ignored as CachedFile class changed since it was created");
-      // Should just mean that CachedFile class was changed so old cache invalid
-    } catch (ClassNotFoundException cnfe) {
-      logger.error("", cnfe);
-    } catch (IOException e) {
-      // This is to catch any currently unexpected error cnditions
-      logger.warn("Exception trying to read cache: " + e);
     }
 
     logger.info("Cache Entries Loaded: " + loadedCount);
