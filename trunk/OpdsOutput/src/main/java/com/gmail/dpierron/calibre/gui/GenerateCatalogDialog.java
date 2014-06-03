@@ -168,12 +168,26 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     boldFont(label, true);
   }
 
-  private void endStage(long milliseconds, JLabel label, JLabel time, JCheckBox ckkBox) {
+  private void endStage(long milliseconds, JLabel label, JLabel time, JCheckBox chkBox) {
     logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    ckkBox.setSelected(true);
+    if (label.isEnabled()) chkBox.setSelected(true);
     boldFont(label, false);
-    setTimeNow(time);
+    if (label.isEnabled()) setTimeNow(time);
   }
+
+  /**
+   * Called when a stage will not be relevant to this generate run
+   *
+   * @param check
+   * @param label
+   * @param time
+   */
+  private void disableStage(JCheckBox check, JLabel label, JLabel time) {
+    check.setEnabled(false);
+    label.setEnabled(false);
+    time.setEnabled(false);
+  }
+
 
   public void startReadDatabase() {
     logger.info(Localization.Main.getText("info.step.database"));
@@ -193,6 +207,18 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   public void setAuthorCount(String summary){
     lblAuthors.setText(lblAuthors.getText() + " (" + summary + ")");
+  }
+
+  public void startCreateAuthors(long nb) {
+    startStage(nb, lblAuthors, "info.step.authors");
+  }
+
+  public void endCreateAuthors(long milliseconds) {
+    endStage(milliseconds, lblAuthors, lblAuthorsTime, chkAuthors);
+  }
+
+  public void disableCreateAuthors() {
+    disableStage(chkAuthors, lblAuthors, lblAuthorsTime);
   }
 
   public void setSeriesCount(String summary) {
@@ -216,19 +242,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateTags() {
-    lblTags.setEnabled(false);
-  }
-
-  public void startCreateAuthors(long nb) {
-    startStage(nb, lblAuthors, "info.step.authors");
-  }
-
-  public void endCreateAuthors(long milliseconds) {
-    endStage(milliseconds, lblAuthors, lblAuthorsTime, chkAuthors);
-  }
-
-  public void disableCreateAuthors() {
-    lblAuthors.setEnabled(false);
+    disableStage(chkTags, lblTags, lblTagsTime);
   }
 
   public void startCreateSeries(long nb) {
@@ -244,7 +258,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateSeries() {
-    lblSeries.setEnabled(false);
+        disableStage(chkSeries, lblSeries, lblSeriesTime);
   }
 
   public void startCreateRecent(long nb) {
@@ -256,7 +270,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateRecent() {
-    lblRecent.setEnabled(false);
+    disableStage(chkRecent, lblRecent, lblRecentTime);
   }
 
   public void startCreateRated(long nb) {
@@ -268,7 +282,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateRated() {
-    lblRated.setEnabled(false);
+    disableStage(chkRated, lblRated, lblRatingTime);
   }
 
   public void startCreateAllbooks(long nb) {
@@ -280,7 +294,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateAllBooks() {
-    lblAllbooks.setEnabled(false);
+    disableStage(chkAllbooks, lblAllbooks, lblAllbooksTime);
   }
 
   public void startCreateFeaturedBooks(long nb) {
@@ -292,7 +306,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateFeaturedBooks() {
-    lblFeaturedBooks.setEnabled(false);
+    disableStage(chkFeaturedBooks, lblFeaturedBooks, lblFeaturedBooksTime);
   }
 
   public void startCreateCustomCatalogs(long nb) {
@@ -304,12 +318,11 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCreateCustomCatalogs() {
-    lblCustomCatalogs.setEnabled(false);
+    disableStage(chkCustomCatalogs, lblCustomCatalogs, lblCustomCatalogsTime);
   }
 
   public void startReprocessingEpubMetadata(long nb) {
     startStage(nb, lblReprocessingEpubMetadata, "info.step.reprocessingEpubMetadata");
-    lblReprocessingEpubMetadataTime.setText(String.format("%tT", System.currentTimeMillis()));
   }
 
   public void endReprocessingEpubMetadata(long milliseconds) {
@@ -317,7 +330,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableReprocessingEpubMetadata () {
-    lblReprocessingEpubMetadata.setEnabled(false);
+    disableStage(chkReprocessingEpubMetadata, lblReprocessingEpubMetadata, lblReprocessingEpubMetadataTime);
   }
 
   public void endCreateJavascriptDatabase(long milliseconds) {
@@ -326,11 +339,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   public void startCreateJavascriptDatabase(long nb) {
     startStage(nb, lblIndex, "info.step.index");
-    lblIndexTime.setText(String.format("%tT", System.currentTimeMillis()));
   }
 
   public void disableCreateJavascriptDatabase() {
-    lblIndex.setEnabled(false);
+    disableStage(chkIndex, lblIndex, lblIndexTime);
   }
 
   public void setCopyLibCount(String summary){
@@ -346,7 +358,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableCopyLibToTarget() {
-    lblCopyLibToTarget.setEnabled(false);
+    disableStage(chkCopyLibToTarget, lblCopyLibToTarget, lblCopyLibraryTime);
   }
 
   public void setCopyCatCount(String summary){
@@ -370,9 +382,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void disableZipCatalog() {
-    lblZipCatalog.setEnabled(false);
+    disableStage(chkZipCatalog, lblZipCatalog, lblZipCatalogTime);
   }
-
 
   public void startCreatedMainCatalog() {
     startStage(100,lblFinished,"info.step.done");
