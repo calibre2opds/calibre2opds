@@ -3248,7 +3248,9 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(chkNoThumbnailGenerate, gridBagConstraints);
 
         txtMaxKeywords.setText("txtMaxKeywords");
-        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(187, 20));
+        txtMaxKeywords.setMinimumSize(new java.awt.Dimension(300, 26));
+        txtMaxKeywords.setName(""); // NOI18N
+        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(200, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 12;
@@ -3303,7 +3305,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblIndexFilterAlgorithm, gridBagConstraints);
 
         cboIndexFilterAlgorithm.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cboIndexFilterAlgorithm.setPreferredSize(new java.awt.Dimension(100, 20));
+        cboIndexFilterAlgorithm.setMinimumSize(new java.awt.Dimension(300, 26));
+        cboIndexFilterAlgorithm.setPreferredSize(new java.awt.Dimension(300, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 13;

@@ -200,14 +200,15 @@ public class Catalog {
       // ITIMPI:
       // The following code is to get around the fact that if a user renames a book in
       // Calibre while a generate is running then the book will be missing when we get
-      // around to trying to copy it.   We will silently ignore such cases although a wrning
-      // message is added to the log file.
+      // around to trying to copy it.   We will silently ignore such cases although a
+      // warning message is added to the log file.
       src.clearCachedInformation();
+      if (src.exists()) {
+        logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
+      }
     }
-    if (src.exists()) {
-      logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
-    } else {
-      // If we get here at least the cached state agrees with the real state!
+    if (! src.exists()) {
+      // If we get here at least the cached state now agrees with the real state!
       // If it is missing .xml or .html file then this is still a significant issue
       if (! src.isDirectory()) {
         logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
@@ -460,6 +461,7 @@ public class Catalog {
           // This allows for the user to have made changes to the library while
           // Calibre2opds is generating a library without the whole run failing.
           logger.warn("Unable to to copy file " + src);
+          if (logger.isDebugEnabled()) logger.debug(e.toString());
         }
       }
     }  // End of File Handling section
@@ -825,6 +827,7 @@ public class Catalog {
           logger.trace("Loading Cache");
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
         CachedFileManager.INSTANCE.loadCache();
+        callback.showMessage("");
         logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
 
       } else {
