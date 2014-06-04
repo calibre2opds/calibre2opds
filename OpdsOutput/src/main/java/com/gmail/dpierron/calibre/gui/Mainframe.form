@@ -2037,8 +2037,12 @@
                 <Component class="javax.swing.JTextField" name="txtMaxKeywords">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="txtMaxKeywords"/>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[300, 26]"/>
+                    </Property>
+                    <Property name="name" type="java.lang.String" value="" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[187, 20]"/>
+                      <Dimension value="[200, 20]"/>
                     </Property>
                   </Properties>
                   <Constraints>
@@ -2103,8 +2107,11 @@
                         <StringItem index="3" value="Item 4"/>
                       </StringArray>
                     </Property>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[300, 26]"/>
+                    </Property>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[100, 20]"/>
+                      <Dimension value="[300, 20]"/>
                     </Property>
                   </Properties>
                   <Constraints>

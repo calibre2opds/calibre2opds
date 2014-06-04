@@ -10,6 +10,16 @@ REM  - JAVA_HOME environment variable set
 REM  - have installed to default location.
 REM  - have the expected registry keys set
 
+REM  We set JAVA VM stack limits explicitly here to get consistency across systems
+REM
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+REM If these options are omitted then defaults are chosen depending on system configuration
+
+set _C2O_JAVAOPT= -Xms128m -Xmx512m 
 
 cls
 echo Calibre2opds startup
@@ -192,16 +202,10 @@ echo '
 echo cd %TEMP%
 echo [INFO] Current directory set to %cd%
 
-REM  We set stack limits explicitly here to get consistency across systems
-REM -Xms<value> define starting size
-REM -Xmx<value> defines maximum size
-REM -Xss<value> defines stack size
-REM It is possible that for very large libraries this may not be enough - we will have to see.
-
 IF "%1" == "--hidden" goto hidden
 
-echo [INFO]  "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
-"%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*"  Cli -jar "%_cd%/%_C2O%" %*
+echo [INFO]  "%_JAVACMD%" %_C2O_JAVAOPT -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
+"%_JAVACMD%" %_C2O_JAVAOPT% -cp "%_CD%/*"  Cli -jar "%_cd%/%_C2O%" %*
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
@@ -211,14 +215,15 @@ goto end
 
 :hidden
 shift
-echo [INFO]  "START ""calibre2opds"" "/MIN" "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
-START "Calibre2Opds" /MIN "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
+echo [INFO]  "START ""calibre2opds"" "/MIN" "%_JAVACMD%" %_C2O_JAVAOPT% -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
+START "Calibre2Opds" /MIN "%_JAVACMD%" %_C2O_JAVAOPT% -cp "%_CD%/*" Cli -jar "%_cd%/%_C2O%" %*
 
 :end
 REM Clear down all the environment variables we used
 set _JAVACMD=
 set _JAVAPROG=
 set _C2O=
+set _C2O_JAVAOPT=
 set _MYVAR1=
 set _MYVAR2=
 cd %_CD%

@@ -95,11 +95,12 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 beta Rev 292
-    - Change: Some of the filenames in the generated catalog have changed their structure.
-              (not really visible to users except that first run with this release may take slightly longer than expected)
+v3.4 beta Rev 301
+    - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
+              users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
-    - New:    #c2o-93:  Make supported formats and Mime type extendable by users.  Details at:
+    - New:    Option to view File Sync log added to Tools menu.  Can help with debugging caching issues.
+    - New:    #c2o-93:  Make supported formats and Mime type extendable by users.  Details of how to do this at:
               http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize#Extend_list_of_supported_formats
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
     - Fix:    #c2o-205: Destination folder uses Default value instead of the per-profile one

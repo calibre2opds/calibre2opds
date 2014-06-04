@@ -5,11 +5,13 @@
 c2o_jar=OpdsOutput-3.4-SNAPSHOT.jar
 
 #  We set Java VM stack limits explicitly here to get consistency across systems
+#
 # -Xms<value> define starting size
 # -Xmx<value> defines maximum size
 # -Xss<value> defines stack size
+#
 # It is possible that for very large libraries this may not be enough - we will have to see.
-c2o_opts="-Xms128m -Xmx1024m"
+c2o_opts="-Xms128m -Xmx512m"
 
 old=`pwd`
 scriptdir=`dirname "$0"`

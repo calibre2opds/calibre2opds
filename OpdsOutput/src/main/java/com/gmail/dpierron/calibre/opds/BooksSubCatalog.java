@@ -653,7 +653,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
     }
-    // If we are generating a ctalog for a Nook we cache the results for use later
+    // If we are generating a catalog for a Nook we cache the results for use later
     if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
       CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
     }
@@ -1306,6 +1306,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getGenerateIndex()) {
         logger.debug("getBookEntry: indexing book");
         // index the book
+        // TODO   We need to work out what should be stored for image URI's when
+        // TODO   we are embedding images as hexencoded strings in the html files.
+        // TODO   We probably want pointers to the actual image files (eith stored
+        // TODO   in the catalog or the calibre library) instead.
         IndexManager.INSTANCE.indexBook(book, CatalogManager.INSTANCE.htmlManager.getHtmlFilename(fullEntryUrl), CatalogManager.INSTANCE.thumbnailManager.getThumbnailUrl(book));
       }
       book.setDone();

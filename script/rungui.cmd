@@ -10,6 +10,17 @@ REM  - JAVA_HOME environment variable set
 REM  - have installed to default location.
 REM  - have the expected registry keys set
 
+REM  We set JAVA VM stack limits explicitly here to get consistency across systems
+REM
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+REM If these options are omitted then defaults are chosen depending on system configuration
+
+set _C2O_JAVAOPT= -Xms128m -Xmx512m 
+
 cls
 echo Calibre2opds startup
 echo ====================
@@ -176,13 +187,6 @@ set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
 
 
 :start_c2o
-
-REM  We set stack limits explicitly here to get consistency across systems
-REM -Xms<value> define starting size
-REM -Xmx<value> defines maximum size
-REM -Xss<value> defines stack size
-REM It is possible that for very large libraries this may not be enough - we will have to see.
-REM If these options are omitted then defaults are chosen depending on system configuration
 echo '
 echo "-----------------------"
 echo " Calibre2Opds STARTING "
@@ -195,9 +199,9 @@ echo [INFO] Current directory set to %cd%
 if not "%1"=="-enableassertions" goto no_assertions
 shift
 REM Start the GUI leaving this batch file running for progress/debug messages
-echo [INFO]  "%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp "%_CD%/*" -jar "%_cd%/C2O%" Gui
+echo [INFO]  "%_JAVACMD%" %_C2O_JAVAOPT%  -enableassertions -cp "%_CD%/*" -jar "%_cd%/C2O%" Gui
 echo '
-"%_JAVACMD%" -Xms256m -Xmx1024m  -enableassertions -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
+"%_JAVACMD%" %_C2O_JAVAOPT%  -enableassertions -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
@@ -207,9 +211,9 @@ goto end
 
 :no_assertions
 REM Start the GUI in normal mode as a separate process and close this batch file
-echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx1024m -cp "%_CD%/*" Gui -jar "%_cd%/%_C2O%"
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" %J_C2o_JAVAOPT% -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
 echo '
-START "Calibre2Opds" "%_JAVACMD%" -Xms128m -Xmx512m  -cp "%_CD%/*" Gui -jar "%_cd%/%_C2O%"
+START "Calibre2Opds" "%_JAVACMD%" %_C2O_JAVAOPT%  -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
 
 :end
 REM Clear down all the environment variables we (might have) used
@@ -220,6 +224,7 @@ set _CD%=
 set _JAVACMD=
 set _JAVAPROG=
 set _C2O=
+set _C2O_JAVAOPT=
 set _MYVAR1=
 set _MYVAR2=
 set _MYKEY=
