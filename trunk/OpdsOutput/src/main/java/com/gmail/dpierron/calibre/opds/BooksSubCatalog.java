@@ -630,6 +630,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (isCover) logger.warn("addImageLink: No cover.jpg file in Calibre library for book " + book);
     }
 
+    // If we are generating a catalog for a Nook we cache the results for use later
+    if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
+      CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
+    }
+    // TODO   Decide here whether to embed image or not rather than where it is done at the moment.
+    // TODO   We would alsom prefer to store the external URL format rather than the encoded data as
+    // TODO   this would reduce over-all RAM consumption significantly on large libraries.
+
     // Are we storing cover images in the catalog?
 
     if (includeCoversInCatalog) {
@@ -652,10 +660,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
           CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
         }
       }
-    }
-    // If we are generating a catalog for a Nook we cache the results for use later
-    if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
-      CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
     }
     entry.addContent(FeedHelper.getImageLink(imageUri,isCover));
   }
@@ -910,11 +914,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param type
    * @return
    */
+/*
   private String getImageFilename (Book book, String type) {
     String filename = getBookFolderFilename(book);
     return filename;
   }
-
+ */
   /**
    * Generate a book entry in a catalog
    *
@@ -933,11 +938,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // cover and thumbnail links
     if (isFullEntry) {
+      // We onfly need a cover image for full entries
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
       addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers()
                     ? CatalogManager.INSTANCE.thumbnailManager
                     : CatalogManager.INSTANCE.coverManager,currentProfile.getCoverResize(),true);
     }
+    // We want a thumbnail for both full and partial entries.
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");
     addImageLink(book,entry,CatalogManager.INSTANCE.thumbnailManager,currentProfile.getThumbnailGenerate(),false);
 

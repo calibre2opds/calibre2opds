@@ -22,7 +22,7 @@ function loadDb() {
 
     loadIdentifier();
     loadWithTimer(1000,10);
-    
+
 
 
 }
@@ -61,7 +61,7 @@ function loadWithTimer(timer,howManyTimes){
         setTimeout("loadWithTimer('timer','value')");
         }
     }
-    
+
 
 }
 
@@ -106,18 +106,36 @@ oHead.appendChild(oScript);
 
 
 function needToReloadDb() {
-    db.readTransaction(function (tx) {
-        tx.executeSql("SELECT ID FROM IDENTIFIER",[], function (tx, results) {
-            if (results.rows.length > 0 && results.rows.item(0).ID == getIdentifier()[0][0]) {
-                console.log("DB does not need to be reloaded");
-            } else {
-                loadDb();
-            }
-        },
-        function (tx, error) {
-            loadDb();
-        });
-    });
+
+	try {
+	    if (!window.openDatabase) {
+	        alert('Search not supported as Databases\nare not supported in this browser.');
+	    } else {
+			db.readTransaction(function (tx) {
+				tx.executeSql("SELECT ID FROM IDENTIFIER",[], function (tx, results) {
+					if (results.rows.length > 0 && results.rows.item(0).ID == getIdentifier()[0][0]) {
+						console.log("DB does not need to be reloaded");
+					} else {
+						loadDb();
+					}
+				},
+				function (tx, error) {
+					loadDb();
+				});
+			});
+	    }
+	} catch(e) {
+
+	    if (e == 2) {
+	        // Version number mismatch.
+	        console.log("Invalid database version.");
+	    } else {
+	        console.log("Unknown error "+e+".");
+	    }
+	    return;
+	}
+
+
 }
 
 function loadBooks(){
@@ -159,7 +177,7 @@ function loadIdentifier() {
         console.log("populate identifier");
         var identifier = getIdentifier();
         tx.executeSql('INSERT INTO IDENTIFIER(ID, LABEL, DATE) VALUES (?, ?, ?)', [identifier[0][0],identifier[0][1],identifier[0][2]]);
-        console.log("finish loading identifier");        
+        console.log("finish loading identifier");
     });
 }
 
@@ -210,25 +228,25 @@ function getKeywordsWithSize(element, word) {
             if (results.rows.length > 0) {
                 var keywords =[[]];
                 var delimiter;
-                
+
                 if (default_number_of_keywords > results.rows.length) {
                     delimiter = results.rows.length;
                 } else {
                     delimiter = default_number_of_keywords;
                 }
-                
+
                 for (var i = 0; i < delimiter; i++) {
                     keywords[i] =[results.rows.item(i).KW_ID, results.rows.item(i).KW_WORD, results.rows.item(i).KW_WEIGHT];
                 }
-                
-                
-                
+
+
+
                 level_10 = keywords[0][2];
                 level_1 = keywords[keywords.length - 1][2];
-                
+
                 diff = level_10 - level_1;
                 dist = diff / 7;
-                
+
                 level_9 = 1 + (dist * 6);
                 level_8 = 1 + (dist * 5);
                 level_7 = 1 + (dist * 4);
@@ -237,7 +255,7 @@ function getKeywordsWithSize(element, word) {
                 level_4 = 1 + dist;
                 level_3 = 1 + (dist / 2);
                 level_2 = 1 + (dist / 4);
-                
+
                 /*
                 alert("level1 "+ level_1);
                 alert("level2 "+ level_2);
@@ -250,10 +268,10 @@ function getKeywordsWithSize(element, word) {
                 alert("level9 "+ level_9);
                 alert("level10 "+ level_10);
                 */
-                
+
                 //Let's display the tag_cloud trying to order by words ...
                 keywords.sort();
-                
+
                 for (var i = 0; i < keywords.length; i++) {
                     var size = getTagClass(keywords[i][2]);
                     tagClouds += "<a href=\"#\" onclick=\"searchByKeywordId('" + keywords[i][0] + "',document.getElementById('searchResult'))\" class='" + size + "'>" + keywords[i][1] + "</a> &nbsp;";
@@ -270,7 +288,7 @@ function cleanSearch() {
 
 function getTagClass(z) {
     var tagClass = "";
-    
+
     if (z == level_10) {
         tagClass = "level10Tag";
     } else if (z >= level_9) {

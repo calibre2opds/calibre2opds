@@ -222,7 +222,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblCoverHeight, txtCoverHeight, "config.CoverHeight", "CoverHeight", 0, 999),
       new guiField(lblTagsToMakeDeep, txtTagsToMakeDeep, "config.TagsToMakeDeep", "TagsToMakeDeep"),
       new guiField(lblMinBooksToMakeDeepLevel, txtMinBooksToMakeDeepLevel, "config.MinBooksToMakeDeepLevel", "MinBooksToMakeDeepLevel", 0, 99999),
-      new guiField(lblMaxMobileResolution, txtMaxMobileResolution, "config.MaxMobileResolution", "MaxMobileResolution", 0, 2000),
+      // new guiField(lblMaxMobileResolution, txtMaxMobileResolution, "config.MaxMobileResolution", "MaxMobileResolution", 0, 2000),
       new guiField(lblMinimizeChangedFiles, chkMinimizeChangedFiles, "config.MinimizeChangedFiles", "MinimizeChangedFiles"),
       new guiField(lblGenerateIndex, chkGenerateIndex, "config.GenerateIndex", "GenerateIndex"),
       new guiField(lblMaxKeywords, txtMaxKeywords, "config.MaxKeywords", "MaxKeywords"),
@@ -978,8 +978,8 @@ public class Mainframe extends javax.swing.JFrame {
 
     lblCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
     txtCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
-    txtMaxMobileResolution.setVisible(false);   // TODO Not currently being used
-    lblMaxMobileResolution.setVisible(false);   // TODO Not currently being used
+    // txtMaxMobileResolution.setVisible(false);   // TODO Not currently being used
+    // lblMaxMobileResolution.setVisible(false);   // TODO Not currently being used
     setExternalLinksEnabledState();
     customCatalogTableModel.setCustomCatalogs(currentProfile.getCustomCatalogs());
     tblCustomCatalogs.setModel(customCatalogTableModel);
@@ -1372,8 +1372,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblCoverHeight = new javax.swing.JLabel();
         lblIncludeOnlyOneFile = new javax.swing.JLabel();
         chkIncludeOnlyOneFile = new javax.swing.JCheckBox();
-        txtMaxMobileResolution = new javax.swing.JTextField();
-        lblMaxMobileResolution = new javax.swing.JLabel();
         lblNoCoverResize = new javax.swing.JLabel();
         lblNoThumbnailGenerate = new javax.swing.JLabel();
         chkNoCoverResize = new javax.swing.JCheckBox();
@@ -1866,7 +1864,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 3, 5);
         pnlMainOptions.add(lblWikilang, gridBagConstraints);
@@ -1875,7 +1873,7 @@ public class Mainframe extends javax.swing.JFrame {
         txtWikilang.setPreferredSize(new java.awt.Dimension(60, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -1938,13 +1936,13 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblZipTrookCatalog, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
@@ -2964,7 +2962,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxbeforepaginate, gridBagConstraints);
 
         txtMaxbeforepaginate.setText("txtMaxbeforepaginate");
-        txtMaxbeforepaginate.setMaximumSize(new java.awt.Dimension(50, 22));
+        txtMaxbeforepaginate.setMaximumSize(new java.awt.Dimension(100, 100));
         txtMaxbeforepaginate.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -2989,6 +2987,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxbeforesplit, gridBagConstraints);
 
         txtMaxbeforesplit.setText("txtMaxbeforesplit");
+        txtMaxbeforesplit.setMaximumSize(new java.awt.Dimension(100, 100));
         txtMaxbeforesplit.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -3091,7 +3090,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblThumbnailheight, gridBagConstraints);
 
         txtThumbnailheight.setText("txtThumbnailheight");
-        txtThumbnailheight.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtThumbnailheight.setMaximumSize(new java.awt.Dimension(100, 100));
+        txtThumbnailheight.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -3126,7 +3126,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(txtMinBooksToMakeDeepLevel, gridBagConstraints);
 
         txtCoverHeight.setText("txtCoverHeight");
-        txtCoverHeight.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtCoverHeight.setMaximumSize(new java.awt.Dimension(100, 100));
+        txtCoverHeight.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
@@ -3170,32 +3171,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(chkIncludeOnlyOneFile, gridBagConstraints);
-
-        txtMaxMobileResolution.setText("txtMaxMobileResolution");
-        txtMaxMobileResolution.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtMaxMobileResolution(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(txtMaxMobileResolution, gridBagConstraints);
-
-        lblMaxMobileResolution.setText("lblMaxMobileResolution");
-        lblMaxMobileResolution.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(lblMaxMobileResolution, gridBagConstraints);
 
         lblNoCoverResize.setText("lblNoCoverResize");
         lblNoCoverResize.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -3248,9 +3223,9 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(chkNoThumbnailGenerate, gridBagConstraints);
 
         txtMaxKeywords.setText("txtMaxKeywords");
-        txtMaxKeywords.setMinimumSize(new java.awt.Dimension(300, 26));
+        txtMaxKeywords.setMinimumSize(new java.awt.Dimension(150, 26));
         txtMaxKeywords.setName(""); // NOI18N
-        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(200, 20));
+        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(100, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 12;
@@ -3305,8 +3280,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblIndexFilterAlgorithm, gridBagConstraints);
 
         cboIndexFilterAlgorithm.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cboIndexFilterAlgorithm.setMinimumSize(new java.awt.Dimension(300, 26));
-        cboIndexFilterAlgorithm.setPreferredSize(new java.awt.Dimension(300, 20));
+        cboIndexFilterAlgorithm.setMinimumSize(new java.awt.Dimension(200, 26));
+        cboIndexFilterAlgorithm.setPreferredSize(new java.awt.Dimension(150, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 13;
@@ -3425,6 +3400,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxSplitLevels, gridBagConstraints);
 
         txtMaxSplitLevels.setText("txtMaxSplitLevels");
+        txtMaxSplitLevels.setMaximumSize(new java.awt.Dimension(100, 100));
         txtMaxSplitLevels.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -4495,10 +4471,6 @@ public class Mainframe extends javax.swing.JFrame {
     processEpubMetadataOfAllBooks();
   }//GEN-LAST:event_mnuToolsprocessEpubMetadataOfAllBooksActionPerformed
 
-  private void txtMaxMobileResolution(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMaxMobileResolution
-    JOptionPane.showMessageDialog(null, Localization.Main.getText("error.notYetReady"), "Warning", JOptionPane.WARNING_MESSAGE);
-  }//GEN-LAST:event_txtMaxMobileResolution
-
   private void chkNoCoverResizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoCoverResizeActionPerformed
     // lblCoverHeight.setVisible(!chkNoCoverResize.isSelected());
     lblCoverHeight.setVisible(true);
@@ -4960,7 +4932,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField lblLibrarythingTitleUrl;
     private javax.swing.JLabel lblMaxBookSummaryLength;
     private javax.swing.JLabel lblMaxKeywords;
-    private javax.swing.JLabel lblMaxMobileResolution;
     private javax.swing.JLabel lblMaxSplitLevels;
     private javax.swing.JLabel lblMaxbeforepaginate;
     private javax.swing.JLabel lblMaxbeforesplit;
@@ -5069,7 +5040,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JTextField txtLibrarythingTitleUrl;
     private javax.swing.JTextField txtMaxBookSummaryLength;
     private javax.swing.JTextField txtMaxKeywords;
-    private javax.swing.JTextField txtMaxMobileResolution;
     private javax.swing.JTextField txtMaxSplitLevels;
     private javax.swing.JTextField txtMaxbeforepaginate;
     private javax.swing.JTextField txtMaxbeforesplit;

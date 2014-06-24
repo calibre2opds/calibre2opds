@@ -21,7 +21,7 @@ public abstract class ImageManager {
   private final static Logger logger = Logger.getLogger(ImageManager.class);
 
   private boolean imageSizeChanged = false;
-  private Map<File, File> generatedImages;
+  // private Map<File, File> generatedImages;
 
   private int imageHeight = 1;
   private long timeInImages;
@@ -67,7 +67,7 @@ public abstract class ImageManager {
   // METHODS and PROPERTIES
 
   public void reset () {
-    generatedImages = new HashMap<File, File>();
+    // generatedImages = new HashMap<File, File>();
     countOfImagesGenerated = 0;
     timeInImages = 0;
   }
@@ -80,13 +80,14 @@ public abstract class ImageManager {
     return new CoverManager(ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
   }
 
+  /*
   public void setImageToGenerate(CachedFile resizedCoverFile, CachedFile coverFile) {
     if (!generatedImages.containsKey(resizedCoverFile)) {
       generateImage(coverFile,resizedCoverFile);
       generatedImages.put(resizedCoverFile, coverFile);
     }
   }
-
+  */
 
   boolean hasImageSizeChanged() {
     return imageSizeChanged;
@@ -180,7 +181,7 @@ public abstract class ImageManager {
    * generate a single image file
    * @return
    */
-  public void generateImage(CachedFile imageFile, File coverFile) {
+  public void generateImage(CachedFile imageFile, CachedFile coverFile) {
     logger.debug("generateImage: " + imageFile.getAbsolutePath());
     long now = System.currentTimeMillis();
     try {
