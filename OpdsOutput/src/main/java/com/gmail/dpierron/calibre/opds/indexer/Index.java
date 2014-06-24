@@ -14,20 +14,33 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * The index of all the catalog items (books, authors, series, etc.) composing the catalog, with the keywords to search them full-text
+ * The index of all the catalog items (books, authors, series, etc.)
+ * composing the catalog, with the keywords to search them full-text
  */
 public class Index {
-  private static int MIN_KEYWORD_SIZE = 3;
+  // TODO Make this configurabel?
+  private static final int MIN_KEYWORD_SIZE = 3;
   private final static Logger logger = Logger.getLogger(Index.class);
   //  private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+  // TODO Make this configurable?
+  // TODO Build up list further,
+  // TODO make a language dependent
+  private final static Collection<String> keywordsToIgnore = Arrays.asList("and", "the", "not");
 
   Map<String, Keyword> mapOfKeywords;
 
+  /**
+   *
+   */
   public Index() {
     super();
     mapOfKeywords = new TreeMap<String, Keyword>();
   }
 
+  /**
+   *
+   * @param toCopy
+   */
   private Index(Index toCopy) {
     this();
     mapOfKeywords = new TreeMap<String, Keyword>();
@@ -35,12 +48,21 @@ public class Index {
       mapOfKeywords.putAll(toCopy.mapOfKeywords);
   }
 
+  /**
+   *
+   * @return
+   */
   public long size() {
     if (mapOfKeywords == null)
       return 0;
     return mapOfKeywords.size();
   }
 
+  /**
+   *
+   * @param keyword
+   * @return
+   */
   public static String prepareKeywordForIndexing(String keyword) {
     if (keyword == null)
       return null;
@@ -61,9 +83,19 @@ public class Index {
     return result;
   }
 
+  /**
+   * split the given string into keywords for search indexing purposes
+   *
+   * TODO:  ITIMPI:  I think this algorithm could be revisitied to improve it
+   *
+   * @param text
+   * @param pTags
+   * @return
+   */
   private List<String> splitStringIntoKeywords(String text, boolean pTags) {
     List<String> result = new ArrayList<String>();
-    String splitTagsOn = ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn();
+    String splitTagsOn = ConfigurationManager.INSTANCE.getCurrentProfile().getDontSplitTagsOn()
+                          ? "" : ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn();
     boolean processingTags = pTags && Helper.isNotNullOrEmpty(splitTagsOn);
     char tagChar = ' ';
     if (processingTags)
@@ -71,14 +103,19 @@ public class Index {
     if (Helper.isNullOrEmpty(text)) {
       return result;
     }
-
+    // TODO  Look at whether tokenizing string would be more efficient?
+    // TODO  For tags could use SplitOnTags character
     StringBuffer currentKeyword = new StringBuffer();
     for (char c : text.toCharArray()) {
       if (Character.isLetter(c) || (processingTags && (c == tagChar)))
         currentKeyword.append(c);
       else {
-        if (currentKeyword.length() >= MIN_KEYWORD_SIZE)
-          result.add(currentKeyword.toString());
+        if (currentKeyword.length() >= MIN_KEYWORD_SIZE) {
+          String lowerCurrentKeyword = currentKeyword.toString().toLowerCase();
+          if (! keywordsToIgnore.contains(lowerCurrentKeyword)) {
+            result.add(lowerCurrentKeyword);
+          }
+        }
         currentKeyword = new StringBuffer();
       }
     }
@@ -86,6 +123,12 @@ public class Index {
     return result;
   }
 
+  /**
+   *
+   * @param pKeyword
+   * @param type
+   * @param bookEntry
+   */
   public void addItem(String pKeyword, ItemType type, BookEntry bookEntry) {
     Keyword keyword;
     String word = prepareKeywordForIndexing(pKeyword);
@@ -107,13 +150,26 @@ public class Index {
     }
   }
 
+  /**
+   * @param text
+   * @param type
+   * @param bookEntry
+   * @param tags
+   */
   private void indexMultipleKeywords(String text, ItemType type, BookEntry bookEntry, boolean tags) {
     List<String> keywords = splitStringIntoKeywords(text, tags);
     for (String keyword : keywords) {
+
       addItem(keyword, type, bookEntry);
     }
   }
 
+  /**
+   *
+   * @param book
+   * @param url
+   * @param thumbnailUrl
+   */
   public void indexBook(Book book, String url, String thumbnailUrl) {
     if (logger.isTraceEnabled())
       logger.trace("indexBook: book=" + book + ", url=" + url + ", thumbnailUrl=" + thumbnailUrl);
@@ -144,14 +200,27 @@ public class Index {
     }
   }
 
+  /**
+   *
+   * @param text
+   * @return
+   */
   private String parseForApostrophes(String text) {
     return text.replace("'", "\\'");
   }
 
+  /**
+   *
+   * @param text
+   * @return
+   */
   private String parseForFrenchQuotes(String text) {
     return text.replace("\"", "\\\"");
   }
 
+  /**
+   *
+   */
   public enum FilterHintType {
     RemoveRare,
     RemoveCommon,
@@ -223,6 +292,7 @@ public class Index {
     return result;
   }
 
+/*
   public void exportToJavascript(File exportFolder) throws FileNotFoundException {
     List<String> sqlKeywords = new ArrayList<String>(mapOfKeywords.size());
     List<String> sqlBooks = new ArrayList<String>(mapOfKeywords.size());
@@ -307,8 +377,8 @@ public class Index {
         pw.close();
     }
   }
-
-
+*/
+/*
   private void writeJsonArray(String name, List<String> strings, PrintWriter pw) {
     pw.print("[");
     Iterator<String> iterator = strings.iterator();
@@ -320,7 +390,8 @@ public class Index {
     }
     pw.print("]");
   }
-
+*/
+/*
   private void writeJson(File exportFolder, String name, List<String> jsonData, List<String> jsonKeys) throws IOException {
     File outputFile = new File(exportFolder, name + ".json");
     FileOutputStream fos = null;
@@ -339,7 +410,8 @@ public class Index {
     }
 
   }
-
+ */
+/*
   public void exportToJSON(File exportFolder) throws IOException {
     List<String> jsonKeywords = new ArrayList<String>(mapOfKeywords.size());
     List<String> jsonBooks = new ArrayList<String>(mapOfKeywords.size());
@@ -403,7 +475,18 @@ public class Index {
       add("catType");
     }});
   }
-
+*/
+  /**
+   * Create a Javascript file from the items passed in
+   *
+   * TODO  See if rework can write files in-line?
+   *
+   * @param exportFolder
+   * @param name
+   * @param data
+   * @param keys
+   * @throws IOException
+   */
   private void writeJavascript(File exportFolder, String name, List<String[]> data, List<String> keys) throws IOException {
     File outputFile = new File(exportFolder, name + ".js");
     FileOutputStream fos = null;
@@ -413,7 +496,7 @@ public class Index {
       pw = new PrintWriter(fos);
       {
         pw.println("function get" + Helper.toTitleCase(name) + " () {");
-        pw.print("  // ");
+        pw.print(" // ");
         Iterator<String> iterator = keys.iterator();
         while (iterator.hasNext()) {
           String string = iterator.next();
@@ -422,12 +505,12 @@ public class Index {
             pw.print(", ");
         }
         pw.println();
-        pw.println("  // " + data.size() + " elements");
-        pw.print("  return [");
+        pw.println(" // " + data.size() + " elements");
+        pw.println(" return [");
         Iterator<String[]> arrayIterator = data.iterator();
         while (arrayIterator.hasNext()) {
           String[] stringArray = arrayIterator.next();
-          pw.print("[");
+          pw.print("  [");
           for (int i = 0; i < stringArray.length; i++) {
             String string = stringArray[i];
             pw.print("'" + string + "'");
@@ -437,8 +520,9 @@ public class Index {
           pw.print("]");
           if (arrayIterator.hasNext())
             pw.print(",");
+            pw.println();
         }
-        pw.println("  ];");
+        pw.println(" ];");
         pw.println("}");
       }
     } finally {
@@ -456,6 +540,7 @@ public class Index {
     for (Book book : DataModel.INSTANCE.getListOfBooks()) {
       book.clearFlag();
     }
+    // TODO:  See if we can rework to write directly to files to reduce RAM usage
     for (Keyword keyword : mapOfKeywords.values()) {
       String kwId = Long.toString(keyword.id);
       {

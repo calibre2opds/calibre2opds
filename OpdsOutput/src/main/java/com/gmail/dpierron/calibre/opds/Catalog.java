@@ -1224,18 +1224,21 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       callback.checkIfContinueGenerating();
 
       callback.startZipCatalog(nbCatalogFilesToCopyToTarget);
+      String zipFilename = ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle() + ".zip";
+      File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
+      File zipFile = new File(zipFolder, zipFilename);
+      zipFile.delete();     // Remove any existing ZIP file
       if (currentProfile.getZipCatalog()) {
         logger.debug("STARTING: ZIP Catalog");
-        String zipFilename = ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle() + ".zip";
-        File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
-        File zipFile = new File(zipFolder, zipFilename);
-        zipFile.delete();     // Remove any existing ZIP file
         recursivelyZipFiles(CatalogManager.INSTANCE.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
         if (targetFolder != null  && currentProfile.getCopyToDatabaseFolder()) {
           Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
         }
         logger.debug("COMPLETED: ZIP Catalog");
       }
+      zipFilename = null;
+      zipFolder = null;
+      zipFile = null;
       callback.endZipCatalog();
       callback.checkIfContinueGenerating();
 

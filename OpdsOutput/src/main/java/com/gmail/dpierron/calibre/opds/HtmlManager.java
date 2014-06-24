@@ -122,13 +122,14 @@ public class HtmlManager {
    * @return
    */
   public String getHtmlFilename(String filename) {
-    assert Helper.isNotNullOrEmpty(filename) : "Program error: Attempt to create HTML filename for empty/null filename";
+    assert Helper.isNotNullOrEmpty(filename) :
+            "Program error: Attempt to create HTML filename for empty/null filename";
     assert ! filename.startsWith(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName()):
-              "Program Error:  filename should not include catalog folder" ;
-    String htmlfilename = filename.replaceAll(Constants.XML_EXTENSION, "") + Constants.HTML_EXTENSION;
-    if (! htmlfilename.endsWith(Constants.HTML_EXTENSION)) {
-      htmlfilename += Constants.HTML_EXTENSION;
-    }
-    return htmlfilename;
+            "Program Error: Filename should not include catalog folder" ;
+    assert filename.endsWith(Constants.XML_EXTENSION) :
+            "Program Error: Filename '" + filename + "' does not end with " + Constants.XML_EXTENSION;
+    int pos = filename.lastIndexOf(Constants.XML_EXTENSION);
+    // if (pos == -1) pos = filename.length();
+    return filename.substring(0, pos) + Constants.HTML_EXTENSION;
   }
 }

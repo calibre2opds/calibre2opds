@@ -29,7 +29,7 @@ public enum IndexManager {
 
   private void exportToJavascript(Index pIndex, String name) throws IOException {
   }
-
+ /*
   public void exportToJavascript() throws IOException {
     Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
@@ -45,7 +45,11 @@ public enum IndexManager {
     searchFolder.mkdirs();
     index2.exportToJSON(searchFolder);
   }
-
+*/
+  /**
+   * Export search information to Javascript arrays in files
+   * @throws IOException
+   */
   public void exportToJavascriptArrays() throws IOException {
     Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
         ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
