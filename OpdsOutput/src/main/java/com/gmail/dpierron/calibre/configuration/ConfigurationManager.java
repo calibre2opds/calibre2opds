@@ -74,6 +74,15 @@ public enum ConfigurationManager {
       return DEFAULT_PROFILE;
   }
 
+  /**
+   * Set a new name for the current profile after it has beeb renamed.
+   * As a consistency check the old name is provided.
+   * @param newName
+   */
+  public void setCurrentProfileName(String newName) {
+    getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, newName);
+  }
+
   public void changeProfile(String profileName) {
     logger.trace("changeProfile to " + profileName);
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);

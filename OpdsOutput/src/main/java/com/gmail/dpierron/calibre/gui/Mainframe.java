@@ -805,6 +805,9 @@ public class Mainframe extends javax.swing.JFrame {
     loadValues();
   }
 
+  /**
+   *
+   */
   private void loadProfiles() {
     // empty the profiles menu
     mnuProfiles.removeAll();
@@ -825,7 +828,9 @@ public class Mainframe extends javax.swing.JFrame {
         ProfileManagerDialog dialog = new ProfileManagerDialog(Mainframe.this, true);
         dialog.setLocationRelativeTo(Mainframe.this);
         dialog.setVisible(true);
-        loadProfiles();
+        // We only get to this next statement when the dialog hides itself.
+        loadProfiles(); // Reload the list as it has probably changed.
+        loadValues();   // Reload the current profile as it may have been renamed
       }
     });
     mnuProfiles.add(mnuProfileManage);

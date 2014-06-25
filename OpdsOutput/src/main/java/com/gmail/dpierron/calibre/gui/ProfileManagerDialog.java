@@ -56,12 +56,13 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
       File profileFile =
           new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), profile + ConfigurationManager.PROFILES_SUFFIX);
       if (profileFile.exists()) {
-        profileFile.renameTo(
-            new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), newProfile + ConfigurationManager.PROFILES_SUFFIX));
+        profileFile.renameTo(new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), newProfile + ConfigurationManager.PROFILES_SUFFIX));
+        // #c2o-10:  If current profile is the one renamed then need to refresh main screen
+        if (ConfigurationManager.INSTANCE.getCurrentProfileName().equals(profile)) {
+          ConfigurationManager.INSTANCE.setCurrentProfileName(newProfile);
+        }
         loadProfiles();
       }
-      // TODO #c2o-10:  If current profile is the one renamed then need to refresh main screen
-      // if (ConfigurationManager.INSTANCE.getCurrentProfile().getp)
     }
   }
 
@@ -201,7 +202,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
   }//GEN-LAST:event_cmdNewActionPerformed
 
     private void cmdCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCloseActionPerformed
-      // TODO add your handling code here:
+      this.setVisible(false);
     }//GEN-LAST:event_cmdCloseActionPerformed
 
   /**
