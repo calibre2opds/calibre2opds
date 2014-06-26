@@ -77,7 +77,7 @@ public class Book implements SplitableByLetter {
     this.uuid = uuid;
     setTitle(title);
     // Space optimisation to avoid storing title sort when identical to title
-    if (title_sort.equals(this.title)) {
+    if (Helper.isNullOrEmpty(title_sort) || title_sort.equals(this.title)) {
       titleSortSameAsTitle=true;
     } else {
       titleSortSameAsTitle = false;
