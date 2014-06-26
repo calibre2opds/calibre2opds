@@ -144,12 +144,14 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     progressStep.setMaxScale(nb);
     logger.info(Localization.Main.getText(localizationKey));
     boldFont(label, true);
+    label.setForeground(Color.RED);
   }
 
   private void endStage(JLabel label, JLabel time, JCheckBox chkBox) {
     logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - stageStartTime));
     System.currentTimeMillis();   // Probably redundant as set when starting stage!
     if (label.isEnabled()) chkBox.setSelected(true);
+    label.setForeground(Color.BLACK);
     boldFont(label, false);
     if (label.isEnabled()) setTimeNow(time);
     checkIfContinueGenerating();
@@ -198,11 +200,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void startReadDatabase() {
-    startStage(100, lblStarted, "info.step.database");
-    chkStarted.setSelected(true);
+    startStage(100, lblDatabase, "info.step.database");
     setTimeNow(lblStartedTime);
-    boldFont(lblStarted, false);
-    boldFont(lblDatabase, true);
   }
 
   public void endReadDatabase(String summary) {
