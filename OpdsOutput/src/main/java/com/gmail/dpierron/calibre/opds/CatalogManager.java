@@ -29,11 +29,12 @@ public enum CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
   private static File generateFolder;
   public static BookFilter featuredBooksFilter;
-  // TODO  Itimpi:  Does not seem to be needed any more1
-  /// private static List<CachedFile> listOfFilesToCopy;
-  // The list of files that need to be copied from the source
-  // library to the target library.
-  private static List<String> listOfFilesPathsToCopy;
+  // TODO Does not seem to be used any more - remove it?
+  // private static List<CachedFile> listOfFilesToCopy;
+  // The list of non-image files that need to be copied from the
+  // source library to the target library
+  private static List<String> listOfLibraryFilesToCopy;
+  // The lsit of image files that need to ce copied from the source library
   private static Map<String, CachedFile> mapOfImagesToCopy;
   // TODO:  Itimpi:  Does not seem to be needed any more?
   // private static Map<String, Book> mapOfBookByPathToCopy;
@@ -41,8 +42,6 @@ public enum CatalogManager {
   // List of file in catalog that are unchanged
   // TODO - Not yet used - intended to help with optimisation
   private static List<CachedFile> listOfUnchangedCatalogFiles;
-  // List of books that have already been generated
-  // used to track if has already been done before!
   private String securityCode;
   private String initialUrl;
 
@@ -100,8 +99,8 @@ public enum CatalogManager {
   public void reset() {
     generateFolder = null;
     featuredBooksFilter = null;
-    /// listOfFilesToCopy = new LinkedList<CachedFile>();
-    listOfFilesPathsToCopy = new LinkedList<String>();
+    // listOfFilesToCopy = new LinkedList<CachedFile>();
+    listOfLibraryFilesToCopy = new LinkedList<String>();
     // mapOfBookByPathToCopy = new HashMap<String, Book>();
     mapOfCatalogFolderNames = new HashMap<String, String>();
     // bookEntriesFiles = new LinkedList<File>();
@@ -166,7 +165,7 @@ public enum CatalogManager {
    * @return
    */
   public List<String> getListOfFilesPathsToCopy() {
-    return listOfFilesPathsToCopy;
+    return listOfLibraryFilesToCopy;
   }
 
   /**
@@ -186,7 +185,7 @@ public enum CatalogManager {
    * @param file
    */
   void addFileToTheMapOfFilesToCopy(CachedFile file) {
-    addFileToTheMapOfFilesToCopy(file, null);
+    addFileToTheMapOfLibraryFilesToCopy(file, null);
   }
 
   /**
@@ -194,39 +193,44 @@ public enum CatalogManager {
    * @param file
    * @param book
    */
-  void addFileToTheMapOfFilesToCopy(CachedFile file, Book book) {
+  void addFileToTheMapOfLibraryFilesToCopy(CachedFile file, Book book) {
     final String databasePath = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
     final int databasePathLength = databasePath.length() + 1;
 
     if (file == null)
       return;
 
-    // We should never try and add the same file twice (I think!)
-    // assert ! listOfFilesPathsToCopy.contains(file);
-
     String filePath = file.getAbsolutePath();
 
-    // TODO Might want to rework safety check into asserts!
-/*
-    if (!filePath.startsWith(databasePath)
-    && (!filePath.endsWith(Constants.DEFAULT_RESIZED_COVER_FILENAME)))  {
-      logger.trace("addFileToTheMapOfFilesToCopy: adding file not in library area!");
-      return; // let's not copy files outside the database folder
+    // Lets not copy files outside the database folder
+    if (!filePath.startsWith(databasePath) ) {
+    // && (!filePath.endsWith(Constants.DEFAULT_RESIZED_COVER_FILENAME)))  {
+      logger.warn("addFileToTheMapOfLibraryFilesToCopy: adding file not in library area! (" + filePath + ")");
+      return;
     }
-*/
     String relativePath = filePath.substring(databasePathLength);
-    if (! listOfFilesPathsToCopy.contains(relativePath))
-      listOfFilesPathsToCopy.add(relativePath);
+    if (! listOfLibraryFilesToCopy.contains(relativePath)) {
+      listOfLibraryFilesToCopy.add(relativePath);
+    }
     // TODO  Work out if this following line is ever needed
     // TODO  If not we can eliminate the version that passed in book as a parameter
-    // mapOfBookByPathToCopy.put(relativePath, book);
-    /// listOfFilesToCopy.add(file);
+    // if (book != null) {
+    //   assert ! mapOfBooksByPathToCopy.contains(relativePath);
+    //   mapOfBookByPathToCopy.put(relativePath, book);
+    // }
+    // TODO It appear we no longer need the following list either.
+    // TODO Perhaps it is necessary to validate what is was intended for?
+    // if (listOfFilesToCopy.contains(file)) {
+    //   logger.trace("addFileToTheMapOfLibraryFilesToCopy: listOfFilesToCopy alread contains file " + file);
+    // } else {
+    //    listOfFilesToCopy.add(file);
+    // }
   }
+
   /**
    * Add a file to the map of image files that are to be copied
    * to the catalog (assuming this option is even set!)
    */
-
   void addImageFileToTheMapOfCatalogImages(String key, CachedFile file) {
 
     assert file != null : "Program Error: attempt to add 'null' file to image map";
@@ -239,9 +243,13 @@ public enum CatalogManager {
     }
   }
 
-public Map<String,CachedFile> getMapOfCatalogImages() {
-  return mapOfImagesToCopy;
-}
+  /**
+   *
+   * @return
+   */
+  public Map<String,CachedFile> getMapOfCatalogImages() {
+    return mapOfImagesToCopy;
+  }
 
   /**
    * Get the URL that is used to reference a particular file.

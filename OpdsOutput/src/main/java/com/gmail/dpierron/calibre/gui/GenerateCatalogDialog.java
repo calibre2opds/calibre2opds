@@ -138,7 +138,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     label.setText(String.format("%tT", System.currentTimeMillis()));
   }
 
-
   private void startStage(long nb, JLabel label, String localizationKey) {
     stageStartTime = System.currentTimeMillis();
     progressStep.setMaxScale(nb);
@@ -191,7 +190,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     lblCopyCatalogTime.setText("");
     lblZipCatalogTime.setText("");
     lblFinishedTime.setText("");
-    boldFont(lblStarted, true);
     startStage(100, lblStarted,"info.step.started");
   }
 
