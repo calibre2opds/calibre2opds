@@ -513,8 +513,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // prepare to copy the ebook file
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: prepare to copy the ebook file " + file.getName());
       // TODO ITIMPI  Why is EPUB treated as a special case?
-      CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(file.getFile(),
-                                                          (file.getFormat() == EBookFormat.EPUB) ? book : null);
+      CatalogManager.INSTANCE.addFileToTheMapOfLibraryFilesToCopy(file.getFile(), (file.getFormat() == EBookFormat.EPUB) ? book : null);
       // Allow for books on specific URL (#c2o-160)
       String prefix = currentProfile.getUrlBooks();
       if (Helper.isNullOrEmpty(prefix)) {

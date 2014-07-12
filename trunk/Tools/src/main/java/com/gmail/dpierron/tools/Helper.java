@@ -1148,6 +1148,16 @@ public class Helper {
     return sb.toString();
   }
 
+  /**
+   * Code to remove HTML tags from an HTML string
+   *
+   * TODO:  Consider whether this can be better implemented
+   * TODO:  using FOM and the InnterText metthod?
+   *
+   * TODO:  Might want to consider replacing </p> tags with CR/LF?
+   * @param s
+   * @return
+   */
   public static String removeHtmlElements(String s) {
     // process possible HTML tags
     StringBuffer sb = new StringBuffer();
@@ -1202,8 +1212,8 @@ public class Helper {
   }
 
   /**
-   * This function is the 'worker' one for handling derived names for split-by-letter
-   * or split by page number.
+   * This function is the 'worker' one for handling derived names
+   * for split-by-letter or split by page number.
    *
    * Any characters that are not alpha-numeric or the split character are hex encoded
    * to make the results safe to use in a URN or filename.
