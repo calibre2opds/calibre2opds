@@ -30,6 +30,7 @@ public abstract class SubCatalog {
   protected boolean useExternalIcons = currentProfile.getExternalIcons();
   protected boolean useExternalImages = currentProfile.getExternalImages();
   protected boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
+  protected static String booksURI = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
   private static String securityCode = CatalogManager.INSTANCE.getSecurityCode();
   private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
   private static CRC32 crc32;

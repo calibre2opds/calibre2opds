@@ -564,7 +564,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
           new File(bookFolder, iManager.getResizedFilenameOld(book)));
 
       if (isresized) {
-        imageUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX
+        imageUri = FeedHelper.urlEncode(
+            // #c2o_223  Need to use image from Books URI if it is specified
+            (Helper.isNullOrEmpty(booksURI) ? Constants.LIBRARY_PATH_PREFIX : booksURI)
             + book.getPath()
             + Constants.FOLDER_SEPARATOR
             + iManager.getResizedFilename(), true);
@@ -589,7 +591,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       } else {
         // Not using resized covers - use original cover.jpg
-        imageUri = FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX
+        imageUri = FeedHelper.urlEncode(
+            // #c2o_223  Need to use image from Books URI if it is specified
+            (Helper.isNullOrEmpty(booksURI) ? Constants.LIBRARY_PATH_PREFIX : booksURI)
             + book.getPath()
             + Constants.FOLDER_SEPARATOR
             + Constants.CALIBRE_COVER_FILENAME, true);
