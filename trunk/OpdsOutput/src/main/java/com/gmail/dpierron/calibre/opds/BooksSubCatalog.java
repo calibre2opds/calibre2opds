@@ -564,12 +564,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
           new File(bookFolder, iManager.getResizedFilenameOld(book)));
 
       if (isresized) {
-        imageUri = FeedHelper.urlEncode(
+        imageUri =
             // #c2o_223  Need to use image from Books URI if it is specified
-            (Helper.isNullOrEmpty(booksURI) ? Constants.LIBRARY_PATH_PREFIX : booksURI)
-            + book.getPath()
-            + Constants.FOLDER_SEPARATOR
-            + iManager.getResizedFilename(), true);
+                (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX)
+                                                : booksURI)
+                + FeedHelper.urlEncode(book.getPath()
+                                      + Constants.FOLDER_SEPARATOR
+                                      + iManager.getResizedFilename(), true);
         imageFile = resizedImageFile;
         catalogImageFilename = getBookFolderFilename(book)
             + Constants.TYPE_SEPARATOR
@@ -591,12 +592,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       } else {
         // Not using resized covers - use original cover.jpg
-        imageUri = FeedHelper.urlEncode(
+        imageUri =
             // #c2o_223  Need to use image from Books URI if it is specified
-            (Helper.isNullOrEmpty(booksURI) ? Constants.LIBRARY_PATH_PREFIX : booksURI)
-            + book.getPath()
-            + Constants.FOLDER_SEPARATOR
-            + Constants.CALIBRE_COVER_FILENAME, true);
+            (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX)
+                                            : booksURI)
+            + FeedHelper.urlEncode(book.getPath()
+                                  + Constants.FOLDER_SEPARATOR
+                                  + Constants.CALIBRE_COVER_FILENAME, true);
         imageFile = calibreCoverFile;
         catalogImageFilename = getBookFolderFilename(book)
             + Constants.TYPE_SEPARATOR
@@ -1127,9 +1129,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
           }
           if (currentProfile.getBookDetailsCustomFieldsAlways()
           || Helper.isNotNullOrEmpty(textValue)) {
-
-            content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG));
-
                 // Special processing for bool type
             // convert to localized yes/no text
             if (dataType.equals("bool")) {
@@ -1150,7 +1149,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               }
             } else {
               name += ": ";
-              content.addContent(name);
+              content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(name));
             }
 
             // Special processing for fields that contain HTML (e.g. comment)
