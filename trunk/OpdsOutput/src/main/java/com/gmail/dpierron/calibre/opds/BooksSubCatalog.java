@@ -566,7 +566,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (isresized) {
         imageUri =
             // #c2o_223  Need to use image from Books URI if it is specified
-                (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX)
+                (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true)
                                                 : booksURI)
                 + FeedHelper.urlEncode(book.getPath()
                                       + Constants.FOLDER_SEPARATOR
@@ -594,7 +594,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // Not using resized covers - use original cover.jpg
         imageUri =
             // #c2o_223  Need to use image from Books URI if it is specified
-            (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX)
+            (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true)
                                             : booksURI)
             + FeedHelper.urlEncode(book.getPath()
                                   + Constants.FOLDER_SEPARATOR
