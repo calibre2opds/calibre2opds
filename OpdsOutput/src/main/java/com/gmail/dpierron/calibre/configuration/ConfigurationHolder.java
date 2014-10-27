@@ -29,6 +29,10 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   final static Pattern PATTERN_CUSTOMCATALOG_SEARCH = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_SEARCH_ID + "\\]");
   final static Pattern PATTERN_CUSTOMCATALOG_ATTOP = Pattern.compile("\\[" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "\\](.+?)\\[/" + PATTERN_CUSTOMCATALOG_ATTOP_ID + "\\]");
 
+  private final static String PROPERTY_NAME_WINDOW_HEIGHT = "WindowHeight";
+  private final static String PROPERTY_NAME_WINDOW_WIDTH = "WindowWidth";
+
+  private final static String PROPERTY_NAME_FAVICON = "Favicon";
   private final static String PROPERTY_NAME_DATABASEFOLDER = "DatabaseFolder";
   private final static String PROPERTY_NAME_TARGETFOLDER = "TargetFolder";
   private final static String PROPERTY_NAME_LANGUAGE = "Language";
@@ -106,6 +110,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   /* Catalog Structure */
   private final static String PROPERTY_NAME_SortUsingAuthor = "SortUsingAuthor";
   private final static String PROPERTY_NAME_SortUsingTitle = "SortUsingTitle";
+  private final static String PROPERTY_NAME_SortUsingSeries = "SortUsingSeries";
   private final static String PROPERTY_NAME_SortTagsByAuthor = "SortTagsByAuthor";
   private final static String PROPERTY_NAME_TagBooksNoSplit = "TagBooksNoSplit";
   /* Book Details */
@@ -119,6 +124,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
   private final static String PROPERTY_NAME_DisplayAuthorSort = "DisplayAuthorSort";
   private final static String PROPERTY_NAME_DisplayTitleSort = "DisplayTitleSort";
+  private final static String PROPERTY_NAME_DisplaySeriesSort = "DisplaySeriesSort";
   private final static String PROPERTY_NAME_BookDetailsCustomFields = "BookDetailsCustomFields";
   private final static String PROPERTY_NAME_BookDetailsCustomFieldsAlways = "BookDetailsCustomFieldsAlways";
   private final static String PROPERTY_NAME_GenerateCrossLinks = "GenerateCrossLinks";
@@ -214,6 +220,23 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
    * * SPECIFIC CONFIGURATION GETTERS AND SETTERS ARE BELOW THIS LINE ***
    */
 
+  public Integer getWindowHeight() {
+    Integer i = getInteger(PROPERTY_NAME_WINDOW_HEIGHT);
+    return (i == null) ?defaults.getWindowHeight() : i;
+  }
+  public void setWindowHeight(Integer height) {
+    setProperty(PROPERTY_NAME_WINDOW_HEIGHT, height);
+  }
+
+  public Integer getWindowWidth() {
+    Integer i = getInteger(PROPERTY_NAME_WINDOW_WIDTH);
+    return (i == null) ?defaults.getWindowWidth() : i;
+  }
+  public void setWindowWidth(Integer width) {
+    setProperty(PROPERTY_NAME_WINDOW_WIDTH, width);
+  }
+
+
   public DeviceMode getDeviceMode() {
     String s = getProperty(PROPERTY_NAME_DEVICEMODE);
     return (s == null) ? defaults.getDeviceMode() : DeviceMode.fromName(s);
@@ -226,6 +249,14 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     } else {
       reset();
     }
+  }
+
+  public File getFavicon() {
+    String s = getProperty(PROPERTY_NAME_FAVICON);
+    return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
+  }
+  public void setFavicon(File Favicon) {
+    setProperty(PROPERTY_NAME_FAVICON, Helper.isNullOrEmpty(Favicon) ? "" : Favicon.getAbsolutePath());
   }
 
   public Boolean isDatabaseFolderReadOnly() {
@@ -1068,16 +1099,12 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     if (s == null) {
       s = defaults.getUrlBooks();
     } else {
-      if (s == null) {
+      if (s.length() > 0 && (! s.endsWith(Constants.FOLDER_SEPARATOR))) {
+        s+= Constants.FOLDER_SEPARATOR;
+      }
+      // Ignore a simple / as the base Url
+      if (s.equals(Constants.FOLDER_SEPARATOR)) {
         s = "";
-      } else {
-        if (s.length() > 0 && (! s.endsWith(Constants.FOLDER_SEPARATOR))) {
-          s+= Constants.FOLDER_SEPARATOR;
-        }
-        // Ignore a simple / as the base Url
-        if (s.equals(Constants.FOLDER_SEPARATOR)) {
-          s = "";
-        }
       }
     }
     return s;
@@ -1275,6 +1302,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_DisplayTitleSort, value);
   }
 
+  public Boolean getDisplaySeriesSort() {
+    Boolean b = getBoolean(PROPERTY_NAME_DisplaySeriesSort);
+    return (b == null) ? defaults.getDisplaySeriesSort() : b;
+  }
+  public void setDisplaySeriesSort(Boolean value) {
+    setProperty(PROPERTY_NAME_DisplaySeriesSort, value);
+  }
 
   public Boolean isSortUsingAuthorReadOnly() { return isPropertyReadOnly(PROPERTY_NAME_SortUsingAuthor); }
   public Boolean getSortUsingAuthor() {
@@ -1307,6 +1341,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setSortTagsByAuthor(Boolean value) {
     setProperty(PROPERTY_NAME_SortTagsByAuthor, value);
   }
+
   public Boolean getSortUsingTitle() {
     Boolean b = getBoolean(PROPERTY_NAME_SortUsingTitle);
     return (b == null) ? defaults.getSortUsingTitle() : b;
@@ -1315,9 +1350,17 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SortUsingTitle, value);
   }
 
-  public Boolean isSortUsingTitleReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
+  public Boolean getSortUsingSeries() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortUsingSeries);
+    return (b == null) ? defaults.getSortUsingSeries() : b;
   }
+  public void setSortUsingTseries(Boolean value) {
+    setProperty(PROPERTY_NAME_SortUsingSeries, value);
+  }
+
+  // public Boolean isSortUsingTitleReadOnly() {
+  //  return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
+  //}
 
   //  Book Details
 

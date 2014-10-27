@@ -112,7 +112,10 @@ public class TagListSubCatalog extends TagsSubCatalog {
                                            listTags,
                                            inSubDir,
                                            i,
-                                           title, summary, urn, pFilename,
+                                           title,
+                                           summary,
+                                           urn,
+                                           pFilename,
                                            splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption)/*.getFirstElement()*/;
           result.add(0, nextLink);
           break;
@@ -141,8 +144,11 @@ public class TagListSubCatalog extends TagsSubCatalog {
       if (title.equals("Science Fiction")) {
         int x = 1;
       }
-      entry = FeedHelper.getCatalogEntry(title, urn, urlExt, summary,
-          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
+      entry = FeedHelper.getCatalogEntry(title,
+                                         urn,
+                                         urlExt,
+                                         summary,
+                                         useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
     return entry;
   }
@@ -153,6 +159,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
       String baseTitle,
       String baseUrn,
       String baseFilename) throws IOException {
+
     if (Helper.isNullOrEmpty(mapOfTagsByLetter))
       return null;
 
@@ -184,7 +191,9 @@ public class TagListSubCatalog extends TagsSubCatalog {
                                 inSubDir,
                                 0,
                                 letterTitle,
-                                summary, letterUrn, letterFilename,
+                                summary,
+                                letterUrn,
+                                letterFilename,
                                 checkSplitByLetter(letter))/*.getFirstElement()*/;
       }
       if (element != null)

@@ -179,6 +179,7 @@ public class Constants {
   public final static String OPDS_ELEMENT_EMAIL = "email";
   public final static String HTML_ELEMENT_BREAK = "br";
   public final static String HTML_ELEMENT_STRONG = "strong";
+  public final static String HTML_ELEMENT_PARAGRAPH = "p";
 
   public static String getBzrVersion() {
     String vcsVersion = "";

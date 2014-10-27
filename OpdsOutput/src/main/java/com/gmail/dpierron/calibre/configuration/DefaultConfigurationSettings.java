@@ -14,6 +14,9 @@ import java.util.Vector;
 
 public final class DefaultConfigurationSettings extends DefaultConfiguration implements GetConfigurationInterface {
 
+  public Integer getWindowWidth() { return 1050; }
+  public Integer getWindowHeight() { return 660; }
+
   public String getLanguage() {
     return Locale.getDefault().getLanguage();
   }
@@ -337,6 +340,10 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return true;
   }
 
+  public Boolean getDisplaySeriesSort() {
+    return true;
+  }
+
   public Boolean getTagBooksNoSplit() {  return false;  }
 
   public Boolean getSortUsingAuthor() {
@@ -344,6 +351,10 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
   }
 
   public Boolean getSortUsingTitle() {
+    return false;
+  }
+
+  public Boolean getSortUsingSeries() {
     return false;
   }
 
