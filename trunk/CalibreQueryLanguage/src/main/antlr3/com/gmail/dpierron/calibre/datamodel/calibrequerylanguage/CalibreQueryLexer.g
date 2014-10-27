@@ -62,6 +62,11 @@ RATING : R A T I N G ':' ('"')? ('<'|'>'|'=')? ('0'..'5') ('"')?;
 RATING_TRUE: R A T I N G ':' T R U E;
 RATING_FALSE: R A T I N G ':' F A L S E;
 
+// custom column filters
+// CUSCOL :      '#' (options{greedy=false;}:.)*':"' (options{greedy=false;}:.)*'"';
+// CUSCOL_TRUE:  '#' ':' T R U E;
+// CUSCOL_FALSE: '#' ':' F A L S E;
+
 fragment A:('a'|'A');
 fragment B:('b'|'B');
 fragment C:('c'|'C');

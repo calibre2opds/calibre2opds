@@ -77,6 +77,16 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
     - #c2o-200: Improve GUI validation for Custom Catalogs
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
+    - #c2o-222: Sorting of series should ignore initial articles
+    - #c2o-224: "Tags to omit from Tags catalog" ignores "Lang:" tags when "Language as Tag" is checked 
+    - #c2o-225: "Do not include the 'About calibre2opds' entry" should also omit credits at the bottom of index.html 
+    - #c2o-226: GUI screen size is too tall on 768 pix screens with Windows taskbar unhidden. 
+    - #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart 
+    - #c2o-228: Fields in "Custom Fields to include in Book Details" option should be bold in the generated book details page 
+    - #c2o-229: Spacing between fields in Book details should be reduced
+    - #c2o-230: Favicon for Library catalog URL
+    - #c2o-231: Split tags doesn't work
+
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -94,12 +104,13 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 beta Rev 304
+v3.4 beta Rev 306
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
     - Change: Search is now deprecated as it is based on a HTML5 database capability that did not make it through the
               standardixation process.   Gives error message on browsers that do not support the database capability.
+    - Change: Improved German Localization (thanks to Kai Raven)
     - New:    Option to view File Sync log added to Tools menu.  Can help with debugging caching issues.
     - New:    When generating the active step is now highlighted in the progress dialog in Red to make it more obvious
     - Fix:    A Null pointer error if title_sort not set (should not be possible with current Calibre releases)
@@ -119,7 +130,9 @@ v3.4 beta Rev 304
     - fix:    #c2o-217: Wrong default location for creating new Configuration folders
     - New:    #c2o-218: Add support for DJVU downloads
     - Fix:    #c2o-219: Problem with relative links in generated tags pages when using SplitTagsOn option
-    - Fix:    #c2o-220: Problem in tag pages with titles, beginning with numbers 
+    - Fix:    #c2o-220: Problem in tag pages with titles, beginning with numbers
+    - Fix:    #c2o-223: Image files are not referenced via Books URL when it is specified
+    - New:    #c2o-232: Save Window Size between runs
 
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

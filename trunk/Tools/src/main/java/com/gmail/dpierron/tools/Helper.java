@@ -1231,7 +1231,8 @@ public class Helper {
     StringBuffer encodedSplitText = new StringBuffer();
     encodedSplitText.append(splitSeparator);
 
-    // Get the encoded form of the spliText
+    // Get the encoded form of the splitText
+    // TODO ITIMPI:  Need to check why this encoding is needed!
     for (int x= 0; x < splitText.length(); x++) {
       char c = splitText.charAt(x);
       if (Character.isLetterOrDigit(c)) {
@@ -1245,10 +1246,11 @@ public class Helper {
     // Now see if we only we need to extend the basename or add a new section
     int pos = baseString.lastIndexOf(splitSeparator);
     if (pos > 0) {
+      // Get the amount we want to check
       String checkPart = baseString.substring(pos);
-      if (! encodedSplitText.toString().equals(checkPart)
-          && encodedSplitText.toString().startsWith(checkPart)) {
-         return baseString.substring(0,pos) + encodedSplitText.toString();
+      if (encodedSplitText.toString().length() != checkPart.length()
+      && encodedSplitText.toString().startsWith(checkPart)) {
+         baseString = checkPart;
       }
     }
     return baseString + encodedSplitText.toString();

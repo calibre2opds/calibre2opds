@@ -19,7 +19,6 @@ public class Book implements SplitableByLetter {
   private final String uuid;
   private String title;
   private String titleSort;
-  private boolean titleSortSameAsTitle;
   private final String path;
   private String comment;
   private String summary;
@@ -60,6 +59,8 @@ public class Book implements SplitableByLetter {
     ZERO = c.getTime();
   }
 
+  // CONSTRUCTORS
+
   public Book(String id,
       String uuid,
       String title,
@@ -73,15 +74,28 @@ public class Book implements SplitableByLetter {
       String authorSort,
       BookRating rating) {
     super();
+    assert Helper.isNotNullOrEmpty(id);
     this.id = id;
+    assert Helper.isNotNullOrEmpty(uuid);
     this.uuid = uuid;
-    setTitle(title);
-    // Space optimisation to avoid storing title sort when identical to title
-    if (Helper.isNullOrEmpty(title_sort) || title_sort.equals(this.title)) {
-      titleSortSameAsTitle=true;
+
+    assert Helper.isNotNullOrEmpty(title) : "Unexpected null/empty title for book ID " + id;
+    // Do some (possibly unnecessary) tidyong of title
+    title = title.trim();
+    this.title = title.substring(0, 1).toUpperCase() + title.substring(1);
+    // title_sort is normally set by Calibre autoamtically, but it can be cleared
+    // by users and may not be set by older versions of Calibre.  In these
+    // cases we fall back to using the (mandatory) title field and issue a warning
+    if (Helper.isNullOrEmpty(title_sort)) {
+      logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
+      this.titleSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(this.title);
     } else {
-      titleSortSameAsTitle = false;
       this.titleSort = title_sort;
+    }
+    // Small memory optimisation to re-use title object if possible
+    // TODO check if unecessary if Java does this automatically?
+    if (this.title.equalsIgnoreCase(this.titleSort)) {
+      this.titleSort = this.title;
     }
     this.path = path;
     this.serieIndex = serieIndex;
@@ -97,64 +111,21 @@ public class Book implements SplitableByLetter {
     done = false;
   }
 
-  /**
-   * Get the unique book id.
-   * It should always be set!
-   * @return
-   */
+  // METHODS and PROPERTIES
+
   public String getId() {
-    assert Helper.isNotNullOrEmpty(id);
     return id;
   }
 
   public String getUuid() {
-    assert Helper.isNotNullOrEmpty(uuid);
     return uuid;
   }
 
-  /**
-   * Store a new value for the title field
-   * Clear other related fields so that they get
-   * recalculatee if they are needed.
-   * @param value
-   */
-  private void setTitle(String value) {
-    title = value;
-    // clean up
-    if (Helper.isNotNullOrEmpty(title)) {
-      title = title.trim();
-      title = title.substring(0, 1).toUpperCase() + title.substring(1);
-    }
-  }
-
-  /**
-   * Get the title
-   * It should not be possible to have a book entry without this being set.
-   * @return
-   */
   public String getTitle() {
-    assert Helper.isNotNullOrEmpty(title) : "Unexpected null/empty title for book ID " + id;
     return title;
   }
 
-  /**
-   * Get the title_sort value
-   * It is normally set by Calibre autoamtically, but it can be cleared
-   * by users and may not be set by older versions of Calibre.  In these
-   * cases we fall back to using the (mandatory) title field and issue a warning
-   *
-   * NOTE:  As a space optimisation we do not store title_sort if identical to title.
-   * @return
-   */
   public String getTitle_Sort() {
-    if (titleSortSameAsTitle) {
-      logger.trace("getTitle_Sort: Title_Sort same as Title for book '" + getTitle() + "'");
-      return title;
-    }
-    if (Helper.isNullOrEmpty(titleSort)) {
-      logger.warn("getTitle_Sort: Title_Sort not set - using Title for book '" + getTitle() + "'");
-      titleSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(getTitle());
-    }
     return titleSort;
   }
 
@@ -182,7 +153,6 @@ public class Book implements SplitableByLetter {
   public String getIsbn() {
     return (isbn == null ? "" : isbn);
   }
-
 
   public String getPath() {
     return path;

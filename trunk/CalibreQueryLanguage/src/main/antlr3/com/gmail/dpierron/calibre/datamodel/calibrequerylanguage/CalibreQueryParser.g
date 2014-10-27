@@ -62,6 +62,10 @@ tokens {
 	PUBLISHER_TRUE;
 	PUBLISHER_FALSE;
 
+	// CUSCOL;
+	// CUSCOL_TRUE;
+	// CUSCOL_FALSE;
+
 }
 
 // What package should the generated source exist in?
@@ -102,5 +106,6 @@ condition
     | SERIES | SERIES_TRUE | SERIES_FALSE
     | FORMAT | FORMAT_TRUE | FORMAT_FALSE
     | PUBLISHER | PUBLISHER_TRUE | PUBLISHER_FALSE
+    // | CUSCOL | CUSCOL_TRUE | CUSCOL_FALSE
     ;
 

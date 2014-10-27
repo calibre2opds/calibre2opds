@@ -18,17 +18,13 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   public Author(String id, String name, String sort) {
     super();
     this.id = id;
-    setName(name);
+    this.name = name.replace('|', ',');
     /* history of change for the author.sort column :
      * - at the beginning, C2O was looking in this column for sort info ; if it was empty, it would be computed
      * - then a bug was found (577526) and I removed the load code for this column 
      * - and then, after bug 655081 I realized that Calibre had evolved into using the column again ; so back to step one
      */
     this.sort = sort;
-  }
-
-  void setName(String name) {
-    this.name = name.replace('|', ',');
   }
 
   public String getId() {

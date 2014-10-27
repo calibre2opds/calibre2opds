@@ -341,21 +341,26 @@ public class FeedHelper {
   }
 
   /**
-   * URL encode a string with control over how slashes are handled
+   * URL encode a string with control over how special characters are handled
    *
-   * @param s                  the string to be encoded
-   * @param doNotEncodeSlashes if true, slashes will not be encoded
+   * @param s                       the string to be encoded
+   * @param doNotEncodeSlashOrColon if true, slashes and colons will not be encoded
+   *                                This ,eams sequences like http:// stay intact
    */
-  public static String urlEncode(String s, boolean doNotEncodeSlashes) {
+  public static String urlEncode(String s, boolean doNotEncodeSlashOrColon) {
     try {
       String result = s;
-      if (doNotEncodeSlashes)
+      if (doNotEncodeSlashOrColon) {
         result = result.replace("/", "HERELIESASLASH_ICIUNSLASH");
+        result = result.replace(":", "HERELIESACOLON_ICIUNSLASH");
+      }
       result = URLEncoder.encode(result, "utf-8");
       // this dumb java converts spaces to "+" and I don't like it
       result = result.replace("+", "%20");
-      if (doNotEncodeSlashes)
+      if (doNotEncodeSlashOrColon) {
         result = result.replace("HERELIESASLASH_ICIUNSLASH", "/");
+        result = result.replace("HERELIESACOLON_ICIUNSLASH", ":");
+      }
       return result;
     } catch (UnsupportedEncodingException e) {
       // we don't give a damn

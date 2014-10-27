@@ -251,6 +251,13 @@ public class CalibreQueryInterpreter {
     }
   }
 
+  /**
+   *
+   * @param calibreSearchQueryOrName
+   * @return
+   * @throws CalibreSavedSearchInterpretException
+   * @throws CalibreSavedSearchNotFoundException
+   */
   public static BookFilter interpret(String calibreSearchQueryOrName) throws CalibreSavedSearchInterpretException, CalibreSavedSearchNotFoundException {
     if (logger.isTraceEnabled())
       logger.trace("CalibreQueryInterpreter.interpret:" + calibreSearchQueryOrName);
