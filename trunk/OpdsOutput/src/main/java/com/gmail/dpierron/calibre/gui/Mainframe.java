@@ -292,6 +292,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(mnuToolsOpenSyncLog,null,  "gui.menu.tools.syncFile"),
       new guiField(mnuToolsClearLog, null, "gui.menu.tools.logClear"),
       new guiField(mnuToolsOpenConfig, null, "gui.menu.tools.configFolder"),
+      new guiField(lblSearchDeprecated,null,"gui.searchDeprecated.label"),
       // Should always be last entry in case it triggers re-localisation to new language
       new guiField(lblLang, cboLang, "config.Language", "Language")
     };
@@ -1484,6 +1485,7 @@ public class Mainframe extends javax.swing.JFrame {
         cboIndexFilterAlgorithm = new javax.swing.JComboBox();
         lblGenerateIndex = new javax.swing.JLabel();
         chkGenerateIndex = new javax.swing.JCheckBox();
+        lblSearchDeprecated = new javax.swing.JLabel();
         pnlBottom = new javax.swing.JPanel();
         lblBottom0 = new javax.swing.JLabel();
         pnlButtons = new javax.swing.JPanel();
@@ -4201,7 +4203,7 @@ public class Mainframe extends javax.swing.JFrame {
         txtMaxKeywords.setPreferredSize(new java.awt.Dimension(100, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         pnlSearchOptions.add(txtMaxKeywords, gridBagConstraints);
 
@@ -4213,7 +4215,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlSearchOptions.add(lblMaxKeywords, gridBagConstraints);
@@ -4272,7 +4274,7 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         pnlSearchOptions.add(lblGenerateIndex, gridBagConstraints);
 
@@ -4283,10 +4285,24 @@ public class Mainframe extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlSearchOptions.add(chkGenerateIndex, gridBagConstraints);
+
+        lblSearchDeprecated.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSearchDeprecated.setText("lblSearchDeprecated");
+        lblSearchDeprecated.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblSearchDeprecatedhandleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 4;
+        pnlSearchOptions.add(lblSearchDeprecated, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlSearchOptions", pnlSearchOptions);
 
@@ -4853,6 +4869,10 @@ public class Mainframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdSetFaviconActionPerformed
 
+    private void lblSearchDeprecatedhandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchDeprecatedhandleMouseClickOnLabel
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblSearchDeprecatedhandleMouseClickOnLabel
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -5099,6 +5119,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblProfile;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;
+    private javax.swing.JLabel lblSearchDeprecated;
     private javax.swing.JLabel lblSingleBookCrossReferences;
     private javax.swing.JLabel lblSortTagsByAuthor;
     private javax.swing.JLabel lblSortUsingAuthor;

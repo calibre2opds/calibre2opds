@@ -18,9 +18,14 @@ import java.util.List;
 
 public interface GetConfigurationInterface extends ReadOnlyConfigurationInterface {
 
+  public Integer getWindowHeight();
+  public Integer getWindowWidth();
+
   public DeviceMode getDeviceMode();
 
   public String getLanguage();
+
+  public String getFavicon();
 
   public String getCatalogFolderName();
 
@@ -132,13 +137,11 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   /* Catalog Structure */
 
-  public Boolean getDisplayAuthorSort();
-
-  public Boolean getDisplayTitleSort();
-
   public Boolean getSortUsingAuthor();
 
   public Boolean getSortUsingTitle();
+
+  public Boolean getSortUsingSeries();
 
   public String getTagsToIgnore();
 
@@ -147,6 +150,13 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
   public Boolean getTagBooksNoSplit();
 
   /* Book Details */
+
+
+  public Boolean getDisplayAuthorSort();
+
+  public Boolean getDisplayTitleSort();
+
+  public Boolean getDisplaySeriesSort();
 
   public Boolean getGenerateCrossLinks();
 

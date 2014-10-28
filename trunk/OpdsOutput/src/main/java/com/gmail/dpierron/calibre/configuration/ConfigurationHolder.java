@@ -251,12 +251,12 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     }
   }
 
-  public File getFavicon() {
+  public String getFavicon() {
     String s = getProperty(PROPERTY_NAME_FAVICON);
-    return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
+    return (Helper.isNullOrEmpty(s)) ? defaults.getFavicon() : s;
   }
-  public void setFavicon(File Favicon) {
-    setProperty(PROPERTY_NAME_FAVICON, Helper.isNullOrEmpty(Favicon) ? "" : Favicon.getAbsolutePath());
+  public void setFavicon(String Favicon) {
+    setProperty(PROPERTY_NAME_FAVICON, Favicon);
   }
 
   public Boolean isDatabaseFolderReadOnly() {

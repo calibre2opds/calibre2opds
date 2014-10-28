@@ -15,7 +15,12 @@ import java.util.List;
 
 public interface SetConfigurationInterface extends GetConfigurationInterface {
 
+  public void setWindowHeight(Integer height);
+  public void setWindowWidth(Integer width);
+
   public void setLanguage(String value);
+
+  public void setFavicon(String favicon);
 
   public void setCatalogFolderName(String value);
 
