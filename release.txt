@@ -80,8 +80,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-222: Sorting of series should ignore initial articles
     - #c2o-224: "Tags to omit from Tags catalog" ignores "Lang:" tags when "Language as Tag" is checked 
     - #c2o-225: "Do not include the 'About calibre2opds' entry" should also omit credits at the bottom of index.html 
-    - #c2o-226: GUI screen size is too tall on 768 pix screens with Windows taskbar unhidden. 
-    - #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart 
+    - #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart
     - #c2o-228: Fields in "Custom Fields to include in Book Details" option should be bold in the generated book details page 
     - #c2o-229: Spacing between fields in Book details should be reduced
     - #c2o-230: Favicon for Library catalog URL
@@ -104,7 +103,7 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 beta Rev 306
+v3.4 beta Rev 310
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
@@ -132,6 +131,7 @@ v3.4 beta Rev 306
     - Fix:    #c2o-219: Problem with relative links in generated tags pages when using SplitTagsOn option
     - Fix:    #c2o-220: Problem in tag pages with titles, beginning with numbers
     - Fix:    #c2o-223: Image files are not referenced via Books URL when it is specified
+    - Fix:    #c2o-226: GUI screen size is too tall on 768 pix screens with Windows taskbar unhidden.
     - New:    #c2o-232: Save Window Size between runs
 
 v3.3 (1st April 2014) Rev 274

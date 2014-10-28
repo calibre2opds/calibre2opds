@@ -239,6 +239,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     if (Helper.isNullOrEmpty(mapOfAuthorsByLetter))
       return null;
 
+    if (! baseFilename.startsWith(Constants.AUTHORLIST_TYPE)) {
+      int dummy = 1;
+    }
     boolean inSubDir = getCatalogLevel().length() > 0 || pBreadcrumbs.size() > 1;
     String sTitle = baseTitle;
     if (Helper.isNotNullOrEmpty(sTitle))

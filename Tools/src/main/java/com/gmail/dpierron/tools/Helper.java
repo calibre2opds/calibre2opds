@@ -1250,7 +1250,7 @@ public class Helper {
       String checkPart = baseString.substring(pos);
       if (encodedSplitText.toString().length() != checkPart.length()
       && encodedSplitText.toString().startsWith(checkPart)) {
-         baseString = checkPart;
+         baseString = baseString.substring(0,pos);
       }
     }
     return baseString + encodedSplitText.toString();

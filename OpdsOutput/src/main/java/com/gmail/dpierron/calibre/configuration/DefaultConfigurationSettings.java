@@ -34,6 +34,8 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
       return "Calibre library";
   }
 
+  public String getFavicon() { return ""; }
+
   public Integer getMaxBeforePaginate() {
     return 25;
   }
