@@ -40,7 +40,7 @@ public class ThumbnailManager extends ImageManager {
   }
 
   public String getDefaultResizedFilename () {
-    return "thumbnail.jpg";
+    return Constants.DEFAULT_THUMBNAIL_FILENAME;
   }
 
   /**

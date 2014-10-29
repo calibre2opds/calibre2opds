@@ -15,6 +15,7 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -204,7 +205,11 @@ public enum CatalogManager {
 
     // Lets not copy files outside the database folder
     if (!filePath.startsWith(databasePath) ) {
-    // && (!filePath.endsWith(Constants.DEFAULT_RESIZED_COVER_FILENAME)))  {
+      if (filePath.endsWith(Constants.DEFAULT_THUMBNAIL_FILENAME)
+      ||  filePath.endsWith(Constants.DEFAULT_IMAGE_FILENAME)) {
+        // Expected to happen when cover image missing
+        return;
+      }
       logger.warn("addFileToTheMapOfLibraryFilesToCopy: adding file not in library area! (" + filePath + ")");
       return;
     }

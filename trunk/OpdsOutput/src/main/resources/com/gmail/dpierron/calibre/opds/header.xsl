@@ -38,7 +38,6 @@
     <p class="dateGenerated">
       <small>
         <xsl:value-of select="$i18n.dateGenerated"/>
-        <xsl:value-of select="$bookCount"/>
       </small>
     </p>
   </xsl:template>
