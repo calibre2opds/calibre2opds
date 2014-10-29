@@ -65,6 +65,7 @@ public class Constants {
   public final static String NOOK_CATALOG_FOLDERNAME = "_catalog";
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
   public final static String DEFAULT_IMAGE_FILENAME = "default_image.jpg";
+  public final static String DEFAULT_THUMBNAIL_FILENAME = "thumbnail.jpg";
   // URL's for links from Help menu
   public final static String HOME_URL = "http://calibre2opds.com/";
   public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";

@@ -482,6 +482,7 @@ public class LevelSubCatalog extends SubCatalog {
           assert tag.isDone();
         } catch (Exception e) {
           logger.error("Error when generating tag from book cross-link");
+          logger.error("  Exception: " + e);
           tag.setDone();
         }
       }

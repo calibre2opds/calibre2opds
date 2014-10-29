@@ -650,8 +650,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (! useExternalImages && ! catalogImageFilename.equals(Constants.PARENT_PATH_PREFIX + iManager.getDefaultResizedFilename())) {
           imageUri = iManager.getFileToBase64Uri(imageFile);
         } else {
-          CatalogManager.INSTANCE.addImageFileToTheMapOfCatalogImages(catalogImageFilename,imageFile);
-          if (isCover) {
+          CatalogManager.INSTANCE.addImageFileToTheMapOfCatalogImages(catalogImageFilename, imageFile);
+         if (isCover) {
             imageUri=catalogImageFilename.substring(catalogImageFilename.indexOf(Constants.FOLDER_SEPARATOR)+1);
           } else {
             imageUri=Constants.PARENT_PATH_PREFIX + catalogImageFilename;

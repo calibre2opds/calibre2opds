@@ -18,9 +18,6 @@ import java.util.List;
 
 public interface GetConfigurationInterface extends ReadOnlyConfigurationInterface {
 
-  public Integer getWindowHeight();
-  public Integer getWindowWidth();
-
   public DeviceMode getDeviceMode();
 
   public String getLanguage();
