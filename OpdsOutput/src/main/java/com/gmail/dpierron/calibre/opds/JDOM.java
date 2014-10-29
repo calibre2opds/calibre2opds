@@ -72,8 +72,8 @@ public enum JDOM {
              DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
         headerTransformer.setParameter("i18n.dateGenerated",
              Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
-             + Localization.Main.getText("i18n.dateGenerated",dateGenerated) + " - "
-             + Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()));
+             + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
+             + "  ("+ Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) +")");
       } catch (TransformerConfigurationException e) {
         logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
         headerTransformer = null;
@@ -204,8 +204,8 @@ public enum JDOM {
           DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
       transformer.setParameter("i18n.dateGenerated",
           Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
-              + Localization.Main.getText("i18n.dateGenerated",dateGenerated) + " - "
-              + Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()));
+              + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
+              + "  ("+ Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) +")");
       boolean includeAbout =ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeAboutLink();
       transformer.setParameter("programName", Constants.PROGNAME);
       transformer.setParameter("programVersion", includeAbout ? Constants.PROGVERSION + Constants.BZR_VERSION : "");
