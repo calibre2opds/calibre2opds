@@ -702,14 +702,28 @@ public class Mainframe extends javax.swing.JFrame {
     String intro_wiki_url = Localization.Main.getText("intro.wiki.url");
     String intro_team_title = Localization.Main.getText("intro.team.title");
     String intro_team_list1 = Localization.Main.getText("intro.team.list1");
+    String intro_team_title2 = Localization.Main.getText("intro.team.title2");
     String intro_team_list2 = Localization.Main.getText("intro.team.list2");
     String intro_team_list3 = Localization.Main.getText("intro.team.list3");
     String intro_team_list4 = Localization.Main.getText("intro.team.list4");
+    String intro_team_list5 = Localization.Main.getText("intro.team.list5");
     String intro_thanks_1 = Localization.Main.getText("intro.thanks.1");
     String intro_thanks_2 = Localization.Main.getText("intro.thanks.2");
     String message =
-        "<html>" + prog_version + "<br><br>" + intro_goal + "<br><br>" + intro_wiki_title + intro_wiki_url + "<br><br>" + intro_team_title + "<br><ul>" + "<li>" + intro_team_list1 + "<li>" +
-            intro_team_list2 + "<li>" + intro_team_list3 + "<li>" + intro_team_list4 + "</ul><br>" + intro_thanks_1 + "<br>" + intro_thanks_2 + "<br><br></html>";
+        "<html>" + prog_version + "<br><br>" + intro_goal + "<br><br>" + intro_wiki_title + intro_wiki_url
+            + "<br><br>" + intro_team_title
+            + "<br><ul>"
+            + "<li>" + intro_team_list1
+            + "</ul>"
+            + "<br>" + intro_team_title2
+            + "<br><ul>"
+            + "<li>" + intro_team_list2
+            + "<li>" + intro_team_list3
+            + "<li>" + intro_team_list4
+            + "<li>" + intro_team_list5
+            + "</ul><br>"
+            + intro_thanks_1
+            + "<br>" + intro_thanks_2 + "<br><br></html>";
     JOptionPane.showMessageDialog(this, message, Localization.Main.getText("gui.menu.help.about"), JOptionPane.INFORMATION_MESSAGE);
   }
 
