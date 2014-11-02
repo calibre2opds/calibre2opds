@@ -206,7 +206,7 @@ public enum CatalogManager {
     // Lets not copy files outside the database folder
     if (!filePath.startsWith(databasePath) ) {
       if (filePath.endsWith(Constants.DEFAULT_THUMBNAIL_FILENAME)
-      ||  filePath.endsWith(Constants.DEFAULT_IMAGE_FILENAME)) {
+      ||  filePath.endsWith(Constants.CALIBRE_COVER_FILENAME)) {
         // Expected to happen when cover image missing
         return;
       }

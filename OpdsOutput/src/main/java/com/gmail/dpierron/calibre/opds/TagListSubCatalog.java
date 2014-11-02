@@ -97,12 +97,15 @@ public class TagListSubCatalog extends TagsSubCatalog {
 
     // list the entries (or split them)
     List<Element> result;
-    if (willSplitByLetter) {
+    if (willSplitByLetter && listTags.size() > 1) {
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
       logger.debug("calling getListOfTagsSplitByLetter");
       result = getListOfTagsSplitByLetter(breadcrumbs,
                                           mapOfTagsByLetter,
-                                          inSubDir, title, urn, pFilename);
+                                          inSubDir,
+                                          title,
+                                          urn,
+                                          pFilename);
     } else {
       logger.debug("no split by letter");
       result = new LinkedList<Element>();

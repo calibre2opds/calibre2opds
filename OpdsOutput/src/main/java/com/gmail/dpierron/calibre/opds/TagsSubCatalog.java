@@ -170,25 +170,30 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @throws IOException
    */
   public Element getTagEntry(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
-    if (logger.isDebugEnabled())
-      logger.debug(pBreadcrumbs + "/" + tag);
+
+    assert pBreadcrumbs != null;
+    assert tag != null;
+
+    if (logger.isDebugEnabled()) logger.debug("getTagEntry: Entry (" + pBreadcrumbs + "/" + tag + ")");
+
+    tag.setDone();
 
     CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
-    if (!isInDeepLevel())
+    if (!isInDeepLevel()) {
       CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
-
+    }
     List<Book> books = getMapOfBooksByTag().get(tag);
-    if (Helper.isNullOrEmpty(books))
+    if (Helper.isNullOrEmpty(books)) {
+      if (logger.isDebugEnabled()) logger.debug("getTagEntry: Exit (no books fond for tag");
       return null;
-
+    }
     // Tags are held at each level (i.e. not the top level)
     String filename = getTagFolderFilenameWithLevel(tag);
     String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
     String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();
 
     // sort books by title
-    if (logger.isDebugEnabled())
-      logger.debug("sorting " + books.size() + " books");
+    if (logger.isDebugEnabled()) logger.debug("sorting " + books.size() + " books");
     sortBooksByTitle(books);
 
     SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
@@ -196,10 +201,10 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     if (makeTagDeep(tag, books)) {
       // specify that this is a deep level
       String summary = Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(books.size()));
-      if (logger.isDebugEnabled())
+      if (logger.isDebugEnabled()) {
         logger.debug("getTagEntry: Making a deep level for tag " + tag);
-      if (logger.isDebugEnabled())
         logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
+      }
       // String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
       // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null);
       LevelSubCatalog level = new LevelSubCatalog(books, title);
@@ -216,9 +221,10 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     } else {
       // try and list the items to make the summary
       String summary = Summarizer.INSTANCE.summarizeBooks(books);
-      if (logger.isDebugEnabled())
+      if (logger.isDebugEnabled()) {
         logger.debug("getTagEntry: making a simple book list for tag " + tag);
-      logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
+        if (logger.isTraceEnabled()) logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
+      }
       // #c2o-212  Sort tag books by author
       if (currentProfile.getSortTagsByAuthor()) {
         sortBooksByAuthorAndTitle(books);
@@ -227,7 +233,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
         splitOption = SplitOption.Paginate;
       }
 
-      return getListOfBooks(pBreadcrumbs,
+      Element element = getListOfBooks(pBreadcrumbs,
                             books,
                             true,               // Always in sub-dir for tag
                             0,
@@ -237,6 +243,8 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
                             filename,
                             splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS,
                             null);
+      if (logger.isDebugEnabled()) logger.debug("getTagEntry: Exit");
+      return element;
     }
   }
 
