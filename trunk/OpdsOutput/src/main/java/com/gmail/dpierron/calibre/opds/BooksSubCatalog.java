@@ -19,8 +19,11 @@ import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
+import sun.reflect.ConstructorAccessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -168,7 +171,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled()) logger.debug("getListOfBooks:catalogSize=" + catalogSize);
 
     if (from != 0) inSubDir = true;
-    if (pBreadcrumbs.size() > 1) inSubDir = true;
+    if (Helper.isNotNullOrEmpty(pBreadcrumbs) ||  pBreadcrumbs.size() > 1) inSubDir = true;
     if (inSubDir && icon.startsWith(Constants.CURRENT_PATH_PREFIX))
       icon = Constants.PARENT_PATH_PREFIX + icon.substring(2);
 
@@ -725,6 +728,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     // add the tags links
     // (but only if we generate a tags catalog)
+    // TODO:  Shpi;d we do something different if the option to split tags
+    // TODO   is enabled - e.g. go to each section individully?
     if (isTagCrossReferences(book)) {
       if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
       for (final Tag tag : book.getTags()) {
@@ -1018,11 +1023,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Series (if present and wanted)
       if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
-        content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+        content.addContent(JDOM.INSTANCE.newParagraph()
+            .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
             .addContent(Localization.Main.getText("content.series") + ": "))
-            .addContent(data)
-            .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-            .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+            .addContent(data))
+            // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+            // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+            ;
         hasContent = true;
       }
       // Rating (if present and wanted)
@@ -1032,11 +1039,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeRatingInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getRating())) {
           String rating = LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating());
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOM.INSTANCE.newParagraph()
+              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.rating") + ": "))
               .addContent(rating)
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+          );
           hasContent = true;
         }
       }
@@ -1053,22 +1062,26 @@ public abstract class BooksSubCatalog extends SubCatalog {
           else
             // If no tags then we need an empty string (is this possible)
             tags = "";
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOM.INSTANCE.newParagraph()
+              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.tags") + ": "))
               .addContent(tags)
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              );
           hasContent = true;
         }
       }
       // Publisher (if present and wanted)
       if (currentProfile.getIncludePublisherInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getPublisher())) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOM.INSTANCE.newParagraph()
+              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.publisher") + ": "))
               .addContent(book.getPublisher().getName())
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              );
           hasContent = true;
         }
       }
@@ -1076,11 +1089,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludePublishedInBookDetails()) {
         Date pubtmp = book.getPublicationDate();
         if (Helper.isNotNullOrEmpty(pubtmp)) {
-            content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+            content.addContent(JDOM.INSTANCE.newParagraph()
+                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.published") + ": "))
                 .addContent(CatalogManager.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
-                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+                // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+                // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+            );
         }
       }
 
@@ -1088,11 +1103,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeAddedInBookDetails()) {
         Date addtmp = book.getTimestamp();
         if (Helper.isNotNullOrEmpty(addtmp)) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOM.INSTANCE.newParagraph()
+              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.added") + ": "))
               .addContent(CatalogManager.INSTANCE.titleDateFormat.format(addtmp))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              );
         }
       }
 
@@ -1101,11 +1118,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeModifiedInBookDetails()) {
         Date modtmp = book.getModified();
         if (Helper.isNotNullOrEmpty(modtmp)) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
-              .addContent(Localization.Main.getText("content.modified") + ": "))
+          content.addContent(JDOM.INSTANCE.newParagraph())
+              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+              .addContent(Localization.Main.getText("content.modified") + ": ")
               .addContent(CatalogManager.INSTANCE.titleDateFormat.format(modtmp))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
+              );
         }
       }
 
@@ -1174,8 +1193,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               }
             }
             // Finally some spacing elements
-            content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK));
+            content.addContent(JDOM.INSTANCE.newParagraph());
 
           }
         }
@@ -1185,7 +1203,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: got comments");
         content.addContent(JDOM.INSTANCE.newParagraph()
-            .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.summary"))));
         for (Element p : comments) {
           content.addContent(p.detach());

@@ -477,7 +477,7 @@ public class LevelSubCatalog extends SubCatalog {
         TagsSubCatalog tagsSubCatalog = new TagListSubCatalog(DataModel.INSTANCE.getMapOfBooksByTag().get(tag));
         tagsSubCatalog.setCatalogLevel(getCatalogLevel());
         try {
-          tagsSubCatalog.getTagEntry(null, tag, null, null);
+          tagsSubCatalog.getTagEntry(pBreadcrumbs, tag, null, null);
           foundreference = true;
           assert tag.isDone();
         } catch (Exception e) {

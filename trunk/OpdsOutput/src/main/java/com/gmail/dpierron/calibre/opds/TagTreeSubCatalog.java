@@ -51,11 +51,12 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
   @Override
   Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     Element result;
-    logger.debug("compute the tree of tags");
+    if (logger.isDebugEnabled()) logger.debug("getCatalog: pBreadcrumbs=" + pBreadcrumbs.toString() + ", inSubDir=" + inSubDir);
     String splitTagsOn = currentProfile.getSplitTagsOn();
     assert Helper.isNotNullOrEmpty(splitTagsOn);
     TreeNode root = new RootTreeNode();
     // Work through the tags creating the tree
+    if (logger.isTraceEnabled()) logger.trace("generate initial tree");
     for (Tag tag : getTags()) {
       String[] partsOfTag = tag.getPartsOfTag(splitTagsOn);
       TreeNode currentPositionInTree = root;
@@ -73,11 +74,11 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       currentPositionInTree.setData(tag);
     }
     // browse the tree, removing unneeded levels (single childs up to the leafs)
-    logger.debug("remove unneeded levels");
+    if (logger.isTraceEnabled()) logger.trace("remove unneeded levels");
     removeUnNeededLevelsInTree(root, null);
-    logger.debug("getCatalog: " + pBreadcrumbs.toString());
     // Now get the resulting page set
     result = getLevelOfTreeNode(pBreadcrumbs, root);
+    if (logger.isDebugEnabled()) logger.debug("getCatalog: exit (pBreadcrumbs=" + pBreadcrumbs.toString() + ")");
     return result;
   }
 
@@ -96,6 +97,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @return
    */
   private TreeNode removeUnNeededLevelsInTree(TreeNode node, TreeNode removedParent) {
+    // if (logger.isTraceEnabled()) logger.trace("removeUnNeededLevel: node=" + node + ", removedParent=" + removedParent);
     if (removedParent != null) {
       node.setId(removedParent.getId() + currentProfile.getSplitTagsOn() + node.getId());
     }
@@ -109,7 +111,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       if (childNode.getData() == null && childNode.getChildren().size() <= 1) {
         if (childNode.getChildren().size() == 0) {
           // useless node
-          // TODO:  ITIMPI:  Feel there should be something done here if this condition can really ever occurr
+          // TODO:  ITIMPI:  Feel there should be something done here if this condition can really ever occur
           int dummy = 1;        // TODO See if we really ever get here!
         } else {
           // useless level so remove it
@@ -128,7 +130,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
   }
 
   /**
-   * Initial entry point to creating a list of tags
+   * Initial entry point to creating a tree list of tags
    *
    * @param pBreadcrumbs
    * @param level
@@ -136,19 +138,20 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    * @throws IOException
    */
   private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level) throws IOException {
-    logger.debug("getLevelOfTreeNode:" + level);
+    if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: pBreadcrumbs=" + pBreadcrumbs + ", level=" + level);
+    Element result;
     if (Helper.isNullOrEmpty(level.getChildren())) {
       // it's a leaf, consisting of a single tag : make a list of books
-      logger.debug("it's a leaf, consisting of a single tag : make a list of books");
+      if (logger.isTraceEnabled()) logger.trace("getLevelOfTreeNode: it's a leaf, consisting of a single tag : make a list of books");
       Tag tag = (Tag) level.getData();
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType()+ level.getGuid();
-      Element entry = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
-      TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
-      return entry;
+      result = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
+      TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, result);
     } else {
-      logger.debug("calling getLevelOfTreeNode,int");
-      return getLevelOfTreeNode(pBreadcrumbs, level, 0);
+      result = getLevelOfTreeNode(pBreadcrumbs, level, 0);
     }
+    if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: Exit level " + level);
+    return result;
   }
 
 
@@ -163,12 +166,15 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
    */
   private Element getLevelOfTreeNode(Breadcrumbs pBreadcrumbs, TreeNode level, int from) throws IOException {
 
+    if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: pBreadcrumbs=" + pBreadcrumbs + ", level=" + level + ", from=" + from);
+
     boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0) || pBreadcrumbs.size() > 1);
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
     int itemsCount = level.getChildren().size();
 
     String filename = getCatalogBaseFolderFileName()
-                      + Constants.TYPE_SEPARATOR + encryptString(pBreadcrumbs.toString())
+//                      + Constants.TYPE_SEPARATOR + encryptString(pBreadcrumbs.toString())
+                      + Constants.TYPE_SEPARATOR + encryptString(level.toString())
                       + Constants.PAGE_DELIM + pageNumber;
     logger.debug("getLevelOfTreeNode,int: generating " + filename);
 
@@ -197,19 +203,24 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
     for (int i = from; i < itemsCount; i++) {
       if ((i - from) >= maxBeforePaginate) {
-        Element nextLink = getLevelOfTreeNode(pBreadcrumbs, level, i)/*.getFirstElement()*/;
+        Element nextLink = getLevelOfTreeNode(pBreadcrumbs,
+                                            level,
+                                            i);
         result.add(0, nextLink);
         break;
       } else {
         TreeNode childLevel = level.getChildren().get(i);
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        Element entry = getLevelOfTreeNode(breadcrumbs, childLevel)/*.getFirstElement()*/;
+        Element entry = getLevelOfTreeNode(breadcrumbs,
+                                           childLevel);
         if (entry != null)
           result.add(entry);
       }
     }
 
+    if (logger.isTraceEnabled()) logger.trace("getLevelOfTreeNode: add entry to feed");
     feed.addContent(result);
+
 
     Element entry;
     String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
@@ -223,7 +234,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
                                          summary,
                                          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     }
+    if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: Exit level " + level + ", from=" + from);
     return entry;
   }
-
 }

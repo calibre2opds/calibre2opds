@@ -28,19 +28,35 @@ import java.util.zip.CheckedInputStream;
 public class CachedFile extends File {
   private final static Logger logger = Logger.getLogger(CachedFile.class);
 
-  private boolean privateExists;
-  private boolean existsChecked = false;
+  // private boolean privateExists;
+  // private boolean existsChecked = false;
   private long privateLastModified;
-  private boolean lastModifiedChecked;
+  // private boolean lastModifiedChecked;
   private long privateLength;
-  private boolean lengthChecked;
-  private boolean privateIsDirectory;
-  private boolean isDirectoryChecked;
+  // private boolean lengthChecked;
+  // private boolean privateIsDirectory;
+  // private boolean isDirectoryChecked;
   private long privateCrc;                     // A -ve value indicates invalid CRC;
-  private boolean crcCalced;
-  private boolean targetFile;           // Set to true if file/directory is only on target
-  private boolean cachedFileValuesChecked;           // Set to true if data is from cache and not filing system
-  private boolean isChanged;            // If set to false the can assume file is unchanged so target cioy is OK
+  // private boolean crcCalced;
+  // private boolean targetFile;           // Set to true if file/directory is only on target
+  // private boolean cachedFileValuesChecked;           // Set to true if data is from cache and not filing system
+  // private boolean isChanged;            // If set to false the can assume file is unchanged so target cioy is OK
+
+  // Flags indicating state of entry
+  // Noee:  Using bits in more memory efficient than using boolean types.
+  //        This can mount up with the number of these objects that are created.
+  final static short FLAG_ALL_CLEAR = 0x0000;
+  final static short FLAG_EXISTS = 1<<1;
+  final static short FLAG_EXISTS_CHECKED = 1<<2;
+  final static short FLAG_MODIFIED_CHECKED = 1<<3;
+  final static short FLAG_LENGTH_CHECKED = 1<<4;
+  final static short FLAG_IS_DIRECTORY = 1<<5;
+  final static short FLAG_IS_DIRECTORY_CHECKED = 1<<6;
+  final static short FLAG_CRC_CALCED = 1<<7;
+  final static short FLAG_TARGET_FILE = 1<<8;
+  final static short FLAG_CACHED_VALUES_CHECKED = 1<<9;
+  final static short FLAG_IS_CHANGED = 1<<10;             // If set to false the can assume file is unchanged so target cioy is OK
+  private short flags = FLAG_ALL_CLEAR;
 
   // Constructors mirror those for the File class
 
@@ -50,30 +66,43 @@ public class CachedFile extends File {
     clearCached();
   }
 
+
+  /**
+   *   Helper routine to set flags bits state
+   */
+  private void setFlags (boolean b, int f) {
+    if (b == true)
+      flags |= f;           // Set flag bits
+    else
+      flags &= ~f;           // Clear flag bits;
+  }
+
+  /**
+   * Helper routine to check if specified kags set
+   * @param f
+   * @return
+   */
+  private boolean isFlags( int f) {
+    return ((flags & f) == f);
+  }
+
   /**
    * Clear all cached information.
    */
   private void clearCached() {
-    cachedFileValuesChecked = false;
-    targetFile = false;
+    setFlags(false, FLAG_CACHED_VALUES_CHECKED + FLAG_TARGET_FILE);
     clearCachedInformation();
   }
-
   /**
    * Use this when we have just created a new file.
    * This is pribarliy when new image files are generated,
    * so we want to force any cached files to be re-read.
    */
   public void clearCachedInformation() {
-    crcCalced = false;
-    lastModifiedChecked = false;
-    existsChecked = false;
-    lengthChecked = false;
-    privateExists = false;
     privateLastModified = 0;
-    privateIsDirectory = false;
-    isDirectoryChecked = false;
-    cachedFileValuesChecked = false;        // Reset to say cache pnly entry
+    setFlags(false,
+        FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_EXISTS + FLAG_IS_DIRECTORY + FLAG_IS_DIRECTORY_CHECKED +
+            FLAG_CACHED_VALUES_CHECKED);     // Reset to say cache only entry
   }
 
 
@@ -84,31 +113,26 @@ public class CachedFile extends File {
    */
   private void checkCachedValues() {
     // If it is not a cached entry then simply return
-    if (cachedFileValuesChecked) {
+    if (isFlags(FLAG_CACHED_VALUES_CHECKED)) {
       return;
     }
 
     if (logger.isTraceEnabled()) logger.trace("Check Cached data for " + getPath());
 
-    if (! existsChecked) {
-      if (!super.exists()) {
+    if (! isFlags(FLAG_EXISTS_CHECKED)) {
+      setFlags(super.exists(), FLAG_EXISTS);
+      setFlags(true, FLAG_EXISTS_CHECKED);
+      if (! isFlags (FLAG_EXISTS)) {
         // Cached entry for non-existent file needs resetting
-        privateExists = false;
-        clearCached();
         if (logger.isTraceEnabled())
           logger.trace("File does not exist - reset to defaults");
-        privateExists = false;
-        existsChecked = true;
+        clearCached();
         return;
-      } else {
-        privateExists = true;
-        existsChecked = true;
       }
     }
 
-    if (! lengthChecked) {
+    if (! isFlags(FLAG_LENGTH_CHECKED)) {
       long l = super.length();
-      lengthChecked = true;
       if (privateLength != l) {
         if (logger.isTraceEnabled()) logger.trace("privateLength not matched - CRC needs recalculating");
         clearCachedCrc();
@@ -116,25 +140,24 @@ public class CachedFile extends File {
       privateLength = l;
     }
 
-    if (! lastModifiedChecked) {
+    if (! isFlags(FLAG_MODIFIED_CHECKED)) {
       long d = super.lastModified();
-      lastModifiedChecked = true;
       if (privateLastModified != d) {
         if (logger.isTraceEnabled()) logger.trace("date not matched - CRC needs recalculating");
         clearCachedCrc();
       }
       privateLastModified = d;
     }
-    if (! crcCalced && privateCrc != -1) {
+    if (!isFlags(FLAG_CRC_CALCED) && privateCrc != -1) {
       if (logger.isTraceEnabled()) logger.trace("CRC assumed valid");
-      crcCalced = true;
+      setFlags(true, FLAG_CRC_CALCED);
     }
 
-    if (! isDirectoryChecked) {
-      privateIsDirectory = super.isDirectory();
-      isDirectoryChecked = true;
+    if ( ! isFlags(FLAG_IS_DIRECTORY_CHECKED)) {
+      setFlags(super.isDirectory(), FLAG_IS_DIRECTORY);
     }
-    cachedFileValuesChecked = true;     // Set to say entry been used
+
+    setFlags(true, FLAG_MODIFIED_CHECKED + FLAG_LENGTH_CHECKED + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED);
   }
 
   /**
@@ -150,16 +173,13 @@ public class CachedFile extends File {
    * @param isDirectory
    */
   public void setCachedValues(boolean exists, long lastModified, long length, long crc, boolean isDirectory) {
-    privateExists = exists;
-    existsChecked = true;
+    setFlags(exists, FLAG_EXISTS);
     privateLastModified = lastModified;
-    lastModifiedChecked = true;
     privateLength = length;
-    lengthChecked = true;
     privateCrc = crc;
-    crcCalced = (privateCrc != -1);
-    privateIsDirectory = isDirectory;
-    cachedFileValuesChecked = true;
+    setFlags((crc != -1), FLAG_CRC_CALCED);
+    setFlags(isDirectory, FLAG_IS_DIRECTORY);
+    setFlags(true, FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_MODIFIED_CHECKED + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED);
   }
 
   /**
@@ -168,7 +188,7 @@ public class CachedFile extends File {
   @Override
   public boolean exists() {
     checkCachedValues();
-    return privateExists;
+    return isFlags(FLAG_EXISTS);
   }
  /**
    * Check modified date of the cached file object
@@ -197,7 +217,7 @@ public class CachedFile extends File {
   @Override
   public boolean isDirectory() {
     checkCachedValues();
-    return privateIsDirectory;
+    return isFlags(FLAG_IS_DIRECTORY);
   }
 
   /**
@@ -214,10 +234,10 @@ public class CachedFile extends File {
    */
   public long getCrc() {
     checkCachedValues();
-    if (! crcCalced) {
+    if (! isFlags(FLAG_CRC_CALCED)) {
       // See i conditions for used cached value are met
-      if (privateCrc != -1 && lengthChecked && lastModifiedChecked) {
-        crcCalced = true;
+      if ((privateCrc != -1) && isFlags(FLAG_LENGTH_CHECKED + FLAG_MODIFIED_CHECKED)) {
+        setFlags(true, FLAG_CRC_CALCED);
       } else {
         // Calculate the CRC for this file.
         CheckedInputStream cis = null;
@@ -231,7 +251,7 @@ public class CachedFile extends File {
           logger.error("ERROR: Failed trying to calculate CRC for " + super.getAbsolutePath() + "\n" + e.toString());
           clearCachedCrc();
         } finally {
-          crcCalced = (privateCrc != -1);
+          setFlags((privateCrc != -1), FLAG_CRC_CALCED);
         }
         // Close file ignoring any errors
         try {
@@ -240,7 +260,7 @@ public class CachedFile extends File {
         } catch (IOException e) {
           // Do nothing
         }
-        if (logger.isTraceEnabled()) logger.trace("calcCrc=" + crcCalced + " (privateCrc=" + privateCrc + "): " + getAbsolutePath());
+        if (logger.isTraceEnabled()) logger.trace("calcCrc=" + isFlags(FLAG_CRC_CALCED) + " (privateCrc=" + privateCrc + "): " + getAbsolutePath());
       }
     }
     if (logger.isTraceEnabled()) logger.trace("getCrc=" + privateCrc + ": " + getAbsolutePath());
@@ -255,7 +275,7 @@ public class CachedFile extends File {
    * @return True if yes, false if not.
    */
   public boolean isCrc() {
-    return cachedFileValuesChecked && crcCalced;
+    return isFlags(FLAG_CACHED_VALUES_CHECKED & FLAG_CRC_CALCED);
   }
 
 
@@ -264,7 +284,7 @@ public class CachedFile extends File {
    */
   private void clearCachedCrc() {
     privateCrc = -1;
-    crcCalced = false;
+    setFlags(false, FLAG_CRC_CALCED);
   }
 
   /**
@@ -273,8 +293,8 @@ public class CachedFile extends File {
    * @param b True if it is, false otherwise
    */
   public void setTarget(boolean b) {
-    targetFile = b;
-    if (logger.isTraceEnabled()) logger.trace("setTarget(" + targetFile + "): " + getAbsolutePath());
+    setFlags(b, FLAG_TARGET_FILE);
+    if (logger.isTraceEnabled()) logger.trace("setTarget(" + isFlags(FLAG_TARGET_FILE) + "): " + getAbsolutePath());
   }
 
   /**
@@ -283,16 +303,13 @@ public class CachedFile extends File {
    * @return true if cached data
    */
   public boolean isCachedValidated() {
-    if (logger.isTraceEnabled()) logger.trace("isCachedValidated=" + cachedFileValuesChecked + ": " + getAbsolutePath());
-    return cachedFileValuesChecked;
+    if (logger.isTraceEnabled()) logger.trace("isCachedValidated=" + isFlags(FLAG_CACHED_VALUES_CHECKED)
+                                          + ": " + getAbsolutePath());
+    return isFlags (FLAG_CACHED_VALUES_CHECKED);
   }
 
   public void clearCacheValidated() {
-    existsChecked = false;
-    lengthChecked = false;
-    crcCalced = false;
-    lastModifiedChecked = false;
-    cachedFileValuesChecked = false;
+    setFlags(false, FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_CACHED_VALUES_CHECKED);
   }
 
   /**
@@ -305,7 +322,7 @@ public class CachedFile extends File {
    * @return
    */
   public boolean isChanged() {
-    return isChanged;
+    return isFlags(FLAG_IS_CHANGED);
   }
 
   /**
@@ -319,7 +336,7 @@ public class CachedFile extends File {
    * @param b True if it is, false otherwise
    */
   public void setChanged (boolean b) {
-    isChanged = b;
-    if (logger.isTraceEnabled()) logger.trace("setChanged(" + isChanged + "): " + getAbsolutePath());
+    setFlags(b, FLAG_IS_CHANGED);
+    if (logger.isTraceEnabled()) logger.trace("setChanged(" + isFlags(FLAG_IS_CHANGED) + "): " + getAbsolutePath());
   }
 }

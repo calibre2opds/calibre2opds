@@ -12,8 +12,12 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   private String sort;
   private String guessedLastName;
   private String nameForSort;
-  private boolean done = false;
-  private boolean referenced = false;
+  // Flags
+  // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
+  final static byte FLAG_ALL_CELAR = 0;
+  final static byte FLAG_DONE = 0x01;
+  final static byte FLAG_REFERENCED = 0x02;
+  private byte flags = FLAG_ALL_CELAR;
 
   public Author(String id, String name, String sort) {
     super();
@@ -134,16 +138,16 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   }
 
   public void setDone() {
-    done = true;
+    flags |= FLAG_DONE;
   }
   public boolean isDone () {
-    return done;
+    return ((flags & FLAG_DONE) != 0);
   }
 
   public void setReferenced() {
-    referenced = true;
+    flags |= FLAG_REFERENCED;
   }
   public boolean isReferenced () {
-    return referenced;
+    return ((flags & FLAG_REFERENCED) != 0);
   }
 }
