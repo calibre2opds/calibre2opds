@@ -120,24 +120,21 @@ public enum Database {
         try {
           step= 4; timestamp = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_timestamp"));
         } catch (ParseException e) {
-          if (logger.isDebugEnabled())
-            logger.debug("listBooks (timestamp): " + e);
+          if (logger.isDebugEnabled()) logger.debug("listBooks (timestamp): " + e);
           // we don't care
         }
         Date modified = null;
         try {
           step= 5; modified = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_modified"));
         } catch (ParseException e) {
-          if (logger.isDebugEnabled())
-            logger.debug("listBooks (modified): " + e);
+          if (logger.isDebugEnabled()) logger.debug("listBooks (modified): " + e);
           // we don't care
         }
         Date publicationDate = null;
         try {
           step=6; publicationDate = SQLITE_TIMESTAMP_FORMAT.parse(set.getString("book_pubdate"));
         } catch (ParseException e) {
-          if (logger.isDebugEnabled())
-            logger.debug("listBooks (publicationDate): " + e);
+          if (logger.isDebugEnabled()) logger.debug("listBooks (publicationDate): " + e);
           // we don't care
         }
         // add a new book
@@ -176,8 +173,7 @@ public enum Database {
             book.addAuthor(author);
           }
         } else {
-          if (logger.isTraceEnabled())
-            logger.trace("Appear to be no authors for bookId" + bookId);
+          if (logger.isTraceEnabled()) logger.trace("Appear to be no authors for bookId" + bookId);
         }
 
         // fetch its publisher
@@ -464,7 +460,7 @@ public enum Database {
       logger.error("listCommentsByBookId: " + e);
       sqlException += (2^14);
     }
-    logger.info("Number of comments=" + result.size() + ", Total Size="+ result.toString().length());
+    if (logger.isDebugEnabled()) logger.debug("Number of comments=" + result.size() + ", Total Size="+ result.toString().length());
     return result;
   }
 

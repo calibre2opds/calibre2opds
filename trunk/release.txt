@@ -84,7 +84,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-228: Fields in "Custom Fields to include in Book Details" option should be bold in the generated book details page 
     - #c2o-229: Spacing between fields in Book details should be reduced
     - #c2o-230: Favicon for Library catalog URL
-    - #c2o-231: Split tags doesn't work
 
 
 Any requests for new features should be made by adding them to the Issue Register,
@@ -132,6 +131,7 @@ v3.4 beta Rev 310
     - Fix:    #c2o-220: Problem in tag pages with titles, beginning with numbers
     - Fix:    #c2o-223: Image files are not referenced via Books URL when it is specified
     - Fix:    #c2o-226: GUI screen size is too tall on 768 pix screens with Windows taskbar unhidden.
+    - fix:    #c2o-231: Split tags doesn't work
     - New:    #c2o-232: Save Window Size between runs
 
 v3.3 (1st April 2014) Rev 274

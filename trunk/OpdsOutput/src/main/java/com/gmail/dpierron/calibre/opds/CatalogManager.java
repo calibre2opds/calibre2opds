@@ -15,7 +15,6 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;

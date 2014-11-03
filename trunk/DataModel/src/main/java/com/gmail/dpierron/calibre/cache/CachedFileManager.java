@@ -144,16 +144,16 @@ public enum CachedFileManager {
   public void setCacheFolder(File cf) {
     assert cf != null;    // cf must not be null
     cacheFile = new File(cf, CALIBRE2OPDS_LOG_FILENAME);
-    logger.info("CRC Cache file set to " + cacheFile.getPath());
+    if (logger.isDebugEnabled()) logger.debug("CRC Cache file set to " + cacheFile.getPath());
 
     // Check for old name, and if necessary rename to new style
     File cacheFileOld = new File(cf, CALIBRE2OPDS_LOG_FILENAME_OLD);
     if (cacheFileOld.exists()) {
-        logger.debug("Cache file found with name " + CALIBRE2OPDS_LOG_FILENAME_OLD + ", rename to " + CALIBRE2OPDS_LOG_FILENAME);
+        if (logger.isDebugEnabled()) logger.debug("Cache file found with name " + CALIBRE2OPDS_LOG_FILENAME_OLD + ", rename to " + CALIBRE2OPDS_LOG_FILENAME);
         if (cacheFileOld.renameTo(cacheFile)) {
-          logger.debug("Cache file renamed to " + CALIBRE2OPDS_LOG_FILENAME);
+          if (logger.isDebugEnabled())logger.debug("Cache file renamed to " + CALIBRE2OPDS_LOG_FILENAME);
         } else {
-          logger.debug("ERROR: failed to rename cache file");
+          if (logger.isDebugEnabled()) logger.debug("ERROR: failed to rename cache file");
       }
     }
 
@@ -170,9 +170,9 @@ public enum CachedFileManager {
   public void saveCache(String pathToIgnore, CatalogCallbackInterface callback) {
 
     // Check Cache folder has been set
-    logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
+    if (logger.isDebugEnabled()) logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
     if (cacheFile == null) {
-      logger.debug("Aborting saveCache() as cacheFile not set");
+      if (logger.isDebugEnabled()) logger.debug("Aborting saveCache() as cacheFile not set");
       return;
     }
 
@@ -190,7 +190,7 @@ public enum CachedFileManager {
     if (callback != null ) callback.setProgressMax(cachedFilesMap.entrySet().size());
     try {
       try {
-        logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
+        if (logger.isDebugEnabled()) logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
         fs = new FileOutputStream(cacheFile);         // Open File
         assert fs != null: "saveCache: fs should never be null at this point";
         bs = new BufferedOutputStream(fs,512 * 1024); // Add buffering
@@ -253,17 +253,19 @@ public enum CachedFileManager {
         } catch (IOException e) {
           // Do nothing - we ignore an error at this point
           // Having said that, an error here is a bit unexpected so lets log it when testing
-          logger.debug("saveCache: Unexpected error\n" + e);
+          logger.warn("saveCache: Unexpected error\n" + e);
         }
       }
     } catch (IOException e) {
       logger.warn("saveCache: Exception trying to write cache: " + e);
     }
 
-    logger.debug("saveCache: Cache Entries Saved:   " + savedCount);
-    logger.debug("saveCache: Cache Entries Ignored: " + ignoredCount);
-    logger.debug("saveCache: isDirectory=" + isDirectory + ", notUsed=" + notUsed + ", notExists=" + notExists + ", crcNotKnown=" + crcNotKnown + ", pathMatch=" + pathMatch);
-    logger.debug("saveCache: COMPLETED Saving CRC cache to file " + cacheFile.getPath());
+    if (logger.isDebugEnabled()) {
+      logger.debug("saveCache: Cache Entries Saved:   " + savedCount);
+      logger.debug("saveCache: Cache Entries Ignored: " + ignoredCount);
+      logger.debug("saveCache: isDirectory=" + isDirectory + ", notUsed=" + notUsed + ", notExists=" + notExists + ", crcNotKnown=" + crcNotKnown + ", pathMatch=" + pathMatch);
+      logger.debug("saveCache: COMPLETED Saving CRC cache to file " + cacheFile.getPath());
+    }
   }
 
   /**
@@ -291,7 +293,7 @@ public enum CachedFileManager {
     BufferedInputStream bs = null;
     long loadedCount = 0;
     try {
-      logger.info("STARTED Loading CRC cache from file " + cacheFile.getPath());
+      if (logger.isDebugEnabled()) logger.debug("STARTED Loading CRC cache from file " + cacheFile.getPath());
       fs = new FileInputStream(cacheFile);          // Open file
       assert fs != null: "loadCache: fs should never be null at this point";
       bs = new BufferedInputStream(fs, 512 * 1024); // Add buffering
@@ -311,8 +313,7 @@ public enum CachedFileManager {
           cf = (CachedFile) os.readObject();
 
           String path = cf.getPath();
-          if (logger.isTraceEnabled())
-            logger.trace("Loaded cached object " + path);
+          if (logger.isTraceEnabled())  logger.trace("Loaded cached object " + path);
           loadedCount++;
           CachedFile cf2 = inCache(cf);
           if (cf2 == null) {
@@ -321,22 +322,21 @@ public enum CachedFileManager {
             addCachedFile(cf);
             cf.clearCacheValidated();
             cf.setChanged(true);    // Assume changed unless we find otherwise
-            if (logger.isTraceEnabled())
-              logger.trace("added entry to cache");
+            if (logger.isTraceEnabled()) logger.trace("added entry to cache");
           } else {
             // Already in cache (can this happen?), so we
             // need to determine what values (if any) can
             // be set in the entry already there.
-            logger.debug("Entry already in cache - ignore cached entry for now");
+            if (logger.isDebugEnabled()) logger.debug("Entry already in cache - ignore cached entry for now");
           }
         }
       } catch (ClassNotFoundException cnfe) {
         logger.warn("Cache file not loaded +\n" + cnfe);
       } catch (java.io.InvalidClassException ic) {
-        logger.debug("Cache ignored as CachedFile class changed since it was created");
+        if (logger.isDebugEnabled()) logger.debug("Cache ignored as CachedFile class changed since it was created");
         // Should just mean that CachedFile class was changed so old cache invalid
       } catch (java.io.EOFException io) {
-        logger.trace("End of Cache file encountered");
+        if (logger.isTraceEnabled()) logger.trace("End of Cache file encountered");
         // Do nothing else - this is expected
       } catch (IOException e) {
         // This is to catch any currently unexpected error cnditions
@@ -357,8 +357,10 @@ public enum CachedFileManager {
       }
     }
 
-    logger.info("Cache Entries Loaded: " + loadedCount);
-    logger.info("COMPLETED Loading CRC cache from file " + cacheFile.getPath());
+    if (logger.isDebugEnabled()) {
+      logger.debug("Cache Entries Loaded: " + loadedCount);
+      logger.debug("COMPLETED Loading CRC cache from file " + cacheFile.getPath());
+    }
   }
 
   /**

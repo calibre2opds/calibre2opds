@@ -171,7 +171,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled()) logger.debug("getListOfBooks:catalogSize=" + catalogSize);
 
     if (from != 0) inSubDir = true;
-    if (Helper.isNotNullOrEmpty(pBreadcrumbs) ||  pBreadcrumbs.size() > 1) inSubDir = true;
+    if (Helper.isNotNullOrEmpty(pBreadcrumbs) &&  pBreadcrumbs.size() > 1) inSubDir = true;
     if (inSubDir && icon.startsWith(Constants.CURRENT_PATH_PREFIX))
       icon = Constants.PARENT_PATH_PREFIX + icon.substring(2);
 
