@@ -173,7 +173,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     int itemsCount = level.getChildren().size();
 
     String filename = getCatalogBaseFolderFileName()
-//                      + Constants.TYPE_SEPARATOR + encryptString(pBreadcrumbs.toString())
+//                    // TODO:  Get tag id as part of name to help with tracing source
                       + Constants.TYPE_SEPARATOR + encryptString(level.toString())
                       + Constants.PAGE_DELIM + pageNumber;
     logger.debug("getLevelOfTreeNode,int: generating " + filename);

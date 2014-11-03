@@ -53,7 +53,7 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1);
+    // String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1);
     Element result = getListOfBooks(pBreadcrumbs,
                                     getBooks(),
                                     inSubDir,
