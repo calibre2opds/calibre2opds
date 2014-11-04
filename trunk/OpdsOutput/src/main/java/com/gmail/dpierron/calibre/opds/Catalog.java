@@ -831,12 +831,11 @@ public class Catalog {
         logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
 
       } else {
-        if (logger.isTraceEnabled())
-          logger.trace("Deleting Cache");
+        if (logger.isTraceEnabled()) logger.trace("Deleting Cache");
         CachedFileManager.INSTANCE.deleteCache();
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
-      CatalogManager.recordRamUsage("After lading (and deleting cache");
+      CatalogManager.recordRamUsage("After loading (and deleting cache");
 
       // copy the resource files to the catalog folder
       // We check in the following order:
@@ -851,7 +850,7 @@ public class Catalog {
         //        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
         File resourceFile = new File(generateFolder, resource);
         Helper.copy(resourceStream, resourceFile);
-        logger.trace("Copying Resource " + resource);
+        if (logger.isTraceEnabled()) logger.trace("Copying Resource " + resource);
       }
       logger.debug("COMPLETED: Copying Resource files");
       callback.endInitializeMainCatalog();

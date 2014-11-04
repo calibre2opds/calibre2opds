@@ -173,7 +173,10 @@ public class Helper {
   public static List<String> tokenize(String text, String delim, boolean trim) {
     List<String> result = new LinkedList<String>();
     if (isNotNullOrEmpty(text)) {
-      String s = text.replaceAll(delim, "�");
+      // Note:  Do not use replaceall as this uses regular expressions for the 'delim'
+      // parameter which can ahve unexpected side effects if special characters used.
+      // String s = text.replaceAll(delim, "�");
+      String s = text.replace(delim, "�");
       String[] tokens = s.split("�");
       for (String token : tokens) {
         if (trim)
