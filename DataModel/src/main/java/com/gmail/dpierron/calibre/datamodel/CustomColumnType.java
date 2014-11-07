@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import java.lang.String;
+
 /**
  * Created with IntelliJ IDEA.
  * User: WalkerDJ
@@ -13,6 +15,8 @@ public class CustomColumnType {
   private String  datatype;
   private boolean  is_multiple;
   private boolean  normalized;
+  // TODO Decide if we should use the display format field from Calibre
+  // private String   display;
 
   //  CONSTRUCTORS
 
@@ -36,7 +40,8 @@ public class CustomColumnType {
   }
 
   /**
-   * Get Calibre custom column name
+   * Get Calibre custom column label
+   * (this is the column name used internally within Calibre)
    * @return
    */
   public String getLabel() {
@@ -45,6 +50,7 @@ public class CustomColumnType {
 
   /**
    * Get Custom Column display name
+   * (This is the name displayed in the Calibre GUI)
    * @return
    */
   public String getName() {
@@ -61,7 +67,7 @@ public class CustomColumnType {
   }
 
   /**
-   * Get custom column formatting string for displaying values
+   * Get custom column formatting string for displaying values in Calibre
    *
    * @return
    */
@@ -69,6 +75,10 @@ public class CustomColumnType {
     return normalized;
   }
 
+  /**
+   * Get whether curom column is multi-value
+   * @return
+   */
   public boolean isMultiple () {
     return is_multiple;
   }
