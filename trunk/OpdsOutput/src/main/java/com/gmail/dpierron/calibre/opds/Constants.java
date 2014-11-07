@@ -181,6 +181,7 @@ public class Constants {
   public final static String HTML_ELEMENT_BREAK = "br";
   public final static String HTML_ELEMENT_STRONG = "strong";
   public final static String HTML_ELEMENT_PARAGRAPH = "p";
+  public final static String HTML_ELEMENT_ANCHOR = "a";
 
   public static String getBzrVersion() {
     String vcsVersion = "";

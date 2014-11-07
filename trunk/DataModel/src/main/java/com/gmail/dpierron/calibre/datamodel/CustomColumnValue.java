@@ -4,6 +4,7 @@ import com.gmail.dpierron.tools.Helper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.lang.String;
 
 /**
  * User: WalkerDJ
@@ -49,6 +50,10 @@ public class CustomColumnValue {
 //            : Localization.Main.getText("boolean.yes");
     } else if (type.equals("series")) {
       result += " [" + extra + "]";
+    } else if (type.equals("float")) {
+      // TODO  Decide if Calibre format string should be applied?
+    } else if (type.equals("datetime")) {
+      // TODO Decide if Calibre format string should be applied
     }
     return result;
   }

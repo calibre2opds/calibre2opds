@@ -1238,6 +1238,11 @@
             <option name="TAB_SIZE" value="2" />
           </indentOptions>
         </codeStyleSettings>
+        <codeStyleSettings language="JSON">
+          <option name="KEEP_LINE_BREAKS" value="false" />
+          <option name="WRAP_LONG_LINES" value="true" />
+          <option name="PARENT_SETTINGS_INSTALLED" value="true" />
+        </codeStyleSettings>
         <codeStyleSettings language="JavaScript">
           <option name="KEEP_LINE_BREAKS" value="false" />
           <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
@@ -1488,4 +1493,3 @@
     </library>
   </component>
 </project>
-

@@ -355,6 +355,11 @@ public enum JDOM {
     return result;
   }
 
+  /**
+   *
+   * @param text      text to convert to HTML
+   * @return
+   */
   public List<Element> convertHtmlTextToXhtml(String text) {
     List<Element> result = null;
 
@@ -363,15 +368,14 @@ public enum JDOM {
     if (Helper.isNotNullOrEmpty(text)) {
       if (!text.startsWith("<")) {
         // plain text
-        if (logger.isTraceEnabled())
-          logger.trace("convertHtmlTextToXhtml: plain text");
+        if (logger.isTraceEnabled())logger.trace("convertHtmlTextToXhtml: plain text");
         StringBuffer sb = new StringBuffer();
         if (Helper.isNotNullOrEmpty(text)) {
           List<String> strings = Helper.tokenize(text, "\n", true);
           for (String string : strings) {
-            if (Helper.isNullOrEmpty(string))
+            if (Helper.isNullOrEmpty(string)) {
               sb.append("<p />");
-            else {
+            } else {
               sb.append("<p>");
               sb.append(string);
               sb.append("</p>\n");
@@ -408,5 +412,4 @@ public enum JDOM {
     }
     return result;
   }
-
 }

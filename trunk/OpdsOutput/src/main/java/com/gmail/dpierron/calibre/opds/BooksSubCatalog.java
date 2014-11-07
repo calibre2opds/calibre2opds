@@ -21,6 +21,7 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import sun.reflect.ConstructorAccessor;
@@ -970,7 +971,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         Element authorElement = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_AUTHOR)
             .addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_NAME).addContent(name))
             .addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_URI)
-                .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
+            .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
         entry.addContent(authorElement);
       }
     }
@@ -1023,12 +1024,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Series (if present and wanted)
       if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
-        content.addContent(JDOM.INSTANCE.newParagraph()
+        content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
             .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
             .addContent(Localization.Main.getText("content.series") + ": "))
             .addContent(data))
-            // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-            // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
             ;
         hasContent = true;
       }
@@ -1039,12 +1038,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeRatingInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getRating())) {
           String rating = LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating());
-          content.addContent(JDOM.INSTANCE.newParagraph()
+          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.rating") + ": "))
               .addContent(rating)
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
           );
           hasContent = true;
         }
@@ -1062,12 +1059,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
           else
             // If no tags then we need an empty string (is this possible)
             tags = "";
-          content.addContent(JDOM.INSTANCE.newParagraph()
+          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.tags") + ": "))
               .addContent(tags)
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
               );
           hasContent = true;
         }
@@ -1075,12 +1070,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Publisher (if present and wanted)
       if (currentProfile.getIncludePublisherInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getPublisher())) {
-          content.addContent(JDOM.INSTANCE.newParagraph()
+          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
               .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.publisher") + ": "))
               .addContent(book.getPublisher().getName())
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
               );
           hasContent = true;
         }
@@ -1089,13 +1082,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludePublishedInBookDetails()) {
         Date pubtmp = book.getPublicationDate();
         if (Helper.isNotNullOrEmpty(pubtmp)) {
-            content.addContent(JDOM.INSTANCE.newParagraph()
+            content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
                 .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.published") + ": "))
                 .addContent(CatalogManager.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
-                // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-                // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
             );
+          hasContent = true;
         }
       }
 
@@ -1103,13 +1095,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeAddedInBookDetails()) {
         Date addtmp = book.getTimestamp();
         if (Helper.isNotNullOrEmpty(addtmp)) {
-          content.addContent(JDOM.INSTANCE.newParagraph()
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
-              .addContent(Localization.Main.getText("content.added") + ": "))
-              .addContent(CatalogManager.INSTANCE.titleDateFormat.format(addtmp))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              );
+          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                  .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.added") + ": "))
+                  .addContent(CatalogManager.INSTANCE.titleDateFormat.format(addtmp)));
+          hasContent = true;
         }
       }
 
@@ -1118,13 +1107,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeModifiedInBookDetails()) {
         Date modtmp = book.getModified();
         if (Helper.isNotNullOrEmpty(modtmp)) {
-          content.addContent(JDOM.INSTANCE.newParagraph())
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
-              .addContent(Localization.Main.getText("content.modified") + ": ")
-              .addContent(CatalogManager.INSTANCE.titleDateFormat.format(modtmp))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              // .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_BREAK))
-              );
+          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                  .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.modified") + ": "))
+                  .addContent(CatalogManager.INSTANCE.titleDateFormat.format(modtmp)));
+          hasContent = true;
         }
       }
 
@@ -1138,7 +1124,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           String dataType = columnType.getDatatype();
           String name = columnType.getName();
           String label = columnType.getLabel();
-          if (values != null && values.size()> 0) {
+          if (values != null && values.size() > 0) {
             for (CustomColumnValue value : values) {
               if (value.getType().equals(columnType)) {
                 textValue = value.getValueAsString();
@@ -1146,9 +1132,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
               }
             }
           }
+          // If we have a value for a custom field then add it
+          // (or always add it even when empty if the settings say so)
           if (currentProfile.getBookDetailsCustomFieldsAlways()
           || Helper.isNotNullOrEmpty(textValue)) {
-                // Special processing for bool type
+
+            // Special processing for bool type
             // convert to localized yes/no text
             if (dataType.equals("bool")) {
               if (Helper.isNotNullOrEmpty(textValue)) {
@@ -1156,45 +1145,58 @@ public abstract class BooksSubCatalog extends SubCatalog {
               }
             }
 
+            // TODO:  Special processing for Series type fields
+            if (dataType.equals("series")) {
+            }
+
             // Special processing for fields that look like links
             // We convert them to a link, and use name as the description.
-            if (textValue.toUpperCase().startsWith("HTTP://")
-                ||  textValue.toString().startsWith("HTTPS://")) {
-              name = "<U><A HREF=\"" + textValue + "\">" + name + "</A></U>";
+            if (textValue.toUpperCase().startsWith("http://") || textValue.toString().startsWith("HTTPS://")) {
+              name = "<u><a href=\"" + textValue + "\">" + name + "</a></u>";
               textValue = "";
-              List<Element>namexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(name);
-              for (Element p : namexhtml) {
-                content.addContent(p.detach());
-              }
             } else {
               name += ": ";
-              content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(name));
             }
 
-            // Special processing for fields that contain HTML (e.g. comment)
+            // Special processing for text fields that contain HTML (e.g. Calibre comment)
             // We want to remove the leading <DIV> tag inserted by Calibre
-            int posStart = textValue.startsWith("<div>") ? 5 : 0;
-            int posEnd = textValue.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
-            int posPara = textValue.indexOf("<p>");
+            String textvaluelower = textValue.toLowerCase();
+            int posStart = textvaluelower.startsWith("<div>") ? 5 : 0;
+            if (posStart != 0) {
+              int posEnd = textvaluelower.endsWith("</div>") ? textValue.length() - 6 : textValue.length();
+              // int posPara = textvaluelower.indexOf("<p>");
 
-            // We want a <DIV> around the custom field inserted by Calibre to be
-            // changed to a <SPAN> to avoid unecessary white space being inserted at display time
-            if (posPara != -1 ) {
-              textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posPara) + "</span>" + textValue.substring(posPara+4);
-            } else {
-              textValue = "<span id=\"" + label + "\">" +  textValue.substring(posStart,posEnd) + "</span>";
+              // We want a <DIV> around the custom field inserted by Calibre to be
+              // changed to a <SPAN> to avoid unecessary white space being inserted at display time
+              // if (posPara != -1) {
+              //   textValue = "<span id=\"" + label + "\">" + textValue.substring(posStart, posPara) + "</span>" + textValue.substring(posPara + 4);
+              // } else {
+                textValue = "<span id=\"" + label + "\">" + textValue.substring(posStart, posEnd) + "</span>";
+              // }
             }
-
-            // Now add the text (if any)
-            if (Helper.isNotNullOrEmpty(textValue)) {
-              List<Element>valuexhtml = JDOM.INSTANCE.convertHtmlTextToXhtml(textValue);
-              for (Element p : valuexhtml) {
-                content.addContent(p.detach());
+            // Finally add results
+            Element customElement = JDOM.INSTANCE.element((Constants.HTML_ELEMENT_PARAGRAPH));
+            // Most of the time the name will be pure text, but in the
+            // special case of it being an link it will be HTML
+            Element nameElement = JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG);
+            if (name.startsWith("<")) {
+              for (Element p : JDOM.INSTANCE.convertHtmlTextToXhtml(name)) {
+                nameElement.addContent(p.detach());
               }
+            } else {
+              nameElement.addContent(name);
             }
-            // Finally some spacing elements
-            content.addContent(JDOM.INSTANCE.newParagraph());
-
+            customElement.addContent(nameElement);
+            // The text part can be either pur text or HTML with equal liklihood
+            if (textvaluelower.startsWith("<")) {
+              for (Element p : JDOM.INSTANCE.convertHtmlTextToXhtml(textValue)) {
+                customElement.addContent(p.detach());
+              }
+            } else {
+              customElement.addContent(textValue);
+            }
+            content.addContent(customElement);
+            hasContent = true;
           }
         }
       }
@@ -1202,7 +1204,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       List<Element> comments = JDOM.INSTANCE.convertHtmlTextToXhtml(book.getComment());
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: got comments");
-        content.addContent(JDOM.INSTANCE.newParagraph()
+        content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
                 .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.summary"))));
         for (Element p : comments) {
@@ -1225,8 +1227,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())  logger.trace("getBookEntry: short comment");
       String summary = book.getSummary(currentProfile.getMaxBookSummaryLength());
       // If we had anything for the summary then it needs to be added to the output.
-      if (Helper.isNotNullOrEmpty(summary))
+      if (Helper.isNotNullOrEmpty(summary)) {
         entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
+      }
     }
 
     if (isFullEntry) {
