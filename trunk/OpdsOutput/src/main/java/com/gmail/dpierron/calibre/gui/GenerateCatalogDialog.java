@@ -14,6 +14,7 @@ package com.gmail.dpierron.calibre.gui;
 import com.gmail.dpierron.calibre.opds.*;
 import com.gmail.dpierron.calibre.opds.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -87,8 +88,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
    */
   public GenerateCatalogDialog(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
-    setLocationRelativeTo(parent);
     initComponents();
+    // NOTE: Initialise components first so that dialog centers on parent.
+    //       Failure to do causes top left to be centred on parent which is undesireable
+    setLocationRelativeTo(parent);
     progressStep.setMaxVisible(500);
     translateTexts();
   }
