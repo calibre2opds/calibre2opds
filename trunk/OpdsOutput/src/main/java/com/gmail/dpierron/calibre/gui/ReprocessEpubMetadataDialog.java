@@ -60,12 +60,12 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   private void run() {
     jProgress.setValue(0);
     ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder();
-    DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
+    DataModel.INSTANCE.setUseLanguagesAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
     DataModel.INSTANCE.preloadDataModel();
     java.util.List<Book> books = null;
-    if (Helper.isNullOrEmpty(onlyForTag))
+    if (Helper.isNullOrEmpty(onlyForTag)) {
       books = DataModel.INSTANCE.getListOfBooks();
-    else {
+    } else {
       Tag theTag = null;
       for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
         if (tag.getName().equalsIgnoreCase(onlyForTag)) {
@@ -73,8 +73,9 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
           break;
         }
       }
-      if (theTag != null)
+      if (theTag != null) {
         books = DataModel.INSTANCE.getMapOfBooksByTag().get(theTag);
+      }
     }
     setMaxScale(books.size());
     for (Book book : books) {

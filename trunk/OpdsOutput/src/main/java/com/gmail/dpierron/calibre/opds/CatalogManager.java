@@ -92,7 +92,6 @@ public enum CatalogManager {
     if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
     if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, new Locale(currentProfile.getLanguage()));
     if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
-    getTagsToIgnore();
   }
 
 

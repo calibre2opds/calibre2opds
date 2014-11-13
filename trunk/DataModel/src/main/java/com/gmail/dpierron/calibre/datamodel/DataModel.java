@@ -5,7 +5,6 @@ import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.apache.log4j.lf5.viewer.configure.ConfigurationManager;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -16,7 +15,7 @@ public enum DataModel {
 
   private final static Logger logger = Logger.getLogger(DataModel.class);
 
-  private static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
+  protected static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
 
   private Map<String, List<EBookFile>> mapOfFilesByBookId;
   private Map<String, List<Publisher>> mapOfPublishersByBookId;
@@ -44,6 +43,8 @@ public enum DataModel {
   private Map<Series, List<Book>> mapOfBooksBySeries;
   private List<Series> listOfCustomSeries;
 
+  private List<BookRating> listOfRatings;
+  private Map<String, BookRating> mapOfRatings;
   private Map<BookRating, List<Book>> mapOfBooksByRating;
 
   private List<Publisher> listOfPublishers;
@@ -57,7 +58,7 @@ public enum DataModel {
   private List<CustomColumnType> listOfCustomColumnTypes;
   private Map<String, List <CustomColumnValue>> mapOfCustomColumnValuesByBookId;
 
-  private boolean useLanguageAsTags = true;
+  private boolean useLanguagesAsTags = true;
 
   public void reset() {
     mapOfFilesByBookId = null;
@@ -77,6 +78,8 @@ public enum DataModel {
     listOfSeries = null;
     mapOfSeries = null;
     mapOfBooksBySeries = null;
+    listOfRatings = null;
+    mapOfRatings = null;
     mapOfBooksByRating = null;
     listOfPublishers = null;
     mapOfPublishers = null;
@@ -101,29 +104,37 @@ public enum DataModel {
    * an attempt is amde to access their data set.
    */
   public void preloadDataModel() {
+    // Load reference data from database
     getMapOfLanguagesById();
-    // getMapOfLanguagesByIsoCode(); not useful, loaded by getMapOfLanguagesById();
-    getListOfBooks();
+    getListOfCustomColumnTypes();
+
+    // Build up cross-refernce lookups by bookid
+    // TODO Decide if these can be delayed until useded!
     getMapOfFilesByBookId();
     getMapOfAuthorsByBookId();
     getMapOfTagsByBookId();
     getMapOfSeriesByBookId();
     getMapOfCommentsByBookId();
-    getMapOfBooks();
-    getListOfTags();
-    getMapOfTags();
-    generateImplicitLanguageTags();
-    getMapOfBooksByTag();
-    getListOfAuthors();
-    getMapOfAuthors();
-    getMapOfBooksByAuthor();
-    getListOfSeries();
-    getMapOfSeries();
-    getMapOfBooksBySeries();
-    // TODO Avoid loading any values not required by this run!
-    // getMapOfBooksByRating();
-    // getListOfCustomColumnTypes();
     // getMapOfCustomColumnValuesByBookId();
+
+    getListOfTags();
+    getListOfAuthors();
+    getListOfSeries();
+    getListOfBooks();
+    // Build simple lookups for main data objects by id
+    // (these will always be needed so get it donw ASAP)
+    getMapOfBooks();
+    getMapOfTags();
+    getMapOfAuthors();
+    getMapOfSeries();
+
+    // Build up cross-reference list by other types
+    generateImplicitLanguageTags();   // NOTE:  Must be done befoe generate BooksByTag listing
+    // TODO Decide if generating these can be delayed until used (or if any benefit to doing so)
+    getMapOfBooksByTag();
+    getMapOfBooksByAuthor();
+    getMapOfBooksBySeries();
+    getMapOfBooksByRating();
   }
 
   public List<CustomColumnType> getListOfCustomColumnTypes () {
@@ -164,20 +175,32 @@ public enum DataModel {
     return mapOfLanguagesById;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
     if (mapOfFilesByBookId == null) {
-      mapOfFilesByBookId = Database.INSTANCE.listFilesByBookId();
+      mapOfFilesByBookId = Database.INSTANCE.getMapOfFilesByBookId();
     }
     return mapOfFilesByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Author>> getMapOfAuthorsByBookId() {
     if (mapOfAuthorsByBookId == null) {
-      mapOfAuthorsByBookId = Database.INSTANCE.listAuthorsByBookId();
+      mapOfAuthorsByBookId = Database.INSTANCE.getMapOfAuthorsByBookId();
     }
     return mapOfAuthorsByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Publisher>> getMapOfPublishersByBookId() {
     if (mapOfPublishersByBookId == null) {
       mapOfPublishersByBookId = Database.INSTANCE.listPublishersByBookId();
@@ -185,27 +208,43 @@ public enum DataModel {
     return mapOfPublishersByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Tag>> getMapOfTagsByBookId() {
     if (mapOfTagsByBookId == null) {
-      mapOfTagsByBookId = Database.INSTANCE.listTagsByBookId();
+      mapOfTagsByBookId = Database.INSTANCE.getMapOfTagsByBookId();
     }
     return mapOfTagsByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<Series>> getMapOfSeriesByBookId() {
     if (mapOfSeriesByBookId == null) {
-      mapOfSeriesByBookId = Database.INSTANCE.listSeriesByBookId();
+      mapOfSeriesByBookId = Database.INSTANCE.getMapOfSeriesByBookId();
     }
     return mapOfSeriesByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Map<String, List<String>> getMapOfCommentsByBookId() {
     if (mapOfCommentsByBookId == null) {
-      mapOfCommentsByBookId = Database.INSTANCE.listCommentsByBookId();
+      mapOfCommentsByBookId = Database.INSTANCE.getMapOfCommentsByBookId();
     }
     return mapOfCommentsByBookId;
   }
 
+  /**
+   *
+   * @return
+   */
   public List<Book> getListOfBooks() {
     if (listOfBooks == null) {
       listOfBooks = Database.INSTANCE.listBooks();
@@ -230,6 +269,11 @@ public enum DataModel {
     return listOfTags;
   }
 
+  /**
+   * Build up a map of tags by their tag id
+   *
+   * @return
+   */
   public Map<String, Tag> getMapOfTags() {
     if (mapOfTags == null) {
       mapOfTags = new HashMap<String, Tag>();
@@ -240,13 +284,23 @@ public enum DataModel {
     return mapOfTags;
   }
 
+  /**
+   * Add a tag to the list of tags
+   *
+   * @param tag
+   */
   void addTag(Tag tag) {
-    if (getListOfTags().contains(tag))
+    if (getListOfTags().contains(tag)) {
       return;
+    }
     getListOfTags().add(tag);
     getMapOfTags().put(tag.getId(), tag);
   }
 
+  /**
+   * Get the mapping of tags to Book Id.
+   * @return
+   */
   public Map<Tag, List<Book>> getMapOfBooksByTag() {
     if (mapOfBooksByTag == null) {
       mapOfBooksByTag = new HashMap<Tag, List<Book>>();
@@ -534,7 +588,11 @@ public enum DataModel {
    * There is a configuration option to disable the treatement of language as implict tags.
    */
   void generateImplicitLanguageTags() {
-    if (useLanguageAsTags == false) return;
+    logger.debug("generateImplicitLanguageTags:  Enter");
+    if (useLanguagesAsTags == false) {
+      logger.debug("generateImplicitLanguageTags:  Exit - not wanted");
+      return;
+    }
     // compute the latest id
     int lastId = -1;
     for (Tag tag : getListOfTags()) {
@@ -566,7 +624,7 @@ public enum DataModel {
             if (!book.getTags().contains(languageTag))
               book.getTags().add(languageTag);
           } else {
-            logger.error("found a null language for book " + book);
+            logger.error("generateImplicitLanguageTags: found a null language for book " + book);
             for (Language language1 : book.getBookLanguages()) {
               logger.error(language1);
             }
@@ -575,9 +633,38 @@ public enum DataModel {
       }
     }
     mapOfBooksByTag = null;
+    logger.debug("generateImplicitLanguageTags:  Exit");
+  }
+  /**
+   * Get the book languages in the form of tags.
+   * Only available if the apprpriate option set
+   * @return
+   */
+  private List<Tag> getBookLanguagesAsTags(int bookId) {
+    if (!useLanguagesAsTags) {
+      return null;
+    }
+    Book book = getListOfBooks().get(bookId);
+    assert book != null;
+    List<Language> bookLanguages = book.getBookLanguages();
+    List<Tag>tags = null;
+    if (bookLanguages != null) {
+      tags = new LinkedList<Tag>();
+      for (Language language : bookLanguages) {
+        String tagName = IMPLICIT_LANGUAGE_TAG_PREFIX + language.getIso2();
+        Tag tag = getMapOfTags().get(tagName);
+        // Do not think null return is possible, but lets play safe
+        if (tag != null) {
+          tags.add(tag);
+        }
+      }
+    }
+    return tags;
   }
 
-  public void setUseLanguageAsTags (boolean b) {
-    useLanguageAsTags = b;
+  public void setUseLanguagesAsTags(boolean b) {
+    useLanguagesAsTags = b;
   }
+
+  public boolean getUseLangauagesAsTags() { return useLanguagesAsTags; }
 }

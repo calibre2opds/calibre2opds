@@ -216,6 +216,8 @@ public enum Database {
   }
 
   /**
+   * Get the list of possible authors
+   * If it does not already exist, then create it.
    *
    * @return
    */
@@ -240,6 +242,8 @@ public enum Database {
   }
 
   /**
+   * Get the list of possible publishers.
+   * If it does not already exist thenc reate it.
    *
    * @return
    */
@@ -264,6 +268,9 @@ public enum Database {
   }
 
   /**
+   * Get the list of possible Series
+   * If it does not exist then create it
+   * by loading it from the Calibre database.
    *
    * @return
    */
@@ -291,7 +298,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<EBookFile>> listFilesByBookId() {
+  public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
     Map<String, List<EBookFile>> result = new HashMap<String, List<EBookFile>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_DATA.getStatement();
     try {
@@ -318,7 +325,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Author>> listAuthorsByBookId() {
+  public Map<String, List<Author>> getMapOfAuthorsByBookId() {
     Map<String, List<Author>> result = new HashMap<String, List<Author>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_AUTHORS.getStatement();
     try {
@@ -375,15 +382,16 @@ public enum Database {
   }
 
   /**
+   * Build up a list of the tags by the bookid using them
    *
    * @return
    */
-  public Map<String, List<Tag>> listTagsByBookId() {
+  public Map<String, List<Tag>> getMapOfTagsByBookId() {
     Map<String, List<Tag>> result = new HashMap<String, List<Tag>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_TAGS.getStatement();
     try {
       ResultSet set = statement.executeQuery();
-      while (set.next()) {
+       while (set.next()) {
         String bookId = set.getString("book");
         String tagId = set.getString("tag");
         List<Tag> tags = result.get(bookId);
@@ -392,13 +400,14 @@ public enum Database {
           result.put(bookId, tags);
         }
         Tag tag = DataModel.INSTANCE.getMapOfTags().get(tagId);
-        if (tag != null)
+        if (tag != null) {
           tags.add(tag);
-        else
+        } else {
           logger.warn("cannot find tag #" + tagId);
+        }
       }
     } catch (SQLException e) {
-      logger.error("listTagsByBookId: " + e);
+      logger.error("getMapOfTagsByBookId: " + e);
       sqlException += (2^12);
     }
     return result;
@@ -408,7 +417,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Series>> listSeriesByBookId() {
+  public Map<String, List<Series>> getMapOfSeriesByBookId() {
     Map<String, List<Series>> result = new HashMap<String, List<Series>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_SERIES.getStatement();
     try {
@@ -428,7 +437,7 @@ public enum Database {
           logger.warn("cannot find serie #" + serieId);
       }
     } catch (SQLException e) {
-      logger.error("listSeriesByBookId: " + e);
+      logger.error("getMapOfSeriesByBookId: " + e);
       sqlException += (2^13);
     }
     return result;
@@ -441,7 +450,7 @@ public enum Database {
    * @return
    */
 
-  public Map<String, List<String>> listCommentsByBookId() {
+  public Map<String, List<String>> getMapOfCommentsByBookId() {
     Map<String, List<String>> result = new HashMap<String, List<String>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_COMMENTS.getStatement();
     try {
@@ -457,7 +466,7 @@ public enum Database {
         comments.add(text);
       }
     } catch (SQLException e) {
-      logger.error("listCommentsByBookId: " + e);
+      logger.error("getMapOfCommentsByBookId: " + e);
       sqlException += (2^14);
     }
     if (logger.isDebugEnabled()) logger.debug("Number of comments=" + result.size() + ", Total Size="+ result.toString().length());
