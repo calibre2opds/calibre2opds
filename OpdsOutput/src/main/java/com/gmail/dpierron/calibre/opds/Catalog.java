@@ -857,7 +857,8 @@ public class Catalog {
 
       callback.startReadDatabase();
       DataModel.INSTANCE.reset();
-      DataModel.INSTANCE.setUseLanguageAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
+      DataModel.INSTANCE.setUseLanguagesAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
+      // CatalogManager.INSTANCE.getTagsToIgnore();
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
       logger.info("COMPLETED preloading Datamodel");
       CatalogManager.recordRamUsage("After loading DataModel");

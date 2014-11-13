@@ -419,8 +419,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       seriesSubCatalog = null;    // May not be necessary, but allow earlier release of resources
 
       // Make a link to the "allbooks entry" for this author
-      sortBooksByTitle(authorbooks);
       AllBooksSubCatalog allbooksSubcatalog = new AllBooksSubCatalog(authorbooks);
+      sortBooksByTitle(authorbooks);
       allbooksSubcatalog.setCatalogLevel(getCatalogLevel());
       allbooksSubcatalog.setCatalogFolder(filename);
       allbooksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);

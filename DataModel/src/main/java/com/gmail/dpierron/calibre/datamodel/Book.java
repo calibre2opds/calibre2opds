@@ -48,8 +48,8 @@ public class Book implements SplitableByLetter {
   private boolean flag;
   private List<CustomColumnValue> customColumnValues;
 
-  private boolean done = false;
-  private boolean referenced = false;
+  private boolean done = false;           // Set when the Book full details have been generated
+  private boolean referenced = false;     // Set if book full details must be generated as referenced
 
   private static Date ZERO;
   private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
@@ -129,6 +129,11 @@ public class Book implements SplitableByLetter {
     return titleSort;
   }
 
+  /**
+   * Return the first listed language for a book
+   * (this is on the assumption it is the most important one)
+   * @return
+   */
   public Language getBookLanguage() {
     List<Language> languages = getBookLanguages();
     if ((languages == null) || (languages.size() == 0))
@@ -137,6 +142,12 @@ public class Book implements SplitableByLetter {
       return languages.get(0);
   }
 
+  /**
+   * Get all the languages for a book.
+   * Most of the time there will only be one, but Ca;ibre
+   * allows for multpiple languages on the same book.
+   * @return
+   */
   public List<Language> getBookLanguages() {
     return bookLanguages;
   }

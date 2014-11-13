@@ -141,9 +141,13 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: pBreadcrumbs=" + pBreadcrumbs + ", level=" + level);
     Element result;
     if (Helper.isNullOrEmpty(level.getChildren())) {
+      Tag tag = (Tag) level.getData();
+      if (tag == null) {
+        if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: Exinull (Appears to be an empty level!)");
+        return null;
+      }
       // it's a leaf, consisting of a single tag : make a list of books
       if (logger.isTraceEnabled()) logger.trace("getLevelOfTreeNode: it's a leaf, consisting of a single tag : make a list of books");
-      Tag tag = (Tag) level.getData();
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType()+ level.getGuid();
       result = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, result);
