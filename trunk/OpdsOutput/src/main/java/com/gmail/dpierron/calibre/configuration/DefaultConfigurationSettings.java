@@ -339,11 +339,11 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
   }
 
   public Boolean getDisplayTitleSort() {
-    return true;
+    return false;
   }
 
   public Boolean getDisplaySeriesSort() {
-    return true;
+    return false;
   }
 
   public Boolean getTagBooksNoSplit() {  return false;  }

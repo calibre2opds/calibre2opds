@@ -77,7 +77,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
     - #c2o-200: Improve GUI validation for Custom Catalogs
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
-    - #c2o-222: Sorting of series should ignore initial articles
     - #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart
     - #c2o-230: Favicon for Library catalog URL
 
@@ -126,6 +125,7 @@ v3.4 beta Rev 319
     - New:    #c2o-218: Add support for DJVU downloads
     - Fix:    #c2o-219: Problem with relative links in generated tags pages when using SplitTagsOn option
     - Fix:    #c2o-220: Problem in tag pages with titles, beginning with numbers
+    - New:    #c2o-222: Sorting of series should ignore initial articles
     - Fix:    #c2o-223: Image files are not referenced via Books URL when it is specified
     - Fix:  - #c2o-224: "Tags to omit from Tags catalog" ignores "Lang:" tags when "Language as Tag" is checked
     - Fix:    #c2o-225: "Do not include the 'About calibre2opds' entry" should also omit credits at the bottom of index.html

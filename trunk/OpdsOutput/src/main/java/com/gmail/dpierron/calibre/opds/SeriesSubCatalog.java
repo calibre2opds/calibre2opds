@@ -63,9 +63,16 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       Collections.sort(series, new Comparator<Series>() {
 
         public int compare(Series o1, Series o2) {
-          String title1 = (o1 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o1.getName().toUpperCase()));
-          String title2 = (o2 == null ? "" : NoiseWord.fromLanguage(bookLang).removeLeadingNoiseWords(o2.getName().toUpperCase()));
-          return collator.compare(title1, title2);
+          String seriesName1;
+          String seriesName2;
+          if (currentProfile.getSortUsingSeries()) {
+            seriesName1 = (o1 == null ? "" : o1.getName().toUpperCase());
+            seriesName2 = (o2 == null ? "" : o2.getName().toUpperCase());
+          } else {
+            seriesName1 = (o1 == null ? "" : o1.getSort().toUpperCase());
+            seriesName2 = (o2 == null ? "" : o2.getSort().toUpperCase());
+          }
+          return collator.compare(seriesName1, seriesName2);
         }
       });
 
@@ -253,10 +260,13 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
-    // Check for special case where the series name is equal to the split level.
+    // Check for special case where the series name is equal to the split leve
+    String seriesNameUpper = currentProfile.getSortUsingSeries()
+                                            ? listSeries.get(0).getName().toUpperCase()
+                                            : listSeries.get(0).getSort().toUpperCase();
     if (splitOption == SplitOption.SplitByLetter) {
       while (listSeries.size() > 0
-          && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listSeries.get(0).getName().toUpperCase())) {
+          && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + seriesNameUpper)) {
         Series series = listSeries.get(0);
         listSeries.remove(0);
         Element element;
@@ -414,8 +424,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    */
   public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
 
-    if (logger.isDebugEnabled())
-      logger.debug(pBreadcrumbs + "/" + serie);
+    if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + serie);
 
     CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
     // We want to avoid incrementing the progress bar if we are not doing
@@ -437,9 +446,11 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       }
     });
 
-    String title = serie.getName();
-    if (addTheSeriesWordToTheTitle)
+    String title = currentProfile.getSortUsingSeries() ? serie.getName().toUpperCase()
+                                                       : serie.getSort().toUpperCase();
+    if (addTheSeriesWordToTheTitle) {
       title = Localization.Main.getText("content.series") + ": " + title;
+    }
     String urn = baseurn + Constants.SERIES_TYPE + Constants.URN_SEPARATOR + serie.getId();
     // We need to determine if we are generating a serie within an author?
     // If we are we want the file to be in the author folder

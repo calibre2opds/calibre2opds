@@ -48,6 +48,14 @@ public class Book implements SplitableByLetter {
   private boolean flag;
   private List<CustomColumnValue> customColumnValues;
 
+  // Flags
+  // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
+  final static byte FLAG_ALL_CELAR = 0;
+  final static byte FLAG_DONE = 0x01;
+  final static byte FLAG_REFERENCED = 0x02;
+  private byte flags = FLAG_ALL_CELAR;
+
+
   private boolean done = false;           // Set when the Book full details have been generated
   private boolean referenced = false;     // Set if book full details must be generated as referenced
 
