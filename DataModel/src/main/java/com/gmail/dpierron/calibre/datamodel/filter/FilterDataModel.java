@@ -77,7 +77,7 @@ public enum FilterDataModel {
 
         // remove the book from the maps of XXX by bookId
         DataModel.INSTANCE.getMapOfCommentsByBookId().remove(book.getId());
-        DataModel.INSTANCE.getMapOfFilesByBookId().remove(book.getId());
+        DataModel.INSTANCE.getMapOfEBookFilesByBookId().remove(book.getId());
 
       }
     }

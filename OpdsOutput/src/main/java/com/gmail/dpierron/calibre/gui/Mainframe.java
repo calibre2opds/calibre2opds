@@ -1005,10 +1005,6 @@ public class Mainframe extends javax.swing.JFrame {
     cmdSetFavicon.setVisible(false);  // TODO remove to activate option
     lblCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
     txtCatalogCustomColumns.setVisible(false);  // TODO remove to activate option
-    lblSortUsingSeries.setVisible(false);       // TODO remove to activate option
-    chkSortUsingSeriesSort.setVisible(false);   // TODO remove to activate option
-    lblDisplaySeriesSort.setVisible(false);     // TODO remove to activate option
-    chkDisplaySeriesSort.setVisible(false);     // TODO remove to activate option
     // txtMaxMobileResolution.setVisible(false);   // TODO Not currently being used
     // lblMaxMobileResolution.setVisible(false);   // TODO Not currently being used
     setExternalLinksEnabledState();

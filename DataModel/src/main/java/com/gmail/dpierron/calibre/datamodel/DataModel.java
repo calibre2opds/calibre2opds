@@ -17,7 +17,7 @@ public enum DataModel {
 
   protected static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
 
-  private Map<String, List<EBookFile>> mapOfFilesByBookId;
+  private Map<String, List<EBookFile>> mapOfEBookFilesByBookId;
   private Map<String, List<Publisher>> mapOfPublishersByBookId;
   private Map<String, List<Author>> mapOfAuthorsByBookId;
   private Map<String, List<Tag>> mapOfTagsByBookId;
@@ -56,12 +56,13 @@ public enum DataModel {
   private Map<String, String> mapOfSavedSearches;
 
   private List<CustomColumnType> listOfCustomColumnTypes;
+  private List<CustomColumnType> listOfCustomColumnTypesReferenced;
   private Map<String, List <CustomColumnValue>> mapOfCustomColumnValuesByBookId;
 
   private boolean useLanguagesAsTags = true;
 
   public void reset() {
-    mapOfFilesByBookId = null;
+    mapOfEBookFilesByBookId = null;
     mapOfPublishersByBookId = null;
     mapOfAuthorsByBookId = null;
     mapOfTagsByBookId = null;
@@ -88,6 +89,7 @@ public enum DataModel {
     mapOfLanguagesByIsoCode = null;
     mapOfSavedSearches = null;
     listOfCustomColumnTypes = null;
+    listOfCustomColumnTypesReferenced = null;
     mapOfCustomColumnValuesByBookId = null;
     listOfCustomTags = null;
     listOfCustomSeries = null;
@@ -107,10 +109,10 @@ public enum DataModel {
     // Load reference data from database
     getMapOfLanguagesById();
     getListOfCustomColumnTypes();
+    listOfCustomColumnTypesReferenced = listOfCustomColumnTypes;  // Initialise to full list
 
     // Build up cross-refernce lookups by bookid
-    // TODO Decide if these can be delayed until useded!
-    getMapOfFilesByBookId();
+    getMapOfEBookFilesByBookId();
     getMapOfAuthorsByBookId();
     getMapOfTagsByBookId();
     getMapOfSeriesByBookId();
@@ -130,7 +132,6 @@ public enum DataModel {
 
     // Build up cross-reference list by other types
     generateImplicitLanguageTags();   // NOTE:  Must be done befoe generate BooksByTag listing
-    // TODO Decide if generating these can be delayed until used (or if any benefit to doing so)
     getMapOfBooksByTag();
     getMapOfBooksByAuthor();
     getMapOfBooksBySeries();
@@ -144,6 +145,14 @@ public enum DataModel {
     return listOfCustomColumnTypes;
   }
 
+  /**
+   * Get list of Custom Column Vlues
+   *
+   * TODO:  See if we can filter it down to thos that arereferenced in this run
+   * TODO:  This will save RAM on libraries with a large number of unreferenced columns
+   *
+   * @return
+   */
   public Map<String, List<CustomColumnValue>> getMapOfCustomColumnValuesByBookId() {
     if (mapOfCustomColumnValuesByBookId == null) {
        mapOfCustomColumnValuesByBookId = Database.INSTANCE.getMapofCustomColumnValuesbyBookId(getListOfCustomColumnTypes());
@@ -176,14 +185,15 @@ public enum DataModel {
   }
 
   /**
+   * Get the list of formats that should exist for eah book
    *
    * @return
    */
-  public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
-    if (mapOfFilesByBookId == null) {
-      mapOfFilesByBookId = Database.INSTANCE.getMapOfFilesByBookId();
+  public Map<String, List<EBookFile>> getMapOfEBookFilesByBookId() {
+    if (mapOfEBookFilesByBookId == null) {
+      mapOfEBookFilesByBookId = Database.INSTANCE.getMapOfEBookFilesByBookId();
     }
-    return mapOfFilesByBookId;
+    return mapOfEBookFilesByBookId;
   }
 
   /**

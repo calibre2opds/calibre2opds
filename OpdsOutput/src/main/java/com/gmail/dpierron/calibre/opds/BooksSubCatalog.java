@@ -1003,7 +1003,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
     // series
     if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
-      String seriesName = book.getSeries().getName();
+      String seriesName = currentProfile.getSortUsingSeries() ? book.getSeries().getName()
+                                                              : book.getSeries().getSort();
       if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   series " + seriesName + "[" + book.getSerieIndex() + "]");
       Element categoryElement = FeedHelper.getCategoryElement(seriesName);
       entry.addContent(categoryElement);
@@ -1019,7 +1020,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: computing comments");
       // Series (if present and wanted)
       if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
-        String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), book.getSeries().getName());
+        String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), currentProfile.getSortUsingSeries() ? book.getSeries().getName()
+            : book.getSeries().getSort());
         content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
             .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
             .addContent(Localization.Main.getText("content.series") + ": "))

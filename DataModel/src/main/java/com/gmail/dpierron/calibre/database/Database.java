@@ -198,7 +198,7 @@ public enum Database {
           book.getTags().addAll(tags);
 
         // fetch its files
-        List<EBookFile> files = DataModel.INSTANCE.getMapOfFilesByBookId().get(bookId);
+        List<EBookFile> files = DataModel.INSTANCE.getMapOfEBookFilesByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(files)) {
           for (EBookFile file : files) {
             file.setBook(book);
@@ -298,7 +298,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<EBookFile>> getMapOfFilesByBookId() {
+  public Map<String, List<EBookFile>> getMapOfEBookFilesByBookId() {
     Map<String, List<EBookFile>> result = new HashMap<String, List<EBookFile>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_DATA.getStatement();
     try {
