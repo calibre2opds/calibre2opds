@@ -446,8 +446,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       }
     });
 
-    String title = currentProfile.getSortUsingSeries() ? serie.getName().toUpperCase()
-                                                       : serie.getSort().toUpperCase();
+    String title = currentProfile.getSortUsingSeries() ? serie.getName()
+                                                       : serie.getSort();
     if (addTheSeriesWordToTheTitle) {
       title = Localization.Main.getText("content.series") + ": " + title;
     }

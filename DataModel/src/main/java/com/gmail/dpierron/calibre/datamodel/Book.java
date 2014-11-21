@@ -35,25 +35,25 @@ public class Book implements SplitableByLetter {
   private Series series;
   private List<Tag> tags;
   private List<EBookFile> files;
-  private boolean filesSorted = false;
   private EBookFile preferredFile;
   private EBookFile epubFile;
-  private boolean epubFileComputed = false;
-  private boolean preferredFileComputed = false;
   private String epubFileName;
   private long latestFileModifiedDate = -1;
   private final BookRating rating;
   private List<Language> bookLanguages = new LinkedList<Language>();
-  private boolean changed = false;
-  private boolean flag;
   private List<CustomColumnValue> customColumnValues;
 
   // Flags
   // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
-  final static byte FLAG_ALL_CELAR = 0;
-  final static byte FLAG_DONE = 0x01;
-  final static byte FLAG_REFERENCED = 0x02;
-  private byte flags = FLAG_ALL_CELAR;
+  final static byte FLAG_ALL_CLEAR = 0;
+  final static byte FLAG_DONE = 0x01;                   // Set when the Book full details have been generated
+  final static byte FLAG_REFERENCED = 0x02;             // Set if book full details must be generated as referenced
+  final static byte FLAG_FILES_SORTED = 0x04;
+  final static byte FLAG_EPUBFILE_COMPUTED = 0x08;
+  final static byte FLAG_PREFERREDFILECOMPUTED = 0x10;
+  final static byte FLAG_CHANGED = 0x20;
+  final static byte FLAG_FLAGGED = 0x40;
+  private byte flags = FLAG_ALL_CLEAR;
 
 
   private boolean done = false;           // Set when the Book full details have been generated
@@ -100,11 +100,12 @@ public class Book implements SplitableByLetter {
     } else {
       this.titleSort = title_sort;
     }
-    // Small memory optimisation to re-use title object if possible
-    // TODO check if unecessary if Java does this automatically?
+      // Small memory optimisation to re-use title object if possible
+      // TODO check if unecessary if Java does this automatically?
     if (this.title.equalsIgnoreCase(this.titleSort)) {
       this.titleSort = this.title;
     }
+
     this.path = path;
     this.serieIndex = serieIndex;
     this.timestamp = timestamp;
@@ -116,10 +117,28 @@ public class Book implements SplitableByLetter {
     this.isbn = isbn;
     this.authorSort = authorSort;
     this.rating = rating;
-    done = false;
   }
 
   // METHODS and PROPERTIES
+  /**
+   *   Helper routine to set flags bits state
+   */
+  private void setFlags (boolean b, int f) {
+    if (b == true)
+      flags |= f;           // Set flag bits
+    else
+      flags &= ~f;           // Clear flag bits;
+  }
+
+  /**
+   * Helper routine to check if specified kags set
+   * @param f
+   * @return
+   */
+  private boolean isFlags( int f) {
+    return ((flags & f) == f);
+  }
+
 
   public String getId() {
     return id;
@@ -457,7 +476,7 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public List<EBookFile> getFiles() {
-    if (!filesSorted) {
+    if (! isFlags(FLAG_FILES_SORTED)) {
       if (files != null && files.size() > 1) {
         Collections.sort(files, new Comparator<EBookFile>() {
           public int compare(EBookFile o1, EBookFile o2) {
@@ -475,19 +494,17 @@ public class Book implements SplitableByLetter {
           }
         });
       }
-      filesSorted = true;
+       setFlags(true, FLAG_FILES_SORTED);;
     }
     return files;
   }
 
   public void removeFile(EBookFile file) {
     files.remove(file);
-    epubFileComputed = false;
-    preferredFileComputed = false;
     epubFile = null;
     preferredFile = null;
     latestFileModifiedDate = -1;
-    filesSorted = false;
+    setFlags(false,FLAG_EPUBFILE_COMPUTED + FLAG_PREFERREDFILECOMPUTED + FLAG_FILES_SORTED);
   }
 
   /**
@@ -496,21 +513,19 @@ public class Book implements SplitableByLetter {
    */
   public void addFile(EBookFile file) {
     files.add(file);
-    epubFileComputed = false;
-    preferredFileComputed = false;
     epubFile = null;
     preferredFile = null;
     latestFileModifiedDate = -1;
-    filesSorted = false;
+    setFlags(false,FLAG_EPUBFILE_COMPUTED + FLAG_PREFERREDFILECOMPUTED + FLAG_FILES_SORTED);
   }
 
   public EBookFile getPreferredFile() {
-    if (!preferredFileComputed) {
+    if (! isFlags(FLAG_PREFERREDFILECOMPUTED)) {
       for (EBookFile file : getFiles()) {
         if (preferredFile == null || file.getFormat().getPriority() > preferredFile.getFormat().getPriority())
           preferredFile = file;
       }
-      preferredFileComputed = true;
+      setFlags(true, FLAG_PREFERREDFILECOMPUTED);
     }
     return preferredFile;
   }
@@ -550,14 +565,14 @@ public class Book implements SplitableByLetter {
   }
 
   public String getEpubFilename() {
-    if (!epubFileComputed) {
+    if (! isFlags(FLAG_EPUBFILE_COMPUTED)) {
       getEpubFile();
     }
     return epubFileName;
   }
 
   public EBookFile getEpubFile() {
-    if (!epubFileComputed) {
+    if (!isFlags(FLAG_EPUBFILE_COMPUTED)) {
       epubFile = null;
       epubFileName = null;
       for (EBookFile file : getFiles()) {
@@ -566,7 +581,7 @@ public class Book implements SplitableByLetter {
           epubFileName = epubFile.getName() + epubFile.getExtension();
         }
       }
-      epubFileComputed = true;
+      setFlags(true, FLAG_EPUBFILE_COMPUTED);
     }
     return epubFile;
   }
@@ -616,15 +631,15 @@ public class Book implements SplitableByLetter {
   }
 
   public boolean isFlagged() {
-    return flag;
+    return isFlags(FLAG_FLAGGED);
   }
 
   public void setFlag() {
-    flag = true;
+    setFlags(true, FLAG_FLAGGED);
   }
 
   public void clearFlag() {
-    flag = false;
+    setFlags(false, FLAG_FLAGGED);
   }
 
   /**
@@ -632,7 +647,7 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public boolean isChanged() {
-    return changed;
+    return isFlags(FLAG_CHANGED);
   }
 
   /**
@@ -641,7 +656,7 @@ public class Book implements SplitableByLetter {
    * If neccesary could change to pass in required state).
    */
   public void setChanged() {
-    changed = true;
+    setFlags(true, FLAG_CHANGED);
   }
 
   public List<CustomColumnValue> getCustomColumnValues() {
@@ -662,16 +677,16 @@ public class Book implements SplitableByLetter {
   }
 
   public void setDone() {
-    done = true;
+    setFlags(true, FLAG_DONE);
   }
   public boolean isDone() {
-    return done;
+    return isFlags(FLAG_DONE);
   }
 
   public void setReferenced() {
-    referenced = true;
+    setFlags(true, FLAG_REFERENCED);
   }
   public boolean isReferenced() {
-    return referenced;
+    return isFlags(FLAG_REFERENCED);
   }
 }
