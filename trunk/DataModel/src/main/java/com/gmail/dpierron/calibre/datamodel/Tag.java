@@ -9,8 +9,12 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   private final String id;
   private final String name;
   private String[] partsOfTag;
-  private boolean done = false;
-  private boolean referenced = false;
+  // Flags
+  // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
+  final static byte FLAG_ALL_CLEAR = 0;
+  final static byte FLAG_DONE = 0x01;
+  final static byte FLAG_REFERENCED = 0x02;
+  private byte flags = FLAG_ALL_CLEAR;
 
   public Tag(String id, String name) {
     super();
@@ -65,16 +69,16 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   }
 
   public void setDone() {
-    done = true;
+    flags |= FLAG_DONE;
   }
-  public boolean isDone() {
-    return done;
+  public boolean isDone () {
+    return ((flags & FLAG_DONE) != 0);
   }
 
   public void setReferenced() {
-    referenced = true;
+    flags |= FLAG_REFERENCED;
   }
-  public boolean isReferenced() {
-    return referenced;
+  public boolean isReferenced () {
+    return ((flags & FLAG_REFERENCED) != 0);
   }
 }

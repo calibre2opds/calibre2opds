@@ -9,6 +9,12 @@ public class Series implements SplitableByLetter {
   private final String sort;          // Sort name set in Calibre
   private boolean done = false;       // sse true when this series has been generated
   private boolean referenced = false; // Set true if referenced (which means entry needs generating
+  // Flags
+  // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
+  final static byte FLAG_ALL_CLEAR = 0;
+  final static byte FLAG_DONE = 0x01;
+  final static byte FLAG_REFERENCED = 0x02;
+  private byte flags = FLAG_ALL_CLEAR;
 
   public Series(String id, String name, String sort) {
     super();
@@ -55,16 +61,16 @@ public class Series implements SplitableByLetter {
   }
 
   public void setDone() {
-    done = true;
+    flags |= FLAG_DONE;
   }
-  public boolean isDone() {
-    return done;
+  public boolean isDone () {
+    return ((flags & FLAG_DONE) != 0);
   }
 
   public void setReferenced() {
-    referenced = true;
+    flags |= FLAG_REFERENCED;
   }
-  public boolean isReferenced() {
-    return referenced;
+  public boolean isReferenced () {
+    return ((flags & FLAG_REFERENCED) != 0);
   }
 }
