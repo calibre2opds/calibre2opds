@@ -76,6 +76,7 @@ public class Mainframe extends javax.swing.JFrame {
     }
     initComponents();
     initGuiFields();
+    setLocationRelativeTo(null);
     tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
     loadValues();
     translateTexts();
