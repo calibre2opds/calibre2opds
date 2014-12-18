@@ -11,6 +11,8 @@ package com.gmail.dpierron.calibre.gui;
 
 import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
 
+import javax.swing.*;
+
 public interface CatalogCallbackInterface {
 
   //  Progrees Indicator
@@ -33,9 +35,11 @@ public interface CatalogCallbackInterface {
 
   // database
 
+  public void setDatabaseCount(String sumamary);
+
   public void startReadDatabase();
 
-  public void endReadDatabase(String summary);
+  public void endReadDatabase();
 
   // Tags
 
@@ -86,6 +90,8 @@ public interface CatalogCallbackInterface {
   public void disableCreateRated();
 
   // All books
+
+  public void setAllBooksCount(String summary);
 
   public void startCreateAllbooks(long nb);
 

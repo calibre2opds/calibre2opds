@@ -862,6 +862,8 @@ public class Catalog {
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
       logger.info("COMPLETED preloading Datamodel");
       CatalogManager.recordRamUsage("After loading DataModel");
+      List<Book> books = DataModel.INSTANCE.getListOfBooks();
+      callback.setDatabaseCount(Summarizer.INSTANCE.getBookWord(books.size()));
 
       // Database read optimizations
       // (ony read in optional databitems if weneed them later)
@@ -971,7 +973,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
       }
 
-      List<Book> books = DataModel.INSTANCE.getListOfBooks();
+      books = DataModel.INSTANCE.getListOfBooks();
       if (Helper.isNullOrEmpty(books)) {
         if (Database.INSTANCE.wasSqlEsception() == 0 ) {
           callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
@@ -981,7 +983,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       } else {
         logger.info("Database loaded: " + books.size() + " books");
       }
+      callback.endReadDatabase();
       CatalogManager.recordRamUsage("After loading database");
+
+      //  Display counts for each progress stage
 
       callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
       callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
@@ -989,7 +994,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       int recentSize = DataModel.INSTANCE.getListOfBooks().size();
       if (recentSize > currentProfile.getBooksInRecentAdditions()) recentSize = currentProfile.getBooksInRecentAdditions();
       callback.setRecentCount("" + recentSize + " " + Localization.Main.getText("bookword.title"));
-
+      callback.setAllBooksCount(Summarizer.INSTANCE.getBookWord(books.size()));
 
       // prepare the Trook specific search database
 
@@ -997,8 +1002,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         TrookSpecificSearchDatabaseManager.INSTANCE.setDatabaseFile(new File(generateFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME));
         TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
       }
-      callback.endReadDatabase(Summarizer.INSTANCE.getBookWord(books.size()));
-
 
       //      Standard sub-catalogs for a folder level
 

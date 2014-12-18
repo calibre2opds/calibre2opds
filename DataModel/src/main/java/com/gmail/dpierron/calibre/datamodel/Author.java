@@ -14,9 +14,9 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   private String nameForSort;
   // Flags
   // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
-  final static byte FLAG_ALL_CLEAR = 0;
-  final static byte FLAG_DONE = 0x01;
-  final static byte FLAG_REFERENCED = 0x02;
+  private final static byte FLAG_ALL_CLEAR = 0;
+  private final static byte FLAG_DONE = 0x01;
+  private final static byte FLAG_REFERENCED = 0x02;
   private byte flags = FLAG_ALL_CLEAR;
 
   public Author(String id, String name, String sort) {

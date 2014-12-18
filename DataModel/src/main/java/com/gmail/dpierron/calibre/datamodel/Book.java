@@ -45,14 +45,14 @@ public class Book implements SplitableByLetter {
 
   // Flags
   // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
-  final static byte FLAG_ALL_CLEAR = 0;
-  final static byte FLAG_DONE = 0x01;                   // Set when the Book full details have been generated
-  final static byte FLAG_REFERENCED = 0x02;             // Set if book full details must be generated as referenced
-  final static byte FLAG_FILES_SORTED = 0x04;
-  final static byte FLAG_EPUBFILE_COMPUTED = 0x08;
-  final static byte FLAG_PREFERREDFILECOMPUTED = 0x10;
-  final static byte FLAG_CHANGED = 0x20;
-  final static byte FLAG_FLAGGED = 0x40;
+  private final static byte FLAG_ALL_CLEAR = 0;
+  private final static byte FLAG_DONE = 0x01;                   // Set when the Book full details have been generated
+  private final static byte FLAG_REFERENCED = 0x02;             // Set if book full details must be generated as referenced
+  private final static byte FLAG_FILES_SORTED = 0x04;
+  private final static byte FLAG_EPUBFILE_COMPUTED = 0x08;
+  private final static byte FLAG_PREFERREDFILECOMPUTED = 0x10;
+  private final static byte FLAG_CHANGED = 0x20;
+  private final static byte FLAG_FLAGGED = 0x40;
   private byte flags = FLAG_ALL_CLEAR;
 
 
