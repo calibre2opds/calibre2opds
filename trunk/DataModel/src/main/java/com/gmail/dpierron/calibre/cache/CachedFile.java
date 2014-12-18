@@ -28,34 +28,24 @@ import java.util.zip.CheckedInputStream;
 public class CachedFile extends File {
   private final static Logger logger = Logger.getLogger(CachedFile.class);
 
-  // private boolean privateExists;
-  // private boolean existsChecked = false;
   private long privateLastModified;
-  // private boolean lastModifiedChecked;
   private long privateLength;
-  // private boolean lengthChecked;
-  // private boolean privateIsDirectory;
-  // private boolean isDirectoryChecked;
   private long privateCrc;                     // A -ve value indicates invalid CRC;
-  // private boolean crcCalced;
-  // private boolean targetFile;           // Set to true if file/directory is only on target
-  // private boolean cachedFileValuesChecked;           // Set to true if data is from cache and not filing system
-  // private boolean isChanged;            // If set to false the can assume file is unchanged so target cioy is OK
 
   // Flags indicating state of entry
   // Noee:  Using bits in more memory efficient than using boolean types.
   //        This can mount up with the number of these objects that are created.
   final static short FLAG_ALL_CLEAR = 0x0000;
-  final static short FLAG_EXISTS = 1<<1;
-  final static short FLAG_EXISTS_CHECKED = 1<<2;
-  final static short FLAG_MODIFIED_CHECKED = 1<<3;
-  final static short FLAG_LENGTH_CHECKED = 1<<4;
-  final static short FLAG_IS_DIRECTORY = 1<<5;
-  final static short FLAG_IS_DIRECTORY_CHECKED = 1<<6;
-  final static short FLAG_CRC_CALCED = 1<<7;
-  final static short FLAG_TARGET_FILE = 1<<8;
-  final static short FLAG_CACHED_VALUES_CHECKED = 1<<9;
-  final static short FLAG_IS_CHANGED = 1<<10;             // If set to false the can assume file is unchanged so target cioy is OK
+  final static short FLAG_EXISTS = 0x0001;
+  final static short FLAG_EXISTS_CHECKED = 0x0002;
+  final static short FLAG_MODIFIED_CHECKED = 0x0004;
+  final static short FLAG_LENGTH_CHECKED = 0x0008;
+  final static short FLAG_IS_DIRECTORY = 0x0010;
+  final static short FLAG_IS_DIRECTORY_CHECKED = 0x0020;
+  final static short FLAG_CRC_CALCED = 0x0040;
+  final static short FLAG_TARGET_FILE = 0x0080;
+  final static short FLAG_CACHED_VALUES_CHECKED = 0x0100;
+  final static short FLAG_IS_CHANGED = 0x02000;             // If set to clear then can assume file is unchanged so target cioy is OK
   private short flags = FLAG_ALL_CLEAR;
 
   // Constructors mirror those for the File class

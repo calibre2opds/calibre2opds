@@ -105,6 +105,7 @@ v3.4 beta Rev 319
               standardixation process.   Gives error message on browsers that do not support the database capability.
     - Change: Improved German Localization (thanks to Kai Raven)
     - Change: Progress dialog now properly centered on main Calibre2opds window rather than top left being entered
+    - Change: Initali dialog now centered on the screen.
     - New:    Option to view File Sync log added to Tools menu.  Can help with debugging caching issues.
     - New:    When generating the active step is now highlighted in the progress dialog in Red to make it more obvious
     - Fix:    A Null pointer error if title_sort not set (should not be possible with current Calibre releases)

@@ -7,13 +7,13 @@ public class Series implements SplitableByLetter {
   private final String id;            // Calibre database ID for this series
   private final String name;          // Display name
   private final String sort;          // Sort name set in Calibre
-  private boolean done = false;       // sse true when this series has been generated
-  private boolean referenced = false; // Set true if referenced (which means entry needs generating
+  // private boolean done = false;       // sse true when this series has been generated
+  // private boolean referenced = false; // Set true if referenced (which means entry needs generating
   // Flags
   // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
-  final static byte FLAG_ALL_CLEAR = 0;
-  final static byte FLAG_DONE = 0x01;
-  final static byte FLAG_REFERENCED = 0x02;
+  private final static byte FLAG_ALL_CLEAR = 0;
+  private final static byte FLAG_DONE = 0x01;
+  private final static byte FLAG_REFERENCED = 0x02;
   private byte flags = FLAG_ALL_CLEAR;
 
   public Series(String id, String name, String sort) {

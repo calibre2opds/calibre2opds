@@ -172,6 +172,16 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     time.setEnabled(false);
   }
 
+  /**
+   * Update a progess step with the count for that step.
+   *
+   * @param label     The field to be updated
+   * @param summary   The additional text to be added to the field
+   */
+  private void setCount(JLabel label, String summary) {
+    label.setText(label.getText() + " (" + summary + ")");
+  }
+
   public void startInitializeMainCatalog() {
     cmdStopGenerating.setVisible(true);
     cmdStopGenerating.repaint();
@@ -205,13 +215,16 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     setTimeNow(lblStartedTime);
   }
 
-  public void endReadDatabase(String summary) {
-    lblDatabase.setText(lblDatabase.getText() + " (" + summary + ")");
+  public void endReadDatabase() {
     endStage(lblDatabase, lblDatabaseTime, chkDatabase);
   }
 
+  public void setDatabaseCount (String summary) {
+    setCount(lblDatabase, summary);
+  }
+
   public void setAuthorCount(String summary){
-    lblAuthors.setText(lblAuthors.getText() + " (" + summary + ")");
+    setCount(lblAuthors, summary);
   }
 
   public void startCreateAuthors(long nb) {
@@ -227,15 +240,15 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   }
 
   public void setSeriesCount(String summary) {
-    lblSeries.setText(lblSeries.getText() + " (" + summary + ")");
+    setCount(lblSeries, summary);
   }
 
   public void setTagCount(String summary) {
-    lblTags.setText(lblTags.getText() + " (" + summary + ")");
+    setCount(lblTags, summary);
   }
 
   public void setFeaturedCount(String summary) {
-    lblFeaturedBooks.setText(lblFeaturedBooks.getText() + " (" + summary + ")");
+    setCount(lblFeaturedBooks, summary);
   }
 
   public void startCreateTags(long nb) {
@@ -288,6 +301,10 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   public void disableCreateRated() {
     disableStage(chkRated, lblRated, lblRatingTime);
+  }
+
+  public void setAllBooksCount(String summary) {
+    setCount(lblAllbooks, summary);
   }
 
   public void startCreateAllbooks(long nb) {

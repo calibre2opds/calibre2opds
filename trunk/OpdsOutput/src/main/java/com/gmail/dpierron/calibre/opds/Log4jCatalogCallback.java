@@ -141,11 +141,11 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     startStage(0, "info.step.database");
   }
 
-  public void endReadDatabase(String summary) {
-    // logger.info(Localization.Main.getText("info.step.donein", milliseconds));
-    endStage(summary);
+  public void endReadDatabase() {
+    endStage( "info.step.database");
   }
 
+  public void setDatabaseCount(String s) { setCount(s);}
   public void setAuthorCount(String s) {
     setCount(s);
   }
@@ -159,6 +159,7 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     setCount(s);
   }
   public void setRecentCount(String s) { setCount(s); }
+  public void setAllBooksCount(String s) { setCount(s); }
 
   public void setCopyLibCount(String s) {
     setCount(s);
