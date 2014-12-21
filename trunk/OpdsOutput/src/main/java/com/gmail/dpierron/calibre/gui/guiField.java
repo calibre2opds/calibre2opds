@@ -14,14 +14,12 @@ package com.gmail.dpierron.calibre.gui;
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.indexer.Index;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import javax.swing.*;
-import javax.swing.text.StringContent;
 import java.lang.reflect.*;
 
 public class guiField {

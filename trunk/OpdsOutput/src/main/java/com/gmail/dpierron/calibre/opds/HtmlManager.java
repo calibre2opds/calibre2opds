@@ -9,7 +9,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;

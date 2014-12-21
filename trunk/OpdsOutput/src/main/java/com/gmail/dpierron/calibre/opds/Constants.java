@@ -7,7 +7,7 @@ package com.gmail.dpierron.calibre.opds;
  * once they have been genrated.
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 
 import java.io.BufferedReader;

@@ -1,7 +1,7 @@
 package com.gmail.dpierron.calibre.thumbnails;
 
 import com.gmail.dpierron.calibre.opds.CatalogManager;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;

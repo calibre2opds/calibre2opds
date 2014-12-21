@@ -11,19 +11,17 @@ package com.gmail.dpierron.calibre.gui;
 
 import com.gmail.dpierron.calibre.configuration.*;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
-import com.gmail.dpierron.calibre.datamodel.EBookFormat;
 import com.gmail.dpierron.calibre.gui.table.ButtonColumn;
 import com.gmail.dpierron.calibre.gui.table.CustomCatalogTableModel;
 import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
 import com.l2fprod.common.swing.JDirectoryChooser;
 import org.apache.log4j.Logger;
-import sun.security.krb5.Config;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -621,6 +619,8 @@ public class Mainframe extends javax.swing.JFrame {
     if (Helper.checkedCompare(language, newLanguage) != 0) {
       currentProfile.setLanguage(newLanguage);
       language = newLanguage;
+      Localization.Main.setProgileLanguage(currentProfile.getLanguage());
+      Localization.Enum.setProgileLanguage(currentProfile.getLanguage());
       Localization.Main.reloadLocalizations();
       Localization.Enum.reloadLocalizations();
       translateTexts();

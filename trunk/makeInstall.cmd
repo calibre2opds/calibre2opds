@@ -5,6 +5,8 @@ REM
 REM The following specifies the ZIP program to use
 REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
+
+SETLOCAL
 call setenv.cmd
 
 for /f "delims=" %%a in ('svnversion') do @set SVNVERSION=%%a
@@ -145,3 +147,4 @@ echo ------------------------------------------------
 echo '
 dir /b %VERSION%.*
 echo '
+ENDLOCAL

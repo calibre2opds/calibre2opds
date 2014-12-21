@@ -3,8 +3,8 @@ package com.gmail.dpierron.calibre.configuration;
 import com.gmail.dpierron.calibre.datamodel.EBookFormat;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.JDOM;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 

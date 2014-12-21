@@ -8,7 +8,7 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Tag;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.RootTreeNode;

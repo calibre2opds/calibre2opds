@@ -3,8 +3,7 @@ package com.gmail.dpierron.calibre.configuration;
 /**
  * These are the default setting for the Calibre2opds configuration
  */
-import com.gmail.dpierron.calibre.opds.Constants;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 
 import java.io.File;

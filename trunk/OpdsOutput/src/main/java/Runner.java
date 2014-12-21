@@ -1,12 +1,11 @@
-import com.gmail.dpierron.calibre.configuration.Configuration;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.test.TestDataModel;
 import com.gmail.dpierron.calibre.gui.Mainframe;
 import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.Log4jCatalogCallback;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -14,8 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 

@@ -9,11 +9,13 @@ if not exist setenv.cmd (
     echo        on suitable settings .
     echo ---------------------------------------------
 ) else (
+    SETLOCAL
     @call setenv.cmd
     if errorlevel 0 (
         echo Started compile at %TIME%
         mvn clean install -Dmaven.test.skip=true dependency:copy-dependencies
         echo Completed at %TIME%
     )
+    ENDLOCAL
 )
 pause

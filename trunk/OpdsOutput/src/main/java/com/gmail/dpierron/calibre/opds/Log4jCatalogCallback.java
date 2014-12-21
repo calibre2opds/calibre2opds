@@ -8,8 +8,8 @@ import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 

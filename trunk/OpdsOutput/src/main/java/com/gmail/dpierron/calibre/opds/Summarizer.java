@@ -5,7 +5,7 @@ import com.gmail.dpierron.calibre.datamodel.Author;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.TreeNode;
 
