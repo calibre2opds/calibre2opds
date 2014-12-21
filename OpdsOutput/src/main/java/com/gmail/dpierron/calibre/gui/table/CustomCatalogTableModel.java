@@ -2,8 +2,7 @@ package com.gmail.dpierron.calibre.gui.table;
 
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.opds.Constants;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.tools.Composite;
+import com.gmail.dpierron.tools.i18n.Localization;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

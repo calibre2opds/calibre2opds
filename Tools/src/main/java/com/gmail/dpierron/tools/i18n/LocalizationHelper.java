@@ -1,4 +1,4 @@
-package com.gmail.dpierron.calibre.opds.i18n;
+package com.gmail.dpierron.tools.i18n;
 
 import com.gmail.dpierron.tools.Helper;
 

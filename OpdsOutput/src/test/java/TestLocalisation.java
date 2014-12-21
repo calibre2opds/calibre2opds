@@ -1,6 +1,6 @@
 import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
-import com.gmail.dpierron.calibre.opds.i18n.LocalizationHelper;
+import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.junit.Test;
 

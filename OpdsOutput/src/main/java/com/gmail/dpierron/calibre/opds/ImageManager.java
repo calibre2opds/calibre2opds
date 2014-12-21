@@ -7,14 +7,12 @@ import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.thumbnails.CreateThumbnail;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public abstract class ImageManager {

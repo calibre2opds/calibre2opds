@@ -1,4 +1,4 @@
-package com.gmail.dpierron.calibre.opds.i18n;
+package com.gmail.dpierron.tools.i18n;
 
 public interface Object2StringConverter {
   public String getStringValue(Object value);

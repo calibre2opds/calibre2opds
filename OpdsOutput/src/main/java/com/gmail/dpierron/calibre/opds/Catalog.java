@@ -18,7 +18,7 @@ import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
-import com.gmail.dpierron.calibre.opds.i18n.Localization;
+import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
@@ -560,6 +560,8 @@ public class Catalog {
     CatalogManager.INSTANCE.coverManager.reset();
     CachedFileManager.INSTANCE.reset();
 
+    Localization.Main.setProgileLanguage(currentProfile.getLanguage());
+    Localization.Enum.setProgileLanguage(currentProfile.getLanguage());
     Localization.Main.reloadLocalizations();
     Localization.Enum.reloadLocalizations();
 

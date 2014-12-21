@@ -1,6 +1,5 @@
-package com.gmail.dpierron.calibre.opds.i18n;
+package com.gmail.dpierron.tools.i18n;
 
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.Utf8ResourceBundle;
 import org.apache.log4j.Logger;
@@ -48,6 +47,13 @@ public enum Localization {
    * The name of the last loaded locale
    */
   private String lastLocalLanguage = null;
+  private String profileLanguage = null;
+  public void setProgileLanguage (String lang) {
+    profileLanguage = lang;
+  }
+  private String getProfileLanguage() {
+    return profileLanguage == null ? "en" : profileLanguage;
+  }
   
   public ResourceBundle getBundle() {
     if (localizations == null)
@@ -132,7 +138,7 @@ public enum Localization {
    * Reloads the localizations according to the language set in Configuration manager
    */
   public void reloadLocalizations() {
-    reloadLocalizations(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage());
+    reloadLocalizations(getProfileLanguage());
   }
 
   /**

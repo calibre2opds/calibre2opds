@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import com.gmail.dpierron.tools.i18n.Localization;
+
 import java.util.*;
 
 public enum NoiseWord {
@@ -13,6 +15,7 @@ public enum NoiseWord {
   private static final NoiseWord DEFAULT = EN;
 
   private NoiseWord(String lang, String... words) {
+    String langnoiseWords = Localization.Main.getText("i18n.noiseWords");
     List<String> temp = Arrays.asList(words);
     this.noiseWords = new LinkedList<String>();
     for (String s : temp) {
