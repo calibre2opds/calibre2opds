@@ -53,8 +53,8 @@ public class Runner {
     Locale lc = Locale.getDefault();
     Localization.Main.reloadLocalizations("en");      // Initalize Localization object to English
     Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
-    Localization.Enum.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
-    Localization.Main.reloadLocalizations(avail.contains(lc.getISO3Language()) ? lc.getISO3Language() : "en");
+    Localization.Enum.reloadLocalizations(avail.contains(lc.getLanguage()) ? lc.getLanguage() : "en");
+    Localization.Main.reloadLocalizations(avail.contains(lc.getLanguage()) ? lc.getLanguage() : "en");
 
     ConfigurationManager.setGuiMode(startGui);
     ConfigurationManager.addStartupLogMessage("");
@@ -63,7 +63,7 @@ public class Runner {
     ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")");
-    ConfigurationManager.addStartupLogMessage("LANG: " + lc.getISO3Language());
+    ConfigurationManager.addStartupLogMessage("LANG: " + lc.getLanguage() + " (" + lc.getDisplayLanguage() + ")");
     ConfigurationManager.addStartupLogMessage("JAVA: " + System.getProperty("java.specification.version") + " (" + System.getProperty("java.version") + ")");
     ConfigurationManager.addStartupLogMessage("");
 
@@ -85,15 +85,19 @@ public class Runner {
 //    logger.info ("LOG LEVEL: " + levelText + " (" + logger.getLevel().toString() + ")");
     logger.info("");
     try {
+      String currentProfileName = ConfigurationManager.INSTANCE.getCurrentProfileName();
+      logger.info(Localization.Main.getText("startup.profiledefault", currentProfileName));
       if (args.length == 1) {
         String profileName = args[0];
         if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))  {
           logger.info(Localization.Main.getText("startup.profileswitch", profileName));
           ConfigurationManager.INSTANCE.changeProfile(profileName);
         } else {
-          logger.info(Localization.Main.getText("startup.profillemissing", profileName));
+          logger.error(Localization.Main.getText("startup.profilemissing", profileName));
+          if (! startGui)  System.exit(-3);
         }
       }
+
       runner.run(startGui);
     } catch (IOException e) {
       logger.info(Localization.Main.getText("error.generic", Constants.AUTHOREMAIL));
@@ -111,9 +115,11 @@ public class Runner {
       logger.info(Localization.Main.getText("intro.goal"));
       logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
       logger.info("");
-      // TODO:   ITIMPI: List of members removed as no longer seems to reflect active developers!
+      // TODO:   ITIMPI: List of members revised to reflect active developers!
       logger.info(Localization.Main.getText("intro.team.title"));
       logger.info("  * " + Localization.Main.getText("intro.team.list1"));
+      logger.info("");
+      logger.info(Localization.Main.getText("intro.team.title2"));
       logger.info("  * " + Localization.Main.getText("intro.team.list2"));
       logger.info("  * " + Localization.Main.getText("intro.team.list3"));
       logger.info("  * " + Localization.Main.getText("intro.team.list4"));
