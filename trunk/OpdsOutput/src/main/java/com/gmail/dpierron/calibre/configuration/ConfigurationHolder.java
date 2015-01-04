@@ -1,6 +1,7 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.datamodel.Language;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
@@ -289,6 +290,11 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     String s = getProperty(PROPERTY_NAME_LANGUAGE);
     return (Helper.isNullOrEmpty(s)) ? defaults.getLanguage() : s;
   }
+  /*
+  public Language getLanguage() {
+    String s = getLanguage()[]
+  }
+  */
   public void setLanguage(String language) {
     setProperty(PROPERTY_NAME_LANGUAGE, language);
   }
