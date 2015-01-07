@@ -35,6 +35,10 @@ public enum ConfigurationManager {
   // Listof formats that are used in the current profile
   private static List<EBookFormat> profileFormats = null;
 
+  /**
+   *
+   * @return
+   */
   PropertiesBasedConfiguration getDefaultConfiguration() {
     if (defaultConfiguration == null) {
       logger.trace("defaultConfiguration is not set");
@@ -57,6 +61,10 @@ public enum ConfigurationManager {
     return defaultConfiguration;
   }
 
+  /**
+   *
+   * @return
+   */
   public ConfigurationHolder getCurrentProfile() {
     if (currentProfile == null) {
       logger.trace("getCurrentProfile - currentProfile not set");
@@ -66,6 +74,10 @@ public enum ConfigurationManager {
     return currentProfile;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getCurrentProfileName() {
     String s = getDefaultConfiguration().getProperty(PROPERTY_NAME_CURRENTCONFIGURATION);
     if (Helper.isNotNullOrEmpty(s))
@@ -77,19 +89,35 @@ public enum ConfigurationManager {
   /**
    * Set a new name for the current profile after it has beeb renamed.
    * As a consistency check the old name is provided.
+   *
    * @param newName
    */
   public void setCurrentProfileName(String newName) {
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, newName);
   }
 
-  public void changeProfile(String profileName) {
+  /**
+   * Change the current loaded GUI.
+   *
+   * There is an option as to whether it should become the default
+   *
+   * @param profileName
+   * @param setDefault
+   */
+  public void changeProfile(String profileName, boolean setDefault) {
     logger.trace("changeProfile to " + profileName);
+    String currentProfileName = getCurrentProfileName();
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
     currentProfile = null;
     getCurrentProfile();
+    if (setDefault) getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, currentProfileName);
   }
 
+  /**
+   * Copy the current profile to a new one with a given name
+   *
+   * @param newProfileName
+   */
   public void copyCurrentProfile(String newProfileName) {
     getCurrentProfile().setPropertiesFile(new File(getConfigurationDirectory(), newProfileName + PROFILES_SUFFIX));
     getCurrentProfile().save();
@@ -98,15 +126,28 @@ public enum ConfigurationManager {
     getCurrentProfile();
   }
 
-  public boolean isExistingConfiguration(String filename) {
+  /**
+   * See if the configuration already exists
+   *
+   * We return the name if matched so that the
+   * name case is maintained.
+   *
+   * @param filename
+   * @return    Null if not found
+   *            Existing name if found
+   */
+  public String isExistingConfiguration(String filename) {
     for (String existingConfigName : getExistingConfigurations()) {
       if (existingConfigName.equalsIgnoreCase(filename))
-        return true;
+        return existingConfigName;
     }
-    return false;
+    return null;
   }
 
-
+  /**
+   *
+   * @return
+   */
   public List<String> getExistingConfigurations() {
     File configurationFolder = getConfigurationDirectory();
     String[] files = configurationFolder.list(new FilenameFilter() {
@@ -122,6 +163,10 @@ public enum ConfigurationManager {
     return result;
   }
 
+  /**
+   *
+   * @return
+   */
   public static File getInstallDirectory() {
     if (installDirectory == null) {
       URL mySource = ConfigurationHolder.class.getProtectionDomain().getCodeSource().getLocation();
@@ -130,7 +175,12 @@ public enum ConfigurationManager {
     }
     return installDirectory;
   }
-  
+
+  /**
+   * Get the Configuration folder
+   *
+   * @return
+   */
   public File getConfigurationDirectory() {
     if (configurationDirectory == null) {
       //            logger.trace("getConfigurationDirectory - configurationDirectory not set");
@@ -140,6 +190,11 @@ public enum ConfigurationManager {
     return configurationDirectory;
   }
 
+  /**
+   * Get the startup messsages
+   *
+   * @return
+   */
   private static String startupMessagesForDisplay() {
     StringBuffer s = new StringBuffer("\n\nLOG:");
     for (String m : startupLogMessages) {
@@ -147,6 +202,7 @@ public enum ConfigurationManager {
     }
     return s.toString();
   }
+
   /**
    * Check for redirection (if any
    *
@@ -205,6 +261,7 @@ public enum ConfigurationManager {
     addStartupLogMessage(Localization.Main.getText("startup.configusing", redirectToNewHome));
     return redirectToNewHome;
   }
+
   /**
    * Work out where the configuration folder is located.
    * Note that at this poin t log4j will not have been initiaised

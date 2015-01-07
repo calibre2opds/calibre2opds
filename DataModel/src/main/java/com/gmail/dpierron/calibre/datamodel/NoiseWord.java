@@ -1,28 +1,34 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.tools.i18n.Localization;
+import com.gmail.dpierron.tools.Helper;
 
 import java.util.*;
 
 public enum NoiseWord {
-  EN("eng", "the ", "a ", "an "),
-  FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
-  DE("deu", "der ", "die ", "das ", "ein ", "eine ");
+//  EN("eng", "the ", "a ", "an "),
+//  FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
+//  DE("deu", "der ", "die ", "das ", "ein ", "eine ");
+    EN("eng"),
+    FR("fra"),
+    DE("deu");
 
   private final List<String> noiseWords;
   private final String lang;
   private static Map<String, NoiseWord> map;
   private static final NoiseWord DEFAULT = EN;
 
-  private NoiseWord(String lang, String... words) {
-    String langnoiseWords = Localization.Main.getText("i18n.noiseWords");
-    List<String> temp = Arrays.asList(words);
+  private NoiseWord(String lang) {
+    Localization.Main.reloadLocalizations(lang);
+    String langNoiseWords = Localization.Main.getText("i18n.noiseWords");
+    StringTokenizer st = new StringTokenizer(langNoiseWords,",");
     this.noiseWords = new LinkedList<String>();
-    for (String s : temp) {
-      noiseWords.add(s.toUpperCase(Locale.ENGLISH));
+    while (st.hasMoreTokens()) {
+      noiseWords.add(st.nextToken().toUpperCase(Locale.ENGLISH));
     }
     this.lang = lang;
     addToMap();
+    Localization.Main.reloadLocalizations();
   }
 
   private void addToMap() {

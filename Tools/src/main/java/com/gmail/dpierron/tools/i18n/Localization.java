@@ -135,7 +135,7 @@ public enum Localization {
   }
 
   /**
-   * Reloads the localizations according to the language set in Configuration manager
+   * Reloads the localizations according to the language set in Configuration manager                        Helper
    */
   public void reloadLocalizations() {
     reloadLocalizations(getProfileLanguage());
@@ -153,6 +153,8 @@ public enum Localization {
       englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH);
       lastLocalLanguage = "en";
     }
+    // Ensure we have the ISO2 version that the localizations use.
+    if (language.length() != 2)  language = Helper.getLocaleFromLanguageString(language).getLanguage();
     // No need to load english localizations twice!
     if (language.equals("en") && englishLocalizations != null)
       localizations = englishLocalizations;
@@ -213,6 +215,18 @@ public enum Localization {
       return null;
     String formattedMessage = MessageFormat.format(message, parameters);
     return formattedMessage;
+  }
+
+  /**
+   * fetches a localized message with parameters for a specified locale
+   *
+   * @param locale
+   * @param key        the key in the resource bundle
+   * @param parameters the parameters used to construct the message
+   * @return
+   */
+  public String getText(Locale locale, String key, Object... parameters) {
+    return null;
   }
 
   /**
