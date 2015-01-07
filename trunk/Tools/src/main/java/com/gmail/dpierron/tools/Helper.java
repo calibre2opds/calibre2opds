@@ -1377,4 +1377,33 @@ public class Helper {
     }
     return sb.toString();
   }
+
+  /**
+   * Get the local that corresponds to the provided language string
+   * The following assumptions are made about the supplied parameter:
+   * - If it is 2 characters in length then it is assumed to be the ISO2 value
+   * - If it is 3 characters in length then it is assumed to be the ISO3 value
+   * - If it is 4+ characters then it is assumed to be the Display Language text
+   * If no match can be found then the English Locale is always returned
+   *
+   * @param lang
+   * @return
+   */
+  public static Locale getLocaleFromLanguageString(String lang) {
+    if (lang != null || lang.length() > 1) {
+      for (Locale l : Locale.getAvailableLocales()) {
+         switch (lang.length()) {
+           case 2:  if (l.getLanguage().equalsIgnoreCase(lang)) return l;
+                    break;
+           case 3:  if (l.getISO3Language().equalsIgnoreCase(lang)) return l;
+                    break;
+           default: if (l.getDisplayLanguage().equalsIgnoreCase(lang)) return l;
+                    break;
+        }
+      }
+    }
+    return Locale.ENGLISH;
+
+
+  }
 }

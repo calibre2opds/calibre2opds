@@ -1,3 +1,4 @@
+import com.gmail.dpierron.calibre.configuration.Configuration;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.test.TestDataModel;
 import com.gmail.dpierron.calibre.gui.Mainframe;
@@ -59,7 +60,6 @@ public class Runner {
     ConfigurationManager.setGuiMode(startGui);
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
-    ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
     ConfigurationManager.addStartupLogMessage("");
     ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")");
@@ -87,16 +87,32 @@ public class Runner {
     try {
       String currentProfileName = ConfigurationManager.INSTANCE.getCurrentProfileName();
       logger.info(Localization.Main.getText("startup.profiledefault", currentProfileName));
-      if (args.length == 1) {
-        String profileName = args[0];
-        if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName))  {
-          logger.info(Localization.Main.getText("startup.profileswitch", profileName));
-          ConfigurationManager.INSTANCE.changeProfile(profileName);
-        } else {
-          logger.error(Localization.Main.getText("startup.profilemissing", profileName));
-          if (! startGui)  System.exit(-3);
-        }
+      switch (args.length) {
+        case 0:
+            // This is the normal default where we use the last profile used in the GUI.
+            break;
+        default:
+            // We seem to have more parameters than expected.
+            // Log the details and then assume that the first may be a profile
+            logger.warn("startup.extraParameters");
+            String argstring = "";
+            for (String s : args) argstring += s + " ";
+            logger.warn("  " + argstring );
+            // FALLTHRU
+        case 1:
+            // It appears that a profile has been supplied
+            String profileName = args[0];
+            if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName) == null) {
+              logger.error(Localization.Main.getText("startup.profilemissing", profileName));
+              if (!startGui)
+                System.exit(-3);
+            } else {
+              logger.info(Localization.Main.getText("startup.profileswitch", ConfigurationManager.INSTANCE.isExistingConfiguration(profileName)));
+              ConfigurationManager.INSTANCE.changeProfile(ConfigurationManager.INSTANCE.isExistingConfiguration(profileName), startGui);
+            }
+            break;
       }
+
 
       runner.run(startGui);
     } catch (IOException e) {

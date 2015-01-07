@@ -9,7 +9,12 @@ REM  path but do have the one of the following conditions met:
 REM  - JAVA_HOME environment variable set
 REM  - have installed to default location.
 REM  - have the expected registry keys set
+REM The following optional parameters can be provided:
+REM  --enableassertions			Enable JAVA VM assertions for testing
+REM  profilename			Name of the profile to use.  If omitted
+REM                                     then the last one used is assumed.
 
+SETLOCAL
 REM  We set JAVA VM stack limits explicitly here to get consistency across systems
 REM
 REM -Xms<value> define starting size
@@ -18,8 +23,6 @@ REM -Xss<value> defines stack size
 REM
 REM It is possible that for very large libraries this may not be enough - we will have to see.
 REM If these options are omitted then defaults are chosen depending on system configuration
-
-SETLOCAL
 set _C2O_JAVAOPT= -Xms128m -Xmx512m 
 
 cls
@@ -31,6 +34,7 @@ set _CD=%cd%
 echo [INFO] Current Directory: %_CD%
 
 set _JAVAPROG=JAVAW.EXE
+
 if "%1"=="-enableassertions" set _JAVAPROG=JAVA.EXE
 
 REM  The following is used to determine free RAM
@@ -43,7 +47,7 @@ for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do (
 )
 :freemem_done
 echo '
-echo Free RAM: %m%
+echo [INFO]  Free RAM: %m%
 
 
 echo '
@@ -189,20 +193,22 @@ set CALIBRE2OPDS_CONFIG=%cd%/Calibre2OpdsConfig
 
 :start_c2o
 echo '
-echo "-----------------------"
-echo " Calibre2Opds STARTING "
-echo "-----------------------"
+echo "---------------------------------"
+echo " Calibre2Opds STARTING (GUI mode)"
+echo "---------------------------------"
 echo '
-%TEMP:~0,2%
-cd "%TEMP%"
+pushd %TEMP%
 echo [INFO] Current directory set to %cd%
+echo [INFO]  Attempting to start Calibre2opds with the following command:
 
-if not "%1"=="-enableassertions" goto no_assertions
+if "_ASSERTIONS"=="" got without_assertions
 shift
+
 REM Start the GUI leaving this batch file running for progress/debug messages
-echo [INFO]  "%_JAVACMD%" %_C2O_JAVAOPT%  -enableassertions -cp "%_CD%/*" -jar "%_cd%/C2O%" Gui
+echo [INFO]  "%_JAVACMD%" %_C2O_JAVAOPT%  -enableassertions -cp "%_CD%\*" Gui %*
 echo '
-"%_JAVACMD%" %_C2O_JAVAOPT%  -enableassertions -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
+"%_JAVACMD%" %_C2O_JAVAOPT% -enableassertions -cp "%_CD%\*"  Gui %*
+if not "%ERRORLEVEL%"=="0" goto check_result
 echo '
 echo "-----------------------"
 echo " Calibre2Opds FINISHED "
@@ -210,13 +216,23 @@ echo "-----------------------"
 echo '
 goto end
 
-:no_assertions
+:without_assertions
 REM Start the GUI in normal mode as a separate process and close this batch file
-echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" %J_C2o_JAVAOPT% -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" %J_C2o_JAVAOPT% -cp "%_CD%\*" Gui %1
 echo '
-START "Calibre2Opds" "%_JAVACMD%" %_C2O_JAVAOPT%  -cp "%_CD%/*" -jar "%_cd%/%_C2O%" Gui
+START "Calibre2Opds" "%_JAVACMD%" %_C2O_JAVAOPT%  -cp "%_CD%\*" Gui %1
+
+:check_result
+if "%ERRORLEVEL"=="0" goto end
+echo '
+echo [INFO]  ----------------------------------
+echo [INFO]  ERROR trying to start Calibre2opds
+echo [INFO]  Exit code: %ERRORLEVEL%
+echo [INFO]  ----------------------------------
+echo '
 
 :end
-%_CD:~0,2%
-cd "%_CD%"
+popd
+echo [INFO]] Current Directory reset to %cd%
+
 ENDLOCAL

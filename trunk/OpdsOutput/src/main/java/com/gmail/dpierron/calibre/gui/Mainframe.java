@@ -5,7 +5,7 @@ package com.gmail.dpierron.calibre.gui;
  *
  * Note that the GUI form and this associated java class is constructed
  * and maintained using the Netbeans IDE tool for form design.
- * Althought he java class can be edited from within the IntelliJ IDEA editor
+ * Although the java class can be edited from within the IntelliJ IDEA editor
  * you should not make any changes that invalidate its use by the Netbeans one.
  */
 
@@ -803,7 +803,7 @@ public class Mainframe extends javax.swing.JFrame {
    * @param profileName
    */
   private void setProfile(String profileName) {
-    ConfigurationManager.INSTANCE.changeProfile(profileName);
+    ConfigurationManager.INSTANCE.changeProfile(profileName, true);
     // Changed profile - so need to update local cached copy as well!
     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
     if (currentProfile.isObsolete()) {
