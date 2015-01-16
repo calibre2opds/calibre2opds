@@ -811,7 +811,7 @@ public class Mainframe extends javax.swing.JFrame {
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
-    logger.info(Localization.Main.getText("info.loadProfile", profileName));
+    logger.info(Localization.Main.getText("info.setProfile", profileName));
     loadValues();
   }
 

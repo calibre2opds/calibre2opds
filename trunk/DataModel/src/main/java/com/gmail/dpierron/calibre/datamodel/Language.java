@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import com.gmail.dpierron.tools.Helper;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -9,6 +11,8 @@ public class Language {
   private Locale locale;
 
   public Language(String id, String iso3) {
+    assert id != null;
+    assert Helper.isNotNullOrEmpty(iso3);
     for (Locale l : Locale.getAvailableLocales()) {
       if (l.getISO3Language().equalsIgnoreCase(iso3)) {
         this.locale = l;
@@ -27,18 +31,22 @@ public class Language {
   }
 
   public String getIso3() {
+    assert locale != null;
     return locale.getISO3Language();
   }
 
   public String getIso2() {
+    assert locale != null;
     return locale.getLanguage();
   }
 
   public String getEnglishName() {
+    assert locale != null;
     return locale.getDisplayLanguage().toLowerCase();
   }
 
   public String toString() {
+    assert locale != null;
     return ""+locale.getLanguage()+"/"+locale.getISO3Language()+"/"+ locale.getDisplayLanguage();
   }
 

@@ -68,5 +68,4 @@ public enum NoiseWord {
     return result;
   }
 
-
 }

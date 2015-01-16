@@ -522,7 +522,11 @@ public class Catalog {
   /**
     * Sync a set of image files across to the specified target folder
     * The images are segregated into folders according to the bookid
-    * Used when images are stored within catalog
+    * Used when images are stored within catalog.
+   *
+   * If we are going to ZIP the files then we also need to put the images
+   * into the temprorary folder area so that they get picked up by the
+   * ZIP catalog procedure.
     *
     * @param targetFolder
     */
@@ -534,6 +538,15 @@ public class Catalog {
         syncFiles(entry.getValue(), targetFile);
       } catch (IOException e) {
         logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to catalog");
+      }
+      // #c2o-234:  Copy images to temporary area for later inclusion into ZIP of catalog
+      if (currentProfile.getZipCatalog()) {
+        targetFile = CachedFileManager.INSTANCE.addCachedFile(CatalogManager.INSTANCE.getGenerateFolder(), entry.getKey());
+        try {
+          syncFiles(entry.getValue(), targetFile);
+        } catch (IOException e) {
+          logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to temporary area for ZIP");
+        }
       }
     }
   }

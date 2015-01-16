@@ -59,6 +59,7 @@ public class Runner {
 
     ConfigurationManager.setGuiMode(startGui);
     ConfigurationManager.addStartupLogMessage("");
+    ConfigurationManager.addStartupLogMessage("--------------------------------------------");
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
     ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
     ConfigurationManager.addStartupLogMessage("");

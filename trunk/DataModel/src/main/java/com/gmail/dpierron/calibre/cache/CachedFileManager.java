@@ -218,8 +218,7 @@ public enum CachedFileManager {
             ignoredCount++;
             continue;
           }
-          // We only want to cache items that have actually been used this time
-          // around, so ignore entries that indicate cached values not used.
+          // We d not want to cache files that are in the temprorary area.
           if (! cf.isCachedValidated()) {
             if (logger.isTraceEnabled()) logger.trace("saveCache: Not used.  Not saving CachedFile " + key);
             notUsed++;
