@@ -110,7 +110,7 @@ public enum ConfigurationManager {
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
     currentProfile = null;
     getCurrentProfile();
-    if (setDefault) getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, currentProfileName);
+    if (setDefault) getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
   }
 
   /**

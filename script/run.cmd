@@ -11,9 +11,9 @@ REM  - have installed to default location.
 REM  - have the expected registry keys set
 REM The following optional parameter options are available
 REM  --enableassertions		Start the JAVA VM with assertions enabled for testing
-REM  --hidden			Hide the command window while running
+REM  --hidden			    Hide the command window while running
 REM  profilename			Name of the profile to use.  If omitted
-REM                                     then the last one used is assumed.
+REM                   then the last one used is assumed.
 
 SETLOCAL
 set _C2O=OpdsOutput-3.4-SNAPSHOT.jar
@@ -26,6 +26,7 @@ REM -Xss<value> defines stack size
 REM
 REM It is possible that for very large libraries this may not be enough - we will have to see.
 REM If these options are omitted then defaults are chosen depending on system configuration
+REM One idea for future consideration is to look at the free RAM and try and derive values dynamically.
 set _C2O_JAVAOPT=-Xms128m -Xmx512m
 
 cls
@@ -148,14 +149,14 @@ REM  We apear to have found a location for Java.  Check that it is valid
 REM  -------------------------------------------------------------------
 :get_javahome
 FOR /F "tokens=3*" %%A IN ('REG.EXE QUERY "%_MYKEY%\%_MYVAR1%" /s ^| FIND "JavaHome"') DO set _MYVAR2=%%A %%B
-if not "%_MYVAR2%" == "" goto ok_regjavajome
+if not "%_MYVAR2%" == "" goto ok_regjavahome
 echo [INFO]  Failed to find JavaHome registry key
 goto java_notfound
 :ok_regjavahome
 echo [INFO]  Found JavaHome registry key
 
 
-if exist "%_MYVAR2%\bin\%_JAVAPROG%"
+if exist "%_MYVAR2%\bin\%_JAVAPROG%" goto ok_javaprog
 echo [INFO]  Failed to find Java at location indicated by registry
 goto java_notfound
 :ok_javaprog

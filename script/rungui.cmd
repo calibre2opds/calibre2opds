@@ -11,8 +11,8 @@ REM  - have installed to default location.
 REM  - have the expected registry keys set
 REM The following optional parameters can be provided:
 REM  --enableassertions			Enable JAVA VM assertions for testing
-REM  profilename			Name of the profile to use.  If omitted
-REM                                     then the last one used is assumed.
+REM  profilename			      Name of the profile to use.  If omitted
+REM                         then the last one used is assumed.
 
 SETLOCAL
 REM  We set JAVA VM stack limits explicitly here to get consistency across systems
@@ -22,7 +22,8 @@ REM -Xmx<value> defines maximum size
 REM -Xss<value> defines stack size
 REM
 REM It is possible that for very large libraries this may not be enough - we will have to see.
-REM If these options are omitted then defaults are chosen depending on system configuration
+REM If these options are omitted then defaults are chosen depending on system configuration.
+REM One idea for future consideration is to look at the free RAM and try and derive values dynamically.
 set _C2O_JAVAOPT= -Xms128m -Xmx512m 
 
 cls
@@ -35,7 +36,7 @@ echo [INFO] Current Directory: %_CD%
 
 set _JAVAPROG=JAVAW.EXE
 
-if "%1"=="-enableassertions" set _JAVAPROG=JAVA.EXE
+if "%1"=="--enableassertions" set _JAVAPROG=JAVA.EXE
 
 REM  The following is used to determine free RAM
 REM  (we want to use this as a basis for giving the JVM 
@@ -201,7 +202,7 @@ pushd %TEMP%
 echo [INFO] Current directory set to %cd%
 echo [INFO]  Attempting to start Calibre2opds with the following command:
 
-if "_ASSERTIONS"=="" got without_assertions
+if not "--enableassertions"=="%1" goto without_assertions
 shift
 
 REM Start the GUI leaving this batch file running for progress/debug messages
