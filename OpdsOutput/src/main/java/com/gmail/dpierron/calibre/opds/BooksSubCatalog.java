@@ -947,9 +947,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (isFullEntry) {
       // We onfly need a cover image for full entries
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
-      addImageLink(book,entry,currentProfile.getUseThumbnailsAsCovers()
-                    ? CatalogManager.INSTANCE.thumbnailManager
-                    : CatalogManager.INSTANCE.coverManager,currentProfile.getCoverResize(),true);
+      ImageManager iManager = currentProfile.getUseThumbnailsAsCovers()
+          ? CatalogManager.INSTANCE.thumbnailManager
+          : CatalogManager.INSTANCE.coverManager;
+      addImageLink(book,entry, iManager, iManager.hasImageSizeChanged(),true);
     }
     // We want a thumbnail for both full and partial entries.
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");

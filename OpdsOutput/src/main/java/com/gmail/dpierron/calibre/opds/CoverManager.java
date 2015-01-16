@@ -5,6 +5,8 @@ import com.gmail.dpierron.calibre.datamodel.EBookFile;
 
 public class CoverManager extends ImageManager {
 
+  private static Integer imageHeight = null;
+
   // CONSTRUCTORS
 
   public CoverManager(int maxSize) {

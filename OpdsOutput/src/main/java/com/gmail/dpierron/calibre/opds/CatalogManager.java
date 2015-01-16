@@ -63,6 +63,8 @@ public enum CatalogManager {
   // Tags that the user has specified should not be included
   private static List<Tag> tagsToIgnore;
   public static Map<String, BookFilter> customCatalogsFilters;
+  private Boolean coverResized = null;
+  private Boolean thumbnailResized = null;
 
   // public CatalogManager() {
   public void initialize() {
@@ -116,6 +118,8 @@ public enum CatalogManager {
     tagsToIgnore = null;
     customCatalogsFilters = null;
     JDOM.INSTANCE.reset();
+    coverResized = null;
+    thumbnailResized = null;
   }
 
   public String getSecurityCode() {
@@ -419,6 +423,17 @@ public enum CatalogManager {
     return tagsToIgnore;
   }
 
+  /**
+   * Determine if images need to be resized
+   *
+   * @param filename
+   * @param TargetSize
+   * @return
+   */
+  private boolean isImagesResized(String filename, int TargetSize) {
+    File sizeFile = new File(filename);
+    return false;
+  }
   // Collect some information about the RAM usage while running
   private static String ramPoolMeasurement[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
   private static String ramPoolName[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];

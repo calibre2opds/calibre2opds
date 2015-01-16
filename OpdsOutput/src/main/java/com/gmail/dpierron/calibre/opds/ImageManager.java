@@ -18,18 +18,16 @@ import java.io.*;
 public abstract class ImageManager {
   private final static Logger logger = Logger.getLogger(ImageManager.class);
 
-  private boolean imageSizeChanged = false;
   // private Map<File, File> generatedImages;
 
   private int imageHeight = 1;
+  private boolean imageSizeChanged;     // Set true to force regeneration of images
   private long timeInImages;
+  private static int countOfImagesGenerated;
 
   abstract String getResizedFilename();
   abstract String getResizedFilenameOld(Book book);
   abstract String getDefaultResizedFilename();
-
-  private static int countOfImagesGenerated;
-
   abstract String getImageHeightDat();
 
   // CONSTRUCTOR
@@ -41,22 +39,26 @@ public abstract class ImageManager {
     CachedFile imageSizeFile = CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
     FeedHelper.checkFileNameIsNewStandard(imageSizeFile, CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), imageSizeFile.getName().substring(4)));
 
-    if (!imageSizeFile.exists())
-      imageSizeChanged = true;
-    else {
+    imageSizeChanged = true;
+    if (imageSizeFile.exists()) {
       try {
-        ObjectInputStream ois = null;
+        BufferedReader in = null;
         try {
-          ois = new ObjectInputStream(new FileInputStream(imageSizeFile));
-          int oldSize = ois.readInt();
+          in = new BufferedReader(new FileReader(imageSizeFile));
+          String line = in.readLine();      // Skip the comment line
+          line = in.readLine();
+          int oldSize = Integer.valueOf(line);
           imageSizeChanged = oldSize != imageHeight;
         } finally {
-          if (ois != null)
-            ois.close();
-          // TODO Need to update cachedFile information.
+          if (in != null) {
+            in.close();
+            // TODO Need to update cachedFile information?
+          }
         }
-      } catch (IOException e) {
-        // we don't care about the file error, let's just say size has changed
+      } catch (Exception e) {
+        // we don't care about errors, let's just say size has changed
+        if (logger.isDebugEnabled())
+          logger.debug("Failed to read size fom file " + imageSizeFile);
         imageSizeChanged = true;
       }
     }
@@ -106,16 +108,23 @@ public abstract class ImageManager {
     return uriBase + FeedHelper.urlEncode(book.getPath() + "/" + getResizedFilename(), true);
   }
 
+  /**
+   * Save the height of the images that we havfe generated
+   *
+   * For efficency reasons, this method is expected to be called once
+   * after a particular catalog generation run has completed
+   */
   public void writeImageHeightFile() {
     File imageSizeFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
     try {
-      ObjectOutputStream oos = null;
+      PrintWriter out = null;
       try {
-        oos = new ObjectOutputStream(new FileOutputStream(imageSizeFile));
-        oos.writeInt(imageHeight);
+        out = new PrintWriter(new FileWriter(imageSizeFile));
+        out.println("## Automatically generated config file.  DO NOT EDIT!");
+        out.println(Integer.toString(imageHeight));
       } finally {
-        if (oos != null)
-          oos.close();
+        if (out != null)
+          out.close();
       }
     } catch (IOException e) {
       // we don't care if the image height file cannot be written, image will be recomputed and that's all

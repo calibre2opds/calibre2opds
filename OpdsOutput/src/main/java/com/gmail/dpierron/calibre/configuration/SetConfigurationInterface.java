@@ -141,9 +141,9 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
   public void setBrowseByCoverWithoutSplit(Boolean value);
 
   public void setMinBooksToMakeDeepLevel(Integer value);
-
+/*
   public void setCoverResize(Boolean value);
-
+*/
   public void setCoverHeight(Integer value);
 
   public void setIncludeOnlyOneFile(Boolean value);
