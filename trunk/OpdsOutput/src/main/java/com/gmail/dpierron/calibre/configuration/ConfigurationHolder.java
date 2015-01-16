@@ -853,17 +853,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_BROWSEBYCOVERWITHOUTSPLIT, value);
   }
 
-  public Boolean isCoverResizeReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_COVERRESIZE);
-  }
-  public Boolean getCoverResize() {
-    Boolean b = getBoolean(PROPERTY_NAME_COVERRESIZE);
-    return (b == null) ? defaults.getThumbnailGenerate() : b;
-  }
-  public void setCoverResize(Boolean coverResize) {
-    setProperty(PROPERTY_NAME_COVERRESIZE, coverResize);
-  }
-
   public Boolean isCoverHeightReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_COVERHEIGHT);
   }

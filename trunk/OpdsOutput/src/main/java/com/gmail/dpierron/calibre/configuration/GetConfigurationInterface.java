@@ -118,8 +118,6 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Integer getMinBooksToMakeDeepLevel();
 
-  public Boolean getCoverResize();
-
   public Integer getCoverHeight();
 
   public Boolean getIncludeOnlyOneFile();
