@@ -16,8 +16,8 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
   public Integer getWindowWidth() { return 1050; }
   public Integer getWindowHeight() { return 660; }
 
-  public String getLanguage() {
-    return Locale.getDefault().getLanguage();
+  public Locale getLanguage() {
+    return Locale.getDefault();
   }
 
   public String getCatalogFolderName() {
@@ -27,7 +27,7 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
   public Boolean getOnlyCatalogAtTarget() { return false; }
 
   public String getCatalogTitle() {
-    if (Localization.Main.isInitialized())
+    if (Localization.Main.isLocalization_initialized())
       return Localization.Main.getText("main.title");
     else
       return "Calibre library";
@@ -43,8 +43,8 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return 500;
   }
 
-  public String getWikipediaLanguage() {
-    return "en";
+  public Locale getWikipediaLanguage() {
+    return Locale.ENGLISH;
   }
 
   public String getIncludedFormatsList() {
@@ -355,7 +355,7 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return false;
   }
 
-  public Boolean getSortUsingSeries() {
+  public Boolean getSortSeriesUsingLibrarySort() {
     return false;
   }
 

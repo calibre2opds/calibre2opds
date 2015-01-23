@@ -237,8 +237,8 @@ public enum ConfigurationManager {
           if (guiMode) {
             JOptionPane.showMessageDialog(null, message + "\n" + message2 + "\n" + message3 + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
           }
-          addStartupLogMessage(message3);
-          addStartupLogMessage(message2);
+          addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message3));
+          addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message2));
           System.exit(-1);
         }
       } finally {
@@ -251,8 +251,8 @@ public enum ConfigurationManager {
       if (guiMode) {
         JOptionPane.showMessageDialog(null, message + "\n" + message2 + "\n" + message3 + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
       }
-      addStartupLogMessage(message2);
-      addStartupLogMessage(message3);
+      addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message2));
+      addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message3));
       ConfigurationManager.addStartupLogMessage("Exit(-2)");
       System.exit(-2);
     }
@@ -452,20 +452,15 @@ public enum ConfigurationManager {
       lc = Locale.getDefault();
       logger.debug("setLocale: lc==null.  Trying to set to Default Locale: " + lc.getISO3Language());
     }
-    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
-    if (avail.contains(lc.getISO3Language())) {
+    Vector<Locale> avail = Localization.Main.getAvailableLocalizationsAsLocales();
+    if (avail.contains(lc)) {
       configLocale = lc;
     } else {
-      configLocale = Locale.getDefault();
+      configLocale = Locale.ENGLISH;
       logger.trace("setLocale: Requested locale " + lc.getISO3Language() + " is not supported");
-      if (avail.contains(configLocale.getISO3Language())) {
-        logger.trace("setLocale: Locale set");
-      } else {
-        logger.trace("setLocale: set to fallback of English (EN)");
-        lc = new Locale("EN");
-      }
+      logger.trace("setLocale: set to fallback of English (EN)");
     }
-    logger.trace("setLocale: Locale set to " + lc.getISO3Language());
+    logger.trace("setLocale: Locale set to " + configLocale.getLanguage() + "(" + configLocale.getDisplayLanguage() + ")");
   }
 
   /**

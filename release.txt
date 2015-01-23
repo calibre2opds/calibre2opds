@@ -96,7 +96,7 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
 
-v3.4 beta Rev 327
+v3.4 beta Rev 329
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
@@ -137,6 +137,7 @@ v3.4 beta Rev 327
     - Fix:    #c2o-233: Running in Batch Mode with a Specific Profile not working
     - Fix:    #c2o-234: Image files omitted from ZIP of catalog
     - Fix:    #c2o-235: New image size not respected when generating images
+    - Fix:    #c20-246: Unexpected fatal error when generating Series with * for tags that get additional level
 
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

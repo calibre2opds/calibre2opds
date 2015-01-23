@@ -573,8 +573,8 @@ public class Catalog {
     CatalogManager.INSTANCE.coverManager.reset();
     CachedFileManager.INSTANCE.reset();
 
-    Localization.Main.setProgileLanguage(currentProfile.getLanguage());
-    Localization.Enum.setProgileLanguage(currentProfile.getLanguage());
+    Localization.Main.setProfileLanguage(currentProfile.getLanguage());
+    Localization.Enum.setProfileLanguage(currentProfile.getLanguage());
     Localization.Main.reloadLocalizations();
     Localization.Enum.reloadLocalizations();
 

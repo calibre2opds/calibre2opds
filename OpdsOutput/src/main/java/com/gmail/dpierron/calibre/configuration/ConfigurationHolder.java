@@ -11,10 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,7 +108,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   /* Catalog Structure */
   private final static String PROPERTY_NAME_SortUsingAuthor = "SortUsingAuthor";
   private final static String PROPERTY_NAME_SortUsingTitle = "SortUsingTitle";
-  private final static String PROPERTY_NAME_SortUsingSeries = "SortUsingSeries";
+  private final static String PROPERTY_NAME_SortSeriesUsingLibrarySort = "SortSeriesUsingLibrarySort";
   private final static String PROPERTY_NAME_SortTagsByAuthor = "SortTagsByAuthor";
   private final static String PROPERTY_NAME_TagBooksNoSplit = "TagBooksNoSplit";
   /* Book Details */
@@ -286,28 +283,28 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public Boolean isLanguageReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_LANGUAGE);
   }
-  public String getLanguage() {
+  public Locale getLanguage() {
     String s = getProperty(PROPERTY_NAME_LANGUAGE);
-    return (Helper.isNullOrEmpty(s)) ? defaults.getLanguage() : s;
+    return Helper.getLocaleFromLanguageString((Helper.isNullOrEmpty(s) ? defaults.getLanguage().getLanguage() : s));
   }
   /*
   public Language getLanguage() {
     String s = getLanguage()[]
   }
   */
-  public void setLanguage(String language) {
-    setProperty(PROPERTY_NAME_LANGUAGE, language);
+  public void setLanguage(Locale language) {
+    setProperty(PROPERTY_NAME_LANGUAGE, language.getLanguage());
   }
 
   public Boolean isWikipediaLanguageReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_WIKIPEDIALANGUAGE);
   }
-  public String getWikipediaLanguage() {
+  public Locale getWikipediaLanguage() {
     String s = getProperty(PROPERTY_NAME_WIKIPEDIALANGUAGE);
-    return (s == null) ? defaults.getWikipediaLanguage() : s;
+    return Helper.getLocaleFromLanguageString ((s == null) ? defaults.getWikipediaLanguage().getLanguage() : s);
   }
-  public void setWikipediaLanguage(String wikipediaLanguage) {
-    setProperty(PROPERTY_NAME_WIKIPEDIALANGUAGE, wikipediaLanguage);
+  public void setWikipediaLanguage(Locale wikipediaLanguage) {
+    setProperty(PROPERTY_NAME_WIKIPEDIALANGUAGE, wikipediaLanguage.getLanguage());
   }
 
   public Boolean isCatalogFolderNameReadOnly() {
@@ -865,6 +862,14 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_COVERHEIGHT, value);
   }
 
+  public Boolean getCoverResize() {
+    Boolean b = getBoolean(PROPERTY_NAME_COVERRESIZE);
+    return (b == null) ? defaults.getCoverResize() : b;
+  }
+  public void setCoverResize(Boolean value) {
+    setProperty(PROPERTY_NAME_COVERRESIZE, value);
+  }
+
   public Boolean isIncludeOnlyOneFileReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_INCLUDEONLYONEFILE);
   }
@@ -1345,17 +1350,13 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SortUsingTitle, value);
   }
 
-  public Boolean getSortUsingSeries() {
-    Boolean b = getBoolean(PROPERTY_NAME_SortUsingSeries);
-    return (b == null) ? defaults.getSortUsingSeries() : b;
+  public Boolean getSortSeriesUsingLibrarySort() {
+    Boolean b = getBoolean(PROPERTY_NAME_SortSeriesUsingLibrarySort);
+    return (b == null) ? defaults.getSortSeriesUsingLibrarySort() : b;
   }
-  public void setSortUsingTseries(Boolean value) {
-    setProperty(PROPERTY_NAME_SortUsingSeries, value);
+  public void setSortSeriesUsingLibrarySort(Boolean value) {
+    setProperty(PROPERTY_NAME_SortSeriesUsingLibrarySort, value);
   }
-
-  // public Boolean isSortUsingTitleReadOnly() {
-  //  return isPropertyReadOnly(PROPERTY_NAME_SortUsingTitle);
-  //}
 
   //  Book Details
 

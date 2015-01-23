@@ -19,7 +19,7 @@ public enum NoiseWord {
   private static final NoiseWord DEFAULT = EN;
 
   private NoiseWord(String lang) {
-    Localization.Main.reloadLocalizations(lang);
+    Localization.Main.reloadLocalizations(Helper.getLocaleFromLanguageString(lang));
     String langNoiseWords = Localization.Main.getText("i18n.noiseWords");
     StringTokenizer st = new StringTokenizer(langNoiseWords,",");
     this.noiseWords = new LinkedList<String>();

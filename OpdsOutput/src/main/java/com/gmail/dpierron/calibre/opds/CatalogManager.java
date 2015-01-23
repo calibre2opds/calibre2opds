@@ -91,8 +91,8 @@ public enum CatalogManager {
     if (coverManager==null)       coverManager = ImageManager.newCoverManager();
     if (securityManager==null)    securityManager = new SecurityManager();
     if (currentProfile==null)     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
-    if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,new Locale(currentProfile.getLanguage()));
-    if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, new Locale(currentProfile.getLanguage()));
+    if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,currentProfile.getLanguage());
+    if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, currentProfile.getLanguage());
     if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
   }
 

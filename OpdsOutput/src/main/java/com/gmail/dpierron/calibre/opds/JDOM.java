@@ -69,7 +69,7 @@ public enum JDOM {
         // headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
  //        headerTransformer.setParameter("bookCount", Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()));
          String dateGenerated =
-             DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
+             DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
         headerTransformer.setParameter("i18n.dateGenerated",
              Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
              + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
@@ -132,7 +132,7 @@ public enum JDOM {
     catalogTransformer.setParameter("i18n.relatedsection", Localization.Main.getText("i18n.relatedsection"));
     catalogTransformer.setParameter("i18n.linksection", Localization.Main.getText("i18n.linksection"));
     String dateGenerated =
-        DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
+        DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
     catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated",
                                                                         dateGenerated,
                                                                         Constants.PROGVERSION + Constants.BZR_VERSION,
@@ -201,7 +201,7 @@ public enum JDOM {
   private Transformer setIntroParameters (Transformer transformer) {
     if (transformer != null) {
       String dateGenerated =
-          DateFormat.getDateInstance(DateFormat.DEFAULT, new Locale(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage())).format(new Date());
+          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
       transformer.setParameter("i18n.dateGenerated",
           Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
               + Localization.Main.getText("i18n.dateGenerated",dateGenerated)

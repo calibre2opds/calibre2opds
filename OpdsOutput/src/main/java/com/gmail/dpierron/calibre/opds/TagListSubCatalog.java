@@ -57,6 +57,12 @@ public class TagListSubCatalog extends TagsSubCatalog {
       String pFilename,
       SplitOption splitOption) throws IOException {
 
+    if (listTags == null) listTags = getTags();
+    if (listTags.size() == 0) {
+      if (logger.isDebugEnabled()) logger.debug("getSubCatalog:  Return 'null' as no tag entries found");
+      return null;
+    }
+
     if (from != 0) inSubDir = true;
     if (pBreadcrumbs.size() > 1) inSubDir = true;
     int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);

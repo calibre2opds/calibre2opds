@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import javax.swing.*;
 import java.lang.reflect.*;
+import java.util.Locale;
 
 public class guiField {
   private final static Logger logger = Logger.getLogger(guiField.class);
@@ -114,7 +115,7 @@ public class guiField {
 
   /**
    * Store the configuration information for the given field
-   * Do nothing if field has no associted value field or method
+   * Do nothing if field has no associated value field or method
    */
   public void storeValue() {
 
@@ -177,6 +178,11 @@ public class guiField {
     } catch (NoSuchMethodException e1) {
       logger.error("storeValue:  unhandled parameter type for  '" + setMethodName + "'");
       return;
+    }
+    // For language fields we need a locale object
+    if (Locale.class.equals(paramTypes[0])) {
+      assert String.class.equals(setValue);
+      setValue = Helper.getLocaleFromLanguageString((String)setValue);
     }
     try {
       setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), setValue);
@@ -243,6 +249,8 @@ public class guiField {
         s = ((Integer)loadValue).toString();
       } else if (loadValue instanceof File) {
         s = (loadValue==null ? "" : ((File)loadValue).getAbsolutePath());
+      } else if (loadValue instanceof  Locale) {
+        s = ((Locale)loadValue).getLanguage();
       } else {
         // We assume an empty string for null being returned
         s = "";
@@ -260,8 +268,11 @@ public class guiField {
       assert loadValue instanceof  Boolean;
       ((JCheckBox)guiValue).setSelected(negate ? !(Boolean)loadValue : (Boolean)loadValue);
     } else if (guiValue instanceof JComboBox) {
-      assert loadValue instanceof  String;
-      ((JComboBox) guiValue).setSelectedItem((String)loadValue);
+      if (loadValue instanceof Locale) {
+        ((JComboBox) guiValue).setSelectedItem(((Locale) loadValue).getLanguage());
+      } else {
+        ((JComboBox) guiValue).setSelectedItem((String) loadValue);
+      }
     } else {
       logger.error("loadValue: guiValue oBject type not recognised for " + guiLabel);
       return;

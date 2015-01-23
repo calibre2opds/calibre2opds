@@ -2,6 +2,7 @@ package com.gmail.dpierron.tools.i18n;
 
 import com.gmail.dpierron.tools.Helper;
 
+import java.util.Locale;
 import java.util.Vector;
 
 public enum LocalizationHelper {
@@ -9,10 +10,11 @@ public enum LocalizationHelper {
 
   private final static Object2StringConverter CONVERTER = new MethodCallerConverter("getHumanName");
 
-  public Vector<String> getAvailableLocalizations() {
+/*
+  public Vector<Locale> getAvailableLocalizations() {
     return Localization.Main.getAvailableLocalizations();
   }
-
+*/
   public String getEnumConstantHumanName(Enum enumConstant) {
     return getEnumConstantHumanName(enumConstant, false);
   }

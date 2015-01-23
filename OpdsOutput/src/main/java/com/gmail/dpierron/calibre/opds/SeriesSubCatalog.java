@@ -65,7 +65,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         public int compare(Series o1, Series o2) {
           String seriesName1;
           String seriesName2;
-          if (currentProfile.getSortUsingSeries()) {
+          if (currentProfile.getSortSeriesUsingLibrarySort()) {
             seriesName1 = (o1 == null ? "" : o1.getName().toUpperCase());
             seriesName2 = (o2 == null ? "" : o2.getName().toUpperCase());
           } else {
@@ -251,7 +251,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           SplitOption splitOption,
           boolean addTheSeriesWordToTheTitle) throws IOException {
 
-    if (listSeries == null) listSeries = getSeries();
+    if (listSeries == null)  listSeries = getSeries();
+    if (listSeries.size() == 0) {
+      if (logger.isDebugEnabled()) logger.debug("getSubCatalog:  Return 'null' as no series entries found");
+      return null;
+    }
+
     if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
     if (from > 0) inSubDir = true;
 
@@ -261,7 +266,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case where the series name is equal to the split leve
-    String seriesNameUpper = currentProfile.getSortUsingSeries()
+    String seriesNameUpper = currentProfile.getSortSeriesUsingLibrarySort()
                                             ? listSeries.get(0).getName().toUpperCase()
                                             : listSeries.get(0).getSort().toUpperCase();
     if (splitOption == SplitOption.SplitByLetter) {
@@ -446,7 +451,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       }
     });
 
-    String title = currentProfile.getSortUsingSeries() ? serie.getName()
+    String title = currentProfile.getSortSeriesUsingLibrarySort() ? serie.getName()
                                                        : serie.getSort();
     if (addTheSeriesWordToTheTitle) {
       title = Localization.Main.getText("content.series") + ": " + title;
