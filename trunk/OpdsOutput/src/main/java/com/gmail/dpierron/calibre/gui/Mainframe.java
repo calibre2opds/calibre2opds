@@ -35,12 +35,13 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class Mainframe extends javax.swing.JFrame {
   Logger logger = Logger.getLogger(Mainframe.class);
   GenerateCatalogDialog catalogDialog;
-  String language;
+  Locale language;
   CustomCatalogTableModel customCatalogTableModel = new CustomCatalogTableModel();
   private final Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
   private final Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -176,7 +177,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblTagBooksNoSplit, chkTagBookNoSplit, "config.TagBooksNoSplit", "TagBooksNoSplit"),
       new guiField(lblSortUsingAuthor, chkSortUsingAuthorSort, "config.SortUsingAuthor", "SortUsingAuthor"),
       new guiField(lblSortUsingTitle, chkSortUsingTitleSort, "config.SortUsingTitle", "SortUsingTitle"),
-      new guiField(lblSortUsingSeries, chkSortUsingSeriesSort, "config.SortUsingSeries", "SortUsingSeries"),
+      new guiField(lblSortSeriesUsingLibrarySort, chkSortSeriesUsingLibrarySort, "config.SortSeriesUsingLibrarySort", "SortUsingSeries"),
 
       // Book Details Options
 
@@ -616,11 +617,12 @@ public class Mainframe extends javax.swing.JFrame {
    */
   private void changeLanguage() {
     String newLanguage = (String) cboLang.getSelectedItem();
-    if (Helper.checkedCompare(language, newLanguage) != 0) {
-      currentProfile.setLanguage(newLanguage);
-      language = newLanguage;
-      Localization.Main.setProgileLanguage(currentProfile.getLanguage());
-      Localization.Enum.setProgileLanguage(currentProfile.getLanguage());
+    if (newLanguage == null) newLanguage = Locale.ENGLISH.getLanguage();
+    if ((language == null) ||  Helper.checkedCompare(language.getLanguage(), newLanguage) != 0) {
+      language = Helper.getLocaleFromLanguageString(newLanguage);
+      currentProfile.setLanguage(Helper.getLocaleFromLanguageString(newLanguage));
+      Localization.Main.setProfileLanguage(currentProfile.getLanguage());
+      Localization.Enum.setProfileLanguage(currentProfile.getLanguage());
       Localization.Main.reloadLocalizations();
       Localization.Enum.reloadLocalizations();
       translateTexts();
@@ -971,7 +973,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Localizations that need completing before calling default processing
 
-    cboLang.setModel(new DefaultComboBoxModel(LocalizationHelper.INSTANCE.getAvailableLocalizations()));
+    cboLang.setModel(new DefaultComboBoxModel(Localization.Main.getAvailableLocalizationsAsStrings()));
 
     // Types not handled (yet) by guiField class
 
@@ -1051,7 +1053,7 @@ public class Mainframe extends javax.swing.JFrame {
    * Reset GUI vlues to match the current profile
    */
   private void resetValues() {
-    String lang = currentProfile.getLanguage();
+    Locale lang = currentProfile.getLanguage();
     currentProfile.reset();
     loadValues();
     currentProfile.setLanguage(lang);
@@ -1346,12 +1348,12 @@ public class Mainframe extends javax.swing.JFrame {
         chkTagBookNoSplit = new javax.swing.JCheckBox();
         lblNogeneratehtmlfiles = new javax.swing.JLabel();
         chkNogeneratehtmlfiles = new javax.swing.JCheckBox();
-        lblSortUsingSeries = new javax.swing.JLabel();
+        lblSortSeriesUsingLibrarySort = new javax.swing.JLabel();
         lblBrowseByCover = new javax.swing.JLabel();
         chkBrowseByCover = new javax.swing.JCheckBox();
         lblBrowseByCoverWithoutSplit = new javax.swing.JLabel();
         chkBrowseByCoverWithoutSplit = new javax.swing.JCheckBox();
-        chkSortUsingSeriesSort = new javax.swing.JCheckBox();
+        chkSortSeriesUsingLibrarySort = new javax.swing.JCheckBox();
         javax.swing.JPanel pnlBookDetails = new javax.swing.JPanel();
         chkIncludeTagsInBookDetails = new javax.swing.JCheckBox();
         lblIncludeTagsInBookDetails = new javax.swing.JLabel();
@@ -2563,10 +2565,10 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCatalogStructure.add(chkNogeneratehtmlfiles, gridBagConstraints);
 
-        lblSortUsingSeries.setText("lblSortUsingSeries");
-        lblSortUsingSeries.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblSortSeriesUsingLibrarySort.setText("lblSortSeriesUsingLibrarySort");
+        lblSortSeriesUsingLibrarySort.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblSortUsingSerieshandleMouseClickOnLabel(evt);
+                handleMouseClickOnLabel(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2574,7 +2576,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(lblSortUsingSeries, gridBagConstraints);
+        pnlCatalogStructure.add(lblSortSeriesUsingLibrarySort, gridBagConstraints);
 
         lblBrowseByCover.setText("lblBrowseByCover");
         lblBrowseByCover.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -2631,7 +2633,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlCatalogStructure.add(chkSortUsingSeriesSort, gridBagConstraints);
+        pnlCatalogStructure.add(chkSortSeriesUsingLibrarySort, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCatalogStructure", pnlCatalogStructure);
 
@@ -4872,10 +4874,6 @@ public class Mainframe extends javax.swing.JFrame {
       tabHelpUrl = Constants.HELP_URL_SEARCH;
     }//GEN-LAST:event_pnlSearchComponentShown
 
-    private void lblSortUsingSerieshandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSortUsingSerieshandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblSortUsingSerieshandleMouseClickOnLabel
-
     private void cmdSetFaviconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetFaviconActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdSetFaviconActionPerformed
@@ -5010,9 +5008,9 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkPublishedDateAsYear;
     private javax.swing.JCheckBox chkReprocessEpubMetadata;
     private javax.swing.JCheckBox chkSingleBookCrossReferences;
+    private javax.swing.JCheckBox chkSortSeriesUsingLibrarySort;
     private javax.swing.JCheckBox chkSortTagsByAuthor;
     private javax.swing.JCheckBox chkSortUsingAuthorSort;
-    private javax.swing.JCheckBox chkSortUsingSeriesSort;
     private javax.swing.JCheckBox chkSortUsingTitleSort;
     private javax.swing.JCheckBox chkSplitByAuthorInitialGoToBooks;
     private javax.swing.JCheckBox chkSupressRatings;
@@ -5132,9 +5130,9 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblReprocessEpubMetadata;
     private javax.swing.JLabel lblSearchDeprecated;
     private javax.swing.JLabel lblSingleBookCrossReferences;
+    private javax.swing.JLabel lblSortSeriesUsingLibrarySort;
     private javax.swing.JLabel lblSortTagsByAuthor;
     private javax.swing.JLabel lblSortUsingAuthor;
-    private javax.swing.JLabel lblSortUsingSeries;
     private javax.swing.JLabel lblSortUsingTitle;
     private javax.swing.JLabel lblSplitByAuthorInitialGoToBooks;
     private javax.swing.JLabel lblSplittagson;

@@ -1403,7 +1403,22 @@ public class Helper {
       }
     }
     return Locale.ENGLISH;
-
-
   }
+  /**
+   * Convert a pseudo=html string to plain text
+   *
+   * We sometimes use a form of Pseudo-HTML is strings that are to be
+   * displayed in the GUI.   These can be identifed by the fact that they
+   * start with <HTML> andd contain <BR> where end-of-line is wanted.
+   */
+  public static String getTextFromPseudoHtmlText (String htmltext) {
+    String text;
+    if (! htmltext.toUpperCase().startsWith("<HTML>")) {
+      text = htmltext;
+    } else {
+      text = htmltext.substring("<HTML>".length()).toUpperCase().replace("<br>", "\r\n");
+    }
+    return text;
+  }
+
 }

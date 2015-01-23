@@ -12,13 +12,14 @@ package com.gmail.dpierron.calibre.configuration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setWindowHeight(Integer height);
   public void setWindowWidth(Integer width);
 
-  public void setLanguage(String value);
+  public void setLanguage(Locale value);
 
   public void setFavicon(String favicon);
 
@@ -32,7 +33,7 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setBooksInRecentAdditions(Integer value);
 
-  public void setWikipediaLanguage(String value);
+  public void setWikipediaLanguage(Locale value);
 
   public void setIncludedFormatsList(String value);
 
@@ -96,6 +97,14 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setTagBooksNoSplit(Boolean value);
 
+    /* Catalog Structure */
+
+  public void setSortUsingAuthor(Boolean value);
+
+  public void setSortUsingTitle(Boolean value);
+
+  public void setSortSeriesUsingLibrarySort(Boolean value);
+
   public void setTagsToIgnore(String value);
 
   public void setIncludeSeriesInBookDetails(Boolean value);
@@ -141,9 +150,9 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
   public void setBrowseByCoverWithoutSplit(Boolean value);
 
   public void setMinBooksToMakeDeepLevel(Integer value);
-/*
+
   public void setCoverResize(Boolean value);
-*/
+
   public void setCoverHeight(Integer value);
 
   public void setIncludeOnlyOneFile(Boolean value);

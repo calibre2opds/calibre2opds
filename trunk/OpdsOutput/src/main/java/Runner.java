@@ -5,6 +5,7 @@ import com.gmail.dpierron.calibre.gui.Mainframe;
 import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.Log4jCatalogCallback;
+import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import org.apache.log4j.Logger;
@@ -52,10 +53,10 @@ public class Runner {
    */
   public static void run(String[] args, boolean startGui) {
     Locale lc = Locale.getDefault();
-    Localization.Main.reloadLocalizations("en");      // Initalize Localization object to English
-    Vector<String> avail = LocalizationHelper.INSTANCE.getAvailableLocalizations();
-    Localization.Enum.reloadLocalizations(avail.contains(lc.getLanguage()) ? lc.getLanguage() : "en");
-    Localization.Main.reloadLocalizations(avail.contains(lc.getLanguage()) ? lc.getLanguage() : "en");
+    Localization.Main.reloadLocalizations(Locale.ENGLISH);      // Initalize Localization object to English
+    Vector<Locale> avail = Localization.Main.getAvailableLocalizationsAsLocales();
+    Localization.Enum.reloadLocalizations(avail.contains(lc) ? lc : Locale.ENGLISH);
+    Localization.Main.reloadLocalizations(avail.contains(lc) ? lc : Locale.ENGLISH);
 
     ConfigurationManager.setGuiMode(startGui);
     ConfigurationManager.addStartupLogMessage("");
@@ -130,7 +131,8 @@ public class Runner {
     if (!introDone) {
       logger.info("");
       logger.info(Localization.Main.getText("intro.goal"));
-      logger.info(Localization.Main.getText("intro.wiki.title") + Localization.Main.getText("intro.wiki.url"));
+      logger.info(Localization.Main.getText("intro.wiki.title")
+                  + Localization.Main.getText("intro.wiki.url"));
       logger.info("");
       // TODO:   ITIMPI: List of members revised to reflect active developers!
       logger.info(Localization.Main.getText("intro.team.title"));
@@ -213,8 +215,8 @@ public class Runner {
       for ( String s : ConfigurationManager.INSTANCE.getStartupLogMessages()) {
         logger.info(s);
       }
-      ConfigurationManager.INSTANCE.clearStartupLogMessages();
     }
+    ConfigurationManager.INSTANCE.clearStartupLogMessages();
     ConfigurationManager.INSTANCE.initialiseListOfSupportedEbookFormats();
   }
 }

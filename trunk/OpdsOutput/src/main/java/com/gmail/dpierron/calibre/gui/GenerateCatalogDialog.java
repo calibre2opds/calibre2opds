@@ -451,7 +451,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
     cmdStopGenerating.setVisible(b);
     cmdStopGenerating.repaint();
-    logger.error(message, error);
+    logger.error(Helper.getTextFromPseudoHtmlText(message), error);
   }
 
   public int askUser(String message, String... possibleAnswers) {
@@ -462,7 +462,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         .showOptionDialog(this, message, message, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleAnswers, possibleAnswers[0]);
     if (nAnswer > -1) {
       String logMessage = message + " (answered " + possibleAnswers[nAnswer] + ")";
-      logger.info(logMessage);
+      logger.info(Helper.getTextFromPseudoHtmlText(logMessage));
     }
     cmdStopGenerating.setVisible(b);
     cmdStopGenerating.repaint();

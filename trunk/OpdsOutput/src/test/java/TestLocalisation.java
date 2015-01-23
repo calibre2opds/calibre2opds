@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,13 +15,13 @@ public class TestLocalisation {
 
   @Test
   public void test() {
-    System.out.println(LocalizationHelper.INSTANCE.getAvailableLocalizations());
+    System.out.println(Localization.Main.getAvailableLocalizationsAsStrings());
   }
 
   @Test
   public void testAllOptions() {
-    List<String> languages = LocalizationHelper.INSTANCE.getAvailableLocalizations();
-    for (String language : languages) {
+    List<Locale> languages = Localization.Main.getAvailableLocalizationsAsLocales();
+    for (Locale language : languages) {
       Localization.Main.reloadLocalizations(language);
       for (Method getter : GetConfigurationInterface.class.getMethods()) {
         String getterName = getter.getName();
@@ -43,7 +44,7 @@ public class TestLocalisation {
 
   @Test
   public void testFallbackToEnglish() {
-    Localization.Main.reloadLocalizations("fr");
+    Localization.Main.reloadLocalizations(Locale.FRENCH);
     String key = "title.numberOfPages";
     String value = Localization.Main.getText(key);
     assertTrue(Helper.isNotNullOrEmpty(value));

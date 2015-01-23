@@ -15,12 +15,13 @@ import com.gmail.dpierron.tools.Composite;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public interface GetConfigurationInterface extends ReadOnlyConfigurationInterface {
 
   public DeviceMode getDeviceMode();
 
-  public String getLanguage();
+  public Locale getLanguage();
 
   public String getFavicon();
 
@@ -40,7 +41,7 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Integer getBooksInRecentAdditions();
 
-  public String getWikipediaLanguage();
+  public Locale getWikipediaLanguage();
 
   public String getIncludedFormatsList();
 
@@ -118,6 +119,8 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Integer getMinBooksToMakeDeepLevel();
 
+  public Boolean getCoverResize();
+
   public Integer getCoverHeight();
 
   public Boolean getIncludeOnlyOneFile();
@@ -136,7 +139,7 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getSortUsingTitle();
 
-  public Boolean getSortUsingSeries();
+  public Boolean getSortSeriesUsingLibrarySort();
 
   public String getTagsToIgnore();
 
@@ -145,7 +148,6 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
   public Boolean getTagBooksNoSplit();
 
   /* Book Details */
-
 
   public Boolean getDisplayAuthorSort();
 
