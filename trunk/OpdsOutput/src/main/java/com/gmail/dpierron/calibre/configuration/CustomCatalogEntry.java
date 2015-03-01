@@ -3,7 +3,7 @@ package com.gmail.dpierron.calibre.configuration;
 /**
  * Created by WalkerDJ on 24/04/2014.
  *
- * Class used with the CutomCatalog to describe a single value
+ * Class used with to describe a single value in the CustomCatalogs table
  */
 public class CustomCatalogEntry {
 

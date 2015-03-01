@@ -951,6 +951,11 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                 continue nextCC;
               }
             }
+            // As a usability feature we ignore any entries set to defaults which the user forgot to change
+            if (customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_TITLE)
+            &&  customCatalogSearch.equals(Constants.CUSTOMCATALOG_DEFAULT_SEARCH)) {
+              continue nextCC;
+            }
             BookFilter customCatalogFilter = null;
             try {
               customCatalogFilter = CalibreQueryInterpreter.interpret(customCatalogSearch);
@@ -968,7 +973,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                 return;
               }
               // TODO Set something to suppress this custom catalog entry at generate stage!
-              //      Currently an entry is generated to a none-existent URL
+              //      Currently an entry is generated to a non-existent URL
             } else {
               CatalogManager.INSTANCE.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
             }
