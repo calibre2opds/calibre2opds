@@ -54,22 +54,47 @@ public enum Localization {
   private Locale getProfileLanguage() {
     return profileLanguage == null ? Locale.ENGLISH : profileLanguage;
   }
-  
+
+  /**
+   * Get the loaded bundle for the last localization locale used
+   * @return
+   */
   public ResourceBundle getBundle() {
     if (localizations == null)
       reloadLocalizations();
     return localizations;
   }
 
+  /**
+   * Get the bundle for the English locale
+   * (we always default to English if a dfferent locale fails)
+   * @return
+   */
   public ResourceBundle getEnglishBundle() {
     if (englishLocalizations == null)
       reloadLocalizations();
     return englishLocalizations;
   }
 
+  /**
+   * Get the bundle for a specific locale
+   * NOTE Default loaded locale is not changed
+   * @param language
+   * @return
+   */
   public ResourceBundle getBundle(Locale language) {
-    if (localizations == null)
-      reloadLocalizations(language);
+     ResourceBundle localizations = null;
+    // We always want the English localizations loaded
+    if (englishLocalizations == null)    {
+      englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
+    }
+    // No need to load english localizations twice!
+    assert englishLocalizations != null : "Program Error: English localizations should always have loaded OK";
+    if (Helper.isNullOrEmpty(language) || language.equals(Locale.ENGLISH)) {
+      localizations = englishLocalizations;
+    } else {
+      localizations = getResourceBundle(localizationBundleName, language, true);
+    }
     return localizations;
   }
 
@@ -156,11 +181,11 @@ public enum Localization {
     if (englishLocalizations == null)    {
       englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
       lastLocalLanguage = Locale.ENGLISH;
+      if (localizations == null)  localizations = englishLocalizations;
     }
     // No need to load english localizations twice!
-    if (language.equals(Locale.ENGLISH) && englishLocalizations != null)
-      localizations = englishLocalizations;
-    else {
+    assert englishLocalizations != null : "Program Error: English localizations should always have loaded OK";
+    if (! language.equals(Locale.ENGLISH)) {
       if (Helper.isNullOrEmpty(language)) {
         localizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
       } else {
@@ -193,6 +218,29 @@ public enum Localization {
   }
 
   /**
+   * Get the text for the specified locale that corresponds to the given key.
+   * If it cannot be found in the specified localewe fall back to English.
+   * If it does not exist in English either we simply return the key name.
+   * NOTE:  Does not change the default for the currently loaded locale
+   *
+   * @param locale
+   * @param key
+   * @return
+   */
+  private String lookupText(Locale locale, String key) {
+    try {
+      return getBundle(locale).getString(key);
+    } catch (MissingResourceException e) {
+      // try english
+      try {
+        return getEnglishBundle().getString(key);
+      } catch (MissingResourceException ee) {
+        return key;
+      }
+    }
+  }
+
+  /**
    * fetches a localized message.
    * Optionally parameters can be added to embed in the
    * message.
@@ -212,7 +260,7 @@ public enum Localization {
   }
 
   /**
-   * fetches a localized message with (optional) parameters for a specified locale
+   * fetches a locale specific message with (optional) parameters
    *
    * @param locale
    * @param key        the key in the resource bundle
@@ -220,7 +268,13 @@ public enum Localization {
    * @return
    */
   public String getText(Locale locale, String key, Object... parameters) {
-    return getText(key, parameters);
+    String message = lookupText(locale, key);
+    if (message == null)
+      return null;
+    if (parameters.length != 0) {
+      message = MessageFormat.format(message, parameters);
+    }
+    return message;
   }
 
   /**

@@ -129,7 +129,11 @@ public class CustomCatalogTableModel implements TableModel {
         return Localization.Main.getText("config.CustomCatalogSavedSearchName.label");
       case 2:
         return Localization.Main.getText("config.CustomCatalogSavedSearchTop.label");
+      case 3:
+        // Delete button column
+        return "";
       default:
+        assert false : "unexpected value of columnIndex=" + columnIndex;;
         return "";
     }
   }
@@ -149,8 +153,11 @@ public class CustomCatalogTableModel implements TableModel {
         return String.class;
      case 2:                    // Display at top toggle
         return Boolean.class;
-     default:
+      case 3:                   // Delete buttong
         // TODO  ITIMPI:  Not sure what we should return for this column - does it even matter?
+        return String.class;
+     default:
+        assert false : "unexpected value of columnIndex=" + columnIndex;
         return Boolean.class;
    }
   }
@@ -168,11 +175,13 @@ public class CustomCatalogTableModel implements TableModel {
    */
   public boolean isCellEditable(int rowIndex, int columnIndex) {
     switch (columnIndex) {
-      case 0:
-      case 1:
-      case 2:
+      case 0:           // Label
+      case 1:           // Value
+      case 2:           // At top checkbox
+      case 3:           // Delete button column
         return true;
       default:
+        assert false : "unexpected value of columnIndex=" + columnIndex;
         return false;
     }
   }
@@ -187,15 +196,16 @@ public class CustomCatalogTableModel implements TableModel {
    */
   public Object getValueAt(int rowIndex, int columnIndex) {
     switch (columnIndex) {
-      case 0:
+      case 0:           // Label
         return getCustomCatalogs().get(rowIndex).getLabel();
-      case 1:
+      case 1:           // Value
         return getCustomCatalogs().get(rowIndex).getValue();
-      case 2:
+      case 2:           // At Top checkbox
         return getCustomCatalogs().get(rowIndex).getAtTop();
-      case 3:
+      case 3:           // Delete button
         return Localization.Main.getText("config.CustomCatalogSavedSearchDelete.label");
       default:
+        assert false : "unexpected value of columnIndex=" + columnIndex;
         return "";
     }
   }
@@ -221,6 +231,13 @@ public class CustomCatalogTableModel implements TableModel {
         break;
       case 2:
          val.setAtTop((Boolean)aValue);
+         break;
+      case 3:
+         // Do nothing - this is the Delete button column
+        break;
+      default:
+        assert false : "Unexpected balue of columnIndex=" + columnIndex;
+        break;
     }
   }
 

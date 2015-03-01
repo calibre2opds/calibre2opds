@@ -69,9 +69,9 @@ public class LevelSubCatalog extends SubCatalog {
           continue;
         }
 
-        if (Helper.isNotNullOrEmpty(customCatalogTitle) && (!customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_TITLE))
-            // && (Helper.isNotNullOrEmpty(customCatalogsFilters))
-            && (!customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_SEARCH))) {
+        if (Helper.isNotNullOrEmpty(customCatalogTitle)
+        && (!customCatalogTitle.equals(Constants.CUSTOMCATALOG_DEFAULT_TITLE))
+        && (!customCatalogSearch.equals(Constants.CUSTOMCATALOG_DEFAULT_SEARCH))) {
           BookFilter customCatalogBookFilter = null;
           if (customCatalogsFilters != null) {
             customCatalogBookFilter = customCatalogsFilters.get(customCatalogTitle);

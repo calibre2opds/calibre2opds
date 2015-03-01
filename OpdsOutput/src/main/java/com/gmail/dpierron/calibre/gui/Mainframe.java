@@ -267,7 +267,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblFeaturedCatalogTitle, txtFeaturedCatalogTitle, "config.FeaturedCatalogTitle", "FeaturedCatalogTitle"),
       new guiField(lblFeaturedCatalogSavedSearchName, txtFeaturedCatalogSavedSearchName, "config.FeaturedCatalogSavedSearchName", "FeaturedCatalogSavedSearchName"),
 
-      // Menuse
+      // Menus
 
       new guiField(mnuFile, null, "gui.menu.file"),
       new guiField(mnuFileSave, null, "gui.save"),
@@ -326,11 +326,12 @@ public class Mainframe extends javax.swing.JFrame {
     Dimension d = tabOptionsTabs.getPreferredSize();
     int width = (int) d.getWidth() - 24;
     tblCustomCatalogs.getColumnModel().getColumn(0).setPreferredWidth((int)(width * .2));
-    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int)(width * .6));
+    tblCustomCatalogs.getColumnModel().getColumn(1).setPreferredWidth((int) (width * .6));
     tblCustomCatalogs.getColumnModel().getColumn(2).setMinWidth(40);    // Checkbox
     tblCustomCatalogs.getColumnModel().getColumn(2).setMaxWidth(40);    // Checkbox
-    tblCustomCatalogs.getColumnModel().getColumn(3).setPreferredWidth((int)(width * .10));    // Delete button
+    tblCustomCatalogs.getColumnModel().getColumn(3).setMinWidth(80);    // Delete
     tblCustomCatalogs.getColumnModel().getColumn(3).setMaxWidth(80);    // Delete
+    tblCustomCatalogs.getColumnModel().getColumn(3).setPreferredWidth((int)(width * .10));    // Delete button
   }
 
   /**
@@ -452,7 +453,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   /**
-   * Control the valid combinations of gneration types and downloads allowed
+   * Control the valid combinations of generation types and downloads allowed
    */
   private void checkDownloads() {
     // If we are not generating OPDS files, then the option to

@@ -5,22 +5,71 @@ import com.gmail.dpierron.tools.Helper;
 
 import java.util.*;
 
-public enum NoiseWord {
+public class NoiseWord {
 //  EN("eng", "the ", "a ", "an "),
 //  FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
 //  DE("deu", "der ", "die ", "das ", "ein ", "eine ");
-    EN("eng"),
-    FR("fra"),
-    DE("deu");
+//    EN("eng"),
+//    FR("fra"),
+//    DE("deu");
 
-  private final List<String> noiseWords;
-  private final String lang;
-  private static Map<String, NoiseWord> map;
-  private static final NoiseWord DEFAULT = EN;
+  private List<String> noiseWords;            // List of Noisewords for this class instance
+  private String lang;                        // Language code for this class instance
+  private Locale locale;                      // Local for this class instance
+  private static Map<String, NoiseWord> map;  // Map of all Noiseword instances identified by Language code
+  private static NoiseWord DEFAULT;           // The default Noisword class instance
+  private Vector<List<String>> allNoiseWords; //
+  // private Vector<Map<String, word>> allNoiseWordMaps;
 
+  // CONSTRUCTORS
+
+  /**
+   * Constructor that initialise static variables if not already done so
+   * This optimises later creating language specific instances of classes,
+   * and avoids creating two instances for the same language.
+   */
+  private NoiseWord() {
+    Generic_Initilisation();
+  }
+
+  /**
+   * Constructor for a language specific instance
+   *
+   * @param lang
+   */
   private NoiseWord(String lang) {
-    Localization.Main.reloadLocalizations(Helper.getLocaleFromLanguageString(lang));
-    String langNoiseWords = Localization.Main.getText("i18n.noiseWords");
+    Locale locale = Helper.getLocaleFromLanguageString(lang);
+    Locale_Initialization(locale);
+    // Localization.Main.reloadLocalizations(Helper.getLocaleFromLanguageString(lang));
+  }
+
+  /**
+   * Constructor for a locale specific instance
+   *
+   * @param l
+   */
+  private NoiseWord(Locale l) {
+    Locale_Initialization(l);
+  }
+
+  /**
+   * Initialisation that is done for all constructor types
+   */
+  private void Generic_Initilisation() {
+    if (allNoiseWords != null) {
+      return;
+    }
+    DEFAULT = new NoiseWord(Locale.ENGLISH.getLanguage());
+  }
+
+  /**
+   * Initialisation that is done for a specific language/locale instance
+   *
+   * @param l
+   */
+  private void Locale_Initialization(Locale l) {
+    Generic_Initilisation();
+    String langNoiseWords = Localization.Main.getText(Helper.getLocaleFromLanguageString(lang),"i18n.noiseWords");
     StringTokenizer st = new StringTokenizer(langNoiseWords,",");
     this.noiseWords = new LinkedList<String>();
     while (st.hasMoreTokens()) {
@@ -30,6 +79,8 @@ public enum NoiseWord {
     addToMap();
     Localization.Main.reloadLocalizations();
   }
+
+  // METHODS and PROPERTIES
 
   private void addToMap() {
     if (map == null)
