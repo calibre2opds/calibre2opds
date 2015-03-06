@@ -1386,8 +1386,8 @@ public class Helper {
    * - If it is 4+ characters then it is assumed to be the Display Language text
    * If no match can be found then the English Locale is always returned
    *
-   * @param lang
-   * @return
+   * @param   lang
+   * @return  Locale
    */
   public static Locale getLocaleFromLanguageString(String lang) {
     if (lang != null || lang.length() > 1) {
@@ -1402,7 +1402,8 @@ public class Helper {
         }
       }
     }
-    return Locale.ENGLISH;
+    logger.warn("Program Error: Unable to find locale for '" + lang + "'");
+    return null;
   }
   /**
    * Convert a pseudo=html string to plain text

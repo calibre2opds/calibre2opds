@@ -110,7 +110,7 @@ public enum Localization {
   }
 
   // Save results to improve efficency on subsequent calls
-  private static Vector<Locale> localAvailableLocalizations = null;
+  private static Vector<Locale> localeAvailableLocalizations = null;
   private static Vector<String> stringAvailableLicalizations = null;
 
   /**
@@ -120,19 +120,20 @@ public enum Localization {
    * @return
    */
   public Vector<Locale> getAvailableLocalizationsAsLocales() {
-    if (Helper.isNullOrEmpty(localAvailableLocalizations)) {
-      localAvailableLocalizations = new Vector<Locale>();
+    if (Helper.isNullOrEmpty(localeAvailableLocalizations)) {
+      localeAvailableLocalizations = new Vector<Locale>();
       stringAvailableLicalizations = new Vector<String>();
       for (Locale locale : Locale.getAvailableLocales()) {
         ResourceBundle bundle = getResourceBundle(localizationBundleName, locale, false);
         if (bundle != null) {
-          if (bundle.getLocale().getLanguage().equals(locale))
-            localAvailableLocalizations.add(locale);
+          if (bundle.getLocale().equals(locale)) {
+            localeAvailableLocalizations.add(locale);
             stringAvailableLicalizations.add(locale.getLanguage());
+          }
         }
       }
     }
-    return localAvailableLocalizations;
+    return localeAvailableLocalizations;
   }
   public Vector<String> getAvailableLocalizationsAsStrings() {
     if (stringAvailableLicalizations == null ) getAvailableLocalizationsAsLocales();
@@ -269,8 +270,7 @@ public enum Localization {
    */
   public String getText(Locale locale, String key, Object... parameters) {
     String message = lookupText(locale, key);
-    if (message == null)
-      return null;
+    if (message == null) return null;
     if (parameters.length != 0) {
       message = MessageFormat.format(message, parameters);
     }

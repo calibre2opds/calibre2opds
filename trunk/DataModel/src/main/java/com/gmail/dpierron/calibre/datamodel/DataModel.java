@@ -1,9 +1,15 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+/**
+ * Class that supports the data model that is used within Calibre2opds
+ *
+ * The data model is largely determined by the Calibre database stuucture.
+ */
 import com.gmail.dpierron.calibre.database.Database;
 import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.log4j.Logger;
 
 import java.text.Normalizer;
@@ -58,6 +64,8 @@ public enum DataModel {
   private List<CustomColumnType> listOfCustomColumnTypes;
   private List<CustomColumnType> listOfCustomColumnTypesReferenced;
   private Map<String, List <CustomColumnValue>> mapOfCustomColumnValuesByBookId;
+
+  private static Map<Locale, NoiseWord> mapOfNoisewords;
 
   private boolean useLanguagesAsTags = true;
 
@@ -677,4 +685,54 @@ public enum DataModel {
   }
 
   public boolean getUseLangauagesAsTags() { return useLanguagesAsTags; }
+
+  /**
+   * Get a Noiseword object given the language string
+   */
+  public NoiseWord getNoiseword(String language) {
+    return getNoiseword(Helper.getLocaleFromLanguageString(language));
+  }
+  /**
+   * Get a Noiseword correspnding to a Language object
+   *
+   * @param lang
+   * @return
+   */
+  public NoiseWord getNoiseword(Language lang) {
+    if (lang == null) {
+      // TODO Is this option even possible?
+      logger.debug("Unexpected null Language parameter");
+      return new NoiseWord(null, new LinkedList<String>());
+    }
+    return getNoiseword(lang.getLocale());
+  }
+
+  /**
+   * Get a Noiseword object corresponding to a locale
+   *
+   * @param locale
+   * @return
+   */
+  public NoiseWord getNoiseword (Locale locale) {
+    if (mapOfNoisewords == null) {
+      mapOfNoisewords = new HashMap<Locale, NoiseWord>();
+    }
+    if (mapOfNoisewords.containsKey(locale)) {
+      return mapOfNoisewords.get(locale);
+    }
+    if (!Localization.Main.getAvailableLocalizationsAsLocales().contains(locale)) {
+      if (logger.isTraceEnabled()) logger.trace("Attempt to create Noiseword for unsupported locale " + locale.getDisplayLanguage());
+      return new NoiseWord(locale, null);
+    }
+
+    String langNoiseWords = Localization.Main.getText(locale,"i18n.noiseWords");
+    StringTokenizer st = new StringTokenizer(langNoiseWords,",");
+    List<String> noiseWordList = new LinkedList<String>();
+    while (st.hasMoreTokens()) {
+      noiseWordList.add(st.nextToken().toUpperCase(locale));
+    }
+    NoiseWord nw = new NoiseWord(locale, noiseWordList);
+    mapOfNoisewords.put(locale, nw);
+    return nw;
+  }
 }
