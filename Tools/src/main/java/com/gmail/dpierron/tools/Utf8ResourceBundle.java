@@ -13,7 +13,8 @@ public abstract class Utf8ResourceBundle {
 
   public static final ResourceBundle getBundle(String baseName, Locale locale) {
     ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale);
-    return createUtf8PropertyResourceBundle(bundle);
+    // return createUtf8PropertyResourceBundle(bundle);
+    return (bundle.getLocale().equals(locale)) ? createUtf8PropertyResourceBundle(bundle): null;
   }
 
   public static ResourceBundle getBundle(String baseName, Locale locale, ClassLoader loader) {

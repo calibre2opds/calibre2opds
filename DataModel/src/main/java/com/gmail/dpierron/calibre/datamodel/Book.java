@@ -96,7 +96,7 @@ public class Book implements SplitableByLetter {
     // cases we fall back to using the (mandatory) title field and issue a warning
     if (Helper.isNullOrEmpty(title_sort)) {
       logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
-      this.titleSort = NoiseWord.fromLanguage(getBookLanguage()).removeLeadingNoiseWords(this.title);
+      this.titleSort = DataModel.INSTANCE.getNoiseword(getBookLanguage()).removeLeadingNoiseWords(this.title);
     } else {
       this.titleSort = title_sort;
     }

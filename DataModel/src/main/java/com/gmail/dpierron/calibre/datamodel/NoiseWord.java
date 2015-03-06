@@ -1,122 +1,63 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+/**
+ * Class for handling Noisewords at the beginning of a
+ * title or series name.   This is highly language
+ * dependent so this class may be a bit simplistic.
+ *
+ * For languages where there are no list of noisewords
+ * available this class effectively does nothing.
+ */
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 
 import java.util.*;
 
 public class NoiseWord {
-//  EN("eng", "the ", "a ", "an "),
-//  FR("fra", "le ", "la ", "les ", "l'", "un ", "une ", "du ", "de ", "la ", "des "),
-//  DE("deu", "der ", "die ", "das ", "ein ", "eine ");
-//    EN("eng"),
-//    FR("fra"),
-//    DE("deu");
-
-  private List<String> noiseWords;            // List of Noisewords for this class instance
-  private String lang;                        // Language code for this class instance
   private Locale locale;                      // Local for this class instance
-  private static Map<String, NoiseWord> map;  // Map of all Noiseword instances identified by Language code
-  private static NoiseWord DEFAULT;           // The default Noisword class instance
-  private Vector<List<String>> allNoiseWords; //
-  // private Vector<Map<String, word>> allNoiseWordMaps;
+  private List<String> noiseWords;            // List of Noisewords for this class instance
 
   // CONSTRUCTORS
 
   /**
-   * Constructor that initialise static variables if not already done so
-   * This optimises later creating language specific instances of classes,
-   * and avoids creating two instances for the same language.
-   */
-  private NoiseWord() {
-    Generic_Initilisation();
-  }
-
-  /**
-   * Constructor for a language specific instance
+   * Construct a locale specific NoiseWord object
    *
-   * @param lang
+   * @param locale      // The locale for this instance
+   * @param noiseWords  // The list of noise words for this locale
+   *                    // If not known provide either null ir an empty list
    */
-  private NoiseWord(String lang) {
-    Locale locale = Helper.getLocaleFromLanguageString(lang);
-    Locale_Initialization(locale);
-    // Localization.Main.reloadLocalizations(Helper.getLocaleFromLanguageString(lang));
+  public NoiseWord(Locale locale, List<String> noiseWords) {
+    this.locale = locale;
+    this.noiseWords = noiseWords;
   }
 
-  /**
-   * Constructor for a locale specific instance
-   *
-   * @param l
-   */
-  private NoiseWord(Locale l) {
-    Locale_Initialization(l);
-  }
-
-  /**
-   * Initialisation that is done for all constructor types
-   */
-  private void Generic_Initilisation() {
-    if (allNoiseWords != null) {
-      return;
-    }
-    DEFAULT = new NoiseWord(Locale.ENGLISH.getLanguage());
-  }
-
-  /**
-   * Initialisation that is done for a specific language/locale instance
-   *
-   * @param l
-   */
-  private void Locale_Initialization(Locale l) {
-    Generic_Initilisation();
-    String langNoiseWords = Localization.Main.getText(Helper.getLocaleFromLanguageString(lang),"i18n.noiseWords");
-    StringTokenizer st = new StringTokenizer(langNoiseWords,",");
-    this.noiseWords = new LinkedList<String>();
-    while (st.hasMoreTokens()) {
-      noiseWords.add(st.nextToken().toUpperCase(Locale.ENGLISH));
-    }
-    this.lang = lang;
-    addToMap();
-    Localization.Main.reloadLocalizations();
-  }
 
   // METHODS and PROPERTIES
 
-  private void addToMap() {
-    if (map == null)
-      map = new HashMap<String, NoiseWord>();
-    map.put(lang.toLowerCase(), this);
-  }
-
-  public static NoiseWord fromLanguage(Language lang) {
-    if (lang == null)
-      return DEFAULT;
-    else
-      return fromLanguage(lang.getIso3());
-  }
-
-  public static NoiseWord fromLanguage(String lang) {
-    if (lang == null)
-      return DEFAULT;
-    NoiseWord result = map.get(lang.toLowerCase());
-    if (result == null)
-      result = DEFAULT;
-    return result;
-  }
-
+  /**
+   * Remove leading noisewords from the start of the provided string
+   * and instead append them at the end after a comma.  The primary
+   * purpose of this method is to allow for sorting titles and series
+   * via the 'library ordeer' which ignores leading nosie words.
+   *
+   * @param s   // The String to be examined
+   * @return    // String amended (if necessary) to place noise words at the end
+   */
   public String removeLeadingNoiseWords(String s) {
+    if (noiseWords == null || noiseWords.size() == 0) {
+      return s;
+    }
     String result = s;
     boolean found = true;
     while ((result.length() > 0) && found) {
       found = false;
       for (String noiseWord : noiseWords) {
         if (result.toUpperCase().startsWith(noiseWord)) {
-          result = result.substring(noiseWord.length());
+          result = result.substring(noiseWord.length()) + ", " + result.substring(0,noiseWord.length());;
           found = true;
         }
       }
     }
     return result;
   }
-
 }

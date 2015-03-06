@@ -8,13 +8,11 @@ import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
-import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.datamodel.Tag;
+import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.i18n.Localization;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -42,8 +40,8 @@ public enum CatalogManager {
   // List of file in catalog that are unchanged
   // TODO - Not yet used - intended to help with optimisation
   private static List<CachedFile> listOfUnchangedCatalogFiles;
-  private String securityCode;
-  private String initialUrl;
+  private static String securityCode;
+  private static String initialUrl;
 
   public static HtmlManager htmlManager;
   public static ThumbnailManager thumbnailManager;
@@ -83,9 +81,8 @@ public enum CatalogManager {
     initialUrl = securityCode;
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
-  // }
 
-  // public void initialize() {
+    // TODO  Decide if these should be conditional or just done every time!
     if (htmlManager == null)      htmlManager = new HtmlManager();
     if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
     if (coverManager==null)       coverManager = ImageManager.newCoverManager();
@@ -120,6 +117,7 @@ public enum CatalogManager {
     JDOM.INSTANCE.reset();
     coverResized = null;
     thumbnailResized = null;
+    securityCode = "";
   }
 
   public String getSecurityCode() {

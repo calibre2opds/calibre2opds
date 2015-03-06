@@ -50,6 +50,10 @@ public class Language {
     return ""+locale.getLanguage()+"/"+locale.getISO3Language()+"/"+ locale.getDisplayLanguage();
   }
 
+  public Locale getLocale() {
+    return locale;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof String) {
