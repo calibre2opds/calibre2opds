@@ -75,7 +75,7 @@ public class Series implements SplitableByLetter {
   }
 
   public String getTitleToSplitByLetter() {
-    return getName();
+    return DataModel.INSTANCE.getLibrarySortSeries() ? getName(): getSort();
   }
 
   public void setDone() {

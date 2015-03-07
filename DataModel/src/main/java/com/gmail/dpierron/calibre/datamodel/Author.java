@@ -124,7 +124,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   }
 
   public String getTitleToSplitByLetter() {
-    return getLastName();
+    return DataModel.INSTANCE.getLibrarySortAuthor() ? getName() :  getNameForSort();
   }
 
   /* Comparable interface, used to sort an authors list */

@@ -69,6 +69,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     // We can use configuration parameters to sort by either auth_sort or author
     Collections.sort(authors, new Comparator<Author>() {
       public int compare(Author o1, Author o2) {
+        String name1 = (o1 == null ? "" : o1.getTitleToSplitByLetter().toUpperCase());
+        String name2 = (o2 == null ? "" : o2.getTitleToSplitByLetter().toUpperCase());
+        /*
         String name1;
         String name2;
         if (currentProfile.getSortUsingAuthor()) {
@@ -78,6 +81,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           name1 = (o1 == null ? "" : o1.getNameForSort().toUpperCase());
           name2 = (o2 == null ? "" : o2.getNameForSort().toUpperCase());
         }
+        return collator.compare(name1, name2);
+        */
         return collator.compare(name1, name2);
       }
     });
@@ -186,9 +191,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           Author author = listauthors.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
           logger.debug("getAuthorEntry:" + author);
-          // AuthorEntry authorEntry = new AuthorEntry (mapOfBooksByAuthor.get(author), author);
-          // Element entry = authorEntry.getSubCatalogEntry(breadcrumbs, true).getFirstElement();
-
           Element entry = getAuthorEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author)) ;
           if (entry != null) {
             result.add(entry);
@@ -369,7 +371,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       }
     }
 
-
     List<Element> firstElements = null;
     List<Book> morebooks = null;
 
@@ -383,8 +384,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     String filename = getAuthorFolderFilenameWithLevel(author);
     logger.debug("getAuthorEntry:generating " + filename);
-
-    String title = author.getSort();
+    String title = currentProfile.getDisplayAuthorSort() ? author.getSort(): author.getName();
     String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.PAGE_ONE_XML, true));
 

@@ -65,6 +65,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         public int compare(Series o1, Series o2) {
           String seriesName1;
           String seriesName2;
+          seriesName1 = (o1 == null ? "" : o1.getTitleToSplitByLetter().toUpperCase());
+          seriesName2 = (o2 == null ? "" : o2.getTitleToSplitByLetter().toUpperCase());
+/*
           if (currentProfile.getSortSeriesUsingLibrarySort()) {
             seriesName1 = (o1 == null ? "" : o1.getName().toUpperCase());
             seriesName2 = (o2 == null ? "" : o2.getName().toUpperCase());
@@ -72,6 +75,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
             seriesName1 = (o1 == null ? "" : o1.getSort().toUpperCase());
             seriesName2 = (o2 == null ? "" : o2.getSort().toUpperCase());
           }
+*/
           return collator.compare(seriesName1, seriesName2);
         }
       });
@@ -265,7 +269,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
-    // Check for special case where the series name is equal to the split leve
+    // Check for special case where the series name is equal to the split level
     String seriesNameUpper = currentProfile.getSortSeriesUsingLibrarySort()
                                             ? listSeries.get(0).getName().toUpperCase()
                                             : listSeries.get(0).getSort().toUpperCase();

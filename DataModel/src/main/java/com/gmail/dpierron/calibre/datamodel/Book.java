@@ -614,7 +614,7 @@ public class Book implements SplitableByLetter {
   }
 
   public String getTitleToSplitByLetter() {
-    return getTitle_Sort();
+    return DataModel.INSTANCE.getLibrarySortTitle() ? getTitle() : getTitle_Sort();
   }
 
   public Book copy() {
