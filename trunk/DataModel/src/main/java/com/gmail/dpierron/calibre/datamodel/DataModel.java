@@ -68,6 +68,9 @@ public enum DataModel {
   private static Map<Locale, NoiseWord> mapOfNoisewords;
 
   private boolean useLanguagesAsTags = true;
+  private boolean librarySortAuthor = true;
+  private boolean librarySortTitle = true;
+  private boolean librarySortSeries = true;
 
   public void reset() {
     mapOfEBookFilesByBookId = null;
@@ -684,7 +687,19 @@ public enum DataModel {
     useLanguagesAsTags = b;
   }
 
-  public boolean getUseLangauagesAsTags() { return useLanguagesAsTags; }
+  public boolean getUseLanguagesAsTags() { return useLanguagesAsTags; }
+
+  public void setLibrarySortAuthor(boolean b) { librarySortAuthor = b; }
+
+  public boolean getLibrarySortAuthor() {return librarySortAuthor; }
+
+  public void setLibrarySortTitle(boolean b) { librarySortTitle = b; }
+
+  public boolean getLibrarySortTitle() {return librarySortTitle; }
+
+  public void setLibrarySortSeries(boolean b) { librarySortSeries = b; }
+
+  public boolean getLibrarySortSeries() {return librarySortSeries; }
 
   /**
    * Get a Noiseword object given the language string

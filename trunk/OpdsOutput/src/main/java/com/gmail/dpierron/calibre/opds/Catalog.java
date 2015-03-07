@@ -175,6 +175,78 @@ public class Catalog {
   }
 
   /**
+   * Check to see if there appears to already be an existing calibre2opds catalog
+   * at the specified location (by checking for specific files).  Note that a false
+   * is always definitive, while a true could return a false (although unlikely) positive.
+   *
+   * @param catalogParentFolder    Path that contains the catalog folder
+   * @param checkCatalogFolderOnly Set to true if it is OK if parent exists and catalog does not
+   * @return true if cataog appears to be present
+   *         false if catalog definitely not there.
+   */
+  private boolean checkCatalogExistence(File catalogParentFolder, boolean checkCatalogFolderOnly) {
+    // We treat Parent folder as not existing as being equivalent to
+    // catalog existing as there is no problem with over-writing.
+    if (!catalogParentFolder.exists()) {
+      if (logger.isTraceEnabled())
+        logger.trace("checkCatalogExistence: true (parent does not exist");
+      return true;
+    }
+    // In Nook mode the only thing we check for is the presentce of the
+    // Trook database file as we deem this sufficient to allow overwrite
+    switch (currentProfile.getDeviceMode()) {
+      case Nook:
+        File trookFile = new File(catalogParentFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
+        if (! trookFile.exists()) {
+          if (logger.isTraceEnabled())
+            logger.trace("checkCatalogExistence: false (trook database file does not exist");
+          return false;
+        }
+        break;
+
+      default:
+        File catalogFolder;
+        if (currentProfile.getOnlyCatalogAtTarget()) {
+          // If this option set, then catalog going to be at supplied level
+          catalogFolder = catalogParentFolder;
+        } else {
+          catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+        }
+        // We treat catalog folder as not existing as being equivalent to
+        // catalog existing as there is no problem with over-writing.
+        if ((false == catalogFolder.exists()) && (true == checkCatalogFolderOnly)) {
+          if (logger.isTraceEnabled())
+            logger.trace("checkCatalogExistence: true (catalog folder does not exist");
+          return true;
+        }
+
+        if (logger.isTraceEnabled())
+          logger.trace("checkCatalogExistence: Check for catalog at " + catalogFolder.    getPath());
+        if (!catalogFolder.exists()) {
+          if (logger.isTraceEnabled())
+            logger.trace("checkCatalogExistence: false (catalog folder does not exist)");
+          return false;
+        }
+        File desktopFile = new File(catalogFolder, "desktop.css");
+        if (!desktopFile.exists()) {
+          if (logger.isTraceEnabled())
+            logger.trace("checkCatalogExistence: false (desktop.css file does not exist)");
+          return false;
+        }
+        File mobileFile = new File(catalogFolder, "mobile.css");
+        if (!mobileFile.exists()) {
+          if (logger.isTraceEnabled())
+            logger.trace("checkCatalogExistence: false (desktop.css file does not exist)");
+          return false;
+        }
+        break;
+    }
+    if (logger.isTraceEnabled())
+      logger.trace("checkCatalogExistence: true");
+    return true;
+  }
+
+  /**
    * Sync Files between source and target
    * <p/>
    * Routine that handles synchronisation of files between source and target
@@ -873,6 +945,10 @@ public class Catalog {
       callback.startReadDatabase();
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguagesAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
+      // Set the sort/split criteria that are to be used
+      DataModel.INSTANCE.setLibrarySortAuthor(ConfigurationManager.INSTANCE.getCurrentProfile().getSortUsingAuthor());
+      DataModel.INSTANCE.setLibrarySortTitle(ConfigurationManager.INSTANCE.getCurrentProfile().getSortUsingTitle());
+      DataModel.INSTANCE.setLibrarySortSeries(ConfigurationManager.INSTANCE.getCurrentProfile().getSortSeriesUsingLibrarySort());
       // CatalogManager.INSTANCE.getTagsToIgnore();
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
       logger.info("COMPLETED preloading Datamodel");
@@ -1364,6 +1440,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         callback.clearStopGenerating();
         Helper.delete(generateFolder, false);
       }
+      callback.showMessage("");       // Clear status line at end-of-run
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - deleteFilesStart));
       if (generationStopped)
         callback.errorOccured(Localization.Main.getText("error.userAbort"), null);
@@ -1374,77 +1451,5 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       CatalogManager.recordRamUsage("End of Generate Run");
       CatalogManager.reportRamUsage("Summary");
     }
-  }
-
-  /**
-   * Check to see if there appears to already be an existing calibre2opds catalog
-   * at the specified location (by checking for specific files).  Note that a false
-   * is always definitive, while a true could return a false (although unlikely) positive.
-   *
-   * @param catalogParentFolder    Path that contains the catalog folder
-   * @param checkCatalogFolderOnly Set to true if it is OK if parent exists and catalog does not
-   * @return true if cataog appears to be present
-   *         false if catalog definitely not there.
-   */
-  private boolean checkCatalogExistence(File catalogParentFolder, boolean checkCatalogFolderOnly) {
-    // We treat Parent folder as not existing as being equivalent to
-    // catalog existing as there is no problem with over-writing.
-    if (!catalogParentFolder.exists()) {
-      if (logger.isTraceEnabled())
-        logger.trace("checkCatalogExistence: true (parent does not exist");
-      return true;
-    }
-    // In Nook mode the only thing we check for is the presentce of the
-    // Trook database file as we deem this sufficient to allow overwrite
-    switch (currentProfile.getDeviceMode()) {
-      case Nook:
-        File trookFile = new File(catalogParentFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
-        if (! trookFile.exists()) {
-          if (logger.isTraceEnabled())
-            logger.trace("checkCatalogExistence: false (trook database file does not exist");
-          return false;
-        }
-        break;
-    
-      default:
-        File catalogFolder;
-        if (currentProfile.getOnlyCatalogAtTarget()) {
-          // If this option set, then catalog going to be at supplied level
-          catalogFolder = catalogParentFolder;
-        } else {
-          catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
-        }
-        // We treat catalog folder as not existing as being equivalent to
-        // catalog existing as there is no problem with over-writing.
-        if ((false == catalogFolder.exists()) && (true == checkCatalogFolderOnly)) {
-          if (logger.isTraceEnabled())
-            logger.trace("checkCatalogExistence: true (catalog folder does not exist");
-          return true;
-        }
-    
-        if (logger.isTraceEnabled())
-          logger.trace("checkCatalogExistence: Check for catalog at " + catalogFolder.    getPath());
-        if (!catalogFolder.exists()) {
-          if (logger.isTraceEnabled())
-            logger.trace("checkCatalogExistence: false (catalog folder does not exist)");
-          return false;
-        }
-        File desktopFile = new File(catalogFolder, "desktop.css");
-        if (!desktopFile.exists()) {
-          if (logger.isTraceEnabled())
-            logger.trace("checkCatalogExistence: false (desktop.css file does not exist)");
-          return false;
-        }
-        File mobileFile = new File(catalogFolder, "mobile.css");
-        if (!mobileFile.exists()) {
-          if (logger.isTraceEnabled())
-            logger.trace("checkCatalogExistence: false (desktop.css file does not exist)");
-          return false;
-        }
-        break;
-    }
-    if (logger.isTraceEnabled())
-      logger.trace("checkCatalogExistence: true");
-    return true;
   }
 }

@@ -84,7 +84,10 @@ public enum Summarizer {
 
       @Override
       String getTitle(Object o) {
-        return ((Author) o).getLastName();
+        // return ((Author) o).getLastName();
+        return ConfigurationManager.INSTANCE.getCurrentProfile().getDisplayAuthorSort()
+            ? ((Author) o).getSort()
+            : ((Author) o).getName();
       }
     };
 

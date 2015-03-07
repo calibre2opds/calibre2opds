@@ -69,11 +69,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
   void sortBooksByTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
       public int compare(Book o1, Book o2) {
+        /*
         if (currentProfile.getSortUsingTitle())  {
           return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
         } else {
           return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
         }
+        */
+        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
       }
     });
   }
@@ -82,17 +85,22 @@ public abstract class BooksSubCatalog extends SubCatalog {
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String s1 = o1.getAuthorSort();
-        String s2 = o2.getAuthorSort();
+        String s1 = o1.getTitleToSplitByLetter();
+        String s2 = o2.getTitleToSplitByLetter();
+        // String s1 = o1.getAuthorSort();
+        // String s2 = o2.getAuthorSort();
         if (! s1.equals(s2)) {
            return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
         }
         // If authors equal compare on title.
+        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
+        /*
         if (currentProfile.getSortUsingTitle())  {
           return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
         } else {
           return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
         }
+        */
       }
 
     });
