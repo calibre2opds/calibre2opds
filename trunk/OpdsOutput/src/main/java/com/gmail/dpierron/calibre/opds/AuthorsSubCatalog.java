@@ -69,21 +69,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     // We can use configuration parameters to sort by either auth_sort or author
     Collections.sort(authors, new Comparator<Author>() {
       public int compare(Author o1, Author o2) {
-        String name1 = (o1 == null ? "" : o1.getTitleToSplitByLetter().toUpperCase());
-        String name2 = (o2 == null ? "" : o2.getTitleToSplitByLetter().toUpperCase());
-        /*
-        String name1;
-        String name2;
-        if (currentProfile.getSortUsingAuthor()) {
-          name1 = (o1 == null ? "" : o1.getName().toUpperCase());
-          name2 = (o2 == null ? "" : o2.getName().toUpperCase());
-        } else {
-          name1 = (o1 == null ? "" : o1.getNameForSort().toUpperCase());
-          name2 = (o2 == null ? "" : o2.getNameForSort().toUpperCase());
-        }
-        return collator.compare(name1, name2);
-        */
-        return collator.compare(name1, name2);
+        String name1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+        String name2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        return  Helper.checkedCollatorCompareIgnoreCase(name1, name2,collator);
       }
     });
   }

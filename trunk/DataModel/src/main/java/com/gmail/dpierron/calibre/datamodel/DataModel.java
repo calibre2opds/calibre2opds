@@ -29,8 +29,8 @@ public enum DataModel {
   private Map<String, List<Tag>> mapOfTagsByBookId;
   private Map<String, List<Series>> mapOfSeriesByBookId;
   private Map<String, List<String>> mapOfCommentsByBookId;
-  private Map<String, List<Tag>> mapOfCustomTagsByBookId;
-  private Map<String, List<Series>> mapOfCustomSeriesByBookId;
+  // private Map<String, List<Tag>> mapOfCustomTagsByBookId;
+  // private Map<String, List<Series>> mapOfCustomSeriesByBookId;
 
   private List<Book> listOfBooks;
   private Map<String, Book> mapOfBooks;
@@ -38,7 +38,7 @@ public enum DataModel {
   private List<Tag> listOfTags;
   private Map<String, Tag> mapOfTags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
-  private List<Tag> listOfCustomTags;
+  // private List<Tag> listOfCustomTags;
 
   private List<Author> listOfAuthors;
   private Map<String, Author> mapOfAuthors;
@@ -47,7 +47,7 @@ public enum DataModel {
   private List<Series> listOfSeries;
   private Map<String, Series> mapOfSeries;
   private Map<Series, List<Book>> mapOfBooksBySeries;
-  private List<Series> listOfCustomSeries;
+  // private List<Series> listOfCustomSeries;
 
   private List<BookRating> listOfRatings;
   private Map<String, BookRating> mapOfRatings;
@@ -62,7 +62,7 @@ public enum DataModel {
   private Map<String, String> mapOfSavedSearches;
 
   private List<CustomColumnType> listOfCustomColumnTypes;
-  private List<CustomColumnType> listOfCustomColumnTypesReferenced;
+  // private List<CustomColumnType> listOfCustomColumnTypesReferenced;
   private Map<String, List <CustomColumnValue>> mapOfCustomColumnValuesByBookId;
 
   private static Map<Locale, NoiseWord> mapOfNoisewords;
@@ -100,10 +100,10 @@ public enum DataModel {
     mapOfLanguagesByIsoCode = null;
     mapOfSavedSearches = null;
     listOfCustomColumnTypes = null;
-    listOfCustomColumnTypesReferenced = null;
+    // listOfCustomColumnTypesReferenced = null;
     mapOfCustomColumnValuesByBookId = null;
-    listOfCustomTags = null;
-    listOfCustomSeries = null;
+    // listOfCustomTags = null;
+    // listOfCustomSeries = null;
 
     // reset the database
     DatabaseManager.INSTANCE.reset();
@@ -120,15 +120,14 @@ public enum DataModel {
     // Load reference data from database
     getMapOfLanguagesById();
     getListOfCustomColumnTypes();
-    listOfCustomColumnTypesReferenced = listOfCustomColumnTypes;  // Initialise to full list
+    // listOfCustomColumnTypesReferenced = listOfCustomColumnTypes;  // Initialise to full list
 
-    // Build up cross-refernce lookups by bookid
+    // Build up cross-reference lookups by bookid
     getMapOfEBookFilesByBookId();
     getMapOfAuthorsByBookId();
     getMapOfTagsByBookId();
     getMapOfSeriesByBookId();
     getMapOfCommentsByBookId();
-    // getMapOfCustomColumnValuesByBookId();
 
     getListOfTags();
     getListOfAuthors();
@@ -149,6 +148,10 @@ public enum DataModel {
     getMapOfBooksByRating();
   }
 
+  /**
+   * This list should not be very large so we do not mind loading all of it every time
+   * @return
+   */
   public List<CustomColumnType> getListOfCustomColumnTypes () {
     if (listOfCustomColumnTypes == null) {
       listOfCustomColumnTypes = Database.INSTANCE.getlistOfCustoColumnTypes();
@@ -157,10 +160,11 @@ public enum DataModel {
   }
 
   /**
-   * Get list of Custom Column Vlues
+   * Get list of Custom Column Values
    *
-   * TODO:  See if we can filter it down to thos that arereferenced in this run
-   * TODO:  This will save RAM on libraries with a large number of unreferenced columns
+   * Since it highly likely that not all custom columns will be referenced,
+   * the loading should be delayed until we know which ones are required for
+   * this parituclar run to both improve performance and reduce RAM usage.
    *
    * @return
    */

@@ -61,8 +61,6 @@ public enum CatalogManager {
   // Tags that the user has specified should not be included
   private static List<Tag> tagsToIgnore;
   public static Map<String, BookFilter> customCatalogsFilters;
-  private Boolean coverResized = null;
-  private Boolean thumbnailResized = null;
 
   // public CatalogManager() {
   public void initialize() {
@@ -115,8 +113,6 @@ public enum CatalogManager {
     tagsToIgnore = null;
     customCatalogsFilters = null;
     JDOM.INSTANCE.reset();
-    coverResized = null;
-    thumbnailResized = null;
     securityCode = "";
   }
 

@@ -14,10 +14,11 @@ package com.gmail.dpierron.calibre.cache;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 public enum CachedFileManager {
   INSTANCE;
@@ -33,7 +34,6 @@ public enum CachedFileManager {
   public void reset() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
-    // loadCache();
   }
 
   /**
@@ -156,8 +156,6 @@ public enum CachedFileManager {
           if (logger.isDebugEnabled()) logger.debug("ERROR: failed to rename cache file");
       }
     }
-
-
   }
 
   /**
@@ -183,14 +181,18 @@ public enum CachedFileManager {
     long crcNotKnown = 0;
     long notExists = 0 ;
     long notUsed = 0;
-    // Open cache file
+    long countChecked = 0;
     ObjectOutputStream os = null;
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
-    if (callback != null ) callback.setProgressMax(cachedFilesMap.entrySet().size());
+    long countPercent = cachedFilesMap.entrySet().size()/100;       // Use to avoid too frequent GUI updates
+    if (callback != null ) callback.setProgressMax(100);
+    deleteCache();
+
     try {
       try {
-        if (logger.isDebugEnabled()) logger.debug("STARTED Saving CRC cache to file " + cacheFile.getPath());
+        if (logger.isDebugEnabled()) logger.debug("STARTED Saving cacheFile entries to " + cacheFile.getPath());
+        // Open cache file (objects)
         fs = new FileOutputStream(cacheFile);         // Open File
         assert fs != null: "saveCache: fs should never be null at this point";
         bs = new BufferedOutputStream(fs,512 * 1024); // Add buffering
@@ -199,29 +201,36 @@ public enum CachedFileManager {
         assert os != null: "saveCache: os should never be null at this point";
 
         // Write out the cache entries
+        CachedFile cf;
+        String key = null;          // Force initialise to avoid later compile time warnings
         for (Map.Entry<String, CachedFile> m : cachedFilesMap.entrySet()) {
-          if (callback != null) callback.incStepProgressIndicatorPosition();
-          CachedFile cf = m.getValue();
-          String key = m.getKey();
+          // Only update GUI at 1% intervals (reduces overhead)
+          if ((countChecked % countPercent) == 0
+          &&  callback != null) callback.incStepProgressIndicatorPosition();
+          countChecked++;
 
-          if (cf.isDirectory()) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: isDirectory  Not saving CachedFile " + key);
-            isDirectory++;
+          cf = m.getValue();
+          if (logger.isTraceEnabled()) key = m.getKey();
+
+          // We d not want to cache files that have unvalidated cache values.
+          if (! cf.isCachedValidated()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: Not used.  Not saving CachedFile " + key);
+            notUsed++;
             ignoredCount++;
             continue;
           }
-          // We are only interested in caching entries for which the CRC is known
-          // as this is the expensive operation we do not want to do unnecessarily
+          // No point in caching enrtries for fiels in the temporary area.
           if (pathToIgnore != null && cf.getPath().startsWith(pathToIgnore)) {
             if (logger.isTraceEnabled()) logger.trace("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
             pathMatch++;
             ignoredCount++;
             continue;
           }
-          // We d not want to cache files that are in the temprorary area.
-          if (! cf.isCachedValidated()) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: Not used.  Not saving CachedFile " + key);
-            notUsed++;
+          // We are only interested in caching entries for which the CRC is known
+          // as this is the expensive operation we do not want to do unnecessarily
+          if (!cf.isCrc()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
+            crcNotKnown++;
             ignoredCount++;
             continue;
           }
@@ -232,10 +241,10 @@ public enum CachedFileManager {
             ignoredCount++;
             continue;
           }
-          // No point in caching information if CRC not known
-          if (!cf.isCrc()) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: CRC not known.  Not saving CachedFile " + key);
-            crcNotKnown++;
+          // We do not bother with entries pointing at directories.
+          if (cf.isDirectory()) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: isDirectory  Not saving CachedFile " + key);
+            isDirectory++;
             ignoredCount++;
             continue;
           }
@@ -248,15 +257,14 @@ public enum CachedFileManager {
           if (os != null) os.close();
           if (bs != null) bs.close();
           if (fs != null) fs.close();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
           // Do nothing - we ignore an error at this point
           // Having said that, an error here is a bit unexpected so lets log it when testing
           logger.warn("saveCache: Unexpected error\n" + e);
         }
       }
     } catch (IOException e) {
-      logger.warn("saveCache: Exception trying to write cache: " + e);
+      logger.warn("saveCache: Exception trying to write cache:\n" + e);
     }
 
     if (logger.isDebugEnabled()) {
@@ -286,31 +294,30 @@ public enum CachedFileManager {
       if (logger.isDebugEnabled())  logger.debug("Exiting loadCache() as cache file not present");
       return;
     }
-    // Open Cache file
     ObjectInputStream os = null;
     FileInputStream fs = null;
     BufferedInputStream bs = null;
     long loadedCount = 0;
     try {
       if (logger.isDebugEnabled()) logger.debug("STARTED Loading CRC cache from file " + cacheFile.getPath());
+      // Open Cache file
       fs = new FileInputStream(cacheFile);          // Open file
-      assert fs != null: "loadCache: fs should never be null at this point";
+      assert fs != null : "loadCache: fs should never be null at this point";
       bs = new BufferedInputStream(fs, 512 * 1024); // Add buffering
-      assert bs != null: "loadCache: bs should never be null at this point";
+      assert bs != null : "loadCache: bs should never be null at this point";
       os = new ObjectInputStream(bs);               // And now object handling
-      assert os != null: "loadCache: os should never be null at this point";
+      assert os != null : "loadCache: os should never be null at this point";
     } catch (IOException e) {
-      logger.warn("Aborting loadCache() as cache file failed to open");
+      logger.warn("loadCache: Aborting as cache file failed to open");
       // Abort any cache loading
       return;
     }
 
     // Read in entries from cache
+    CachedFile cf;
     try {
         for (; ; ) {
-          CachedFile cf;
           cf = (CachedFile) os.readObject();
-
           String path = cf.getPath();
           if (logger.isTraceEnabled())  logger.trace("Loaded cached object " + path);
           loadedCount++;
@@ -372,7 +379,6 @@ public enum CachedFileManager {
     }
     Helper.delete(cacheFile, false);
     if (logger.isDebugEnabled())  logger.debug("Deleted CRC cache file " + cacheFile.getPath());
-    cacheFile = null;
   }
 
   public long getCacheSize() {

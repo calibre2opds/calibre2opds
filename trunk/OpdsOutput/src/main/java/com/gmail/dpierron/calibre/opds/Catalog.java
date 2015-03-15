@@ -910,17 +910,14 @@ public class Catalog {
       }
       long loadCacheStart = System.currentTimeMillis();
       if (checkCRC) {
-        if (logger.isTraceEnabled())
-          logger.trace("Loading Cache");
+        if (logger.isTraceEnabled()) logger.trace("Loading Cache");
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
         CachedFileManager.INSTANCE.loadCache();
         callback.showMessage("");
         logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
-
-      } else {
-        if (logger.isTraceEnabled()) logger.trace("Deleting Cache");
-        CachedFileManager.INSTANCE.deleteCache();
       }
+      if (logger.isTraceEnabled()) logger.trace("Deleting Cache");
+      CachedFileManager.INSTANCE.deleteCache();
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
       CatalogManager.recordRamUsage("After loading (and deleting cache");
 
@@ -943,6 +940,7 @@ public class Catalog {
       callback.endInitializeMainCatalog();
 
       callback.startReadDatabase();
+      callback.showMessage(Localization.Main.getText("info.step.loadingdatabase"));
       DataModel.INSTANCE.reset();
       DataModel.INSTANCE.setUseLanguagesAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
       // Set the sort/split criteria that are to be used
@@ -951,7 +949,9 @@ public class Catalog {
       DataModel.INSTANCE.setLibrarySortSeries(ConfigurationManager.INSTANCE.getCurrentProfile().getSortSeriesUsingLibrarySort());
       // CatalogManager.INSTANCE.getTagsToIgnore();
       DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
-      logger.info("COMPLETED preloading Datamodel");
+      logger.trace("COMPLETED preloading Datamodel");
+      callback.showMessage("");
+
       CatalogManager.recordRamUsage("After loading DataModel");
       List<Book> books = DataModel.INSTANCE.getListOfBooks();
       callback.setDatabaseCount(Summarizer.INSTANCE.getBookWord(books.size()));
@@ -964,6 +964,8 @@ public class Catalog {
       // TODO Published
       // TODO Publisher
       // Custom Columns - remove any custom columns that are not on wanted list
+      // TODO Could we avoid loading these from the database at all?
+      callback.showMessage(Localization.Main.getText("info.step.loadingcustom"));
       List<CustomColumnType>customColumns = DataModel.INSTANCE.getListOfCustomColumnTypes();
       customColumnsWanted = currentProfile.getCustomColumnsWanted();
       checktype: for (int i=0; i < customColumns.size() ; i++) {
@@ -985,6 +987,7 @@ public class Catalog {
         }
       }
       DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId();
+      callback.showMessage("");
       callback.checkIfContinueGenerating();     // check if we must continue
 
 
@@ -1118,6 +1121,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
           null,           // Splitoption
           "");            // icon
       levelSubCatalog = null; // Maybe not necessary - but forced free may help release resources earlier
+      // If we get this far any new images required should already be generated
+      // so record the fact by writing out new imageheight files.
+      if (currentProfile.getCoverResize())        CatalogManager.coverManager.writeImageHeightFile();
+      if (currentProfile.getThumbnailGenerate())  CatalogManager.thumbnailManager.writeImageHeightFile();
 
       /* Javascript search database */
 
@@ -1317,8 +1324,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         syncImages(new CachedFile(libraryCatalogFolder.getAbsolutePath()));
         logger.debug("COMPLETED: Copy images to Database catalog folder");
       }
-      CatalogManager.thumbnailManager.writeImageHeightFile();
-      CatalogManager.coverManager.writeImageHeightFile();
       callback.endCopyCatToTarget();
       callback.checkIfContinueGenerating();
 

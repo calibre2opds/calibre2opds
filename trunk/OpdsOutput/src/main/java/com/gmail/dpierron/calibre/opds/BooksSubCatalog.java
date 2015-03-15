@@ -69,13 +69,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
   void sortBooksByTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
       public int compare(Book o1, Book o2) {
-        /*
-        if (currentProfile.getSortUsingTitle())  {
-          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
-        } else {
-          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
-        }
-        */
         return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
       }
     });
@@ -87,20 +80,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       public int compare(Book o1, Book o2) {
         String s1 = o1.getTitleToSplitByLetter();
         String s2 = o2.getTitleToSplitByLetter();
-        // String s1 = o1.getAuthorSort();
-        // String s2 = o2.getAuthorSort();
         if (! s1.equals(s2)) {
            return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
         }
         // If authors equal compare on title.
         return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
-        /*
-        if (currentProfile.getSortUsingTitle())  {
-          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle_Sort(), o2.getTitle_Sort(), collator);
-        } else {
-          return Helper.checkedCollatorCompareIgnoreCase(o1.getTitle(), o2.getTitle(), collator);
-        }
-        */
       }
 
     });
@@ -548,43 +532,73 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * If we are including the covers in the catalog we want to
    * embed the image as base64 data to reduce the number of files.
    *
-   * @param book
-   * @param entry
-   * @param iManager
-   * @param isresized
-   * @param isCover
+   * @param book            // The book to which this image applies
+   * @param entry           // The entry to which the image URL should be added
+   * @param iManager        // The particular ImageManager object
+   * @param useResizeImage  // true if we need a resized image.  false implies use existing cover image
+   * @param isCover         // true if a cover, false if it is a thumbnail
    */
-  private void addImageLink (Book book, Element entry, ImageManager iManager, boolean isresized, boolean isCover) {
+  private void addImageLink (Book book, Element entry, ImageManager iManager, boolean useResizeImage, boolean isCover) {
 
     String imageUri = null;         // The URI to the image at runtime
     File bookFolder = book.getBookFolder();
 
     CachedFile calibreCoverFile = CachedFileManager.INSTANCE.addCachedFile(bookFolder, Constants.CALIBRE_COVER_FILENAME);
+    CachedFile defaultCoverFile = null;
 
     String catalogImageFilename;  // Name when stored in catalog
     CachedFile imageFile;         // The file that contains the image to be used
     CachedFile resizedImageFile;  // File to be used when resized images in use
 
     resizedImageFile = CachedFileManager.INSTANCE.addCachedFile(bookFolder, iManager.getResizedFilename());
+
+    // We normally expect a calibre cover file to exist as Calibre
+    // will normally have inserted its default ocver.
     if (calibreCoverFile.exists()) {
       // Handle migration to new name standard (#c2o_???)
-      FeedHelper.checkFileNameIsNewStandard(resizedImageFile,
-          new File(bookFolder, iManager.getResizedFilenameOld(book)));
+      FeedHelper.checkFileNameIsNewStandard(resizedImageFile, new File(bookFolder, iManager.getResizedFilenameOld(book)));
+    } else {
+      // We will use our default cover instead!
+      defaultCoverFile = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
 
-      if (isresized) {
-        imageUri =
-            // #c2o_223  Need to use image from Books URI if it is specified
-                (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true)
-                                                : booksURI)
-                + FeedHelper.urlEncode(book.getPath()
-                                      + Constants.FOLDER_SEPARATOR
-                                      + iManager.getResizedFilename(), true);
+      // We only want the warning once per book
+      if ((book.isDone() == false)
+      &&  (isCover == true)) {
+        // We suppress the warning if we already have resized image?
+        if (resizedImageFile.exists() && useResizeImage == false) {
+          if (logger.isTraceEnabled()) logger.trace("addImageFile: Cover missing, but OK as found " + resizedImageFile);
+        } else {
+          logger.warn("addImageFile:  No cover file found forbook " + book);
+          // Generate a default resized image file in this case
+          iManager.generateImage(resizedImageFile, defaultCoverFile);
+          resizedImageFile.clearCachedInformation();
+        }
+      }
+    }
+
+    if (useResizeImage) {
+
+      // We DO want to use a resized image
+
+      imageUri =
+          // #c2o_223  Need to use image from Books URI if it is specified
+              (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true)
+                                              : booksURI)
+              + FeedHelper.urlEncode(book.getPath()
+                                    + Constants.FOLDER_SEPARATOR
+                                    + iManager.getResizedFilename(), true);
         imageFile = resizedImageFile;
         catalogImageFilename = getBookFolderFilename(book)
             + Constants.TYPE_SEPARATOR
             + iManager.getResizedFilename();
-        // Decide whether we need to generate the resized cover image
-        if (!resizedImageFile.exists() || iManager.hasImageSizeChanged() || resizedImageFile.lastModified() < calibreCoverFile.lastModified()) {
+      // #c2o-238 Only create image if we have not already done this book previously
+      if (book.isDone()) {
+        if (logger.isTraceEnabled()) logger.trace("addImageLink: skipping creating image - book already done previously");
+      } else {
+        // We ned to generate if it is missing, the size has changed or the cover file is newer than te resized file.
+        if (resizedImageFile.exists() && ! iManager.hasImageSizeChanged() && resizedImageFile.lastModified() > calibreCoverFile.lastModified()) {
+          if (logger.isTraceEnabled()) logger.trace("addImageLink: resizedCover exissts - not to be regenerated");
+        } else {
           if (logger.isTraceEnabled()) {
             if (!resizedImageFile.exists()) {
               logger.trace("addImageLink: resizedImage set to be generated (not already existing)");
@@ -592,66 +606,57 @@ public abstract class BooksSubCatalog extends SubCatalog {
               logger.trace("addImageLink: resizedImage set to be generated (image size changed)");
             } else if (resizedImageFile.lastModified() < calibreCoverFile.lastModified()) {
               logger.trace("addImageLink: resizedImage set to be generated (new cover)");
-            } }
-          iManager.generateImage(resizedImageFile, calibreCoverFile);
-        } else {
-          if (logger.isTraceEnabled())  logger.trace("addImageLink: resizedCover exissts - not to be regenerated");
-
+            }
+          }
+          iManager.generateImage(resizedImageFile, calibreCoverFile.exists() ? calibreCoverFile : defaultCoverFile);
         }
-      } else {
-        // Not using resized covers - use original cover.jpg
+      }
+    } else {
+
+      // Not using resized covers -
+
+      // Delete and resized image file
+      // (Except in case of Calibre cover missing)
+      if (resizedImageFile.exists() && calibreCoverFile.exists()) {
+        if (logger.isTraceEnabled())  logger.trace("addImageLink:  deleted unwanted resized image " + resizedImageFile);
+        resizedImageFile.delete();
+      }
+      // use original cover.jpg (or default cover if that is missing)
+
+      if (calibreCoverFile.exists()) {
         imageUri =
             // #c2o_223  Need to use image from Books URI if it is specified
-            (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true)
-                                            : booksURI)
-            + FeedHelper.urlEncode(book.getPath()
-                                  + Constants.FOLDER_SEPARATOR
-                                  + Constants.CALIBRE_COVER_FILENAME, true);
+            (Helper.isNullOrEmpty(booksURI) ? FeedHelper.urlEncode(Constants.LIBRARY_PATH_PREFIX, true) : booksURI) +
+                FeedHelper.urlEncode(book.getPath() + Constants.FOLDER_SEPARATOR + Constants.CALIBRE_COVER_FILENAME, true);
         imageFile = calibreCoverFile;
-        catalogImageFilename = getBookFolderFilename(book)
-            + Constants.TYPE_SEPARATOR
-            + Constants.CALIBRE_COVER_FILENAME;
-        if (logger.isTraceEnabled())  logger.trace("addImageLink: imageResize=false. Use Calibre cover.jpg file for book " + book.getTitle());
-        // Decide if we need to remove previously used resized cover images!
-        if (resizedImageFile.exists()) {
-          if (resizedImageFile.getName().compareTo("cover.jpg") == 0) {
-            logger.warn("addImageLink: attempt to delete Calibre cover (for book " + book.getTitle());
-          } else {
-            if (logger.isTraceEnabled())  logger.trace("addImageLink: Delete existing image file " + imageFile.getName());
-            resizedImageFile.delete();
-            // Make sure it is no longer in the cache
-            CachedFileManager.INSTANCE.removeCachedFile(resizedImageFile);
-          }
-        }
+        catalogImageFilename = getBookFolderFilename(book) + Constants.TYPE_SEPARATOR + Constants.CALIBRE_COVER_FILENAME;
+      } else {
+        // We should not really get here as all books should have a cover.jpg file,
+        // we have certainly found cases where it is not present.
+        imageUri = Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
+        imageFile = defaultCoverFile;
+        catalogImageFilename = Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
       }
-
-    } else {
-      // No cover from Calibre so use our default!
-      // resize the default thumbnail if needed
-      CachedFile resizedDefaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), iManager.getDefaultResizedFilename()));
-      CachedFile defaultCover = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
-      // Separate out resized cover case
-      if (!resizedDefaultCover.exists() || iManager.hasImageSizeChanged() || resizedDefaultCover.lastModified() < defaultCover.lastModified()) {
-        iManager.generateImage(resizedDefaultCover, defaultCover);
-      }
-      imageUri = FeedHelper.urlEncode(Constants.PARENT_PATH_PREFIX
-                                  + iManager.getDefaultResizedFilename(), true);
-      imageFile = resizedDefaultCover;
-      catalogImageFilename = Constants.PARENT_PATH_PREFIX
-          + iManager.getDefaultResizedFilename();
-      CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
-      if (isCover) logger.warn("addImageLink: No cover.jpg file in Calibre library for book " + book);
     }
 
     // If we are generating a catalog for a Nook we cache the results for use later
     if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
       CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
     }
-    // TODO   Decide here whether to embed image or not rather than where it is done at the moment.
-    // TODO   We would alsom prefer to store the external URL format rather than the encoded data as
-    // TODO   this would reduce over-all RAM consumption significantly on large libraries.
 
-    // Are we storing cover images in the catalog?
+    // Are we ebedding images in the catalog XML/HTML or using external ones?
+
+    if (! useExternalImages) {
+      // Embed the image into the XML/HTM as base 64 data
+      imageUri = iManager.getFileToBase64Uri(imageFile);
+    } else {
+      // If not in default mode we need to copy them to the published area
+      if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
+        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
+      }
+    }
+
+    // Are we storing images in the catalog?
 
     if (includeCoversInCatalog) {
       if (calibreCoverFile.exists()) {
@@ -664,13 +669,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
           } else {
             imageUri=Constants.PARENT_PATH_PREFIX + catalogImageFilename;
           }
-        }
-      }
-    } else {
-      // Copy images to target if not in default mode (and not images in catalog)
-      if (useExternalImages) {
-        if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
-          CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
         }
       }
     }
@@ -924,18 +922,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
   /**
-   * Get the filename that should be used for the image file
-   * @param book
-   * @param type
-   * @return
-   */
-/*
-  private String getImageFilename (Book book, String type) {
-    String filename = getBookFolderFilename(book);
-    return filename;
-  }
- */
-  /**
    * Generate a book entry in a catalog
    *
    * The amount of detail added depends on whether we are generating
@@ -950,19 +936,25 @@ public abstract class BooksSubCatalog extends SubCatalog {
    */
   private void decorateBookEntry(Element entry, Book book, boolean isFullEntry) {
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING book decoration to book " + book);
-
+    ImageManager iManager;
     // cover and thumbnail links
     if (isFullEntry) {
-      // We onfly need a cover image for full entries
+      // We only need a cover image for full entries
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
-      ImageManager iManager = currentProfile.getUseThumbnailsAsCovers()
-          ? CatalogManager.INSTANCE.thumbnailManager
-          : CatalogManager.INSTANCE.coverManager;
-      addImageLink(book,entry, iManager, iManager.hasImageSizeChanged(),true);
+      boolean resizeCover;
+      if (currentProfile.getUseThumbnailsAsCovers()) {
+        iManager = CatalogManager.INSTANCE.thumbnailManager;
+        resizeCover = currentProfile.getThumbnailGenerate();
+      } else {
+        iManager = CatalogManager.INSTANCE.coverManager;
+        resizeCover = currentProfile.getCoverResize();
+      }
+      addImageLink(book, entry, iManager,resizeCover,true);
     }
     // We want a thumbnail for both full and partial entries.
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");
-    addImageLink(book,entry,CatalogManager.INSTANCE.thumbnailManager,currentProfile.getThumbnailGenerate(),false);
+    iManager = CatalogManager.INSTANCE.thumbnailManager;
+    addImageLink(book, entry, iManager, currentProfile.getThumbnailGenerate(), false);
 
 
     // acquisition links
@@ -1349,7 +1341,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // TODO   in the catalog or the calibre library) instead.
         IndexManager.INSTANCE.indexBook(book, CatalogManager.INSTANCE.htmlManager.getHtmlFilename(fullEntryUrl), CatalogManager.INSTANCE.thumbnailManager.getThumbnailUrl(book));
       }
-      book.setDone();
     }
 
     Element entry = FeedHelper.getBookEntry(title, urn, book.getLatestFileModifiedDate());
@@ -1361,7 +1352,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: add a full entry link to the partial entry");
     entry.addContent(FeedHelper.getFullEntryLink(fullEntryUrl));
     book.setReferenced();
-
+    book.setDone();
     return entry;
   }
 }
