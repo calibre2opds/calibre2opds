@@ -32,6 +32,9 @@ public class Series implements SplitableByLetter {
     // series name field even if it starts with noise words!
     // if (Helper.isNullOrEmpty(sort)) {
       // TDDO  How we determine the Locale for a Series if not english?
+    if (name.toUpperCase().startsWith("THE ")) {
+      int dummy = 1;
+    }
       this.sort = DataModel.INSTANCE.getNoiseword(Locale.ENGLISH).removeLeadingNoiseWords(name);
     // } else {
     //  this.sort = sort;

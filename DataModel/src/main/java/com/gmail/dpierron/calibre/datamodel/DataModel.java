@@ -467,8 +467,8 @@ public enum DataModel {
     Comparator<Book> comparator = new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String title1 = (o1 == null ? "" : o1.getTitle_Sort());
-        String title2 = (o2 == null ? "" : o2.getTitle_Sort());
+        String title1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+        String title2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
         return title1.compareTo(title2);
       }
     };
@@ -480,8 +480,8 @@ public enum DataModel {
     Comparator<Author> comparator = new Comparator<Author>() {
 
       public int compare(Author o1, Author o2) {
-        String author1 = (o1 == null ? "" : o1.getNameForSort());
-        String author2 = (o2 == null ? "" : o2.getNameForSort());
+        String author1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+        String author2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
         return author1.compareTo(author2);
       }
     };
@@ -493,8 +493,8 @@ public enum DataModel {
     Comparator<Series> comparator = new Comparator<Series>() {
 
       public int compare(Series o1, Series o2) {
-        String series1 = (o1 == null ? "" : o1.getName());
-        String series2 = (o2 == null ? "" : o2.getName());
+        String series1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+        String series2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
         return series1.compareTo(series2);
       }
     };
