@@ -210,6 +210,12 @@ public class CachedFile extends File {
     return isFlags(FLAG_IS_DIRECTORY);
   }
 
+  @Override
+  public boolean delete() {
+    clearCached();
+    return super.delete();
+  }
+
   /**
    * Get the CRC for the given file.
    *
@@ -299,7 +305,7 @@ public class CachedFile extends File {
   }
 
   public void clearCacheValidated() {
-    setFlags(false, FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_CACHED_VALUES_CHECKED);
+    setFlags(false, FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_MODIFIED_CHECKED + FLAG_CACHED_VALUES_CHECKED);
   }
 
   /**

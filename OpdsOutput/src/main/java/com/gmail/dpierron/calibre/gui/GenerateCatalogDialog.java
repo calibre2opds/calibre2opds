@@ -143,7 +143,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   private void startStage(long nb, JLabel label, String localizationKey) {
     stageStartTime = System.currentTimeMillis();
     progressStep.setMaxScale(nb);
-    logger.info(Localization.Main.getText(localizationKey));
+    logger.info(Localization.Main.getText(localizationKey) + " (" + nb +")");
     boldFont(label, true);
     label.setForeground(Color.RED);
   }

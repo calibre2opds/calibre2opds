@@ -584,7 +584,7 @@ public abstract class SubCatalog {
   }
 
   /**
-   * Set the list of books to be included in this aa(sub) catalog
+   * Set the list of books to be included in this (sub)catalog
    *
    * @param books
    */
@@ -593,8 +593,9 @@ public abstract class SubCatalog {
     if (Helper.isNotNullOrEmpty(stuffToFilterOut)) {
       this.books = filterOutStuff(books);
     }
-    if (this.books == null)
+    if (this.books == null) {
       this.books = books;
+    }
   }
 
   /**

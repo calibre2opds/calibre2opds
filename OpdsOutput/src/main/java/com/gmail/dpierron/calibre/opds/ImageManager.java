@@ -39,7 +39,7 @@ public abstract class ImageManager {
     CachedFile imageSizeFile = CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
     FeedHelper.checkFileNameIsNewStandard(imageSizeFile, CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), imageSizeFile.getName().substring(4)));
 
-    imageSizeChanged = true;
+    imageSizeChanged = true;      // Assume true if sizefile does not exist
     if (imageSizeFile.exists()) {
       try {
         BufferedReader in = null;
@@ -52,14 +52,20 @@ public abstract class ImageManager {
         } finally {
           if (in != null) {
             in.close();
-            // TODO Need to update cachedFile information?
           }
         }
       } catch (Exception e) {
         // we don't care about errors, let's just say size has changed
         if (logger.isDebugEnabled())
-          logger.debug("Failed to read size fom file " + imageSizeFile);
+          logger.debug("Failed to read size from file " + imageSizeFile);
         imageSizeChanged = true;
+      } finally {
+        // #c2o-238
+        // Delete the file in case generate goes wrong!
+        // It will be recreated if the appropriate point
+        // in the catalog generation is reached.
+        imageSizeFile.delete();
+        CachedFileManager.INSTANCE.removeCachedFile(imageSizeFile);
       }
     }
   }
@@ -109,10 +115,10 @@ public abstract class ImageManager {
   }
 
   /**
-   * Save the height of the images that we havfe generated
+   *  Save the height of the images that we havfe generated.
    *
-   * For efficency reasons, this method is expected to be called once
-   * after a particular catalog generation run has completed
+   *  For efficency reasons, this method is expected to be called once
+   *  after a particular catalog generation run has completed
    */
   public void writeImageHeightFile() {
     File imageSizeFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
@@ -129,6 +135,7 @@ public abstract class ImageManager {
     } catch (IOException e) {
       // we don't care if the image height file cannot be written, image will be recomputed and that's all
     }
+    CachedFileManager.INSTANCE.addCachedFile(imageSizeFile).clearCachedInformation();
   }
 
   /**
@@ -185,10 +192,14 @@ public abstract class ImageManager {
   }
 
   /**
-   * generate a single image file
-   * @return
+   *    * generate a single image file
+   *
+   * @param imageFile   File for written fir output image
+   * @param coverFile   File to be read for input image
    */
   public void generateImage(CachedFile imageFile, CachedFile coverFile) {
+    assert imageFile != null && coverFile.exists();
+    assert coverFile != null;
     logger.debug("generateImage: " + imageFile.getAbsolutePath());
     long now = System.currentTimeMillis();
     try {

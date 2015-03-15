@@ -139,6 +139,7 @@ v3.4 beta Rev 329
     - Fix:    #c2o-235: New image size not respected when generating images
     - Fix:    #c20-236: Unexpected fatal error when generating Series with * for tags that get additional level
     - Fix:    #c20-237: Delete button not working in Custom Catalogs tab
+    - Fix:    #c2o-238: Do not generate resized covers' option is sometimes ignored
 
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

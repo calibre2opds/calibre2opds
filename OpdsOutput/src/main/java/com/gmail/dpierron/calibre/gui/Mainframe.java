@@ -16,7 +16,6 @@ import com.gmail.dpierron.calibre.gui.table.CustomCatalogTableModel;
 import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.tools.i18n.Localization;
-import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
@@ -177,7 +176,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblTagBooksNoSplit, chkTagBookNoSplit, "config.TagBooksNoSplit", "TagBooksNoSplit"),
       new guiField(lblSortUsingAuthor, chkSortUsingAuthorSort, "config.SortUsingAuthor", "SortUsingAuthor"),
       new guiField(lblSortUsingTitle, chkSortUsingTitleSort, "config.SortUsingTitle", "SortUsingTitle"),
-      new guiField(lblSortSeriesUsingLibrarySort, chkSortSeriesUsingLibrarySort, "config.SortSeriesUsingLibrarySort", "SortUsingSeries"),
+      new guiField(lblSortSeriesUsingLibrarySort, chkSortSeriesUsingLibrarySort, "config.SortSeriesUsingLibrarySort", "SortSeriesUsingLibrarySort"),
 
       // Book Details Options
 
@@ -4633,9 +4632,16 @@ public class Mainframe extends javax.swing.JFrame {
 
   private void chkNoThumbnailGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNoThumbnailGenerateActionPerformed
     // lblThumbnailheight.setVisible(!chkNoThumbnailGenerate.isSelected());
-    lblThumbnailheight.setVisible(true);
+    // lblThumbnailheight.setVisible(true);
     // txtThumbnailheight.setVisible(!chkNoThumbnailGenerate.isSelected());
-    txtThumbnailheight.setVisible(true);
+    // txtThumbnailheight.setVisible(true);
+    // We cannot use a thumbnail as a cover if they are not being generated!
+    if (chkNoThumbnailGenerate.isSelected() == true) {
+      chkUseThumbnailAsCover.setSelected(false);
+      chkUseThumbnailAsCoverActionPerformed(evt);
+    }
+    lblUseThumbnailAsCover.setEnabled(! chkNoThumbnailGenerate.isSelected());
+    chkUseThumbnailAsCover.setEnabled(lblUseThumbnailAsCover.isEnabled());
   }//GEN-LAST:event_chkNoThumbnailGenerateActionPerformed
 
   private void cmdAmazonUrlResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAmazonUrlResetActionPerformed
@@ -4820,10 +4826,6 @@ public class Mainframe extends javax.swing.JFrame {
       // TODO add your handling code here:
   }//GEN-LAST:event_lblLibrarythingIsbnUrlActionPerformed
 
-  private void chkUseThumbnailAsCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseThumbnailAsCoverActionPerformed
-      // TODO add your handling code here:
-  }//GEN-LAST:event_chkUseThumbnailAsCoverActionPerformed
-
   private void chkZipCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkZipCatalogActionPerformed
     boolean genOptions = !chkNogenerateopds.isSelected() && !chkNogeneratehtml.isSelected();
     lblZipOmitXml.setEnabled(chkZipCatalog.isSelected() && genOptions);
@@ -4882,6 +4884,16 @@ public class Mainframe extends javax.swing.JFrame {
     private void lblSearchDeprecatedhandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchDeprecatedhandleMouseClickOnLabel
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSearchDeprecatedhandleMouseClickOnLabel
+
+    private void chkUseThumbnailAsCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseThumbnailAsCoverActionPerformed
+      // We do not want resized cover images if we are using existing covers as thumbnails
+      if (chkNoCoverResize.isEnabled() == true
+      &&  chkUseThumbnailAsCover.isSelected() == true) {
+        chkNoCoverResize.setSelected(true);
+      }
+      chkNoCoverResize.setEnabled(! chkUseThumbnailAsCover.isSelected());
+      lblNoCoverResize.setEnabled(chkNoCoverResize.isEnabled());
+    }//GEN-LAST:event_chkUseThumbnailAsCoverActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();

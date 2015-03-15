@@ -42,6 +42,9 @@ public class Book implements SplitableByLetter {
   private final BookRating rating;
   private List<Language> bookLanguages = new LinkedList<Language>();
   private List<CustomColumnValue> customColumnValues;
+  private static Date ZERO;
+  private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
+  protected Book copyOfBook;          // If a book is copied then this points to the original
 
   // Flags
   // NOTE: Using byte plus bit settings is more memory efficient than using boolean types
@@ -55,12 +58,6 @@ public class Book implements SplitableByLetter {
   private final static byte FLAG_FLAGGED = 0x40;
   private byte flags = FLAG_ALL_CLEAR;
 
-
-  private boolean done = false;           // Set when the Book full details have been generated
-  private boolean referenced = false;     // Set if book full details must be generated as referenced
-
-  private static Date ZERO;
-  private static final Pattern tag_br = Pattern.compile("\\<br\\>", Pattern.CASE_INSENSITIVE);
   static {
     Calendar c = Calendar.getInstance();
     c.setTimeInMillis(0);
@@ -117,6 +114,7 @@ public class Book implements SplitableByLetter {
     this.isbn = isbn;
     this.authorSort = authorSort;
     this.rating = rating;
+    copyOfBook = null;
   }
 
   // METHODS and PROPERTIES
@@ -162,6 +160,7 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public Language getBookLanguage() {
+    if (copyOfBook != null) return copyOfBook.getBookLanguage();
     List<Language> languages = getBookLanguages();
     if ((languages == null) || (languages.size() == 0))
       return null;
@@ -176,16 +175,23 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public List<Language> getBookLanguages() {
+    if (copyOfBook != null) return copyOfBook.getBookLanguages();
     return bookLanguages;
   }
 
+  /**
+   * Add a language to the book.
+   *
+   * @param bookLanguage
+   */
   public void addBookLanguage(Language bookLanguage) {
-    if (bookLanguage == null)
-      return;
-    if (bookLanguages == null)
+    assert copyOfBook == null;        // Never expect this to be used on a copy of the book!
+    if (getBookLanguages() == null) {
       bookLanguages = new LinkedList<Language>();
-    if (!bookLanguages.contains(bookLanguage))
+    }
+    if (!bookLanguages.contains(bookLanguage)) {
       bookLanguages.add(bookLanguage);
+    }
   }
 
   public String getIsbn() {
@@ -197,6 +203,7 @@ public class Book implements SplitableByLetter {
   }
 
   public String getComment() {
+    if (copyOfBook != null) return copyOfBook.getComment();
     return comment;
   }
 
@@ -316,6 +323,7 @@ public class Book implements SplitableByLetter {
    * @param value the new comment
    */
   public void setComment(String value) {
+    assert copyOfBook == null;    // Never expect this to be used on a copy
     summary = null;
     summaryMaxLength = -1;
     if (Helper.isNotNullOrEmpty(value)) {
@@ -424,7 +432,7 @@ public class Book implements SplitableByLetter {
   }
 
   public boolean hasAuthor() {
-    return Helper.isNotNullOrEmpty(getAuthors());
+    return  Helper.isNotNullOrEmpty(getAuthors());
   }
 
   public boolean hasSingleAuthor() {
@@ -435,6 +443,10 @@ public class Book implements SplitableByLetter {
     return authors;
   }
 
+  /**
+   * Create a comma separated list of authors
+   * @return
+   */
   public String getListOfAuthors() {
     if (listOfAuthors == null)
       listOfAuthors = Helper.concatenateList(" & ", getAuthors(), "getName");
@@ -442,9 +454,10 @@ public class Book implements SplitableByLetter {
   }
 
   public Author getMainAuthor() {
+    if (copyOfBook != null) return copyOfBook.getMainAuthor();
     if (getAuthors() == null || getAuthors().size() == 0)
       return null;
-    return getAuthors().get(0);
+    return  getAuthors().get(0);
   }
 
   public String getAuthorSort() {
@@ -456,6 +469,7 @@ public class Book implements SplitableByLetter {
   }
 
   public void setPublisher(Publisher publisher) {
+    assert copyOfBook == null;    // Do not expect this on a copy
     this.publisher = publisher;
   }
 
@@ -464,9 +478,16 @@ public class Book implements SplitableByLetter {
   }
 
   public void setSeries(Series value) {
+    assert copyOfBook == null;    // Do not expect this on a copy
     this.series = value;
   }
 
+  /**
+   * Note that the list of tags for a books can be different
+   * in the master and in any copies of the book object
+   *
+   * @return
+   */
   public List<Tag> getTags() {
     return tags;
   }
@@ -476,6 +497,7 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public List<EBookFile> getFiles() {
+    if (copyOfBook != null) return copyOfBook.getFiles();
     if (! isFlags(FLAG_FILES_SORTED)) {
       if (files != null && files.size() > 1) {
         Collections.sort(files, new Comparator<EBookFile>() {
@@ -500,6 +522,7 @@ public class Book implements SplitableByLetter {
   }
 
   public void removeFile(EBookFile file) {
+    assert copyOfBook == null;    // Do not expect this on a copy
     files.remove(file);
     epubFile = null;
     preferredFile = null;
@@ -512,6 +535,7 @@ public class Book implements SplitableByLetter {
    * @param file
    */
   public void addFile(EBookFile file) {
+    assert copyOfBook == null;      // Fo not expect this on a copy
     files.add(file);
     epubFile = null;
     preferredFile = null;
@@ -520,6 +544,7 @@ public class Book implements SplitableByLetter {
   }
 
   public EBookFile getPreferredFile() {
+    if (copyOfBook != null) return copyOfBook.getPreferredFile();
     if (! isFlags(FLAG_PREFERREDFILECOMPUTED)) {
       for (EBookFile file : getFiles()) {
         if (preferredFile == null || file.getFormat().getPriority() > preferredFile.getFormat().getPriority())
@@ -530,8 +555,12 @@ public class Book implements SplitableByLetter {
     return preferredFile;
   }
 
+  /**
+   * @param author
+   */
   public void addAuthor(Author author) {
-    listOfAuthors = null;
+    assert copyOfBook == null;    // Do not expect this on a copy
+    listOfAuthors = null;     // Force display list to be recalculated
     if (authors == null)
       authors = new LinkedList<Author>();
     if (!authors.contains(author))
@@ -557,6 +586,7 @@ public class Book implements SplitableByLetter {
   }
 
   public File getBookFolder() {
+    if (copyOfBook != null) return copyOfBook.getBookFolder();
     if (bookFolder == null) {
       File calibreLibraryFolder = Configuration.instance().getDatabaseFolder();
       bookFolder = new File(calibreLibraryFolder, getPath());
@@ -587,6 +617,7 @@ public class Book implements SplitableByLetter {
   }
 
   public boolean doesEpubFileExist() {
+    if (copyOfBook != null) return copyOfBook.doesEpubFileExist();
     EBookFile file = getEpubFile();
     if (file == null)
       return false;
@@ -595,6 +626,7 @@ public class Book implements SplitableByLetter {
   }
 
   public long getLatestFileModifiedDate() {
+    if (copyOfBook != null) return copyOfBook.getLatestFileModifiedDate();
     if (latestFileModifiedDate == -1) {
       latestFileModifiedDate = 0;
       for (EBookFile file : getFiles()) {
@@ -610,6 +642,7 @@ public class Book implements SplitableByLetter {
   }
 
   public BookRating getRating() {
+    if (copyOfBook != null)  return copyOfBook.getRating();
     return rating;
   }
 
@@ -617,28 +650,62 @@ public class Book implements SplitableByLetter {
     return DataModel.INSTANCE.getLibrarySortTitle() ? getTitle() : getTitle_Sort();
   }
 
+  /**
+   * Make a copy of the book object.
+   *
+   * The copy has some special behavior in that most properties are read
+   * from the original, but the tags one is still private.
+   *
+   * NOTE:  Can pass as null values that are alwars read from parent!
+   *        Not sure if this reduces RAM usage or not!
+   *
+   * @return  Book object that is the copy
+   */
   public Book copy() {
-    Book result = new Book(id, uuid, title, titleSort, path, serieIndex, timestamp, modified, publicationDate, isbn, authorSort, rating);
-    result.setComment(this.getComment());
-    result.setSeries(this.getSeries());
-    result.setPublisher(this.getPublisher());
+    Book result = new Book(id,uuid,title,titleSort,path,serieIndex,timestamp,modified,publicationDate,isbn,authorSort,rating);
 
-    result.files = new LinkedList<EBookFile>(this.getFiles());
+    // Set some private variables that should be invariant in a copy
+    authors = this.authors;
+    series = this.series;
+    publisher = this.publisher;
+    listOfAuthors = this.listOfAuthors;
+    authorSort = this.authorSort;
+    latestFileModifiedDate = this.getLatestFileModifiedDate();
+    epubFile = this.getEpubFile();
+    epubFileName = this.getEpubFilename();
+    customColumnValues = this.customColumnValues;
+    comment = this.comment;
+    summary = this.summary;
+    summaryMaxLength = this.summaryMaxLength;
+
+    // The tags aassciated with this entry may be changed, so we make
+    // a copy of the ones currently associated
     result.tags = new LinkedList<Tag>(this.getTags());
-    result.authors = new LinkedList<Author>(this.getAuthors());
 
+    // Indicate this is a copy by setting a reference to the parent
+    // This is used to read/set variables that must be in parent.
+    result.copyOfBook = (this.copyOfBook == null) ? this : this.copyOfBook;
     return result;
   }
 
   public boolean isFlagged() {
+    if (copyOfBook != null) return copyOfBook.isFlagged();
     return isFlags(FLAG_FLAGGED);
   }
 
-  public void setFlag() {
+  public void setFlagged() {
+    if (copyOfBook != null) {
+      copyOfBook.setFlagged();
+      return;
+    }
     setFlags(true, FLAG_FLAGGED);
   }
 
-  public void clearFlag() {
+  public void clearFlagged() {
+    if (copyOfBook != null) {
+      copyOfBook.clearFlagged();
+      return;
+    }
     setFlags(false, FLAG_FLAGGED);
   }
 
@@ -647,6 +714,7 @@ public class Book implements SplitableByLetter {
    * @return
    */
   public boolean isChanged() {
+    if (copyOfBook != null) return copyOfBook.isChanged();
     return isFlags(FLAG_CHANGED);
   }
 
@@ -655,7 +723,11 @@ public class Book implements SplitableByLetter {
    * (default is false, -so should only need to set to true.
    * If neccesary could change to pass in required state).
    */
-  public void setChanged() {
+  public void setChanged()  {
+    if (copyOfBook != null) {
+      copyOfBook.setChanged();
+      return;
+    }
     setFlags(true, FLAG_CHANGED);
   }
 
@@ -677,16 +749,36 @@ public class Book implements SplitableByLetter {
   }
 
   public void setDone() {
+    if (copyOfBook != null) {
+      copyOfBook.setDone();
+      return;
+    }
     setFlags(true, FLAG_DONE);
   }
+
   public boolean isDone() {
+    if (copyOfBook != null) return copyOfBook.isDone();
     return isFlags(FLAG_DONE);
   }
 
+  /**
+   * Set referenced flag.
+   */
   public void setReferenced() {
+    if (copyOfBook != null) {
+      copyOfBook.setReferenced();
+      return;
+    }
     setFlags(true, FLAG_REFERENCED);
   }
+
+  /**
+   * Get referenced flag
+   *
+   * @return
+   */
   public boolean isReferenced() {
+    if (copyOfBook != null) return copyOfBook.isReferenced();
     return isFlags(FLAG_REFERENCED);
   }
 }

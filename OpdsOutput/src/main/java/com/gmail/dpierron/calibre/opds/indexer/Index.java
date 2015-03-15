@@ -299,7 +299,7 @@ public class Index {
     List<String> sqlCatalogItems = new ArrayList<String>(mapOfKeywords.size());
     // clear the flag of all books
     for (Book book : DataModel.INSTANCE.getListOfBooks()) {
-      book.clearFlag();
+      book.clearFlagged();
     }
     for (Keyword keyword : mapOfKeywords.values()) {
       String kwId = Long.toString(keyword.id);
@@ -316,7 +316,7 @@ public class Index {
           String bkId = bookEntry.book.getId();
           int bookId = Integer.parseInt(bkId);
           if (!bookEntry.book.isFlagged()) {
-            bookEntry.book.setFlag();
+            bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
@@ -418,7 +418,7 @@ public class Index {
     List<String> jsonCatalogItems = new ArrayList<String>(mapOfKeywords.size());
     // clear the flag of all books
     for (Book book : DataModel.INSTANCE.getListOfBooks()) {
-      book.clearFlag();
+      book.clearFlagged();
     }
     for (Keyword keyword : mapOfKeywords.values()) {
       String kwId = Long.toString(keyword.id);
@@ -435,7 +435,7 @@ public class Index {
           String bkId = bookEntry.book.getId();
           int bookId = Integer.parseInt(bkId);
           if (!bookEntry.book.isFlagged()) {
-            bookEntry.book.setFlag();
+            bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
@@ -538,7 +538,7 @@ public class Index {
     List<String[]> jsCatalogItems = new ArrayList<String[]>(mapOfKeywords.size());
     // clear the flag of all books
     for (Book book : DataModel.INSTANCE.getListOfBooks()) {
-      book.clearFlag();
+      book.clearFlagged();
     }
     // TODO:  See if we can rework to write directly to files to reduce RAM usage
     for (Keyword keyword : mapOfKeywords.values()) {
@@ -554,7 +554,7 @@ public class Index {
           String bkId = bookEntry.book.getId();
           int bookId = Integer.parseInt(bkId);
           if (!bookEntry.book.isFlagged()) {
-            bookEntry.book.setFlag();
+            bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
               String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
