@@ -1230,17 +1230,22 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                 if (!existingTargetFile.getAbsolutePath()
                     .startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
                 {
-                  if (logger.isTraceEnabled())
-                    logger.trace("deleting " + existingTargetFile.getPath());
-                  callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
-                  Helper.delete(existingTargetFile, true);
+                  CachedFile cf = CachedFileManager.INSTANCE.inCache(existingTargetFile);
+                  if (cf != null && cf.isChanged() == false) {
+                    if (logger.isTraceEnabled()) logger.trace("Not deleted as marked unchanged");
+                  } else {
+                    if (logger.isTraceEnabled())
+                      logger.trace("deleting " + existingTargetFile.getPath());
+                    callback.showMessage(Localization.Main.getText("info.deleting") + " " + existingTargetFile);
+                    Helper.delete(existingTargetFile, true);
 
-                  if (syncLog) {
-                    syncLogFile.printf("DELETED: %s", existingTargetFile);
-                    syncLogFile.println();
+                    if (syncLog) {
+                      syncLogFile.printf("DELETED: %s", existingTargetFile);
+                      syncLogFile.println();
+                    }
+                    // Ensure no longer in cache
+                    CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
                   }
-                  // Ensure no longer in cache
-                  CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
                 }
               }
             }

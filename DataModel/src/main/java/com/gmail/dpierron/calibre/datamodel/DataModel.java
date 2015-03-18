@@ -709,7 +709,18 @@ public enum DataModel {
    * Get a Noiseword object given the language string
    */
   public NoiseWord getNoiseword(String language) {
-    return getNoiseword(Helper.getLocaleFromLanguageString(language));
+    Locale locale;
+    switch (language.length()) {
+      case 2: locale = Localization.Main.getLocaleFromiso2(language);
+              break;
+      case 3: locale = Localization.Main.getLocaleFromIso3(language);
+              break;
+      default:
+              // Bit sure this should even be ossible!
+              assert false : "Unexpected value for language parameter (" + language +")";
+              return null;
+    }
+    return getNoiseword(locale);
   }
   /**
    * Get a Noiseword correspnding to a Language object
@@ -739,19 +750,29 @@ public enum DataModel {
     if (mapOfNoisewords.containsKey(locale)) {
       return mapOfNoisewords.get(locale);
     }
-    if (!Localization.Main.getAvailableLocalizationsAsLocales().contains(locale)) {
+
+    // This is a 'tweak' to ensure we have the correct internal locale
+    Locale ll = Localization.Main.getLocaleFromIso3(locale.getISO3Language());
+    if (ll == null) {
       if (logger.isTraceEnabled()) logger.trace("Attempt to create Noiseword for unsupported locale " + locale.getDisplayLanguage());
       return new NoiseWord(locale, null);
     }
 
-    String langNoiseWords = Localization.Main.getText(locale,"i18n.noiseWords");
-    StringTokenizer st = new StringTokenizer(langNoiseWords,",");
+    // Convert the string returned from localization to the vector format used internally
+
+    String langNoiseWords = Localization.Main.getText(ll,"i18n.noiseWords");
     List<String> noiseWordList = new LinkedList<String>();
-    while (st.hasMoreTokens()) {
-      noiseWordList.add(st.nextToken().toUpperCase(locale));
+    StringTokenizer st = new StringTokenizer(langNoiseWords, ",");
+    NoiseWord nw = null;
+    if (langNoiseWords != null) {
+      while (st.hasMoreTokens()) {
+        String nt = st.nextToken().toUpperCase(locale);
+        if (nt.length() > 1)
+          noiseWordList.add(nt);
+      }
+      nw = new NoiseWord(locale, noiseWordList);
+      mapOfNoisewords.put(locale, nw);
     }
-    NoiseWord nw = new NoiseWord(locale, noiseWordList);
-    mapOfNoisewords.put(locale, nw);
     return nw;
   }
 }

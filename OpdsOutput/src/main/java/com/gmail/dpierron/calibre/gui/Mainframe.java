@@ -973,7 +973,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Localizations that need completing before calling default processing
 
-    cboLang.setModel(new DefaultComboBoxModel(Localization.Main.getAvailableLocalizationsAsStrings()));
+    cboLang.setModel(new DefaultComboBoxModel(Localization.Main.getAvailableLocalizationsAsIso2()));
 
     // Types not handled (yet) by guiField class
 

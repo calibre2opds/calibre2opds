@@ -131,14 +131,19 @@ public enum JDOM {
     catalogTransformer.setParameter("i18n.downloadsection", Localization.Main.getText("i18n.downloadsection"));
     catalogTransformer.setParameter("i18n.relatedsection", Localization.Main.getText("i18n.relatedsection"));
     catalogTransformer.setParameter("i18n.linksection", Localization.Main.getText("i18n.linksection"));
-    String dateGenerated =
-        DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
-    catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated",
-                                                                        dateGenerated,
-                                                                        Constants.PROGVERSION + Constants.BZR_VERSION,
-                                                                        "" + DataModel.INSTANCE.getListOfBooks().size()));
     catalogTransformer.setParameter("browseByCover", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
     catalogTransformer.setParameter("generateIndex", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
+    // We only want to add the Date Generated to the bottom of each catalog page if
+    // we have not elected to try and minimise the number of files changed each run
+    // (it will still be added to the top page)
+    // TODO:  decide if we never want this on each page?
+    if (ConfigurationManager.INSTANCE.getCurrentProfile().getMinimizeChangedFiles()) {
+      catalogTransformer.setParameter("i18n.dateGenerated","");
+    } else {
+      String dateGenerated =
+          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
+      catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
+    }
   }
 
   public Transformer getCatalogTransformer() {

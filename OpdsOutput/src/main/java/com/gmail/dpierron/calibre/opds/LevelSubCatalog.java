@@ -135,7 +135,7 @@ public class LevelSubCatalog extends SubCatalog {
             }
             logger.info("Generating custom catalog: " + customCatalogTitle + " (" + s + ")");
             if (Helper.isNullOrEmpty(customCatalogBooks)) {
-              logger.warn(Localization.Main.getText("error.customCatalogEmpty",customCatalogTitle));
+              logger.warn(Localization.Main.getText("error.customCatalogEmpty",customCatalogTitle) + " (" + customCatalogSearch + ")" );
             } else {
               LevelSubCatalog customSubCatalog = new LevelSubCatalog(customCatalogBooks, customCatalogTitle);
               customSubCatalog.setCatalogType(Constants.CUSTOM_TYPE);

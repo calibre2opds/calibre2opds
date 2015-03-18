@@ -1,6 +1,5 @@
 import com.gmail.dpierron.calibre.configuration.GetConfigurationInterface;
 import com.gmail.dpierron.tools.i18n.Localization;
-import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ public class TestLocalisation {
 
   @Test
   public void test() {
-    System.out.println(Localization.Main.getAvailableLocalizationsAsStrings());
+    System.out.println(Localization.Main.getAvailableLocalizationsAsIso2());
   }
 
   @Test

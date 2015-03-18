@@ -16,6 +16,7 @@ import java.util.*;
 public class NoiseWord {
   private Locale locale;                      // Local for this class instance
   private List<String> noiseWords;            // List of Noisewords for this class instance
+  private boolean removeWords;                // true = remove words completely, false = move words to end
 
   // CONSTRUCTORS
 
@@ -29,35 +30,61 @@ public class NoiseWord {
   public NoiseWord(Locale locale, List<String> noiseWords) {
     this.locale = locale;
     this.noiseWords = noiseWords;
+    removeWords = true;
   }
 
 
   // METHODS and PROPERTIES
 
   /**
-   * Remove leading noisewords from the start of the provided string
-   * and instead append them at the end after a comma.  The primary
-   * purpose of this method is to allow for sorting titles and series
-   * via the 'library ordeer' which ignores leading nosie words.
+   *
+   * @param b
+   */
+  public void setRemovewords(boolean b) {
+    removeWords = b;
+  }
+  /**
+   * Remove leading noisewords from the start of the provided string.
+   * The primary purpose of this method is to allow for sorting titles
+   * and series via the 'library ordeer' which ignores leading nosie
+   * words.
+   *
+   * Whether the words are removed entirely or moved to the end receeded
+   * by a comma is controlled via the removeWords prperty (defaults to move)
    *
    * @param s   // The String to be examined
-   * @return    // String amended (if necessary) to place noise words at the end
+   * @return    // Amended string.
    */
   public String removeLeadingNoiseWords(String s) {
     if (noiseWords == null || noiseWords.size() == 0) {
       return s;
     }
-    String result = s;
+    String result = s.toUpperCase(locale);
     boolean found = true;
-    while ((result.length() > 0) && found) {
+    int startPos = 0;
+    while ( (startPos < s.length()) && found) {
       found = false;
       for (String noiseWord : noiseWords) {
-        if (result.toUpperCase().startsWith(noiseWord)) {
-          result = result.substring(noiseWord.length()) + ", " + result.substring(0,noiseWord.length());;
+        if (result.substring(startPos).startsWith(noiseWord)) {
+          startPos += noiseWord.length();
           found = true;
         }
       }
     }
+    result = s.substring(startPos);
+    if (! removeWords && startPos > 0) {
+      // We want to ignore any trailing space on the noiseword(s)
+      if (s.charAt(startPos-1) == ' ')  startPos--;
+      // Move noisewords to end
+      result += ", " + s.substring(0, startPos);
+    }
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return (locale == null ? "Unknown" : locale.getDisplayLanguage())
+            + ": "
+            + (Helper.isNullOrEmpty(noiseWords) ? "[]" : noiseWords.toString());
   }
 }

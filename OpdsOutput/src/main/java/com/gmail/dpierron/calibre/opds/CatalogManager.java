@@ -299,7 +299,7 @@ public enum CatalogManager {
    * Set up an entry for the given file in the catalog.
    * Checks to see if the file is already present and if not adds it
    *
-   * @param catalogFileName   The name of the file to be stored.  Includes folde if relevant
+   * @param catalogFileName   The name of the file to be stored.  Includes folder if relevant
    * @return                  File object corresponding to the given path
    */
   public File storeCatalogFile(String catalogFileName) {

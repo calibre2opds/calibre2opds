@@ -755,7 +755,20 @@ public abstract class SubCatalog {
     }
 
     //  generate corresponding HTML file
-    CatalogManager.INSTANCE.htmlManager.generateHtmlFromDOM(document, outputFile, feedType);
+
+    // TODO:   See if we can optimise things by avoiding generating the HTML file
+    // TODO:   if the target already exists and the XML file is unchanged in this run?
+    // TODO:   This would have an implication on the syn process so not a trivial change
+
+    if (! ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
+      return;
+    }
+    File htmlFile = new File(HtmlManager. getHtmlFilename(outputFile.toString()));
+    if (htmlFile.exists()) {
+      logger.warn("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'");
+      return;
+    }
+    CatalogManager.INSTANCE.htmlManager.generateHtmlFromDOM(document, htmlFile, feedType);
   }
 
   /*

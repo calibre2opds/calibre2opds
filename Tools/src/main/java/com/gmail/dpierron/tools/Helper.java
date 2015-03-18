@@ -1385,6 +1385,7 @@ public class Helper {
    * - If it is 3 characters in length then it is assumed to be the ISO3 value
    * - If it is 4+ characters then it is assumed to be the Display Language text
    * If no match can be found then the English Locale is always returned
+   * TODO:  Perhaps we should consider returning null if no match found?
    *
    * @param   lang
    * @return  Locale
@@ -1393,7 +1394,8 @@ public class Helper {
     if (lang != null || lang.length() > 1) {
       for (Locale l : Locale.getAvailableLocales()) {
          switch (lang.length()) {
-           case 2:  if (l.getLanguage().equalsIgnoreCase(lang)) return l;
+           //  Note te case of a 2 charachter lang needs special trreatment - see Locale code for getLangugage
+           case 2:  if (l.getLanguage().substring(0,2).equalsIgnoreCase(new Locale(lang).getLanguage())) return l;
                     break;
            case 3:  if (l.getISO3Language().equalsIgnoreCase(lang)) return l;
                     break;

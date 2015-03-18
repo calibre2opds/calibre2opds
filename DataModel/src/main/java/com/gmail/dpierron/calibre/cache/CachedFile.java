@@ -31,6 +31,7 @@ public class CachedFile extends File {
   private long privateLastModified;
   private long privateLength;
   private long privateCrc;                     // A -ve value indicates invalid CRC;
+  private final static long CRC_NOT_SET = -1;
 
   // Flags indicating state of entry
   // Noee:  Using bits in more memory efficient than using boolean types.
@@ -53,7 +54,7 @@ public class CachedFile extends File {
   public CachedFile(String pathname) {
     super(pathname);
     if (logger.isTraceEnabled()) logger.trace("new CachedFile: " + getAbsolutePath());
-    clearCached();
+    resetCached();
   }
 
 
@@ -77,9 +78,9 @@ public class CachedFile extends File {
   }
 
   /**
-   * Clear all cached information.
+   * Reset all cached information to defaults.
    */
-  private void clearCached() {
+  private void resetCached() {
     setFlags(false, FLAG_CACHED_VALUES_CHECKED + FLAG_TARGET_FILE);
     clearCachedInformation();
   }
@@ -90,9 +91,11 @@ public class CachedFile extends File {
    */
   public void clearCachedInformation() {
     privateLastModified = 0;
+    privateCrc = CRC_NOT_SET;
     setFlags(false,
-        FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_EXISTS + FLAG_IS_DIRECTORY + FLAG_IS_DIRECTORY_CHECKED +
-            FLAG_CACHED_VALUES_CHECKED);     // Reset to say cache only entry
+        FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_EXISTS
+        + FLAG_IS_DIRECTORY + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED);     // Reset to say cache only entry
+    setFlags(true, FLAG_IS_CHANGED);          // We always assume a file is changed until explicitly told otherwise
   }
 
 
@@ -116,7 +119,7 @@ public class CachedFile extends File {
         // Cached entry for non-existent file needs resetting
         if (logger.isTraceEnabled())
           logger.trace("File does not exist - reset to defaults");
-        clearCached();
+        resetCached();
         return;
       }
     }
@@ -138,7 +141,7 @@ public class CachedFile extends File {
       }
       privateLastModified = d;
     }
-    if (!isFlags(FLAG_CRC_CALCED) && privateCrc != -1) {
+    if (!isFlags(FLAG_CRC_CALCED) && privateCrc != CRC_NOT_SET) {
       if (logger.isTraceEnabled()) logger.trace("CRC assumed valid");
       setFlags(true, FLAG_CRC_CALCED);
     }
@@ -212,7 +215,7 @@ public class CachedFile extends File {
 
   @Override
   public boolean delete() {
-    clearCached();
+    resetCached();
     return super.delete();
   }
 
@@ -232,7 +235,7 @@ public class CachedFile extends File {
     checkCachedValues();
     if (! isFlags(FLAG_CRC_CALCED)) {
       // See i conditions for used cached value are met
-      if ((privateCrc != -1) && isFlags(FLAG_LENGTH_CHECKED + FLAG_MODIFIED_CHECKED)) {
+      if ((privateCrc != CRC_NOT_SET) && isFlags(FLAG_LENGTH_CHECKED + FLAG_MODIFIED_CHECKED)) {
         setFlags(true, FLAG_CRC_CALCED);
       } else {
         // Calculate the CRC for this file.
@@ -247,7 +250,7 @@ public class CachedFile extends File {
           logger.error("ERROR: Failed trying to calculate CRC for " + super.getAbsolutePath() + "\n" + e.toString());
           clearCachedCrc();
         } finally {
-          setFlags((privateCrc != -1), FLAG_CRC_CALCED);
+          setFlags((privateCrc != CRC_NOT_SET), FLAG_CRC_CALCED);
         }
         // Close file ignoring any errors
         try {
@@ -279,7 +282,7 @@ public class CachedFile extends File {
    * Clear any cached CRC value to invalidate it
    */
   private void clearCachedCrc() {
-    privateCrc = -1;
+    privateCrc = CRC_NOT_SET;
     setFlags(false, FLAG_CRC_CALCED);
   }
 
