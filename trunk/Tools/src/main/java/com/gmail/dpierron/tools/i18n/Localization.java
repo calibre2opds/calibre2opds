@@ -30,15 +30,15 @@ public enum Localization {
   /**
    * the resource bundle used by this localization resource
    */
-  private ResourceBundle localizations;
+  private ResourceBundle currentLocalizations;
 
   /**
-   * english localizations
+   * english currentLocalizations
    */
   private ResourceBundle englishLocalizations;
 
   /*
-   * all localizations.
+   * all currentLocalizations.
    * Loaded once to avoid reloads later.
    */
   private Vector<ResourceBundle> allLocalizations;
@@ -47,6 +47,7 @@ public enum Localization {
    * The name of the last loaded locale
    */
   private Locale lastLocalLanguage = null;
+
   private Locale profileLanguage = null;
   public void setProfileLanguage(Locale lang) {
     profileLanguage = lang;
@@ -60,9 +61,9 @@ public enum Localization {
    * @return
    */
   public ResourceBundle getBundle() {
-    if (localizations == null)
+    if (currentLocalizations == null)
       reloadLocalizations();
-    return localizations;
+    return currentLocalizations;
   }
 
   /**
@@ -84,12 +85,12 @@ public enum Localization {
    */
   public ResourceBundle getBundle(Locale language) {
      ResourceBundle localizations = null;
-    // We always want the English localizations loaded
+    // We always want the English currentLocalizations loaded
     if (englishLocalizations == null)    {
       englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
     }
-    // No need to load english localizations twice!
-    assert englishLocalizations != null : "Program Error: English localizations should always have loaded OK";
+    // No need to load english currentLocalizations twice!
+    assert englishLocalizations != null : "Program Error: English currentLocalizations should always have loaded OK";
     if (Helper.isNullOrEmpty(language) || language.equals(Locale.ENGLISH)) {
       localizations = englishLocalizations;
     } else {
@@ -109,39 +110,78 @@ public enum Localization {
     reloadLocalizations(Locale.ENGLISH);
   }
 
-  // Save results to improve efficency on subsequent calls
+  // Cache results to improve efficency on subsequent calls
   private static Vector<Locale> localeAvailableLocalizations = null;
-  private static Vector<String> stringAvailableLicalizations = null;
+  private static Vector<String> iso2AvailableLicalizations = null;
+  private static Vector<String> iso3AvailableLicalizations = null;
 
   /**
-   * Get the kist of localizations that we have available
-   * in the properties file for Calibre2opds.
+   * Get the kist of currentLocalizations that we have available
+   * in the properties file for Calibre2opds indexed by locale.
    *
    * @return
    */
   public Vector<Locale> getAvailableLocalizationsAsLocales() {
     if (Helper.isNullOrEmpty(localeAvailableLocalizations)) {
       localeAvailableLocalizations = new Vector<Locale>();
-      stringAvailableLicalizations = new Vector<String>();
+      iso2AvailableLicalizations = new Vector<String>();
+      iso3AvailableLicalizations = new Vector<String>();
       for (Locale locale : Locale.getAvailableLocales()) {
         ResourceBundle bundle = getResourceBundle(localizationBundleName, locale, false);
         if (bundle != null) {
           if (bundle.getLocale().equals(locale)) {
             localeAvailableLocalizations.add(locale);
-            stringAvailableLicalizations.add(locale.getLanguage());
+            iso2AvailableLicalizations.add(locale.getLanguage());
+            iso3AvailableLicalizations.add(locale.getISO3Language());
           }
         }
       }
     }
     return localeAvailableLocalizations;
   }
-  public Vector<String> getAvailableLocalizationsAsStrings() {
-    if (stringAvailableLicalizations == null ) getAvailableLocalizationsAsLocales();
-    return stringAvailableLicalizations;
+
+  /**
+   * Get the list of available currentLocalizations indexed by the 2 character language code
+   * @return
+   */
+  public Vector<String> getAvailableLocalizationsAsIso2() {
+    if (iso2AvailableLicalizations == null ) getAvailableLocalizationsAsLocales();
+    return iso2AvailableLicalizations;
   }
 
   /**
-   * Get a given resource bundle.
+   * Get the list of available currentLocalizations indexed by the 3 character ISO langiage code
+   * @return
+   */
+  public Vector<String> getAvailableLocalizationsAsiso3() {
+    if (iso3AvailableLicalizations == null ) getAvailableLocalizationsAsLocales();
+    return iso3AvailableLicalizations;
+  }
+
+  /**
+   *   Get the Localization Locale corresponding to a particular iso2 language code
+   *
+   * @param iso2
+   * @return        locale, or null if not available
+   */
+  public Locale getLocaleFromiso2(String iso2) {
+    int i = getAvailableLocalizationsAsIso2().indexOf(iso2.substring(0, 2));
+    return i == -1 ? null : getAvailableLocalizationsAsLocales().get(i);
+  }
+
+  /**
+   *   Get the Localization Locale corresponding to a particular iso3 language code
+   *
+   * @param iso3
+   * @return      Locale, or null if not available
+   */
+  public Locale getLocaleFromIso3(String iso3) {
+    int i = getAvailableLocalizationsAsiso3().indexOf(iso3);
+    return i == -1 ? null : getAvailableLocalizationsAsLocales().get(i);
+  }
+
+  /**
+   * Get a given resource bundle corresponding to the specified locale.
    *
    * @param name
    * @param locale          Set to the locale we want.
@@ -165,7 +205,7 @@ public enum Localization {
   }
 
   /**
-   * Reloads the localizations according to the language set in Configuration manager                        Helper
+   * Reloads the currentLocalizations according to the language set in Configuration manager                        Helper
    */
   public void reloadLocalizations() {
     reloadLocalizations(getProfileLanguage());
@@ -178,19 +218,19 @@ public enum Localization {
    * @throws IOException
    */
   public void reloadLocalizations(Locale language) {
-    // We always want the English localizations loaded
+    // We always want the English currentLocalizations loaded
     if (englishLocalizations == null)    {
       englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
       lastLocalLanguage = Locale.ENGLISH;
-      if (localizations == null)  localizations = englishLocalizations;
+      if (currentLocalizations == null)  currentLocalizations = englishLocalizations;
     }
-    // No need to load english localizations twice!
-    assert englishLocalizations != null : "Program Error: English localizations should always have loaded OK";
+    // No need to load english currentLocalizations twice!
+    assert englishLocalizations != null : "Program Error: English currentLocalizations should always have loaded OK";
     if (! language.equals(Locale.ENGLISH)) {
       if (Helper.isNullOrEmpty(language)) {
-        localizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
+        currentLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
       } else {
-        localizations = getResourceBundle(localizationBundleName, language, true);
+        currentLocalizations = getResourceBundle(localizationBundleName, language, true);
         lastLocalLanguage = language;
       }
     }

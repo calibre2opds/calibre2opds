@@ -29,7 +29,7 @@ public class HtmlManager {
     MainCatalog
   }
   private final static Logger logger = Logger.getLogger(HtmlManager.class);
-  private long timeInHtml = 0;
+  private static long timeInHtml = 0;
 
   public HtmlManager() {
     timeInHtml = 0;
@@ -39,59 +39,56 @@ public class HtmlManager {
     return timeInHtml;
   }
 
-  public void generateHtmlFromDOM(Document document, File outputFile, FeedType feedType) throws IOException {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
-      FileOutputStream fos = null;
+  public static void generateHtmlFromDOM(Document document, File outputFile, FeedType feedType) throws IOException {
+
+    FileOutputStream fos = null;
+    try {
+      // create the same file as html
+      long now = System.currentTimeMillis();
+
+      JDOMSource source = new JDOMSource(document);
+      fos = new FileOutputStream(outputFile);
+      StreamResult streamResult = new StreamResult(fos);
       try {
-        // create the same file as html
-        long now = System.currentTimeMillis();
-        File htmlFile = new File(getHtmlFilename(outputFile.toString()));
-        if (htmlFile.exists()) {
-          return;
+        Transformer transformer = null;
+        switch (feedType) {
+          case MainCatalog:
+            generateHeaderHtml(document, outputFile);
+            transformer = JDOM.INSTANCE.getMainCatalogTransformer();
+            break;
+
+          case Catalog:
+            transformer = JDOM.INSTANCE.getCatalogTransformer();
+            break;
+
+          case BookFullEntry:
+            transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
+            break;
+
+          default:
+            assert false : "generateHtmlFromXml: Unknown feed type " + feedType;
         }
-        JDOMSource source = new JDOMSource(document);
-        fos = new FileOutputStream(htmlFile);
-        StreamResult streamResult = new StreamResult(fos);
-        try {
-          Transformer transformer = null;
-          switch (feedType) {
-            case MainCatalog:
-              generateHeaderHtml(document, outputFile);
-              transformer = JDOM.INSTANCE.getMainCatalogTransformer();
-              break;
 
-            case Catalog:
-              transformer = JDOM.INSTANCE.getCatalogTransformer();
-              break;
-
-            case BookFullEntry:
-              transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
-              break;
-
-            default:
-              assert false : "generateHtmlFromXml: Unknown feed type " + feedType;
-          }
-
-          if (transformer == null) {
-            logger.fatal("Failed to get transformer: Probably means XSL file invalid and failed to compile!" );
-          } else {
-            transformer.transform(source, streamResult);
-          }
-        } catch (TransformerException e) {
-          logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
+        if (transformer == null) {
+          logger.fatal("Failed to get transformer: Probably means XSL file invalid and failed to compile!" );
+        } else {
+          transformer.transform(source, streamResult);
         }
-        timeInHtml += (System.currentTimeMillis() - now);
-      } finally {
-        if (fos != null)
-          fos.close();
+      } catch (TransformerException e) {
+        logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
       }
+      timeInHtml += (System.currentTimeMillis() - now);
+    } finally {
+      if (fos != null)
+        fos.close();
     }
+
   }
 
   /**
    *   TODO:  Decide if this function is needed at all!
    */
-  private void generateHeaderHtml(Document document, File outputFile) throws IOException {
+  private static void generateHeaderHtml(Document document, File outputFile) throws IOException {
     if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
       try {
@@ -121,7 +118,7 @@ public class HtmlManager {
    * @param filename
    * @return
    */
-  public String getHtmlFilename(String filename) {
+  public static String getHtmlFilename(String filename) {
     assert Helper.isNotNullOrEmpty(filename) :
             "Program error: Attempt to create HTML filename for empty/null filename";
     assert ! filename.startsWith(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName()):
