@@ -11,8 +11,8 @@ call setenv.cmd
 
 for /f "delims=" %%a in ('svnversion') do @set SVNVERSION=%%a
 
-SET BASEVERSION=calibre2opds-3.5
-SET VERSION=%BASEVERSION%-%SVNVERSION%
+SET BASEVERSION=3.4
+SET VERSION=calibre2opds-%BASEVERSION%-%SVNVERSION%
 
 SET ZIPFILE=%cd%\%VERSION%.zip
 
@@ -47,7 +47,7 @@ cd brand
 cd ..
 cd Install\target\Dependency
 
-"%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-3.5-SNAPSHOT.jar  DataModel-3.5-SNAPSHOT.jar    Tools-3.5-SNAPSHOT.jar   CalibreQueryLanguage-3.5-SNAPSHOT.jar
+"%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-%BASEVERSION%-SNAPSHOT.jar  DataModel-%BASEVERSION%-SNAPSHOT.jar    Tools-%BASEVERSION%-SNAPSHOT.jar   CalibreQueryLanguage-%BASEVERSION%-SNAPSHOT.jar
 "%ZIPPROG%" "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar jdom-1.1.jar jtidy-r938.jar junit-4.7.jar log4j-1.2.12.jar sqlite-jdbc-3.6.17.1.jar stringtemplate-3.2.jar
 cd ..\..\..\
 

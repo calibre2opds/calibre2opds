@@ -181,7 +181,7 @@ public class guiField {
     }
     // For language fields we need a locale object
     if (Locale.class.equals(paramTypes[0])) {
-      assert String.class.equals(setValue);
+      assert String.class.equals(setValue.getClass()) : "Unexpected class " + setValue.getClass().getName() +" (" + setValue + ")";
       setValue = Helper.getLocaleFromLanguageString((String)setValue);
     }
     try {

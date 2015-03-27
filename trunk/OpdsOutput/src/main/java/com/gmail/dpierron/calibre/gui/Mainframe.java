@@ -1538,7 +1538,7 @@ public class Mainframe extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(700, 550));
         setPreferredSize(new java.awt.Dimension(1050, 760));
 
-        pnlMain.setMinimumSize(new java.awt.Dimension(910, 750));
+        pnlMain.setMinimumSize(new java.awt.Dimension(910, 768));
         pnlMain.setName(""); // NOI18N
         pnlMain.setPreferredSize(new java.awt.Dimension(900, 760));
         pnlMain.setLayout(new java.awt.GridBagLayout());
