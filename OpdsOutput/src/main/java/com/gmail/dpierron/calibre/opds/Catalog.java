@@ -915,9 +915,10 @@ public class Catalog {
         CachedFileManager.INSTANCE.loadCache();
         callback.showMessage("");
         logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
+      } else {
+        if (logger.isTraceEnabled())logger.trace("Deleting Cache");
+        CachedFileManager.INSTANCE.deleteCache();
       }
-      if (logger.isTraceEnabled()) logger.trace("Deleting Cache");
-      CachedFileManager.INSTANCE.deleteCache();
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
       CatalogManager.recordRamUsage("After loading (and deleting cache");
 
@@ -1424,8 +1425,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       if (targetFolder != null &&  currentProfile.getCopyToDatabaseFolder()) {
         where = where + " " + Localization.Main.getText("info.step.done.andYourDb");
       }
-      if (logger.isTraceEnabled())
-        logger.trace("where=" + where);
+      if (logger.isTraceEnabled()) logger.trace("where=" + where);
     } catch (GenerationStoppedException gse) {
       generationStopped = true;
     } catch (Throwable t) {

@@ -172,6 +172,7 @@ public class LevelSubCatalog extends SubCatalog {
       CatalogManager.recordRamUsage("After generating Custom Catalogs");
     }
     CatalogManager.INSTANCE.callback.endCreateCustomCatalogs();
+    CatalogManager.INSTANCE.callback.showMessage("");
   }
 
   /**
@@ -281,6 +282,35 @@ public class LevelSubCatalog extends SubCatalog {
     if (atTopLevel)   CatalogManager.INSTANCE.callback.endCreateAuthors();
     CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
 
+    /* Series */
+
+    if (atTopLevel)   CatalogManager.INSTANCE.callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
+    if (currentProfile.getGenerateSeries()) {
+      // bug c20-81  Need to allow for (perhaps unlikely) case where no books in library have a series entry set
+      logger.debug("STARTED: Generating Series catalog");
+      SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOut, getBooks());
+      seriesSubCatalog.setCatalogLevel(getCatalogLevel());
+      entry = seriesSubCatalog.getSubCatalog(breadcrumbs,
+          null,     // let it be derived from books
+          getCatalogLevel().length() > 0,
+          0,
+          Localization.Main.getText("series.title"),
+          seriesSubCatalog.getSeries().size() > 1
+              ? Localization.Main.getText("series.alphabetical", seriesSubCatalog.getSeries().size())
+              : (seriesSubCatalog.getSeries().size() == 1 ? Localization.Main.getText("series.alphabetical.single") : ""),
+          null,       // urn:      let it be derived from catalog properties,
+          null,       // filename: let it be derived from catalog properties
+          SplitOption.SplitByLetter,
+          false);     // seriesWod: Do NOT add to series title
+      seriesSubCatalog = null;  // Maybe not necesary - but explicit object cleanup for earlier resource release
+      if (entry != null)
+        feed.addContent(entry);
+      logger.debug("COMPLETED: Generating Series catalog");
+      if (atTopLevel) CatalogManager.recordRamUsage("After generating Series catalog");
+    }
+    if (atTopLevel)   CatalogManager.INSTANCE.callback.endCreateSeries();
+    CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
+
     /* Tags */
 
     if (atTopLevel)   CatalogManager.INSTANCE.callback.startCreateTags(DataModel.INSTANCE.getListOfTags().size());
@@ -292,8 +322,7 @@ public class LevelSubCatalog extends SubCatalog {
                                   ? new TagListSubCatalog(stuffToFilterOut, getBooks())
                                   : new TagTreeSubCatalog(stuffToFilterOut, getBooks());
       tagssubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = tagssubCatalog.getCatalog(breadcrumbs,
-                                        pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
+      entry = tagssubCatalog.getCatalog(breadcrumbs, pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
       tagssubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
         feed.addContent(entry);
@@ -301,35 +330,6 @@ public class LevelSubCatalog extends SubCatalog {
       if (atTopLevel) CatalogManager.recordRamUsage("After generating Tags catalog");
     }
     if (atTopLevel)   CatalogManager.INSTANCE.callback.endCreateTags();
-    CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
-
-    /* Series */
-
-    if (atTopLevel)   CatalogManager.INSTANCE.callback.startCreateSeries(DataModel.INSTANCE.getListOfSeries().size());
-    if (currentProfile.getGenerateSeries()) {
-      // bug c20-81  Need to allow for (perhaps unlikely) case where no books in library have a series entry set
-      logger.debug("STARTED: Generating Series catalog");
-      SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOut, getBooks());
-      seriesSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = seriesSubCatalog.getSubCatalog(breadcrumbs,
-                                             null,     // let it be derived from books
-                                             getCatalogLevel().length() > 0,
-                                             0,
-                                             Localization.Main.getText("series.title"),
-                                             seriesSubCatalog.getSeries().size() > 1
-                                                ? Localization.Main.getText("series.alphabetical", seriesSubCatalog.getSeries().size())
-                                                : (seriesSubCatalog.getSeries().size() == 1 ? Localization.Main.getText("series.alphabetical.single") : ""),
-                                            null,       // urn:      let it be derived from catalog properties,
-                                            null,       // filename: let it be derived from catalog properties
-                                            SplitOption.SplitByLetter,
-                                            false);     // seriesWod: Do NOT add to series title
-      seriesSubCatalog = null;  // Maybe not necesary - but explicit object cleanup for earlier resource release
-      if (entry != null)
-        feed.addContent(entry);
-      logger.debug("COMPLETED: Generating Series catalog");
-      if (atTopLevel) CatalogManager.recordRamUsage("After generating Series catalog");
-    }
-    if (atTopLevel)   CatalogManager.INSTANCE.callback.endCreateSeries();
     CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
 
     /* Recent books */
