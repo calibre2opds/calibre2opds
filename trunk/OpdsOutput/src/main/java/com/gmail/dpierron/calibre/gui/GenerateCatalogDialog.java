@@ -412,7 +412,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   public void endFinalizeMainCatalog(String where, long timeInHtml) {
     endStage(lblFinished, lblFinishedTime, chkFinished);
-    logger.info("Time generating HTML was " + timeInHtml + "milliseconds");
+    logger.info("Time generating HTML was " + timeInHtml + " milliseconds");
     if (where != null) {
       String message = Localization.Main.getText("info.step.done", where);
       logger.info(message);
@@ -687,7 +687,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         chkTags.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkTags, gridBagConstraints);
@@ -695,7 +695,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblTags.setText("lblTags");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
@@ -704,7 +704,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblTagsTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblTagsTime, gridBagConstraints);
@@ -712,7 +712,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         chkSeries.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         getContentPane().add(chkSeries, gridBagConstraints);
@@ -720,7 +720,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblSeries.setText("lblSeries");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
@@ -729,7 +729,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
         lblSeriesTime.setText("!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         getContentPane().add(lblSeriesTime, gridBagConstraints);
