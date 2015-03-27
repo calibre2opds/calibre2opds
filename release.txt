@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.4
+                    RELEASE NOTES for Calibre2Opds v3.5
                     -----------------------------------
 
 Documentation
@@ -95,8 +95,11 @@ that have been recorded in the Issue tracker.
 Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
+  
+v3.5 
+    - No changes/fixes yet included
 
-v3.4 beta Rev 329
+v3.4 (27th March 2015) Rev 336
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.

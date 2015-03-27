@@ -2,13 +2,13 @@
     <parent>
         <artifactId>calibre2opds</artifactId>
         <groupId>com.gmail.dpierron.calibre</groupId>
-        <version>3.4-SNAPSHOT</version>
+        <version>3.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.dpierron</groupId>
     <artifactId>Tools</artifactId>
     <name>Tools</name>
-    <version>3.4-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
     <description>Helper tools</description>
     <dependencies>
         <dependency>
