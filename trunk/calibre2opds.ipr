@@ -752,45 +752,6 @@
     <entry_points version="2.0" />
   </component>
   <component name="IdProvider" IDEtalkID="8C89CA0136CDD788E7EAE3F59459477E" />
-  <component name="InspectionProjectProfileManager">
-    <profiles>
-      <profile version="1.0" is_locked="false">
-        <option name="myName" value="Project Default" />
-        <option name="myLocal" value="false" />
-        <inspection_tool class="CssInvalidElementInspection" enabled="false" level="ERROR" enabled_by_default="false" />
-        <inspection_tool class="CssInvalidHtmlTagReferenceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssInvalidImportInspection" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssInvalidShorthandPropertyValue" enabled="false" level="ERROR" enabled_by_default="false" />
-        <inspection_tool class="CssNegativeValueInspection" enabled="false" level="ERROR" enabled_by_default="false" />
-        <inspection_tool class="CssNoGenericFontName" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssOptimizeSimilarPropertiesInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssOverwrittenProperties" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssRgbFunctionInspection" enabled="false" level="ERROR" enabled_by_default="false" />
-        <inspection_tool class="CssUnitlessNumber" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="CssUnknownProperty" enabled="false" level="WARNING" enabled_by_default="false">
-          <option name="myCustomPropertiesEnabled" value="false" />
-          <option name="myIgnoreVendorSpecificProperties" value="false" />
-          <option name="myCustomPropertiesList">
-            <value>
-              <list size="0" />
-            </value>
-          </option>
-        </inspection_tool>
-        <inspection_tool class="CssUnusedSymbolInspection" enabled="false" level="WARNING" enabled_by_default="false" />
-        <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
-          <option name="processCode" value="true" />
-          <option name="processLiterals" value="true" />
-          <option name="processComments" value="true" />
-        </inspection_tool>
-        <inspection_tool class="W3CssValidation" enabled="false" level="WARNING" enabled_by_default="false">
-          <option name="myCssVersion" value="css3" />
-        </inspection_tool>
-      </profile>
-    </profiles>
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_PROFILE" value="true" />
-    <version value="1.0" />
-  </component>
   <component name="IssueNavigationConfiguration">
     <option name="links">
       <list>
@@ -1412,6 +1373,19 @@
         <root url="jar://$PROJECT_DIR$/Tools/pom-sources.jar!/" />
         <root url="jar://$MAVEN_REPOSITORY$/com/gmail/dpierron/Tools/2.2-SNAPSHOT/Tools-2.2-SNAPSHOT-sources.jar!/" />
         <root url="file://$PROJECT_DIR$/Tools/src/main/java" />
+      </SOURCES>
+    </library>
+    <library name="Maven: com.gmail.dpierron:Tools:3.4-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/gmail/dpierron/Tools/3.4-SNAPSHOT/Tools-3.4-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/Tools/Tools-3.4-SNAPSHOT-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/gmail/dpierron/Tools/3.4-SNAPSHOT/Tools-3.4-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/Tools/Tools-3.4-SNAPSHOT-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/com/gmail/dpierron/Tools/3.4-SNAPSHOT/Tools-3.4-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: junit:junit:4.7">
