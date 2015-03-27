@@ -1394,8 +1394,11 @@ public class Helper {
     if (lang != null || lang.length() > 1) {
       for (Locale l : Locale.getAvailableLocales()) {
          switch (lang.length()) {
-           //  Note te case of a 2 charachter lang needs special trreatment - see Locale code for getLangugage
-           case 2:  if (l.getLanguage().substring(0,2).equalsIgnoreCase(new Locale(lang).getLanguage())) return l;
+           //  Note te case of a 2 character lang needs special treatment - see Locale code for getLangugage
+           case 2:  String s = l.getLanguage();
+                    // Work around a Java 8 issue where an empty entry is at start of list
+                    if (s.length() < 2) break;
+                    if (s.equals(new Locale(lang).getLanguage())) return l;
                     break;
            case 3:  if (l.getISO3Language().equalsIgnoreCase(lang)) return l;
                     break;

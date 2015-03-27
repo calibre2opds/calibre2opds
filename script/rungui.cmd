@@ -224,7 +224,7 @@ echo '
 START "Calibre2Opds" "%_JAVACMD%" %_C2O_JAVAOPT%  -cp "%_CD%\*" Gui %1
 
 :check_result
-if "%ERRORLEVEL"=="0" goto end
+if "%ERRORLEVEL%"=="0" goto end
 echo '
 echo [INFO]  ----------------------------------
 echo [INFO]  ERROR trying to start Calibre2opds

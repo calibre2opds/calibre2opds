@@ -64,7 +64,7 @@ public class Runner {
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
     ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
     ConfigurationManager.addStartupLogMessage("");
-    ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")");
+    ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " (" + System.getProperty("os.arch") + ")");
     ConfigurationManager.addStartupLogMessage("LANG: " + lc.getLanguage() + " (" + lc.getDisplayLanguage() + ")");
     ConfigurationManager.addStartupLogMessage("JAVA: " + System.getProperty("java.specification.version") + " (" + System.getProperty("java.version") + ")");
     ConfigurationManager.addStartupLogMessage("");
@@ -160,8 +160,8 @@ public class Runner {
     String[] levels = new String[]{".info", ".debug", ".trace", ".trace.noCachedFileTracing", "STANDARD"};
     String standardLevel = ".info";
     File home = ConfigurationManager.getDefaultConfigurationDirectory();
-    System.setProperty("calibre2opds.home", home.getAbsolutePath());
     if (home == null)    return;
+    System.setProperty("calibre2opds.home", home.getAbsolutePath());
     String defaultOutFileName = "log/log4j.properties";
     File log4jConfig = null;
     for (String level : levels) {

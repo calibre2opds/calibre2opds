@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.5
+                    RELEASE NOTES for Calibre2Opds v3.4
                     -----------------------------------
 
 Documentation
@@ -143,6 +143,7 @@ v3.4 (27th March 2015) Rev 336
     - Fix:    #c20-236: Unexpected fatal error when generating Series with * for tags that get additional level
     - Fix:    #c20-237: Delete button not working in Custom Catalogs tab
     - Fix:    #c2o-238: Do not generate resized covers' option is sometimes ignored
+    - Fix:    #c2o-239: Locale related crash if running under Java 8.
 
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,
