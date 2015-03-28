@@ -24,24 +24,23 @@ import java.util.List;
 import java.util.Locale;
 
 
-public enum JDOM {
-  INSTANCE;
-  private final static Logger logger = Logger.getLogger(JDOM.class);
+public class JDOMManager {
+  private final static Logger logger = Logger.getLogger(JDOMManager.class);
   private static final String CATALOG_XSL = "catalog.xsl";
   private static final String HEADER_XSL = "header.xsl";
   private static final String FULLENTRY_XSL = "fullentry.xsl";
 
-  private JDOMFactory factory;
-  private XMLOutputter outputter;
-  private XMLOutputter serializer;
-  private TransformerFactory transformerFactory;
-  private Transformer bookFullEntryTransformer;
-  private Transformer catalogTransformer;
-  private Transformer headerTransformer;
-  private Transformer mainTransformer;
-  private SAXBuilder sb;
+  private static JDOMFactory factory;
+  private static XMLOutputter outputter;
+  private static XMLOutputter serializer;
+  private static TransformerFactory transformerFactory;
+  private static Transformer bookFullEntryTransformer;
+  private static Transformer catalogTransformer;
+  private static Transformer headerTransformer;
+  private static Transformer mainTransformer;
+  private static SAXBuilder sb;
 
-  public void reset() {
+  public static void reset() {
     factory = null;
     outputter = null;
     serializer = null;
@@ -58,22 +57,22 @@ public enum JDOM {
    *
    * @return
    */
-  public Transformer getHeaderTransformer() {
+  public static Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
-        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(HEADER_XSL)));
+        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
         setIntroParameters(headerTransformer);
         // Add book count if not generating ALl Books (which gives count if present)
         // headerTransformer.setParameter("programName", Constants.PROGNAME);
         // headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
- //        headerTransformer.setParameter("bookCount", Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()));
+ //        headerTransformer.setParameter("bookCount", Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()));
          String dateGenerated =
-             DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
+             DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
         headerTransformer.setParameter("i18n.dateGenerated",
              Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
              + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
-             + "  ("+ Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) +")");
+             + "  ("+ Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()) +")");
       } catch (TransformerConfigurationException e) {
         logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
         headerTransformer = null;
@@ -94,11 +93,11 @@ public enum JDOM {
     private org.jdom.Namespace jdomNamespace;
 
     private Namespace(String prefix, String uri) {
-      this.jdomNamespace = org.jdom.Namespace.getNamespace(prefix, uri);
+      jdomNamespace = org.jdom.Namespace.getNamespace(prefix, uri);
     }
 
     public org.jdom.Namespace getJdomNamespace() {
-      return jdomNamespace;
+      return this.jdomNamespace;
     }
   }
 
@@ -106,21 +105,21 @@ public enum JDOM {
    * Set parameters that are common to many the transformers we use.
    * @param catalogTransformer
    */
-  private void setParametersOnCatalog(Transformer catalogTransformer) {
-    double dh = ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight();
+  private static void setParametersOnCatalog(Transformer catalogTransformer) {
+    double dh = ConfigurationManager.getCurrentProfile().getCoverHeight();
     double dw = 2f / 3f * dh;
     long lh = (long) Math.floor(dh);
     long lw = (long) Math.floor(dw);
     catalogTransformer.setParameter("coverWidth", lw);
     catalogTransformer.setParameter("coverHeight", lh);
-    dh = ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight();
+    dh = ConfigurationManager.getCurrentProfile().getThumbnailHeight();
     dw = 2f / 3f * dh;
     lh = (long) Math.floor(dh);
     lw = (long) Math.floor(dw);
     catalogTransformer.setParameter("thumbWidth", lw);
     catalogTransformer.setParameter("thumbHeight", lh);
-    catalogTransformer.setParameter("generateDownloads", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
-    catalogTransformer.setParameter("libraryTitle", ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle());
+    catalogTransformer.setParameter("generateDownloads", Boolean.toString(ConfigurationManager.getCurrentProfile().getGenerateHtmlDownloads()).toLowerCase());
+    catalogTransformer.setParameter("libraryTitle", ConfigurationManager.getCurrentProfile().getCatalogTitle());
     catalogTransformer.setParameter("i18n.and", Localization.Main.getText("i18n.and"));
     catalogTransformer.setParameter("i18n.backToMain", Localization.Main.getText("i18n.backToMain"));
     catalogTransformer.setParameter("i18n.downloads", Localization.Main.getText("i18n.downloads"));
@@ -131,25 +130,25 @@ public enum JDOM {
     catalogTransformer.setParameter("i18n.downloadsection", Localization.Main.getText("i18n.downloadsection"));
     catalogTransformer.setParameter("i18n.relatedsection", Localization.Main.getText("i18n.relatedsection"));
     catalogTransformer.setParameter("i18n.linksection", Localization.Main.getText("i18n.linksection"));
-    catalogTransformer.setParameter("browseByCover", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getBrowseByCover()).toLowerCase());
-    catalogTransformer.setParameter("generateIndex", Boolean.toString(ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateIndex()).toLowerCase());
+    catalogTransformer.setParameter("browseByCover", Boolean.toString(ConfigurationManager.getCurrentProfile().getBrowseByCover()).toLowerCase());
+    catalogTransformer.setParameter("generateIndex", Boolean.toString(ConfigurationManager.getCurrentProfile().getGenerateIndex()).toLowerCase());
     // We only want to add the Date Generated to the bottom of each catalog page if
     // we have not elected to try and minimise the number of files changed each run
     // (it will still be added to the top page)
     // TODO:  decide if we never want this on each page?
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getMinimizeChangedFiles()) {
+    if (ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
       catalogTransformer.setParameter("i18n.dateGenerated","");
     } else {
       String dateGenerated =
-          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
+          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
       catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
     }
   }
 
-  public Transformer getCatalogTransformer() {
+  public static Transformer getCatalogTransformer() {
     if (catalogTransformer == null) {
       try {
-        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
+        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(catalogTransformer);
         catalogTransformer.setParameter("programName", "");  // Set to empty for all pages except top level
       } catch (TransformerConfigurationException e) {
@@ -165,10 +164,10 @@ public enum JDOM {
    *
    * @return
    */
-  public Transformer getBookFullEntryTransformer() {
+  public static Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(FULLENTRY_XSL)));
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(FULLENTRY_XSL)));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
@@ -183,10 +182,10 @@ public enum JDOM {
    *
    * @return
    */
-  public Transformer getMainCatalogTransformer() {
+  public static Transformer getMainCatalogTransformer() {
     if (mainTransformer == null) {
       try {
-        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.INSTANCE.getResourceAsStream(CATALOG_XSL)));
+        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(CATALOG_XSL)));
         setParametersOnCatalog(mainTransformer);
         setIntroParameters(mainTransformer);
       } catch (TransformerConfigurationException e) {
@@ -203,15 +202,15 @@ public enum JDOM {
    * @param transformer
    * @return
    */
-  private Transformer setIntroParameters (Transformer transformer) {
+  private static Transformer setIntroParameters (Transformer transformer) {
     if (transformer != null) {
       String dateGenerated =
-          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.INSTANCE.getCurrentProfile().getLanguage()).format(new Date());
+          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
       transformer.setParameter("i18n.dateGenerated",
           Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
               + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
-              + "  ("+ Localization.Main.getText("bookword.many", DataModel.INSTANCE.getListOfBooks().size()) +")");
-      boolean includeAbout =ConfigurationManager.INSTANCE.getCurrentProfile().getIncludeAboutLink();
+              + "  ("+ Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()) +")");
+      boolean includeAbout =ConfigurationManager.getCurrentProfile().getIncludeAboutLink();
       transformer.setParameter("programName", Constants.PROGNAME);
       transformer.setParameter("programVersion", includeAbout ? Constants.PROGVERSION + Constants.BZR_VERSION : "");
       // transformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
@@ -238,44 +237,44 @@ public enum JDOM {
     return transformer;
   }
 
-  public TransformerFactory getTransformerFactory() {
+  public static TransformerFactory getTransformerFactory() {
     if (transformerFactory == null) {
       transformerFactory = TransformerFactory.newInstance();
     }
     return transformerFactory;
   }
 
-  public void setTransformerFactory(TransformerFactory transformerFactory) {
-    this.transformerFactory = transformerFactory;
+  public static void setTransformerFactory(TransformerFactory transformerFactory) {
+    transformerFactory = transformerFactory;
   }
 
-  public JDOMFactory getFactory() {
+  public static JDOMFactory getFactory() {
     if (factory == null) {
       factory = new DefaultJDOMFactory();
     }
     return factory;
   }
 
-  public SAXBuilder getSaxBuilder() {
+  public static SAXBuilder getSaxBuilder() {
     if (sb == null) {
       sb = new SAXBuilder();
     }
     return sb;
   }
 
-  public XMLOutputter getOutputter() {
+  public static XMLOutputter getOutputter() {
     if (outputter == null)
       outputter = new XMLOutputter(Format.getPrettyFormat());
     return outputter;
   }
 
-  public XMLOutputter getSerializer() {
+  public static XMLOutputter getSerializer() {
     if (serializer == null)
       serializer = new XMLOutputter(Format.getCompactFormat());
     return serializer;
   }
 
-  public Element rootElement(String name, Namespace namespace, Namespace... declaredNamespaces) {
+  public static Element rootElement(String name, Namespace namespace, Namespace... declaredNamespaces) {
     Element result = element(name, namespace);
     for (Namespace declaredNamespace : declaredNamespaces) {
       result.addNamespaceDeclaration(declaredNamespace.getJdomNamespace());
@@ -283,22 +282,22 @@ public enum JDOM {
     return result;
   }
 
-  public Element element(String name, Namespace namespace) {
+  public static Element element(String name, Namespace namespace) {
     Element result = getFactory().element(name);
     if (namespace != null)
       result.setNamespace(namespace.getJdomNamespace());
     return result;
   }
 
-  public Element element(String name) {
+  public static Element element(String name) {
     return element(name, Namespace.Atom);
   }
 
-  public Element newParagraph() {
+  public static Element newParagraph() {
     return element("p", Namespace.Atom);
   }
 
-  private Tidy tidyForTidyInputStream = null;
+  private static Tidy tidyForTidyInputStream = null;
 
   /**
    * Routine to tidy up the HTML in the Summary field
@@ -308,7 +307,7 @@ public enum JDOM {
    * @throws JDOMException
    * @throws IOException
    */
-  public List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException {
+  public static List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException {
     List<Element> result = null;
     // initializing tidy
     if (logger.isTraceEnabled())
@@ -365,11 +364,11 @@ public enum JDOM {
    * @param text      text to convert to HTML
    * @return
    */
-  public List<Element> convertHtmlTextToXhtml(String text) {
+  public static List<Element> convertHtmlTextToXhtml(String text) {
     List<Element> result = null;
 
     // if (logger.isTraceEnabled())
-    //   logger.trace("Comment to convert: " + Database.INSTANCE.stringToHex(text));
+    //   logger.trace("Comment to convert: " + Database.stringToHex(text));
     if (Helper.isNotNullOrEmpty(text)) {
       if (!text.startsWith("<")) {
         // plain text

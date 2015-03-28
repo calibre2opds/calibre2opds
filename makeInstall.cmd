@@ -16,7 +16,7 @@ SET VERSION=calibre2opds-%BASEVERSION%-%SVNVERSION%
 
 SET ZIPFILE=%cd%\%VERSION%.zip
 
-del /q %cd%\%BASEVERSION%-*
+del /q %cd%\calibre2opds-%BASEVERSION%-*
 
 echo '
 echo -------------------------------

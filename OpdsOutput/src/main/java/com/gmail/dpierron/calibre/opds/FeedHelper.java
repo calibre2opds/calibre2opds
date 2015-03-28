@@ -3,7 +3,7 @@ package com.gmail.dpierron.calibre.opds;
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
-import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
+import com.gmail.dpierron.calibre.opds.JDOMManager.Namespace;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -283,9 +283,9 @@ public class FeedHelper {
     // add a "start" link to the catalog main page
 
     String startUrl = (folder.length() == 0 ? Constants.CURRENT_PATH_PREFIX : Constants.PARENT_PATH_PREFIX)
-                      + CatalogManager.INSTANCE.getInitialUr() + Constants.XML_EXTENSION;
+                      + CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle()));
+    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.getCurrentProfile().getCatalogTitle()));
 
     // add a navigation link to every breadcrumb in the hierarchy
 
@@ -314,19 +314,19 @@ public class FeedHelper {
   /* ---------- METADATA ----------*/
 
   public static Element getDublinCoreLanguageElement(String lang) {
-    Element result = JDOM.INSTANCE.element("language", Namespace.DcTerms);
+    Element result = JDOMManager.element("language", Namespace.DcTerms);
     result.setText(lang);
     return result;
   }
 
   public static Element getDublinCorePublisherElement(String publisher) {
-    Element result = JDOM.INSTANCE.element("publisher", Namespace.DcTerms);
+    Element result = JDOMManager.element("publisher", Namespace.DcTerms);
     result.setText(publisher);
     return result;
   }
 
   public static Element getCategoryElement(String term) {
-    Element result = JDOM.INSTANCE.element("category");
+    Element result = JDOMManager.element("category");
     result.setAttribute("term", term);
     return result;
   }
@@ -375,23 +375,23 @@ public class FeedHelper {
   }
 
   private static Element getFeedAuthorElement(String name, String uri, String email) {
-    Element author = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_AUTHOR);
+    Element author = JDOMManager.element(Constants.OPDS_ELEMENT_AUTHOR);
     if (Helper.isNotNullOrEmpty(author))
-      author.addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_NAME).addContent(name));
+      author.addContent(JDOMManager.element(Constants.OPDS_ELEMENT_NAME).addContent(name));
     if (Helper.isNotNullOrEmpty(uri))
-      author.addContent(JDOM.INSTANCE.element( Constants.OPDS_ELEMENT_URI).addContent(uri));
+      author.addContent(JDOMManager.element( Constants.OPDS_ELEMENT_URI).addContent(uri));
     if (Helper.isNotNullOrEmpty(email))
-      author.addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_EMAIL).addContent(email));
+      author.addContent(JDOMManager.element(Constants.OPDS_ELEMENT_EMAIL).addContent(email));
     return author;
   }
 
   private static Element getUpdatedTag() {
-    if (!ConfigurationManager.INSTANCE.getCurrentProfile().getMinimizeChangedFiles()) {
+    if (!ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
       Calendar c = Calendar.getInstance();
       return getUpdatedTag(c);
     } else {
       // DP: return fake updated time - Oh, my birthday, what a coincidence ;)
-      return JDOM.INSTANCE.element("updated").addContent("1973-01-26T08:00:00Z");
+      return JDOMManager.element("updated").addContent("1973-01-26T08:00:00Z");
     }
   }
 
@@ -428,11 +428,11 @@ public class FeedHelper {
   }
 
   private static Element getUpdatedTag(Calendar c) {
-    return JDOM.INSTANCE.element("updated").addContent(getDateAsIsoDate(c));
+    return JDOMManager.element("updated").addContent(getDateAsIsoDate(c));
   }
 
   public static Element getPublishedTag(Date d) {
-    return JDOM.INSTANCE.element("published").addContent(getDateAsIsoDate(d));
+    return JDOMManager.element("published").addContent(getDateAsIsoDate(d));
   }
 
   /**
@@ -444,7 +444,7 @@ public class FeedHelper {
    * @return
    */
   public static Element getLinkElement(String url, String urlType, String urlRelation, String title) {
-    Element link = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_LINK);
+    Element link = JDOMManager.element(Constants.OPDS_ELEMENT_LINK);
     if (urlType != null && urlRelation != null
     && urlType.equals(LINKTYPE_NAVIGATION)
     && (urlRelation.equals(RELATION_NEXT) || urlRelation.equals(RELATION_PREV) || urlRelation.equals(RELATION_FIRST) || urlRelation.equals(RELATION_LAST))) {
@@ -503,21 +503,21 @@ public class FeedHelper {
       String icon) {
     Element contentElement = null;
     if (Helper.isNotNullOrEmpty(content)) {
-      contentElement = JDOM.INSTANCE.element("content").addContent(content);
+      contentElement = JDOMManager.element("content").addContent(content);
       contentElement.setAttribute("type", "text");
     }
     Element element;
     if (isRoot)
-      element = JDOM.INSTANCE.rootElement(elementName, Namespace.Atom, Namespace.DcTerms, Namespace.Atom, Namespace.Xhtml, Namespace.Opds);
+      element = JDOMManager.rootElement(elementName, Namespace.Atom, Namespace.DcTerms, Namespace.Atom, Namespace.Xhtml, Namespace.Opds);
     else
-      element = JDOM.INSTANCE.element(elementName);
+      element = JDOMManager.element(elementName);
 
     // title
-    Element titleElement = JDOM.INSTANCE.element("title").addContent(title);
+    Element titleElement = JDOMManager.element("title").addContent(title);
     element.addContent(titleElement);
 
     // id
-    Element idElement = JDOM.INSTANCE.element("id").addContent(id);
+    Element idElement = JDOMManager.element("id").addContent(id);
     element.addContent(idElement);
 
     // content
@@ -555,7 +555,7 @@ public class FeedHelper {
     if (! newfile.exists() && oldfile.exists()) {
       oldfile.renameTo(newfile);
       newfile.clearCachedInformation();                 // Clear cached information
-      CachedFileManager.INSTANCE.removeCachedFile(oldfile);
+      CachedFileManager.removeCachedFile(oldfile);
       logger.info("File " + oldfile.getName() + " renamed to " + newfile.getName());
     }
   }

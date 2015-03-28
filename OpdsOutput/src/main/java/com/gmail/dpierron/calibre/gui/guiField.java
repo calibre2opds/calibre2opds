@@ -185,7 +185,7 @@ public class guiField {
       setValue = Helper.getLocaleFromLanguageString((String)setValue);
     }
     try {
-      setMethod.invoke(ConfigurationManager.INSTANCE.getCurrentProfile(), setValue);
+      setMethod.invoke(ConfigurationManager.getCurrentProfile(), setValue);
 
     // None of the following should happen except in development - but lets play safe!
     } catch (final Exception e) {
@@ -232,7 +232,7 @@ public class guiField {
     }
     // Invoke the get method
     try {
-      loadValue =  method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
+      loadValue =  method.invoke(ConfigurationManager.getCurrentProfile());
     } catch (Exception e) {
       logger.error("loadValue:  Invoke 'get" + methodBase + "' Exception " + e);
       return;
@@ -284,7 +284,7 @@ public class guiField {
     try {
       String methodName = "is" + methodBase + "ReadOnly";
       method = ConfigurationHolder.class.getDeclaredMethod(methodName);
-      disable = (Boolean) method.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
+      disable = (Boolean) method.invoke(ConfigurationManager.getCurrentProfile());
     } catch (final Exception e) {
       // We assume ReadOnly method does not exist if we get to this point.
       disable = false;

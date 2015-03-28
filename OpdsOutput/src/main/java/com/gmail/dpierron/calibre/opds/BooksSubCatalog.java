@@ -31,7 +31,7 @@ import java.util.*;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
-  protected final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
+  protected final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
 
   /**
    * @return
@@ -223,12 +223,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isTraceEnabled()) logger.trace("getListOfBooks:willSplitByDate=" + willSplitByDate);
     if (logger.isTraceEnabled()) logger.trace("listing books from=" + from + ", title=" + title);
 
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
-    int maxPages = Summarizer.INSTANCE.getPageNumber((willSplitByDate || willSplitByLetter) ? 0 : catalogSize);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
+    int maxPages = Summarizer.getPageNumber((willSplitByDate || willSplitByLetter) ? 0 : catalogSize);
 
     // generate the book list files
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
 
     Element feed;
     feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir */);
@@ -268,11 +268,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Paginated listing
       result = new LinkedList<Element>();
       String progressText = Breadcrumbs.getProgressText(breadcrumbs);
-      progressText += " (" + Summarizer.INSTANCE.getBookWord(listbooks.size()) + ")";
-      CatalogManager.INSTANCE.callback.showMessage(progressText.toString());
+      progressText += " (" + Summarizer.getBookWord(listbooks.size()) + ")";
+      CatalogManager.callback.showMessage(progressText.toString());
       for (int i = from; i < listbooks.size(); i++) {
         // check if we must continue
-        CatalogManager.INSTANCE.callback.checkIfContinueGenerating();
+        CatalogManager.callback.checkIfContinueGenerating();
 
         // See if we need to do the next page
         if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
@@ -303,7 +303,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             if (entry != null) {
               if (logger.isTraceEnabled()) logger.trace("getListOfBooks: entry=" + entry);
               result.add(entry);
-              TrookSpecificSearchDatabaseManager.INSTANCE.addBook(book, entry);
+              TrookSpecificSearchDatabaseManager.addBook(book, entry);
             }
           } catch (RuntimeException e) {
             logger.error("getListOfBooks: Exception on book: " + book.getTitle() + "[" + book.getId() + "]", e);
@@ -319,7 +319,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     feed.addContent(result);
 
     Element entry;
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
 
     entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
@@ -380,7 +380,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
                                                 letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
 
       // try and list the items to make the summary
-      String summary = Summarizer.INSTANCE.summarizeBooks(booksInThisLetter);
+      String summary = Summarizer.summarizeBooks(booksInThisLetter);
 
       Element element = null;
       if (booksInThisLetter.size() > 0) {
@@ -450,11 +450,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       String rangeUrn = Helper.getSplitString(baseUrn, range.toString(), Constants.URN_SEPARATOR);
 
-      String rangeTitle = LocalizationHelper.INSTANCE.getEnumConstantHumanName(range);
+      String rangeTitle = LocalizationHelper.getEnumConstantHumanName(range);
       List<Book> booksInThisRange = mapOfBooksByDate.get(range);
 
       // try and list the items to make the summary
-      String summary = Summarizer.INSTANCE.summarizeBooks(booksInThisRange);
+      String summary = Summarizer.summarizeBooks(booksInThisRange);
 
       Element element = null;
       if (booksInThisRange.size() > 0) {
@@ -505,7 +505,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // prepare to copy the ebook file
       if (logger.isTraceEnabled())  logger.trace("addAcquisitionLinks: prepare to copy the ebook file " + file.getName());
       // TODO ITIMPI  Why is EPUB treated as a special case?
-      CatalogManager.INSTANCE.addFileToTheMapOfLibraryFilesToCopy(file.getFile(), (file.getFormat() == EBookFormat.EPUB) ? book : null);
+      CatalogManager.addFileToTheMapOfLibraryFilesToCopy(file.getFile(), (file.getFormat() == EBookFormat.EPUB) ? book : null);
       // Allow for books on specific URL (#c2o-160)
       String prefix = currentProfile.getUrlBooks();
       if (Helper.isNullOrEmpty(prefix)) {
@@ -543,14 +543,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
     String imageUri = null;         // The URI to the image at runtime
     File bookFolder = book.getBookFolder();
 
-    CachedFile calibreCoverFile = CachedFileManager.INSTANCE.addCachedFile(bookFolder, Constants.CALIBRE_COVER_FILENAME);
+    CachedFile calibreCoverFile = CachedFileManager.addCachedFile(bookFolder, Constants.CALIBRE_COVER_FILENAME);
     CachedFile defaultCoverFile = null;
 
     String catalogImageFilename;  // Name when stored in catalog
     CachedFile imageFile;         // The file that contains the image to be used
     CachedFile resizedImageFile;  // File to be used when resized images in use
 
-    resizedImageFile = CachedFileManager.INSTANCE.addCachedFile(bookFolder, iManager.getResizedFilename());
+    resizedImageFile = CachedFileManager.addCachedFile(bookFolder, iManager.getResizedFilename());
 
     // We normally expect a calibre cover file to exist as Calibre
     // will normally have inserted its default ocver.
@@ -559,7 +559,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       FeedHelper.checkFileNameIsNewStandard(resizedImageFile, new File(bookFolder, iManager.getResizedFilenameOld(book)));
     } else {
       // We will use our default cover instead!
-      defaultCoverFile = CachedFileManager.INSTANCE.addCachedFile(new File(CatalogManager.INSTANCE.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
+      defaultCoverFile = CachedFileManager.addCachedFile(new File(CatalogManager.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
 
       // We only want the warning once per book
       if ((book.isDone() == false)
@@ -602,7 +602,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled()) {
             if (!resizedImageFile.exists()) {
               logger.trace("addImageLink: resizedImage set to be generated (not already existing)");
-            } else if (CatalogManager.INSTANCE.coverManager.hasImageSizeChanged()) {
+            } else if (CatalogManager.coverManager.hasImageSizeChanged()) {
               logger.trace("addImageLink: resizedImage set to be generated (image size changed)");
             } else if (resizedImageFile.lastModified() < calibreCoverFile.lastModified()) {
               logger.trace("addImageLink: resizedImage set to be generated (new cover)");
@@ -640,8 +640,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
 
     // If we are generating a catalog for a Nook we cache the results for use later
-    if (iManager.equals(CatalogManager.INSTANCE.thumbnailManager) && currentProfile.getGenerateIndex()) {
-      CatalogManager.INSTANCE.thumbnailManager.addBook(book, imageUri);
+    if (iManager.equals(CatalogManager.thumbnailManager) && currentProfile.getGenerateIndex()) {
+      CatalogManager.thumbnailManager.addBook(book, imageUri);
     }
 
     // Are we ebedding images in the catalog XML/HTML or using external ones?
@@ -652,7 +652,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     } else {
       // If not in default mode we need to copy them to the published area
       if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)) {
-        CatalogManager.INSTANCE.addFileToTheMapOfFilesToCopy(imageFile);
+        CatalogManager.addFileToTheMapOfFilesToCopy(imageFile);
       }
     }
 
@@ -663,7 +663,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (! useExternalImages && ! catalogImageFilename.equals(Constants.PARENT_PATH_PREFIX + iManager.getDefaultResizedFilename())) {
           imageUri = iManager.getFileToBase64Uri(imageFile);
         } else {
-          CatalogManager.INSTANCE.addImageFileToTheMapOfCatalogImages(catalogImageFilename, imageFile);
+          CatalogManager.addImageFileToTheMapOfCatalogImages(catalogImageFilename, imageFile);
          if (isCover) {
             imageUri=catalogImageFilename.substring(catalogImageFilename.indexOf(Constants.FOLDER_SEPARATOR)+1);
           } else {
@@ -699,7 +699,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Series for cross-references are always held at top level
       // TODO Perhaps consider whether level should be taken into account?
       filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(serie) + Constants.PAGE_ONE_XML;
-      entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+      entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
           Localization.Main.getText("bookentry.series", book.getSerieIndex(), serie.getName())));
       serie.setReferenced();
     }
@@ -718,12 +718,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
         // c2o-168 - Omit Counts if MinimizeChangedFiles set
         if (! currentProfile.getMinimizeChangedFiles()) {
-          booksText = Summarizer.INSTANCE.getBookWord(DataModel.INSTANCE.getMapOfBooksByAuthor().get(author).size());
+          booksText = Summarizer.getBookWord(DataModel.getMapOfBooksByAuthor().get(author).size());
         }
         // Authors for cross-references are always held at top level !
         // TODO Perhaps consider whether level should be taken into account?
         filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
-        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
             Localization.Main.getText("bookentry.author", booksText, authorName)));
         author.setReferenced();
       }
@@ -736,17 +736,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (isTagCrossReferences(book)) {
       if (logger.isTraceEnabled()) logger.trace("addNavigationLinks: add the tags links");
       for (final Tag tag : book.getTags()) {
-        if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)) {           // #c2o_192
-          int nbBooks = DataModel.INSTANCE.getMapOfBooksByTag().get(tag).size();
+        if (! CatalogManager.getTagsToIgnore().contains(tag)) {           // #c2o_192
+          int nbBooks = DataModel.getMapOfBooksByTag().get(tag).size();
           // Tags for cross-references are held at top level
           // TODO Perhaps consider whether level should be taken into account?
           filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
           if (nbBooks > 1) {
             // c2o-168 - Omit Counts if MinimizeChangedFiles set
             if (! currentProfile.getMinimizeChangedFiles()) {
-              booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+              booksText = Summarizer.getBookWord(nbBooks);
             }
-            entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
+            entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
             tag.setReferenced();
           }
@@ -757,17 +757,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // add the ratings links
     if (isRatingCrossReferences(book)) {
       if (logger.isTraceEnabled())  logger.trace("addNavigationLinks: add the ratings links");
-      int nbBooks = DataModel.INSTANCE.getMapOfBooksByRating().get(book.getRating()).size();
+      int nbBooks = DataModel.getMapOfBooksByRating().get(book.getRating()).size();
       if (nbBooks > 1) {
         BookRating rating = book.getRating();
         // c2o-168 - Omit Counts if MinimizeChangedFiles set
         if (! currentProfile.getMinimizeChangedFiles()) {
-          booksText = Summarizer.INSTANCE.getBookWord(nbBooks);
+          booksText = Summarizer.getBookWord(nbBooks);
         }
         // Ratings are held at level
         filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, rating.getId().toString()) + Constants.PAGE_ONE_XML;
-        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.INSTANCE.getCatalogFileUrl(filename, true),
-            Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.INSTANCE.getEnumConstantHumanName(rating))));
+        entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
+            Localization.Main.getText("bookentry.ratings", booksText, LocalizationHelper.getEnumConstantHumanName(rating))));
         rating.setReferenced();
       }
     }
@@ -943,17 +943,17 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING cover link");
       boolean resizeCover;
       if (currentProfile.getUseThumbnailsAsCovers()) {
-        iManager = CatalogManager.INSTANCE.thumbnailManager;
+        iManager = CatalogManager.thumbnailManager;
         resizeCover = currentProfile.getThumbnailGenerate();
       } else {
-        iManager = CatalogManager.INSTANCE.coverManager;
+        iManager = CatalogManager.coverManager;
         resizeCover = currentProfile.getCoverResize();
       }
       addImageLink(book, entry, iManager,resizeCover,true);
     }
     // We want a thumbnail for both full and partial entries.
     if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: ADDING thumbnail link");
-    iManager = CatalogManager.INSTANCE.thumbnailManager;
+    iManager = CatalogManager.thumbnailManager;
     addImageLink(book, entry, iManager, currentProfile.getThumbnailGenerate(), false);
 
 
@@ -965,9 +965,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   author " + author);
         // #c2o-190
         String name = currentProfile.getDisplayAuthorSort() ? author.getSort() : author.getName();
-        Element authorElement = JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_AUTHOR)
-            .addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_NAME).addContent(name))
-            .addContent(JDOM.INSTANCE.element(Constants.OPDS_ELEMENT_URI)
+        Element authorElement = JDOMManager.element(Constants.OPDS_ELEMENT_AUTHOR)
+            .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_NAME).addContent(name))
+            .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_URI)
             .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
         entry.addContent(authorElement);
       }
@@ -1016,15 +1016,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isTraceEnabled()) logger.trace("decorateBookEntry: FULL ENTRY");
       // content element
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry:   content element");
-      Element content = JDOM.INSTANCE.element("content").setAttribute("type", "text/html");
+      Element content = JDOMManager.element("content").setAttribute("type", "text/html");
       boolean hasContent = false;
       if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: computing comments");
       // Series (if present and wanted)
       if (currentProfile.getIncludeSeriesInBookDetails() && Helper.isNotNullOrEmpty(book.getSeries())) {
         String data = Localization.Main.getText("content.series.data", book.getSerieIndex(), currentProfile.getSortSeriesUsingLibrarySort() ? book.getSeries().getName()
             : book.getSeries().getSort());
-        content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-            .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+        content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+            .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
             .addContent(Localization.Main.getText("content.series") + ": "))
             .addContent(data))
             ;
@@ -1036,9 +1036,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // If we get feedback that this is not  a valid addumption then we could omit it when the list is empty
       if (currentProfile.getIncludeRatingInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getRating())) {
-          String rating = LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating());
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          String rating = LocalizationHelper.getEnumConstantHumanName(book.getRating());
+          content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+              .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.rating") + ": "))
               .addContent(rating)
           );
@@ -1058,8 +1058,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
           else
             // If no tags then we need an empty string (is this possible)
             tags = "";
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+              .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.tags") + ": "))
               .addContent(tags)
               );
@@ -1069,8 +1069,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // Publisher (if present and wanted)
       if (currentProfile.getIncludePublisherInBookDetails()) {
         if (Helper.isNotNullOrEmpty(book.getPublisher())) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-              .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+          content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+              .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
               .addContent(Localization.Main.getText("content.publisher") + ": "))
               .addContent(book.getPublisher().getName())
               );
@@ -1081,10 +1081,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludePublishedInBookDetails()) {
         Date pubtmp = book.getPublicationDate();
         if (Helper.isNotNullOrEmpty(pubtmp)) {
-            content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+            content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.published") + ": "))
-                .addContent(CatalogManager.INSTANCE.bookDateFormat.format(book.getPublicationDate()))
+                .addContent(CatalogManager.bookDateFormat.format(book.getPublicationDate()))
             );
           hasContent = true;
         }
@@ -1094,9 +1094,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeAddedInBookDetails()) {
         Date addtmp = book.getTimestamp();
         if (Helper.isNotNullOrEmpty(addtmp)) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-                  .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.added") + ": "))
-                  .addContent(CatalogManager.INSTANCE.titleDateFormat.format(addtmp)));
+          content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                  .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.added") + ": "))
+                  .addContent(CatalogManager.titleDateFormat.format(addtmp)));
           hasContent = true;
         }
       }
@@ -1106,18 +1106,18 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (currentProfile.getIncludeModifiedInBookDetails()) {
         Date modtmp = book.getModified();
         if (Helper.isNotNullOrEmpty(modtmp)) {
-          content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-                  .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.modified") + ": "))
-                  .addContent(CatalogManager.INSTANCE.titleDateFormat.format(modtmp)));
+          content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                  .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG).addContent(Localization.Main.getText("content.modified") + ": "))
+                  .addContent(CatalogManager.titleDateFormat.format(modtmp)));
           hasContent = true;
         }
       }
 
       // See if any Custom Column values to be included
 
-      List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogManager.INSTANCE.getBookDetailsCustomColumns();
+      List<CustomColumnType>bookDetailsCustomColumnTypes = CatalogManager.getBookDetailsCustomColumns();
       if (bookDetailsCustomColumnTypes != null && bookDetailsCustomColumnTypes.size() > 0) {
-        List<CustomColumnValue> values = DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId().get(book.getId().toString());
+        List<CustomColumnValue> values = DataModel.getMapOfCustomColumnValuesByBookId().get(book.getId().toString());
         for (CustomColumnType columnType : bookDetailsCustomColumnTypes) {
           String textValue = "";
           String dataType = columnType.getDatatype();
@@ -1174,12 +1174,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
               // }
             }
             // Finally add results
-            Element customElement = JDOM.INSTANCE.element((Constants.HTML_ELEMENT_PARAGRAPH));
+            Element customElement = JDOMManager.element((Constants.HTML_ELEMENT_PARAGRAPH));
             // Most of the time the name will be pure text, but in the
             // special case of it being an link it will be HTML
-            Element nameElement = JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG);
+            Element nameElement = JDOMManager.element(Constants.HTML_ELEMENT_STRONG);
             if (name.startsWith("<")) {
-              for (Element p : JDOM.INSTANCE.convertHtmlTextToXhtml(name)) {
+              for (Element p : JDOMManager.convertHtmlTextToXhtml(name)) {
                 nameElement.addContent(p.detach());
               }
             } else {
@@ -1188,7 +1188,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
             customElement.addContent(nameElement);
             // The text part can be either pur text or HTML with equal liklihood
             if (textvaluelower.startsWith("<")) {
-              for (Element p : JDOM.INSTANCE.convertHtmlTextToXhtml(textValue)) {
+              for (Element p : JDOMManager.convertHtmlTextToXhtml(textValue)) {
                 customElement.addContent(p.detach());
               }
             } else {
@@ -1200,11 +1200,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
 
-      List<Element> comments = JDOM.INSTANCE.convertHtmlTextToXhtml(book.getComment());
+      List<Element> comments = JDOMManager.convertHtmlTextToXhtml(book.getComment());
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: got comments");
-        content.addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_PARAGRAPH)
-                .addContent(JDOM.INSTANCE.element(Constants.HTML_ELEMENT_STRONG)
+        content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)
+                .addContent(JDOMManager.element(Constants.HTML_ELEMENT_STRONG)
                 .addContent(Localization.Main.getText("content.summary"))));
         for (Element p : comments) {
           content.addContent(p.detach());
@@ -1227,7 +1227,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String summary = book.getSummary(currentProfile.getMaxBookSummaryLength());
       // If we had anything for the summary then it needs to be added to the output.
       if (Helper.isNotNullOrEmpty(summary)) {
-        entry.addContent(JDOM.INSTANCE.element("summary").addContent(summary));
+        entry.addContent(JDOMManager.element("summary").addContent(summary));
       }
     }
 
@@ -1274,11 +1274,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
     String filename = getBookFolderFilename(book);
-    String fullEntryUrl = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
-    File outputFile = CatalogManager.INSTANCE.storeCatalogFile(filename + Constants.XML_EXTENSION);
+    String fullEntryUrl = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true);
+    File outputFile = CatalogManager.storeCatalogFile(filename + Constants.XML_EXTENSION);
 
     if (!isInDeepLevel() && isBookTheStepUnit() && !getCatalogFolder().startsWith(Constants.AUTHOR_TYPE))
-      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.callback.incStepProgressIndicatorPosition();
 
     if (logger.isDebugEnabled())  logger.debug("getBookEntry:" + book);
     if (logger.isTraceEnabled())  logger.trace("getBookEntry: pBreadcrumbs " + pBreadcrumbs.toString());
@@ -1294,10 +1294,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       }
     } else if (Option.contains(options, Option.INCLUDE_TIMESTAMP)) {
-      title = title + " [" + CatalogManager.INSTANCE.titleDateFormat.format(book.getTimestamp()) + "]";
+      title = title + " [" + CatalogManager.titleDateFormat.format(book.getTimestamp()) + "]";
     } else if (!Option.contains(options, Option.DONOTINCLUDE_RATING) && !currentProfile.getSuppressRatingsInTitles()) {
       if (book.getRating() != BookRating.NOTRATED) {
-        title = MessageFormat.format(Localization.Main.getText("bookentry.rated"), title,  LocalizationHelper.INSTANCE.getEnumConstantHumanName(book.getRating()));
+        title = MessageFormat.format(Localization.Main.getText("bookentry.rated"), title,  LocalizationHelper.getEnumConstantHumanName(book.getRating()));
       }
     }
     // #c2o-212
@@ -1321,9 +1321,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         breadcrumbs = new Breadcrumbs();
         breadcrumbs.add(pBreadcrumbs.get(0));
       }
-      Element entry = JDOM.INSTANCE.rootElement("entry", JDOM.Namespace.Atom, JDOM.Namespace.DcTerms, JDOM.Namespace.Atom, JDOM.Namespace.Xhtml);
-      entry.addContent (JDOM.INSTANCE.element("title").addContent(book.getTitle()));
-      entry.addContent(JDOM.INSTANCE.element("id").addContent("urn:book:" + book.getUuid()));
+      Element entry = JDOMManager.rootElement("entry", JDOMManager.Namespace.Atom, JDOMManager.Namespace.DcTerms, JDOMManager.Namespace.Atom, JDOMManager.Namespace.Xhtml);
+      entry.addContent (JDOMManager.element("title").addContent(book.getTitle()));
+      entry.addContent(JDOMManager.element("id").addContent("urn:book:" + book.getUuid()));
       entry.addContent(FeedHelper.getUpdatedTag(book.getLatestFileModifiedDate()));
       // add the navigation links
       FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
@@ -1339,7 +1339,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         // TODO   we are embedding images as hexencoded strings in the html files.
         // TODO   We probably want pointers to the actual image files (eith stored
         // TODO   in the catalog or the calibre library) instead.
-        IndexManager.INSTANCE.indexBook(book, CatalogManager.INSTANCE.htmlManager.getHtmlFilename(fullEntryUrl), CatalogManager.INSTANCE.thumbnailManager.getThumbnailUrl(book));
+        IndexManager.indexBook(book, CatalogManager.htmlManager.getHtmlFilename(fullEntryUrl), CatalogManager.thumbnailManager.getThumbnailUrl(book));
       }
     }
 

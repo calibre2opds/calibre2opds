@@ -236,7 +236,7 @@ echo [INFO]  "START ""calibre2opds"" "/MIN" "%_JAVACMD%" %_C2O_JAVAOPT% -cp "%_C
 START "Calibre2Opds" /MIN "%_JAVACMD%" %_C2O_JAVAOPT% -cp "%_CD%\*" Cli %1
 
 :check_result
-if "%ERRORLEVEL"=="0" goto end
+if "%ERRORLEVEL%"=="0" goto end
 echo '
 echo [INFO] ---------------------------------
 echo [INFO]  ERROR trying to run Calibre2opds

@@ -94,7 +94,7 @@ public enum DatabaseRequest {
   private PreparedStatement getStatement(String sql) throws RuntimeException {
     if (preparedStatement == null) {
       try {
-        Connection connection = DatabaseManager.INSTANCE.getConnection();
+        Connection connection = Database.getConnection();
         if (connection == null) {
           String e = "Cannot establish a database connection to " + new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
           logger.error(e);

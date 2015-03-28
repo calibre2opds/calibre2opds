@@ -21,7 +21,7 @@ import java.util.Vector;
 
 public class Runner {
   private static boolean introDone = false;
-  private boolean testMode = false;     // Set this to true to generate a test datamodel
+  private static boolean testMode = false;     // Set this to true to generate a test datamodel
   private final static Logger logger = Logger.getLogger(Runner.class);
 
   /**
@@ -29,7 +29,7 @@ public class Runner {
    * @param startGui
    * @throws IOException
    */
-  public void run(boolean startGui) throws IOException {
+  static void run(boolean startGui) throws IOException {
     intro();
     if (testMode) {
       new TestDataModel().testDataModel();
@@ -47,6 +47,7 @@ public class Runner {
   }
 
   /**
+   * Constructor
    * Start of run initialisation
    * @param args
    * @param startGui
@@ -64,13 +65,17 @@ public class Runner {
     ConfigurationManager.addStartupLogMessage(Constants.PROGTITLE + Constants.BZR_VERSION);
     ConfigurationManager.addStartupLogMessage("**** " + (startGui?"GUI":"BATCH") + " MODE ****");
     ConfigurationManager.addStartupLogMessage("");
-    ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " (" + System.getProperty("os.arch") + ")");
+    ConfigurationManager.addStartupLogMessage("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " (" + System.getProperty(
+        "os.arch") + ")");
     ConfigurationManager.addStartupLogMessage("LANG: " + lc.getLanguage() + " (" + lc.getDisplayLanguage() + ")");
     ConfigurationManager.addStartupLogMessage("JAVA: " + System.getProperty("java.specification.version") + " (" + System.getProperty("java.version") + ")");
     ConfigurationManager.addStartupLogMessage("");
 
-    Runner runner = new Runner();
-    runner.initLog4J();
+    // TODO:  ITIMPI - not sure why we need a new runner object - what is wrong with the one we are in?
+    // TODO            It seems to be related as to which methods can be static
+    // Runner runner = new Runner();
+    // unner.initLog4J();
+    initLog4J();
     // log4j now initialised so we can start using it.
     String levelText;
     if (logger.isTraceEnabled()) {
@@ -84,10 +89,9 @@ public class Runner {
     }
     logger.info("");
     logger.info ("LOG LEVEL: " + levelText);
-//    logger.info ("LOG LEVEL: " + levelText + " (" + logger.getLevel().toString() + ")");
     logger.info("");
     try {
-      String currentProfileName = ConfigurationManager.INSTANCE.getCurrentProfileName();
+      String currentProfileName = ConfigurationManager.getCurrentProfileName();
       logger.info(Localization.Main.getText("startup.profiledefault", currentProfileName));
       switch (args.length) {
         case 0:
@@ -104,19 +108,20 @@ public class Runner {
         case 1:
             // It appears that a profile has been supplied
             String profileName = args[0];
-            if (ConfigurationManager.INSTANCE.isExistingConfiguration(profileName) == null) {
+            if (ConfigurationManager.isExistingConfiguration(profileName) == null) {
               logger.error(Localization.Main.getText("startup.profilemissing", profileName));
               if (!startGui)
                 System.exit(-3);
             } else {
-              logger.info(Localization.Main.getText("startup.profileswitch", ConfigurationManager.INSTANCE.isExistingConfiguration(profileName)));
-              ConfigurationManager.INSTANCE.changeProfile(ConfigurationManager.INSTANCE.isExistingConfiguration(profileName), startGui);
+              logger.info(Localization.Main.getText("startup.profileswitch", ConfigurationManager.isExistingConfiguration(profileName)));
+              ConfigurationManager.changeProfile(ConfigurationManager.isExistingConfiguration(profileName), startGui);
             }
             break;
       }
 
 
-      runner.run(startGui);
+      // runner.run(startGui);
+      run(startGui);
     } catch (IOException e) {
       logger.info(Localization.Main.getText("error.generic", Constants.AUTHOREMAIL));
       e.printStackTrace();
@@ -147,7 +152,7 @@ public class Runner {
       logger.info(Localization.Main.getText("intro.thanks.1"));
       logger.info(Localization.Main.getText("intro.thanks.2"));
       logger.info("");
-      logger.info(Localization.Main.getText("usage.intro", ConfigurationManager.INSTANCE.getCurrentProfile().getPropertiesFile().getPath()));
+      logger.info(Localization.Main.getText("usage.intro", ConfigurationManager.getCurrentProfile().getPropertiesFile().getPath()));
       logger.info("");
       introDone = true;
     }
@@ -156,11 +161,14 @@ public class Runner {
   /**
    * log4j initialisation
    */
-  private void initLog4J() {
+  private static void initLog4J() {
     String[] levels = new String[]{".info", ".debug", ".trace", ".trace.noCachedFileTracing", "STANDARD"};
     String standardLevel = ".info";
     File home = ConfigurationManager.getDefaultConfigurationDirectory();
-    if (home == null)    return;
+    if (home == null)  {
+      ConfigurationManager.addStartupLogMessage("ERROR: Failed to initialize logging - could not find suitable log folder");
+      System.exit(-5);
+    }
     System.setProperty("calibre2opds.home", home.getAbsolutePath());
     String defaultOutFileName = "log/log4j.properties";
     File log4jConfig = null;
@@ -183,7 +191,8 @@ public class Runner {
           InputStream is = null;
           FileOutputStream os = null;
           try {
-            is = this.getClass().getResourceAsStream(inFileName);
+            is = Runner.class.getResourceAsStream(inFileName);
+            // is = this.getClass().getResourceAsStream(inFileName);
             if (is == null) {
               ConfigurationManager.addStartupLogMessage("Cannot find " + inFileName + " in the resources");
             }
@@ -211,12 +220,12 @@ public class Runner {
 
     // Configure and watch
     PropertyConfigurator.configureAndWatch(log4jConfig.getAbsolutePath(), 3000);
-    if (ConfigurationManager.INSTANCE.getStartupLogMessages() != null) {
-      for ( String s : ConfigurationManager.INSTANCE.getStartupLogMessages()) {
+    if (ConfigurationManager.getStartupLogMessages() != null) {
+      for ( String s : ConfigurationManager.getStartupLogMessages()) {
         logger.info(s);
       }
     }
-    ConfigurationManager.INSTANCE.clearStartupLogMessages();
-    ConfigurationManager.INSTANCE.initialiseListOfSupportedEbookFormats();
+    ConfigurationManager.clearStartupLogMessages();
+    ConfigurationManager.initialiseListOfSupportedEbookFormats();
   }
 }

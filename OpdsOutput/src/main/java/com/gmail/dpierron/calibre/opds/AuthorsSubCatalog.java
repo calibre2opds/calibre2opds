@@ -25,7 +25,7 @@ import java.util.*;
 
 public class AuthorsSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(AuthorsSubCatalog.class);
-  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
   private Map<Author, List<Book>> mapOfBooksByAuthor;     // Cached information for efficency
   private List<Author> authors;                           // Cached information for efficiency
 
@@ -103,9 +103,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       SplitOption splitOption) throws IOException {
 
     if (from != 0) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
@@ -140,7 +140,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     } else {
       catalogSize = listauthors.size();
     }
-    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
+    int maxPages = Summarizer.getPageNumber(catalogSize);
     logger.debug("generating " + urlExt);
 
     // list the entries (or split them)
@@ -183,7 +183,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           if (entry != null) {
             result.add(entry);
             logger.debug("adding author to the TROOK database:" + author);
-            TrookSpecificSearchDatabaseManager.INSTANCE.addAuthor(author, entry);
+            TrookSpecificSearchDatabaseManager.addAuthor(author, entry);
           }
         }
       }
@@ -191,7 +191,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     feed.addContent(result);
 
     Element entry;
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
+    String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
     entry  = createPaginateLinks (feed, filename, pageNumber, maxPages);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
     if (from == 0)  {
@@ -255,7 +255,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
             letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
 
       // try and list the items to make the summary
-      String summary = Summarizer.INSTANCE.summarizeAuthors(authorsInThisLetter);
+      String summary = Summarizer.summarizeAuthors(authorsInThisLetter);
       /*
        *  Prepare the list of authors in any case, even if it will be skipped by SplitByAuthorInitialGoToBooks.
        *  It'll be useful in cross references
@@ -341,9 +341,9 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     if (logger.isDebugEnabled())
       logger.debug(pBreadcrumbs + "/" + author);
 
-    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel())
-      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.callback.incStepProgressIndicatorPosition();
 
     List listOfBooksInSeries = new LinkedList<Book>();
     List listOfBooksNotInSeries = new LinkedList<Book>();
@@ -374,10 +374,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     logger.debug("getAuthorEntry:generating " + filename);
     String title = currentProfile.getDisplayAuthorSort() ? author.getSort(): author.getName();
     String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
-    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.PAGE_ONE_XML, true));
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.PAGE_ONE_XML, true));
 
     // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(authorbooks);
+    String summary = Summarizer.summarizeBooks(authorbooks);
 
     // We like to list series if we can before books not in series
     // (unless the user has suppressed series generation).
@@ -433,7 +433,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       logger.debug("there are no series by " + author + ", processing all his " + morebooks.size() + " books");
       // try and list the items to make the summary
       logger.debug("try and list the items to make the summary");
-      summary = Summarizer.INSTANCE.summarizeBooks(morebooks);
+      summary = Summarizer.summarizeBooks(morebooks);
     }
 
     // sort 'morebooks' by title

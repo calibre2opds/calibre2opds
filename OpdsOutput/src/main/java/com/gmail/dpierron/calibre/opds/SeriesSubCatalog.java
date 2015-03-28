@@ -24,7 +24,7 @@ import java.util.*;
 
 public class SeriesSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(SeriesSubCatalog.class);
-  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
   private List<Series> series;
   private Map<Series, List<Book>> mapOfBooksBySerie;
 
@@ -162,14 +162,14 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     }
 
     if (from > 0) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
 
     // list the entries (or split them)
 
     if (willSplitByLetter) {
       // split the series list by letter
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
       result = getListOfSeriesSplitByLetter(breadcrumbs,
                                             mapOfSeriesByLetter,
                                             inSubDir,
@@ -194,7 +194,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                             pFilename,
                             splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption, addTheSeriesWordToTheTitle);
           result.add(0, nextLink);
-          int maxPages = Summarizer.INSTANCE.getPageNumber(listSeries.size());
+          int maxPages = Summarizer.getPageNumber(listSeries.size());
           break;
         } else {
           Series serie = listSeries.get(i);
@@ -203,12 +203,12 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           if (this.getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
             breadcrumbs = pBreadcrumbs;
           } else {
-            breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+            breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
           }
           Element entry = getSeriesEntry(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
-            TrookSpecificSearchDatabaseManager.INSTANCE.addSeries(serie, entry);
+            TrookSpecificSearchDatabaseManager.addSeries(serie, entry);
           }
         }
       }
@@ -253,9 +253,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     if (pFilename == null) pFilename = getCatalogBaseFolderFileName();
     if (from > 0) inSubDir = true;
 
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
-    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case where the series name is equal to the split level
@@ -288,7 +288,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     } else
       catalogSize = listSeries.size();
 
-    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
+    int maxPages = Summarizer.getPageNumber(catalogSize);
 
 
     // list the entries (or split them)
@@ -308,7 +308,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
 
     Element entry;
-    String urlInItsSubfolder = optimizeCatalogURL(CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    String urlInItsSubfolder = optimizeCatalogURL(CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
     entry = createPaginateLinks(feed, urlInItsSubfolder, pageNumber, maxPages);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
     if (from == 0) {
@@ -364,7 +364,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       if (itemsCount > 0) {
         int maxBeforeSplit=0;
         // try and list the items to make the summary
-        String summary = Summarizer.INSTANCE.summarizeSeries(seriesInThisLetter);
+        String summary = Summarizer.summarizeSeries(seriesInThisLetter);
 
         element = getSubCatalog(pBreadcrumbs,
                                 seriesInThisLetter,
@@ -424,11 +424,11 @@ public class SeriesSubCatalog extends BooksSubCatalog {
 
     if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + serie);
 
-    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.callback.showMessage(pBreadcrumbs.toString());
     // We want to avoid incrementing the progress bar if we are not doing
     // the top level series sub-catalog
     if ( !(isInDeepLevel() || (getCatalogFolder().startsWith(Constants.AUTHOR_TYPE))))
-      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.callback.incStepProgressIndicatorPosition();
 
     List<Book> books = getMapOfBooksBySerie().get(serie);
     if (Helper.isNullOrEmpty(books))
@@ -459,7 +459,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       filename = getCatalogBaseFolderFileNameId(serie.getId());
     }
     // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(books);
+    String summary = Summarizer.summarizeBooks(books);
 
     Element result = getListOfBooks(pBreadcrumbs,
                                     books,

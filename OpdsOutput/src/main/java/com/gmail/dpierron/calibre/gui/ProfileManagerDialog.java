@@ -35,7 +35,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
 
   private void loadProfiles() {
     DefaultListModel listOfProfiles = new DefaultListModel();
-    for (String profile : ConfigurationManager.INSTANCE.getExistingConfigurations()) {
+    for (String profile : ConfigurationManager.getExistingConfigurations()) {
       if ("default".equalsIgnoreCase(profile))
         continue;
       listOfProfiles.addElement(profile);
@@ -53,12 +53,12 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
       return;
     if (Helper.isNotNullOrEmpty(newProfile) && !newProfile.equals(profile)) {
       File profileFile =
-          new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), profile + ConfigurationManager.PROFILES_SUFFIX);
+          new File(ConfigurationManager.getConfigurationDirectory(), profile + ConfigurationManager.PROFILES_SUFFIX);
       if (profileFile.exists()) {
-        profileFile.renameTo(new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), newProfile + ConfigurationManager.PROFILES_SUFFIX));
+        profileFile.renameTo(new File(ConfigurationManager.getConfigurationDirectory(), newProfile + ConfigurationManager.PROFILES_SUFFIX));
         // #c2o-10:  If current profile is the one renamed then need to refresh main screen
-        if (ConfigurationManager.INSTANCE.getCurrentProfileName().equals(profile)) {
-          ConfigurationManager.INSTANCE.setCurrentProfileName(newProfile);
+        if (ConfigurationManager.getCurrentProfileName().equals(profile)) {
+          ConfigurationManager.setCurrentProfileName(newProfile);
         }
         loadProfiles();
       }
@@ -76,7 +76,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
               JOptionPane.QUESTION_MESSAGE);
       if (result != JOptionPane.CANCEL_OPTION) {
         File profileFile =
-            new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), profile + ConfigurationManager.PROFILES_SUFFIX);
+            new File(ConfigurationManager.getConfigurationDirectory(), profile + ConfigurationManager.PROFILES_SUFFIX);
         if (profileFile.exists()) {
           profileFile.delete();
         }
@@ -196,7 +196,7 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
     String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new.msg"));
     if ("default".equalsIgnoreCase(newProfileName))
       return;
-    ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
+    ConfigurationManager.copyCurrentProfile(newProfileName);
     loadProfiles();
   }//GEN-LAST:event_cmdNewActionPerformed
 

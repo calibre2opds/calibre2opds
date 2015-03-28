@@ -54,15 +54,15 @@ public class HtmlManager {
         switch (feedType) {
           case MainCatalog:
             generateHeaderHtml(document, outputFile);
-            transformer = JDOM.INSTANCE.getMainCatalogTransformer();
+            transformer = JDOMManager.getMainCatalogTransformer();
             break;
 
           case Catalog:
-            transformer = JDOM.INSTANCE.getCatalogTransformer();
+            transformer = JDOMManager.getCatalogTransformer();
             break;
 
           case BookFullEntry:
-            transformer = JDOM.INSTANCE.getBookFullEntryTransformer();
+            transformer = JDOMManager.getBookFullEntryTransformer();
             break;
 
           default:
@@ -89,7 +89,7 @@ public class HtmlManager {
    *   TODO:  Decide if this function is needed at all!
    */
   private static void generateHeaderHtml(Document document, File outputFile) throws IOException {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
+    if (ConfigurationManager.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
       try {
         JDOMSource source = new JDOMSource(document);
@@ -99,7 +99,7 @@ public class HtmlManager {
         StreamResult streamResult = new StreamResult(fos);
         try {
           Transformer transformer;
-          transformer = JDOM.INSTANCE.getHeaderTransformer();
+          transformer = JDOMManager.getHeaderTransformer();
           transformer.transform(source, streamResult);
         } catch (TransformerException e) {
           logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
@@ -121,7 +121,7 @@ public class HtmlManager {
   public static String getHtmlFilename(String filename) {
     assert Helper.isNotNullOrEmpty(filename) :
             "Program error: Attempt to create HTML filename for empty/null filename";
-    assert ! filename.startsWith(ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName()):
+    assert ! filename.startsWith(ConfigurationManager.getCurrentProfile().getCatalogFolderName()):
             "Program Error: Filename should not include catalog folder" ;
     assert filename.endsWith(Constants.XML_EXTENSION) :
             "Program Error: Filename '" + filename + "' does not end with " + Constants.XML_EXTENSION;

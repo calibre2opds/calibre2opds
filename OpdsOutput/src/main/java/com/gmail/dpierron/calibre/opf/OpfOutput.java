@@ -3,8 +3,8 @@ package com.gmail.dpierron.calibre.opf;
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.datamodel.*;
-import com.gmail.dpierron.calibre.opds.JDOM;
-import com.gmail.dpierron.calibre.opds.JDOM.Namespace;
+import com.gmail.dpierron.calibre.opds.JDOMManager;
+import com.gmail.dpierron.calibre.opds.JDOMManager.Namespace;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.*;
@@ -95,7 +95,7 @@ public class OpfOutput {
   }
 
   private void addMetaElement(Element source, String name, String content) {
-    Element meta = JDOM.INSTANCE.element("meta", Namespace.Opf);
+    Element meta = JDOMManager.element("meta", Namespace.Opf);
     meta.setAttribute("name", name);
     meta.setAttribute("content", content);
     source.addContent(meta);
@@ -106,7 +106,7 @@ public class OpfOutput {
   }
 
   private Element getDublinCoreElement(Element source, String name, String content) {
-    Element dc = JDOM.INSTANCE.element(name, Namespace.Dc);
+    Element dc = JDOMManager.element(name, Namespace.Dc);
     dc.setText(content);
     return dc;
   }
@@ -196,7 +196,7 @@ public class OpfOutput {
       CachedFile epubfile = book.getEpubFile().getFile();
       Helper.copy(outputFile, epubfile);
       // Clear any cached information for this file as we have created a new one
-      if (CachedFileManager.INSTANCE.inCache(epubfile) != null) {
+      if (CachedFileManager.inCache(epubfile) != null) {
         epubfile.clearCachedInformation();
       }
     } catch (ZipException e ) {
@@ -228,7 +228,7 @@ public class OpfOutput {
             if (zipEntry.getName().toUpperCase().endsWith("CONTENT.OPF")) {
               // process the XML in the file
               try {
-                Document doc = JDOM.INSTANCE.getSaxBuilder().build(inputStream);
+                Document doc = JDOMManager.getSaxBuilder().build(inputStream);
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
                 } catch (org.jdom.IllegalAddException e) {
@@ -255,7 +255,7 @@ public class OpfOutput {
                 try {
                   ZipEntry newEntry = new ZipEntry(zipEntry.getName());
                   zos.putNextEntry(newEntry);
-                  JDOM.INSTANCE.getOutputter().output(doc, zos);
+                  JDOMManager.getOutputter().output(doc, zos);
                 } finally {
                   zos.closeEntry();
                 }

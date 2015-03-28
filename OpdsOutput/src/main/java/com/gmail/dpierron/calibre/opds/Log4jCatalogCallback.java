@@ -67,9 +67,9 @@ public class Log4jCatalogCallback implements CatalogCallbackInterface {
     for (Method getter : GetConfigurationInterface.class.getMethods()) {
       String getterName = getter.getName();
       try {
-        Object result = getter.invoke(ConfigurationManager.INSTANCE.getCurrentProfile());
+        Object result = getter.invoke(ConfigurationManager.getCurrentProfile());
         if (result instanceof Boolean) {
-          result = LocalizationHelper.INSTANCE.getYesOrNo((Boolean) result);
+          result = LocalizationHelper.getYesOrNo((Boolean) result);
         }
         // Check for special case of Custom Catalogs!
         if (result instanceof List) {

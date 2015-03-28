@@ -9,6 +9,9 @@ package com.gmail.dpierron.calibre.cache;
  * the next run.   The main purpose of this is to avoid having
  * to recalculate the CRC (which is an expensive operation) between
  * runs if it can be avoided.
+ *
+ * NOTE:  There should only ever be one instance of this class, so all
+ *        global variables and methods are declared static
  */
 
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
@@ -20,18 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public enum CachedFileManager {
-  INSTANCE;
+public class CachedFileManager {
+
   private final static Logger logger = Logger.getLogger(CachedFileManager.class);
   private static Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
-  private File cacheFile = null;
+  private static File cacheFile = null;
   private final static String CALIBRE2OPDS_LOG_FILENAME = "c2o_cache";
   private final static String CALIBRE2OPDS_LOG_FILENAME_OLD = "calibre2opds.cache";
 
-  private long savedCount = 0;
-  private long ignoredCount = 0;
+  private static long savedCount = 0;
+  private static long ignoredCount = 0;
 
-  public void reset() {
+  public static void reset() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
   }
@@ -42,7 +45,7 @@ public enum CachedFileManager {
    * @param cf CachedFile object to check
    * @return null if not present, object otherwise
    */
-  public CachedFile inCache(CachedFile cf) {
+  public static CachedFile inCache(CachedFile cf) {
     CachedFile cf_result = cachedFilesMap.get(cf.getPath());
     if (logger.isTraceEnabled())  logger.trace("inCache=" + (cf_result != null) + ": " + cf.getPath());
     return cf_result;
@@ -54,7 +57,7 @@ public enum CachedFileManager {
    * @param f File object to check
    * @return null if not present, object otherwise
    */
-  public CachedFile inCache(File f) {
+  public static CachedFile inCache(File f) {
     CachedFile cf_result = cachedFilesMap.get(f.getPath());
     if (logger.isTraceEnabled())  logger.trace("inCache=" + (cf_result != null) + ": " + f.getPath());
     return cf_result;
@@ -68,7 +71,7 @@ public enum CachedFileManager {
    * @param cf CachedFile object representing file
    * @return A CachedFile object for the given path
    */
-  public CachedFile addCachedFile(CachedFile cf) {
+  public static CachedFile addCachedFile(CachedFile cf) {
     String path = cf.getPath();
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
@@ -87,7 +90,7 @@ public enum CachedFileManager {
    * @param f File object representing file
    * @return A CachedFile object for the given path
    */
-  public CachedFile addCachedFile(File f) {
+  public static CachedFile addCachedFile(File f) {
     String path = f.getPath();
     CachedFile cf = inCache(f);
     if (cf == null) {
@@ -106,7 +109,7 @@ public enum CachedFileManager {
    * @param child  Filename
    * @return CachedFile object corresponding to file
    */
-  public CachedFile addCachedFile(File parent, String child) {
+  public static CachedFile addCachedFile(File parent, String child) {
     return addCachedFile(new File(parent, child));
   }
 
@@ -115,7 +118,7 @@ public enum CachedFileManager {
    *
    * @param f File object representing file
    */
-  public void removeCachedFile(File f) {
+  public static void removeCachedFile(File f) {
     String path = f.getPath();
     if (cachedFilesMap.containsKey(path)) {
       cachedFilesMap.remove(path);
@@ -130,7 +133,7 @@ public enum CachedFileManager {
    *
    * @param cf CachedFile object representing file
    */
-  public void removeCachedFile(CachedFile cf) {
+  public static void removeCachedFile(CachedFile cf) {
     removeCachedFile((File)cf);
   }
 
@@ -141,7 +144,7 @@ public enum CachedFileManager {
    * @param cf Specify the folder to hold the cache
    *           This is normally the catalog sub-folder of the target folder
    */
-  public void setCacheFolder(File cf) {
+  public static void setCacheFolder(File cf) {
     assert cf != null;    // cf must not be null
     cacheFile = new File(cf, CALIBRE2OPDS_LOG_FILENAME);
     if (logger.isDebugEnabled()) logger.debug("CRC Cache file set to " + cacheFile.getPath());
@@ -165,7 +168,7 @@ public enum CachedFileManager {
    *
    * N.B. the setCacheFolder() call must have been used
    */
-  public void saveCache(String pathToIgnore, CatalogCallbackInterface callback) {
+  public static void saveCache(String pathToIgnore, CatalogCallbackInterface callback) {
 
     // Check Cache folder has been set
     if (logger.isDebugEnabled()) logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
@@ -280,7 +283,7 @@ public enum CachedFileManager {
    *
    * N.B. the setCacheFolder() call must have been used
    */
-  public void loadCache() {
+  public static void loadCache() {
 
     reset();               // Reset cache to be empty
 
@@ -372,7 +375,7 @@ public enum CachedFileManager {
   /**
    * Delete any existing cache file
    */
-  public void deleteCache() {
+  public static void deleteCache() {
     if (cacheFile == null) {
       if (logger.isDebugEnabled())  logger.debug("Aborting deleteCache() as cache folder not set");
       return;
@@ -381,15 +384,15 @@ public enum CachedFileManager {
     if (logger.isDebugEnabled())  logger.debug("Deleted CRC cache file " + cacheFile.getPath());
   }
 
-  public long getCacheSize() {
+  public static long getCacheSize() {
     return cachedFilesMap.size();
   }
 
-  public long getSaveCount() {
+  public static long getSaveCount() {
     return savedCount;
   }
 
-  public long getIgnoredCount() {
+  public static long getIgnoredCount() {
     return ignoredCount;
   }
 }

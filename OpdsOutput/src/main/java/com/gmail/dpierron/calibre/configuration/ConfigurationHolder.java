@@ -265,7 +265,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     return (Helper.isNotNullOrEmpty(s)) ? new File(s) : null;
   }
   public void setDatabaseFolder(File databaseFolder) {
-    DataModel.INSTANCE.reset(); // reset the datamodel when the database changes !
+    DataModel.reset(); // reset the datamodel when the database changes !
     setProperty(PROPERTY_NAME_DATABASEFOLDER, Helper.isNullOrEmpty(databaseFolder) ? "" : databaseFolder.getAbsolutePath());
   }
 

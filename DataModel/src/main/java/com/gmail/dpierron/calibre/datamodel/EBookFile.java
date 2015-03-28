@@ -40,7 +40,7 @@ public class EBookFile {
   }
 
   public CachedFile getFile() {
-    return CachedFileManager.INSTANCE.addCachedFile(getBook().getBookFolder(), getName() + getExtension());
+    return CachedFileManager.addCachedFile(getBook().getBookFolder(), getName() + getExtension());
   }
 
   public String toString() {

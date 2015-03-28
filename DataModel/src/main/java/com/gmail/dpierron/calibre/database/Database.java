@@ -3,24 +3,26 @@ package com.gmail.dpierron.calibre.database;
 /**
  * Abstract the basic database operations used by calibre2opds
  * Handles transfering data between database field and calibre2opds variables
+ *
+ * NOTE:  There should only ever be one instance of this object, so all
+ *        global variables and methods are declared static.
  */
 
+import com.gmail.dpierron.calibre.configuration.Configuration;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.File;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
-public enum Database {
-
-  INSTANCE;
+public class Database {
 
   private static final Logger logger = Logger.getLogger(Database.class);
   private static final DateFormat SQLITE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -30,7 +32,7 @@ public enum Database {
    *
    * @return
    */
-  public List<Tag> listTags() {
+  public static List<Tag> listTags() {
     List<Tag> result = new LinkedList<Tag>();
     PreparedStatement statement = DatabaseRequest.ALL_TAGS.getStatement();
     try {
@@ -49,7 +51,7 @@ public enum Database {
    *
    * @return
    */
-  public boolean test() {
+  public static boolean test() {
     PreparedStatement statement = DatabaseRequest.TEST.getStatement();
     try {
       statement.executeQuery();
@@ -66,7 +68,7 @@ public enum Database {
    *
    * @return
    */
-  public Composite<Map<String, Language>, Map<String, Language>> getMapsOfLanguages() {
+  public static Composite<Map<String, Language>, Map<String, Language>> getMapsOfLanguages() {
     Map<String, Language> mapOfLanguagesById = new HashMap<String, Language>();
     Map<String, Language> mapOfLanguagesByIsoCode = new HashMap<String, Language>();
     PreparedStatement statement = DatabaseRequest.ALL_LANGUAGES.getStatement();
@@ -94,7 +96,7 @@ public enum Database {
    *
    * @return
    */
-  public List<Book> listBooks() {
+  public static List<Book> listBooks() {
     List<Book> result = new LinkedList<Book>();
     PreparedStatement statement = DatabaseRequest.ALL_BOOKS.getStatement();
     PreparedStatement stmtBooksLanguagesLink = DatabaseRequest.BOOKS_LANGUAGES.getStatement();
@@ -162,12 +164,12 @@ public enum Database {
         step=21;
         while (setLanguages.next()) {
           step=14 ; String languageId = setLanguages.getString("lang_code");
-          book.addBookLanguage(DataModel.INSTANCE.getMapOfLanguagesById().get(languageId));
+          book.addBookLanguage(DataModel.getMapOfLanguagesById().get(languageId));
           step=22;
         }
 
         // fetch its author
-        List<Author> authors = DataModel.INSTANCE.getMapOfAuthorsByBookId().get(bookId);
+        List<Author> authors = DataModel.getMapOfAuthorsByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(authors)) {
           for (Author author : authors) {
             book.addAuthor(author);
@@ -177,28 +179,28 @@ public enum Database {
         }
 
         // fetch its publisher
-        List<Publisher> publishers = DataModel.INSTANCE.getMapOfPublishersByBookId().get(bookId);
+        List<Publisher> publishers = DataModel.getMapOfPublishersByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(publishers)) {
           book.setPublisher(publishers.get(0));
         }
 
         // fetch its series
-        List<Series> series = DataModel.INSTANCE.getMapOfSeriesByBookId().get(bookId);
+        List<Series> series = DataModel.getMapOfSeriesByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(series))
           book.setSeries(series.get(0));
 
         // fetch its comment
-        List<String> comments = DataModel.INSTANCE.getMapOfCommentsByBookId().get(bookId);
+        List<String> comments = DataModel.getMapOfCommentsByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(comments))
           book.setComment(comments.get(0));
 
         // fetch its categories
-        List<Tag> tags = DataModel.INSTANCE.getMapOfTagsByBookId().get(bookId);
+        List<Tag> tags = DataModel.getMapOfTagsByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(tags))
           book.getTags().addAll(tags);
 
         // fetch its files
-        List<EBookFile> files = DataModel.INSTANCE.getMapOfEBookFilesByBookId().get(bookId);
+        List<EBookFile> files = DataModel.getMapOfEBookFilesByBookId().get(bookId);
         if (Helper.isNotNullOrEmpty(files)) {
           for (EBookFile file : files) {
             file.setBook(book);
@@ -221,7 +223,7 @@ public enum Database {
    *
    * @return
    */
-  public List<Author> listAuthors() {
+  public static List<Author> listAuthors() {
     List<Author> result = new LinkedList<Author>();
     List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_AUTHORS.getStatement();
@@ -247,7 +249,7 @@ public enum Database {
    *
    * @return
    */
-  public List<Publisher> listPublishers() {
+  public static List<Publisher> listPublishers() {
     List<Publisher> result = new LinkedList<Publisher>();
     List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_PUBLISHERS.getStatement();
@@ -274,7 +276,7 @@ public enum Database {
    *
    * @return
    */
-  public List<Series> listSeries() {
+  public static List<Series> listSeries() {
     List<Series> result = new LinkedList<Series>();
     List<String> ids = new LinkedList<String>();
     PreparedStatement statement = DatabaseRequest.ALL_SERIES.getStatement();
@@ -298,7 +300,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<EBookFile>> getMapOfEBookFilesByBookId() {
+  public static Map<String, List<EBookFile>> getMapOfEBookFilesByBookId() {
     Map<String, List<EBookFile>> result = new HashMap<String, List<EBookFile>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_DATA.getStatement();
     try {
@@ -325,7 +327,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Author>> getMapOfAuthorsByBookId() {
+  public static Map<String, List<Author>> getMapOfAuthorsByBookId() {
     Map<String, List<Author>> result = new HashMap<String, List<Author>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_AUTHORS.getStatement();
     try {
@@ -338,7 +340,7 @@ public enum Database {
           authors = new LinkedList<Author>();
           result.put(bookId, authors);
         }
-        Author author = DataModel.INSTANCE.getMapOfAuthors().get(authorId);
+        Author author = DataModel.getMapOfAuthors().get(authorId);
         if (author != null)
           authors.add(author);
         else
@@ -355,7 +357,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Publisher>> listPublishersByBookId() {
+  public static Map<String, List<Publisher>> listPublishersByBookId() {
     Map<String, List<Publisher>> result = new HashMap<String, List<Publisher>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_PUBLISHERS.getStatement();
     try {
@@ -368,7 +370,7 @@ public enum Database {
           publishers = new LinkedList<Publisher>();
           result.put(bookId, publishers);
         }
-        Publisher publisher = DataModel.INSTANCE.getMapOfPublishers().get(publisherId);
+        Publisher publisher = DataModel.getMapOfPublishers().get(publisherId);
         if (publisher != null)
           publishers.add(publisher);
         else
@@ -386,7 +388,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Tag>> getMapOfTagsByBookId() {
+  public static Map<String, List<Tag>> getMapOfTagsByBookId() {
     Map<String, List<Tag>> result = new HashMap<String, List<Tag>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_TAGS.getStatement();
     try {
@@ -399,7 +401,7 @@ public enum Database {
           tags = new LinkedList<Tag>();
           result.put(bookId, tags);
         }
-        Tag tag = DataModel.INSTANCE.getMapOfTags().get(tagId);
+        Tag tag = DataModel.getMapOfTags().get(tagId);
         if (tag != null) {
           tags.add(tag);
         } else {
@@ -417,7 +419,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<Series>> getMapOfSeriesByBookId() {
+  public static Map<String, List<Series>> getMapOfSeriesByBookId() {
     Map<String, List<Series>> result = new HashMap<String, List<Series>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_SERIES.getStatement();
     try {
@@ -430,7 +432,7 @@ public enum Database {
           series = new LinkedList<Series>();
           result.put(bookId, series);
         }
-        Series serie = DataModel.INSTANCE.getMapOfSeries().get(serieId);
+        Series serie = DataModel.getMapOfSeries().get(serieId);
         if (serie != null)
           series.add(serie);
         else
@@ -450,7 +452,7 @@ public enum Database {
    * @return
    */
 
-  public Map<String, List<String>> getMapOfCommentsByBookId() {
+  public static Map<String, List<String>> getMapOfCommentsByBookId() {
     Map<String, List<String>> result = new HashMap<String, List<String>>();
     PreparedStatement statement = DatabaseRequest.BOOKS_COMMENTS.getStatement();
     try {
@@ -477,7 +479,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, String> getMapOfSavedSearches() {
+  public static Map<String, String> getMapOfSavedSearches() {
     final String MIDDLE_DELIMITER = "\": \"";
     Map<String, String> result = new HashMap<String, String>();
     PreparedStatement statement = DatabaseRequest.SAVED_SEARCHES.getStatement();
@@ -519,7 +521,7 @@ public enum Database {
    * @return  0 = no error
    *          other = value with bit field deterining exception points encountered
    */
-  public int wasSqlEsception() {
+  public static int wasSqlEsception() {
     return sqlException;
   }
 
@@ -528,7 +530,7 @@ public enum Database {
    *
    * @return
    */
-  public List<CustomColumnType> getlistOfCustoColumnTypes() {
+  public static List<CustomColumnType> getlistOfCustoColumnTypes() {
     List<CustomColumnType> result = new LinkedList<CustomColumnType>();
     PreparedStatement statement = DatabaseRequest.CUSTOM_COLUMN_DEFINITION.getStatement();
     try {
@@ -556,7 +558,7 @@ public enum Database {
    *
    * @return
    */
-  public Map<String, List<CustomColumnValue>> getMapofCustomColumnValuesbyBookId (List<CustomColumnType> listTypes) {
+  public static Map<String, List<CustomColumnValue>> getMapofCustomColumnValuesbyBookId (List<CustomColumnType> listTypes) {
     Map<String, List<CustomColumnValue>> result = new HashMap<String, List<CustomColumnValue>>();
     for (CustomColumnType listType : listTypes)  {
       PreparedStatement statement;
@@ -601,4 +603,63 @@ public enum Database {
 
     return result;
   }
+
+
+
+  private static Connection connection;
+
+  public static Connection getConnection() {
+    if (connection == null) {
+      initConnection();
+    }
+    return connection;
+  }
+
+  public static boolean databaseExists() {
+    Boolean reply;
+    File database = new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
+    reply = database.exists();
+    logger.debug("Database existence check: " + reply);
+    if (reply) {
+      // check for BOOKS table
+      reply=Database.test();
+      logger.debug("Database access check: " + reply);
+    }
+    return reply;
+  }
+
+
+  private static void initConnection() {
+    initConnection(Configuration.instance().getDatabaseFolder());
+  }
+
+  private static void closeConnection() {
+    if (connection != null)
+      try {
+        connection.close();
+        connection = null;
+      } catch (SQLException e) {
+        logger.warn("Unexpected error on database closeConnection: " + e);
+      }
+  }
+
+  public static void initConnection(File calibreLibrary) {
+    try {
+      Class.forName("org.sqlite.JDBC");
+      File database = new File(calibreLibrary, "metadata.db");
+      String url = database.toURI().getPath();
+      connection = DriverManager.getConnection("jdbc:sqlite:" + url);
+    } catch (ClassNotFoundException e) {
+      logger.error(e);
+    } catch (SQLException e) {
+      logger.error("initConnection: " + e);
+    }
+  }
+
+  public static void reset() {
+    // reset the database prepared statements
+    DatabaseRequest.reset();
+    closeConnection();
+  }
+
 }

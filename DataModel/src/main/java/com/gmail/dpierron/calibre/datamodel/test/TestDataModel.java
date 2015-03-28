@@ -23,7 +23,7 @@ public class TestDataModel {
   public void testDataModel(boolean checkFiles) {
     skipLine();
     logger.info("loading books");
-    List<Book> books = DataModel.INSTANCE.getListOfBooks();
+    List<Book> books = DataModel.getListOfBooks();
     logger.info("Found " + books.size() + " book(s)");
     skipLine();
 
@@ -89,30 +89,30 @@ public class TestDataModel {
 
     skipLine();
     logger.info("loading tags");
-    List<Tag> list = DataModel.INSTANCE.getListOfTags();
+    List<Tag> list = DataModel.getListOfTags();
     logger.info("there are " + list.size() + " tag(s)");
     skipLine();
 
     skipLine();
     logger.info("loading books by tag");
-    for (Tag key : DataModel.INSTANCE.getMapOfBooksByTag().keySet()) {
-      books = DataModel.INSTANCE.getMapOfBooksByTag().get(key);
+    for (Tag key : DataModel.getMapOfBooksByTag().keySet()) {
+      books = DataModel.getMapOfBooksByTag().get(key);
       logger.info(key + " has " + books.size() + " book(s)");
     }
     skipLine();
 
     skipLine();
     logger.info("loading books by author");
-    for (Author key : DataModel.INSTANCE.getMapOfBooksByAuthor().keySet()) {
-      books = DataModel.INSTANCE.getMapOfBooksByAuthor().get(key);
+    for (Author key : DataModel.getMapOfBooksByAuthor().keySet()) {
+      books = DataModel.getMapOfBooksByAuthor().get(key);
       logger.info(key + " has " + books.size() + " book(s)");
     }
     skipLine();
 
     skipLine();
     logger.info("loading books by serie");
-    for (Series key : DataModel.INSTANCE.getMapOfBooksBySeries().keySet()) {
-      books = DataModel.INSTANCE.getMapOfBooksBySeries().get(key);
+    for (Series key : DataModel.getMapOfBooksBySeries().keySet()) {
+      books = DataModel.getMapOfBooksBySeries().get(key);
       logger.info(key + " has " + books.size() + " book(s)");
     }
     skipLine();

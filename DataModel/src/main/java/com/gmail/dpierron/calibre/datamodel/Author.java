@@ -76,7 +76,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   private String computeSort() {
     // first, let's try and find a book by this author (alone) which has a author_sort field
     // If so we use that value as the most likely one
-    List<Book> books = DataModel.INSTANCE.getMapOfBooksByAuthor().get(this);
+    List<Book> books = DataModel.getMapOfBooksByAuthor().get(this);
     if (books != null)
       for (Book book : books) {
         if (book.hasSingleAuthor()) {
@@ -124,7 +124,7 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   }
 
   public String getTitleToSplitByLetter() {
-    return DataModel.INSTANCE.getLibrarySortAuthor() ? getName() :  getNameForSort();
+    return DataModel.getLibrarySortAuthor() ? getName() :  getNameForSort();
   }
 
   /* Comparable interface, used to sort an authors list */
