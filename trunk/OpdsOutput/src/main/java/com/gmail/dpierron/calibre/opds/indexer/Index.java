@@ -94,8 +94,8 @@ public class Index {
    */
   private List<String> splitStringIntoKeywords(String text, boolean pTags) {
     List<String> result = new ArrayList<String>();
-    String splitTagsOn = ConfigurationManager.INSTANCE.getCurrentProfile().getDontSplitTagsOn()
-                          ? "" : ConfigurationManager.INSTANCE.getCurrentProfile().getSplitTagsOn();
+    String splitTagsOn = ConfigurationManager.getCurrentProfile().getDontSplitTagsOn()
+                          ? "" : ConfigurationManager.getCurrentProfile().getSplitTagsOn();
     boolean processingTags = pTags && Helper.isNotNullOrEmpty(splitTagsOn);
     char tagChar = ' ';
     if (processingTags)
@@ -182,7 +182,7 @@ public class Index {
     indexMultipleKeywords(book.getTitle(), ItemType.BookTitle, bookEntry, false);
 
     // parse the book comments
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getIndexComments())
+    if (ConfigurationManager.getCurrentProfile().getIndexComments())
       indexMultipleKeywords(Helper.removeHtmlElements(book.getComment()), ItemType.BookComment, bookEntry, false);
 
     // parse the book series
@@ -298,7 +298,7 @@ public class Index {
     List<String> sqlBooks = new ArrayList<String>(mapOfKeywords.size());
     List<String> sqlCatalogItems = new ArrayList<String>(mapOfKeywords.size());
     // clear the flag of all books
-    for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+    for (Book book : DataModel.getListOfBooks()) {
       book.clearFlagged();
     }
     for (Keyword keyword : mapOfKeywords.values()) {
@@ -417,7 +417,7 @@ public class Index {
     List<String> jsonBooks = new ArrayList<String>(mapOfKeywords.size());
     List<String> jsonCatalogItems = new ArrayList<String>(mapOfKeywords.size());
     // clear the flag of all books
-    for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+    for (Book book : DataModel.getListOfBooks()) {
       book.clearFlagged();
     }
     for (Keyword keyword : mapOfKeywords.values()) {
@@ -537,7 +537,7 @@ public class Index {
     List<String[]> jsBooks = new ArrayList<String[]>(mapOfKeywords.size());
     List<String[]> jsCatalogItems = new ArrayList<String[]>(mapOfKeywords.size());
     // clear the flag of all books
-    for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+    for (Book book : DataModel.getListOfBooks()) {
       book.clearFlagged();
     }
     // TODO:  See if we can rework to write directly to files to reduce RAM usage
@@ -573,7 +573,7 @@ public class Index {
     }
     List<String[]> jsIdentifier = new LinkedList<String[]>();
     jsIdentifier.add(new String[]{new VMID().toString(),
-        ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle(),
+        ConfigurationManager.getCurrentProfile().getCatalogTitle(),
         SimpleDateFormat.getInstance().format(new Date())});
     writeJavascript(exportFolder, "identifier", jsIdentifier, Helper.listThis("id", "label", "date"));
     writeJavascript(exportFolder, "books", jsBooks, Helper.listThis("bkId", "bkTitle", "bkUrl", "bkThumbnailUrl"));

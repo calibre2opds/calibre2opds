@@ -6,7 +6,7 @@ import com.gmail.dpierron.calibre.datamodel.Author;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
-import com.gmail.dpierron.calibre.opds.JDOM;
+import com.gmail.dpierron.calibre.opds.JDOMManager;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 
@@ -16,39 +16,38 @@ import java.io.StringWriter;
 import java.sql.*;
 import java.util.*;
 
-public enum TrookSpecificSearchDatabaseManager {
-  INSTANCE;
+public class TrookSpecificSearchDatabaseManager {
 
-  private final int MIN_KEYWORD_LEN = 3;
+  private static final int MIN_KEYWORD_LEN = 3;
 
-  private File databaseFile = null;
-  private Connection connection = null;
-  private Map<String, Long> keywords = new HashMap<String, Long>();
-  private List<Book> storedBooks = new LinkedList<Book>();
-  private List<Author> storedAuthors = new LinkedList<Author>();
-  private List<Series> storedSeries = new LinkedList<Series>();
-  private List<Tag> storedTags = new LinkedList<Tag>();
-  private long keywordCounter = 0;
-  private long resultCounter = 0;
+  private static File databaseFile = null;
+  private static Connection connection = null;
+  private static Map<String, Long> keywords = new HashMap<String, Long>();
+  private static List<Book> storedBooks = new LinkedList<Book>();
+  private static List<Author> storedAuthors = new LinkedList<Author>();
+  private static List<Series> storedSeries = new LinkedList<Series>();
+  private static List<Tag> storedTags = new LinkedList<Tag>();
+  private static long keywordCounter = 0;
+  private static long resultCounter = 0;
 
   private static final Logger logger = Logger.getLogger(TrookSpecificSearchDatabaseManager.class);
 
-  public void setDatabaseFile(File databaseFile) {
-    this.databaseFile = databaseFile;
+  public static void setDatabaseFile(File dbFile) {
+    databaseFile = dbFile;
   }
 
-  public File getDatabaseFile() {
+  public static File getDatabaseFile() {
     return databaseFile;
   }
 
-  public Connection getConnection() {
+  public static Connection getConnection() {
     if (connection == null) {
       initConnection();
     }
     return connection;
   }
 
-  public void closeConnection() {
+  public static void closeConnection() {
     if (connection != null) {
       try {
         connection.close();
@@ -58,7 +57,7 @@ public enum TrookSpecificSearchDatabaseManager {
     }
   }
 
-  public boolean databaseExists() {
+  public static boolean databaseExists() {
     if (databaseFile == null)
       return false;
     if (!databaseFile.exists())
@@ -67,7 +66,7 @@ public enum TrookSpecificSearchDatabaseManager {
     return true;
   }
 
-  private void initConnection() {
+  private static void initConnection() {
     try {
       Class.forName("org.sqlite.JDBC");
       if (databaseFile == null)
@@ -104,7 +103,7 @@ public enum TrookSpecificSearchDatabaseManager {
 
 
 
-  private long addResult(String opdsEntry, ResultType type) throws SQLException {
+  private static long addResult(String opdsEntry, ResultType type) throws SQLException {
     PreparedStatement ps = getConnection().prepareStatement("INSERT INTO results(result_id, result_type, result_entry) values (?, ?, ?);");
     ps.setLong(1, ++resultCounter);
     ps.setString(2, type.name().toUpperCase(Locale.ENGLISH));
@@ -113,7 +112,7 @@ public enum TrookSpecificSearchDatabaseManager {
     return resultCounter;
   }
 
-  private long addKeyword(String keyword) throws SQLException {
+  private static long addKeyword(String keyword) throws SQLException {
     // check if keyword already exist (we test in memory to be quicker)
     if (keywords.containsKey(keyword))
       return keywords.get(keyword);
@@ -127,14 +126,14 @@ public enum TrookSpecificSearchDatabaseManager {
     return keywordCounter;
   }
 
-  private void addKeywordResultRelation(long keywordId, long resultId) throws SQLException {
+  private static void addKeywordResultRelation(long keywordId, long resultId) throws SQLException {
     PreparedStatement ps = getConnection().prepareStatement("INSERT INTO keywords_results_relation(keyword_id, result_id) values (?, ?);");
     ps.setLong(1, keywordId);
     ps.setLong(2, resultId);
     ps.execute();
   }
 
-  private List<String> keywordize(String pKeywordString) {
+  private static List<String> keywordize(String pKeywordString) {
     List<String> keywords = new LinkedList<String>();
     List<String> result = new LinkedList<String>();
     String keywordString = pKeywordString.toUpperCase(Locale.ENGLISH);
@@ -182,7 +181,7 @@ public enum TrookSpecificSearchDatabaseManager {
     return result;
   }
 
-  public void addEntry(String opdsEntry, ResultType type, String... keywordStrings) throws SQLException {
+  public static void addEntry(String opdsEntry, ResultType type, String... keywordStrings) throws SQLException {
     // add the result
     long resultId = addResult(opdsEntry, type);
 
@@ -198,12 +197,12 @@ public enum TrookSpecificSearchDatabaseManager {
     }
   }
 
-  private void addEntryToTrookSearchDatabase(Element entry, ResultType type, String... keywords) {
+  private static void addEntryToTrookSearchDatabase(Element entry, ResultType type, String... keywords) {
     try {
       StringWriter sw = new StringWriter();
-      JDOM.INSTANCE.getSerializer().output(entry, sw);
+      JDOMManager.getSerializer().output(entry, sw);
       String opdsEntry = sw.getBuffer().toString();
-      TrookSpecificSearchDatabaseManager.INSTANCE.addEntry(opdsEntry, type, keywords);
+      addEntry(opdsEntry, type, keywords);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     } catch (SQLException e) {
@@ -211,8 +210,8 @@ public enum TrookSpecificSearchDatabaseManager {
     }
   }
 
-  public void addAuthor(Author item, Element entry) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
+  public static void addAuthor(Author item, Element entry) {
+    if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedAuthors.contains(item)) {
         logger.debug("adding result for " + item);
         String keywords = item.getName();
@@ -222,21 +221,21 @@ public enum TrookSpecificSearchDatabaseManager {
     }
   }
 
-  public void addSeries(Series item, Element entry) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
+  public static void addSeries(Series item, Element entry) {
+    if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedSeries.contains(item)) {
         logger.debug("adding result for " + item);
         String keywords = item.getName();
         // TODO do this after Doug has added support for noise words filtering in series 
-        // String noNoise = item.getTitleForSort(ConfigurationManager.INSTANCE.getCurrentProfile().getBookLanguageTag());
+        // String noNoise = item.getTitleForSort(ConfigurationManager.getCurrentProfile().getBookLanguageTag());
         addEntryToTrookSearchDatabase(entry, ResultType.SERIES, keywords);
         storedSeries.add(item);
       }
     }
   }
 
-  public void addTag(Tag item, Element entry) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
+  public static void addTag(Tag item, Element entry) {
+    if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedTags.contains(item)) {
         logger.debug("adding result for " + item);
         String keywords = item.getName();
@@ -246,8 +245,8 @@ public enum TrookSpecificSearchDatabaseManager {
     }
   }
 
-  public void addBook(Book item, Element entry) {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
+  public static void addBook(Book item, Element entry) {
+    if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedBooks.contains(item)) {
         logger.debug("adding result for " + item);
         String keywords = item.getTitle();

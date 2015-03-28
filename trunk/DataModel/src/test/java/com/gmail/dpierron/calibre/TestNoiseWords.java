@@ -16,7 +16,7 @@ public class TestNoiseWords {
     String withoutNoise;
 
     // Test ENGLSH
-    noiseWord = DataModel.INSTANCE.getNoiseword("en");        // Using 2-character ISO code
+    noiseWord = DataModel.getNoiseword("en");        // Using 2-character ISO code
     withoutNoise = noiseWord.removeLeadingNoiseWords("the cat who liked girls");
     assertTrue("cat who liked girls".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("the a an cat who liked girls");
@@ -30,7 +30,7 @@ public class TestNoiseWords {
     assertTrue("cat who liked girls, the a an" .equals(withoutNoise));
 
     // Test FRENCH
-    noiseWord = DataModel.INSTANCE.getNoiseword(Locale.FRENCH);         // Using specific Locale
+    noiseWord = DataModel.getNoiseword(Locale.FRENCH);         // Using specific Locale
     withoutNoise = noiseWord.removeLeadingNoiseWords("le chien d'anglais qui aimait les frites");
     assertTrue("chien d'anglais qui aimait les frites".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("la le un anglais qui aimait les frites");
@@ -39,7 +39,7 @@ public class TestNoiseWords {
     assertTrue("anglais qui aimait les frites" .equals(withoutNoise));
 
     // Test GERMAN
-    noiseWord = DataModel.INSTANCE.getNoiseword("deu");       // Using 3-character ISO code
+    noiseWord = DataModel.getNoiseword("deu");       // Using 3-character ISO code
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein voegel");
     assertTrue("voegel" .equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein der die das voegel");

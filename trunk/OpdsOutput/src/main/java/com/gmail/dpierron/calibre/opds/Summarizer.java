@@ -13,17 +13,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public enum Summarizer {
-  INSTANCE;
+public class Summarizer {
 
-  public int getPageNumber(int itemNumber) {
-    double pageSize = ConfigurationManager.INSTANCE.getCurrentProfile().getMaxBeforePaginate();
+  public static int getPageNumber(int itemNumber) {
+    double pageSize = ConfigurationManager.getCurrentProfile().getMaxBeforePaginate();
     double dItemNumber = itemNumber;
     double result = dItemNumber / pageSize;
     return (int) Math.ceil(result);
   }
 
-  public String summarizeBooks(List elements) {
+  public static String summarizeBooks(List elements) {
     InternalSummarizer summarizer = new InternalSummarizer() {
 
       @Override
@@ -40,7 +39,7 @@ public enum Summarizer {
     return summarizer.summarize(elements);
   }
 
-  public String summarizeTags(List elements) {
+  public static String summarizeTags(List elements) {
     InternalSummarizer summarizer = new InternalSummarizer() {
 
       @Override
@@ -57,7 +56,7 @@ public enum Summarizer {
     return summarizer.summarize(elements);
   }
 
-  public String summarizeTagLevels(List elements) {
+  public static String summarizeTagLevels(List elements) {
     InternalSummarizer summarizer = new InternalSummarizer() {
 
       @Override
@@ -74,7 +73,7 @@ public enum Summarizer {
     return summarizer.summarize(elements);
   }
 
-  public String summarizeAuthors(List elements) {
+  public static String summarizeAuthors(List elements) {
     InternalSummarizer summarizer = new InternalSummarizer() {
 
       @Override
@@ -85,7 +84,7 @@ public enum Summarizer {
       @Override
       String getTitle(Object o) {
         // return ((Author) o).getLastName();
-        return ConfigurationManager.INSTANCE.getCurrentProfile().getDisplayAuthorSort()
+        return ConfigurationManager.getCurrentProfile().getDisplayAuthorSort()
             ? ((Author) o).getSort()
             : ((Author) o).getName();
       }
@@ -94,7 +93,7 @@ public enum Summarizer {
     return summarizer.summarize(elements);
   }
 
-  public String summarizeSeries(List elements) {
+  public static String summarizeSeries(List elements) {
     InternalSummarizer summarizer = new InternalSummarizer() {
 
       @Override
@@ -111,7 +110,7 @@ public enum Summarizer {
     return summarizer.summarize(elements);
   }
 
-  public String getBookWord(int nb) {
+  public static String getBookWord(int nb) {
     if (nb == 0)
       return Localization.Main.getText("bookword.none");
     else if (nb == 1)
@@ -120,7 +119,7 @@ public enum Summarizer {
       return Localization.Main.getText("bookword.many", nb);
   }
 
-  public String getAuthorWord(int nb) {
+  public static String getAuthorWord(int nb) {
     if (nb == 0)
       return Localization.Main.getText("authorword.none");
     else if (nb == 1)
@@ -129,7 +128,7 @@ public enum Summarizer {
       return Localization.Main.getText("authorword.many", nb);
   }
 
-  public String getTagLevelWord(int nb) {
+  public static String getTagLevelWord(int nb) {
     if (nb == 0)
       return Localization.Main.getText("taglevelword.none");
     else if (nb == 1)
@@ -138,7 +137,7 @@ public enum Summarizer {
       return Localization.Main.getText("taglevelword.many", nb);
   }
 
-  public String getSeriesWord(int nb) {
+  public static String getSeriesWord(int nb) {
     if (nb == 0)
       return Localization.Main.getText("seriesword.none");
     else if (nb == 1)
@@ -147,7 +146,7 @@ public enum Summarizer {
       return Localization.Main.getText("seriesword.many", nb);
   }
 
-  public String getTagWord(int nb) {
+  public static String getTagWord(int nb) {
     if (nb == 0)
       return Localization.Main.getText("tagword.none");
     else if (nb == 1)
@@ -156,7 +155,7 @@ public enum Summarizer {
       return Localization.Main.getText("tagword.many", nb);
   }
 
-  private abstract class InternalSummarizer {
+  private static abstract class InternalSummarizer {
     abstract String getWord(int itemsCount);
 
     abstract String getTitle(Object o);
@@ -205,7 +204,7 @@ public enum Summarizer {
 
       // try and list the items to make the summary
       Composite<Integer, String> shortList =
-          concatenateListWhileShortening(", ", elements, ConfigurationManager.INSTANCE.getCurrentProfile().getMaxSummaryLength());
+          concatenateListWhileShortening(", ", elements, ConfigurationManager.getCurrentProfile().getMaxSummaryLength());
       int shortListItemCount = shortList.getFirstElement();
       String summary = shortList.getSecondElement();
       if (shortListItemCount < itemsCount) {

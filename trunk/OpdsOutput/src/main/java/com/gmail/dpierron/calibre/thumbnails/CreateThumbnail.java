@@ -32,7 +32,7 @@ public class CreateThumbnail {
         // I don't give a tiny rat's ass
       }
       if (!isImageLoaded())
-        CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName), null);
+        CatalogManager.callback.errorOccured(Localization.Main.getText("error.loadingThumbnail", fileName), null);
     }
   }
 
@@ -93,9 +93,9 @@ public class CreateThumbnail {
         }
       }
       if (exception != null)
-        CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()), exception);
+        CatalogManager.callback.errorOccured(Localization.Main.getText("error.savingThumbnail", file.getAbsolutePath()), exception);
     } else {
-      CatalogManager.INSTANCE.callback.errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
+      CatalogManager.callback.errorOccured(Localization.Main.getText("error.generatingThumbnail", file.getAbsolutePath()), null);
     }
   }
 }

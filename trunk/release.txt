@@ -99,7 +99,7 @@ Usefule links for tracking changes are:
 v3.5 
     - No changes/fixes yet included
 
-v3.4 (27th March 2015) Rev 336
+v3.4 (28th March 2015) Rev 336
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
@@ -144,6 +144,7 @@ v3.4 (27th March 2015) Rev 336
     - Fix:    #c20-237: Delete button not working in Custom Catalogs tab
     - Fix:    #c2o-238: Do not generate resized covers' option is sometimes ignored
     - Fix:    #c2o-239: Locale related crash if running under Java 8.
+    - Fix:    #c2o-241: Calibre3opds always fails the first time it is run on anew system
 
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,

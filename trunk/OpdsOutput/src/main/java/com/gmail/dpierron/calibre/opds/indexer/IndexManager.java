@@ -11,37 +11,40 @@ import java.io.IOException;
 /**
  * all the algorithms needed to index the model objects are stored here
  */
-public enum IndexManager {
-  INSTANCE;
+public class IndexManager {
   private final static Logger logger = Logger.getLogger(IndexManager.class);
-  Index index = new Index();
+  private static Index index = new Index();
 
   private IndexManager() {
   }
 
-  public void indexBook(Book book, String url, String thumbnailUrl) {
+  public void reset () {
+    index = new Index();
+  }
+
+  public static void indexBook(Book book, String url, String thumbnailUrl) {
     index.indexBook(book, url, thumbnailUrl);
   }
 
-  public long size() {
+  public static long size() {
     return index.size();
   }
 
-  private void exportToJavascript(Index pIndex, String name) throws IOException {
+  private static void exportToJavascript(Index pIndex, String name) throws IOException {
   }
  /*
-  public void exportToJavascript() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
-        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
+  public static void exportToJavascript() throws IOException {
+    Index index2 = index.filterIndex(ConfigurationManager.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.getCurrentProfile().getIndexFilterAlgorithm());
+    File searchFolder = new File(CatalogManager.getGenerateFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJavascript(searchFolder);
   }
 
-  public void exportToJSON() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
-        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
+  public static void exportToJSON() throws IOException {
+    Index index2 = index.filterIndex(ConfigurationManager.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.getCurrentProfile().getIndexFilterAlgorithm());
+    File searchFolder = new File(CatalogManager.getGenerateFolder(), "_search");
     searchFolder.mkdirs();
     index2.exportToJSON(searchFolder);
   }
@@ -50,10 +53,10 @@ public enum IndexManager {
    * Export search information to Javascript arrays in files
    * @throws IOException
    */
-  public void exportToJavascriptArrays() throws IOException {
-    Index index2 = index.filterIndex(ConfigurationManager.INSTANCE.getCurrentProfile().getMaxKeywords(),
-        ConfigurationManager.INSTANCE.getCurrentProfile().getIndexFilterAlgorithm());
-    File searchFolder = new File(CatalogManager.INSTANCE.getGenerateFolder(), "_search");
+  public static void exportToJavascriptArrays() throws IOException {
+    Index index2 = index.filterIndex(ConfigurationManager.getCurrentProfile().getMaxKeywords(),
+        ConfigurationManager.getCurrentProfile().getIndexFilterAlgorithm());
+    File searchFolder = new File(CatalogManager.getGenerateFolder(), "_search");
     searchFolder = new File(searchFolder, "database");
     searchFolder.mkdirs();
     index2.exportToJavascriptArrays(searchFolder);

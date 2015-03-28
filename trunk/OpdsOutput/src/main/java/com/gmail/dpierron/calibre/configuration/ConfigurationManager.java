@@ -1,10 +1,15 @@
 package com.gmail.dpierron.calibre.configuration;
 
+/**
+ * Class that handles Configuration Management
+ *
+ * NOTE:  As there should only ever be a single instance of this
+ *        class all vriables and methods are declared static
+ */
 import com.gmail.dpierron.calibre.datamodel.EBookFormat;
 import com.gmail.dpierron.calibre.opds.Constants;
-import com.gmail.dpierron.calibre.opds.JDOM;
+import com.gmail.dpierron.calibre.opds.JDOMManager;
 import com.gmail.dpierron.tools.i18n.Localization;
-import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -13,8 +18,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-public enum ConfigurationManager {
-  INSTANCE;
+public class ConfigurationManager {
 
   public static final String PROFILES_SUFFIX = ".profile.xml";
   private final static String PROFILE_FILENAME = "profile.xml";
@@ -39,7 +43,7 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  PropertiesBasedConfiguration getDefaultConfiguration() {
+  public static PropertiesBasedConfiguration getDefaultConfiguration() {
     if (defaultConfiguration == null) {
       logger.trace("defaultConfiguration is not set");
       File file = new File(getConfigurationDirectory(), PROFILE_FILENAME);
@@ -65,7 +69,7 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  public ConfigurationHolder getCurrentProfile() {
+  public static ConfigurationHolder getCurrentProfile() {
     if (currentProfile == null) {
       logger.trace("getCurrentProfile - currentProfile not set");
       currentProfile = new ConfigurationHolder(new File(getConfigurationDirectory(), getCurrentProfileName() + PROFILES_SUFFIX));
@@ -78,7 +82,7 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  public String getCurrentProfileName() {
+  public static String getCurrentProfileName() {
     String s = getDefaultConfiguration().getProperty(PROPERTY_NAME_CURRENTCONFIGURATION);
     if (Helper.isNotNullOrEmpty(s))
       return s;
@@ -92,7 +96,7 @@ public enum ConfigurationManager {
    *
    * @param newName
    */
-  public void setCurrentProfileName(String newName) {
+  public static void setCurrentProfileName(String newName) {
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, newName);
   }
 
@@ -104,7 +108,7 @@ public enum ConfigurationManager {
    * @param profileName
    * @param setDefault
    */
-  public void changeProfile(String profileName, boolean setDefault) {
+  public static void changeProfile(String profileName, boolean setDefault) {
     logger.trace("changeProfile to " + profileName);
     String currentProfileName = getCurrentProfileName();
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
@@ -118,7 +122,7 @@ public enum ConfigurationManager {
    *
    * @param newProfileName
    */
-  public void copyCurrentProfile(String newProfileName) {
+  public static void copyCurrentProfile(String newProfileName) {
     getCurrentProfile().setPropertiesFile(new File(getConfigurationDirectory(), newProfileName + PROFILES_SUFFIX));
     getCurrentProfile().save();
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, newProfileName);
@@ -136,7 +140,7 @@ public enum ConfigurationManager {
    * @return    Null if not found
    *            Existing name if found
    */
-  public String isExistingConfiguration(String filename) {
+  public static String isExistingConfiguration(String filename) {
     for (String existingConfigName : getExistingConfigurations()) {
       if (existingConfigName.equalsIgnoreCase(filename))
         return existingConfigName;
@@ -148,7 +152,7 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  public List<String> getExistingConfigurations() {
+  public static List<String> getExistingConfigurations() {
     File configurationFolder = getConfigurationDirectory();
     String[] files = configurationFolder.list(new FilenameFilter() {
 
@@ -181,7 +185,7 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  public File getConfigurationDirectory() {
+  public static File getConfigurationDirectory() {
     if (configurationDirectory == null) {
       //            logger.trace("getConfigurationDirectory - configurationDirectory not set");
       configurationDirectory = getDefaultConfigurationDirectory();
@@ -378,7 +382,8 @@ public enum ConfigurationManager {
       ConfigurationManager.addStartupLogMessage("Exit(-1)");
       System.exit(-4);
     }
-    addStartupLogMessage(Localization.Main.getText("startup.configusing", newConfigurationFolder));
+    configurationFolder = newConfigurationFolder;
+    addStartupLogMessage(Localization.Main.getText("startup.configusing", configurationFolder));
     return configurationFolder;
   }
 
@@ -389,7 +394,7 @@ public enum ConfigurationManager {
    * @param filename
    * @return
    */
-  public InputStream getResourceAsStream(String filename) {
+  public static InputStream getResourceAsStream(String filename) {
     InputStream ins = null;
     try {
         // Try user configuration folder
@@ -402,13 +407,13 @@ public enum ConfigurationManager {
           logger.info("Resource '" + filename + "' loaded from Install folder");
       } catch (FileNotFoundException f) {
           // If still not found then use built-in resource
-        ins = JDOM.class.getResourceAsStream(filename);
+        ins = JDOMManager.class.getResourceAsStream(filename);
       }
     }
     return ins;
   }
 
-  public boolean isHacksEnabled() {
+  public static boolean isHacksEnabled() {
     return Helper.isNotNullOrEmpty(System.getenv("CALIBRE2OPDS_HACKSENABLED"));
   }
 
@@ -430,7 +435,7 @@ public enum ConfigurationManager {
    * Get the list of startup messages that have been built up
    * @return
    */
-  public List<String> getStartupLogMessages() {
+  public static List<String> getStartupLogMessages() {
     return startupLogMessages;
   }
 
@@ -438,7 +443,7 @@ public enum ConfigurationManager {
    * Clear down the list of startup messages.
    * (Just saves a little RAM if there were a lot?)
    */
-  public void clearStartupLogMessages() {
+  public static void clearStartupLogMessages() {
     startupLogMessages = null;
   }
 
@@ -447,7 +452,7 @@ public enum ConfigurationManager {
    * If the one requested is not one we support we set it to English
    * @param lc
    */
-  public void setLocale (Locale lc){
+  public static void setLocale (Locale lc){
     if (lc == null) {
       lc = Locale.getDefault();
       logger.debug("setLocale: lc==null.  Trying to set to Default Locale: " + lc.getISO3Language());
@@ -467,7 +472,7 @@ public enum ConfigurationManager {
    * Get the locale that is to be used for this configuration
    * @return
    */
-  public Locale getLocale () {
+  public static Locale getLocale () {
     if (configLocale == null) {
       logger.trace("getLocale: Not set, so try to set to default");
       setLocale(Locale.getDefault());
@@ -495,13 +500,13 @@ public enum ConfigurationManager {
    *
    * @return
    */
-  public void initialiseListOfSupportedEbookFormats () {
+  public static void initialiseListOfSupportedEbookFormats () {
 
     if (EBookFormat.getSupportedFormats() != null) {
       return;
     }
     List<EBookFormat> supportedFormats = new LinkedList<EBookFormat>();
-    InputStream is = getResourceAsStream(Constants.MIMETYPES_FILENAME);
+    InputStream is = ConfigurationManager.getResourceAsStream(Constants.MIMETYPES_FILENAME);
     assert is != null;
     Scanner scanner = new Scanner(is);
     String line;

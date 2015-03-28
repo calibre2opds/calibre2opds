@@ -36,8 +36,8 @@ public abstract class ImageManager {
     reset();
     this.imageHeight = imageHeight;
 
-    CachedFile imageSizeFile = CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
-    FeedHelper.checkFileNameIsNewStandard(imageSizeFile, CachedFileManager.INSTANCE.addCachedFile(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), imageSizeFile.getName().substring(4)));
+    CachedFile imageSizeFile = CachedFileManager.addCachedFile(ConfigurationManager.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
+    FeedHelper.checkFileNameIsNewStandard(imageSizeFile, CachedFileManager.addCachedFile(ConfigurationManager.getCurrentProfile().getDatabaseFolder(), imageSizeFile.getName().substring(4)));
 
     imageSizeChanged = true;      // Assume true if sizefile does not exist
     if (imageSizeFile.exists()) {
@@ -65,7 +65,7 @@ public abstract class ImageManager {
         // It will be recreated if the appropriate point
         // in the catalog generation is reached.
         imageSizeFile.delete();
-        CachedFileManager.INSTANCE.removeCachedFile(imageSizeFile);
+        CachedFileManager.removeCachedFile(imageSizeFile);
       }
     }
   }
@@ -79,11 +79,11 @@ public abstract class ImageManager {
   }
 
   public final static ThumbnailManager newThumbnailManager() {
-    return new ThumbnailManager(ConfigurationManager.INSTANCE.getCurrentProfile().getThumbnailHeight());
+    return new ThumbnailManager(ConfigurationManager.getCurrentProfile().getThumbnailHeight());
   }
 
   public final static ImageManager newCoverManager() {
-    return new CoverManager(ConfigurationManager.INSTANCE.getCurrentProfile().getCoverHeight());
+    return new CoverManager(ConfigurationManager.getCurrentProfile().getCoverHeight());
   }
 
   /*
@@ -107,7 +107,7 @@ public abstract class ImageManager {
    * @return
    */
   String getImageUri(Book book) {
-    String uriBase = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
+    String uriBase = ConfigurationManager.getCurrentProfile().getUrlBooks();
     if (Helper.isNullOrEmpty(uriBase)) {
       uriBase = Constants.LIBRARY_PATH_PREFIX;
     }
@@ -121,7 +121,7 @@ public abstract class ImageManager {
    *  after a particular catalog generation run has completed
    */
   public void writeImageHeightFile() {
-    File imageSizeFile = new File(ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
+    File imageSizeFile = new File(ConfigurationManager.getCurrentProfile().getDatabaseFolder(), getImageHeightDat());
     try {
       PrintWriter out = null;
       try {
@@ -135,7 +135,7 @@ public abstract class ImageManager {
     } catch (IOException e) {
       // we don't care if the image height file cannot be written, image will be recomputed and that's all
     }
-    CachedFileManager.INSTANCE.addCachedFile(imageSizeFile).clearCachedInformation();
+    CachedFileManager.addCachedFile(imageSizeFile).clearCachedInformation();
   }
 
   /**
@@ -207,12 +207,12 @@ public abstract class ImageManager {
       ct.getThumbnail(imageHeight, CreateThumbnail.VERTICAL);
       ct.saveThumbnail(imageFile, CreateThumbnail.IMAGE_JPEG);
       // bug #732821 Ensure file added to those cached for copying
-      CachedFile cf = CachedFileManager.INSTANCE.addCachedFile(imageFile);
+      CachedFile cf = CachedFileManager.addCachedFile(imageFile);
       if (logger.isTraceEnabled())
         logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
       countOfImagesGenerated++;         // Update count of files processed
     } catch (Exception e) {
-      CatalogManager.INSTANCE.callback
+      CatalogManager.callback
           .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
     } catch (Throwable t) {
          logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );

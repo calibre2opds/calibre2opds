@@ -22,7 +22,7 @@ import java.util.zip.CRC32;
 public abstract class SubCatalog {
   // cache some widely used objects.
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
-  protected ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  protected ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
   // Get some non-mutable configuration options once for efffeciency that are used widely in subcatalog variants
   protected int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
   protected int maxSplitLevels = currentProfile.getMaxSplitLevels();
@@ -30,8 +30,8 @@ public abstract class SubCatalog {
   protected boolean useExternalIcons = currentProfile.getExternalIcons();
   protected boolean useExternalImages = currentProfile.getExternalImages();
   protected boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
-  protected static String booksURI = ConfigurationManager.INSTANCE.getCurrentProfile().getUrlBooks();
-  private static String securityCode = CatalogManager.INSTANCE.getSecurityCode();
+  protected static String booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
+  private static String securityCode = CatalogManager.getSecurityCode();
   private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
   private static CRC32 crc32;
 
@@ -710,7 +710,7 @@ public abstract class SubCatalog {
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
     assert Helper.isNotNullOrEmpty(outputFilename) : "Program error: Attempt to create XML file for empty/null filename";
-    assert !outputFilename.startsWith(CatalogManager.INSTANCE.getGenerateFolder().toString()) : "Program Error:  filename should not include catalog folder (" +
+    assert !outputFilename.startsWith(CatalogManager.getGenerateFolder().toString()) : "Program Error:  filename should not include catalog folder (" +
         outputFilename + ")";
     // int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
     // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
@@ -724,7 +724,7 @@ public abstract class SubCatalog {
     if (!xmlfilename.endsWith(Constants.XML_EXTENSION)) {
       xmlfilename += Constants.XML_EXTENSION;
     }
-    File outputFile = CatalogManager.INSTANCE.storeCatalogFile(xmlfilename);
+    File outputFile = CatalogManager.storeCatalogFile(xmlfilename);
     // Avoid creating files that already exist.
     // (if xml file exists then HTML one will as well)
     if (outputFile.exists()) {
@@ -745,7 +745,7 @@ public abstract class SubCatalog {
       FileOutputStream fos = null;
       try {
         fos = new FileOutputStream(outputFile);
-        JDOM.INSTANCE.getOutputter().output(document, fos);
+        JDOMManager.getOutputter().output(document, fos);
       } catch (RuntimeException e) {
         logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
       } finally {
@@ -760,7 +760,7 @@ public abstract class SubCatalog {
     // TODO:   if the target already exists and the XML file is unchanged in this run?
     // TODO:   This would have an implication on the syn process so not a trivial change
 
-    if (! ConfigurationManager.INSTANCE.getCurrentProfile().getGenerateHtml()) {
+    if (! ConfigurationManager.getCurrentProfile().getGenerateHtml()) {
       return;
     }
     File htmlFile = new File(HtmlManager. getHtmlFilename(outputFile.toString()));
@@ -768,7 +768,7 @@ public abstract class SubCatalog {
       logger.warn("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'");
       return;
     }
-    CatalogManager.INSTANCE.htmlManager.generateHtmlFromDOM(document, htmlFile, feedType);
+    CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile, feedType);
   }
 
   /*
@@ -786,7 +786,7 @@ public abstract class SubCatalog {
     }
 
     if (currentProfile.getSingleBookCrossReferences()
-        ||  DataModel.INSTANCE.getMapOfBooksBySeries().get(series).size() > 1) {
+        ||  DataModel.getMapOfBooksBySeries().get(series).size() > 1) {
       return true;
     }
 
@@ -831,7 +831,7 @@ public abstract class SubCatalog {
       return false;
     }
     if (currentProfile.getSingleBookCrossReferences()
-        ||  DataModel.INSTANCE.getMapOfBooksByRating().get(rating).size() > 1) {
+        ||  DataModel.getMapOfBooksByRating().get(rating).size() > 1) {
       return true;
     }
     return false;

@@ -3,6 +3,9 @@ package com.gmail.dpierron.calibre.opds;
 /**
  * Class to store context about the current Catalog that is being generated,
  * and to provide methods for manipulating Catalog information.
+ *
+ * NOTE:  As there should only ever be one instance of this class all global
+ *        variables and methods are declared static
  */
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
@@ -22,8 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public enum CatalogManager {
-  INSTANCE;
+public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
   private static File generateFolder;
   public static BookFilter featuredBooksFilter;
@@ -63,17 +65,17 @@ public enum CatalogManager {
   public static Map<String, BookFilter> customCatalogsFilters;
 
   // public CatalogManager() {
-  public void initialize() {
+  public static void initialize() {
     // super();
     // Avoid superflous settings of static object!
 
-    securityCode = ConfigurationManager.INSTANCE.getCurrentProfile().getSecurityCode();
+    securityCode = ConfigurationManager.getCurrentProfile().getSecurityCode();
     if (Helper.isNullOrEmpty(securityCode)) {
       Random generator = new Random(System.currentTimeMillis());
       securityCode = Integer.toHexString(generator.nextInt());
-      ConfigurationManager.INSTANCE.getCurrentProfile().setSecurityCode(securityCode);
+      ConfigurationManager.getCurrentProfile().setSecurityCode(securityCode);
     }
-    if (! ConfigurationManager.INSTANCE.getCurrentProfile().getCryptFilenames()) {
+    if (! ConfigurationManager.getCurrentProfile().getCryptFilenames()) {
       securityCode = "";
     }
     initialUrl = securityCode;
@@ -85,14 +87,14 @@ public enum CatalogManager {
     if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
     if (coverManager==null)       coverManager = ImageManager.newCoverManager();
     if (securityManager==null)    securityManager = new SecurityManager();
-    if (currentProfile==null)     currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    if (currentProfile==null)     currentProfile = ConfigurationManager.getCurrentProfile();
     if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,currentProfile.getLanguage());
     if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, currentProfile.getLanguage());
     if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
   }
 
 
-  public void reset() {
+  public static void reset() {
     generateFolder = null;
     featuredBooksFilter = null;
     // listOfFilesToCopy = new LinkedList<CachedFile>();
@@ -112,22 +114,22 @@ public enum CatalogManager {
     bookDateFormat = null;
     tagsToIgnore = null;
     customCatalogsFilters = null;
-    JDOM.INSTANCE.reset();
+    JDOMManager.reset();
     securityCode = "";
   }
 
-  public String getSecurityCode() {
+  public static String getSecurityCode() {
     return securityCode;
   }
 
-  public String getInitialUr() {
+  public static String getInitialUr() {
     return initialUrl;
   }
   /**
    * Get the current catalog folder
    * @return
    */
-  public File getGenerateFolder() {
+  public static File getGenerateFolder() {
     return generateFolder;
   }
 
@@ -137,7 +139,7 @@ public enum CatalogManager {
    * This is really just the path to where the temporary files are generated
    * @param parentfolder
    */
-  public void setGenerateFolder(File parentfolder) {
+  public static void setGenerateFolder(File parentfolder) {
 //    generateFolder = new File(parentfolder, getCatalogFolderName());
     generateFolder = parentfolder;
     if (!generateFolder.exists()) {
@@ -150,18 +152,18 @@ public enum CatalogManager {
    * It will take into account the current mode if relevant
    * @return
    */
-  public String getCatalogFolderName() {
-    if (ConfigurationManager.INSTANCE.getCurrentProfile().getDeviceMode() == DeviceMode.Nook)
+  public static String getCatalogFolderName() {
+    if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook)
       return Constants.NOOK_CATALOG_FOLDERNAME;
     else
-      return  ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogFolderName();
+      return  ConfigurationManager.getCurrentProfile().getCatalogFolderName();
   }
 
   /**
    *
    * @return
    */
-  public List<String> getListOfFilesPathsToCopy() {
+  public static List<String> getListOfFilesPathsToCopy() {
     return listOfLibraryFilesToCopy;
   }
 
@@ -172,7 +174,7 @@ public enum CatalogManager {
    */
 
  /*
-  public Book getBookByPathToCopy(String pathToCopy) {
+  public static Book getBookByPathToCopy(String pathToCopy) {
     return mapOfBookByPathToCopy.get(pathToCopy);
   }
   */
@@ -181,7 +183,7 @@ public enum CatalogManager {
    *
    * @param file
    */
-  void addFileToTheMapOfFilesToCopy(CachedFile file) {
+  public static void addFileToTheMapOfFilesToCopy(CachedFile file) {
     addFileToTheMapOfLibraryFilesToCopy(file, null);
   }
 
@@ -190,8 +192,8 @@ public enum CatalogManager {
    * @param file
    * @param book
    */
-  void addFileToTheMapOfLibraryFilesToCopy(CachedFile file, Book book) {
-    final String databasePath = ConfigurationManager.INSTANCE.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
+  public static void addFileToTheMapOfLibraryFilesToCopy(CachedFile file, Book book) {
+    final String databasePath = ConfigurationManager.getCurrentProfile().getDatabaseFolder().getAbsolutePath();
     final int databasePathLength = databasePath.length() + 1;
 
     if (file == null)
@@ -232,7 +234,7 @@ public enum CatalogManager {
    * Add a file to the map of image files that are to be copied
    * to the catalog (assuming this option is even set!)
    */
-  void addImageFileToTheMapOfCatalogImages(String key, CachedFile file) {
+  public static void addImageFileToTheMapOfCatalogImages(String key, CachedFile file) {
 
     assert file != null : "Program Error: attempt to add 'null' file to image map";
     assert (file.getName().equals("c2o_thumbnail.jpg")
@@ -248,7 +250,7 @@ public enum CatalogManager {
    *
    * @return
    */
-  public Map<String,CachedFile> getMapOfCatalogImages() {
+  public static Map<String,CachedFile> getMapOfCatalogImages() {
     return mapOfImagesToCopy;
   }
 
@@ -264,7 +266,7 @@ public enum CatalogManager {
 
    * @return
    */
-  public String getCatalogFileUrl(String catalogFileName, Boolean inSubDir) {
+  public static String getCatalogFileUrl(String catalogFileName, Boolean inSubDir) {
     assert Helper.isNotNullOrEmpty(catalogFileName);
     int pos =  catalogFileName.indexOf(Constants.FOLDER_SEPARATOR);
     String catalogFolderName = mapOfCatalogFolderNames.get(catalogFileName);
@@ -287,7 +289,7 @@ public enum CatalogManager {
    * @param pCatalogFileName
    * @return
    */
-  String getFolderName(String pCatalogFileName) {
+   public static String getFolderName(String pCatalogFileName) {
     if (Helper.isNullOrEmpty(pCatalogFileName))
       return "";
 
@@ -302,7 +304,7 @@ public enum CatalogManager {
    * @param catalogFileName   The name of the file to be stored.  Includes folder if relevant
    * @return                  File object corresponding to the given path
    */
-  public File storeCatalogFile(String catalogFileName) {
+  public static File storeCatalogFile(String catalogFileName) {
     File folder = null;
     String folderName;
     int pos = catalogFileName.indexOf(Constants.FOLDER_SEPARATOR);       // Look for catalog name terminator being present
@@ -332,15 +334,15 @@ public enum CatalogManager {
    *
    * @return
    */
-  public List<CustomColumnType> getBookDetailsCustomColumns() {
+  public static List<CustomColumnType> getBookDetailsCustomColumns() {
     if (bookDetailsCustomColumns == null)  {
-      List<CustomColumnType> types = DataModel.INSTANCE.getListOfCustomColumnTypes();
+      List<CustomColumnType> types = DataModel.getListOfCustomColumnTypes();
       if (types == null) {
         logger.warn("getBookDetailsCustomColumns: No custom columns read from database.");
         return null;
       }
       bookDetailsCustomColumns = new LinkedList<CustomColumnType>();
-      for (String customColumnLabel : ConfigurationManager.INSTANCE.getCurrentProfile().getTokenizedBookDetailsCustomColumns()) {
+      for (String customColumnLabel : ConfigurationManager.getCurrentProfile().getTokenizedBookDetailsCustomColumns()) {
         if (customColumnLabel.startsWith("#")) {
           customColumnLabel = customColumnLabel.substring(1);
         }
@@ -360,7 +362,7 @@ public enum CatalogManager {
    * but are are unchanged since the last run
    * @param f
    */
-  public void addUnchangedFileToList (CachedFile f) {
+  public static void addUnchangedFileToList (CachedFile f) {
     if (! listOfUnchangedCatalogFiles.contains(f)) {
       listOfUnchangedCatalogFiles.add(f);
     }
@@ -368,27 +370,27 @@ public enum CatalogManager {
   /*
   Make these properties public to avoid the need for simpe get/set routines that do nothing else!
 
-  public BookFilter getFeaturedBooksFilter() {
+  public static BookFilter getFeaturedBooksFilter() {
     return featuredBooksFilter;
   }
 
-  public void setFeaturedBooksFilter(BookFilter featuredBooksFilter) {
+  public static void setFeaturedBooksFilter(BookFilter featuredBooksFilter) {
     this.featuredBooksFilter = featuredBooksFilter;
   }
 
-  public List<Composite<String, String>> getCustomCatalogs() {
+  public static List<Composite<String, String>> getCustomCatalogs() {
     return customCatalogs;
   }
 
-  public void setCustomCatalogs (List<Composite<String, String>> pcustomCatalogs) {
+  public static void setCustomCatalogs (List<Composite<String, String>> pcustomCatalogs) {
     customCatalogs = pcustomCatalogs;
   }
 
-  public  Map<String, BookFilter> getCustomCatalogFilters () {
+  public static Map<String, BookFilter> getCustomCatalogFilters () {
     return customCatalogsFilters;
   }
 
-  public void setCustomCatalogsFilter (Map<String, BookFilter> pcustomCatalogsFilters) {
+  public  static void setCustomCatalogsFilter (Map<String, BookFilter> pcustomCatalogsFilters) {
     customCatalogsFilters = pcustomCatalogsFilters;
   }
   */
@@ -400,10 +402,10 @@ public enum CatalogManager {
    *
    * @return
    */
-  public List<Tag>  getTagsToIgnore () {
+  public static List<Tag>  getTagsToIgnore () {
     if (tagsToIgnore == null) {
       tagsToIgnore = new LinkedList<Tag>();
-      for (Tag tag : DataModel.INSTANCE.getListOfTags()) {
+      for (Tag tag : DataModel.getListOfTags()) {
         List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
         for (String regexTag : regextagsToIgnore) {
           if (tag.getName().toUpperCase().matches("^" + regexTag)) {
@@ -424,7 +426,7 @@ public enum CatalogManager {
    * @param TargetSize
    * @return
    */
-  private boolean isImagesResized(String filename, int TargetSize) {
+  private static boolean isImagesResized(String filename, int TargetSize) {
     File sizeFile = new File(filename);
     return false;
   }

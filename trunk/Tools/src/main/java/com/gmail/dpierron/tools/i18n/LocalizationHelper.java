@@ -5,8 +5,7 @@ import com.gmail.dpierron.tools.Helper;
 import java.util.Locale;
 import java.util.Vector;
 
-public enum LocalizationHelper {
-  INSTANCE;
+public class LocalizationHelper {;
 
   private final static Object2StringConverter CONVERTER = new MethodCallerConverter("getHumanName");
 
@@ -15,11 +14,11 @@ public enum LocalizationHelper {
     return Localization.Main.getAvailableLocalizations();
   }
 */
-  public String getEnumConstantHumanName(Enum enumConstant) {
+  public static String getEnumConstantHumanName(Enum enumConstant) {
     return getEnumConstantHumanName(enumConstant, false);
   }
 
-  public String getEnumConstantHumanName(Enum enumConstant, boolean secondary) {
+  public static String getEnumConstantHumanName(Enum enumConstant, boolean secondary) {
     String label = uncheckedGetEnumConstantHumanName(enumConstant, secondary);
     // nothing worked, use the toString method
     if (label == null)
@@ -27,11 +26,11 @@ public enum LocalizationHelper {
     return label;
   }
 
-  public String uncheckedGetEnumConstantHumanName(Enum enumConstant) {
+  public static String uncheckedGetEnumConstantHumanName(Enum enumConstant) {
     return uncheckedGetEnumConstantHumanName(enumConstant, false);
   }
 
-  public String uncheckedGetEnumConstantHumanName(Enum enumConstant, boolean secondary) {
+  public static String uncheckedGetEnumConstantHumanName(Enum enumConstant, boolean secondary) {
     if (enumConstant == null)
       return null;
     String label = null;
@@ -51,7 +50,7 @@ public enum LocalizationHelper {
     return label;
   }
 
-  public String getYesOrNo(Boolean b) {
+  public static String getYesOrNo(Boolean b) {
     if (b == null)
       return "";
     if (b.booleanValue())

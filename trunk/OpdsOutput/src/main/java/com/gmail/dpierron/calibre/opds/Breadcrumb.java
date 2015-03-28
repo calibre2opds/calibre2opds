@@ -16,7 +16,7 @@ public class Breadcrumb {
   }
 
   public Element getXml() {
-    Element link = JDOM.INSTANCE.element("link");
+    Element link = JDOMManager.element("link");
     link.setAttribute("rel", "related");
     link.setAttribute("type", "application/atom+xml");
     if (Helper.isNotNullOrEmpty(title))

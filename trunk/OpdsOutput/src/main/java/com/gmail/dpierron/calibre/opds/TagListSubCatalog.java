@@ -65,12 +65,12 @@ public class TagListSubCatalog extends TagsSubCatalog {
 
     if (from != 0) inSubDir = true;
     if (pBreadcrumbs.size() > 1) inSubDir = true;
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
     int catalogSize;
     String filename = pFilename + Constants.PAGE_DELIM + pageNumber ;
     logger.debug("getListOfTags: generating " + filename);
     Map<String, List<Tag>> mapOfTagsByLetter = null;
-    String urlExt = optimizeCatalogURL(CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
+    String urlExt = optimizeCatalogURL(CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
 
     if (splitOption == null) {
@@ -99,7 +99,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
       catalogSize = 0;
     } else
       catalogSize = listTags.size();
-    int maxPages = Summarizer.INSTANCE.getPageNumber(catalogSize);
+    int maxPages = Summarizer.getPageNumber(catalogSize);
 
     // list the entries (or split them)
     List<Element> result;
@@ -136,7 +136,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
           if (entry != null) {
             logger.debug("adding tag to the TROOK database:" + tag);
             result.add(entry);
-            TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, entry);
+            TrookSpecificSearchDatabaseManager.addTag(tag, entry);
           }
         }
       } // End of tags for loop
@@ -190,7 +190,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
         letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("tagword.title"),
                                                     letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
       List<Tag> tagsInThisLetter = mapOfTagsByLetter.get(letter);
-      String summary = Summarizer.INSTANCE.summarizeTags(tagsInThisLetter);
+      String summary = Summarizer.summarizeTags(tagsInThisLetter);
 
       Element element = null;
       if (tagsInThisLetter.size() > 0) {

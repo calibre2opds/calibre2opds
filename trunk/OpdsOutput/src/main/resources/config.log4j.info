@@ -58,8 +58,8 @@ log4j.logger.org.apache=INFO
 #log4j.logger.com.gmail.dpierron.calibre.opds.BooksSubCatalog=TRACE # (this includes the logging of all the books processed) 
 
 # 5. Set the logging level for the XML transformation and parsing, and the book comments conversion system (uncomment only one of these two lines)
-#log4j.logger.com.gmail.dpierron.calibre.opds.JDOM=DEBUG
-#log4j.logger.com.gmail.dpierron.calibre.opds.JDOM=TRACE
+#log4j.logger.com.gmail.dpierron.calibre.opds.JDOMManager=DEBUG
+#log4j.logger.com.gmail.dpierron.calibre.opds.JDOMManager=TRACE
 
 # 6. Set the logging level for the file caching system (uncomment only one of these two lines)
 #log4j.logger.com.gmail.dpierron.calibre.cache.CachedFile=DEBUG

@@ -93,7 +93,7 @@ public class Book implements SplitableByLetter {
     // cases we fall back to using the (mandatory) title field and issue a warning
     if (Helper.isNullOrEmpty(title_sort)) {
       logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
-      this.titleSort = DataModel.INSTANCE.getNoiseword(getBookLanguage()).removeLeadingNoiseWords(this.title);
+      this.titleSort = DataModel.getNoiseword(getBookLanguage()).removeLeadingNoiseWords(this.title);
     } else {
       this.titleSort = title_sort;
     }
@@ -330,7 +330,7 @@ public class Book implements SplitableByLetter {
       comment = removeLeadingText(value, "SUMMARY");
       comment = removeLeadingText(comment, "PRODUCT DESCRIPTION");
       // The following log entry can be useful if trying to debug character encoding issues
-      // logger.info("Book " + id + ", setComment (Hex): " + Database.INSTANCE.stringToHex(comment));
+      // logger.info("Book " + id + ", setComment (Hex): " + Database.stringToHex(comment));
     
       if (comment != null && comment.matches("(?i)\\<br\\>")) {
         logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
@@ -647,7 +647,7 @@ public class Book implements SplitableByLetter {
   }
 
   public String getTitleToSplitByLetter() {
-    return DataModel.INSTANCE.getLibrarySortTitle() ? getTitle() : getTitle_Sort();
+    return DataModel.getLibrarySortTitle() ? getTitle() : getTitle_Sort();
   }
 
   /**

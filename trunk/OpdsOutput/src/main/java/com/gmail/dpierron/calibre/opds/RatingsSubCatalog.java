@@ -77,14 +77,14 @@ public class RatingsSubCatalog extends BooksSubCatalog {
       books = new LinkedList<Book>();
 
     String filename = getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + rating.getId();
-    String title = LocalizationHelper.INSTANCE.getEnumConstantHumanName(rating);
+    String title = LocalizationHelper.getEnumConstantHumanName(rating);
     String urn = baseurn + Constants.URN_SEPARATOR + rating.getId();
 
     // sort books by title
     sortBooksByTitle(books);
 
     // try and list the items to make the summary
-    String summary = Summarizer.INSTANCE.summarizeBooks(books);
+    String summary = Summarizer.summarizeBooks(books);
     // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
     SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
     Element result = getListOfBooks(pBreadcrumbs,
@@ -109,9 +109,9 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     String filename = getCatalogBaseFolderFileName();
     String title = Localization.Main.getText("rating.title");
     String urn = Constants.INITIAL_URN_PREFIX + getCatalogType();
-    String summary = Localization.Main.getText("rating.summary", Summarizer.INSTANCE.getBookWord(getBooks().size()));
+    String summary = Localization.Main.getText("rating.summary", Summarizer.getBookWord(getBooks().size()));
 
-    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir */);
 
     // list the entries (or split them)
@@ -128,7 +128,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     feed.addContent(result);
     createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
 
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element result2 = FeedHelper.getCatalogEntry(title,
                                                  urn,
                                                  urlInItsSubfolder,

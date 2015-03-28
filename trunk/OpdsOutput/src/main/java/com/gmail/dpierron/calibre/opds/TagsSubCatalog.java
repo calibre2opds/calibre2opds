@@ -20,7 +20,7 @@ import java.util.*;
 
 public abstract class TagsSubCatalog extends BooksSubCatalog {
   private final static Logger logger = Logger.getLogger(TagsSubCatalog.class);
-  private final static Collator collator = Collator.getInstance(ConfigurationManager.INSTANCE.getLocale());
+  private final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
 
   private List<Tag> tags;
   private Map<Tag, List<Book>> mapOfBooksByTag;
@@ -69,7 +69,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       tags = new LinkedList<Tag>();
       for (Book book : getBooks()) {
         for (Tag tag : book.getTags()) {
-          if (! CatalogManager.INSTANCE.getTagsToIgnore().contains(tag)
+          if (! CatalogManager.getTagsToIgnore().contains(tag)
           &&  ! tags.contains(tag)) {
             tags.add(tag);
           }
@@ -179,9 +179,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
 
     tag.setDone();
 
-    CatalogManager.INSTANCE.callback.showMessage(pBreadcrumbs.toString());
+    CatalogManager.callback.showMessage(pBreadcrumbs.toString());
     if (!isInDeepLevel()) {
-      CatalogManager.INSTANCE.callback.incStepProgressIndicatorPosition();
+      CatalogManager.callback.incStepProgressIndicatorPosition();
     }
     List<Book> books = getMapOfBooksByTag().get(tag);
     if (Helper.isNullOrEmpty(books)) {
@@ -201,7 +201,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     // check if we need to make this tag deep
     if (makeTagDeep(tag, books)) {
       // specify that this is a deep level
-      String summary = Localization.Main.getText("deeplevel.summary", Summarizer.INSTANCE.getBookWord(books.size()));
+      String summary = Localization.Main.getText("deeplevel.summary", Summarizer.getBookWord(books.size()));
       if (logger.isDebugEnabled()) {
         logger.debug("getTagEntry: Making a deep level for tag " + tag);
         logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
@@ -221,7 +221,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
                               splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS);
     } else {
       // try and list the items to make the summary
-      String summary = Summarizer.INSTANCE.summarizeBooks(books);
+      String summary = Summarizer.summarizeBooks(books);
       if (logger.isDebugEnabled()) {
         logger.debug("getTagEntry: making a simple book list for tag " + tag);
         if (logger.isTraceEnabled()) logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());

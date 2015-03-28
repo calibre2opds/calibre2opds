@@ -10,7 +10,7 @@ package com.gmail.dpierron.calibre.gui;
  */
 
 import com.gmail.dpierron.calibre.configuration.*;
-import com.gmail.dpierron.calibre.database.DatabaseManager;
+import com.gmail.dpierron.calibre.database.*;
 import com.gmail.dpierron.calibre.gui.table.ButtonColumn;
 import com.gmail.dpierron.calibre.gui.table.CustomCatalogTableModel;
 import com.gmail.dpierron.calibre.opds.Catalog;
@@ -47,9 +47,9 @@ public class Mainframe extends javax.swing.JFrame {
   private String tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
   // Store this as we use it a lot and it should improve effeciency
   // IMPORTANT:  We need to update this cached copy if the profile ever gets changed!
-  private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  private ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
   private guiField[] guiFields;
-  private File  SyncLogFile = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+  private File  SyncLogFile = new File(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
 
 
   /**
@@ -368,7 +368,7 @@ public class Mainframe extends javax.swing.JFrame {
     File defaultCss = null;
     String onlyForTag = null;
     int result;
-    if (ConfigurationManager.INSTANCE.isHacksEnabled()) {
+    if (ConfigurationManager.isHacksEnabled()) {
       String yesAndRemoveCss = Localization.Main.getText("gui.confirm.tools.removeCss");
       String yesAndRestoreCss = Localization.Main.getText("gui.confirm.tools.restoreCss");
       result = JOptionPane
@@ -658,7 +658,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void debugShowLogFile() {
-    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER + "/" + Constants.LOGFILE_NAME);
+    File f = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER + "/" + Constants.LOGFILE_NAME);
     logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + f.getPath());
     debugShowFile(f);
   }
@@ -672,7 +672,7 @@ public class Mainframe extends javax.swing.JFrame {
    * TODO:  There appears to be an issue deleting the current active log file - not sure how to resolve this!
    */
   private void debugClearLogFile() {
-    File logFolder = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
+    File logFolder = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
     File fileList[] = logFolder.listFiles();
     for (File f : fileList) {
       if (f.getName().contains(".log")) {
@@ -686,13 +686,13 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void debugShowLogFolder() {
-    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
+    File f = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
     logger.info(Localization.Main.getText("gui.menu.tools.logFolder") + ": " + f.getPath());
     debugShowFile(f);
   }
 
   private void debugShowSupportFolder() {
-    File f = ConfigurationManager.INSTANCE.getConfigurationDirectory();
+    File f = ConfigurationManager.getConfigurationDirectory();
     logger.info(Localization.Main.getText("gui.menu.tools.configFolder") + ": " + f.getPath());
     debugShowFolder(f);
   }
@@ -805,9 +805,9 @@ public class Mainframe extends javax.swing.JFrame {
    * @param profileName
    */
   private void setProfile(String profileName) {
-    ConfigurationManager.INSTANCE.changeProfile(profileName, true);
+    ConfigurationManager.changeProfile(profileName, true);
     // Changed profile - so need to update local cached copy as well!
-    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    currentProfile = ConfigurationManager.getCurrentProfile();
     if (currentProfile.isObsolete()) {
       currentProfile.reset();
       String msg = Localization.Main.getText("gui.reset.warning");
@@ -821,9 +821,9 @@ public class Mainframe extends javax.swing.JFrame {
     String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new.msg"));
     if ("default".equalsIgnoreCase(newProfileName))
       return;
-    ConfigurationManager.INSTANCE.copyCurrentProfile(newProfileName);
+    ConfigurationManager.copyCurrentProfile(newProfileName);
     // Changed profile - so need to update local cached copy pointer as well!
-    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    currentProfile = ConfigurationManager.getCurrentProfile();
     loadValues();
   }
 
@@ -857,7 +857,7 @@ public class Mainframe extends javax.swing.JFrame {
     });
     mnuProfiles.add(mnuProfileManage);
     mnuProfiles.add(new JSeparator());
-    List<String> profiles = ConfigurationManager.INSTANCE.getExistingConfigurations();
+    List<String> profiles = ConfigurationManager.getExistingConfigurations();
     for (String profileName : profiles) {
       JCheckBoxMenuItem mnuProfileItem = new JCheckBoxMenuItem();
       mnuProfileItem.setText(profileName); // NOI18N
@@ -875,7 +875,7 @@ public class Mainframe extends javax.swing.JFrame {
       }.setProfile(profileName);
       mnuProfileItem.addActionListener(listener);
       // TODO check if it works
-      mnuProfileItem.setSelected(ConfigurationManager.INSTANCE.getCurrentProfileName().equalsIgnoreCase(profileName));
+      mnuProfileItem.setSelected(ConfigurationManager.getCurrentProfileName().equalsIgnoreCase(profileName));
       mnuProfiles.add(mnuProfileItem);
     }
   }
@@ -1033,7 +1033,7 @@ public class Mainframe extends javax.swing.JFrame {
     checkDownloads();
     checkOnlyCatalogAllowed();
 
-    String profile=Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName());
+    String profile=Localization.Main.getText("config.profile.label", ConfigurationManager.getCurrentProfileName());
     String title = Localization.Main.getText("gui.title", Constants.PROGTITLE + Constants.BZR_VERSION) + " - " + profile;
     setTitle(title);
     lblProfile.setText(profile);
@@ -1154,7 +1154,7 @@ public class Mainframe extends javax.swing.JFrame {
      if (newFolder.exists()) {
        File oldFolder = currentProfile.getDatabaseFolder();
        currentProfile.setDatabaseFolder(newFolder);
-       if (DatabaseManager.INSTANCE.databaseExists()) {
+       if (Database.databaseExists()) {
          JOptionPane.showMessageDialog(this, Localization.Main.getText("info.databasefolderset", targetFolder), null, JOptionPane.INFORMATION_MESSAGE);
          return true;
        } else
@@ -4715,7 +4715,7 @@ public class Mainframe extends javax.swing.JFrame {
     logger.info(Localization.Main.getText("gui.menu.tools.resetEncrypted"));
     Random generator = new Random(System.currentTimeMillis());
     String securityCode = Integer.toHexString(generator.nextInt());
-    ConfigurationManager.INSTANCE.getCurrentProfile().setSecurityCode(securityCode);
+    ConfigurationManager.getCurrentProfile().setSecurityCode(securityCode);
   }//GEN-LAST:event_mnuToolsResetSecurityCacheActionPerformed
 
   private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
@@ -4731,7 +4731,7 @@ public class Mainframe extends javax.swing.JFrame {
   }
 
   private void mnuToolsOpenSyncLogActionPerformed(java.awt.event.ActionEvent evt) {
-    File f = new File(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+    File f = new File(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
     if (f.exists()) {
       logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + f.getPath());
       debugShowFile(f);

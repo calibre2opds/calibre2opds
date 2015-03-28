@@ -35,7 +35,7 @@ public class Series implements SplitableByLetter {
     if (name.toUpperCase().startsWith("THE ")) {
       int dummy = 1;
     }
-      this.sort = DataModel.INSTANCE.getNoiseword(Locale.ENGLISH).removeLeadingNoiseWords(name);
+      this.sort = DataModel.getNoiseword(Locale.ENGLISH).removeLeadingNoiseWords(name);
     // } else {
     //  this.sort = sort;
     // }
@@ -78,7 +78,7 @@ public class Series implements SplitableByLetter {
   }
 
   public String getTitleToSplitByLetter() {
-    return DataModel.INSTANCE.getLibrarySortSeries() ? getSort(): getName();
+    return DataModel.getLibrarySortSeries() ? getSort(): getName();
   }
 
   public void setDone() {

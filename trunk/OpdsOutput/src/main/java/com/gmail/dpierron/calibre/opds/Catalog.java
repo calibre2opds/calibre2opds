@@ -7,21 +7,22 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.database.Database;
-import com.gmail.dpierron.calibre.database.DatabaseManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.CustomColumnType;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.EBookFile;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
+import com.gmail.dpierron.calibre.datamodel.filter.BooleanAndFilter;
 import com.gmail.dpierron.calibre.datamodel.filter.CalibreQueryInterpreter;
+import com.gmail.dpierron.calibre.datamodel.filter.SelectedEbookFormatsFilter;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchNotFoundException;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
+import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
-import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -48,7 +49,7 @@ public class Catalog {
   private long copyDeleted;       // Count of files/folders deleted during copy process
 
   // Values read once from configuration that are used repeatedly
-  private ConfigurationHolder currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+  private ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
   private boolean checkCRC = currentProfile.getMinimizeChangedFiles();
 
   private CatalogCallbackInterface callback;        // GUI handling routine
@@ -81,7 +82,7 @@ public class Catalog {
   public Catalog(CatalogCallbackInterface callback) {
     super();
     this.callback = callback;
-    CatalogManager.INSTANCE.callback = callback;
+    CatalogManager.callback = callback;
   }
 
   /**
@@ -210,7 +211,7 @@ public class Catalog {
           // If this option set, then catalog going to be at supplied level
           catalogFolder = catalogParentFolder;
         } else {
-          catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+          catalogFolder = new File(catalogParentFolder, CatalogManager.getCatalogFolderName());
         }
         // We treat catalog folder as not existing as being equivalent to
         // catalog existing as there is no problem with over-writing.
@@ -353,9 +354,9 @@ public class Catalog {
       // - If we aer adding images to catalog we also need not to delete these if they exist!
       // - Copy across files from source list as we go
       for (int i = 0; i < sourceFiles.length; i++) {
-        CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(sourceFiles[i]);
+        CachedFile sourceFile = CachedFileManager.addCachedFile(sourceFiles[i]);
         String fileName = sourceFile.getName();
-        CachedFile destFile = CachedFileManager.INSTANCE.addCachedFile(dst, fileName);
+        CachedFile destFile = CachedFileManager.addCachedFile(dst, fileName);
 
         // ITIMPI:  Need to decide if the exists() check is redundant
         //          as it may cause an unneeded file access
@@ -369,8 +370,8 @@ public class Catalog {
             // remove entry from list of deletion candidates
             // as we are going to over-write it
              targetNotInSourceFiles.remove(destFile);
-            if (CachedFileManager.INSTANCE.inCache(destFile) == null) {
-              destFile = CachedFileManager.INSTANCE.addCachedFile(destFile);
+            if (CachedFileManager.inCache(destFile) == null) {
+              destFile = CachedFileManager.addCachedFile(destFile);
             }
           }
         } else {
@@ -379,7 +380,7 @@ public class Catalog {
           // what this means in terms of application logic if we
           // actually get to this point!
           if (logger.isTraceEnabled()) logger.trace("Directory " + src.getAbsolutePath() + " Unexpected missing target" + dst.getName());
-          CachedFileManager.INSTANCE.removeCachedFile(destFile);
+          CachedFileManager.removeCachedFile(destFile);
         }
         // copy across the file
         syncFiles(sourceFile, destFile);
@@ -392,7 +393,7 @@ public class Catalog {
           syncLogFile.println();
         }
         copyDeleted++;
-        CachedFileManager.INSTANCE.removeCachedFile(file);
+        CachedFileManager.removeCachedFile(file);
       }
       if (logger.isTraceEnabled()) logger.trace("Directory " + src.getName() + " Processing completed");
     } // End of Directory section
@@ -413,8 +414,8 @@ public class Catalog {
           if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + dst.getAbsolutePath()+ ": "
                                                           + (dst.exists() ? ": Deleted as XML file and no OPDS catalog required"
                                                                           : ": Ignored as XML file and no OPDS catalog required"));
-          CachedFileManager.INSTANCE.removeCachedFile(src);
-          CachedFileManager.INSTANCE.removeCachedFile(dst);
+          CachedFileManager.removeCachedFile(src);
+          CachedFileManager.removeCachedFile(dst);
           return;
         }
       }
@@ -561,7 +562,7 @@ public class Catalog {
    * @return
    */
   private Element computeSummary(List<Book> books) {
-    Element contentElement = JDOM.INSTANCE.element("content");
+    Element contentElement = JDOMManager.element("content");
 
     File calibreLibraryFolder = currentProfile.getDatabaseFolder();
     File summaryFile = new File(calibreLibraryFolder, "calibre2opds_summary.html");
@@ -571,7 +572,7 @@ public class Catalog {
       try {
         FileInputStream is = new FileInputStream(summaryFile);
         String text = Helper.readTextFile(is);
-        List<Element> htmlElements = JDOM.INSTANCE.convertHtmlTextToXhtml(text);
+        List<Element> htmlElements = JDOMManager.convertHtmlTextToXhtml(text);
         if (htmlElements != null)
           for (Element htmlElement : htmlElements) {
             contentElement.addContent(htmlElement.detach());
@@ -584,7 +585,7 @@ public class Catalog {
     } else {
       // create a simple content element with a text summary
       contentElement.setAttribute("type", "text");
-      String summary = Localization.Main.getText("main.summary", Constants.PROGTITLE, Summarizer.INSTANCE.getBookWord(books.size()));
+      String summary = Localization.Main.getText("main.summary", Constants.PROGTITLE, Summarizer.getBookWord(books.size()));
       contentElement.addContent(summary);
     }
 
@@ -603,9 +604,9 @@ public class Catalog {
     * @param targetFolder
     */
   private void syncImages(CachedFile targetFolder) {
-    Map<String,CachedFile> mapOfImagesToCopy = CatalogManager.INSTANCE.getMapOfCatalogImages();
+    Map<String,CachedFile> mapOfImagesToCopy = CatalogManager.getMapOfCatalogImages();
     for (Map.Entry<String,CachedFile> entry : mapOfImagesToCopy.entrySet()) {
-      CachedFile targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, entry.getKey());
+      CachedFile targetFile = CachedFileManager.addCachedFile(targetFolder, entry.getKey());
       try {
         syncFiles(entry.getValue(), targetFile);
       } catch (IOException e) {
@@ -613,7 +614,7 @@ public class Catalog {
       }
       // #c2o-234:  Copy images to temporary area for later inclusion into ZIP of catalog
       if (currentProfile.getZipCatalog()) {
-        targetFile = CachedFileManager.INSTANCE.addCachedFile(CatalogManager.INSTANCE.getGenerateFolder(), entry.getKey());
+        targetFile = CachedFileManager.addCachedFile(CatalogManager.getGenerateFolder(), entry.getKey());
         try {
           syncFiles(entry.getValue(), targetFile);
         } catch (IOException e) {
@@ -637,13 +638,13 @@ public class Catalog {
     CatalogManager.recordRamUsage("Initial");
 
     // reinitialize objects/caches (in case of multiple calls in the same session)
-    // CatalogManager.INSTANCE.catalogManager.reset();
-    CatalogManager.INSTANCE.reset();
-    CatalogManager.INSTANCE.initialize();
-    CatalogManager.INSTANCE.callback = callback;
-    CatalogManager.INSTANCE.thumbnailManager.reset();
-    CatalogManager.INSTANCE.coverManager.reset();
-    CachedFileManager.INSTANCE.reset();
+    // CatalogManager.catalogManager.reset();
+    CatalogManager.reset();
+    CatalogManager.initialize();
+    CatalogManager.callback = callback;
+    CatalogManager.thumbnailManager.reset();
+    CatalogManager.coverManager.reset();
+    CachedFileManager.reset();
 
     Localization.Main.setProfileLanguage(currentProfile.getLanguage());
     Localization.Enum.setProfileLanguage(currentProfile.getLanguage());
@@ -653,7 +654,7 @@ public class Catalog {
     String textYES = Localization.Main.getText("boolean.yes");
     String textNO = Localization.Main.getText("boolean.no");
     // Ensure cached values are current for this generate run.
-    currentProfile = ConfigurationManager.INSTANCE.getCurrentProfile();
+    currentProfile = ConfigurationManager.getCurrentProfile();
     checkCRC = currentProfile.getMinimizeChangedFiles();
 
     if (!currentProfile.getGenerateAllbooks())        callback.disableCreateAllBooks();
@@ -677,7 +678,7 @@ public class Catalog {
     /** if true, then generation crashed unexpectedly; */
     boolean generationCrashed = false;
 
-    logger.info(Localization.Main.getText("config.profile.label", ConfigurationManager.INSTANCE.getCurrentProfileName()));
+    logger.info(Localization.Main.getText("config.profile.label", ConfigurationManager.getCurrentProfileName()));
     callback.dumpOptions();
 
     //                      PARAMETER VALIDATION PHASE
@@ -713,7 +714,7 @@ public class Catalog {
       return;
     }
     assert libraryFolder != null : "libraryFolder must be set to continue with generation";
-    if (!DatabaseManager.INSTANCE.databaseExists()) {
+    if (!Database.databaseExists()) {
       callback.errorOccured(Localization.Main.getText("error.nodatabase", libraryFolder), null);
       return;
     }
@@ -781,7 +782,7 @@ public class Catalog {
         if (customLabel.startsWith("#")){
           customLabel = customLabel.substring(1);
         }
-        for (CustomColumnType type : DataModel.INSTANCE.getListOfCustomColumnTypes()) {
+        for (CustomColumnType type : DataModel.getListOfCustomColumnTypes()) {
           if (type.getLabel().toUpperCase().equals(customLabel.toUpperCase())) {
             if (Constants.CUSTOM_COLUMN_TYPES_SUPPORTED.contains(type.getDatatype())) {
               continue testcol;
@@ -852,7 +853,7 @@ public class Catalog {
     }
     logger.trace("catalogParentFolder set to " + catalogParentFolder);
     // Set catalog folder (remembering to add TROOK extension if in Nook mode)
-    File catalogFolder = new File(catalogParentFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+    File catalogFolder = new File(catalogParentFolder, CatalogManager.getCatalogFolderName());
 //                                + ((currentProfile.getDeviceMode() == DeviceMode.Nook ? Constants.TROOK_FOLDER_EXTENSION + "/" + Constants.NOOK_CATALOG_FOLDERNAME : "")));
     if (logger.isTraceEnabled())
       logger.trace("New catalog to be generated at " + catalogFolder.getPath());
@@ -896,28 +897,28 @@ public class Catalog {
       logger.info("Temporary Files folder: " + generateFolder.getAbsolutePath());
 
       // Save the location of the Catalog folder for any other component that needs to knw it
-      CatalogManager.INSTANCE.setGenerateFolder(generateFolder);
+      CatalogManager.setGenerateFolder(generateFolder);
 
       // Load up the File Cache if it exists
 
       switch (currentProfile.getDeviceMode()) {
         case Nook:
-          CachedFileManager.INSTANCE.setCacheFolder(targetFolder);
+          CachedFileManager.setCacheFolder(targetFolder);
           break;
         default:
-          CachedFileManager.INSTANCE.setCacheFolder(catalogFolder);
+          CachedFileManager.setCacheFolder(catalogFolder);
           break;
       }
       long loadCacheStart = System.currentTimeMillis();
       if (checkCRC) {
         if (logger.isTraceEnabled()) logger.trace("Loading Cache");
         callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
-        CachedFileManager.INSTANCE.loadCache();
+        CachedFileManager.loadCache();
         callback.showMessage("");
-        logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.INSTANCE.getCacheSize()));
+        logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.getCacheSize()));
       } else {
         if (logger.isTraceEnabled())logger.trace("Deleting Cache");
-        CachedFileManager.INSTANCE.deleteCache();
+        CachedFileManager.deleteCache();
       }
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
       CatalogManager.recordRamUsage("After loading (and deleting cache");
@@ -931,8 +932,7 @@ public class Catalog {
       logger.debug("STARTED: Copying Resource files");
       for (String resource : Constants.FILE_RESOURCES) {
         callback.checkIfContinueGenerating();
-        InputStream resourceStream = ConfigurationManager.INSTANCE.getResourceAsStream(resource);
-        //        File resourceFile = new File(generateFolder, CatalogContext.INSTANCE.catalogManager.getCatalogFolderName() + "/" + resource);
+        InputStream resourceStream = ConfigurationManager.getResourceAsStream(resource);
         File resourceFile = new File(generateFolder, resource);
         Helper.copy(resourceStream, resourceFile);
         if (logger.isTraceEnabled()) logger.trace("Copying Resource " + resource);
@@ -942,20 +942,20 @@ public class Catalog {
 
       callback.startReadDatabase();
       callback.showMessage(Localization.Main.getText("info.step.loadingdatabase"));
-      DataModel.INSTANCE.reset();
-      DataModel.INSTANCE.setUseLanguagesAsTags(ConfigurationManager.INSTANCE.getCurrentProfile().getLanguageAsTag());
+      DataModel.reset();
+      DataModel.setUseLanguagesAsTags(ConfigurationManager.getCurrentProfile().getLanguageAsTag());
       // Set the sort/split criteria that are to be used
-      DataModel.INSTANCE.setLibrarySortAuthor(ConfigurationManager.INSTANCE.getCurrentProfile().getSortUsingAuthor());
-      DataModel.INSTANCE.setLibrarySortTitle(ConfigurationManager.INSTANCE.getCurrentProfile().getSortUsingTitle());
-      DataModel.INSTANCE.setLibrarySortSeries(ConfigurationManager.INSTANCE.getCurrentProfile().getSortSeriesUsingLibrarySort());
-      // CatalogManager.INSTANCE.getTagsToIgnore();
-      DataModel.INSTANCE.preloadDataModel();    // Get mandatory database fields
+      DataModel.setLibrarySortAuthor(ConfigurationManager.getCurrentProfile().getSortUsingAuthor());
+      DataModel.setLibrarySortTitle(ConfigurationManager.getCurrentProfile().getSortUsingTitle());
+      DataModel.setLibrarySortSeries(ConfigurationManager.getCurrentProfile().getSortSeriesUsingLibrarySort());
+      // CatalogManager.getTagsToIgnore();
+      DataModel.preloadDataModel();    // Get mandatory database fields
       logger.trace("COMPLETED preloading Datamodel");
       callback.showMessage("");
 
       CatalogManager.recordRamUsage("After loading DataModel");
-      List<Book> books = DataModel.INSTANCE.getListOfBooks();
-      callback.setDatabaseCount(Summarizer.INSTANCE.getBookWord(books.size()));
+      List<Book> books = DataModel.getListOfBooks();
+      callback.setDatabaseCount(Summarizer.getBookWord(books.size()));
 
       // Database read optimizations
       // (ony read in optional databitems if weneed them later)
@@ -967,7 +967,7 @@ public class Catalog {
       // Custom Columns - remove any custom columns that are not on wanted list
       // TODO Could we avoid loading these from the database at all?
       callback.showMessage(Localization.Main.getText("info.step.loadingcustom"));
-      List<CustomColumnType>customColumns = DataModel.INSTANCE.getListOfCustomColumnTypes();
+      List<CustomColumnType>customColumns = DataModel.getListOfCustomColumnTypes();
       customColumnsWanted = currentProfile.getCustomColumnsWanted();
       checktype: for (int i=0; i < customColumns.size() ; i++) {
         CustomColumnType type = customColumns.get(i);
@@ -987,15 +987,15 @@ public class Catalog {
           i--;    // Decrement as we have removed current node
         }
       }
-      DataModel.INSTANCE.getMapOfCustomColumnValuesByBookId();
+      DataModel.getMapOfCustomColumnValuesByBookId();
       callback.showMessage("");
       callback.checkIfContinueGenerating();     // check if we must continue
 
 
       // Prepare the feature books search query
       BookFilter featuredBookFilter = null;
-      String featuredCatalogTitle = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogTitle();
-      String featuredCatalogSearch = ConfigurationManager.INSTANCE.getCurrentProfile().getFeaturedCatalogSavedSearchName();
+      String featuredCatalogTitle = ConfigurationManager.getCurrentProfile().getFeaturedCatalogTitle();
+      String featuredCatalogSearch = ConfigurationManager.getCurrentProfile().getFeaturedCatalogSavedSearchName();
       if (Helper.isNotNullOrEmpty(featuredCatalogSearch)) {
         try {
           featuredBookFilter = CalibreQueryInterpreter.interpret(featuredCatalogSearch);
@@ -1009,16 +1009,16 @@ public class Catalog {
         if (featuredBookFilter == null) {
           // an error occured, let's ask the user if he wants to abort
           if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-            callback.endFinalizeMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+            callback.endFinalizeMainCatalog(null, CatalogManager.htmlManager.getTimeInHtml());
             return;
           }
         }
       }
-      CatalogManager.INSTANCE.featuredBooksFilter = featuredBookFilter;
+      CatalogManager.featuredBooksFilter = featuredBookFilter;
       callback.checkIfContinueGenerating();      // check if we must continue
 
       // Prepare the Custom catalogs search query
-      List<CustomCatalogEntry> customCatalogs = ConfigurationManager.INSTANCE.getCurrentProfile().getCustomCatalogs();
+      List<CustomCatalogEntry> customCatalogs = ConfigurationManager.getCurrentProfile().getCustomCatalogs();
       if (Helper.isNotNullOrEmpty(customCatalogs)) {
 nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
           callback.checkIfContinueGenerating();
@@ -1049,13 +1049,13 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
             if (customCatalogFilter == null) {
               // an error occured, let's ask the user if he wants to abort
               if (1 == callback.askUser(Localization.Main.getText("gui.confirm.continueGenerating"), textYES, textNO)) {
-                callback.endFinalizeMainCatalog(null, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+                callback.endFinalizeMainCatalog(null, CatalogManager.htmlManager.getTimeInHtml());
                 return;
               }
               // TODO Set something to suppress this custom catalog entry at generate stage!
               //      Currently an entry is generated to a non-existent URL
             } else {
-              CatalogManager.INSTANCE.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
+              CatalogManager.customCatalogsFilters.put(customCatalogTitle, customCatalogFilter);
             }
           }
         }
@@ -1066,19 +1066,35 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       // filter the datamodel
 
       try {
-        RemoveFilteredOutBooks.INSTANCE.runOnDataModel();
+        BooleanAndFilter andFilter = new BooleanAndFilter();
+
+        // remove all books that have no ebook format in the included list
+        andFilter.setLeftFilter(new SelectedEbookFormatsFilter(ConfigurationManager.getCurrentProfile().getIncludedFormatsList(),
+            ConfigurationManager.getCurrentProfile().getIncludeBooksWithNoFile()));
+
+        // remove all books not selected by the CatalogFilter search
+        BookFilter mainCatalogFilter = null;
+        String mainCatalogFilterOption = ConfigurationManager.getCurrentProfile().getCatalogFilter();
+
+        if (Helper.isNotNullOrEmpty(mainCatalogFilterOption)) {
+          mainCatalogFilter = CalibreQueryInterpreter.interpret(mainCatalogFilterOption);
+        }
+        if (mainCatalogFilter != null)
+          andFilter.setRightFilter(mainCatalogFilter);
+
+        DataModel.filterDataModel(andFilter);
       } catch (CalibreSavedSearchInterpretException e) {
         callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.interpret", e.getQuery()), e);
       } catch (CalibreSavedSearchNotFoundException e) {
         callback.errorOccured(Localization.Main.getText("gui.error.calibreQuery.noSuchSavedSearch", e.getSavedSearchName()), null);
       }
 
-      books = DataModel.INSTANCE.getListOfBooks();
+      books = DataModel.getListOfBooks();
       if (Helper.isNullOrEmpty(books)) {
-        if (Database.INSTANCE.wasSqlEsception() == 0 ) {
+        if (Database.wasSqlEsception() == 0 ) {
           callback.errorOccured(Localization.Main.getText("error.nobooks"), null);
         } else
-          callback.errorOccured("Error accessing database: code=" + Database.INSTANCE.wasSqlEsception(), null);
+          callback.errorOccured("Error accessing database: code=" + Database.wasSqlEsception(), null);
         return;
       } else {
         logger.info("Database loaded: " + books.size() + " books");
@@ -1088,19 +1104,19 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       //  Display counts for each progress stage
 
-      callback.setAuthorCount("" + DataModel.INSTANCE.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
-      callback.setTagCount("" + DataModel.INSTANCE.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
-      callback.setSeriesCount("" + DataModel.INSTANCE.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
-      int recentSize = DataModel.INSTANCE.getListOfBooks().size();
+      callback.setAuthorCount("" + DataModel.getListOfAuthors().size() + " " + Localization.Main.getText("authorword.title"));
+      callback.setTagCount("" + DataModel.getListOfTags().size() + " " + Localization.Main.getText("tagword.title"));
+      callback.setSeriesCount("" + DataModel.getListOfSeries().size() + " " + Localization.Main.getText("seriesword.title"));
+      int recentSize = DataModel.getListOfBooks().size();
       if (recentSize > currentProfile.getBooksInRecentAdditions()) recentSize = currentProfile.getBooksInRecentAdditions();
       callback.setRecentCount("" + recentSize + " " + Localization.Main.getText("bookword.title"));
-      callback.setAllBooksCount(Summarizer.INSTANCE.getBookWord(books.size()));
+      callback.setAllBooksCount(Summarizer.getBookWord(books.size()));
 
       // prepare the Trook specific search database
 
       if (currentProfile.getDeviceMode() == DeviceMode.Nook) {
-        TrookSpecificSearchDatabaseManager.INSTANCE.setDatabaseFile(new File(generateFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME));
-        TrookSpecificSearchDatabaseManager.INSTANCE.getConnection();
+        TrookSpecificSearchDatabaseManager.setDatabaseFile(new File(generateFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME));
+        TrookSpecificSearchDatabaseManager.getConnection();
       }
 
       //      Standard sub-catalogs for a folder level
@@ -1110,7 +1126,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs
       levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!
       levelSubCatalog.setCatalogFolder("");         // Force to top level!
-      levelSubCatalog.setCatalogBaseFilename(CatalogManager.INSTANCE.getInitialUr());
+      levelSubCatalog.setCatalogBaseFilename(CatalogManager.getInitialUr());
       Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
                                 "dummy.xml");
       levelSubCatalog.getCatalog(
@@ -1130,10 +1146,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       /* Javascript search database */
 
       logger.debug("STARTING: Generating Javascript database");
-      long nbKeywords = IndexManager.INSTANCE.size();
+      long nbKeywords = IndexManager.size();
       callback.startCreateJavascriptDatabase(nbKeywords);
       if (currentProfile.getGenerateIndex())
-        IndexManager.INSTANCE.exportToJavascriptArrays();
+        IndexManager.exportToJavascriptArrays();
       callback.endCreateJavascriptDatabase();
       logger.debug("COMPLETED: Generating Javascript database");
       callback.checkIfContinueGenerating();
@@ -1141,10 +1157,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       /* Epub metadata reprocessing */
 
       logger.debug("STARTING: Processing ePub Metadata");
-      callback.startReprocessingEpubMetadata(DataModel.INSTANCE.getListOfBooks().size());
+      callback.startReprocessingEpubMetadata(DataModel.getListOfBooks().size());
       countMetadata = 0;
       if (currentProfile.getReprocessEpubMetadata()) {
-        for (Book book : DataModel.INSTANCE.getListOfBooks()) {
+        for (Book book : DataModel.getListOfBooks()) {
           callback.checkIfContinueGenerating();
           callback.incStepProgressIndicatorPosition();
           if (shouldReprocessEpubMetadata(book)) {
@@ -1165,7 +1181,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       if (syncLog)
         syncLogFile =
-            new PrintWriter(ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+            new PrintWriter(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
 
       // reset stats fields for this run
 
@@ -1180,17 +1196,17 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       // (and books, if the target folder is set) to the destination folder
 
       // if the target folder is set, copy/sync Files from the library there
-      int nbFilesToCopyToTarget = CatalogManager.INSTANCE.getListOfFilesPathsToCopy().size();
+      int nbFilesToCopyToTarget = CatalogManager.getListOfFilesPathsToCopy().size();
       callback.startCopyLibToTarget(nbFilesToCopyToTarget);
       // In modes other than default mode we make a copy of all the ebook
       // files referenced by the catalog in the target lcoation
       if ((currentProfile.getDeviceMode() != DeviceMode.Default)
       && (!currentProfile.getOnlyCatalogAtTarget())) {
         logger.debug("STARTING: syncFiles eBook files to target");
-        for (String pathToCopy : CatalogManager.INSTANCE.getListOfFilesPathsToCopy()) {
+        for (String pathToCopy : CatalogManager.getListOfFilesPathsToCopy()) {
           callback.checkIfContinueGenerating();
-          CachedFile sourceFile = CachedFileManager.INSTANCE.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
-          CachedFile targetFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, pathToCopy);
+          CachedFile sourceFile = CachedFileManager.addCachedFile(currentProfile.getDatabaseFolder(), pathToCopy);
+          CachedFile targetFile = CachedFileManager.addCachedFile(targetFolder, pathToCopy);
           syncFiles(sourceFile, targetFile);
         }
         logger.debug("COMPLETED: syncFiles eBook files to target");
@@ -1200,7 +1216,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         // delete the target folders that were not in the source list (minus the catalog folder, of course)
         logger.debug("STARTING: Build list of files to delete from target");
         Set<File> usefulTargetFiles = new TreeSet<File>();
-        List<String> sourceFiles = new LinkedList<String>(CatalogManager.INSTANCE.getListOfFilesPathsToCopy());
+        List<String> sourceFiles = new LinkedList<String>(CatalogManager.getListOfFilesPathsToCopy());
         for (String sourceFile : sourceFiles) {
           callback.checkIfContinueGenerating();
           File targetFile = new File(targetFolder, sourceFile);
@@ -1215,7 +1231,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         logger.debug("STARTED: Creating list of files on target");
         List<File> existingTargetFiles = Helper.listFilesIn(targetFolder);
         logger.debug("COMPLETED: Creating list of files on target");
-        String targetCatalogFolderPath = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName()).getAbsolutePath();
+        String targetCatalogFolderPath = new File(targetFolder, CatalogManager.getCatalogFolderName()).getAbsolutePath();
         String calibreFolderPath = currentProfile.getDatabaseFolder().getAbsolutePath();
 
         // TODO    Look if this can be done more effeciently?  Perhaps piecemeal during sync?
@@ -1231,7 +1247,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                 if (!existingTargetFile.getAbsolutePath()
                     .startsWith(calibreFolderPath)) // as an additional security, don't delete anything in the Calibre library
                 {
-                  CachedFile cf = CachedFileManager.INSTANCE.inCache(existingTargetFile);
+                  CachedFile cf = CachedFileManager.inCache(existingTargetFile);
                   if (cf != null && cf.isChanged() == false) {
                     if (logger.isTraceEnabled()) logger.trace("Not deleted as marked unchanged");
                   } else {
@@ -1245,7 +1261,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
                       syncLogFile.println();
                     }
                     // Ensure no longer in cache
-                    CachedFileManager.INSTANCE.removeCachedFile(existingTargetFile);
+                    CachedFileManager.removeCachedFile(existingTargetFile);
                   }
                 }
               }
@@ -1257,13 +1273,13 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       callback.endCopyLibToTarget();
       callback.checkIfContinueGenerating();
 
-      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogManager.INSTANCE.getGenerateFolder());
+      long nbCatalogFilesToCopyToTarget = Helper.count(CatalogManager.getGenerateFolder());
       // If we are copying to two locations need to double count
       if (! currentProfile.getDeviceMode().equals(DeviceMode.Default)
       &&  currentProfile.getCopyToDatabaseFolder()) {
         nbCatalogFilesToCopyToTarget += nbCatalogFilesToCopyToTarget;
       }
-      nbCatalogFilesToCopyToTarget += CatalogManager.INSTANCE.getMapOfCatalogImages().size();
+      nbCatalogFilesToCopyToTarget += CatalogManager.getMapOfCatalogImages().size();
       callback.startCopyCatToTarget(nbCatalogFilesToCopyToTarget);
       // Now need to decide about the catalog and associated files
       // In particular there are some Nook mode specific files
@@ -1272,17 +1288,17 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       switch (currentProfile.getDeviceMode()) {
       case Nook:
         // when publishing to the Nook, don't forget to copy the search database (if it exists)
-        if (TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile() != null) {
-          TrookSpecificSearchDatabaseManager.INSTANCE.closeConnection();
-          CachedFile destinationFile = CachedFileManager.INSTANCE.addCachedFile(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
-          CachedFile trookDatabaseFile = CachedFileManager.INSTANCE.addCachedFile(TrookSpecificSearchDatabaseManager.INSTANCE.getDatabaseFile());
+        if (TrookSpecificSearchDatabaseManager.getDatabaseFile() != null) {
+          TrookSpecificSearchDatabaseManager.closeConnection();
+          CachedFile destinationFile = CachedFileManager.addCachedFile(targetFolder, Constants.TROOK_SEARCH_DATABASE_FILENAME);
+          CachedFile trookDatabaseFile = CachedFileManager.addCachedFile(TrookSpecificSearchDatabaseManager.getDatabaseFile());
           syncFiles(trookDatabaseFile, destinationFile);
         }
         // Also need to make sure catalog.xml exists for Trook use
         // Use index.xml already generated
-        File indexFile = new File(generateFolder, "/" + CatalogManager.INSTANCE.getCatalogFolderName() + "/index.xml");
+        File indexFile = new File(generateFolder, "/" + CatalogManager.getCatalogFolderName() + "/index.xml");
         // replicate it to catalog.xml
-        File catalogFile = new File(generateFolder, "/" + CatalogManager.INSTANCE.getCatalogFolderName() + "/catalog.xml");
+        File catalogFile = new File(generateFolder, "/" + CatalogManager.getCatalogFolderName() + "/catalog.xml");
         if (logger.isTraceEnabled())
           logger.trace("copy '" + indexFile + "' to '" + catalogFile + "'");
         syncFiles(new CachedFile(indexFile.getAbsolutePath()), new CachedFile(catalogFile.getAbsolutePath()));
@@ -1293,9 +1309,9 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         }
         if (currentProfile.getZipTrookCatalog()) {
           // when publishing to the Nook, archive the catalog into a big zip file (easier to transfer, and Trook knows how to read it!)
-          recursivelyZipFiles(CatalogManager.INSTANCE.getGenerateFolder(), true, targetCatalogZipFile, false);
+          recursivelyZipFiles(CatalogManager.getGenerateFolder(), true, targetCatalogZipFile, false);
           // Now ensure that there is no unzipped catalog left behind!
-          File targetCatalogFolder = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+          File targetCatalogFolder = new File(targetFolder, CatalogManager.getCatalogFolderName());
           callback.showMessage(Localization.Main.getText("info.deleting") + " " + targetCatalogFolder.getName());
           Helper.delete(targetCatalogFolder, true);
           break;
@@ -1306,7 +1322,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
         if (currentProfile.getOnlyCatalogAtTarget()) {
           targetCatalogFolder = targetFolder;
         } else {
-          targetCatalogFolder = new File(targetFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+          targetCatalogFolder = new File(targetFolder, CatalogManager.getCatalogFolderName());
         }
         syncFiles(new CachedFile(generateFolder.getAbsolutePath()), new CachedFile(targetCatalogFolder.getAbsolutePath()));
         logger.debug("START: Copy images to Destination catalog folder");
@@ -1323,7 +1339,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       // NOTE.   This is how we sync the catalog in Default mode
       if (currentProfile.getCopyToDatabaseFolder()) {
         logger.debug("STARTING: Copy Catalog Folder to Database Folder");
-        File libraryCatalogFolder = new File(libraryFolder, CatalogManager.INSTANCE.getCatalogFolderName());
+        File libraryCatalogFolder = new File(libraryFolder, CatalogManager.getCatalogFolderName());
         syncFiles(new CachedFile(generateFolder.getAbsolutePath()) , new CachedFile(libraryCatalogFolder.getAbsolutePath()));
         logger.debug("COMPLETED: Copy Catalog Folder to Database Folder");
         logger.debug("START: Copy images to Database catalog folder");
@@ -1334,13 +1350,13 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       callback.checkIfContinueGenerating();
 
       callback.startZipCatalog(nbCatalogFilesToCopyToTarget);
-      String zipFilename = ConfigurationManager.INSTANCE.getCurrentProfile().getCatalogTitle() + ".zip";
+      String zipFilename = ConfigurationManager.getCurrentProfile().getCatalogTitle() + ".zip";
       File zipFolder = (targetFolder == null) ? currentProfile.getDatabaseFolder() : targetFolder;
       File zipFile = new File(zipFolder, zipFilename);
       zipFile.delete();     // Remove any existing ZIP file
       if (currentProfile.getZipCatalog()) {
         logger.debug("STARTING: ZIP Catalog");
-        recursivelyZipFiles(CatalogManager.INSTANCE.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
+        recursivelyZipFiles(CatalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
         if (targetFolder != null  && currentProfile.getCopyToDatabaseFolder()) {
           Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
         }
@@ -1354,15 +1370,15 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       callback.startFinalizeMainCatalog();
       if (syncLog) {
-        logger.info("Sync Log: " + ConfigurationManager.INSTANCE.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+        logger.info("Sync Log: " + ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
       }
       // Save the CRC cache to the catalog folder
       // We always do this even if CRC Checking not enabled
       long saveCacheStart= System.currentTimeMillis();
-      logger.info(Localization.Main.getText("info.step.savingcache") + " " + CachedFileManager.INSTANCE.getCacheSize());
+      logger.info(Localization.Main.getText("info.step.savingcache") + " " + CachedFileManager.getCacheSize());
       callback.showMessage(Localization.Main.getText("info.step.savingcache"));
-      CachedFileManager.INSTANCE.saveCache(generateFolder.getPath(), callback);
-      logger.info(Localization.Main.getText("info.step.savedcache", CachedFileManager.INSTANCE.getSaveCount(), CachedFileManager.INSTANCE.getIgnoredCount()));
+      CachedFileManager.saveCache(generateFolder.getPath(), callback);
+      logger.info(Localization.Main.getText("info.step.savedcache", CachedFileManager.getSaveCount(), CachedFileManager.getIgnoredCount()));
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - saveCacheStart));
 
       callback.checkIfContinueGenerating();
@@ -1384,15 +1400,15 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       logger.info("");
       logger.info(Localization.Main.getText("stats.library.header"));
-      logger.info(String.format("%8d  ", DataModel.INSTANCE.getListOfBooks().size()) + Localization.Main.getText("bookword.title"));
-      logger.info(String.format("%8d  ", DataModel.INSTANCE.getListOfAuthors().size()) + Localization.Main.getText("authorword.title"));
-      logger.info(String.format("%8d  ", DataModel.INSTANCE.getListOfSeries().size()) + Localization.Main.getText("seriesword.title"));
-      logger.info(String.format("%8d  ", DataModel.INSTANCE.getListOfTags().size()) + Localization.Main.getText("tagword.title"));
+      logger.info(String.format("%8d  ", DataModel.getListOfBooks().size()) + Localization.Main.getText("bookword.title"));
+      logger.info(String.format("%8d  ", DataModel.getListOfAuthors().size()) + Localization.Main.getText("authorword.title"));
+      logger.info(String.format("%8d  ", DataModel.getListOfSeries().size()) + Localization.Main.getText("seriesword.title"));
+      logger.info(String.format("%8d  ", DataModel.getListOfTags().size()) + Localization.Main.getText("tagword.title"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.run.header"));
       logger.info(String.format("%8d  ", countMetadata) + Localization.Main.getText("stats.run.metadata"));
-      logger.info(String.format("%8d  ", CatalogManager.INSTANCE.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
-      logger.info(String.format("%8d  ", CatalogManager.INSTANCE.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
+      logger.info(String.format("%8d  ", CatalogManager.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
+      logger.info(String.format("%8d  ", CatalogManager.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
       logger.info(String.format("%8d  ", copyExistHits) + Localization.Main.getText("stats.copy.notexist"));
@@ -1457,7 +1473,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       else if (generationCrashed)
         callback.errorOccured(Localization.Main.getText("error.unexpectedFatal"), null);
       else
-        callback.endFinalizeMainCatalog(where, CatalogManager.INSTANCE.htmlManager.getTimeInHtml());
+        callback.endFinalizeMainCatalog(where, CatalogManager.htmlManager.getTimeInHtml());
       CatalogManager.recordRamUsage("End of Generate Run");
       CatalogManager.reportRamUsage("Summary");
     }

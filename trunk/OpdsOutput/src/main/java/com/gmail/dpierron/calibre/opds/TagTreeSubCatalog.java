@@ -150,7 +150,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       if (logger.isTraceEnabled()) logger.trace("getLevelOfTreeNode: it's a leaf, consisting of a single tag : make a list of books");
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType()+ level.getGuid();
       result = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
-      TrookSpecificSearchDatabaseManager.INSTANCE.addTag(tag, result);
+      TrookSpecificSearchDatabaseManager.addTag(tag, result);
     } else {
       result = getLevelOfTreeNode(pBreadcrumbs, level, 0);
     }
@@ -173,7 +173,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     if (logger.isDebugEnabled()) logger.debug("getLevelOfTreeNode: pBreadcrumbs=" + pBreadcrumbs + ", level=" + level + ", from=" + from);
 
     boolean inSubDir = ((getCatalogLevel().length() > 0) || (from != 0) || pBreadcrumbs.size() > 1);
-    int pageNumber = Summarizer.INSTANCE.getPageNumber(from + 1);
+    int pageNumber = Summarizer.getPageNumber(from + 1);
     int itemsCount = level.getChildren().size();
 
     String filename = getCatalogBaseFolderFileName()
@@ -187,7 +187,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     // TODO Might want to make the title include all 'parts' ?
     String title = (onRoot ? Localization.Main.getText("tags.title") : level.getId());
     String urn = Constants.INITIAL_URN_PREFIX + getCatalogType() + Constants.URN_SEPARATOR + encryptString(pBreadcrumbs.toString());
-    String urlExt = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
 
     String summary = "";
     if (onRoot) {
@@ -198,9 +198,9 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
         summary = Localization.Main.getText("tags.categorized.single");
     } else {
       // try and list the items to make the summary
-      summary = Summarizer.INSTANCE.summarizeTagLevels(level.getChildren());
+      summary = Summarizer.summarizeTagLevels(level.getChildren());
     }
-    int maxPages = Summarizer.INSTANCE.getPageNumber(itemsCount);
+    int maxPages = Summarizer.getPageNumber(itemsCount);
 
     List<Element> result = new LinkedList<Element>();
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir*/);
@@ -227,7 +227,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
 
 
     Element entry;
-    String urlInItsSubfolder = CatalogManager.INSTANCE.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+    String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     entry = createPaginateLinks(feed, urlExt, pageNumber, maxPages);
     createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
     if (from == 0) {
