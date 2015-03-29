@@ -16,7 +16,7 @@ REM  profilename			Name of the profile to use.  If omitted
 REM                   then the last one used is assumed.
 
 SETLOCAL
-set _C2O=OpdsOutput-3.4-SNAPSHOT.jar
+set _C2O=OpdsOutput-3.5-SNAPSHOT.jar
 
 REM  We set JAVA VM stack limits explicitly here to get consistency across systems
 REM

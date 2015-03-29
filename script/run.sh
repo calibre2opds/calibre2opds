@@ -2,7 +2,7 @@
 # script file for running the Calibre2Opds program in CLI mode on Unix-like systems
 # such as Linux and Mac.
 
-c2o_jar=OpdsOutput-3.4-SNAPSHOT.jar
+c2o_jar=OpdsOutput-3.5-SNAPSHOT.jar
 
 #  We set Java VM stack limits explicitly here to get consistency across systems
 #

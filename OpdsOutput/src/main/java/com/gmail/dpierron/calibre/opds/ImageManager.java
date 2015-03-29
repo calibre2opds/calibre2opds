@@ -8,7 +8,6 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.tools.i18n.Localization;
-import com.gmail.dpierron.calibre.thumbnails.CreateThumbnail;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
 
@@ -203,17 +202,20 @@ public abstract class ImageManager {
     logger.debug("generateImage: " + imageFile.getAbsolutePath());
     long now = System.currentTimeMillis();
     try {
-      CreateThumbnail ct = new CreateThumbnail(coverFile.getAbsolutePath());
-      ct.getThumbnail(imageHeight, CreateThumbnail.VERTICAL);
-      ct.saveThumbnail(imageFile, CreateThumbnail.IMAGE_JPEG);
+      ImageFile ct = new ImageFile(coverFile.getAbsolutePath());
+      // If the image failed to load -  no point in trying to generate it!
+      if (! ct.isImageLoaded()) return;
+
+      ct.getImage(imageHeight, ImageFile.VERTICAL);
+      ct.saveImage(imageFile, ImageFile.IMAGE_JPEG);
       // bug #732821 Ensure file added to those cached for copying
       CachedFile cf = CachedFileManager.addCachedFile(imageFile);
       if (logger.isTraceEnabled())
         logger.trace("generateImages: added new thumbnail file " + imageFile.getAbsolutePath() + " to list of files to copy");
       countOfImagesGenerated++;         // Update count of files processed
     } catch (Exception e) {
-      CatalogManager.callback
-          .errorOccured(Localization.Main.getText("error.generatingThumbnail", coverFile.getAbsolutePath()), e);
+      CatalogManager.callback.errorOccured(Localization.Main.getText("error.generatingImage", imageFile.getAbsolutePath()), e);
+      if (logger.isTraceEnabled())  logger.trace(e);
     } catch (Throwable t) {
          logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );
     }

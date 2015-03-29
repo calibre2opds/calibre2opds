@@ -17,7 +17,7 @@ import java.util.Collection;
 
 public class Constants {
   public final static String PROGNAME = "calibre2opds";
-  public final static String PROGVERSION = "3.4";
+  public final static String PROGVERSION = "3.5 beta";
   public final static String BZR_VERSION = getBzrVersion();
   public final static String CALIBRE_METADATA_DB_= "metadata.db";
   public final static String NO = Localization.Main.getText("boolean.no");
