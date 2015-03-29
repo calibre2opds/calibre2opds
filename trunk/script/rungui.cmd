@@ -30,7 +30,7 @@ cls
 echo Calibre2opds startup
 echo ====================
 
-set _C2O=OpdsOutput-3.4-SNAPSHOT.jar
+set _C2O=OpdsOutput-3.5-SNAPSHOT.jar
 set _CD=%cd%
 echo [INFO] Current Directory: %_CD%
 

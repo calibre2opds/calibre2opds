@@ -712,11 +712,11 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public Boolean isGenerateIndexReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_GENERATEALLBOOKS);
+    return isPropertyReadOnly(PROPERTY_NAME_GENERATEINDEX);
   }
   public Boolean getGenerateIndex() {
     Boolean b = getBoolean(PROPERTY_NAME_GENERATEINDEX);
-    return (b == null) ? defaults.getGenerateAllbooks() : b;
+    return (b == null) ? defaults.getGenerateIndex() : b;
   }
   public void setGenerateIndex(Boolean value) {
     setProperty(PROPERTY_NAME_GENERATEINDEX, value);

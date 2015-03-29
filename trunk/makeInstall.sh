@@ -3,7 +3,7 @@
 #
 # If IzPack not installed then stops after ZIP package
 
-BASEVERSION=3.4
+BASEVERSION=3.5
 
 ZIPFILE=`pwd`/calibre2opds-${BASEVERSION}-`svnversion`.zip
 
@@ -26,7 +26,7 @@ zip "$ZIPFILE" calibre2opds-icon_192.png      calibre2opds-icon-small_32.ico  ca
 zip "$ZIPFILE" calibre2opds-text-icon_64.png
 cd ..
 cd Install/target/dependency
-zip "$ZIPFILE"  OpdsOutput-3.4-SNAPSHOT.jar  DataModel-3.4-SNAPSHOT.jar    Tools-3.4-SNAPSHOT.jar   CalibreQueryLanguage-3.4-SNAPSHOT.jar
+zip "$ZIPFILE"  OpdsOutput-%BASEVERSION%-SNAPSHOT.jar  DataModel-%BASEVERSION%-SNAPSHOT.jar    Tools-%BASEVERSION%-SNAPSHOT.jar   CalibreQueryLanguage-%BASEVERSION%-SNAPSHOT.jar
 zip "$ZIPFILE"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar jdom-1.1.jar jtidy-r938.jar junit-4.7.jar log4j-1.2.12.jar sqlite-jdbc-3.6.17.1.jar stringtemplate-3.2.jar
 
 cd ../../..

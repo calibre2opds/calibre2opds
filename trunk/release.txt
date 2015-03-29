@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.4
+                    RELEASE NOTES for Calibre2Opds v3.5
                     -----------------------------------
 
 Documentation

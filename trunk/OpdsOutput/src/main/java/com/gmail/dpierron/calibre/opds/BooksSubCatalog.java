@@ -1314,13 +1314,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isDebugEnabled())  logger.debug("getBookEntry: SKIPPING generation of full book entry as already done");
     } else {
       if (logger.isTraceEnabled()) logger.trace("getBookEntry: book full entry (not yet done)");
-      // if the "all books" catalog never was generated, we'll end up with the first generated catalog's breadcrumbs ; that ain't good, I prefer linking only to main
       Breadcrumbs breadcrumbs = pBreadcrumbs;
-      if (!currentProfile.getGenerateAllbooks()) {
-        // remove all but the first (main) entry
-        breadcrumbs = new Breadcrumbs();
-        breadcrumbs.add(pBreadcrumbs.get(0));
-      }
+      // TODO:  We end up with the first generated catalogs breadcrumbs.
+      // TODO:  Since this is normally the authors catalog that is quite sensible
+      // TODO:  We could decide to remove all breadcrumbs for the book full entries?
+      // remove all but the first (main) entry
+      //  breadcrumbs = new Breadcrumbs();
+      //  breadcrumbs.add(pBreadcrumbs.get(0));
       Element entry = JDOMManager.rootElement("entry", JDOMManager.Namespace.Atom, JDOMManager.Namespace.DcTerms, JDOMManager.Namespace.Atom, JDOMManager.Namespace.Xhtml);
       entry.addContent (JDOMManager.element("title").addContent(book.getTitle()));
       entry.addContent(JDOMManager.element("id").addContent("urn:book:" + book.getUuid()));
