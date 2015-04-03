@@ -1391,7 +1391,7 @@ public class Helper {
    * @return  Locale
    */
   public static Locale getLocaleFromLanguageString(String lang) {
-    if (lang != null || lang.length() > 1) {
+    if (lang != null && lang.length() > 1) {
       for (Locale l : Locale.getAvailableLocales()) {
          switch (lang.length()) {
            //  Note te case of a 2 character lang needs special treatment - see Locale code for getLangugage

@@ -10,11 +10,11 @@ import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.PassthroughFilter;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 
-import junit.framework.Assert;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
