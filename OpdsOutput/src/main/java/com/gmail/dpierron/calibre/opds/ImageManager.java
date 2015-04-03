@@ -60,11 +60,13 @@ public abstract class ImageManager {
         imageSizeChanged = true;
       } finally {
         // #c2o-238
-        // Delete the file in case generate goes wrong!
-        // It will be recreated if the appropriate point
-        // in the catalog generation is reached.
-        imageSizeFile.delete();
-        CachedFileManager.removeCachedFile(imageSizeFile);
+        // If the image size has changed delete the height file in case generate goes wrong!
+        // It will be recreated if we successfully complete the run.  We do not need to delete
+        // it if the image size is unchanged as in this case exiting image files are correct size.
+        if (imageSizeChanged) {
+          imageSizeFile.delete();
+          CachedFileManager.removeCachedFile(imageSizeFile);
+        }
       }
     }
   }
