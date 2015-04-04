@@ -755,15 +755,17 @@ public class Catalog {
         case Nook:
             // As a saftey check we insist that the Nook target already exists
             if (! targetFolder.exists()) {
-              callback.errorOccured(Localization.Main.getText("error.nooktargetdoesnotexist"), null);
-              return;
+              if (1 == callback.askUser(Localization.Main.getText("error.nooktargetdoesnotexist"), textYES, textNO))
+                return;
+              targetFolder.mkdirs();
             }
             targetFolder = new File(targetFolder.getAbsolutePath() + "/" + currentProfile.getCatalogFolderName()  + Constants.TROOK_FOLDER_EXTENSION);
             break;
         case Nas:
           if (! targetFolder.exists()) {
-            callback.errorOccured(Localization.Main.getText("error.targetdoesnotexist"), null);
-            return;
+            if (1 == callback.askUser(Localization.Main.getText("error.targetdoesnotexist"), textYES, textNO))
+              return;
+            targetFolder.mkdirs();
           }
           break;
         case Default:

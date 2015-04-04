@@ -1101,11 +1101,10 @@ public class Mainframe extends javax.swing.JFrame {
     lblBottom0.setFont(lblBottom0.getFont().deriveFont(Font.BOLD));
 
     lblDeviceDropbox.setToolTipText(
-        Localization.Main.getText("config.DeviceMode.dropbox.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.dropbox.tooltip2"));
-    lblDeviceNAS.setToolTipText(Localization.Main.getText("config.DeviceMode.nas.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nas" +
-        ".tooltip2"));
+        Localization.Main.getText("config.DeviceMode.dropbox.tooltip"));
+    lblDeviceNAS.setToolTipText(Localization.Main.getText("config.DeviceMode.nas.tooltip"));
     lblDeviceNook.setToolTipText(
-        Localization.Main.getText("config.DeviceMode.nook.tooltip1") + " " + Localization.Main.getText("config.DeviceMode.nook.tooltip2"));
+        Localization.Main.getText("config.DeviceMode.nook.tooltip"));
 
     // Do translations that are handled by guiFields table
 
