@@ -38,7 +38,7 @@
 			<string>$JAVAROOT/jtidy-r938.jar</string>
 			<string>$JAVAROOT/junit-4.7.jar</string>
 			<string>$JAVAROOT/log4j-1.2.12.jar</string>
-			<string>$JAVAROOT/sqlite-jdbc-3.6.17.1.jar</string>
+			<string>$JAVAROOT/sqlite-jdbc-3.8.7.jar</string>
 			<string>$JAVAROOT/stringtemplate-3.2.jar</string>
 		</array>
 		<key>JVMVersion</key>

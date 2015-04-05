@@ -3531,11 +3531,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblUseThumbnailAsCover, gridBagConstraints);
 
         chkUseThumbnailAsCover.setRequestFocusEnabled(false);
-        chkUseThumbnailAsCover.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkUseThumbnailAsCoverActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 8;
@@ -4637,7 +4632,6 @@ public class Mainframe extends javax.swing.JFrame {
     // We cannot use a thumbnail as a cover if they are not being generated!
     if (chkNoThumbnailGenerate.isSelected() == true) {
       chkUseThumbnailAsCover.setSelected(false);
-      chkUseThumbnailAsCoverActionPerformed(evt);
     }
     lblUseThumbnailAsCover.setEnabled(! chkNoThumbnailGenerate.isSelected());
     chkUseThumbnailAsCover.setEnabled(lblUseThumbnailAsCover.isEnabled());
@@ -4883,16 +4877,6 @@ public class Mainframe extends javax.swing.JFrame {
     private void lblSearchDeprecatedhandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchDeprecatedhandleMouseClickOnLabel
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSearchDeprecatedhandleMouseClickOnLabel
-
-    private void chkUseThumbnailAsCoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkUseThumbnailAsCoverActionPerformed
-      // We do not want resized cover images if we are using existing covers as thumbnails
-      if (chkNoCoverResize.isEnabled() == true
-      &&  chkUseThumbnailAsCover.isSelected() == true) {
-        chkNoCoverResize.setSelected(true);
-      }
-      chkNoCoverResize.setEnabled(! chkUseThumbnailAsCover.isSelected());
-      lblNoCoverResize.setEnabled(chkNoCoverResize.isEnabled());
-    }//GEN-LAST:event_chkUseThumbnailAsCoverActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
