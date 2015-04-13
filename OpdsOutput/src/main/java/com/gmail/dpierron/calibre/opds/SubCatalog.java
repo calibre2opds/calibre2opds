@@ -4,6 +4,8 @@ package com.gmail.dpierron.calibre.opds;
  * Abstract class containing functions and variables common to all catalog types
  */
 
+import com.gmail.dpierron.calibre.cache.CachedFile;
+import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
@@ -22,18 +24,17 @@ import java.util.zip.CRC32;
 public abstract class SubCatalog {
   // cache some widely used objects.
   private final static Logger logger = Logger.getLogger(SubCatalog.class);
-  protected ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
   // Get some non-mutable configuration options once for efffeciency that are used widely in subcatalog variants
-  protected int maxBeforeSplit = currentProfile.getMaxBeforeSplit();
-  protected int maxSplitLevels = currentProfile.getMaxSplitLevels();
-  protected int maxBeforePaginate = currentProfile.getMaxBeforePaginate();
-  protected boolean useExternalIcons = currentProfile.getExternalIcons();
-  protected boolean useExternalImages = currentProfile.getExternalImages();
-  protected boolean includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
-  protected static String booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
-  private static String securityCode = CatalogManager.getSecurityCode();
-  private static String securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
-  private static CRC32 crc32;
+  // TODO:  Decide if perhaps these should be moved to CatalogManager?
+  protected static final ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
+  protected static final int maxBeforeSplit = ConfigurationManager.getCurrentProfile().getMaxBeforeSplit();
+  protected static final int maxSplitLevels = ConfigurationManager.getCurrentProfile().getMaxSplitLevels();
+  protected static final int maxBeforePaginate = ConfigurationManager.getCurrentProfile().getMaxBeforePaginate();
+  protected static final boolean useExternalIcons = ConfigurationManager.getCurrentProfile().getExternalIcons();
+  protected static final boolean useExternalImages = ConfigurationManager.getCurrentProfile().getExternalImages();
+  protected static final boolean includeCoversInCatalog = ConfigurationManager.getCurrentProfile().getIncludeCoversInCatalog();
+  protected static final String booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
+  protected static final CRC32 crc32 = new CRC32();
 
   //  PROPERTIES
 
@@ -73,21 +74,21 @@ public abstract class SubCatalog {
 
   public SubCatalog(List<Book> books) {
     this(null, books);
-    if (crc32 == null)
-      crc32 = new CRC32();
+    //if (crc32 == null)
+    //  crc32 = new CRC32();
   }
 
   public SubCatalog() {
     // Do nothing special!
-    if (crc32 == null)
-      crc32 = new CRC32();
+    //if (crc32 == null)
+    //  crc32 = new CRC32();
   }
 
   public SubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
     setStuffToFilterOut(stuffToFilterOut);
     setBooks(books);
-    if (crc32 == null)
-      crc32 = new CRC32();
+    //if (crc32 == null)
+    //  crc32 = new CRC32();
   }
 
   private void setOptimizUrlPrefix() {
@@ -161,8 +162,10 @@ public abstract class SubCatalog {
    * @return
    */
   private static String encryptFilename(String filename) {
-    if (securityCode.length() == 0)
-      return filename;  // Do nothing if encryption not active
+    if (CatalogManager.getSecurityCode().length() == 0) {
+      // Do nothing if encryption not active
+      return filename;
+    }
     int pos = filename.indexOf(Constants.SECURITY_SEPARATOR);
     if (pos != -1) {
       int dummy = 1;
@@ -178,7 +181,7 @@ public abstract class SubCatalog {
   private String getCatalogPrefix() {
     if (catalogLevel == null)
       catalogLevel = "";
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + catalogLevel;
+    String result = (CatalogManager.getSecurityCode().length() == 0 ? "" : CatalogManager.getSecurityCodeAndSeparator()) + catalogLevel;
     if (catalogLevel.length() > 0)
       result += Constants.LEVEL_SEPARATOR;
     return result;
@@ -270,7 +273,7 @@ public abstract class SubCatalog {
    */
   public String getCatalogFolderWithSecurityNoLevel(String foldertype) {
     assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
+    String result = (CatalogManager.getSecurityCode().length() == 0 ? "" : CatalogManager.getSecurityCodeAndSeparator()) + foldertype;
 
     // Debugging asserts  - could be removed if not wanted
     int pos = result.indexOf(Constants.SECURITY_SEPARATOR);
@@ -292,7 +295,7 @@ public abstract class SubCatalog {
    */
   public String getCatalogFolderWithLevelAndSecurity(String foldertype) {
     assert (Helper.isNotNullOrEmpty(foldertype)) : "Program Error: foldertype not set";
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + foldertype;
+    String result = (CatalogManager.getSecurityCode().length() == 0 ? "" : CatalogManager.getSecurityCodeAndSeparator()) + foldertype;
 
     // Debugging asserts - could be removed if not wanted
     int pos = result.indexOf(Constants.SECURITY_SEPARATOR) + 1;
@@ -324,7 +327,7 @@ public abstract class SubCatalog {
 
     pos = folder.indexOf(Constants.SECURITY_SEPARATOR);
     if (pos != -1) {
-      assert (folder.substring(0, pos).equals(securityCode)) : "Program Error:  Security Code does not seem to match expected value (folder=" + folder + ")";
+      assert (folder.substring(0, pos).equals(CatalogManager.getSecurityCode())) : "Program Error:  Security Code does not seem to match expected value (folder=" + folder + ")";
       assert folder.indexOf(Constants.SECURITY_SEPARATOR, pos + 1) == -1 : "Program error: Unexpected Second Occurencs of SECURITY_SEPARATOR (folder=" +
           folder + ")";
       ;
@@ -370,7 +373,7 @@ public abstract class SubCatalog {
 
     if (catalogLevel.length() == 0 && catalogFolder.length() == 0 && catalogType.length() == 0) {
       // The special case for top level
-      return securityCodeAndSeparator + catalogBaseFilename;
+      return CatalogManager.getSecurityCodeAndSeparator() + catalogBaseFilename;
     } else {
       // The normal case
       return catalogBaseFilename;
@@ -397,8 +400,8 @@ public abstract class SubCatalog {
       name = name.substring(pos + 1);     // Remove the folder part
     }
     // We also want to remove any leading occurrence of security code
-    if (securityCode.length() > 0 && name.startsWith(securityCodeAndSeparator)) {
-      name = name.substring(securityCodeAndSeparator.length());  // Remove the security code
+    if (CatalogManager.getSecurityCode().length() > 0 && name.startsWith(CatalogManager.getSecurityCodeAndSeparator())) {
+      name = name.substring(CatalogManager.getSecurityCodeAndSeparator().length());  // Remove the security code
     }
     // Finally we want to remove any existing encryption string
     pos = name.indexOf(Constants.SECURITY_SEPARATOR);
@@ -448,7 +451,7 @@ public abstract class SubCatalog {
 
   public String getCatalogBaseFolderFileNameNoLevel(String type) {
     assert Helper.isNotNullOrEmpty(type);
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
+    String result = (CatalogManager.getSecurityCode().length() == 0 ? "" : CatalogManager.getSecurityCodeAndSeparator()) + type;
     if (result.length() > 0)
       result += Constants.FOLDER_SEPARATOR;
     return result + encryptFilename(type);
@@ -520,7 +523,7 @@ public abstract class SubCatalog {
    * @return
    */
   private static String getCatalogBaseFolderFileNameIdNoLevel(String type, String id) {
-    String result = (securityCode.length() == 0 ? "" : securityCodeAndSeparator) + type;
+    String result = (CatalogManager.getSecurityCode().length() == 0 ? "" : CatalogManager.getSecurityCodeAndSeparator()) + type;
     if (result.length() > 0)
       result += Constants.FOLDER_SEPARATOR;
     result = result + encryptFilename(type + Constants.TYPE_SEPARATOR + id);
@@ -691,6 +694,13 @@ public abstract class SubCatalog {
     return Helper.isNotNullOrEmpty(stuffToFilterOut);
   }
 
+
+  //  Set up the variables once as they will never change for a given run
+
+  private final static boolean xslCatalogChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.CATALOG_XSL);
+  private final static boolean xslFullEntryChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.FULLENTRY_XSL);
+
+
   /**
    * @return a result composed of the resulting OPDS entry, and the relative url to the subcatalog
    */
@@ -724,7 +734,7 @@ public abstract class SubCatalog {
     if (!xmlfilename.endsWith(Constants.XML_EXTENSION)) {
       xmlfilename += Constants.XML_EXTENSION;
     }
-    File outputFile = CatalogManager.storeCatalogFile(xmlfilename);
+    CachedFile outputFile = CachedFileManager.addCachedFile(CatalogManager.storeCatalogFile(xmlfilename));
     // Avoid creating files that already exist.
     // (if xml file exists then HTML one will as well)
     if (outputFile.exists()) {
@@ -751,24 +761,49 @@ public abstract class SubCatalog {
       } finally {
         if (fos != null)
           fos.close();
+        outputFile.clearCachedInformation();
       }
     }
 
     //  generate corresponding HTML file
 
-    // TODO:   See if we can optimise things by avoiding generating the HTML file
-    // TODO:   if the target already exists and the XML file is unchanged in this run?
-    // TODO:   This would have an implication on the syn process so not a trivial change
-
-    if (! ConfigurationManager.getCurrentProfile().getGenerateHtml()) {
-      return;
-    }
-    File htmlFile = new File(HtmlManager. getHtmlFilename(outputFile.toString()));
+    CachedFile htmlFile = CachedFileManager.addCachedFile(HtmlManager.getHtmlFilename(outputFile.getAbsolutePath()));
     if (htmlFile.exists()) {
       logger.warn("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'");
       return;
     }
-    CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile, feedType);
+
+    // TODO:   See if we can optimise things by avoiding generating the HTML file
+    // TODO:   if:
+    // TODO    - the target HTML file already exists in the catalog
+    // TODO    - the XML file is identical to the one already in the catalog
+    // TODO:   - the XSL file is older than the HTML file
+    // TODO:   This would have an implication on the syn process so not a trivial change
+
+    CachedFile catalogXmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + outputFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
+    CachedFile catalogHtmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + htmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
+    boolean xslChanged = true;
+
+    switch (feedType) {
+      case MainCatalog:
+      case Catalog:
+            xslChanged = xslCatalogChanged;
+            break;
+      case BookFullEntry:
+            xslChanged = xslFullEntryChanged;
+            break;
+    }
+    if (catalogXmlFile.exists()
+    && catalogXmlFile.getCrc() == outputFile.getCrc()) {
+      catalogXmlFile.setChanged(false);
+    }
+    if ( ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(outputFile, catalogXmlFile)) {
+      catalogHtmlFile.setChanged(false);
+    } else {
+      htmlFile.clearCachedInformation();
+      CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(), feedType);
+    }
+
   }
 
   /*

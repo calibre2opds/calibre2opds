@@ -57,7 +57,6 @@ public class CachedFile extends File {
     resetCached();
   }
 
-
   /**
    *   Helper routine to set flags bits state
    */

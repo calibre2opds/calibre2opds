@@ -226,7 +226,6 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblTagsToMakeDeep, txtTagsToMakeDeep, "config.TagsToMakeDeep", "TagsToMakeDeep"),
       new guiField(lblMinBooksToMakeDeepLevel, txtMinBooksToMakeDeepLevel, "config.MinBooksToMakeDeepLevel", "MinBooksToMakeDeepLevel", 0, 99999),
       // new guiField(lblMaxMobileResolution, txtMaxMobileResolution, "config.MaxMobileResolution", "MaxMobileResolution", 0, 2000),
-      new guiField(lblMinimizeChangedFiles, chkMinimizeChangedFiles, "config.MinimizeChangedFiles", "MinimizeChangedFiles"),
       new guiField(lblGenerateIndex, chkGenerateIndex, "config.GenerateIndex", "GenerateIndex"),
       new guiField(lblMaxKeywords, txtMaxKeywords, "config.MaxKeywords", "MaxKeywords"),
       new guiField(lblIndexComments, chkIndexComments, "config.IndexComments", "IndexComments"),
@@ -1418,8 +1417,6 @@ public class Mainframe extends javax.swing.JFrame {
         chkNoThumbnailGenerate = new javax.swing.JCheckBox();
         lblMaxBookSummaryLength = new javax.swing.JLabel();
         txtMaxBookSummaryLength = new javax.swing.JTextField();
-        lblMinimizeChangedFiles = new javax.swing.JLabel();
-        chkMinimizeChangedFiles = new javax.swing.JCheckBox();
         lblExternalIcons = new javax.swing.JLabel();
         chkExternalIcons = new javax.swing.JCheckBox();
         lblMaxSplitLevels = new javax.swing.JLabel();
@@ -3068,12 +3065,12 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxbeforepaginate, gridBagConstraints);
 
         txtMaxbeforepaginate.setText("txtMaxbeforepaginate");
-        txtMaxbeforepaginate.setMaximumSize(new java.awt.Dimension(100, 100));
-        txtMaxbeforepaginate.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtMaxbeforepaginate.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMaxbeforepaginate.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMaxbeforepaginate.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3093,12 +3090,12 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxbeforesplit, gridBagConstraints);
 
         txtMaxbeforesplit.setText("txtMaxbeforesplit");
-        txtMaxbeforesplit.setMaximumSize(new java.awt.Dimension(100, 100));
-        txtMaxbeforesplit.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtMaxbeforesplit.setMaximumSize(new java.awt.Dimension(150, 100));
+        txtMaxbeforesplit.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMaxbeforesplit.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3119,7 +3116,9 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblBooksinrecent, gridBagConstraints);
 
         txtBooksinrecent.setText("txtBooksinrecent");
-        txtBooksinrecent.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtBooksinrecent.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtBooksinrecent.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtBooksinrecent.setPreferredSize(new java.awt.Dimension(60, 20));
         txtBooksinrecent.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtBooksinrecentFocusLost(evt);
@@ -3128,7 +3127,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3149,11 +3147,12 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxsummarylength, gridBagConstraints);
 
         txtMaxsummarylength.setText("txtMaxsummarylength");
-        txtMaxsummarylength.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtMaxsummarylength.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMaxsummarylength.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMaxsummarylength.setPreferredSize(new java.awt.Dimension(60, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3196,12 +3195,17 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblThumbnailheight, gridBagConstraints);
 
         txtThumbnailheight.setText("txtThumbnailheight");
-        txtThumbnailheight.setMaximumSize(new java.awt.Dimension(100, 100));
-        txtThumbnailheight.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtThumbnailheight.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtThumbnailheight.setMinimumSize(new java.awt.Dimension(150, 22));
+        txtThumbnailheight.setPreferredSize(new java.awt.Dimension(80, 20));
+        txtThumbnailheight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtThumbnailheightActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3221,23 +3225,25 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMinBooksToMakeDeepLevel, gridBagConstraints);
 
         txtMinBooksToMakeDeepLevel.setText("txtMaxsummarylength");
-        txtMinBooksToMakeDeepLevel.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtMinBooksToMakeDeepLevel.setInheritsPopupMenu(true);
+        txtMinBooksToMakeDeepLevel.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMinBooksToMakeDeepLevel.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMinBooksToMakeDeepLevel.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMinBooksToMakeDeepLevel, gridBagConstraints);
 
         txtCoverHeight.setText("txtCoverHeight");
-        txtCoverHeight.setMaximumSize(new java.awt.Dimension(100, 100));
-        txtCoverHeight.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtCoverHeight.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtCoverHeight.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtCoverHeight.setPreferredSize(new java.awt.Dimension(80, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -3343,40 +3349,16 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxBookSummaryLength, gridBagConstraints);
 
         txtMaxBookSummaryLength.setText("txtMaxBookSummaryLength");
-        txtMaxBookSummaryLength.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtMaxBookSummaryLength.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMaxBookSummaryLength.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMaxBookSummaryLength.setPreferredSize(new java.awt.Dimension(60, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlAdvancedOptions.add(txtMaxBookSummaryLength, gridBagConstraints);
-
-        lblMinimizeChangedFiles.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblMinimizeChangedFiles.setText("lblMinimizeChangedFiles");
-        lblMinimizeChangedFiles.setToolTipText("");
-        lblMinimizeChangedFiles.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        lblMinimizeChangedFiles.setInheritsPopupMenu(false);
-        lblMinimizeChangedFiles.setMaximumSize(new java.awt.Dimension(250, 16));
-        lblMinimizeChangedFiles.setMinimumSize(new java.awt.Dimension(155, 10));
-        lblMinimizeChangedFiles.setPreferredSize(new java.awt.Dimension(250, 16));
-        lblMinimizeChangedFiles.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                handleMouseClickOnLabel(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        pnlAdvancedOptions.add(lblMinimizeChangedFiles, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlAdvancedOptions.add(chkMinimizeChangedFiles, gridBagConstraints);
 
         lblExternalIcons.setText("lblExternalIcons");
         lblExternalIcons.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -3413,12 +3395,17 @@ public class Mainframe extends javax.swing.JFrame {
         pnlAdvancedOptions.add(lblMaxSplitLevels, gridBagConstraints);
 
         txtMaxSplitLevels.setText("txtMaxSplitLevels");
-        txtMaxSplitLevels.setMaximumSize(new java.awt.Dimension(100, 100));
-        txtMaxSplitLevels.setPreferredSize(new java.awt.Dimension(40, 20));
+        txtMaxSplitLevels.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMaxSplitLevels.setMinimumSize(new java.awt.Dimension(100, 22));
+        txtMaxSplitLevels.setPreferredSize(new java.awt.Dimension(50, 20));
+        txtMaxSplitLevels.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMaxSplitLevelsActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
@@ -4205,9 +4192,10 @@ public class Mainframe extends javax.swing.JFrame {
         pnlSearchOptions.setLayout(new java.awt.GridBagLayout());
 
         txtMaxKeywords.setText("txtMaxKeywords");
-        txtMaxKeywords.setMinimumSize(new java.awt.Dimension(150, 26));
+        txtMaxKeywords.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtMaxKeywords.setMinimumSize(new java.awt.Dimension(100, 22));
         txtMaxKeywords.setName(""); // NOI18N
-        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(100, 20));
+        txtMaxKeywords.setPreferredSize(new java.awt.Dimension(80, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
@@ -4878,6 +4866,14 @@ public class Mainframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblSearchDeprecatedhandleMouseClickOnLabel
 
+    private void txtMaxSplitLevelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaxSplitLevelsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaxSplitLevelsActionPerformed
+
+    private void txtThumbnailheightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThumbnailheightActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtThumbnailheightActionPerformed
+
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
   }// GEN-LAST:event_cmdSetTargetFolderActionPerformed
@@ -4982,7 +4978,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludeemptybooks;
     private javax.swing.JCheckBox chkIndexComments;
     private javax.swing.JCheckBox chkLanguageAsTag;
-    private javax.swing.JCheckBox chkMinimizeChangedFiles;
     private javax.swing.JCheckBox chkNoCoverResize;
     private javax.swing.JCheckBox chkNoGenerateAuthors;
     private javax.swing.JCheckBox chkNoGenerateSeries;
@@ -5102,7 +5097,6 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblMaxbeforesplit;
     private javax.swing.JLabel lblMaxsummarylength;
     private javax.swing.JLabel lblMinBooksToMakeDeepLevel;
-    private javax.swing.JLabel lblMinimizeChangedFiles;
     private javax.swing.JLabel lblNoCoverResize;
     private javax.swing.JLabel lblNoGenerateAuthors;
     private javax.swing.JLabel lblNoGenerateSeries;

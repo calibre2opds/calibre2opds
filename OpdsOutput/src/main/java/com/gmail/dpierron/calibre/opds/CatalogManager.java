@@ -1,13 +1,16 @@
 package com.gmail.dpierron.calibre.opds;
 
 /**
+ *              CatalogManager
+ *              ~~~~~~~~~~~~~~
  * Class to store context about the current Catalog that is being generated,
- * and to provide methods for manipulating Catalog information.
+ * and to provide methods for manipulating Catalog generic information.
  *
  * NOTE:  As there should only ever be one instance of this class all global
  *        variables and methods are declared static
  */
 import com.gmail.dpierron.calibre.cache.CachedFile;
+import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
@@ -15,9 +18,10 @@ import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
-import com.gmail.dpierron.tools.i18n.Localization;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
@@ -27,30 +31,52 @@ import java.util.*;
 
 public class CatalogManager {
   private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
-  private static File generateFolder;
+
+  //-----------------------------------------
+  private static final boolean syncLog = true;      // Set to true to get a log of the file copy process
+  //-----------------------------------------         (If set false, code is optimised out by compiler)
+
   public static BookFilter featuredBooksFilter;
+
   // TODO Does not seem to be used any more - remove it?
   // private static List<CachedFile> listOfFilesToCopy;
+
   // The list of non-image files that need to be copied from the
   // source library to the target library
   private static List<String> listOfLibraryFilesToCopy;
-  // The lsit of image files that need to ce copied from the source library
+
+  // The list of image files that need to ce copied from the source library
   private static Map<String, CachedFile> mapOfImagesToCopy;
+
   // TODO:  Itimpi:  Does not seem to be needed any more?
   // private static Map<String, Book> mapOfBookByPathToCopy;
   private static Map<String, String> mapOfCatalogFolderNames;
+
   // List of file in catalog that are unchanged
   // TODO - Not yet used - intended to help with optimisation
   private static List<CachedFile> listOfUnchangedCatalogFiles;
+
   private static String securityCode;
+  private static String securityCodeAndSeparator;
+
   private static String initialUrl;
+
+  private static CachedFile libraryFolder; // Folder holding the Calibre library
+  private static int libraryFolderPathLength;
+  private static File generateFolder;      // Location where catalog is generated
+  private static int generateFolderPathLength;
+  private static File catalogFolder;       // Location where catalog is to be placed
+  private static int catalogFolderPathLength;
+  private static File targetFolder;        // Location where final catalog will be copied to (if required)
+  private static int targetFolderPathLength;
+  private static PrintWriter syncLogFile;  // File to be used for the Sync log
+
 
   public static HtmlManager htmlManager;
   public static ThumbnailManager thumbnailManager;
   public static ImageManager coverManager;
   public static CatalogCallbackInterface callback;
   public static SecurityManager securityManager;
-  public static ConfigurationManager configurationManager;
   public static ConfigurationHolder currentProfile;
   // This is the date format used within the book details.
   // At the moment it is either a full date or jsut the year
@@ -82,6 +108,8 @@ public class CatalogManager {
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
 
+
+
     // TODO  Decide if these should be conditional or just done every time!
     if (htmlManager == null)      htmlManager = new HtmlManager();
     if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
@@ -95,7 +123,11 @@ public class CatalogManager {
 
 
   public static void reset() {
+    libraryFolder = null;
     generateFolder = null;
+    targetFolder = null;
+    catalogFolder = null;
+    syncLogFile = null;
     featuredBooksFilter = null;
     // listOfFilesToCopy = new LinkedList<CachedFile>();
     listOfLibraryFilesToCopy = new LinkedList<String>();
@@ -116,10 +148,21 @@ public class CatalogManager {
     customCatalogsFilters = null;
     JDOMManager.reset();
     securityCode = "";
+    securityCodeAndSeparator = null;
   }
 
   public static String getSecurityCode() {
+    if (securityCode == null) {
+      securityCode = CatalogManager.getSecurityCode();
+    }
     return securityCode;
+  }
+
+  public static String getSecurityCodeAndSeparator() {
+    if (securityCodeAndSeparator == null) {
+      securityCodeAndSeparator = securityCode + (securityCode.length() == 0 ? "" : Constants.SECURITY_SEPARATOR);
+    }
+    return securityCodeAndSeparator;
   }
 
   public static String getInitialUr() {
@@ -129,24 +172,126 @@ public class CatalogManager {
    * Get the current catalog folder
    * @return
    */
+
+  /**
+   * We always generate into a temporary folder
+   *  We need to create one if we do not already have one setup
+   *
+   * @return
+   */
   public static File getGenerateFolder() {
+
+    if (generateFolder == null) try {
+      //  Initialise area for generating the catalog files
+      File temp = File.createTempFile("calibre2opds", "");
+      String tempPath = temp.getAbsolutePath();
+      temp.delete();  // Remove file just created as we are going to create a folder there instead
+      // See if user has specified a specific location for the TEMP folder
+      String tempDirectory = System.getenv("CALIBRE2OPDS_TEMP");
+      if (Helper.isNotNullOrEmpty(tempDirectory)) {
+        tempPath = tempDirectory + Constants.FOLDER_SEPARATOR + temp.getName();
+      }
+      generateFolder = new File(tempPath);
+      if (logger.isTraceEnabled())
+        logger.trace("generateFolder set to " + generateFolder);
+      generateFolder.mkdir();
+      generateFolder.deleteOnExit();
+      generateFolderPathLength = getGenerateFolder().getAbsolutePath().length();
+      logger.info("Temporary Files folder: " + generateFolder.getAbsolutePath());
+    } catch (IOException e) {
+      // Do not believe this is possible
+      // If it happens we need to abort the run!
+      logger.error("Unable to create temp folder");
+      System.exit(-8);
+    }
     return generateFolder;
   }
 
-  /**
-   * Set the catalog folder given the parth to the parent
-   * The name takes into account the configuration settings and mode
-   * This is really just the path to where the temporary files are generated
-   * @param parentfolder
-   */
-  public static void setGenerateFolder(File parentfolder) {
-//    generateFolder = new File(parentfolder, getCatalogFolderName());
-    generateFolder = parentfolder;
-    if (!generateFolder.exists()) {
-      generateFolder.mkdirs();
-    }
+  public static int getGenerateFolderpathLength() {
+    assert generateFolderPathLength != 0;
+    return generateFolderPathLength;
   }
 
+  /**
+   * Get the library folder associated with the current catalog generation
+   *
+   * @return
+   */
+  public static CachedFile getLibraryFolder() {
+  if (libraryFolder == null) {
+    libraryFolder = CachedFileManager.addCachedFile(currentProfile.getDatabaseFolder());
+    libraryFolderPathLength = libraryFolder.getAbsolutePath().length();
+  }
+  return libraryFolder;
+  }
+
+  public static int getLibraryFolderPathLength() {
+    assert libraryFolderPathLength != 0;
+    return libraryFolderPathLength;
+  }
+
+  /**
+   * Get the target folder for the current catalog generation
+   *
+   * @return
+   */
+  public static File getTargetFolder() {
+    if (targetFolder == null) {
+      targetFolder = currentProfile.getTargetFolder();
+      targetFolderPathLength =  targetFolder == null ? 0 : targetFolder.getAbsolutePath().length();
+    }
+    return targetFolder;
+  }
+
+  public static int getTargetFolderPathLength() {
+    assert targetFolderPathLength != 0;
+    return targetFolderPathLength;
+  }
+  /**
+   * Only used in Nook mode!
+   */
+  public static void setTargetFolder(File f) {
+    assert currentProfile.getDeviceMode().equals(DeviceMode.Nook);
+    targetFolder = f;
+    targetFolderPathLength = targetFolder.getAbsolutePath().length();
+  }
+
+  public static boolean getSyncLog() {
+    return syncLog;
+  }
+
+  private static PrintWriter getSyncLogFile() {
+    if (! syncLog) return null;
+    if (syncLogFile == null) try {
+      syncLogFile = new PrintWriter(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
+    } catch (IOException e) {
+      // This should not happen
+      logger.error("Unable to create SyncLog File");
+      System.exit(-7);
+    }
+    return syncLogFile;
+  }
+
+  /**
+   * Print a line if sync loggining is active
+   * Accepts formatting parameters like a printf method
+   *
+   * @param s     formatting string/fixed text
+   * @param args  (optionla) arguments to use with formatting
+   */
+  public static void syncLogPrintln(String s, Object ... args ) {
+    if (syncLog) {
+      getSyncLogFile().print(String.format(s,args));
+      getSyncLogFile().println();
+    }
+    return;
+  }
+
+  public static void syncLogClose() {
+    if (syncLogFile != null) {
+      syncLogFile.close();
+    }
+  }
   /**
    * Get the name of the catalog folder.
    * It will take into account the current mode if relevant
@@ -159,6 +304,29 @@ public class CatalogManager {
       return  ConfigurationManager.getCurrentProfile().getCatalogFolderName();
   }
 
+  /**
+   * Get the location where the generated catalog must be copied to
+   *
+   * @return
+   */
+  public static File getCatalogFolder() {
+    return catalogFolder;
+  }
+  /**
+   * Set the location where the generated catalog must be copied to
+   *
+   * @param folder
+   */
+  public static void setCatalogFolder(File folder)
+  {
+    catalogFolder = folder;
+    catalogFolderPathLength = catalogFolder.getAbsolutePath().length();
+  }
+
+  public static int getCatalogFolderPathLength() {
+    assert catalogFolderPathLength != 0;
+    return catalogFolderPathLength;
+  }
   /**
    *
    * @return
@@ -321,7 +489,6 @@ public class CatalogManager {
     }
     mapOfCatalogFolderNames.put(catalogFileName, folderName);
     File result = new File(getGenerateFolder(), catalogFileName);
-//    File result = new File(catalogFileName);
     return result;
   }
 
@@ -430,7 +597,78 @@ public class CatalogManager {
     File sizeFile = new File(filename);
     return false;
   }
-  // Collect some information about the RAM usage while running
+
+  /**
+   * Check if specified file different in generate and target folders.
+   *
+   * Ensures that there are entries in the cache for these files.
+   *
+   * The following checks are made as part of determining if the
+   * files are iendtical:
+   * - The file must exist in both locations
+   * = The sizes must be the same
+   * - The CRC's must match
+   *
+   * If these criteria are saitisfied then the 'Changed' attribute is
+   * cleared on the cache entry for both sourc and target.
+   *
+   * @param sourcefile
+   * @return
+   */
+  public static boolean isSourceFileSameAsTargetFile(CachedFile sourcefile, CachedFile targetfile) {
+
+    // Assumptions we should be able to make
+    assert sourcefile != null;
+    assert sourcefile.exists() == true;
+    assert targetfile != null;
+
+    // If target does not exist then they cannot be the same
+    // (even if the generate file appears unchanged
+    if (! targetfile.exists()) {
+      assert targetfile.isChanged() == true;
+      return false;
+    }
+
+    // See if we already know they match
+    if (! sourcefile.isChanged()) {
+      targetfile.setChanged(false);
+    }
+    if (! targetfile.isChanged()) {
+      return true;
+    }
+
+    // Must be different if length changed
+    if (sourcefile.length() != targetfile.length()) {
+      assert targetfile.isChanged() == true;
+      return false;
+    }
+
+    // If length appears identical need to check CRC
+    targetfile.setChanged(sourcefile.getCrc() != targetfile.getCrc());
+    return (targetfile.isChanged() == false);
+  }
+
+  /**
+   *
+   * Check if specified file different in generate and catalog folders.
+   * The filename rovided should be the path relative to the folders
+   * in question and not include the path itself.
+   *
+   * Uses isGenerateFileSameAsTargetFile() supplying catalog folder as target.
+   *
+   * @param filename
+   * @return
+   */
+  public static boolean isGenerateFileSameAsCatalogFile(String filename) {
+    // Create absolute path entries and ensure theya re in the cache
+    CachedFile generateFile = CachedFileManager.addCachedFile(CatalogManager.getGenerateFolder().getAbsolutePath() + File.separator + filename);
+    CachedFile catalogFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder().getAbsolutePath() + File.separator + filename);
+    assert generateFile != null;
+    assert catalogFile != null;
+    return isSourceFileSameAsTargetFile(generateFile, catalogFile);
+  }
+
+    // Collect some information about the RAM usage while running
   private static String ramPoolMeasurement[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
   private static String ramPoolName[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];
   private static String ramPoolType[] = new String[ManagementFactory.getMemoryPoolMXBeans().size()];

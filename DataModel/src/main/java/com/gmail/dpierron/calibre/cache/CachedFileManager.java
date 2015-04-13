@@ -46,6 +46,10 @@ public class CachedFileManager {
    * @return null if not present, object otherwise
    */
   public static CachedFile inCache(CachedFile cf) {
+    if (cf == null) {
+      if (logger.isTraceEnabled()) logger.trace("inCache(cf) - unexpected null parameter");
+      return null;
+    }
     CachedFile cf_result = cachedFilesMap.get(cf.getPath());
     if (logger.isTraceEnabled())  logger.trace("inCache=" + (cf_result != null) + ": " + cf.getPath());
     return cf_result;
@@ -58,6 +62,10 @@ public class CachedFileManager {
    * @return null if not present, object otherwise
    */
   public static CachedFile inCache(File f) {
+    if (f == null) {
+      if (logger.isTraceEnabled()) logger.trace("inCache(f) - unexpected null parameter");
+      return null;
+    }
     CachedFile cf_result = cachedFilesMap.get(f.getPath());
     if (logger.isTraceEnabled())  logger.trace("inCache=" + (cf_result != null) + ": " + f.getPath());
     return cf_result;
@@ -72,9 +80,13 @@ public class CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public static CachedFile addCachedFile(CachedFile cf) {
-    String path = cf.getPath();
+    if (cf == null) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(cf) - unexpected null parameter");
+      return null;
+    }
     CachedFile cf2 = inCache(cf);
     if (cf2 == null) {
+      String path = cf.getPath();
       cf2 = new CachedFile(path);
       cachedFilesMap.put(path, cf2);
       if (logger.isTraceEnabled())  logger.trace("Added CachedFile: " + path);
@@ -91,6 +103,10 @@ public class CachedFileManager {
    * @return A CachedFile object for the given path
    */
   public static CachedFile addCachedFile(File f) {
+    if (f == null) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(f) - unexpected null parameter");
+      return null;
+    }
     String path = f.getPath();
     CachedFile cf = inCache(f);
     if (cf == null) {
@@ -101,16 +117,54 @@ public class CachedFileManager {
     return cf;
   }
 
-
+  /**
+   *
+   * @param filename
+   * @return
+   */
+  public static CachedFile addCachedFile (String filename) {
+    if (Helper.isNullOrEmpty(filename)) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(filename) - unexpected null parameter");
+      return null;
+    }
+    return addCachedFile(new File(filename));
+  }
   /**
    * Add a file to the file cache that is a source file
    *
    * @param parent Folder that will contain the file
-   * @param child  Filename
+   * @param childname  Filename
    * @return CachedFile object corresponding to file
    */
-  public static CachedFile addCachedFile(File parent, String child) {
-    return addCachedFile(new File(parent, child));
+  public static CachedFile addCachedFile(File parent, String childname) {
+    if (Helper.isNullOrEmpty(parent) || Helper.isNullOrEmpty(childname)) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(parent,childname) - unexpected null parameter");
+      return null;
+    }
+    return addCachedFile(new File(parent, childname));
+  }
+
+  public static CachedFile addCachedFile(String parentname, File childfile) {
+    if (Helper.isNullOrEmpty(parentname) || Helper.isNullOrEmpty(childfile)) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(parent,childname) - unexpected null parameter");
+      return null;
+    }
+    return addCachedFile(new File(parentname, childfile.getName()));
+  }
+
+  /**
+   * Add a file to the cache
+   * @param parentname
+   * @param childname
+   * @return
+   */
+  public static CachedFile addCachedFile(String parentname, String childname) {
+    if (Helper.isNullOrEmpty(parentname) || Helper.isNullOrEmpty(childname)) {
+      if (logger.isTraceEnabled()) logger.trace("addCachedFile(parentname,childname) - unexpected null parameter");
+      return null;
+    }
+
+    return addCachedFile(new File(parentname,childname));
   }
 
   /**

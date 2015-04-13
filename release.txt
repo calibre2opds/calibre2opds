@@ -37,20 +37,14 @@ Nore detail can be found in many cases on the calibre2opds Issue register
 here is not a committment that it will appear, but merely that it is under consideration.
 User are encouraged to add comments to the relevant issues in the Issue Register on their views.
    -  Improve/Extend localizations.
-   -  #627926  Publish mode limiting formats allowed (will be fixed by #c2o-93)
    -  #c2o-26: Introduce a carousel mode for the book pages
    -  #c2o-29: Generate a recent books RSS-compatible catalog
    -  #c2o-38: Is it possible to generate a flat display for catalogues
     - #c2o-48: Generate the full-text search HTML page dynamically
-    - #c2o-59: Use Calibre library_sort field when sorting books
     - #c2o-62: Unfriendly error message when problem with Search in custom catalogs
-    - #c2o-63: Allow for authors to be displayed like in Calibre
-    - #c2o-66: Custom catalog tab not correctly reset on switching profiles
     - #c2o-74: Goto Page option in HTML catalogs
     - #c2o-76: Add context sensitive links to help (documentation)
     - #c2o-82: Test option for Saved Searches/ Custom Catalogs
-    - #c2o-86: Incorrect Mime type for FB2 files (will be fixed by #c2o-93)
-    - #c2o-90: Make Custom Catalogs setting easier to edit manually in XML
     - #c2o-94: Trook compatibility (lack of Nook+Trook hindering investigation)
     - #c2o-96: Add some runtime stats on Search database
     - #c2o-100: Uninstall does not work under Windows 7
@@ -58,8 +52,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-103: Goodreads URL (by Goodreads ID when available)
     - #c2o-105: Add a download link to the 'group' pages
     - #c2o-107: Speed up All Books phase of catalog generation
-    - #c2o-108: Omit download section for books with no available download
-    - #c2o-109: Improve navigation links in pages
     - #c2o-115: Send to Readmill Library
     - #c20-125: Add Publishers section to generated catalog
     - #c20-139: Include the .opf files when copying the library in "Publish" mode
@@ -73,12 +65,11 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-173: Make authors, series and tags into active links in book details
     - #c20-175: Set logging level via GUI
     - #c2o-180: Indicate on completion dialog if warnings logged
-    - #c2o-188: Allow custom external URLs
     - #c2o-189: Allow inclusion of only regex/wildcard tags to tag catalog
     - #c2o-200: Improve GUI validation for Custom Catalogs
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
-    - #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart
     - #c2o-230: Favicon for Library catalog URL
+    - #c20-243: Allow custom icons to be used with Custom Catalog entries 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -97,9 +88,15 @@ Usefule links for tracking changes are:
   Change History: http://code.google.com/p/calibre2opds/source/list
   
 v3.5 
-    - No changes/fixes yet included
-
-v3.4 (28th March 2015) Rev 336
+    - Upgrade versions of components used unternally by calibre2opds:
+      	junit		4.7	-> 4.12
+      	sqlitejdbc	3.6.17.1-> 3.8.7
+    - Change: Choosing to use thumbnails as covers no longer forces resized cover images to be removed.
+    - Change: Removed option to minimize Changed Files as program logic now tries to do this anyway. 
+    - Change: performance Optimization to avoid generating HTML files that are known to be unchanged since last run
+    - Fix:    #c2o-242: Publish mode does not let you continue if the destination folder does not exist 
+    
+v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase
     - Change: Checkbox for generating external links moved to tab defining them as more logical place.
@@ -107,10 +104,12 @@ v3.4 (28th March 2015) Rev 336
               standardixation process.   Gives error message on browsers that do not support the database capability.
     - Change: Improved German Localization (thanks to Kai Raven)
     - Change: Progress dialog now properly centered on main Calibre2opds window rather than top left being entered
-    - Change: Initali dialog now centered on the screen.
+    - Change: Initial dialog now centered on the screen.
     - New:    Option to view File Sync log added to Tools menu.  Can help with debugging caching issues.
     - New:    When generating the active step is now highlighted in the progress dialog in Red to make it more obvious
     - Fix:    A Null pointer error if title_sort not set (should not be possible with current Calibre releases)
+    - Fix:    #c2o-86:  Incorrect Mime type for FB2 files (actually fixed by #c2o-93)
+    - New:    #c2o-90:  Make Custom Catalogs setting easier to edit manually in XML
     - New:    #c2o-93:  Make supported formats and Mime type extendable by users.  Details of how to do this at:
               http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize#Extend_list_of_supported_formats
     - Fix:    #c2o-204: Problem navigating to author from an author series in HTML catalog
@@ -133,6 +132,7 @@ v3.4 (28th March 2015) Rev 336
     - Fix:  - #c2o-224: "Tags to omit from Tags catalog" ignores "Lang:" tags when "Language as Tag" is checked
     - Fix:    #c2o-225: "Do not include the 'About calibre2opds' entry" should also omit credits at the bottom of index.html
     - Fix:    #c2o-226: GUI screen size is too tall on 768 pix screens with Windows taskbar unhidden (see also #c2o-232).
+    - Fix:    #c2o-227: New "Custom Fields to include in Book Details" option is only activated after restart
     - Fix:    #c2o-228: Fields in "Custom Fields to include in Book Details" option should be bold in the generated book details page 
     - Fix:    #c2o-229: Spacing between fields in Book details should be reduced
     - fix:    #c2o-231: Split tags doesn't work
@@ -149,6 +149,8 @@ v3.4 (28th March 2015) Rev 336
 v3.3 (1st April 2014) Rev 274
     - Change:  Resized cover and thumbnail images are no longer generated as a specific phase,
                but are instead generated (if required) when creating the book details page
+    - New: #c2o-63:  Allow for authors to be displayed like in Calibre
+    - New: #c2o-109: Improve navigation links in pages
     - New: #c20-144: Remove redundant folder names in relative links
     - New: #c2o-147: Option to suppress selected tags in tags sub-catalog
     - New: #c2o-155: Allow Calibre Custom Column values to be displayed in Book Details
@@ -175,6 +177,7 @@ v3.3 (1st April 2014) Rev 274
     - Fix: #c2o-185: Silent batch mode does not work on Windows
     - Fix: #c2o-186: Problem when author surname shorter than value of split-by-letter level
     - Fix: #c2o-187: Option for destination to only be catalog in Publish mode disabled
+    - New: #c2o-188: Allow custom external URLs
     - Fix: #c2o-190: Display author/book title sort fields don't work
     - Fix: #c2o-191: Tags to omit is not working properly
     - Fix: #c2o-192: Broken links for omitted tags in Book Details
@@ -200,9 +203,12 @@ v3.2 (released 6th October 2013)
     - New: Added counts to some of the generation progress lines where it made sense (authors, tags, series etc)
     - Fix: #c2o-18: Re-organise GUI fields amongst the various tabs
                     (in particular move Featured Books fields to Custom Catalogs tab)
+    - Fix: #c2o-59:  Use Calibre library_sort field when sorting books
+    - Fix: #c2o-66:  Custom catalog tab not correctly reset on switching profiles
     - Fix: #c2o-85:  Sorting in the All Books catalog should ignore case
     - Fix: #c2o-91:  Setting catalog folder to  root (/) is not treated as an error
     - New: #c2o-97:  Context sensitive help on configuration tabs
+    - New: #c2o-108: Omit download section for books with no available download
     - Fix: #c2o-110: Remove the display of the "Stop catalog generation Button" while other dialog displayed on top
     - Fix: #c2o-111: The "All Books" section within an author not sorted alphabetically
     - New: #c2o-112: Do not delete .htaccess files from generated catalog

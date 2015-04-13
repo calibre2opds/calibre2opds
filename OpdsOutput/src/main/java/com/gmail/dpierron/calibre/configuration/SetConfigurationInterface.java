@@ -37,8 +37,6 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setIncludedFormatsList(String value);
 
-  public void setMinimizeChangedFiles(Boolean value);
-
   public void setBookDetailsCustomFields(String value);
 
   public void setBookDetailsCustomFieldsAlways(Boolean b);

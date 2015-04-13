@@ -151,8 +151,10 @@ public class guiField {
           if (s.length() > 0)   setValue = new File(s);
         } else if (Integer.class.equals (paramType)) {
           setValue = getValue(s);
+        } else if (Locale.class.equals(paramType)) {
+          setValue = s.length() == 0 ? "en" : s;
         } else {
-          logger.error("storeValue: Unexpected paramType for '" + setMethodName + "'");
+          logger.error("storeValue: Unexpected paramType for '" + setMethodName + "', type=" + paramType.getClass().getName());
           return;
         }
       } else {

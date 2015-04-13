@@ -417,14 +417,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_BookDetailsCustomFieldsAlways, value);
   }
 
-  public Boolean getMinimizeChangedFiles() {
-    Boolean b = getBoolean(PROPERTY_NAME_MINIMIZECHANGEDFILES);
-    return (b == null) ? defaults.getMinimizeChangedFiles() : b;
-  }
-  public void setMinimizeChangedFiles(Boolean minimizeChangedFiles) {
-    setProperty(PROPERTY_NAME_MINIMIZECHANGEDFILES, minimizeChangedFiles);
-  }
-
   public Boolean isOnlyCatalogAtTargetReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET);
   }

@@ -109,8 +109,6 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getBrowseByCoverWithoutSplit();
 
-  public Boolean getMinimizeChangedFiles();
-
   public Boolean getSplitByAuthorInitialGoToBooks();
 
   public Boolean getLanguageAsTag();

@@ -51,10 +51,6 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return "EPUB, PDF, RTF, TXT, PRC, PDB, MOBI, LRF, LRX, FB2";
   }
 
-  public Boolean getMinimizeChangedFiles() {
-    return true;
-  }
-
   public Boolean getExternalIcons() {
     return true;
   }

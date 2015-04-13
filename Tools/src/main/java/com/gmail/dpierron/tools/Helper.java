@@ -1378,6 +1378,11 @@ public class Helper {
     return sb.toString();
   }
 
+  // All possible locales
+  private final static Locale[] availableLocales = Locale.getAvailableLocales();
+  // Saved subset that we have actually used for faster searching
+  // (can have duplicates under different length keys)
+  private static HashMap<String,Locale> usedLocales = new HashMap<String, Locale>();
   /**
    * Get the local that corresponds to the provided language string
    * The following assumptions are made about the supplied parameter:
@@ -1391,19 +1396,27 @@ public class Helper {
    * @return  Locale
    */
   public static Locale getLocaleFromLanguageString(String lang) {
+    if (usedLocales.containsKey(lang)) {
+      return usedLocales.get(lang);
+    }
     if (lang != null && lang.length() > 1) {
-      for (Locale l : Locale.getAvailableLocales()) {
+      for (Locale l : availableLocales) {
          switch (lang.length()) {
            //  Note te case of a 2 character lang needs special treatment - see Locale code for getLangugage
-           case 2:  String s = l.getLanguage();
+           case 2:  String s = l.toString();
+                    String ll = l.getLanguage();
+                    String lt = l.toLanguageTag();
                     // Work around a Java 8 issue where an empty entry is at start of list
-                    if (s.length() < 2) break;
-                    if (s.equals(new Locale(lang).getLanguage())) return l;
-                    break;
-           case 3:  if (l.getISO3Language().equalsIgnoreCase(lang)) return l;
-                    break;
-           default: if (l.getDisplayLanguage().equalsIgnoreCase(lang)) return l;
-                    break;
+                    if (s.length() < 2 || s.length() > 2) break;    // Ignore entries that are not 2 characters
+                    if (! s.equalsIgnoreCase(lang)) break;
+                    usedLocales.put(lang,l);
+                    return l;
+           case 3:  if (! l.getISO3Language().equalsIgnoreCase(lang)) break;
+                    usedLocales.put(lang,l);
+                    return l;
+           default: if (! l.getDisplayLanguage().equalsIgnoreCase(lang))  break;
+                    usedLocales.put(lang,l);
+                    return l;
         }
       }
     }

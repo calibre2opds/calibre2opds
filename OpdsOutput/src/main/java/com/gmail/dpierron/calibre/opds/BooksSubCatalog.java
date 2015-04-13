@@ -596,7 +596,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
         if (logger.isTraceEnabled()) logger.trace("addImageLink: skipping creating image - book already done previously");
       } else {
         // We ned to generate if it is missing, the size has changed or the cover file is newer than te resized file.
-        if (resizedImageFile.exists() && ! iManager.hasImageSizeChanged() && resizedImageFile.lastModified() > calibreCoverFile.lastModified()) {
+        if (! iManager.hasImageSizeChanged()
+        &&  resizedImageFile.exists()
+        && (resizedImageFile.lastModified() > calibreCoverFile.lastModified())) {
           if (logger.isTraceEnabled()) logger.trace("addImageLink: resizedCover exissts - not to be regenerated");
         } else {
           if (logger.isTraceEnabled()) {
@@ -717,9 +719,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
           continue;
         }
         // c2o-168 - Omit Counts if MinimizeChangedFiles set
+        // TODO:  Check this out now minimizeChangedFiles setting emoved
+        // TODO:  Initial thinking is include counts again.
+ /*
         if (! currentProfile.getMinimizeChangedFiles()) {
           booksText = Summarizer.getBookWord(DataModel.getMapOfBooksByAuthor().get(author).size());
         }
+ */
         // Authors for cross-references are always held at top level !
         // TODO Perhaps consider whether level should be taken into account?
         filename = AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML;
@@ -743,9 +749,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
           filename = TagsSubCatalog.getTagFolderFilenameNoLevel(tag) + Constants.PAGE_ONE_XML;
           if (nbBooks > 1) {
             // c2o-168 - Omit Counts if MinimizeChangedFiles set
-            if (! currentProfile.getMinimizeChangedFiles()) {
-              booksText = Summarizer.getBookWord(nbBooks);
-            }
+            // TODO:  Rethink this in light of minimizechangedfiles being removed
+            // TODO:  Probably best to act as if it had been specified?
+//            if (! currentProfile.getMinimizeChangedFiles()) {
+//              booksText = Summarizer.getBookWord(nbBooks);
+//            }
             entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
                 Localization.Main.getText("bookentry.tags", booksText, tag.getName())));
             tag.setReferenced();
@@ -761,9 +769,11 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (nbBooks > 1) {
         BookRating rating = book.getRating();
         // c2o-168 - Omit Counts if MinimizeChangedFiles set
-        if (! currentProfile.getMinimizeChangedFiles()) {
-          booksText = Summarizer.getBookWord(nbBooks);
-        }
+        // TODO:  Revisit assumption since minimizeChangedFiles option removed
+        // TODO:  Probably best to act as if it were set?
+//        if (! currentProfile.getMinimizeChangedFiles()) {
+//          booksText = Summarizer.getBookWord(nbBooks);
+//        }
         // Ratings are held at level
         filename = getCatalogBaseFolderFileNameId(Constants.RATED_TYPE, rating.getId().toString()) + Constants.PAGE_ONE_XML;
         entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),

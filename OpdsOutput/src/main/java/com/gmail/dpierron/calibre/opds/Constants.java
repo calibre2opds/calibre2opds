@@ -66,6 +66,10 @@ public class Constants {
   public final static String CALIBRE_COVER_FILENAME = "cover.jpg";
   public final static String DEFAULT_IMAGE_FILENAME = "default_image.jpg";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "thumbnail.jpg";
+  public final static String CATALOG_XSL = "catalog.xsl";
+  public final static String HEADER_XSL = "header.xsl";
+  public final static String FULLENTRY_XSL = "fullentry.xsl";
+
   // URL's for links from Help menu
   public final static String HOME_URL = "http://calibre2opds.com/";
   public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
@@ -138,6 +142,9 @@ public class Constants {
       "home.png",
       MIMETYPES_FILENAME,
       DEFAULT_IMAGE_FILENAME,
+      CATALOG_XSL,
+      FULLENTRY_XSL,
+      HEADER_XSL,
       // External image files for catalog sections
       Icons.ICONFILE_RECENT,
       Icons.ICONFILE_AUTHORS,

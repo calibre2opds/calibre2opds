@@ -386,13 +386,15 @@ public class FeedHelper {
   }
 
   private static Element getUpdatedTag() {
-    if (!ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
-      Calendar c = Calendar.getInstance();
-      return getUpdatedTag(c);
-    } else {
+    // TODO:  Revisit sinc minimizChangedFiles removed as an option
+    // TODO:  prbably best to act as if it was set?
+//    if (!ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
+//      Calendar c = Calendar.getInstance();
+//      return getUpdatedTag(c);
+//    } else {
       // DP: return fake updated time - Oh, my birthday, what a coincidence ;)
       return JDOMManager.element("updated").addContent("1973-01-26T08:00:00Z");
-    }
+//    }
   }
 
   private static String getDateAsIsoDate(Date d) {

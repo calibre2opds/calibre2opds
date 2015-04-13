@@ -26,9 +26,6 @@ import java.util.Locale;
 
 public class JDOMManager {
   private final static Logger logger = Logger.getLogger(JDOMManager.class);
-  private static final String CATALOG_XSL = "catalog.xsl";
-  private static final String HEADER_XSL = "header.xsl";
-  private static final String FULLENTRY_XSL = "fullentry.xsl";
 
   private static JDOMFactory factory;
   private static XMLOutputter outputter;
@@ -60,7 +57,7 @@ public class JDOMManager {
   public static Transformer getHeaderTransformer() {
     if (headerTransformer == null) {
       try {
-        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(HEADER_XSL)));
+        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
         setIntroParameters(headerTransformer);
         // Add book count if not generating ALl Books (which gives count if present)
@@ -136,19 +133,21 @@ public class JDOMManager {
     // we have not elected to try and minimise the number of files changed each run
     // (it will still be added to the top page)
     // TODO:  decide if we never want this on each page?
-    if (ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
+    // TODO:  Now that minimizechangedfiles removed need to rethink
+    // TODO:  Probably best to acti as if minimizechangedfiles had been set
+//    if (ConfigurationManager.getCurrentProfile().getMinimizeChangedFiles()) {
       catalogTransformer.setParameter("i18n.dateGenerated","");
-    } else {
-      String dateGenerated =
-          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
-      catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
-    }
+//    } else {
+//      String dateGenerated =
+//          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
+//      catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
+//    }
   }
 
   public static Transformer getCatalogTransformer() {
     if (catalogTransformer == null) {
       try {
-        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(CATALOG_XSL)));
+        catalogTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.CATALOG_XSL)));
         setParametersOnCatalog(catalogTransformer);
         catalogTransformer.setParameter("programName", "");  // Set to empty for all pages except top level
       } catch (TransformerConfigurationException e) {
@@ -167,7 +166,7 @@ public class JDOMManager {
   public static Transformer getBookFullEntryTransformer() {
     if (bookFullEntryTransformer == null) {
       try {
-        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(FULLENTRY_XSL)));
+        bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.FULLENTRY_XSL)));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
         logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
@@ -185,7 +184,7 @@ public class JDOMManager {
   public static Transformer getMainCatalogTransformer() {
     if (mainTransformer == null) {
       try {
-        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(CATALOG_XSL)));
+        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.CATALOG_XSL)));
         setParametersOnCatalog(mainTransformer);
         setIntroParameters(mainTransformer);
       } catch (TransformerConfigurationException e) {
