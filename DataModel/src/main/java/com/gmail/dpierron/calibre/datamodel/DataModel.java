@@ -14,7 +14,9 @@ import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.*;
 
+import java.lang.Object;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -465,6 +467,21 @@ public class DataModel {
   }
 
 
+  public static Map<String, List<GenericDataObject>> splitObjectsByLetter(List<GenericDataObject> objs) {
+    Comparator<GenericDataObject> comparator = new Comparator<GenericDataObject>() {
+
+      public int compare(GenericDataObject o1, GenericDataObject o2) {
+        String title1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+        String title2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        return title1.compareTo(title2);
+      }
+    };
+
+    return splitByLetter(objs, comparator);
+
+  }
+
+
   public static Map<String, List<Book>> splitBooksByLetter(List<Book> books) {
     Comparator<Book> comparator = new Comparator<Book>() {
 
@@ -521,13 +538,28 @@ public class DataModel {
 
     Map<DateRange, List<Book>> splitByDate = new HashMap<DateRange, List<Book>>();
     for (Book book : books) {
-      DateRange range = DateRange.valueOf(book.getTimestamp());
+      DateRange range = DateRange.valueOf((book).getTimestamp());
       List<Book> list = splitByDate.get(range);
       if (list == null) {
         list = new LinkedList<Book>();
         splitByDate.put(range, list);
       }
       list.add(book);
+    }
+    return splitByDate;
+  }
+
+  public static Map<DateRange, List<GenericDataObject>> splitObjectsByDate(List<? extends GenericDataObject> objs) {
+
+    Map<DateRange, List<GenericDataObject>> splitByDate = new HashMap<DateRange, List<GenericDataObject>>();
+    for (GenericDataObject obj : objs) {
+      DateRange range = DateRange.valueOf(((Book)obj).getTimestamp());
+      List<GenericDataObject> list = splitByDate.get(range);
+      if (list == null) {
+        list = new LinkedList<GenericDataObject>();
+        splitByDate.put(range, list);
+      }
+      list.add(obj);
     }
     return splitByDate;
   }

@@ -125,7 +125,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       listauthors.remove(0);
       Element element;
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-      element = getAuthorEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author));
+      element = getDetailedEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author));
       assert element != null;
       if (element != null) {
         feed.addContent(element);
@@ -179,7 +179,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
           Author author = listauthors.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
           logger.debug("getAuthorEntry:" + author);
-          Element entry = getAuthorEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author)) ;
+          Element entry = getDetailedEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author)) ;
           if (entry != null) {
             result.add(entry);
             logger.debug("adding author to the TROOK database:" + author);
@@ -333,17 +333,24 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   /**
    *
    * @param pBreadcrumbs
-   * @param author
-   * @param authorbooks
+   * @param authorObject
+   * @param  opts   authorbooks
    * @return
    */
-  public Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
-    if (logger.isDebugEnabled())
-      logger.debug(pBreadcrumbs + "/" + author);
+  // public Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                  Object authorObject,
+                                  Object... opts) throws IOException  {
+
+    assert authorObject.getClass().equals(Author.class);
+    Author author = (Author)authorObject;
+    assert opts[0] != null && opts[0].getClass().equals(LinkedList.class);
+    List<Book> authorbooks = (List<Book>)opts[0];
+
+    if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + author);
 
     CatalogManager.callback.showMessage(pBreadcrumbs.toString());
-    if (!isInDeepLevel())
-      CatalogManager.callback.incStepProgressIndicatorPosition();
+    if (!isInDeepLevel()) CatalogManager.callback.incStepProgressIndicatorPosition();
 
     List listOfBooksInSeries = new LinkedList<Book>();
     List listOfBooksNotInSeries = new LinkedList<Book>();
@@ -364,7 +371,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     // sort  by title
     logger.debug("sort 'booksByThisAuthor' by title");
-    sortBooksByTitle(authorbooks);
+    BooksSubCatalog.sortBooksByTitle(authorbooks);
 
     if (Helper.isNullOrEmpty(author))  {
       return null;
@@ -407,12 +414,12 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
       // Make a link to the "allbooks entry" for this author
       AllBooksSubCatalog allbooksSubcatalog = new AllBooksSubCatalog(authorbooks);
-      sortBooksByTitle(authorbooks);
+      AllBooksSubCatalog.sortBooksByTitle(authorbooks);
       allbooksSubcatalog.setCatalogLevel(getCatalogLevel());
       allbooksSubcatalog.setCatalogFolder(filename);
       allbooksSubcatalog.setCatalogBaseFilename(filename + Constants.TYPE_SEPARATOR + Constants.ALLBOOKS_TYPE);
       Element entry = allbooksSubcatalog.getListOfBooks(breadcrumbs,
-                                                      null,           // derived from catalog properties
+                                                      allbooksSubcatalog.getBooks(),
                                                       true,
                                                       0,              // from start
                                                       Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getName()),
@@ -444,17 +451,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     logger.trace("getAuthorEntry  Breadcrumbs=" + pBreadcrumbs.toString());
 
     author.setDone();
-    return getListOfBooks(pBreadcrumbs,
-                          morebooks,
-                          true,           // Always in subDir
-                          0,              // from
-                          title,
-                          summary,
-                          urn,
-                          filename,
-                          SplitOption.DontSplit,        // Bug #716917 Do not split on letter
-                          // #751211: Use external icons option
-                          useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS,
-                          firstElements);
+    return getListOfBooks(pBreadcrumbs, morebooks, true,           // Always in subDir
+        0,              // from
+        title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
+        // #751211: Use external icons option
+        useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements);
   }
 }

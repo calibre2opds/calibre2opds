@@ -435,7 +435,7 @@ public class LevelSubCatalog extends SubCatalog {
         BooksSubCatalog booksSubCatalog = new BooksSubCatalog(books) {};
         booksSubCatalog.setCatalogLevel(getCatalogLevel());
         try {
-          booksSubCatalog.getBookEntry(pBreadcrumbs, book);
+          booksSubCatalog.getDetailedEntry(pBreadcrumbs, book);
           foundreference = true;
           assert book.isDone();
         } catch (Exception e) {
@@ -453,7 +453,7 @@ public class LevelSubCatalog extends SubCatalog {
         AuthorsSubCatalog authorsSubCatalog = new AuthorsSubCatalog(authorBooks);
         authorsSubCatalog.setCatalogLevel(getCatalogLevel());
         try {
-          authorsSubCatalog.getAuthorEntry(pBreadcrumbs, author, DataModel.getMapOfBooksByAuthor().get(author));
+          authorsSubCatalog.getDetailedEntry(pBreadcrumbs, author, DataModel.getMapOfBooksByAuthor().get(author));
           foundreference = true;
           assert author.isDone();
         } catch (Exception e) {
@@ -468,7 +468,7 @@ public class LevelSubCatalog extends SubCatalog {
         SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(DataModel.getMapOfBooksBySeries().get(series));
         seriesSubCatalog.setCatalogLevel(getCatalogLevel());
         try {
-          seriesSubCatalog.getSeriesEntry(pBreadcrumbs, series, null, false);
+          seriesSubCatalog.getDetailedEntry(pBreadcrumbs, series, null, Boolean.FALSE);
           foundreference = true;
           assert series.isDone();
         } catch (Exception e) {
@@ -488,7 +488,7 @@ public class LevelSubCatalog extends SubCatalog {
         TagsSubCatalog tagsSubCatalog = new TagListSubCatalog(DataModel.getMapOfBooksByTag().get(tag));
         tagsSubCatalog.setCatalogLevel(getCatalogLevel());
         try {
-          tagsSubCatalog.getTagEntry(pBreadcrumbs, tag, null, null);
+          tagsSubCatalog.getDetailedEntry(pBreadcrumbs, tag, null, null);
           foundreference = true;
           assert tag.isDone();
         } catch (Exception e) {
@@ -520,4 +520,13 @@ public class LevelSubCatalog extends SubCatalog {
     return FeedHelper.getCatalogEntry(title, urn, CatalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
 
   }
+
+
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                  Object obj,
+                                  Option... options) throws IOException {
+    assert false : "getDetailedEntry should never be called";
+    return null;
+  }
+
 }

@@ -6,10 +6,7 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Manages the localization of the messages in an application
@@ -36,12 +33,6 @@ public enum Localization {
    * english currentLocalizations
    */
   private ResourceBundle englishLocalizations;
-
-  /*
-   * all currentLocalizations.
-   * Loaded once to avoid reloads later.
-   */
-  private Vector<ResourceBundle> allLocalizations;
 
   /**
    * The name of the last loaded locale
@@ -77,9 +68,19 @@ public enum Localization {
     return englishLocalizations;
   }
 
+  /*
+   * all currentLocalizations we have loaded so far.
+   * Loaded once to avoid (expensive) reloads later.
+   */
+  private Map<String,ResourceBundle> loadedResourceBundles;
+
   /**
    * Get the bundle for a specific locale
    * NOTE Default loaded locale is not changed
+   *
+   * For performance reasons we cache resourcebundles for
+   * later use to avoid constant reloads from scratch.
+   *
    * @param language
    * @return
    */
@@ -88,13 +89,22 @@ public enum Localization {
     // We always want the English currentLocalizations loaded
     if (englishLocalizations == null)    {
       englishLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
+      if (loadedResourceBundles.get(Locale.ENGLISH.getISO3Language()) == null) {
+        loadedResourceBundles.put(Locale.ENGLISH.getISO3Language(), englishLocalizations);
+      }
     }
     // No need to load english currentLocalizations twice!
     assert englishLocalizations != null : "Program Error: English currentLocalizations should always have loaded OK";
     if (Helper.isNullOrEmpty(language) || language.equals(Locale.ENGLISH)) {
       localizations = englishLocalizations;
     } else {
-      localizations = getResourceBundle(localizationBundleName, language, true);
+      localizations = loadedResourceBundles.get(language.getISO3Language());
+      if (localizations == null) {
+        localizations = getResourceBundle(localizationBundleName, language, true);
+        if (! localizations.equals(englishLocalizations)) {
+          loadedResourceBundles.put(language.getISO3Language(), localizations);
+        }
+      }
     }
     return localizations;
   }
@@ -182,6 +192,8 @@ public enum Localization {
 
   /**
    * Get a given resource bundle corresponding to the specified locale.
+   * The caller can specify whether falling back to English is the
+   * desired result if there is no specific bundle for the locale.
    *
    * @param name
    * @param locale          Set to the locale we want.
@@ -224,16 +236,15 @@ public enum Localization {
       lastLocalLanguage = Locale.ENGLISH;
       if (currentLocalizations == null)  currentLocalizations = englishLocalizations;
     }
-    // No need to load english currentLocalizations twice!
     assert englishLocalizations != null : "Program Error: English currentLocalizations should always have loaded OK";
-    if (! language.equals(Locale.ENGLISH)) {
-      if (Helper.isNullOrEmpty(language)) {
-        currentLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
-      } else {
-        currentLocalizations = getResourceBundle(localizationBundleName, language, true);
-        lastLocalLanguage = language;
-      }
+
+    if (Helper.isNullOrEmpty(language)) {
+      currentLocalizations = getResourceBundle(localizationBundleName, Locale.ENGLISH, true);
+    } else {
+      currentLocalizations = getResourceBundle(localizationBundleName, language, true);
+      lastLocalLanguage = language;
     }
+
     localization_initialized = true;
   }
 

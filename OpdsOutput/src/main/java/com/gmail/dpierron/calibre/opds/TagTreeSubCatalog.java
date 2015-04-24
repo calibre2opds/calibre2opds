@@ -149,7 +149,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
       // it's a leaf, consisting of a single tag : make a list of books
       if (logger.isTraceEnabled()) logger.trace("getLevelOfTreeNode: it's a leaf, consisting of a single tag : make a list of books");
       String urn = Constants.INITIAL_URN_PREFIX + getCatalogType()+ level.getGuid();
-      result = getTagEntry(pBreadcrumbs, tag, urn, level.getId());
+      result = getDetailedEntry(pBreadcrumbs, tag, urn, level.getId());
       TrookSpecificSearchDatabaseManager.addTag(tag, result);
     } else {
       result = getLevelOfTreeNode(pBreadcrumbs, level, 0);

@@ -164,18 +164,24 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * Get the details for a specific tag
    *
    * @param pBreadcrumbs
-   * @param tag
-   * @param baseurn
-   * @param titleWhenCategorized
+   * @param tagObject
+   * @param opts   baseurn
+   *               titleWhenCategorized
    * @return
    * @throws IOException
    */
-  public Element getTagEntry(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
+  // public Element getTagEntry(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs, Object tagObject, Object... opts) throws IOException {
 
     assert pBreadcrumbs != null;
-    assert tag != null;
+    assert tagObject != null & tagObject.getClass().equals(Tag.class);
+    Tag tag = (Tag)tagObject;
+    assert opts[0] != null && opts[0].getClass().equals(String.class);
+    String baseurn = (String)opts[0];
+    if (opts[1] != null) assert opts[1].getClass().equals(String.class);
+    String titleWhenCategorized = (String)opts[1];
 
-    if (logger.isDebugEnabled()) logger.debug("getTagEntry: Entry (" + pBreadcrumbs + "/" + tag + ")");
+    if (logger.isDebugEnabled()) logger.debug("getObjectEntry: Entry (" + pBreadcrumbs + "/" + tag + ")");
 
     tag.setDone();
 
@@ -185,7 +191,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     }
     List<Book> books = getMapOfBooksByTag().get(tag);
     if (Helper.isNullOrEmpty(books)) {
-      if (logger.isDebugEnabled()) logger.debug("getTagEntry: Exit (no books fond for tag");
+      if (logger.isDebugEnabled()) logger.debug("getObjectEntry: Exit (no books fond for tag");
       return null;
     }
     // Tags are held at each level (i.e. not the top level)
@@ -203,8 +209,8 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       // specify that this is a deep level
       String summary = Localization.Main.getText("deeplevel.summary", Summarizer.getBookWord(books.size()));
       if (logger.isDebugEnabled()) {
-        logger.debug("getTagEntry: Making a deep level for tag " + tag);
-        logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
+        logger.debug("getObjectEntry: Making a deep level for tag " + tag);
+        logger.trace("getObjectEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       }
       // String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
       // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null);
@@ -223,8 +229,8 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       // try and list the items to make the summary
       String summary = Summarizer.summarizeBooks(books);
       if (logger.isDebugEnabled()) {
-        logger.debug("getTagEntry: making a simple book list for tag " + tag);
-        if (logger.isTraceEnabled()) logger.trace("getTagEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
+        logger.debug("getObjectEntry: making a simple book list for tag " + tag);
+        if (logger.isTraceEnabled()) logger.trace("getObjectEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       }
       // #c2o-212  Sort tag books by author
       if (currentProfile.getSortTagsByAuthor()) {
@@ -244,7 +250,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
                             filename,
                             splitOption, useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_TAGS : Icons.ICON_TAGS,
                             null);
-      if (logger.isDebugEnabled()) logger.debug("getTagEntry: Exit");
+      if (logger.isDebugEnabled()) logger.debug("getObjectEntry: Exit");
       return element;
     }
   }

@@ -9,8 +9,10 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
+import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -928,4 +930,402 @@ public abstract class SubCatalog {
                                         Localization.Main.getText("title.nextpage", pageNumber, maxPages));
 
   }
+
+  // TODO  GENERALISED SUB-CATALOG TYPE HANDLING
+
+  // TODO:           WORK IN PROGRESS !
+
+  // See if we can genearlise the cration of sub-catgalog pages to a genearlised
+  // treatment with a series of standardised methods implemented in each specific
+  // specific sub-catalog type.    This would have the huge advantage of greatly
+  // reducing the chance of errors in a particular type as well as making the
+  // maintenance of the types simpler.  It will also simplify adding new types.
+
+  // The method to be used to sort objects of this type
+/*
+  protected abstract void sortMethod(List<Object> obj);
+*/
+
+  /**
+   * Get a page withina sub-catalog
+   *
+   * @param pBreadcrumbs
+   * @param listobjects
+   * @param inSubDir
+   * @param from
+   * @param title
+   * @param summary
+   * @param urn
+   * @param pFilename
+   * @param splitOption
+   * @param icon
+   * @param firstElements
+   * @param options
+   * @return
+   * @throws IOException
+   */
+/*
+  protected Element getListOfObjects(Breadcrumbs pBreadcrumbs,
+      List<? extends GenericDataObject> listobjects,
+      boolean inSubDir,
+      int from,
+      String title,
+      String summary,
+      String urn,
+      String pFilename,
+      SplitOption splitOption,
+      String icon,
+      List<Element> firstElements,
+      Option... options) throws IOException {
+
+    if (logger.isDebugEnabled()) logger.debug("getListOfBooks: START");
+
+    // Special case of first time through when not all values set
+    assert listobjects != null;
+    // if (listobjects == null) listobjects = getBooks();
+    if (pFilename == null)  pFilename = getCatalogBaseFolderFileName();
+
+    //  Now some consistency checks
+
+    // Now get on with main processing
+    int catalogSize = listobjects.size();
+    if (logger.isDebugEnabled()) logger.debug("getListOfBooks:catalogSize=" + catalogSize);
+
+    if (from != 0) inSubDir = true;
+    if (Helper.isNotNullOrEmpty(pBreadcrumbs) &&  pBreadcrumbs.size() > 1) inSubDir = true;
+    if (inSubDir && icon.startsWith(Constants.CURRENT_PATH_PREFIX))
+      icon = Constants.PARENT_PATH_PREFIX + icon.substring(2);
+
+    // Work out any split options
+    // Fixes #716917 when applied to author books list
+    boolean willSplitByLetter;
+    boolean willSplitByDate;
+    if (splitOption == null) {
+      // ITIMPI: Null seems to be equivalent to SplitByLetter !
+      //         Might be better to replace calls by explicit value?
+      splitOption = SplitOption.SplitByLetter;
+      if (logger.isDebugEnabled()) logger.debug("getListOfBooks:splitOption=null.  Changed to SplitByLetter");
+    }
+    switch (splitOption) {
+      case Paginate:
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=Paginate");
+        willSplitByLetter = false;
+        willSplitByDate = false;
+        break;
+      case DontSplitNorPaginate:
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=DontSplitNorPaginate");
+        assert from == 0 : "getListBooks: DontSplitNorPaginate, from=" + from;
+        willSplitByLetter = false;
+        willSplitByDate = false;
+        break;
+      case DontSplit:
+        // Bug #716917 Do not split on letter (used in Author and Series book lists)
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=DontSplit");
+        assert from == 0 : "getListBooks: DontSplit, from=" + from;
+        willSplitByLetter = false;
+        willSplitByDate = false;
+        break;
+      case SplitByDate:
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=SplitByDate");
+        assert from == 0 : "getListBooks: splitByDate, from=" + from;
+        willSplitByLetter = checkSplitByLetter(splitOption, listobjects.size());
+        willSplitByDate = true;
+        break;
+      case SplitByLetter:
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=SplitByLetter");
+        assert from == 0 : "getListBooks: splitByLetter, from=" + from;
+        willSplitByLetter = checkSplitByLetter(splitOption, listobjects.size());
+        willSplitByDate = false;
+        break;
+      default:
+        // ITIMPI:  Not sure that this case can ever arise
+        //          Just added as a safety check
+        if (logger.isTraceEnabled()) logger.trace("getListOfBooks:splitOption=" + splitOption);
+        assert from == 0 : "getListBooks: unknown splitOption, from=" + from;
+        willSplitByLetter = checkSplitByLetter(splitOption, listobjects.size());
+        willSplitByDate = false;
+        break;
+    }
+    // See if SplitByLetter conditions actually apply?
+    if ((currentProfile.getBrowseByCover())
+        &&  (currentProfile.getBrowseByCoverWithoutSplit())) {
+      willSplitByLetter = false;
+    }
+    if (logger.isTraceEnabled()) logger.trace("getListOfBooks:willSplitByLetter=" + willSplitByLetter);
+    if (logger.isTraceEnabled()) logger.trace("getListOfBooks:willSplitByDate=" + willSplitByDate);
+    if (logger.isTraceEnabled()) logger.trace("listing books from=" + from + ", title=" + title);
+
+    int pageNumber = Summarizer.getPageNumber(from + 1);
+    int maxPages = Summarizer.getPageNumber((willSplitByDate || willSplitByLetter) ? 0 : catalogSize);
+
+    // generate the book list files
+    String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
+    String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() > 1  || inSubDir);
+
+    Element feed;
+    feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true);
+    // Update breadcrumbs ready for next iteration
+    Breadcrumbs breadcrumbs;
+    // #c2o-204 breadrumbs should already be correct if listing firt page of books for an author.
+    if (from ==0 && getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
+      breadcrumbs = pBreadcrumbs;
+    } else {
+      breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
+    }
+
+    // list the books (or split them)
+    List<Element> result;
+    if (willSplitByDate) {
+      // Split by date listing
+      result = getListOfObjectsSplitByDate( breadcrumbs,
+                                            DataModel.splitObjectsByDate(listobjects),
+                                            true,   // Musy be true if splitting by date
+                                            title,
+                                            urn,
+                                            pFilename,
+                                            icon,
+                                            options);
+    } else if (willSplitByLetter) {
+      // Split by letter listing
+      result = getListOfObjectsSplitByLetter( breadcrumbs,
+                                              DataModel.splitObjectsByLetter(listobjects),
+                                              true, // Must be true if splitting by letter
+                                              title,
+                                              urn,
+                                              pFilename,
+                                              SplitOption.SplitByLetter,
+                                              icon,
+                                              options);
+    } else {
+      // Paginated listing
+      result = new LinkedList<Element>();
+      String progressText = Breadcrumbs.getProgressText(breadcrumbs);
+      progressText += " (" + Summarizer.getBookWord(listobjects.size()) + ")";
+      CatalogManager.callback.showMessage(progressText.toString());
+      for (int i = from; i < listobjects.size(); i++) {
+        // check if we must continue
+        CatalogManager.callback.checkIfContinueGenerating();
+
+        // See if we need to do the next page
+        if ((splitOption != SplitOption.DontSplitNorPaginate) && ((i - from) >= maxBeforePaginate)) {
+          // TODO #c2o-208   Add Previous, First and Last links if needed
+          // ... YES - so go for next page
+          if (logger.isDebugEnabled()) logger.debug("making a nextpage link");
+          Element nextLink = getListOfObjects(pBreadcrumbs,
+                                              listobjects,
+                                              true,             // Awlays in SubDir (need to check this)
+                                              i,                // Continue nfrom where we were
+                                              title,
+                                              summary,
+                                              urn,
+                                              pFilename, splitOption != SplitOption.DontSplitNorPaginate ? SplitOption.Paginate : splitOption,
+                                              icon,
+                                              null,             // No firstElements
+                                              options);
+          result.add(0, nextLink);
+          break;
+        } else {
+          // ... NO - so add book to this page
+          Object book = listobjects.get(i);
+          if (logger.isTraceEnabled()) logger.trace("getListOfObjects: adding object to the list : " + book);
+          try {
+            logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
+            Element entry = getDetailedEntry(breadcrumbs, book, options);
+            if (entry != null) {
+              if (logger.isTraceEnabled()) logger.trace("getListOfBooks: entry=" + entry);
+              result.add(entry);
+              TrookSpecificSearchDatabaseManager.addBook((Book) book, entry);
+            }
+          } catch (RuntimeException e) {
+            logger.error("getListOfBooks: Exception on book: " + ((Book)book).getTitle() + "[" + ((Book)book).getId() + "]", e);
+            throw e;
+          }
+        }
+      }
+    }
+    // if needed, add the first elements to the feed
+    if (Helper.isNotNullOrEmpty(firstElements))
+      feed.addContent(firstElements);
+    // add the book entries to the feed
+    feed.addContent(result);
+
+    Element entry;
+    String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
+
+    entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    if (from == 0) {
+      entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
+    }
+    return entry;
+  };
+*/
+
+  /**
+   * Produce a list plit by letter
+   *
+   * @param pBreadcrumbs
+   * @param mapOfObjectsByLetter
+   * @param inSubDir
+   * @param baseTitle
+   * @param baseUrn
+   * @param baseFilename
+   * @param splitOption
+   * @param icon
+   * @param options
+   * @return
+   * @throws IOException
+   */
+/*
+  protected List<Element> getListOfObjectsSplitByLetter(
+      Breadcrumbs pBreadcrumbs,
+      Map<String,  List<? extends GenericDataObject>> mapOfObjectsByLetter,
+      boolean inSubDir,
+      String baseTitle,
+      String baseUrn,
+      String baseFilename,
+      SplitOption splitOption,
+      String icon,
+      Option... options) throws IOException {
+    if (Helper.isNullOrEmpty(mapOfObjectsByLetter))
+      return null;
+
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
+
+    String sTitle = baseTitle;
+    if (Helper.isNotNullOrEmpty(sTitle))
+      sTitle += ", ";
+
+    List<Element> result = new LinkedList<Element>();
+    SortedSet<String> letters = new TreeSet<String>(mapOfObjectsByLetter.keySet());
+    for (String letter : letters) {
+      // generate the letter file
+      String letterFilename = Helper.getSplitString(baseFilename, letter, Constants.TYPE_SEPARATOR);
+      String letterUrn = Helper.getSplitString(baseUrn, letter, Constants.URN_SEPARATOR);
+
+      List<? extends GenericDataObject> objectsInThisLetter = mapOfObjectsByLetter.get(letter);
+      String letterTitle;
+      if (letter.equals("_"))
+        letterTitle = Localization.Main.getText("splitByLetter.book.other");
+      else
+        letterTitle = Localization.Main.getText("splitByLetter.letter", Localization.Main.getText("bookword.title"),
+            letter.length() > 1 ? letter.substring(0,1) + letter.substring(1).toLowerCase() : letter);
+
+      // try and list the items to make the summary
+      String summary = Summarizer.summarizeBooks(objectsInThisLetter);
+
+      Element element = null;
+      if (objectsInThisLetter.size() > 0) {
+        element = getListOfObjects(pBreadcrumbs,
+                                  objectsInThisLetter,
+                                  true,              // Always inSubDir if in letter
+                                  0,                 // start at first page
+                                  letterTitle,
+                                  summary,
+                                  letterUrn,
+                                  letterFilename,
+                                  checkSplitByLetter(letter),
+                                  icon,
+                                  null,              // No firstElements
+                                  options);
+      }
+      else
+      {
+        // ITIMPI:  Assert to check if the logic can ever let this be zero!
+        assert (objectsInThisLetter.size() <= 0) : "booksInThisLetter=" + objectsInThisLetter.size() + " for letter '" + letter + "'";
+      }
+
+      if (element != null)
+        result.add(element);
+    }
+    return result;
+
+  };
+*/
+  /**
+   * Produce a list split by date
+   *
+   * Only used as part of the 'recent' section at the moment
+   * so maybe it should only be present in that calss?
+   *
+   * @param pBreadcrumbs
+   * @param mapOfObjectsByDate
+   * @param inSubDir
+   * @param baseTitle
+   * @param baseUrn
+   * @param baseFilename
+   * @param icon
+   * @param options
+   * @return
+   * @throws IOException
+   */
+/*
+  protected  List<Element> getListOfObjectsSplitByDate(
+      Breadcrumbs pBreadcrumbs,
+      Map<DateRange, List<GenericDataObject>> mapOfObjectsByDate,
+      boolean inSubDir,
+      String baseTitle,
+      String baseUrn,
+      String baseFilename,
+      String icon,
+      Option... options) throws IOException {
+    if (Helper.isNullOrEmpty(mapOfObjectsByDate))
+      return null;
+    String sTitle = baseTitle;
+    if (Helper.isNotNullOrEmpty(sTitle))
+      sTitle = sTitle + ", ";
+
+    if (pBreadcrumbs.size() > 1) inSubDir = true;
+
+    List<Element> result = new LinkedList<Element>();
+    SortedSet<DateRange> ranges = new TreeSet<DateRange>(mapOfObjectsByDate.keySet());
+    for (DateRange range : ranges) {
+      // generate the range file
+      String rangeFilename = baseFilename + Constants.TYPE_SEPARATOR + range;
+
+      String rangeUrn = Helper.getSplitString(baseUrn, range.toString(), Constants.URN_SEPARATOR);
+
+      String rangeTitle = LocalizationHelper.getEnumConstantHumanName(range);
+      List<? extends GenericDataObject> booksInThisRange = mapOfObjectsByDate.get(range);
+
+      // try and list the items to make the summary
+      String summary = Summarizer.summarizeBooks(booksInThisRange);
+
+      Element element = null;
+      if (booksInThisRange.size() > 0) {
+        element = getListOfObjects(pBreadcrumbs,
+                                  booksInThisRange,
+                                  true,         // Always inSubDir
+                                  0,            // Start at first page
+                                  rangeTitle,
+                                  summary,
+                                  rangeUrn,
+                                  rangeFilename,
+                                  SplitOption.Paginate,
+                                  icon,
+                                  null,
+                                  options);
+      }
+
+      if (element != null)
+        result.add(element);
+    } // end of for
+    return result;
+  }
+*/
+  /**
+   * Get the detailed entry for this object type
+   * We need to over-ride this method in each subcatalog type
+   * as the details are going to be very type dependent.
+   *
+   * @param pBreadcrumbs
+   * @param obj
+   * @param options
+   * @return
+   * @throws IOException
+   */
+  public abstract Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                          Object  obj,
+                                          Option... options) throws IOException;
+
 }

@@ -68,5 +68,4 @@ public class RecentBooksSubCatalog extends BooksSubCatalog {
 
     return result;
   }
-
 }

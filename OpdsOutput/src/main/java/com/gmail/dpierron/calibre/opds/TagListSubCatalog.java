@@ -86,7 +86,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
         listTags.remove(0);
         Element element;
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        element = getTagEntry(breadcrumbs, tag, urn, "");
+        element = getDetailedEntry(breadcrumbs, tag, urn, "");
         assert element != null;
         if (element != null) {
           feed.addContent(element);
@@ -131,8 +131,11 @@ public class TagListSubCatalog extends TagsSubCatalog {
         } else {
           Tag tag = listTags.get(i);
           Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-          logger.debug("getTagEntry:" + tag);
-          Element entry = getTagEntry(breadcrumbs, tag, urn, null);
+          logger.debug("getObjectEntry:" + tag);
+          Element entry = getDetailedEntry(breadcrumbs,
+                                          tag,
+                                          urn,
+                                          null);
           if (entry != null) {
             logger.debug("adding tag to the TROOK database:" + tag);
             result.add(entry);

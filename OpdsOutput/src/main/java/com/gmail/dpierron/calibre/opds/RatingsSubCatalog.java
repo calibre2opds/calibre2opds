@@ -67,41 +67,6 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     return mapOfBooksByRating;
   }
 
-  public Element getRatingEntry(Breadcrumbs pBreadcrumbs, BookRating rating, String baseurn) throws IOException {
-    List<Book> books = getMapOfBooksByRating().get(rating);
-    if (Helper.isNullOrEmpty(books))
-      return null;
-
-    boolean inSubDir = getCatalogLevel().length() > 0 || pBreadcrumbs.size() > 1;
-    if (books == null)
-      books = new LinkedList<Book>();
-
-    String filename = getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + rating.getId();
-    String title = LocalizationHelper.getEnumConstantHumanName(rating);
-    String urn = baseurn + Constants.URN_SEPARATOR + rating.getId();
-
-    // sort books by title
-    sortBooksByTitle(books);
-
-    // try and list the items to make the summary
-    String summary = Summarizer.summarizeBooks(books);
-    // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
-    SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
-    Element result = getListOfBooks(pBreadcrumbs,
-                                    books,
-                                    true,
-                                    0,
-                                    title,
-                                    summary,
-                                    urn,
-                                    filename,
-                                    splitOption,
-                                    // #751211: Use external icons option
-                                    useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING);
-    rating.setDone();
-    return result;
-  }
-
   public Element getCatalog(Breadcrumbs pBreadcrumbs, boolean inSubDir) throws IOException {
     if (Helper.isNullOrEmpty(getRatings()))
       return null;
@@ -120,7 +85,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     for (int i = 0; i < BookRating.sortedRatings().length; i++) {
       BookRating rating = BookRating.sortedRatings()[i];
       Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-      Element entry = getRatingEntry(breadcrumbs, rating, urn);
+      Element entry = getDetailedEntry(breadcrumbs, rating, urn);
       if (entry != null)
         result.add(entry);
     }
@@ -136,6 +101,52 @@ public class RatingsSubCatalog extends BooksSubCatalog {
                                                  // #751211: Use external icons option
                                                  useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING);
     return result2;
+  }
+
+
+  /**
+   *
+    * @param pBreadcrumbs
+   * @param ratingObject
+   * @param opts
+   * @return
+   * @throws IOException
+   */
+  // public Element getRatingEntry(Breadcrumbs pBreadcrumbs, BookRating rating, String baseurn) throws IOException {
+
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                  Object ratingObject,
+                                  Object... opts) throws IOException {
+
+    assert ratingObject.getClass().equals(BookRating.class);
+    BookRating rating = (BookRating) ratingObject;
+    assert opts[0] != null && opts[0].getClass().equals(String.class);
+    String baseurn = (String)opts[0];
+
+    List<Book> books = getMapOfBooksByRating().get(rating);
+    if (Helper.isNullOrEmpty(books))
+      return null;
+
+    boolean inSubDir = getCatalogLevel().length() > 0 || pBreadcrumbs.size() > 1;
+    if (books == null)
+      books = new LinkedList<Book>();
+
+    String filename = getCatalogBaseFolderFileName() + Constants.TYPE_SEPARATOR + rating.getId();
+    String title = LocalizationHelper.getEnumConstantHumanName(rating);
+    String urn = baseurn + Constants.URN_SEPARATOR + rating.getId();
+
+    // sort books by title
+    BooksSubCatalog.sortBooksByTitle(getBooks());
+
+    // try and list the items to make the summary
+    String summary = Summarizer.summarizeBooks(books);
+    // logger.trace("getAuthor  Breadcrumbs=" + pBreadcrumbs.toString());
+    SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
+    Element result = getListOfBooks(pBreadcrumbs, books, true, 0, title, summary, urn, filename, splitOption,
+        // #751211: Use external icons option
+        useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_RATING : Icons.ICON_RATING, null, Option.DONOTINCLUDE_RATING);
+    rating.setDone();
+    return result;
   }
 
 }

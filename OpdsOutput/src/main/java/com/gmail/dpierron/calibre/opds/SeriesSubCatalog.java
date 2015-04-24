@@ -124,7 +124,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       String urn,
       String pFilename,
       SplitOption splitOption,
-      boolean addTheSeriesWordToTheTitle) throws IOException {
+      Boolean addTheSeriesWordToTheTitle) throws IOException {
 
     // Set if not specified from catalog properties
     if (listSeries == null) listSeries = getSeries();
@@ -205,7 +205,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           } else {
             breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
           }
-          Element entry = getSeriesEntry(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
+          Element entry = getDetailedEntry(breadcrumbs, serie, urn, addTheSeriesWordToTheTitle);
           if (entry != null) {
             result.add(entry);
             TrookSpecificSearchDatabaseManager.addSeries(serie, entry);
@@ -242,7 +242,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           String urn,
           String pFilename,
           SplitOption splitOption,
-          boolean addTheSeriesWordToTheTitle) throws IOException {
+          Boolean addTheSeriesWordToTheTitle) throws IOException {
 
     if (listSeries == null)  listSeries = getSeries();
     if (listSeries.size() == 0) {
@@ -269,7 +269,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         listSeries.remove(0);
         Element element;
         Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
-        element = getSeriesEntry(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
+        element = getDetailedEntry(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
         assert element != null;
         if (element != null) {
           feed.addContent(element);
@@ -415,14 +415,22 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    *
    * @param pBreadcrumbs
    * @param serie
-   * @param baseurn
-   * @param addTheSeriesWordToTheTitle
+   * @param opts    baseurn
+   *                addTheSeriesWordToTheTitle
    * @return
    * @throws IOException
    */
-  public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
+  // public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                  Series serie,
+                                  Object... opts) throws IOException {
 
     if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + serie);
+
+    assert opts[0] != null && opts[0].getClass().equals(String.class);
+    String baseurn = (String)opts[0];
+    assert opts[1] != null && opts[1].getClass().equals(Boolean.class);
+    boolean addTheSeriesWordToTheTitle = (Boolean)opts[1];
 
     CatalogManager.callback.showMessage(pBreadcrumbs.toString());
     // We want to avoid incrementing the progress bar if we are not doing

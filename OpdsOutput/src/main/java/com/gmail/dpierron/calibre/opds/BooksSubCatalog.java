@@ -66,7 +66,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    *
    * @param books
    */
-  void sortBooksByTitle(List<Book> books) {
+  static void sortBooksByTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
       public int compare(Book o1, Book o2) {
         return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
@@ -74,7 +74,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
     });
   }
 
-  void sortBooksByAuthorAndTitle(List<Book> books) {
+  static void sortBooksByAuthorAndTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
@@ -95,7 +95,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    *
    * @param books
    */
-  void sortBooksByTimestamp(List<Book> books) {
+  static void sortBooksByTimestamp(List<Book> books) {
     // sort the books by timestamp
     Collections.sort(books, new Comparator<Book>() {
 
@@ -135,7 +135,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @return
    * @throws IOException
    */
-  Element getListOfBooks(Breadcrumbs pBreadcrumbs,
+   public Element getListOfBooks(Breadcrumbs pBreadcrumbs,
       List<Book> listbooks,
       boolean inSubDir,
       int from,
@@ -147,10 +147,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String icon,
       List<Element> firstElements,
       Option... options) throws IOException {
+    // return getListOfObjects(pBreadcrumbs, (List<GenericDataObject>)listbooks, inSubDir,from,title,summary,urn,pFilename,splitOption,icon,firstElements,options);
     if (logger.isDebugEnabled()) logger.debug("getListOfBooks: START");
 
     // Special case of first time through when not all values set
-    if (listbooks == null) listbooks = getBooks();
+     assert listbooks != null;
+    // if (listbooks == null) listbooks = getBooks();
     if (pFilename == null)  pFilename = getCatalogBaseFolderFileName();
 
     //  Now some consistency checks
@@ -299,7 +301,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           if (logger.isTraceEnabled()) logger.trace("getListOfBooks: adding book to the list : " + book);
           try {
             logger.trace("getListOfBooks: breadcrumbs=" + breadcrumbs + ", book=" + book + ", options=" + options);
-            Element entry = getBookEntry(breadcrumbs, book, options);
+            Element entry = getDetailedEntry(breadcrumbs, book, options);
             if (entry != null) {
               if (logger.isTraceEnabled()) logger.trace("getListOfBooks: entry=" + entry);
               result.add(entry);
@@ -1277,10 +1279,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @return
    * @throws java.io.IOException
    */
-  public Element getBookEntry(Breadcrumbs pBreadcrumbs,
-      Book book,
-      Option... options) throws IOException {
+  // public Element getBookEntry(Breadcrumbs pBreadcrumbs,
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+      Object  bookObject,
+      Option... options) throws IOException   {
 
+    assert bookObject.getClass().equals(Book.class);
+    Book book = (Book)bookObject;
     if (logger.isDebugEnabled())  logger.debug("getBookEntry: pBreadcrumbs=" + pBreadcrumbs + ", book=" + book);
     // Book files are always a top level (we might revisit this assumption one day)
     String filename = getBookFolderFilename(book);

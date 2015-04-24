@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.*;
 
-public class Book implements SplitableByLetter {
+public class Book extends GenericDataObject   {
   private final static Logger logger = Logger.getLogger(Book.class);
 
   private File bookFolder;

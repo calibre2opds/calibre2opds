@@ -4,6 +4,8 @@ package com.gmail.dpierron.calibre.opds;
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.GenericDataObject;
+import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
@@ -53,8 +55,33 @@ public class FeaturedBooksSubCatalog extends BooksSubCatalog {
 
     if (logger.isTraceEnabled())
       logger.trace("getSubCatalogEntry  Breadcrumbs=" + pBreadcrumbs.toString());
-    return getListOfBooks(pBreadcrumbs, getBooks(), inSubDir, 0, title, summary, urn, filename, splitOption,
+    return getListOfBooks(pBreadcrumbs,
+                          getBooks(),
+                          inSubDir,
+                          0,
+                          title,
+                          summary,
+                          urn,
+                          filename,
+                          splitOption,
         // #751211: Use external icons option
         useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_FEATURED : Icons.ICON_FEATURED, null);
   }
+
+  /**
+   *
+   * @param pBreadcrumbs
+   * @param obj
+   * @param options
+   * @return
+   * @throws IOException
+   */
+
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+      Object obj,
+      Option... options) throws IOException {
+    assert false : "getDetailedEntry should never be called";
+    return null;
+  }
+
 }

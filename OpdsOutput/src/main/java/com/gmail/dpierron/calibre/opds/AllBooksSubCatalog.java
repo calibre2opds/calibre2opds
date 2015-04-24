@@ -7,11 +7,14 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.datamodel.Book;
+import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
+import org.jdom.Element;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -198,7 +201,12 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
     else return "";
   }
 
+  /**
+   *
+   * @return
+   */
   public String getUrn() {
     return Constants.INITIAL_URN_PREFIX + getCatalogType();
   }
+
 }
