@@ -67,8 +67,7 @@ public class CalibreQueryInterpreter {
       throw new CalibreSavedSearchInterpretException(node.toString(), ((CommonErrorNode) node).trappedException);
     }
     String template = node.getText();
-    if (logger.isTraceEnabled())
-      logger.trace("template=" + template);
+    if (logger.isTraceEnabled()) logger.trace("template=" + template);
 
     /* Tags */
     if (template.toLowerCase().equals(WORD_TAG_TRUE)) {

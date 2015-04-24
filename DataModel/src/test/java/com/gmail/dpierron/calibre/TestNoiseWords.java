@@ -20,9 +20,9 @@ public class TestNoiseWords {
     withoutNoise = noiseWord.removeLeadingNoiseWords("the cat who liked girls");
     assertTrue("cat who liked girls".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("the a an cat who liked girls");
-    assertTrue("cat who liked girls" .equals(withoutNoise));
+    assertTrue("cat who liked girls".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("the un cat who liked girls");
-    assertTrue("un cat who liked girls" .equals(withoutNoise));
+    assertTrue("un cat who liked girls".equals(withoutNoise));
     noiseWord.setRemovewords(false);       // Test now with  moving to end
     withoutNoise = noiseWord.removeLeadingNoiseWords("the un cat who liked girls");
     assertTrue("un cat who liked girls, the".equals(withoutNoise));
@@ -41,9 +41,9 @@ public class TestNoiseWords {
     // Test GERMAN
     noiseWord = DataModel.getNoiseword("deu");       // Using 3-character ISO code
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein voegel");
-    assertTrue("voegel" .equals(withoutNoise));
+    assertTrue("voegel".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein der die das voegel");
-    assertTrue("voegel" .equals(withoutNoise));
+    assertTrue("voegel".equals(withoutNoise));
     withoutNoise = noiseWord.removeLeadingNoiseWords("ein un voegel");
     assertTrue("un voegel" .equals(withoutNoise));
 

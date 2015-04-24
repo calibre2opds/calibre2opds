@@ -94,7 +94,9 @@ v3.5
     - Change: Choosing to use thumbnails as covers no longer forces resized cover images to be removed.
     - Change: Removed option to minimize Changed Files as program logic now tries to do this anyway. 
     - Change: performance Optimization to avoid generating HTML files that are known to be unchanged since last run
+              Provides nice performance boost to those who produce both XML and HTML catalog variants.
     - Fix:    #c2o-242: Publish mode does not let you continue if the destination folder does not exist 
+    - Fix:    #c20-245: Localization not working properly
     
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to

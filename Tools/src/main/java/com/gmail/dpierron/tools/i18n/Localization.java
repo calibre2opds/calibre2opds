@@ -85,6 +85,9 @@ public enum Localization {
    * @return
    */
   public ResourceBundle getBundle(Locale language) {
+    if (loadedResourceBundles == null) {
+      loadedResourceBundles = new HashMap<String, ResourceBundle>();
+    }
      ResourceBundle localizations = null;
     // We always want the English currentLocalizations loaded
     if (englishLocalizations == null)    {
@@ -281,6 +284,7 @@ public enum Localization {
    */
   private String lookupText(Locale locale, String key) {
     try {
+      ResourceBundle b = getBundle(locale);
       return getBundle(locale).getString(key);
     } catch (MissingResourceException e) {
       // try english
@@ -321,6 +325,7 @@ public enum Localization {
    */
   public String getText(Locale locale, String key, Object... parameters) {
     String message = lookupText(locale, key);
+
     if (message == null) return null;
     if (parameters.length != 0) {
       message = MessageFormat.format(message, parameters);

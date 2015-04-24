@@ -33,13 +33,15 @@ public class TestCalibreQueryInterpreter {
       // The TTCC_CONVERSION_PATTERN contains more info than
       // the pattern we used for the root logger
       Logger logger = rootLogger.getLoggerRepository().getLogger(TestCalibreQueryInterpreter.class.getCanonicalName());
-      logger.setLevel(Level.TRACE);
+      // logger.setLevel(Level.TRACE);
+      logger.setLevel(Level.DEBUG);
       logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 
       // The TTCC_CONVERSION_PATTERN contains more info than
       // the pattern we used for the root logger
       logger = rootLogger.getLoggerRepository().getLogger(CalibreQueryInterpreter.class.getCanonicalName());
-      logger.setLevel(Level.TRACE);
+      // logger.setLevel(Level.TRACE);
+      logger.setLevel(Level.DEBUG);
       logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
     }
 
