@@ -6,7 +6,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.opds.JDOMManager.Namespace;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.io.File;

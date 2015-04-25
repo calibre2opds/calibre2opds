@@ -15,7 +15,7 @@ import com.gmail.dpierron.tools.RootTreeNode;
 import com.gmail.dpierron.tools.TreeNode;
 import org.apache.log4j.Logger;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.LinkedList;

@@ -12,7 +12,7 @@ import com.gmail.dpierron.calibre.datamodel.filter.RemoveSelectedTagsFilter;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -134,6 +134,23 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     }
     return false;
   }
+
+  static void sortBooksByAuthorAndTitle(List<Book> books) {
+    Collections.sort(books, new Comparator<Book>() {
+
+      public int compare(Book o1, Book o2) {
+        String s1 = o1.getAuthorSort();
+        String s2 = o2.getAuthorSort();
+        if (! s1.equals(s2)) {
+          return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
+        }
+        // If authors equal compare on title.
+        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
+      }
+
+    });
+  }
+
   /**
    * Get the base filename that is used to store a given author
    *
@@ -171,10 +188,12 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @throws IOException
    */
   // public Element getTagEntry(Breadcrumbs pBreadcrumbs, Tag tag, String baseurn, String titleWhenCategorized) throws IOException {
-  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs, Object tagObject, Object... opts) throws IOException {
+  public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
+                                  Object tagObject,
+                                  Object... opts) throws IOException {
 
     assert pBreadcrumbs != null;
-    assert tagObject != null & tagObject.getClass().equals(Tag.class);
+    assert tagObject != null && tagObject.getClass().equals(Tag.class);
     Tag tag = (Tag)tagObject;
     assert opts[0] != null && opts[0].getClass().equals(String.class);
     String baseurn = (String)opts[0];

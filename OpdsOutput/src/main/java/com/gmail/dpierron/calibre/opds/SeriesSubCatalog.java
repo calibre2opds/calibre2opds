@@ -16,7 +16,7 @@ import com.gmail.dpierron.tools.Helper;
 
 import org.apache.log4j.Logger;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -43,7 +43,11 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     super(books);
     setCatalogType(Constants.SERIESLIST_TYPE);
   }
-
+/*
+  public List<Series> getObjectList() {
+    return getSeries();
+  }
+*/
   /**
    * Get the series list for the books associated with this sub-catalog
    * If it is not populated, then do so in alphabetical order
@@ -414,24 +418,27 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    * List the books that belong to the given series
    *
    * @param pBreadcrumbs
-   * @param serie
+   * @param seriesObject
    * @param opts    baseurn
    *                addTheSeriesWordToTheTitle
    * @return
    * @throws IOException
    */
   // public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
+
   public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
-                                  Series serie,
+                                  Object seriesObject,
                                   Object... opts) throws IOException {
 
-    if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + serie);
 
+    assert seriesObject.getClass().equals(Series.class);
+    Series serie = (Series)seriesObject;
     assert opts[0] != null && opts[0].getClass().equals(String.class);
     String baseurn = (String)opts[0];
     assert opts[1] != null && opts[1].getClass().equals(Boolean.class);
     boolean addTheSeriesWordToTheTitle = (Boolean)opts[1];
 
+    if (logger.isDebugEnabled()) logger.debug(pBreadcrumbs + "/" + serie);
     CatalogManager.callback.showMessage(pBreadcrumbs.toString());
     // We want to avoid incrementing the progress bar if we are not doing
     // the top level series sub-catalog
@@ -468,7 +475,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     }
     // try and list the items to make the summary
     String summary = Summarizer.summarizeBooks(books);
-
     Element result = getListOfBooks(pBreadcrumbs,
                                     books,
                                     true,
@@ -482,6 +488,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
                                         ? getIconPrefix(true) + Icons.ICONFILE_SERIES : Icons.ICON_SERIES,
                                     null,
                                     Option.INCLUDE_SERIE_NUMBER);
+
     serie.setDone();
     return result;
   }

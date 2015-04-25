@@ -89,6 +89,7 @@ Usefule links for tracking changes are:
   
 v3.5 
     - Upgrade versions of components used unternally by calibre2opds:
+        jdom    1.1 -> 2.0.6
       	junit		4.7	-> 4.12
       	sqlitejdbc	3.6.17.1-> 3.8.7
     - Change: Choosing to use thumbnails as covers no longer forces resized cover images to be removed.

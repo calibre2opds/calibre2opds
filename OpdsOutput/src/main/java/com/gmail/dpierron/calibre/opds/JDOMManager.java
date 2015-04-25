@@ -5,11 +5,13 @@ import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.*;
-import org.jdom.input.JDOMParseException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.*;
+import org.jdom2.input.JDOMParseException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.SAXHandlerFactory;
+import org.jdom2.input.sax.XMLReaders;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.w3c.tidy.Tidy;
 
 import javax.xml.transform.Transformer;
@@ -87,13 +89,13 @@ public class JDOMManager {
     Calibre("calibre", "http://calibre.kovidgoyal.net/2009/metadata"),
     Xhtml("xhtml", "http://www.w3.org/1999/xhtml");
 
-    private org.jdom.Namespace jdomNamespace;
+    private org.jdom2.Namespace jdomNamespace;
 
     private Namespace(String prefix, String uri) {
-      jdomNamespace = org.jdom.Namespace.getNamespace(prefix, uri);
+      jdomNamespace = org.jdom2.Namespace.getNamespace(prefix, uri);
     }
 
-    public org.jdom.Namespace getJdomNamespace() {
+    public org.jdom2.Namespace getJdomNamespace() {
       return this.jdomNamespace;
     }
   }
@@ -262,14 +264,16 @@ public class JDOMManager {
   }
 
   public static XMLOutputter getOutputter() {
-    if (outputter == null)
+    if (outputter == null) {
       outputter = new XMLOutputter(Format.getPrettyFormat());
+    }
     return outputter;
   }
 
   public static XMLOutputter getSerializer() {
-    if (serializer == null)
+    if (serializer == null) {
       serializer = new XMLOutputter(Format.getCompactFormat());
+    }
     return serializer;
   }
 
@@ -283,8 +287,9 @@ public class JDOMManager {
 
   public static Element element(String name, Namespace namespace) {
     Element result = getFactory().element(name);
-    if (namespace != null)
+    if (namespace != null) {
       result.setNamespace(namespace.getJdomNamespace());
+    }
     return result;
   }
 
@@ -309,8 +314,7 @@ public class JDOMManager {
   public static List<Element> tidyInputStream(InputStream in) throws JDOMException, IOException {
     List<Element> result = null;
     // initializing tidy
-    if (logger.isTraceEnabled())
-      logger.trace("tidyInputStream: initializing tidy");
+    if (logger.isTraceEnabled()) logger.trace("tidyInputStream: initializing tidy");
     if (tidyForTidyInputStream == null) {
       tidyForTidyInputStream = new Tidy();
       tidyForTidyInputStream.setShowWarnings(false);
@@ -320,41 +324,34 @@ public class JDOMManager {
       tidyForTidyInputStream.setDropEmptyParas(false);
     }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    if (logger.isTraceEnabled())
-      logger.trace("tidyInputStream: parsing with Tidy");
+    if (logger.isTraceEnabled()) logger.trace("tidyInputStream: parsing with Tidy");
     try {
       tidyForTidyInputStream.parseDOM(in, out);
     } finally {
       out.close();
     }
     String text2 = new String(out.toByteArray());
-    SAXBuilder sb = new SAXBuilder(false);
-    if (logger.isTraceEnabled())
-      logger.trace("tidyInputStream: building doc");
+    SAXBuilder sb = new SAXBuilder(XMLReaders.NONVALIDATING, (SAXHandlerFactory)null, (JDOMFactory)null);
+    if (logger.isTraceEnabled()) logger.trace("tidyInputStream: building doc");
     Document doc = sb.build(new StringReader(text2));
     Element html = doc.getRootElement();
     if (! html.getName().equalsIgnoreCase("html")) {
-      if (logger.isTraceEnabled())
-        logger.trace("tidyInputStream: no html tag found");
+      if (logger.isTraceEnabled()) logger.trace("tidyInputStream: no html tag found");
     } else {
-      if (logger.isTraceEnabled())
-        logger.trace("tidyInputStream: found html tag");
+      if (logger.isTraceEnabled()) logger.trace("tidyInputStream: found html tag");
       for (Object o : html.getChildren()) {
         if (o instanceof Element) {
           Element child = (Element) o;
           if (! child.getName().equalsIgnoreCase("body")) {
-            if (logger.isTraceEnabled())
-              logger.trace("tidyInputStream: no body tag found");
+            if (logger.isTraceEnabled()) logger.trace("tidyInputStream: no body tag found");
           } else {
-            if (logger.isTraceEnabled())
-              logger.trace("tidyInputStream: found body tag");
+            if (logger.isTraceEnabled()) logger.trace("tidyInputStream: found body tag");
             (result = new ArrayList<Element>()).addAll(child.getChildren());
           }
         }
       }
     }
-    if (logger.isTraceEnabled())
-      logger.trace("tidyInputStream: completed tidy");
+    if (logger.isTraceEnabled()) logger.trace("tidyInputStream: completed tidy");
     return result;
   }
 
@@ -389,8 +386,7 @@ public class JDOMManager {
       }
 
       // tidy the text
-      if (logger.isTraceEnabled())
-        logger.trace("convertHtmlTextToXhtml: tidy the text");
+      if (logger.isTraceEnabled()) logger.trace("convertHtmlTextToXhtml: tidy the text");
       try {
         result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
       } catch (JDOMParseException j) {
@@ -406,11 +402,9 @@ public class JDOMManager {
       }
 
       if (result != null) {
-        if (logger.isTraceEnabled())
-          logger.trace("convertHtmlTextToXhtml: returning XHTML");
+        if (logger.isTraceEnabled()) logger.trace("convertHtmlTextToXhtml: returning XHTML");
       } else {
-        if (Helper.isNotNullOrEmpty(text))
-          logger.debug("convertHtmlTextToXhtml: Cannot convert comment text\n" + text);
+        if (Helper.isNotNullOrEmpty(text)) logger.debug("convertHtmlTextToXhtml: Cannot convert comment text\n" + text);
       }
     }
     return result;

@@ -10,7 +10,7 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.*;

@@ -1791,6 +1791,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMainOptions.add(lblCatalogFolder, gridBagConstraints);
 
         txtCatalogFolder.setText("txtCatalogFolder");
+        txtCatalogFolder.setMinimumSize(new java.awt.Dimension(150, 22));
         txtCatalogFolder.setPreferredSize(new java.awt.Dimension(200, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;

@@ -8,7 +8,7 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.*;
@@ -115,11 +115,9 @@ public class RatingsSubCatalog extends BooksSubCatalog {
   // public Element getRatingEntry(Breadcrumbs pBreadcrumbs, BookRating rating, String baseurn) throws IOException {
 
   public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
-                                  Object ratingObject,
+                                  BookRating rating,
                                   Object... opts) throws IOException {
 
-    assert ratingObject.getClass().equals(BookRating.class);
-    BookRating rating = (BookRating) ratingObject;
     assert opts[0] != null && opts[0].getClass().equals(String.class);
     String baseurn = (String)opts[0];
 

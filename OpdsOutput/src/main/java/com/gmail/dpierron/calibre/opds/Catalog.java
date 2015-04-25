@@ -25,7 +25,7 @@ import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.*;
 import java.util.*;

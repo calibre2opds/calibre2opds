@@ -20,18 +20,16 @@ import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.Collator;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
 
 public abstract class BooksSubCatalog extends SubCatalog {
   private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
-  protected final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
 
   /**
    * @return
@@ -59,55 +57,10 @@ public abstract class BooksSubCatalog extends SubCatalog {
     super(books);
   }
 
-  /**
-   * Sort the list of books alphabetically
-   * We allow the field that is to be used for sorting
-   * titles to be set as a configuration parameter
-   *
-   * @param books
-   */
-  static void sortBooksByTitle(List<Book> books) {
-    Collections.sort(books, new Comparator<Book>() {
-      public int compare(Book o1, Book o2) {
-        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
-      }
-    });
+
+  public List<Book> getObjectList() {
+    return getBooks();
   }
-
-  static void sortBooksByAuthorAndTitle(List<Book> books) {
-    Collections.sort(books, new Comparator<Book>() {
-
-      public int compare(Book o1, Book o2) {
-        String s1 = o1.getTitleToSplitByLetter();
-        String s2 = o2.getTitleToSplitByLetter();
-        if (! s1.equals(s2)) {
-           return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
-        }
-        // If authors equal compare on title.
-        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
-      }
-
-    });
-  }
-
-  /**
-   * Function to sort books by timestamp (last modified)
-   *
-   * @param books
-   */
-  static void sortBooksByTimestamp(List<Book> books) {
-    // sort the books by timestamp
-    Collections.sort(books, new Comparator<Book>() {
-
-      public int compare(Book o1, Book o2) {
-        Date ts1 = (o1 == null ? new Date() : o1.getTimestamp());
-        Date ts2 = (o2 == null ? new Date() : o2.getTimestamp());
-        return ts2.compareTo(ts1);
-      }
-
-    });
-  }
-
   /**
    * Get a list of books starting from a specific point
    *
@@ -1274,15 +1227,15 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * that we have done these previosuly.
    *
    * @param pBreadcrumbs
-   * @param book
+   * @param bookObject
    * @param options
    * @return
    * @throws java.io.IOException
    */
   // public Element getBookEntry(Breadcrumbs pBreadcrumbs,
   public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
-      Object  bookObject,
-      Option... options) throws IOException   {
+                                  Object  bookObject,
+                                  Option... options) throws IOException   {
 
     assert bookObject.getClass().equals(Book.class);
     Book book = (Book)bookObject;

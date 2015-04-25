@@ -8,7 +8,7 @@ import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.JDOMManager;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.File;
 import java.io.IOException;

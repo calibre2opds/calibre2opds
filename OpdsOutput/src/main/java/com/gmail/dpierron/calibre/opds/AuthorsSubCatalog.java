@@ -17,7 +17,7 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.log4j.Logger;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -333,17 +333,15 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
   /**
    *
    * @param pBreadcrumbs
-   * @param authorObject
+   * @param author
    * @param  opts   authorbooks
    * @return
    */
   // public Element getAuthorEntry(Breadcrumbs pBreadcrumbs, Author author,  List<Book> authorbooks) throws IOException  {
   public Element getDetailedEntry(Breadcrumbs pBreadcrumbs,
-                                  Object authorObject,
+                                  Author author,
                                   Object... opts) throws IOException  {
 
-    assert authorObject.getClass().equals(Author.class);
-    Author author = (Author)authorObject;
     assert opts[0] != null && opts[0].getClass().equals(LinkedList.class);
     List<Book> authorbooks = (List<Book>)opts[0];
 

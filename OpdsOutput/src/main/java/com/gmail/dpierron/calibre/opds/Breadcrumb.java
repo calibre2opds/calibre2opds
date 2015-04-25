@@ -3,7 +3,7 @@ package com.gmail.dpierron.calibre.opds;
  * Class providing methods and prpetries for an indiviudal breadcrumb
  */
 import com.gmail.dpierron.tools.Helper;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public class Breadcrumb {
   String title;

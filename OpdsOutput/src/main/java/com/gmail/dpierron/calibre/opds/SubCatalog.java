@@ -14,12 +14,13 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 import java.util.zip.CRC32;
 
@@ -37,6 +38,7 @@ public abstract class SubCatalog {
   protected static final boolean includeCoversInCatalog = ConfigurationManager.getCurrentProfile().getIncludeCoversInCatalog();
   protected static final String booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
   protected static final CRC32 crc32 = new CRC32();
+  protected final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
 
   //  PROPERTIES
 
@@ -610,6 +612,38 @@ public abstract class SubCatalog {
    */
   List<Book> getBooks() {
     return books;
+  }
+  /**
+   * Function to sort books by timestamp (last modified)
+   *
+   * @param books
+   */
+  static void sortBooksByTimestamp(List<Book> books) {
+    // sort the books by timestamp
+    Collections.sort(books, new Comparator<Book>() {
+
+      public int compare(Book o1, Book o2) {
+        Date ts1 = (o1 == null ? new Date() : o1.getTimestamp());
+        Date ts2 = (o2 == null ? new Date() : o2.getTimestamp());
+        return ts2.compareTo(ts1);
+      }
+
+    });
+  }
+
+  /**
+   * Sort the list of books alphabetically
+   * We allow the field that is to be used for sorting
+   * titles to be set as a configuration parameter
+   *
+   * @param books
+   */
+  static void sortBooksByTitle(List<Book> books) {
+    Collections.sort(books, new Comparator<Book>() {
+      public int compare(Book o1, Book o2) {
+        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
+      }
+    });
   }
 
   /**
@@ -1313,6 +1347,8 @@ public abstract class SubCatalog {
     return result;
   }
 */
+//  public abstract <T extends GenericDataObject> List<T> getObjectList() ;
+
   /**
    * Get the detailed entry for this object type
    * We need to over-ride this method in each subcatalog type
