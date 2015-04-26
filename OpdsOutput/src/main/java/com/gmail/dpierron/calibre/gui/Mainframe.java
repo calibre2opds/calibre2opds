@@ -1636,6 +1636,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMainOptions.add(lblLang, gridBagConstraints);
 
         cboLang.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboLang.setMaximumSize(new java.awt.Dimension(100, 20));
+        cboLang.setMinimumSize(new java.awt.Dimension(100, 20));
         cboLang.setPreferredSize(new java.awt.Dimension(100, 20));
         cboLang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1841,6 +1843,8 @@ public class Mainframe extends javax.swing.JFrame {
         pnlSplitTagsOn.setLayout(new java.awt.GridBagLayout());
 
         txtSplittagson.setText("txtSplittagson");
+        txtSplittagson.setMaximumSize(new java.awt.Dimension(60, 22));
+        txtSplittagson.setMinimumSize(new java.awt.Dimension(40, 22));
         txtSplittagson.setPreferredSize(new java.awt.Dimension(40, 20));
         txtSplittagson.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1918,6 +1922,9 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMainOptions.add(lblWikilang, gridBagConstraints);
 
         txtWikilang.setText("txtWikilang");
+        txtWikilang.setMaximumSize(new java.awt.Dimension(60, 20));
+        txtWikilang.setMinimumSize(new java.awt.Dimension(60, 20));
+        txtWikilang.setName(""); // NOI18N
         txtWikilang.setPreferredSize(new java.awt.Dimension(60, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
