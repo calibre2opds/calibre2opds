@@ -88,16 +88,19 @@ Usefule links for tracking changes are:
   Change History: http://code.google.com/p/calibre2opds/source/list
   
 v3.5 
-    - Upgrade versions of components used unternally by calibre2opds:
+    - Upgrade versions of components used internally by calibre2opds:
         jdom    1.1 -> 2.0.6
       	junit		4.7	-> 4.12
+      	log4j   1.1.2 -> 2.2
       	sqlitejdbc	3.6.17.1-> 3.8.7
     - Change: Choosing to use thumbnails as covers no longer forces resized cover images to be removed.
     - Change: Removed option to minimize Changed Files as program logic now tries to do this anyway. 
-    - Change: performance Optimization to avoid generating HTML files that are known to be unchanged since last run
+    - Change: Performance Optimization to avoid generating HTML files that are known to be unchanged since last run
               Provides nice performance boost to those who produce both XML and HTML catalog variants.
     - Fix:    #c2o-242: Publish mode does not let you continue if the destination folder does not exist 
+    - Fix:    #c2o-244: Catalog folder text entry field is too small to show any text 
     - Fix:    #c20-245: Localization not working properly
+    - Fix:    #c2o-246: Inconsistencies in layout of lists in HTML catalog 
     
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
