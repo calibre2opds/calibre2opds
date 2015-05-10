@@ -84,13 +84,13 @@ public class Runner {
 
     String levelText = "";
     if (logger.isTraceEnabled()) {
-      levelText += "TRACE +";
+      levelText += "TRACE + ";
     }
     if (logger.isDebugEnabled()) {
-      levelText += "DEBUG +";
+      levelText += "DEBUG + ";
     }
     if (logger.isInfoEnabled()) {
-      levelText += "INFO +";
+      levelText += "INFO + ";
     }
     levelText += "WARN + ERROR + FATAL";
     logger.info("");

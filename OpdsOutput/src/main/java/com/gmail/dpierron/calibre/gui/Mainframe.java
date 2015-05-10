@@ -156,7 +156,7 @@ public class Mainframe extends javax.swing.JFrame {
 
       new guiField(lblNogenerateopds, chkNogenerateopds, "config.GenerateOpds", "GenerateOpds", true),
       new guiField(lblNogeneratehtml, chkNogeneratehtml, "config.GenerateHtml", "GenerateHtml", true),
-      new guiField(lblNogenerateopdsfiles, chkNogenerateopdsfiles, "config.GenerateOpdsDownloads", "", true),
+      new guiField(lblNogenerateopdsfiles, chkNogenerateopdsfiles, "config.GenerateOpdsDownloads", "GenerateOpdsDownloads", true),
       new guiField(lblNogeneratehtmlfiles, chkNogeneratehtmlfiles, "config.GenerateHtmlDownloads", "GenerateHtmlDownloads", true),
       new guiField(lblBrowseByCover, chkBrowseByCover, "config.BrowseByCover", "BrowseByCover"),
       new guiField(lblBrowseByCoverWithoutSplit, chkBrowseByCoverWithoutSplit, "config.BrowseByCoverWithoutSplit", "BrowseByCoverWithoutSplit"),
