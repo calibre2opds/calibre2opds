@@ -1,7 +1,8 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.tools.i18n.Localization;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class ImageFile {
-  private final static Logger logger = Logger.getLogger(ImageFile.class);
+  private final static Logger logger = LogManager.getLogger(ImageFile.class);
 
   public static final int VERTICAL = 0;
   public static final int HORIZONTAL = 1;

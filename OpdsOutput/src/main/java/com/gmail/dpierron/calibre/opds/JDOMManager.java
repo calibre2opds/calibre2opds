@@ -4,7 +4,8 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.*;
 import org.jdom2.input.JDOMParseException;
 import org.jdom2.input.SAXBuilder;
@@ -23,11 +24,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 public class JDOMManager {
-  private final static Logger logger = Logger.getLogger(JDOMManager.class);
+  private final static Logger logger = LogManager.getLogger(JDOMManager.class);
 
   private static JDOMFactory factory;
   private static XMLOutputter outputter;

@@ -16,7 +16,8 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import javax.swing.*;
@@ -24,7 +25,7 @@ import java.lang.reflect.*;
 import java.util.Locale;
 
 public class guiField {
-  private final static Logger logger = Logger.getLogger(guiField.class);
+  private final static Logger logger = LogManager.getLogger(guiField.class);
 
   private JComponent guiLabel;      // Label associated with this field
   private JComponent guiValue;      // Value field associated with this field.  NULL if no value involved

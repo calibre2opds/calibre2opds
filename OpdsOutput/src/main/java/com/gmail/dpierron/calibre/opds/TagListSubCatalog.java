@@ -9,14 +9,15 @@ import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.*;
 
 public class TagListSubCatalog extends TagsSubCatalog {
-  private final static Logger logger = Logger.getLogger(TagListSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(TagListSubCatalog.class);
 
 
   public TagListSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {

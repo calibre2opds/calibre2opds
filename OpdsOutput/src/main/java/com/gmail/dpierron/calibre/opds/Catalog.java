@@ -24,7 +24,8 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.*;
@@ -37,7 +38,7 @@ import java.util.zip.ZipOutputStream;
 
 public class Catalog {
 
-  private static final Logger logger = Logger.getLogger(Catalog.class);
+  private static final Logger logger = LogManager.getLogger(Catalog.class);
   // Some Copying stats to accumulate
   private long copyExistHits;     // Count of Files that are copied because target does not exist
   private long copyLengthHits;    // Count of files that are copied because lengths differ

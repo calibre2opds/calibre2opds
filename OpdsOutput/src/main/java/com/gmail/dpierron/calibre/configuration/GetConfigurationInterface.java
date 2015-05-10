@@ -11,7 +11,6 @@ package com.gmail.dpierron.calibre.configuration;
  */
 
 import com.gmail.dpierron.calibre.opds.indexer.Index;
-import com.gmail.dpierron.tools.Composite;
 
 import java.io.File;
 import java.util.List;

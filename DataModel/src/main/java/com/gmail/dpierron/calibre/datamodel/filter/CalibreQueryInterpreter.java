@@ -12,12 +12,13 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.Tree;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
 
 public class CalibreQueryInterpreter {
-  private final static Logger logger = Logger.getLogger(CalibreQueryInterpreter.class);
+  private final static Logger logger = LogManager.getLogger(CalibreQueryInterpreter.class);
 
   // recognized lexical elements
   private static final String WORD_TAG = "tags:";

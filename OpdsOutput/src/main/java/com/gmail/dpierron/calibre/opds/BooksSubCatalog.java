@@ -11,7 +11,6 @@ package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.calibre.cache.CachedFile;
 import com.gmail.dpierron.calibre.cache.CachedFileManager;
-import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.tools.i18n.Localization;
@@ -19,7 +18,8 @@ import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.calibre.opds.indexer.IndexManager;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.File;
@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.*;
 
 public abstract class BooksSubCatalog extends SubCatalog {
-  private final static Logger logger = Logger.getLogger(BooksSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(BooksSubCatalog.class);
 
   /**
    * @return

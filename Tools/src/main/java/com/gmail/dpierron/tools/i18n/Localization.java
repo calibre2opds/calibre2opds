@@ -2,7 +2,8 @@ package com.gmail.dpierron.tools.i18n;
 
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.Utf8ResourceBundle;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -14,7 +15,7 @@ import java.util.*;
 public enum Localization {
   Enum("Enumerations"), Main("Localization");
 
-  Logger logger = Logger.getLogger(Localization.class);
+  Logger logger = LogManager.getLogger(Localization.class);
 
   private boolean localization_initialized = false;
 

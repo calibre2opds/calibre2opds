@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CatalogManager {
-  private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(CatalogManager.class);
+  private final static org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(CatalogManager.class);
 
   //-----------------------------------------
   private static final boolean syncLog = true;      // Set to true to get a log of the file copy process

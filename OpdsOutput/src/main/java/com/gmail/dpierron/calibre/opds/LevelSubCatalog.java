@@ -11,14 +11,15 @@ import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.*;
 
 public class LevelSubCatalog extends SubCatalog {
-  private final static Logger logger = Logger.getLogger(LevelSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(LevelSubCatalog.class);
 
   private String title;
 

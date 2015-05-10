@@ -6,7 +6,8 @@ import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.opds.JDOMManager;
 import com.gmail.dpierron.calibre.opds.JDOMManager.Namespace;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.*;
 
 import java.io.*;
@@ -19,7 +20,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class OpfOutput {
-  private final static Logger logger = Logger.getLogger(OpfOutput.class);
+  private final static Logger logger = LogManager.getLogger(OpfOutput.class);
   private static final DateFormat CALIBRE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
   private static final DateFormat CALIBRE_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 

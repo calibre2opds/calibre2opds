@@ -5,7 +5,8 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.opds.JDOMManager.Namespace;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.UnsupportedEncodingException;
@@ -15,7 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class FeedHelper {
-  private final static Logger logger = Logger.getLogger(ImageManager.class);
+  private final static Logger logger = LogManager.getLogger(ImageManager.class);
 
 
   /**

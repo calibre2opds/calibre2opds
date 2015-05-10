@@ -8,7 +8,8 @@ import com.gmail.dpierron.calibre.opds.Catalog;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opf.OpfOutput;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.io.IOException;
  * @author David
  */
 public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
-  private final static Logger logger = Logger.getLogger(Catalog.class);
+  private final static Logger logger = LogManager.getLogger(Catalog.class);
   int maxScale;
   double to30000;
   int pos;

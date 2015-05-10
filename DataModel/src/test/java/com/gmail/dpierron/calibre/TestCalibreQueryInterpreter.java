@@ -10,10 +10,11 @@ import com.gmail.dpierron.calibre.datamodel.filter.FilterHelper;
 import com.gmail.dpierron.calibre.datamodel.filter.PassthroughFilter;
 import com.gmail.dpierron.calibre.error.CalibreSavedSearchInterpretException;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+// import org.apache.logging.log4j.ConsoleAppender;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+// import org.apache.logging.log4j.PatternLayout;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,26 +26,27 @@ public class TestCalibreQueryInterpreter {
 
   @BeforeClass
   public static void setUp() {
-    Logger rootLogger = Logger.getRootLogger();
+    Logger rootLogger = LogManager.getRootLogger();
+/*
     if (!rootLogger.getAllAppenders().hasMoreElements()) {
       rootLogger.setLevel(Level.INFO);
       rootLogger.addAppender(new ConsoleAppender(new PatternLayout("%-5p [%t]: %m%n")));
 
       // The TTCC_CONVERSION_PATTERN contains more info than
       // the pattern we used for the root logger
-      Logger logger = rootLogger.getLoggerRepository().getLogger(TestCalibreQueryInterpreter.class.getCanonicalName());
+      Logger logger = rootLogManager.getLoggerRepository().getLogger(TestCalibreQueryInterpreter.class.getCanonicalName());
       // logger.setLevel(Level.TRACE);
       logger.setLevel(Level.DEBUG);
       logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 
       // The TTCC_CONVERSION_PATTERN contains more info than
       // the pattern we used for the root logger
-      logger = rootLogger.getLoggerRepository().getLogger(CalibreQueryInterpreter.class.getCanonicalName());
+      logger = rootLogManager.getLoggerRepository().getLogger(CalibreQueryInterpreter.class.getCanonicalName());
       // logger.setLevel(Level.TRACE);
       logger.setLevel(Level.DEBUG);
       logger.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
     }
-
+*/
     ReadOnlyConfigurationInterface conf = new ReadOnlyConfigurationInterface() {
       public File getDatabaseFolder() {
         String fileName = TestCalibreQueryInterpreter.class.getResource("metadata.db").getFile();

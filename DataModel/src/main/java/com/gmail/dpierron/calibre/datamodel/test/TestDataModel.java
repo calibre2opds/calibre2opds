@@ -1,7 +1,8 @@
 package com.gmail.dpierron.calibre.datamodel.test;
 
 import com.gmail.dpierron.calibre.datamodel.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 
 public class TestDataModel {
-  private static final Logger logger = Logger.getLogger(TestDataModel.class);
+  private static final Logger logger = LogManager.getLogger(TestDataModel.class);
 
   private void skipLine() {
     logger.info("\r\n");

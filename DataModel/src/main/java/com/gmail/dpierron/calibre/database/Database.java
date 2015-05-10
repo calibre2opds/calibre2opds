@@ -12,7 +12,8 @@ import com.gmail.dpierron.calibre.configuration.Configuration;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.sql.*;
@@ -24,7 +25,7 @@ import java.util.Date;
 
 public class Database {
 
-  private static final Logger logger = Logger.getLogger(Database.class);
+  private static final Logger logger = LogManager.getLogger(Database.class);
   private static final DateFormat SQLITE_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   private static int sqlException = 0;    // Set to bit dependent value to allow for multiple different exception points
 

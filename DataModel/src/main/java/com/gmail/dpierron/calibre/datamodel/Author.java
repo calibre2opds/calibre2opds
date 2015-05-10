@@ -1,12 +1,13 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class Author implements SplitableByLetter, Comparable<Author> {
-  private final static Logger logger = Logger.getLogger(Author.class);
+  private final static Logger logger = LogManager.getLogger(Author.class);
   private final String id;
   private String name;
   private String sort;

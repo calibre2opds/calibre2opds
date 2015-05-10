@@ -1,10 +1,11 @@
 package com.gmail.dpierron.calibre.opds;
 
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ProgressIndicator {
-  Logger logger = Logger.getLogger(ProgressIndicator.class);
+  private final static Logger logger = LogManager.getLogger(ProgressIndicator.class);
 
   long maxVisible;
   double scale;

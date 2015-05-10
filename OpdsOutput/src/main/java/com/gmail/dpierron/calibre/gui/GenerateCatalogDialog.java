@@ -14,7 +14,8 @@ package com.gmail.dpierron.calibre.gui;
 import com.gmail.dpierron.calibre.opds.*;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ import java.awt.*;
  * @author David
  */
 public class GenerateCatalogDialog extends javax.swing.JDialog implements CatalogCallbackInterface {
-  private final static Logger logger = Logger.getLogger(Catalog.class);
+  private final static Logger logger = LogManager.getLogger(Catalog.class);
   private Log4jCatalogCallback delegate = new Log4jCatalogCallback();
   protected boolean continueGenerating = true;
   private Long stageStartTime;

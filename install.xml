@@ -85,15 +85,15 @@
             <file src="Install/target/dependency/OpdsOutput-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/DataModel-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/Tools-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-			      <file src="Install/target/dependency/CalibreQueryLanguage-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-                        
+	    <file src="Install/target/dependency/CalibreQueryLanguage-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>            
             <file src="Install/target/dependency/jdom2-2.0.6.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-2.7.7.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-runtime-3.1.3.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/jdom2-2.0.6.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/jtidy-r938.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/junit-4.12.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/log4j-1.2.12.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/log4j-api-2.2.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/log4j-core-2.2.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/sqlite-jdbc-3.8.7.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/stringtemplate-3.2.jar" targetdir="$INSTALL_PATH"/>
 

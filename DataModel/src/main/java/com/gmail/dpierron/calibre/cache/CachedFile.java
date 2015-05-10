@@ -17,7 +17,8 @@ package com.gmail.dpierron.calibre.cache;
  *        file.  If not then unexpected actions can occur.
  */
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +27,7 @@ import java.util.zip.Adler32;
 import java.util.zip.CheckedInputStream;
 
 public class CachedFile extends File {
-  private final static Logger logger = Logger.getLogger(CachedFile.class);
+  private final static Logger logger = LogManager.getLogger(CachedFile.class);
 
   private long privateLastModified;
   private long privateLength;

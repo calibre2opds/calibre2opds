@@ -2,20 +2,19 @@ package com.gmail.dpierron.calibre.opds;
 /**
  *
  */
-import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.GenericDataObject;
 import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.List;
 
 public class FeaturedBooksSubCatalog extends SubCatalog {
-  private final static Logger logger = Logger.getLogger(FeaturedBooksSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(FeaturedBooksSubCatalog.class);
 
   private SplitOption splitOption;
 

@@ -3,11 +3,13 @@ package com.gmail.dpierron.tools;
 /**
  * Useful utility functions called from multiple areas of program
  */
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.rmi.dgc.VMID;
 import java.text.Collator;
 import java.text.DateFormat;
@@ -17,7 +19,7 @@ import java.util.Locale;
 
 public class Helper {
 
-  private final static Logger logger = Logger.getLogger(Helper.class);
+  private final static Logger logger = LogManager.getLogger(Helper.class);
   private static final String DEFAULT_PREFIX = "com.gmail.dpierron.";
   static final int DEFAULT_STACK_DEPTH = 5;
 
@@ -1440,4 +1442,18 @@ public class Helper {
     return text;
   }
 
+  private static File installDirectory;
+
+  /**
+   *
+   * @return
+   */
+  public static File getInstallDirectory() {
+    if (installDirectory == null) {
+      URL mySource = Helper.class.getProtectionDomain().getCodeSource().getLocation();
+      File sourceFile = new File(mySource.getPath());
+      installDirectory = sourceFile.getParentFile();
+    }
+    return installDirectory;
+  }
 }

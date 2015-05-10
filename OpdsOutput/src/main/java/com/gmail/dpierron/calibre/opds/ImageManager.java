@@ -9,13 +9,14 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
 
 public abstract class ImageManager {
-  private final static Logger logger = Logger.getLogger(ImageManager.class);
+  private final static Logger logger = LogManager.getLogger(ImageManager.class);
 
   // private Map<File, File> generatedImages;
 

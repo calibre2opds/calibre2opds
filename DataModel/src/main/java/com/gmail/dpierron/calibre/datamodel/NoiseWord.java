@@ -8,7 +8,6 @@ package com.gmail.dpierron.calibre.datamodel;
  * For languages where there are no list of noisewords
  * available this class effectively does nothing.
  */
-import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
 
 import java.util.*;

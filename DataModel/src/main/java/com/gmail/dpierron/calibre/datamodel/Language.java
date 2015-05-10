@@ -1,10 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
 import com.gmail.dpierron.tools.Helper;
-
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class Language {
   private final String id;

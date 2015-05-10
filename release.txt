@@ -100,7 +100,8 @@ v3.5
     - Fix:    #c2o-242: Publish mode does not let you continue if the destination folder does not exist 
     - Fix:    #c2o-244: Catalog folder text entry field is too small to show any text 
     - Fix:    #c20-245: Localization not working properly
-    - Fix:    #c2o-246: Inconsistencies in layout of lists in HTML catalog 
+    - Fix:    #c2o-246: Inconsistencies in layout of lists in HTML catalog
+    - Fix:    #c2o-247: ebook files should not be placed on target in Publish mode if downloads disabled
     
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to

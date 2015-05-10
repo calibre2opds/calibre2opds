@@ -7,7 +7,8 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.JDOMManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class TrookSpecificSearchDatabaseManager {
   private static long keywordCounter = 0;
   private static long resultCounter = 0;
 
-  private static final Logger logger = Logger.getLogger(TrookSpecificSearchDatabaseManager.class);
+  private static final Logger logger = LogManager.getLogger(TrookSpecificSearchDatabaseManager.class);
 
   public static void setDatabaseFile(File dbFile) {
     databaseFile = dbFile;

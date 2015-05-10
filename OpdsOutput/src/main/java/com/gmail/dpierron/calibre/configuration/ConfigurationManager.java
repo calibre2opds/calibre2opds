@@ -11,7 +11,9 @@ import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.JDOMManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.runner.Runner;
 
 import javax.swing.*;
 import java.io.*;
@@ -22,20 +24,16 @@ public class ConfigurationManager {
 
   public static final String PROFILES_SUFFIX = ".profile.xml";
   private final static String PROFILE_FILENAME = "profile.xml";
-  private final static String CONFIGURATION_FOLDER = ".calibre2opds";
   private final static String DEFAULT_PROFILE = "default";
   private final static String PROPERTY_NAME_CURRENTCONFIGURATION = "CurrentConfiguration";
 
-  private final static Logger logger = Logger.getLogger(ConfigurationManager.class);
-  private static List<String> startupLogMessages;
+  private final static Logger logger = LogManager.getLogger(ConfigurationManager.class);
 
-  private static File installDirectory;
   private static File configurationDirectory;
   private static File configurationFolder = null;
   private static ConfigurationHolder currentProfile;
   private static PropertiesBasedConfiguration defaultConfiguration;
   private static Locale configLocale = null;
-  private static boolean guiMode = false;
   // Listof formats that are used in the current profile
   private static List<EBookFormat> profileFormats = null;
 
@@ -168,224 +166,23 @@ public class ConfigurationManager {
   }
 
   /**
-   *
-   * @return
-   */
-  public static File getInstallDirectory() {
-    if (installDirectory == null) {
-      URL mySource = ConfigurationHolder.class.getProtectionDomain().getCodeSource().getLocation();
-      File sourceFile = new File(mySource.getPath());
-      installDirectory = sourceFile.getParentFile();
-    }
-    return installDirectory;
-  }
-
-  /**
    * Get the Configuration folder
    *
    * @return
    */
   public static File getConfigurationDirectory() {
-    if (configurationDirectory == null) {
-      //            logger.trace("getConfigurationDirectory - configurationDirectory not set");
-      configurationDirectory = getDefaultConfigurationDirectory();
-      //            logger.debug("getConfigurationDirectory=" + configurationDirectory.getPath());
-    }
+    assert configurationDirectory != null;
     return configurationDirectory;
   }
 
   /**
-   * Get the startup messsages
-   *
-   * @return
+   * Set the configuration folder
+   * @param f
    */
-  private static String startupMessagesForDisplay() {
-    StringBuffer s = new StringBuffer("\n\nLOG:");
-    for (String m : startupLogMessages) {
-      s.append( m + "\n");
-    }
-    return s.toString();
+  public static void setConfigurationDirectory (File f) {
+    configurationDirectory = f;
   }
 
-  /**
-   * Check for redirection (if any
-   *
-   * @param redirectToNewHome  Folder to check
-   * @return                   Final result (same a redirectToNewHome if redirect not active.
-   */
-  private static File configurationRedirect(File redirectToNewHome) {
-    assert redirectToNewHome != null;
-    assert redirectToNewHome.exists() == true;
-
-    File redirectConfigurationFile = new File(redirectToNewHome, ".redirect");
-    if (! redirectConfigurationFile.exists()) {
-      addStartupLogMessage(Localization.Main.getText("startup.configusing", redirectToNewHome));
-      return redirectToNewHome;
-    }
-    // Attempt to follow a redirect
-    String message = Localization.Main.getText("startup.redirectfound", redirectToNewHome.getPath());
-    addStartupLogMessage(message);
-    try {
-      BufferedReader fr = null;
-      try {
-        fr = new BufferedReader(new FileReader(redirectConfigurationFile));
-        String newHomeFileName = fr.readLine();
-        File newHome = new File(newHomeFileName);
-        if (newHome.exists()) {
-          addStartupLogMessage(Localization.Main.getText("startup.redirecting", newHome.getAbsolutePath()));
-          // Allow for recursion
-          return configurationRedirect(newHome);
-        } else {
-          String message2 = Localization.Main.getText("startup.redirectnotfound", newHome.getPath());
-          String message3 = Localization.Main.getText("startup.redirectabandoned");
-          if (guiMode) {
-            JOptionPane.showMessageDialog(null, message + "\n" + message2 + "\n" + message3 + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
-          }
-          addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message3));
-          addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message2));
-          System.exit(-1);
-        }
-      } finally {
-        if (fr != null)
-          fr.close();
-      }
-    } catch (IOException e) {
-      String message2 = Localization.Main.getText("startup.redirectreadfail");
-      String message3 = Localization.Main.getText("startup.redirectabandoned");
-      if (guiMode) {
-        JOptionPane.showMessageDialog(null, message + "\n" + message2 + "\n" + message3 + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
-      }
-      addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message2));
-      addStartupLogMessage(Helper.getTextFromPseudoHtmlText(message3));
-      ConfigurationManager.addStartupLogMessage("Exit(-2)");
-      System.exit(-2);
-    }
-    // Do not think we can actually get here!
-    // However if we do assume no redirect found
-    addStartupLogMessage(Localization.Main.getText("startup.configusing", redirectToNewHome));
-    return redirectToNewHome;
-  }
-
-  /**
-   * Work out where the configuration folder is located.
-   * Note that at this poin t log4j will not have been initiaised
-   * so send any messages to system.out.
-
-   * @return  Folder to be used for configuration purposes
-   */
-  public static File getDefaultConfigurationDirectory() {
-
-    // Check for redirect
-    // Note that redirect's can be chained.
-
-      // If we got here then configuration folder exists, and no redirect is active
-    if (configurationFolder != null) {
-      addStartupLogMessage(Localization.Main.getText("startup.configusing", configurationFolder));
-      return configurationFolder;
-    }
-    assert configurationFolder == null;
-
-    //  Now all the standard locations if we do not already have an answer
-
-    // try the CALIBRE2OPDS_CONFIG environment variable
-    String configDirectory = System.getenv("CALIBRE2OPDS_CONFIG");
-    if (Helper.isNotNullOrEmpty(configDirectory)) {
-      File envConfigurationFolder = new File(configDirectory);
-      ConfigurationManager.addStartupLogMessage("CALIBRE2OPDS_CONFIG=" + envConfigurationFolder);
-      if (envConfigurationFolder.exists()) {
-        // Allow for redirect
-        return configurationRedirect(envConfigurationFolder);
-      } else {
-        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
-        configurationFolder = null;  
-      }
-    }
-    assert configurationFolder == null;
-    File configurationFolderParent = null;    // Set to the first potential parent for configuration folder.
-
-    // try with user.home  (normal default)
-
-    String userHomePath = System.getProperty("user.home");
-    if (Helper.isNotNullOrEmpty(userHomePath)) {
-      File homeParent = new File(userHomePath);
-      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.folderuserhome", homeParent));
-      if (homeParent.exists()) {
-        File homeConfigurationFolder = new File(homeParent, CONFIGURATION_FOLDER);
-        if (homeConfigurationFolder.exists()) {
-          // Allow for redirection
-          ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.folderuserhome", homeConfigurationFolder));
-          return configurationRedirect(homeConfigurationFolder);
-        }
-        configurationFolderParent = homeParent;       // Set as potential home for configuration folder
-      } else {
-        ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
-      }
-    }
-    assert configurationFolder == null;
-
-    // try with tilde (fallback default on linux/mac)
-
-    File tildeParent = new File("~");
-    ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldertilde", configurationFolderParent));
-    if (tildeParent.exists()) {
-      File tildeConfigurationFolder = new File(tildeParent, CONFIGURATION_FOLDER);
-      if (tildeConfigurationFolder.exists()) {
-        return configurationRedirect(tildeConfigurationFolder);
-      } else {
-        if (configurationFolderParent == null) configurationFolderParent = tildeConfigurationFolder;
-      }
-    } else {
-      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
-    }
-    assert configurationFolder == null;
-
-    // Last ditch effort - try the install folder
-
-    File  installConfigurationFolderParent = getInstallDirectory();
-    ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.folderjar", installConfigurationFolderParent));
-    if (installConfigurationFolderParent.exists()) {
-      File installConfigurationFolder = new File(installConfigurationFolderParent, CONFIGURATION_FOLDER);
-      if (installConfigurationFolder.exists()) {
-        // Allow for redirect
-        return configurationRedirect(installConfigurationFolder);
-      } else {
-        if (configurationFolderParent == null) configurationFolderParent = installConfigurationFolderParent;
-      }
-    } else {
-      // ITIMPI:   Is this condition really possible as surely the InstallDirectory exists!!
-      ConfigurationManager.addStartupLogMessage(Localization.Main.getText("startup.foldernotexist"));
-    }
-    assert configurationFolder == null;
-
-    // No suitable location found (is this actually possible!
-    if (configurationFolderParent == null) {
-      String message = Localization.Main.getText("startup.foldernotfound");
-      if (guiMode) {
-        JOptionPane.showMessageDialog(null, message + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
-      }
-      ConfigurationManager.addStartupLogMessage(message);
-      ConfigurationManager.addStartupLogMessage("Exit(-1)");
-      System.exit(-3);
-    }
-    assert configurationFolderParent != null && configurationFolder == null && configurationFolderParent.exists();
-
-    // OK - configuration folder does not exist so we need to create it
-
-    File newConfigurationFolder = new File (configurationFolderParent,CONFIGURATION_FOLDER);
-    assert !newConfigurationFolder.exists();
-    if (! newConfigurationFolder.mkdirs()) {
-      String message = Localization.Main.getText("startup.foldernotcreatefailed", newConfigurationFolder);
-      if (guiMode) {
-        JOptionPane.showMessageDialog(null, message + startupMessagesForDisplay(), Constants.PROGNAME, JOptionPane.ERROR_MESSAGE);
-      }
-      ConfigurationManager.addStartupLogMessage(message);
-      ConfigurationManager.addStartupLogMessage("Exit(-1)");
-      System.exit(-4);
-    }
-    configurationFolder = newConfigurationFolder;
-    addStartupLogMessage(Localization.Main.getText("startup.configusing", configurationFolder));
-    return configurationFolder;
-  }
 
   /**
    * Special variant of this that checks several locations for the file before
@@ -403,7 +200,7 @@ public class ConfigurationManager {
     } catch (FileNotFoundException e) {
       try {
           // If that fails, try install folder
-          ins = new FileInputStream (getInstallDirectory() + "/" + filename);
+          ins = new FileInputStream (Helper.getInstallDirectory() + "/" + filename);
           logger.info("Resource '" + filename + "' loaded from Install folder");
       } catch (FileNotFoundException f) {
           // If still not found then use built-in resource
@@ -415,36 +212,6 @@ public class ConfigurationManager {
 
   public static boolean isHacksEnabled() {
     return Helper.isNotNullOrEmpty(System.getenv("CALIBRE2OPDS_HACKSENABLED"));
-  }
-
-
-  /**
-   * Add a log message to the array of those to be kept for recoding to
-   * the log after log4j has been initialised
-   *
-   * @param message
-   */
-  public static void addStartupLogMessage (String message) {
-    System.out.println(message);
-    if (startupLogMessages == null)
-      startupLogMessages = new ArrayList<String>();
-    startupLogMessages.add(message);
-  }
-
-  /**
-   * Get the list of startup messages that have been built up
-   * @return
-   */
-  public static List<String> getStartupLogMessages() {
-    return startupLogMessages;
-  }
-
-  /**
-   * Clear down the list of startup messages.
-   * (Just saves a little RAM if there were a lot?)
-   */
-  public static void clearStartupLogMessages() {
-    startupLogMessages = null;
   }
 
   /**
@@ -481,20 +248,9 @@ public class ConfigurationManager {
   }
 
   /**
-   * set the whether we are running in GUI mode or not.
-   *
-   * This setting is used under certain dtartup error conditions to
-   * determine whether we pp up an error dialog or simply log the error
-   * @param b
-   */
-  public static void setGuiMode(boolean b) {
-    guiMode = b;
-  }
-
-  /**
    * get the list of supported ebook formats.
    *
-   * We use the funcyion that can read from a iser
+   * We use the function that can read from a user
    * configuration file (if present), and if that
    * is not present the default resource file
    *

@@ -20,7 +20,8 @@ import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
 import com.l2fprod.common.swing.JDirectoryChooser;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,7 +39,7 @@ import java.util.Locale;
 import java.util.Random;
 
 public class Mainframe extends javax.swing.JFrame {
-  Logger logger = Logger.getLogger(Mainframe.class);
+  private final Logger logger = LogManager.getLogger(Mainframe.class);
   GenerateCatalogDialog catalogDialog;
   Locale language;
   CustomCatalogTableModel customCatalogTableModel = new CustomCatalogTableModel();

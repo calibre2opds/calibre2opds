@@ -13,7 +13,8 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.RootTreeNode;
 import com.gmail.dpierron.tools.TreeNode;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.jdom2.Element;
 
@@ -22,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TagTreeSubCatalog extends TagsSubCatalog {
-  private final static Logger logger = Logger.getLogger(TagTreeSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(TagTreeSubCatalog.class);
 
   // CONSTRUCTOR(S)
 

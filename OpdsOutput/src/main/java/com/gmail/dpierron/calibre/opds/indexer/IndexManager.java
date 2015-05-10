@@ -3,7 +3,8 @@ package com.gmail.dpierron.calibre.opds.indexer;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.opds.CatalogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.io.IOException;
  * all the algorithms needed to index the model objects are stored here
  */
 public class IndexManager {
-  private final static Logger logger = Logger.getLogger(IndexManager.class);
+  private final static Logger logger = LogManager.getLogger(IndexManager.class);
   private static Index index = new Index();
 
   private IndexManager() {

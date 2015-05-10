@@ -11,7 +11,8 @@ import com.gmail.dpierron.calibre.gui.GenerationStoppedException;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.i18n.LocalizationHelper;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class Log4jCatalogCallback implements CatalogCallbackInterface {
-  private final static Logger logger = Logger.getLogger(Catalog.class);
+  private final static Logger logger = LogManager.getLogger(Catalog.class);
   private final static String doNot = Localization.Main.getText("config.negate");
   private final static String yes = Localization.Main.getText("boolean.yes");
   private final static String no = Localization.Main.getText("boolean.no");

@@ -9,15 +9,13 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.*;
-import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import com.gmail.dpierron.tools.i18n.LocalizationHelper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Collator;
@@ -26,7 +24,7 @@ import java.util.zip.CRC32;
 
 public abstract class SubCatalog {
   // cache some widely used objects.
-  private final static Logger logger = Logger.getLogger(SubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(SubCatalog.class);
   // Get some non-mutable configuration options once for efffeciency that are used widely in subcatalog variants
   // TODO:  Decide if perhaps these should be moved to CatalogManager?
   protected static final ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();

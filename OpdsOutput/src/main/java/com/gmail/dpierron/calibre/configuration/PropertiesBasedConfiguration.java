@@ -6,13 +6,14 @@ package com.gmail.dpierron.calibre.configuration;
  */
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Properties;
 
 public class PropertiesBasedConfiguration {
-  private final static Logger logger = Logger.getLogger(PropertiesBasedConfiguration.class);
+  private final static Logger logger = LogManager.getLogger(PropertiesBasedConfiguration.class);
 
   Properties properties;
   File propertiesFile;

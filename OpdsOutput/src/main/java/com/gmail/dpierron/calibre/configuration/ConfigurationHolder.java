@@ -1,11 +1,11 @@
 package com.gmail.dpierron.calibre.configuration;
 
 import com.gmail.dpierron.calibre.datamodel.DataModel;
-import com.gmail.dpierron.calibre.datamodel.Language;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -139,7 +139,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_ZIP_OMIT_XML = "ZipOmitXml";
   private final static String PROPERTY_NAME_SecurityCode = "SecurityCode";
 
-  final static Logger logger = Logger.getLogger(ConfigurationHolder.class);
+  final static Logger logger = LogManager.getLogger(ConfigurationHolder.class);
 
   private DefaultConfigurationSettings defaults = new DefaultConfigurationSettings();
 

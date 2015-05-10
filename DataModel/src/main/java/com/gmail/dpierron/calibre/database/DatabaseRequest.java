@@ -4,7 +4,8 @@ package com.gmail.dpierron.calibre.database;
  */
 
 import com.gmail.dpierron.calibre.configuration.Configuration;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -52,7 +53,7 @@ public enum DatabaseRequest {
   CUSTOM_COLUMN_NORMALIZED_DATA_EXTRA("select bccl.book AS book, cc.value AS value, bccl.extra AS extra FROM books_custom_column_?_link bccl "
       + "LEFT OUTER JOIN custom_column_? cc ON bccl.value=cc.id" );
 
-  private static final Logger logger = Logger.getLogger(DatabaseRequest.class);
+  private static final Logger logger = LogManager.getLogger(DatabaseRequest.class);
   private String sql;
   private PreparedStatement preparedStatement;
 

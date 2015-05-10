@@ -5,14 +5,15 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.IOException;
 import java.util.List;
 
 public class RecentBooksSubCatalog extends BooksSubCatalog {
-  private final static Logger logger = Logger.getLogger(RecentBooksSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(RecentBooksSubCatalog.class);
 
 
   public RecentBooksSubCatalog(List<Object> stuffToFilterOut, List<Book> books) {

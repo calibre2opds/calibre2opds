@@ -13,17 +13,16 @@ import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.tools.Composite;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.i18n.Localization;
-import org.apache.log4j.Logger;
-import org.omg.CORBA.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.lang.Object;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class DataModel {
 
-  private final static Logger logger = Logger.getLogger(DataModel.class);
+  private final static Logger logger = LogManager.getLogger(DataModel.class);
 
   protected static final String IMPLICIT_LANGUAGE_TAG_PREFIX = "Lang:";
 

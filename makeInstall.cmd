@@ -5,6 +5,7 @@ REM
 REM The following specifies the ZIP program to use
 REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
+ZIPPROG=zip
 
 SETLOCAL
 call setenv.cmd
@@ -48,7 +49,7 @@ cd ..
 cd Install\target\Dependency
 
 "%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-%BASEVERSION%-SNAPSHOT.jar  DataModel-%BASEVERSION%-SNAPSHOT.jar    Tools-%BASEVERSION%-SNAPSHOT.jar   CalibreQueryLanguage-%BASEVERSION%-SNAPSHOT.jar
-"%ZIPPROG%" "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar hamcrest-core-1.3.jar jdom2-2.0.6.jar jtidy-r938.jar junit-4.12.jar log4j-1.2.12.jar sqlite-jdbc-3.8.7.jar stringtemplate-3.2.jar
+"%ZIPPROG%" "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar hamcrest-core-1.3.jar jdom2-2.0.6.jar jtidy-r938.jar junit-4.12.jar log4j-api-2.2.jar log4j-core-2.2.jar sqlite-jdbc-3.8.7.jar stringtemplate-3.2.jar
 cd ..\..\..\
 
 goto LINUX

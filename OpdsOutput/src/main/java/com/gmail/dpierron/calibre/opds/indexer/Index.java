@@ -6,7 +6,8 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.rmi.dgc.VMID;
@@ -20,7 +21,7 @@ import java.util.*;
 public class Index {
   // TODO Make this configurabel?
   private static final int MIN_KEYWORD_SIZE = 3;
-  private final static Logger logger = Logger.getLogger(Index.class);
+  private final static Logger logger = LogManager.getLogger(Index.class);
   //  private static Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
   // TODO Make this configurable?
   // TODO Build up list further,

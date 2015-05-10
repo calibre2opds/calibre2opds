@@ -16,7 +16,8 @@ import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.text.Collator;
 import java.util.*;
 
 public class AuthorsSubCatalog extends BooksSubCatalog {
-  private final static Logger logger = Logger.getLogger(AuthorsSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(AuthorsSubCatalog.class);
   private final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
   private Map<Author, List<Book>> mapOfBooksByAuthor;     // Cached information for efficency
   private List<Author> authors;                           // Cached information for efficiency

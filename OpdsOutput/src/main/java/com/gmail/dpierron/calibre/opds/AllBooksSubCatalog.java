@@ -7,20 +7,18 @@ package com.gmail.dpierron.calibre.opds;
  */
 
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.Option;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
-import org.jdom2.Element;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class AllBooksSubCatalog extends BooksSubCatalog {
-  private final static org.apache.log4j.Logger logger = Logger.getLogger(AllBooksSubCatalog.class);
+  private final static Logger logger = LogManager.getLogger(AllBooksSubCatalog.class);
 
   //------------------ CONSTRUCTORS ------------------------
   public AllBooksSubCatalog(List<Book> books) {

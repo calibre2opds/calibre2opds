@@ -16,7 +16,8 @@ package com.gmail.dpierron.calibre.cache;
 
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.StringTokenizer;
 
 public class CachedFileManager {
 
-  private final static Logger logger = Logger.getLogger(CachedFileManager.class);
+  private final static Logger logger = LogManager.getLogger(CachedFileManager.class);
   private static Map<String, CachedFile> cachedFilesMap = new HashMap<String, CachedFile>();
   private static File cacheFile = null;
   private final static String CALIBRE2OPDS_LOG_FILENAME = "c2o_cache";

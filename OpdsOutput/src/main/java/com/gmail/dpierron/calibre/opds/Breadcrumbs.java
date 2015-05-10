@@ -1,6 +1,6 @@
 package com.gmail.dpierron.calibre.opds;
 /**
- * Class that provides methods for manipulating a set of breadcrum.
+ * Class that provides methods for manipulating a set of breadcrumbs.
  */
 
 import com.gmail.dpierron.tools.Helper;
@@ -35,42 +35,6 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
 
     return breadcrumbs;
   }
-
-  /**
-   * Get a unique filename using the breadcrumbs
-   *
-   * ITIMPI:  To keep the name as short as possible when recursing down
-   *          many levels (to avoid hitting file system limits) if the text
-   *          of one breadcrumb is the same as the start of the next one it
-   *          is omitted.
-   *
-   * TODO:  Decide if this method may now be no longer needed with the new naming system.
-   * @return
-   */
-/*
-  public String getFilename() {
-    StringBuffer result = new StringBuffer();
-    Breadcrumb lastElement = null;
-    for (int i=0 ; i < this.size(); i++) {
-      Breadcrumb thisElement = this.elementAt(i);
-      if (lastElement == null) {
-        lastElement = thisElement;
-      } else {
-        if (thisElement.toString().startsWith(lastElement.toString())) {
-          lastElement = thisElement;
-          continue;
-        } else {
-          result.append(lastElement.getFilename());
-          lastElement = thisElement;
-        }
-      }
-      if (i+1 == this.size()){
-        result.append(lastElement.getFilename());
-      }
-    }
-    return result.toString();
-  }
-*/
 
   /**
    * Convert the breadcrumbs ro a string with / between elements
