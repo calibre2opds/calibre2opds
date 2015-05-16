@@ -19,13 +19,13 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.opds.indexer.Index;
 import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.OS;
-import com.l2fprod.common.swing.JDirectoryChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import com.l2fprod.common.swing.JDirectoryChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -288,6 +288,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(mnuToolsResetSecurityCache, null, "gui.menu.tools.resetEncrypted"),
       new guiField(mnuToolsConfigLog,null,"gui.menu.tools.logConfig"),
       new guiField(mnuToolsOpenLog,null,  "gui.menu.tools.logFile"),
+      new guiField(mnuToolsOpenOldLog,null,  "gui.menu.tools.oldLogFile"),
       new guiField(mnuToolsOpenSyncLog,null,  "gui.menu.tools.syncFile"),
       new guiField(mnuToolsClearLog, null, "gui.menu.tools.logClear"),
       new guiField(mnuToolsOpenConfig, null, "gui.menu.tools.configFolder"),
@@ -439,7 +440,7 @@ public class Mainframe extends javax.swing.JFrame {
         return false;
       }
     }
-    txtSplittagson.setEnabled(! chkDontsplittags.isSelected());
+    txtSplittagson.setEnabled(!chkDontsplittags.isSelected());
     return true;
   }
   /**
@@ -638,14 +639,18 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }
 
-  private void debugShowFolder(File file) {
+  private String debugShowFolder(File file, String defaultName) {
     Frame parent = new Frame();            // Dummy ever shown
     FileDialog fd = new FileDialog(parent, file.getPath());
     fd.setDirectory(file.getPath() +"\\");
     fd.setMode(FileDialog.LOAD);
+    if (defaultName != null) {
+      fd.setFile(defaultName);
+    }
     fd.setVisible(true);
-    // Do nothing with result
+    String result = fd.getFile();
     parent.dispose();
+    return result;
   }
 
   /**
@@ -657,10 +662,11 @@ public class Mainframe extends javax.swing.JFrame {
     dialog.setVisible(true);
   }
 
-  private void debugShowLogFile() {
-    File f = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER + "/" + Constants.LOGFILE_NAME);
-    logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + f.getPath());
-    debugShowFile(f);
+  private void debugShowLogFile(String f) {
+    assert f != null;
+    File fl = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER + "/" + f);
+    logger.info(Localization.Main.getText("gui.menu.tools.logFile") + ": " + fl.getPath());
+    debugShowFile(fl);
   }
 
   /**
@@ -688,13 +694,16 @@ public class Mainframe extends javax.swing.JFrame {
   private void debugShowLogFolder() {
     File f = new File(ConfigurationManager.getConfigurationDirectory(), Constants.LOGFILE_FOLDER);
     logger.info(Localization.Main.getText("gui.menu.tools.logFolder") + ": " + f.getPath());
-    debugShowFile(f);
+    String sel = debugShowFolder(f, Constants.LOGFILE_NAME);
+    if (Helper.isNotNullOrEmpty(sel)) {
+      debugShowLogFile(sel);
+    }
   }
 
   private void debugShowSupportFolder() {
     File f = ConfigurationManager.getConfigurationDirectory();
     logger.info(Localization.Main.getText("gui.menu.tools.configFolder") + ": " + f.getPath());
-    debugShowFolder(f);
+    debugShowFolder(f, null);
   }
 
   private void about() {
@@ -1518,6 +1527,7 @@ public class Mainframe extends javax.swing.JFrame {
         mnuToolsConfigLog = new javax.swing.JMenuItem();
         mnuToolsClearLog = new javax.swing.JMenuItem();
         mnuToolsOpenLog = new javax.swing.JMenuItem();
+        mnuToolsOpenOldLog = new javax.swing.JMenuItem();
         mnuToolsOpenSyncLog = new javax.swing.JMenuItem();
         mnuToolsOpenConfig = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
@@ -4494,6 +4504,14 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuTools.add(mnuToolsOpenLog);
 
+        mnuToolsOpenOldLog.setText("mnuToolsOpenOldLog");
+        mnuToolsOpenOldLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuToolsOpenOldLogActionPerformed(evt);
+            }
+        });
+        mnuTools.add(mnuToolsOpenOldLog);
+
         mnuToolsOpenSyncLog.setText("mnuToolsOpenSyncLog");
         mnuToolsOpenSyncLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4717,7 +4735,7 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_mnuToolsConfigLogActionPerformed
 
   private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-    debugShowLogFile();
+    debugShowLogFile(Constants.LOGFILE_NAME);
   }
 
   private void mnuToolsOpenSyncLogActionPerformed(java.awt.event.ActionEvent evt) {
@@ -4882,6 +4900,10 @@ public class Mainframe extends javax.swing.JFrame {
     private void txtThumbnailheightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThumbnailheightActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtThumbnailheightActionPerformed
+
+    private void mnuToolsOpenOldLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenOldLogActionPerformed
+       debugShowLogFolder(); // TODO add your handling code here:
+    }//GEN-LAST:event_mnuToolsOpenOldLogActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -5169,6 +5191,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuToolsConfigLog;
     private javax.swing.JMenuItem mnuToolsOpenConfig;
     private javax.swing.JMenuItem mnuToolsOpenLog;
+    private javax.swing.JMenuItem mnuToolsOpenOldLog;
     private javax.swing.JMenuItem mnuToolsOpenSyncLog;
     private javax.swing.JMenuItem mnuToolsResetSecurityCache;
     private javax.swing.JMenuItem mnuToolsprocessEpubMetadataOfAllBooks;

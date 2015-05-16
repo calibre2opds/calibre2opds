@@ -86,6 +86,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenLogActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenOldLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mnuToolsOpenOldLog"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuToolsOpenOldLogActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuToolsOpenSyncLog">
               <Properties>
                 <Property name="text" type="java.lang.String" value="mnuToolsOpenSyncLog"/>

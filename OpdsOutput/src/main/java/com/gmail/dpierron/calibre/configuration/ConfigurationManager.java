@@ -25,6 +25,9 @@ public class ConfigurationManager {
   public static final String PROFILES_SUFFIX = ".profile.xml";
   private final static String PROFILE_FILENAME = "profile.xml";
   private final static String DEFAULT_PROFILE = "default";
+  public static final String LOGGING_PREFIX = "log4j2.";
+  public static final String LOGGING_SUFFIX = ".xml";
+  public final static String LOGGING_FILENAME = "log4j2.xml";
   private final static String PROPERTY_NAME_CURRENTCONFIGURATION = "CurrentConfiguration";
 
   private final static Logger logger = LogManager.getLogger(ConfigurationManager.class);

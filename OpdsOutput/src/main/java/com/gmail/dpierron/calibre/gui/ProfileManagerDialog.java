@@ -14,6 +14,8 @@ package com.gmail.dpierron.calibre.gui;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
@@ -23,6 +25,8 @@ import java.io.File;
  * @author David Pierron
  */
 public class ProfileManagerDialog extends javax.swing.JDialog {
+  private final Logger logger = LogManager.getLogger(ProfileManagerDialog.class);
+  private guiField[] guiFields;
 
   /**
    * Creates new form ProfileManagerDialog
@@ -30,7 +34,73 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
   public ProfileManagerDialog(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
+    initGuiFields();
     translateTexts();
+  }
+
+
+  /**
+   * Table that defines the GUI fields
+   * Allows standardised handling of GUI fields to be applied with minimal developer effort
+   *
+   * There are a couple of different constructors supported to keep table definition clean.
+   * The fields indicated as Optional are only included for the specific field type they relate to.
+   *
+   * Meaning/Use of the fields is:
+   *
+   * Field 1  Mandatory   Field to which the label localisation should be applied
+   *                      Can be set to null if no label localization required
+   * Field 2  Mandatory   Field in which value stored )if relevant).  Can be same as field 1.
+   *                      Also has tooltip localisation applied if .tooltip version of Field 3 found
+   *                      so set field 1 to null if only tooltip to be set up.
+   *                      Can be null for fields that do not held stored configuration values
+   * Field 3  Mandatory   Key for finding localization string.  Any .label/.tooltip suffix is omitted
+   *                      Can optionally have the .label added to the key in localization file
+   *                      If key with .tooltip found in localization file this is assumed to be a tooltip
+   *
+   * Field 4  Optional    Base name of the methods for loading/storing the the values in Field 2
+   *                      If the field only needs localisation, but not storing in the configuration
+   *                      file then then there will be no method defined so only fields 1 to 3 defined.
+   *
+   * Field 5  Optional    For checkboxes only.  Indicate is displayed field is negated from config value
+   *
+   * Field 5  Optional    Numeric fields.  Indicates minimum value allowed
+   * Field 6  Optional    Numeric fields:  Indicates maximum value allowed
+   *
+   * NOTE:  If any new types are introduced for field 1 or field 2 then guiField class will
+   *         neeed to be updated to handle this new type in the standard way desired.
+   */
+  private void initGuiFields() {
+    guiFields = new guiField[] {
+
+        // Main Windows
+
+        new guiField(cmdNew, null, "gui.profile.new"),
+        new guiField(cmdRename, null, "gui.profile.rename"),
+        new guiField(cmdDelete, null, "gui.profile.delete"),
+        new guiField(cmdClose, null, "gui.profile.close")
+    };
+  }
+
+  /**
+   * Apply localization to this dialog
+   */
+  private void translateTexts() {
+    // Do translations that are handled by guiFields table
+    for (guiField f : guiFields){
+      f.translateTexts();
+    }
+  }
+
+  /**
+   * Display in a popup the tooltip associated with a label that the user has clicked on
+   * This is for convenience in environments where the tootip is not conveniently displayed.
+   *
+   * @param label
+   */
+  private void popupExplanation(JLabel label) {
+    if (Helper.isNotNullOrEmpty(label.getToolTipText()))
+      JOptionPane.showMessageDialog(this, label.getToolTipText(), Localization.Main.getText("gui.tooltip"), JOptionPane.INFORMATION_MESSAGE);
   }
 
   private void loadProfiles() {
@@ -83,16 +153,6 @@ public class ProfileManagerDialog extends javax.swing.JDialog {
       }
     }
     loadProfiles();
-  }
-
-  /**
-   * Apply localization to this dialog
-   */
-  private void translateTexts() {
-    cmdNew.setText(Localization.Main.getText("gui.profile.new"));
-    cmdRename.setText(Localization.Main.getText("gui.profile.rename"));
-    cmdDelete.setText((Localization.Main.getText("gui.profile.delete")));
-    cmdClose.setText((Localization.Main.getText("gui.profile.close")));
   }
   /**
    * This method is called from within the constructor to
