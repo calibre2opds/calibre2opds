@@ -27,13 +27,23 @@ import java.util.Locale;
 public class guiField {
   private final static Logger logger = LogManager.getLogger(guiField.class);
 
-  private JComponent guiLabel;      // Label associated with this field
-  private JComponent guiValue;      // Value field associated with this field.  NULL if no value involved
+  private JComponent guiLabelField;      // Label associated with this field
+  private JComponent guiValueField;      // Value field associated with this field.  NULL if no value involved
   private String localizationKey;  // LocalisationText (without .lable/.tooltip)
   private String methodBase;        // The base of the methodNames associated with loading/storing values
                                     // Set it to null if this field does not have a value loaded/stored
   boolean negate;                   // For check boxes, set to true if checkbox value is negated when displayed
-  int minimum, maximum;             // Set for numeric fields to indicate range.  If both zero then field is not numeric
+  int minimum, maximum;             // Set for numeric fields to indicate range.  If both zero then field is not nu
+
+  //  The following values are cached to reduce the overhead of deriving them each time
+
+  private static ConfigurationHolder currentConfiguration = null;
+  private Class  paramTypes[] = new Class[1];
+  private Object profileType = null;
+  private Object guiType = null;
+
+
+  //
   // CONSTRUCTORS
 
   // Constructor for checkbox fields that have associated configuration information
@@ -58,13 +68,17 @@ public class guiField {
   // METHODS
 
   private void initialise(JComponent label,  JComponent value, String localizationKey, String methodBase,boolean negate, int minimum, int maximum) {
-    this.guiLabel = label;
-    this.guiValue = value;
+    this.guiLabelField = label;
+    this.guiValueField = value;
     this.localizationKey = localizationKey;
     this.methodBase = methodBase;
     this.negate = negate;
     this.minimum = minimum;
     this.maximum = maximum;
+  }
+
+  public void setCurrentConfiguration(ConfigurationHolder c) {
+    currentConfiguration = c;
   }
   /**
    * Apply the localization for the given field(s)
@@ -79,20 +93,20 @@ public class guiField {
     if (tooltipText.endsWith(".tooltip"))  tooltipText = "";
 
     // Apply localisation to the designated 'label' field
-    if (guiLabel != null) {
-      if (guiLabel instanceof JButton) {
-        ((JButton) guiLabel).setText(labelText);
-      } else if (guiLabel instanceof JLabel) {
-        ((JLabel) guiLabel).setText(labelText);
-      } else if (guiLabel instanceof JTextField) {
-        ((JTextField) guiLabel).setText(labelText);
-      } else if (guiLabel instanceof JCheckBox) {
-        ((JCheckBox) guiLabel).setText(labelText);
-      } else if (guiLabel instanceof JTabbedPane) {
+    if (guiLabelField != null) {
+      if (guiLabelField instanceof JButton) {
+        ((JButton) guiLabelField).setText(labelText);
+      } else if (guiLabelField instanceof JLabel) {
+        ((JLabel) guiLabelField).setText(labelText);
+      } else if (guiLabelField instanceof JTextField) {
+        ((JTextField) guiLabelField).setText(labelText);
+      } else if (guiLabelField instanceof JCheckBox) {
+        ((JCheckBox) guiLabelField).setText(labelText);
+      } else if (guiLabelField instanceof JTabbedPane) {
         int tabIndex = -1 + (localizationKey.charAt(localizationKey.length() - 1)) - '0';
-        ((JTabbedPane) guiLabel).setTitleAt(tabIndex, labelText);
-      } else if (guiLabel instanceof JMenuItem) {
-        ((JMenuItem) guiLabel).setText(labelText);
+        ((JTabbedPane) guiLabelField).setTitleAt(tabIndex, labelText);
+      } else if (guiLabelField instanceof JMenuItem) {
+        ((JMenuItem) guiLabelField).setText(labelText);
       } else {
         logger.error("setTranslateTexta:  Cannot handle the type for LocalizationKey=" + localizationKey);
         return;
@@ -100,8 +114,8 @@ public class guiField {
     }
     // If tooltip provided apply tooltip localisation
     if (Helper.isNotNullOrEmpty(tooltipText)) {
-      if (guiLabel != null) guiLabel.setToolTipText(tooltipText);
-      if (guiValue != null) guiValue.setToolTipText(tooltipText);
+      if (guiLabelField != null) guiLabelField.setToolTipText(tooltipText);
+      if (guiValueField != null) guiValueField.setToolTipText(tooltipText);
     }
   }
 
@@ -115,184 +129,264 @@ public class guiField {
   }
 
   /**
-   * Store the configuration information for the given field
-   * Do nothing if field has no associated value field or method
+   * Method that gets the value from the GUI and
+   * returns it as an object of the correct type to
+   * compare against a profile object.
+   *
+   * @return
    */
-  public void storeValue() {
-
-    if (Helper.isNullOrEmpty(guiValue)) {
-      return;
+  public Object getGuiValue() {
+    if (methodBase == null) {
+      return null;
     }
-    if (Helper.isNullOrEmpty(methodBase)) {
-      return;
-    }
-    Object paramType = null;
-    Class[] paramTypes = new Class[1];
-    String getMethodName = "get" + methodBase;
-    String setMethodName = "set" + methodBase;
-    try {
-      // Use get method to work out parameter type for set method
-      Method getMethod = ConfigurationHolder.class.getDeclaredMethod(getMethodName);
-      paramTypes[0] = getMethod.getReturnType();
-      paramType = getMethod.getReturnType();
-    } catch (NoSuchMethodException e1) {
-      logger.error("storeValue:  unable to find get method '" + getMethodName + "'");
-      return;
-    }
-    // Now we can set up the parameter for the setmethod
-    Object setValue = null;
+    Object guiValue = null;
     // Text fields
-    if (guiValue instanceof JTextField) {
-      String s = ((JTextField) guiValue).getText();
-      assert s != null : "storeValue:  Unexpected null return reading value of " + guiValue.getName();
+    if (guiValueField instanceof JTextField) {
+      String s = ((JTextField) guiValueField).getText();
+      assert s != null : "getGuiValue:  Unexpected null return reading value of " + guiValueField.getName();
       if (minimum == 0 && maximum == 0) {
-        if (String.class.equals(paramType)) {
-          setValue = s;
-        } else if (File.class.equals(paramType)) {
-          if (s.length() > 0)   setValue = new File(s);
-        } else if (Integer.class.equals (paramType)) {
-          setValue = getValue(s);
-        } else if (Locale.class.equals(paramType)) {
-          setValue = s.length() == 0 ? "en" : s;
+        if (String.class.equals(profileType)) {
+          guiValue = s;
+        } else if (File.class.equals(profileType)) {
+          if (s.length() > 0)   guiValue = new File(s);
+        } else if (Integer.class.equals (profileType)) {
+          guiValue = getValue(s);
+        } else if (Locale.class.equals(profileType)) {
+          guiValue = s.length() == 0 ? "en" : s;
         } else {
-          logger.error("storeValue: Unexpected paramType for '" + setMethodName + "', type=" + paramType.getClass().getName());
-          return;
+          logger.error("getGuiValue: Unexpected profileType for 'get" + methodBase + "', type=" + profileType.getClass().getName());
+          guiValue = null;
         }
       } else {
-        assert (Integer.class.equals(paramType));
-        setValue = getValue(s);
+        assert (Integer.class.equals(profileType));
+        guiValue = getValue(s);
       }
-    // Checkboxes
-    } else if (guiValue instanceof JCheckBox) {
-      Boolean b = ((JCheckBox) guiValue).isSelected();
-      setValue = negate ? !b : b;
-    // Combo boxes
-    } else if (guiValue instanceof JComboBox) {
-      setValue = ((JComboBox) guiValue).getSelectedItem();
+      // Checkboxes
+    } else if (guiValueField instanceof JCheckBox) {
+      Boolean b = ((JCheckBox) guiValueField).isSelected();
+      guiValue = negate ? !b : b;
+      // Combo boxes
+    } else if (guiValueField instanceof JComboBox) {
+      guiValue = ((JComboBox) guiValueField).getSelectedItem();
 
     } else {
-      logger.error("storeValue: gui value oBject type not recognised for " + guiLabel);
-      return;
+      logger.error("getGuiValue: object type (" + guiValueField.getClass().getName() + ") not recognised for " + guiValueField.getName());
+      guiValue = null;
     }
-    // Now we can do the set method!
-    Method setMethod;
-    try {
-      setMethod = ConfigurationHolder.class.getDeclaredMethod(setMethodName, paramTypes);
-    } catch (NoSuchMethodException e1) {
-      logger.error("storeValue:  unhandled parameter type for  '" + setMethodName + "'");
-      return;
-    }
-    // For language fields we need a locale object
-    if (Locale.class.equals(paramTypes[0])) {
-      assert String.class.equals(setValue.getClass()) : "Unexpected class " + setValue.getClass().getName() +" (" + setValue + ")";
-      setValue = Helper.getLocaleFromLanguageString((String)setValue);
-    }
-    try {
-      setMethod.invoke(ConfigurationManager.getCurrentProfile(), setValue);
 
-    // None of the following should happen except in development - but lets play safe!
-    } catch (final Exception e) {
-      logger.error("storeValue: invoke 'set" + methodBase + "Excepion " + e );
+    // For language fields we need a locale object
+    if (guiValue != null && Locale.class.equals(profileType)) {
+      assert String.class.equals(guiValue.getClass()) : "Unexpected class " + guiValue.getClass().getName() +" (" + guiValue + ")";
+      guiValue = Helper.getLocaleFromLanguageString((String)guiValue);
     }
+    return guiValue;
   }
 
   /**
-   * Load the configuration informtion for the field
-   * Do nothing if field has no associted value field or method
+   * Transfer the value to the correct GUI field
+   *
+   * @param oValue
    */
-  public void loadValue() {
-
-    if (Helper.isNullOrEmpty(guiValue)) {
-      return;
-    }
-    if (Helper.isNullOrEmpty(methodBase)) {
-      return;
-    }
-
-    InputVerifier iv = new InputVerifier() {
-
-      @Override
-      public boolean verify(JComponent input) {
-        if (!(input instanceof JTextField))
-          return false;
-        try {
-          Integer.parseInt(((JTextField) input).getText());
-          return true;
-        } catch (NumberFormatException e) {
-          return false;
-        }
+  private void putGuiValue (Object oValue) {
+    if (oValue == null) {
+      if (profileType instanceof File) {
+        oValue="";
       }
-    };
-
-    Method method;
-    Object loadValue = null;
-    // Find the get method
-    try {
-      method = ConfigurationHolder.class.getDeclaredMethod("get" + methodBase);
-    } catch (final NoSuchMethodException e) {
-      logger.error("loadValue:  Method 'get" + methodBase + "' not found");
-      return;
     }
-    // Invoke the get method
-    try {
-      loadValue =  method.invoke(ConfigurationManager.getCurrentProfile());
-    } catch (Exception e) {
-      logger.error("loadValue:  Invoke 'get" + methodBase + "' Exception " + e);
-      return;
-    }
-
-    // Now use the return value to set the GUI field
-
     // Text fields
-    if (guiValue instanceof JTextField) {
+    if (guiValueField instanceof JTextField) {
       String s;
-      if (loadValue instanceof String) {
-        s = (String)loadValue;
-      } else if (loadValue instanceof Integer) {
-        s = ((Integer)loadValue).toString();
-      } else if (loadValue instanceof File) {
-        s = (loadValue==null ? "" : ((File)loadValue).getAbsolutePath());
-      } else if (loadValue instanceof  Locale) {
-        s = ((Locale)loadValue).getLanguage();
+      if (oValue instanceof String) {
+        s = (String)oValue;
+      } else if (oValue instanceof Integer) {
+        s = ((Integer)oValue).toString();
+      } else if (oValue instanceof File) {
+        s = ((File)oValue).getAbsolutePath();
+      } else if (oValue instanceof  Locale) {
+        s = ((Locale)oValue).getLanguage();
       } else {
         // We assume an empty string for null being returned
         s = "";
       }
-      // If parameter exceeds maximum, then co-erceto the maximum value
+      // If parameter exceeds maximum, then coerce to the maximum value
       if (minimum != 0 || maximum != 0) {
         if (Integer.parseInt(s) > maximum) {
           s = Integer.toString(maximum);
         }
-        ((JTextField) guiValue).setInputVerifier(iv);
+        InputVerifier iv = new InputVerifier() {
+
+          @Override
+          public boolean verify(JComponent input) {
+            if (!(input instanceof JTextField))
+              return false;
+            try {
+              Integer.parseInt(((JTextField) input).getText());
+              return true;
+            } catch (NumberFormatException e) {
+              return false;
+            }
+          }
+        };
+        ((JTextField) guiValueField).setInputVerifier(iv);
       }
-      ((JTextField) guiValue).setText(s);
-    // Check boxes
-    } else if (guiValue instanceof JCheckBox) {
-      assert loadValue instanceof  Boolean;
-      ((JCheckBox)guiValue).setSelected(negate ? !(Boolean)loadValue : (Boolean)loadValue);
-    } else if (guiValue instanceof JComboBox) {
-      if (loadValue instanceof Locale) {
-        ((JComboBox) guiValue).setSelectedItem(((Locale) loadValue).getLanguage());
+      ((JTextField) guiValueField).setText(s);
+      // Check boxes
+    } else if (guiValueField instanceof JCheckBox) {
+      assert oValue instanceof  Boolean;
+      ((JCheckBox)guiValueField).setSelected(negate ? !(Boolean)oValue : (Boolean)oValue);
+    } else if (guiValueField instanceof JComboBox) {
+      if (oValue instanceof Locale) {
+        ((JComboBox) guiValueField).setSelectedItem(((Locale) oValue).getLanguage());
       } else {
-        ((JComboBox) guiValue).setSelectedItem((String) loadValue);
+        ((JComboBox) guiValueField).setSelectedItem((String) oValue);
       }
     } else {
-      logger.error("loadValue: guiValue oBject type not recognised for " + guiLabel);
+      logger.error("loadValue: putGuiValue oBject type not recognised for " + guiLabelField);
       return;
     }
+
+  }
+
+  /**
+   * Method that gets the correct profile value
+   *
+   * @return
+   */
+  public Object getProfileValue() {
+    Method profileGetMethod = getProfileGetMethod();
+    if (profileGetMethod == null) {
+      return null;
+    }
+    Object profileValue;
+    try {
+      // Invoke the get method
+      profileValue =  profileGetMethod.invoke(ConfigurationManager.getCurrentProfile());
+    } catch (Exception e) {
+      logger.error("loadValue:  Invoke 'get" + methodBase + "' Exception " + e);
+      profileValue = null;
+    }
+    return profileValue;
+  }
+
+  /**
+   * Store a value in the profile
+   *
+   * @param setValue
+   */
+  private void putProfileValue(Object setValue) {
+    Method profileSetMethod = getProfileSetMethod();
+    if (profileSetMethod != null) {
+      try {
+        profileSetMethod.invoke(ConfigurationManager.getCurrentProfile(), setValue);
+        // None of the following should happen except in development - but lets play safe!
+      } catch (final Exception e) {
+        logger.error("storeValue: invoke 'set" + methodBase + "Excepion " + e);
+      }
+    }
+  }
+
+  /**
+   * Transfer a value from the GUI to the profile
+   * Do nothing if field has no associated value field or method
+   */
+  public void storeValue() {
+    if (Helper.isNullOrEmpty(methodBase)) {
+      // logger.trace("storeValue: Method baee name to store value not set");
+      return;
+    }
+    if (Helper.isNullOrEmpty(guiValueField)) {
+      // logger.trace("storeValue: Attempt to store a null value");
+      return;
+    }
+    // Now we can set up the parameter for the setmethod
+    Object setValue = getGuiValue();
+    if (setValue == null && ! (profileType instanceof File)) {
+      return;
+    }
+    putProfileValue(setValue);
+  }
+
+  /**
+   * Transfer a value from the profile to the GUI
+   * Do nothing if field has no associated value field or method
+   */
+  public void loadValue() {
+    // Check if there is a GUI field to store any value
+    if (Helper.isNullOrEmpty(guiValueField)) {
+      return;
+    }
+    // Check if we have a profile method base specified
+    if (Helper.isNullOrEmpty(methodBase)) {
+      return;
+    }
+    // Check we can actually find the method
+    Method method = getProfileGetMethod();;
+    if (method == null) {
+      return;
+    }
+    // Get the value from the profile
+    // Only time null is valid for File objects
+    Object loadValue = getProfileValue();
+    putGuiValue(loadValue);
 
     // Now use ReadOnly method to see if field should be currently dsiabled
     // If no such method eists, then assume is always enabled
     Boolean disable;
     try {
       String methodName = "is" + methodBase + "ReadOnly";
-      method = ConfigurationHolder.class.getDeclaredMethod(methodName);
-      disable = (Boolean) method.invoke(ConfigurationManager.getCurrentProfile());
+      method = currentConfiguration.getClass().getDeclaredMethod(methodName);
+      disable = (Boolean) method.invoke(currentConfiguration);
     } catch (final Exception e) {
       // We assume ReadOnly method does not exist if we get to this point.
       disable = false;
     }
-    if (guiLabel != null) guiLabel.setEnabled(!disable);
-    if (guiValue != null) guiValue.setEnabled(!disable);
+    if (guiLabelField != null) guiLabelField.setEnabled(!disable);
+    if (guiValueField != null) guiValueField.setEnabled(!disable);
+  }
+
+
+  /**
+   * Get the method for getting a value from the profile
+   *
+   * If successful will also set up the global variables
+   * paramTypes[]
+   * profileType
+   * This means you MUST have found getProfileGetMethod() before using these
+   *
+   * @return  method if OK, and null otherwise
+   */
+  private Method getProfileGetMethod() {
+    Method profileGetMethod = null;
+    String getMethodName = "get" + methodBase;
+    try {
+      // Use get method to work out parameter type for set method
+      profileGetMethod = currentConfiguration.getClass().getDeclaredMethod(getMethodName);
+      paramTypes[0] = profileGetMethod.getReturnType();
+      profileType = profileGetMethod.getReturnType();
+    } catch (NoSuchMethodException e1) {
+      logger.error("getProfileGetMethod:  unable to find method '" + getMethodName + "'");
+      profileGetMethod = null;
+      paramTypes = null;
+      profileType = null;
+    }
+    return profileGetMethod;
+  }
+
+
+  /**
+   * Get the method for storing values in the profile.
+   *
+   * @return  method if successful, null otherwise
+   */
+  private Method getProfileSetMethod() {
+    String setMethodName = "set" + methodBase;
+    Method profileSetMethod = null;
+    try {
+      profileSetMethod = currentConfiguration.getClass().getDeclaredMethod(setMethodName, paramTypes);
+    } catch (NoSuchMethodException e1) {
+      logger.error("getProfileSetMethod:  unable to find method '" + setMethodName + "'");
+      profileSetMethod = null;
+    }
+    return profileSetMethod;
   }
 }

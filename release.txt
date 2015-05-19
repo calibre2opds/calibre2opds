@@ -69,7 +69,8 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-200: Improve GUI validation for Custom Catalogs
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
     - #c2o-230: Favicon for Library catalog URL
-    - #c20-243: Allow custom icons to be used with Custom Catalog entries 
+    - #c20-243: Allow custom icons to be used with Custom Catalog entries
+    = #c2o-248: Allow logging level to be changed from within the GUI.
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -102,7 +103,10 @@ v3.5
     - Fix:    #c20-245: Localization not working properly
     - Fix:    #c2o-246: Inconsistencies in layout of lists in HTML catalog
     - Fix:    #c2o-247: ebook files should not be placed on target in Publish mode if downloads disabled
-    
+    - New:    #c2o-249: View older logging files
+    - New:    #c2o-250: Get Confirmation before resetting to defaults
+    - New:    #c20-251: Get confirmation before exiting with unsaved changes
+
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
               users except that first run with this release may take slightly longer than expected during Copy phase

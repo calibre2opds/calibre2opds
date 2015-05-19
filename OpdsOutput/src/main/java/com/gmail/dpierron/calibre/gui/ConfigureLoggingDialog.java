@@ -16,9 +16,12 @@ import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.tools.OS;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.tools.Helper;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import javax.swing.*;
 import java.io.File;
@@ -199,6 +202,13 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
       return;
     }
     String newConfig = (String) lstLoggingConfigurations.getModel().getElementAt(indices[0]);
+
+    // TODO:  Lets try and delve inside logger a bit to work out what we can use!
+
+    LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+    Configuration conf = ctx.getConfiguration();
+    LoggerConfig lconf = conf.getLoggerConfig(logger.getName());
+
 
     File activeConfigFile = new File(ConfigurationManager.getConfigurationDirectory(),
                                     Constants.LOGFILE_FOLDER + File.separator + ConfigurationManager.LOGGING_FILENAME);

@@ -52,7 +52,6 @@ public class Mainframe extends javax.swing.JFrame {
   private guiField[] guiFields;
   private File  SyncLogFile = new File(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
 
-
   /**
    * Creates new form Mainframe
    */
@@ -77,7 +76,7 @@ public class Mainframe extends javax.swing.JFrame {
     initGuiFields();
     setLocationRelativeTo(null);
     tabHelpUrl = Constants.HELP_URL_MAIN_OPTIONS;
-    loadValues();
+    loadProfileValues();
     translateTexts();
 
   }
@@ -610,7 +609,7 @@ public class Mainframe extends javax.swing.JFrame {
       adaptInterfaceToDeviceSpecificMode(mode);
       DeviceMode.fromName(currentProfile.getDeviceMode().toString()).setModeSpecificOptions(currentProfile);
     }
-    loadValues();
+    loadProfileValues();
   }
 
   /**
@@ -757,7 +756,7 @@ public class Mainframe extends javax.swing.JFrame {
     if (! checkSplitTagsOn(false)) {
       return;
     }
-    storeValues();
+    storeProfileValues();
 
     catalogDialog = new GenerateCatalogDialog(this, true);
     final Catalog catalog = new Catalog(catalogDialog);
@@ -816,24 +815,31 @@ public class Mainframe extends javax.swing.JFrame {
   private void setProfile(String profileName) {
     ConfigurationManager.changeProfile(profileName, true);
     // Changed profile - so need to update local cached copy as well!
-    currentProfile = ConfigurationManager.getCurrentProfile();
     if (currentProfile.isObsolete()) {
       currentProfile.reset();
       String msg = Localization.Main.getText("gui.reset.warning");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
     }
     logger.info(Localization.Main.getText("info.setProfile", profileName));
-    loadValues();
+    loadProfileValues();
   }
 
   public void saveNewProfile() {
     String newProfileName = JOptionPane.showInputDialog(Localization.Main.getText("gui.profile.new.msg"));
-    if ("default".equalsIgnoreCase(newProfileName))
+    if ("default".equalsIgnoreCase(newProfileName)) {
       return;
+    }
+    if (isUnSavedChanges() == true) {
+      String message = Localization.Main.getText("gui.save,confirm");
+      int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+      if (result != JOptionPane.YES_OPTION) {
+        return;
+      }
+    }
+
     ConfigurationManager.copyCurrentProfile(newProfileName);
     // Changed profile - so need to update local cached copy pointer as well!
-    currentProfile = ConfigurationManager.getCurrentProfile();
-    loadValues();
+    loadProfileValues();
   }
 
   /**
@@ -861,7 +867,7 @@ public class Mainframe extends javax.swing.JFrame {
         dialog.setVisible(true);
         // We only get to this next statement when the dialog hides itself.
         loadProfiles(); // Reload the list as it has probably changed.
-        loadValues();   // Reload the current profile as it may have been renamed
+        loadProfileValues();   // Reload the current profile as it may have been renamed
       }
     });
     mnuProfiles.add(mnuProfileManage);
@@ -964,7 +970,7 @@ public class Mainframe extends javax.swing.JFrame {
    * Load values for configuration into GUI
    * Also enable/disable any fields according to current values if required
    */
-  private void loadValues() {
+  private void loadProfileValues() {
     InputVerifier iv = new InputVerifier() {
 
       @Override
@@ -993,6 +999,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Invoke standard field processing
 
+    guiFields[0].setCurrentConfiguration(currentProfile);
     for (guiField g : guiFields) g.loadValue();
 
     // Now additional settings not handled by default processing
@@ -1061,26 +1068,48 @@ public class Mainframe extends javax.swing.JFrame {
   /**
    * Reset GUI vlues to match the current profile
    */
-  private void resetValues() {
+  private void resetValuesToProfile() {
+    String message = Localization.Main.getText("gui.reset.confirm");
+    int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) {
+      return;
+    }
+
     Locale lang = currentProfile.getLanguage();
     currentProfile.reset();
-    loadValues();
+    loadProfileValues();
     currentProfile.setLanguage(lang);
     changeLanguage();
   }
 
   /**
+   * Routine that determines if there are any
+   * fields in the GUI that are different to
+   * those currently stored in the profile
    *
    * @return
    */
-  private String getFolderNameToStore()  {
-    assert false: "Not yet ready for use";
-    return "";
+  private boolean isUnSavedChanges() {
+    guiFields[0].setCurrentConfiguration(currentProfile);
+    for (guiField g : guiFields) {
+      Object guiValue = g.getGuiValue();
+      if (guiValue != null) {
+        Object profileValue = g.getProfileValue();
+        if (profileValue == null) {
+          int dummy = 1;      // Should it be possible to get here?
+        } else {
+          if (!guiValue.equals(profileValue)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
   /**
    * Save the setting values from the GUI to the configuration file
    */
-  private void storeValues() {
+  private void storeProfileValues() {
     checkSplitTagsOn(false);
     setCursor(hourglassCursor);
 
@@ -1089,6 +1118,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setWindowHeight((size.height));
     currentProfile.setWindowWidth(size.width);
 
+    guiFields[0].setCurrentConfiguration(currentProfile);
     for (guiField g : guiFields) g.storeValue();
 
     // Field types not (yet) handled by guiField
@@ -1096,6 +1126,7 @@ public class Mainframe extends javax.swing.JFrame {
     currentProfile.setCustomCatalogs(customCatalogTableModel.getCustomCatalogs());
     currentProfile.setIndexFilterAlgorithm(Index.FilterHintType.valueOf("" + cboIndexFilterAlgorithm.getSelectedItem()));
 
+    currentProfile.save();
     setCursor(normalCursor);
   }
 
@@ -1117,6 +1148,7 @@ public class Mainframe extends javax.swing.JFrame {
 
     // Do translations that are handled by guiFields table
 
+    guiFields[0].setCurrentConfiguration(currentProfile);
     for (guiField f : guiFields) f.translateTexts();
 
     // `Additional translations  (if any)
@@ -1223,16 +1255,26 @@ public class Mainframe extends javax.swing.JFrame {
    *
    */
    private void saveConfiguration() {
-     storeValues();
+     storeProfileValues();
      String message = Localization.Main.getText("gui.info.saved");
      JOptionPane.showMessageDialog(this, message, "", JOptionPane.OK_OPTION);
    }
 
 
   /**
+   *  Close down the program.
    *
+   *  If we know there are unsaved changes then confirm that
+   *  exiting and losing the changes is what is wanted.
    */
    private void exitProgram() {
+     if (isUnSavedChanges() == true) {
+       String message = Localization.Main.getText("gui.save.confirm");
+       int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
+       if (result != JOptionPane.YES_OPTION) {
+         return;
+       }
+     }
      System.exit(0);
    }
 
@@ -1770,11 +1812,6 @@ public class Mainframe extends javax.swing.JFrame {
 
         txtUrlBooks.setText("txtUrlBooks");
         txtUrlBooks.setPreferredSize(new java.awt.Dimension(400, 20));
-        txtUrlBooks.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                txtUrlBooksMouseExited(evt);
-            }
-        });
         txtUrlBooks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CheckOnlyCatalogAllowed(evt);
@@ -1946,11 +1983,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtWikilang, gridBagConstraints);
 
-        chkCopyToDatabaseFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkCatalogFolderNeeded(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -2029,12 +2061,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblOnlyCatalogAtTarget, gridBagConstraints);
-
-        chkOnlyCatalogAtTarget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkCatalogFolderNeeded(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -2090,11 +2116,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlMainOptions.add(txtFavicon, gridBagConstraints);
 
         cmdSetFavicon.setText("...");
-        cmdSetFavicon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdSetFaviconActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
@@ -3217,11 +3238,6 @@ public class Mainframe extends javax.swing.JFrame {
         txtThumbnailheight.setMaximumSize(new java.awt.Dimension(150, 22));
         txtThumbnailheight.setMinimumSize(new java.awt.Dimension(150, 22));
         txtThumbnailheight.setPreferredSize(new java.awt.Dimension(80, 20));
-        txtThumbnailheight.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtThumbnailheightActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -3417,11 +3433,6 @@ public class Mainframe extends javax.swing.JFrame {
         txtMaxSplitLevels.setMaximumSize(new java.awt.Dimension(150, 22));
         txtMaxSplitLevels.setMinimumSize(new java.awt.Dimension(100, 22));
         txtMaxSplitLevels.setPreferredSize(new java.awt.Dimension(50, 20));
-        txtMaxSplitLevels.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMaxSplitLevelsActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
@@ -3922,11 +3933,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblAmazonIsbnUrl.setMaximumSize(new java.awt.Dimension(250, 2147483647));
         lblAmazonIsbnUrl.setMinimumSize(new java.awt.Dimension(250, 22));
         lblAmazonIsbnUrl.setPreferredSize(new java.awt.Dimension(200, 22));
-        lblAmazonIsbnUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblAmazonIsbnUrlActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -3941,11 +3947,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblAmazonTitleUrl.setMaximumSize(new java.awt.Dimension(250, 2147483647));
         lblAmazonTitleUrl.setMinimumSize(new java.awt.Dimension(250, 22));
         lblAmazonTitleUrl.setPreferredSize(new java.awt.Dimension(200, 22));
-        lblAmazonTitleUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblAmazonTitleUrlActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -4024,11 +4025,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblLibrarythingIsbnUrl.setMaximumSize(new java.awt.Dimension(250, 2147483647));
         lblLibrarythingIsbnUrl.setMinimumSize(new java.awt.Dimension(250, 22));
         lblLibrarythingIsbnUrl.setPreferredSize(new java.awt.Dimension(200, 22));
-        lblLibrarythingIsbnUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblLibrarythingIsbnUrlActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
@@ -4042,11 +4038,6 @@ public class Mainframe extends javax.swing.JFrame {
         lblLibrarythingTitleUrl.setMaximumSize(new java.awt.Dimension(250, 2147483647));
         lblLibrarythingTitleUrl.setMinimumSize(new java.awt.Dimension(250, 22));
         lblLibrarythingTitleUrl.setPreferredSize(new java.awt.Dimension(200, 22));
-        lblLibrarythingTitleUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblLibrarythingTitleUrlActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 13;
@@ -4306,11 +4297,6 @@ public class Mainframe extends javax.swing.JFrame {
 
         lblSearchDeprecated.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSearchDeprecated.setText("lblSearchDeprecated");
-        lblSearchDeprecated.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblSearchDeprecatedhandleMouseClickOnLabel(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -4476,11 +4462,6 @@ public class Mainframe extends javax.swing.JFrame {
         mnuTools.add(mnuToolsResetSecurityCache);
 
         mnuToolsConfigLog.setText("mnuToolsConfigLog");
-        mnuToolsConfigLog.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                mnuToolsConfigLogMouseClicked(evt);
-            }
-        });
         mnuToolsConfigLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuToolsConfigLogActionPerformed(evt);
@@ -4723,7 +4704,7 @@ public class Mainframe extends javax.swing.JFrame {
     logger.info(Localization.Main.getText("gui.menu.tools.resetEncrypted"));
     Random generator = new Random(System.currentTimeMillis());
     String securityCode = Integer.toHexString(generator.nextInt());
-    ConfigurationManager.getCurrentProfile().setSecurityCode(securityCode);
+    currentProfile.setSecurityCode(securityCode);
   }//GEN-LAST:event_mnuToolsResetSecurityCacheActionPerformed
 
   private void mnuToolsClearLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsClearLogActionPerformed
@@ -4822,18 +4803,6 @@ public class Mainframe extends javax.swing.JFrame {
      checkOnlyCatalogAllowed();
   }//GEN-LAST:event_CheckOnlyCatalogAllowed
 
-  private void checkCatalogFolderNeeded(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkCatalogFolderNeeded
-    checkCatalogFolderNeeded();
-  }//GEN-LAST:event_checkCatalogFolderNeeded
-
-  private void txtUrlBooksMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUrlBooksMouseExited
-    checkOnlyCatalogAllowed();
-  }//GEN-LAST:event_txtUrlBooksMouseExited
-
-  private void lblLibrarythingIsbnUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblLibrarythingIsbnUrlActionPerformed
-      // TODO add your handling code here:
-  }//GEN-LAST:event_lblLibrarythingIsbnUrlActionPerformed
-
   private void chkZipCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkZipCatalogActionPerformed
     boolean genOptions = !chkNogenerateopds.isSelected() && !chkNogeneratehtml.isSelected();
     lblZipOmitXml.setEnabled(chkZipCatalog.isSelected() && genOptions);
@@ -4849,10 +4818,6 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_txtBooksinrecentFocusLost
 
-    private void lblAmazonTitleUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAmazonTitleUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblAmazonTitleUrlActionPerformed
-
     private void chkNogeneratecrosslinksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkNogeneratecrosslinksActionPerformed
       checkCrossReferencesEnabled();
     }//GEN-LAST:event_chkNogeneratecrosslinksActionPerformed
@@ -4860,18 +4825,6 @@ public class Mainframe extends javax.swing.JFrame {
     private void chkNogeneratecrosslinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNogeneratecrosslinksStateChanged
       checkCrossReferencesEnabled();
     }//GEN-LAST:event_chkNogeneratecrosslinksStateChanged
-
-    private void lblAmazonIsbnUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAmazonIsbnUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblAmazonIsbnUrlActionPerformed
-
-    private void lblLibrarythingTitleUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblLibrarythingTitleUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblLibrarythingTitleUrlActionPerformed
-
-    private void mnuToolsConfigLogMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuToolsConfigLogMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mnuToolsConfigLogMouseClicked
 
     private void txtSplittagsonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSplittagsonActionPerformed
       checkSplitTagsOn(true);
@@ -4881,29 +4834,13 @@ public class Mainframe extends javax.swing.JFrame {
       checkSplitTagsOn(true);
     }//GEN-LAST:event_txtSplittagsonFocusLost
 
-    private void pnlSearchComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlSearchComponentShown
-      tabHelpUrl = Constants.HELP_URL_SEARCH;
-    }//GEN-LAST:event_pnlSearchComponentShown
+  private void pnlSearchComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlSearchComponentShown
+    tabHelpUrl = Constants.HELP_URL_SEARCH;
+  }//GEN-LAST:event_pnlSearchComponentShown
 
-    private void cmdSetFaviconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSetFaviconActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdSetFaviconActionPerformed
-
-    private void lblSearchDeprecatedhandleMouseClickOnLabel(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSearchDeprecatedhandleMouseClickOnLabel
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblSearchDeprecatedhandleMouseClickOnLabel
-
-    private void txtMaxSplitLevelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaxSplitLevelsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMaxSplitLevelsActionPerformed
-
-    private void txtThumbnailheightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThumbnailheightActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtThumbnailheightActionPerformed
-
-    private void mnuToolsOpenOldLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenOldLogActionPerformed
-       debugShowLogFolder(); // TODO add your handling code here:
-    }//GEN-LAST:event_mnuToolsOpenOldLogActionPerformed
+  private void mnuToolsOpenOldLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuToolsOpenOldLogActionPerformed
+     debugShowLogFolder();
+  }//GEN-LAST:event_mnuToolsOpenOldLogActionPerformed
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -4922,7 +4859,7 @@ public class Mainframe extends javax.swing.JFrame {
   }// GEN-LAST:event_chkDontsplittagsActionPerformed
 
   private void cmdResetActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdResetActionPerformed
-    resetValues();
+    resetValuesToProfile();
   }// GEN-LAST:event_cmdResetActionPerformed
 
   private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuHelpAboutActionPerformed
@@ -4941,8 +4878,7 @@ public class Mainframe extends javax.swing.JFrame {
     exitProgram();
   }// GEN-LAST:event_mnuFileExitActionPerformed
 
-  private void mnuFileGenerateCatalogsActionPerformed(java.awt.event.ActionEvent evt) {//
-    // GEN-FIRST:event_mnuFileGenerateCatalogsActionPerformed
+  private void mnuFileGenerateCatalogsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_mnuFileGenerateCatalogsActionPerformed
     generateCatalog();
   }// GEN-LAST:event_mnuFileGenerateCatalogsActionPerformed
 

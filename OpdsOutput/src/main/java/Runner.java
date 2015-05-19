@@ -239,7 +239,6 @@ public class Runner {
     }
     addStartupLogMessage("Log4j2 configuration file is " + log4jConfig.getAbsolutePath());
 
-
     // Configure and watch
     System.setProperty("log4j.configurationFile", log4jConfig.getAbsolutePath());
 
