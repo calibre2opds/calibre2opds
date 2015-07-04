@@ -39,15 +39,6 @@ import java.util.zip.ZipOutputStream;
 public class Catalog {
 
   private static final Logger logger = LogManager.getLogger(Catalog.class);
-  // Some Copying stats to accumulate
-  private long copyExistHits;     // Count of Files that are copied because target does not exist
-  private long copyLengthHits;    // Count of files that are copied because lengths differ
-  private long copyDateMisses;    // Count of files that  are not copied because source older
-  private long copyCrcHits;       // Count of files that are copied because CRC different
-  private long copyCrcMisses;     // Count of files copied because CRC same
-  private long copyToSelf;        // Count of cases where copy to self requested
-  private long copyUnchanged;      // Count of cases where copy skipped because file was not even generated
-  private long copyDeleted;       // Count of files/folders deleted during copy process
 
   // Values read once from configuration that are used repeatedly
   private ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
@@ -287,7 +278,7 @@ public class Catalog {
     //          logic according to mode to decide if a file is a copy candidate.
     if (src.getAbsolutePath().equalsIgnoreCase(dst.getAbsolutePath())) {
       // Lets add them to stats so we know it happens!
-      copyToSelf++;
+      CatalogManager.statsCopyToSelf++;
       if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
       return;
     }
@@ -381,10 +372,10 @@ public class Catalog {
         if (deleteFile.isChanged() == true) {
           Helper.delete(deleteFile, true);
           CatalogManager.syncLogPrintln("DELETED: %s", deleteFile.getName());
-          copyDeleted++;
+          CatalogManager.statsCopyDeleted++;
           CachedFileManager.removeCachedFile(deleteFile);
         } else {
-          copyUnchanged++;
+          CatalogManager.statsCopyUnchanged++;
           CatalogManager.syncLogPrintln("UNCHANGED: %s", deleteFile.getName());
         }
       }
@@ -423,7 +414,7 @@ public class Catalog {
       }
       if (!dst.exists()) {
         if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as target is missing");
-        copyExistHits++;
+        CatalogManager.statsCopyExistHits++;
         copyflag = true;
         CatalogManager.syncLogPrintln("COPIED (New file): %s", dst.getName());
         dst.clearCachedInformation();
@@ -431,13 +422,13 @@ public class Catalog {
 
         if (dst.isChanged() == false) {
           copyflag = false;
-          copyUnchanged++;
+          CatalogManager.statsCopyUnchanged++;
         } else {
           if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. exists on target");
           // Target present, so check lengths
           if (src.length() != dst.length()) {
             if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as size changed");
-            copyLengthHits++;
+            CatalogManager.statsCopyLengthHits++;
             copyflag = true;
             CatalogManager.syncLogPrintln("COPIED (length changed): %s\n", src.getName());
           } else {
@@ -452,19 +443,19 @@ public class Catalog {
             if (src.lastModified() <= dst.lastModified()) {
               // Target newer than source
               if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip Copy as source is not newer");
-              copyDateMisses++;
+              CatalogManager.statsCopyDateMisses++;
               copyflag = false;
               CatalogManager.syncLogPrintln("NOT COPIED (Source not newer): %s\n", dst.getName());
             } else {
               if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. source is newer");
               if (CatalogManager.isSourceFileSameAsTargetFile(src,dst)) {
                 if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip copy as CRC's match");
-                copyCrcMisses++;
+                CatalogManager.statsCopyCrcMisses++;
                 copyflag = false;
                 CatalogManager.syncLogPrintln("NOT COPIED (CRC same): %s\n", src.getName());
               } else {
                 if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as CRC's different");
-                copyCrcHits++;
+                CatalogManager.statsCopyCrcHits++;
                 copyflag = true;
                 CatalogManager.syncLogPrintln("COPIED (CRC changed): %s\n", src.getName());
               }
@@ -1121,14 +1112,6 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       // FILE SYNCING PHASE
 
-      // reset stats fields for this run
-
-      copyExistHits = copyLengthHits
-                    = copyCrcHits
-                    = copyCrcMisses
-                    = copyDateMisses
-                    = copyUnchanged = 0;
-
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 
@@ -1322,13 +1305,13 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       CatalogManager.syncLogPrintln("");
       CatalogManager.syncLogPrintln(Localization.Main.getText("stats.copy.header"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyExistHits) + Localization.Main.getText("stats.copy.notexist"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", copyDeleted) + " " + Localization.Main.getText("stats.copy.deleted"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDeleted) + " " + Localization.Main.getText("stats.copy.deleted"));
       CatalogManager.syncLogClose();
 
       logger.info("");
@@ -1345,16 +1328,16 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.info(String.format("%8d  ", CatalogManager.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
-      logger.info(String.format("%8d  ", copyExistHits) + Localization.Main.getText("stats.copy.notexist"));
-      logger.info(String.format("%8d  ", copyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
-      logger.info(String.format("%8d  ", copyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
-      logger.info(String.format("%8d  ", copyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
-      logger.info(String.format("%8d  ", copyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      logger.info(String.format("%8d  ", copyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
-      logger.info(String.format("%8d  ", copyDeleted) + Localization.Main.getText("stats.copy.deleted"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
+      logger.info(String.format("%8d  ", CatalogManager.statsCopyDeleted) + Localization.Main.getText("stats.copy.deleted"));
       logger.info("");
-      if (copyToSelf != 0)
-        logger.warn(String.format("%8d  ", copyToSelf) + Localization.Main.getText("stats.copy.toself"));
+      if (CatalogManager.statsCopyToSelf != 0)
+        logger.warn(String.format("%8d  ", CatalogManager.statsCopyToSelf) + Localization.Main.getText("stats.copy.toself"));
 
       // Now work put where to tell user result has been placed
 

@@ -830,6 +830,7 @@ public abstract class SubCatalog {
     if (catalogXmlFile.exists()
     && catalogXmlFile.getCrc() == outputFile.getCrc()) {
       catalogXmlFile.setChanged(false);
+      outputFile.setChanged(false);
     }
     if ( ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(outputFile, catalogXmlFile)) {
       catalogHtmlFile.setChanged(false);
@@ -837,7 +838,11 @@ public abstract class SubCatalog {
       htmlFile.clearCachedInformation();
       CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(), feedType);
     }
-
+    // See if we need to keep the output file
+    if (outputFile.isChanged() == false) {
+      outputFile.delete();
+      CachedFileManager.removeCachedFile(outputFile);
+    }
   }
 
   /*

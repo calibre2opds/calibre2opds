@@ -72,7 +72,8 @@ public class Constants {
 
   // URL's for links from Help menu
   public final static String HOME_URL = "http://calibre2opds.com/";
-  public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
+  // public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
+  public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V9R7W7GLLPFHA";
   public final static String USERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2Opds_Index";
   public final static String DEVELOPERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop";
   public final static String LOCALIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize";

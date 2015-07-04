@@ -90,6 +90,22 @@ public class CatalogManager {
   private static List<Tag> tagsToIgnore;
   public static Map<String, BookFilter> customCatalogsFilters;
 
+  // Some Stats to accumulate
+  // NOTE.  We make them public to avoid needing getters
+  public static long statsCopyExistHits;     // Count of Files that are copied because target does not exist
+  public static long statsCopyLengthHits;    // Count of files that are copied because lengths differ
+  public static long statsCopyDateMisses;    // Count of files that  are not copied because source older
+  public static long statsCopyCrcHits;       // Count of files that are copied because CRC different
+  public static long statsCopyCrcMisses;     // Count of files copied because CRC same
+  public static long statsCopyToSelf;        // Count of cases where copy to self requested
+  public static long statsCopyUnchanged;     // Count of cases where copy skipped because file was not even generated
+  public static long statsCopyDeleted;       // Count of files/folders deleted during copy process
+  public static long statsBookUnchanged;     // We detected that the book was unchanged since last run
+  public static long statsBookChanged;       // We detected that the book was changed since last run
+  public static long statsCoverUnchanged;    // We detected that the cover was unchanged since last run
+  public static long statsCoverChanged;      // We detected that the cover was changed since last run
+
+
   // public CatalogManager() {
   public static void initialize() {
     // super();
@@ -107,8 +123,7 @@ public class CatalogManager {
     initialUrl = securityCode;
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
-
-
+    resetStats();
 
     // TODO  Decide if these should be conditional or just done every time!
     if (htmlManager == null)      htmlManager = new HtmlManager();
@@ -119,6 +134,7 @@ public class CatalogManager {
     if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,currentProfile.getLanguage());
     if (titleDateFormat==null)    titleDateFormat = SimpleDateFormat.getDateInstance(DateFormat.LONG, currentProfile.getLanguage());
     if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
+
   }
 
 
@@ -149,8 +165,21 @@ public class CatalogManager {
     JDOMManager.reset();
     securityCode = "";
     securityCodeAndSeparator = null;
+    resetStats();
   }
 
+  private static void resetStats() {
+    statsCopyExistHits = statsCopyLengthHits
+        = statsCopyCrcHits
+        = statsCopyCrcMisses
+        = statsCopyDateMisses
+        = statsCopyUnchanged
+        = statsBookUnchanged
+        = statsBookChanged
+        = statsCoverUnchanged
+        = statsCoverChanged = 0;
+
+  }
   public static String getSecurityCode() {
     if (securityCode == null) {
       securityCode = CatalogManager.getSecurityCode();

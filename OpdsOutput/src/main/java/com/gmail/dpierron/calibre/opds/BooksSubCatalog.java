@@ -66,7 +66,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
    *
    * This function is the control routine and is called once
    * for each page at the same level, or each time a split occurs.
-   * It is called recursivel - and thus will be called once per file.
+   * It is called recursively - and thus will be called once per file.
    *
    * ITIMPI:  At the moment this function can call itself recursively with the 'from'
    *          parameter being incremented.   It is likely to be much more efficient
