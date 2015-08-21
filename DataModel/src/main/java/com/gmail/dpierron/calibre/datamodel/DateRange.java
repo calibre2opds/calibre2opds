@@ -1,8 +1,10 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public enum DateRange {
   ONEDAY(1),
@@ -11,13 +13,16 @@ public enum DateRange {
   MONTH(30),
   TWOMONTHS(60),
   THREEMONTHS(90),
-  SIXMONTHS(180),
-  YEAR(360),
+  SIXMONTHS(182),
+  YEAR(365),
   MORE(-1);
 
   private final int nbDays;
 
-  private DateRange(int nbDays) {
+  private static final long milPerDay = 1000 * 60 * 60 * 24;
+  private static long midnight = 0;
+
+  DateRange(int nbDays) {
     this.nbDays = nbDays;
   }
 
@@ -25,7 +30,6 @@ public enum DateRange {
     return nbDays;
   }
 
-   private static final long milPerDay = 1000 * 60 * 60 * 24;
   /**
    * Work out which date range a date falls into for Recent Books section
    *
@@ -35,22 +39,15 @@ public enum DateRange {
   public static DateRange valueOf(Date d) {
     if (d == null)
       return MORE;
-    GregorianCalendar da1 = new GregorianCalendar();
-    GregorianCalendar da2 = new GregorianCalendar();
-    da1.setTime(d);                      // Initialise to time to check
-    // da1.set(Calendar.HOUR_OF_DAY, 23);    // Force time to just before midnight so that the
-    // da1.set(Calendar.MINUTE, 59);         // day divisions align with calendar day boundaries
-    // da1.set(Calendar.SECOND, 59);         // Fixes bugs #716558 & #716923
-    // da1.set(Calendar.MILLISECOND, 0);
-    da2.set(Calendar.HOUR_OF_DAY, 23);    // Force time to just before midnight so that the
-    da2.set(Calendar.MINUTE, 59);         // day divisions align with calendar day boundaries
-    da2.set(Calendar.SECOND, 59);         //
-    da2.set(Calendar.MILLISECOND, 0);
-    long d1 = da1.getTime().getTime();
-    long d2 = da2.getTime().getTime();
-    long difMil = d2 - d1;
-
-    long days = difMil / milPerDay;
+    if (midnight == 0) {
+      GregorianCalendar gc = new GregorianCalendar();
+      // TODO  Check if Timezone is automatically handled?
+      gc.set(Calendar.HOUR_OF_DAY, 23);    // Force time to just before midnight so that the
+      gc.set(Calendar.MINUTE, 59);         // day divisions align with calendar day boundaries
+      gc.set(Calendar.SECOND, 59);
+      midnight = gc.getTime().getTime();
+    }
+    long days = (midnight - d.getTime()) / milPerDay;
 
     for (DateRange range : values()) {
       if (days < range.getNbDays())

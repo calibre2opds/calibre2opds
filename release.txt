@@ -98,6 +98,7 @@ v3.5
     - Change: Removed option to minimize Changed Files as program logic now tries to do this anyway. 
     - Change: Performance Optimization to avoid generating HTML files that are known to be unchanged since last run
               Provides nice performance boost to those who produce both XML and HTML catalog variants.
+    - Change: Recent Books->Today now has date to which "Today" applies added
     - Fix:    #c2o-242: Publish mode does not let you continue if the destination folder does not exist 
     - Fix:    #c2o-244: Catalog folder text entry field is too small to show any text 
     - Fix:    #c20-245: Localization not working properly

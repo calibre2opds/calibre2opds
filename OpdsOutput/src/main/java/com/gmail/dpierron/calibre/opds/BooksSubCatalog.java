@@ -21,9 +21,11 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
+import org.w3c.dom.ranges.Range;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
@@ -406,6 +408,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String rangeUrn = Helper.getSplitString(baseUrn, range.toString(), Constants.URN_SEPARATOR);
 
       String rangeTitle = LocalizationHelper.getEnumConstantHumanName(range);
+      // For the "Today" category add the date to which this applies.
+      if (range == DateRange.ONEDAY) {
+        String dateGenerated = DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date());
+        rangeTitle += " (" + dateGenerated + ")";
+      }
+
       List<Book> booksInThisRange = mapOfBooksByDate.get(range);
 
       // try and list the items to make the summary
