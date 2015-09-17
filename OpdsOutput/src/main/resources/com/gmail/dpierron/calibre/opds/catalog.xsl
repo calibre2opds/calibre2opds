@@ -232,8 +232,7 @@
                 <xsl:variable name="url">
                   <xsl:choose>
                     <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
-                      <!-- TODO External links that are OPDS links and end with xml need extension changed to html for HTML catalogs -->
-                      <xsl:value-of select="opds:link/@href" />
+                      <xsl:value-of select="concat(substring-before(opds:link/@href, '.xml'),'.html')"/>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:choose>

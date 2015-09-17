@@ -71,6 +71,8 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-230: Favicon for Library catalog URL
     - #c20-243: Allow custom icons to be used with Custom Catalog entries
     = #c2o-248: Allow logging level to be changed from within the GUI.
+    - #c2o-254: Custom Catalog settings not changed when switching profiles
+    - #c2o-256: Suppress displaying Author in Book Details
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -107,7 +109,8 @@ v3.5
     - New:    #c2o-249: View older logging files
     - New:    #c2o-250: Get Confirmation before resetting to defaults
     - New:    #c20-251: Get confirmation before exiting with unsaved changes
-    - Fix:    #c2o)252: The "Today" section in Recent books should be limited to the current calendar day
+    - Fix:    #c2o:252: The "Today" section in Recent books should be limited to the current calendar day
+    - Fix:    #c2o-255: OpdsURL references in Custom catalogs are not change to .html ones for the HTML catalog
 
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
