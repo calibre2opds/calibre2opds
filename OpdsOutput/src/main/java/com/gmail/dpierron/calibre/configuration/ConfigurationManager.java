@@ -30,7 +30,7 @@ public class ConfigurationManager {
   private final static Logger logger = LogManager.getLogger(ConfigurationManager.class);
 
   private static File configurationDirectory;
-  private static File configurationFolder = null;
+  // private static File configurationFolder = null;
   private static ConfigurationHolder currentProfile;
   private static PropertiesBasedConfiguration defaultConfiguration;
   private static Locale configLocale = null;
@@ -38,7 +38,10 @@ public class ConfigurationManager {
   private static List<EBookFormat> profileFormats = null;
 
   /**
+   * Load up the default set of Configuration settings.
    *
+   * Typically we then load the stored settings for a particular profile.
+   * However loading default first ensures any new ones get default values.
    * @return
    */
   public static PropertiesBasedConfiguration getDefaultConfiguration() {
@@ -64,20 +67,28 @@ public class ConfigurationManager {
   }
 
   /**
+   * Load up the current profile
+   * If the 'currentProfile' class varaible is set then simply return the cached copy.
+   * If it is null then it needs to be loaded from disk.
+   *
+   * The name for the 'currentProfile' should be set prior to calling this method
    *
    * @return
    */
   public static ConfigurationHolder getCurrentProfile() {
+    String currentProfileNme = getCurrentProfileName();
+    assert currentProfileNme != null;
     if (currentProfile == null) {
       logger.trace("getCurrentProfile - currentProfile not set");
-      currentProfile = new ConfigurationHolder(new File(getConfigurationDirectory(), getCurrentProfileName() + PROFILES_SUFFIX));
+      currentProfile = new ConfigurationHolder(new File(getConfigurationDirectory(), currentProfileNme + PROFILES_SUFFIX));
       Configuration.setConfiguration(currentProfile);
     }
     return currentProfile;
   }
 
   /**
-   *
+   * Get the name of the current profile
+   * If there is not one already loaded we return the default name for a calibre2opds profile
    * @return
    */
   public static String getCurrentProfileName() {
@@ -99,20 +110,21 @@ public class ConfigurationManager {
   }
 
   /**
-   * Change the current loaded GUI.
+   * Change the current loaded profile.
    *
-   * There is an option as to whether it should become the default
+   * There is an option as to whether it should become the new currentProfile
    *
    * @param profileName
    * @param setDefault
    */
-  public static void changeProfile(String profileName, boolean setDefault) {
+  public static ConfigurationHolder changeProfile(String profileName, boolean setDefault) {
     logger.trace("changeProfile to " + profileName);
     String currentProfileName = getCurrentProfileName();
     getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
-    currentProfile = null;
-    getCurrentProfile();
+    currentProfile = null;      // clear cached profile to force a new one to load
+    getCurrentProfile();        // Load up the new profile
     if (setDefault) getDefaultConfiguration().setProperty(PROPERTY_NAME_CURRENTCONFIGURATION, profileName);
+    return currentProfile;
   }
 
   /**

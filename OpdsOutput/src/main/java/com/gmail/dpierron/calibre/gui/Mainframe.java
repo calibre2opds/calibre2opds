@@ -813,7 +813,7 @@ public class Mainframe extends javax.swing.JFrame {
    * @param profileName
    */
   private void setProfile(String profileName) {
-    ConfigurationManager.changeProfile(profileName, true);
+    currentProfile = ConfigurationManager.changeProfile(profileName, false);
     // Changed profile - so need to update local cached copy as well!
     if (currentProfile.isObsolete()) {
       currentProfile.reset();

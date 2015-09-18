@@ -410,8 +410,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String rangeTitle = LocalizationHelper.getEnumConstantHumanName(range);
       // For the "Today" category add the date to which this applies.
       if (range == DateRange.ONEDAY) {
-        String dateGenerated = DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date());
-        rangeTitle += " (" + dateGenerated + ")";
+        // rangeTitle += " (" + DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date()) + ")";
+        rangeTitle = DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date());
       }
 
       List<Book> booksInThisRange = mapOfBooksByDate.get(range);
