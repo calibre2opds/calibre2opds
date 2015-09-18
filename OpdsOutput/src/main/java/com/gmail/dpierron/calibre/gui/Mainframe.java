@@ -206,7 +206,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblMaxbeforepaginate, txtMaxbeforepaginate, "config.MaxBeforePaginate", "MaxBeforePaginate", 0, 99999),
       new guiField(lblMaxbeforesplit, txtMaxbeforesplit, "config.MaxBeforeSplit", "MaxBeforeSplit",0, 99999),
       new guiField(lblMaxSplitLevels, txtMaxSplitLevels, "config.MaxSplitLevels", "MaxSplitLevels", 0,8),
-      new guiField(lblBooksinrecent, txtBooksinrecent, "config.BooksInRecentAdditions", "BooksInRecentAdditions", 0, 500),
+      new guiField(lblBooksinrecent, txtBooksinrecent, "config.BooksInRecentAdditions", "BooksInRecentAdditions", 0, 1000),
       new guiField(lblMaxsummarylength, txtMaxsummarylength, "config.MaxSummaryLength", "MaxSummaryLength", 0, 99999),
       new guiField(lblMaxBookSummaryLength, txtMaxBookSummaryLength, "config.MaxBookSummaryLength", "MaxBookSummaryLength", 0, 99999),
       new guiField(lblIncludeemptybooks, chkIncludeemptybooks, "config.IncludeBooksWithNoFile", "IncludeBooksWithNoFile"),

@@ -73,6 +73,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     = #c2o-248: Allow logging level to be changed from within the GUI.
     - #c2o-254: Custom Catalog settings not changed when switching profiles
     - #c2o-256: Suppress displaying Author in Book Details
+    - #c2o-257: Display size on download links 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -111,6 +112,7 @@ v3.5
     - New:    #c20-251: Get confirmation before exiting with unsaved changes
     - Fix:    #c2o:252: The "Today" section in Recent books should be limited to the current calendar day
     - Fix:    #c2o-255: OpdsURL references in Custom catalogs are not change to .html ones for the HTML catalog
+    - Change: #c2o_258: Increase the Maximum allowed in Recent Books to 1000 (was500)
 
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to
