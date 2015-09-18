@@ -119,6 +119,21 @@ public class guiField {
     }
   }
 
+  /**
+   * Get the label field associated with this instance
+   *
+   * @return
+   */
+  public JComponent getGuiLabel() {
+    return guiLabelField;
+  }
+
+  public int getMinimum() {
+    return minimum;
+  }
+  public int getMaximum () {
+    return maximum;
+  }
   private Integer getValue(String s) {
     try {
       int i = Integer.parseInt(s);

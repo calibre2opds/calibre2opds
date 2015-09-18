@@ -296,6 +296,24 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblLang, cboLang, "config.Language", "Language")
     };
   }
+
+  /**
+   * Get the guiField entry corresponding to a particular label field
+   * Useful if we want to check the stored properties
+   *
+   * @param label
+   * @return
+   */
+  private guiField getGuiField(JComponent label) {
+    assert label != null;
+    for (guiField g : guiFields) {
+      if (label == g.getGuiLabel()) {
+        return g;
+      }
+    }
+    logger.trace("Unable to locate guiField " + label.getName());
+    return null;
+  }
   /**
    *  add a button to the custom catalogs table
    */
@@ -4810,11 +4828,13 @@ public class Mainframe extends javax.swing.JFrame {
   }//GEN-LAST:event_chkZipCatalogActionPerformed
 
   private void txtBooksinrecentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBooksinrecentFocusLost
-    DefaultConfigurationSettings defaults = new DefaultConfigurationSettings();
-    if (getValue(txtBooksinrecent) > defaults.getBooksInRecentAdditions()) {
-      String message = Localization.Main.getText("error.recentTooLarge", defaults.getBooksInRecentAdditions());
+    guiField g = getGuiField(lblBooksinrecent);
+    assert g != null;
+    int maximum = g.getMaximum();
+    if (getValue(txtBooksinrecent) > maximum) {
+      String message = Localization.Main.getText("error.recentTooLarge", maximum);
       JOptionPane.showMessageDialog(this, message, "", JOptionPane.ERROR_MESSAGE);
-      txtBooksinrecent.setText("" + defaults.getBooksInRecentAdditions());
+      txtBooksinrecent.setText("" + maximum);
     }
   }//GEN-LAST:event_txtBooksinrecentFocusLost
 

@@ -408,9 +408,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String rangeUrn = Helper.getSplitString(baseUrn, range.toString(), Constants.URN_SEPARATOR);
 
       String rangeTitle = LocalizationHelper.getEnumConstantHumanName(range);
-      // For the "Today" category add the date to which this applies.
+      // For the "Today" category we wabt the actual date to which this applies.
       if (range == DateRange.ONEDAY) {
-        // rangeTitle += " (" + DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date()) + ")";
+      // rangeTitle += " (" + DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date()) + ")";
         rangeTitle = DateFormat.getDateInstance(DateFormat.DEFAULT, currentProfile.getLanguage()).format(new Date());
       }
 
@@ -420,6 +420,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       String summary = Summarizer.summarizeBooks(booksInThisRange);
 
       Element element = null;
+      // We Always generate the "Today" entry so we can see
+      // what the other ranges are relative to.
       if (booksInThisRange.size() > 0) {
         element = getListOfBooks(pBreadcrumbs,
                                  booksInThisRange,
