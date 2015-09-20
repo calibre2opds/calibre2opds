@@ -232,7 +232,16 @@
                 <xsl:variable name="url">
                   <xsl:choose>
                     <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
-                      <xsl:value-of select="concat(substring-before(opds:link/@href, '.xml'),'.html')"/>
+                      <!-- External links with .xml extension need transforming to .html
+                           whiel others (e.g. ,html) ae left alone  -->
+                      <xsl:choose>
+                        <xsl:when test="opds:link[@type='text/html']/@href">
+                          <xsl:value-of select="opds:link/@href"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:value-of select="concat(substring-before(opds:link/@href, '.xml'),'.html')"/>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:choose>
