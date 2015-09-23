@@ -1407,8 +1407,6 @@ public class Helper {
            //  Note te case of a 2 character lang needs special treatment - see Locale code for getLangugage
            case 2:  String s = l.toString();
                     String ll = l.getLanguage();
-                    String lt = l.toLanguageTag();
-                    // Work around a Java 8 issue where an empty entry is at start of list
                     if (s.length() < 2 || s.length() > 2) break;    // Ignore entries that are not 2 characters
                     if (! s.equalsIgnoreCase(lang)) break;
                     usedLocales.put(lang,l);

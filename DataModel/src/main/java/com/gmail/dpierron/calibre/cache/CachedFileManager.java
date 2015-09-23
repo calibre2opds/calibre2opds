@@ -19,10 +19,8 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class CachedFileManager {
 
