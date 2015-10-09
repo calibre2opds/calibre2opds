@@ -611,6 +611,7 @@ public class Catalog {
     String textNO = Localization.Main.getText("boolean.no");
     // Ensure cached values are current for this generate run.
     currentProfile = ConfigurationManager.getCurrentProfile();
+    SubCatalog.reset();
 
     if (!currentProfile.getGenerateAllbooks())        CatalogManager.callback.disableCreateAllBooks();
     if (!currentProfile.getGenerateAuthors())         CatalogManager.callback.disableCreateAuthors();

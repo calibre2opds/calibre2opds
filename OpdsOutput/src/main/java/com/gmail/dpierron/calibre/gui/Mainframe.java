@@ -186,11 +186,12 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblIncludePublisherInBookDetails, chkIncludePublisherInBookDetails, "config.IncludePublisherInBookDetails", "IncludePublisherInBookDetails"),
       new guiField(lblIncludePublishedInBookDetails, chkIncludePublishedInBookDetails, "config.IncludePublishedInBookDetails", "IncludePublishedInBookDetails"),
       new guiField(lblPublishedDateAsYear, chkPublishedDateAsYear, "config.PublishedDateAsYear", "PublishedDateAsYear"),
-      new guiField(lblIncludeAddedInBookDetails, chkIncludeAddedInBookDetails, "config.IncludeAddedInBookDetails", "IncludeAddedInBookDetails"),
-      new guiField(lblIncludeModifiedInBookDetails1, chkIncludeModifiedInBookDetails, "config.IncludeModifiedInBookDetails", "IncludeModifiedInBookDetails"),
       new guiField(lblDisplayAuthorSort, chkDisplayAuthorSort, "config.DisplayAuthorSort", "DisplayAuthorSort"),
       new guiField(lblDisplayTitleSort, chkDisplayTitleSort, "config.DisplayTitleSort", "DisplayTitleSort"),
       new guiField(lblDisplaySeriesSort, chkDisplaySeriesSort, "config.DisplaySeriesSort", "DisplaySeriesSort"),
+      new guiField(lblIncludeAddedInBookDetails, chkIncludeAddedInBookDetails, "config.IncludeAddedInBookDetails", "IncludeAddedInBookDetails"),
+      new guiField(lblIncludeModifiedInBookDetails, chkIncludeModifiedInBookDetails, "config.IncludeModifiedInBookDetails", "IncludeModifiedInBookDetails"),
+      new guiField(lblIncludeSizeOfDownloads, chkIncludeSizeOfDownloads, "config.IncludeSizeOfDownloads", "IncludeSizeOfDownloads"),
       new guiField(lblBookDetailsCustomFields, txtBookDetailsCustomFields, "config.BookDetailsCustomFields", "BookDetailsCustomFields"),
       new guiField(null, chkBookDetailsCustomFieldsAlways, "config.BookDetailsCustomFieldsAlways", "BookDetailsCustomFieldsAlways"),
       new guiField(lblNogeneratecrosslinks, chkNogeneratecrosslinks, "config.GenerateCrossLinks", "GenerateCrossLinks", true),
@@ -1430,7 +1431,7 @@ public class Mainframe extends javax.swing.JFrame {
         lblIncludeSeriesInBookDetails = new javax.swing.JLabel();
         chkIncludePublisherInBookDetails = new javax.swing.JCheckBox();
         lblIncludePublishedInBookDetails = new javax.swing.JLabel();
-        lblIncludeModifiedInBookDetails1 = new javax.swing.JLabel();
+        lblIncludeModifiedInBookDetails = new javax.swing.JLabel();
         chkIncludeModifiedInBookDetails = new javax.swing.JCheckBox();
         chkIncludePublishedInBookDetails = new javax.swing.JCheckBox();
         lblDisplayAuthorSort = new javax.swing.JLabel();
@@ -1460,6 +1461,8 @@ public class Mainframe extends javax.swing.JFrame {
         chkIncludeRatingCrossReferences = new javax.swing.JCheckBox();
         lblDisplaySeriesSort = new javax.swing.JLabel();
         chkDisplaySeriesSort = new javax.swing.JCheckBox();
+        lblIncludeSizeOfDownloads = new javax.swing.JLabel();
+        chkIncludeSizeOfDownloads = new javax.swing.JCheckBox();
         pnlAdvancedOptions = new javax.swing.JPanel();
         lblIncludeformat = new javax.swing.JLabel();
         txtIncludeformat = new javax.swing.JTextField();
@@ -2000,7 +2003,6 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlMainOptions.add(txtWikilang, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -2768,21 +2770,21 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(lblIncludePublishedInBookDetails, gridBagConstraints);
 
-        lblIncludeModifiedInBookDetails1.setText("lblIncludeModifiedInBookDetails");
-        lblIncludeModifiedInBookDetails1.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblIncludeModifiedInBookDetails.setText("lblIncludeModifiedInBookDetails");
+        lblIncludeModifiedInBookDetails.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlBookDetails.add(lblIncludeModifiedInBookDetails1, gridBagConstraints);
+        pnlBookDetails.add(lblIncludeModifiedInBookDetails, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkIncludeModifiedInBookDetails, gridBagConstraints);
@@ -2827,6 +2829,7 @@ public class Mainframe extends javax.swing.JFrame {
         pnlBookDetails.add(chkDisplayAuthorSort, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkDisplayTitleSort, gridBagConstraints);
@@ -3057,7 +3060,6 @@ public class Mainframe extends javax.swing.JFrame {
         pnlBookDetails.add(chkIncludeRatingCrossReferences, gridBagConstraints);
 
         lblDisplaySeriesSort.setText("lblDisplaySeriesSort");
-        lblDisplaySeriesSort.setToolTipText("");
         lblDisplaySeriesSort.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
@@ -3075,6 +3077,25 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlBookDetails.add(chkDisplaySeriesSort, gridBagConstraints);
+
+        lblIncludeSizeOfDownloads.setText("lblIncludeSizeOfDownloads");
+        lblIncludeSizeOfDownloads.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(lblIncludeSizeOfDownloads, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlBookDetails.add(chkIncludeSizeOfDownloads, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlBookDetails", pnlBookDetails);
 
@@ -4960,6 +4981,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludeRatingInBookDetails;
     private javax.swing.JCheckBox chkIncludeSerieCrossReferences;
     private javax.swing.JCheckBox chkIncludeSeriesInBookDetails;
+    private javax.swing.JCheckBox chkIncludeSizeOfDownloads;
     private javax.swing.JCheckBox chkIncludeTagCrossReferences;
     private javax.swing.JCheckBox chkIncludeTagsInBookDetails;
     private javax.swing.JCheckBox chkIncludeemptybooks;
@@ -5057,7 +5079,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblIncludeAddedInBookDetails;
     private javax.swing.JLabel lblIncludeAuthorCrossReferences;
     private javax.swing.JLabel lblIncludeCoversInCatalog;
-    private javax.swing.JLabel lblIncludeModifiedInBookDetails1;
+    private javax.swing.JLabel lblIncludeModifiedInBookDetails;
     private javax.swing.JLabel lblIncludeOnlyOneFile;
     private javax.swing.JLabel lblIncludePublishedInBookDetails;
     private javax.swing.JLabel lblIncludePublisherInBookDetails;
@@ -5065,6 +5087,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblIncludeRatingInBookDetails;
     private javax.swing.JLabel lblIncludeSerieCrossReferences;
     private javax.swing.JLabel lblIncludeSeriesInBookDetails;
+    private javax.swing.JLabel lblIncludeSizeOfDownloads;
     private javax.swing.JLabel lblIncludeTagCrossReferences;
     private javax.swing.JLabel lblIncludeTagsInBookDetails;
     private javax.swing.JLabel lblIncludeemptybooks;

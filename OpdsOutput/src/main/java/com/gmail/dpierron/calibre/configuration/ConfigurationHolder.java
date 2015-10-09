@@ -119,7 +119,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INCLUDEPUBLISHEDINBOOKDETAILS = "IncludePublishedInBookDetails";
   private final static String PROPERTY_NAME_PUBLISHEDDATEASYEAR = "PublishDateAsYear";
   private final static String PROPERTY_NAME_IncludeAddedInBookDetailst = "IncludeAddedInBookDetailst";
-  private final static String PROPERTY_NAME_IncludeModifiedInBookDetailst = "IncludeModifiedInBookDetailst";
+  private final static String PROPERTY_NAME_IncludeModifiedInBookDetails = "IncludeModifiedInBookDetails";
+  private final static String PROPERTY_NAME_IncludeSizeOfDownloads = "IncludeSizeOfDownloads";
   private final static String PROPERTY_NAME_DisplayAuthorSort = "DisplayAuthorSort";
   private final static String PROPERTY_NAME_DisplayTitleSort = "DisplayTitleSort";
   private final static String PROPERTY_NAME_DisplaySeriesSort = "DisplaySeriesSort";
@@ -1442,11 +1443,19 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   public Boolean getIncludeModifiedInBookDetails() {
-    Boolean b = getBoolean(PROPERTY_NAME_IncludeModifiedInBookDetailst);
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeModifiedInBookDetails);
     return (b == null) ? defaults.getIncludeModifiedInBookDetails() : b;
   }
   public void setIncludeModifiedInBookDetails(Boolean value) {
-    setProperty(PROPERTY_NAME_IncludeModifiedInBookDetailst, value);
+    setProperty(PROPERTY_NAME_IncludeModifiedInBookDetails, value);
+  }
+
+  public Boolean getIncludeSizeOfDownloads() {
+    Boolean b = getBoolean(PROPERTY_NAME_IncludeSizeOfDownloads);
+    return (b == null) ? defaults.getIncludeSizeOfDownloads() : b;
+  }
+  public void setIncludeSizeOfDownloads(Boolean value) {
+    setProperty(PROPERTY_NAME_IncludeSizeOfDownloads, value);
   }
 
   public String getSecurityCode() {

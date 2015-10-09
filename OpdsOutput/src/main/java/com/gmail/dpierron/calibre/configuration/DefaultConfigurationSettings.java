@@ -387,6 +387,10 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return false;
   }
 
+  public Boolean getIncludeSizeOfDownloads() {
+    return true;
+  }
+
   public String getSecurityCode() {
     return null;
   }

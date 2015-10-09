@@ -172,6 +172,8 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getIncludeModifiedInBookDetails();
 
+  public Boolean getIncludeSizeOfDownloads();
+
   /*  Advanced */
 
   public Boolean getIncludeCoversInCatalog();

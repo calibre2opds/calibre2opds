@@ -200,8 +200,8 @@ public abstract class ImageManager {
    * @param coverFile   File to be read for input image
    */
   public void generateImage(CachedFile imageFile, CachedFile coverFile) {
-    assert imageFile != null && coverFile.exists();
-    assert coverFile != null;
+    assert imageFile != null ;
+    assert coverFile != null && coverFile.exists();
     logger.debug("generateImage: " + imageFile.getAbsolutePath());
     long now = System.currentTimeMillis();
     try {

@@ -512,10 +512,14 @@ public abstract class BooksSubCatalog extends SubCatalog {
     CachedFile defaultCoverFile = null;
 
     String catalogImageFilename;  // Name when stored in catalog
-    CachedFile imageFile;         // The file that contains the image to be used
-    CachedFile resizedImageFile;  // File to be used when resized images in use
-
-    resizedImageFile = CachedFileManager.addCachedFile(bookFolder, iManager.getResizedFilename());
+    // Filename (without path) of the image to be resized
+    String imageFilename;
+    // The file that contains the image to be used
+    CachedFile imageFile;
+    // Filename of the resized image file (without path)
+    String resizedImageFilename = resizedImageFilename = iManager.getResizedFilename();
+    // File to be used when resized images in use
+    CachedFile resizedImageFile = CachedFileManager.addCachedFile(bookFolder, resizedImageFilename);
 
     // We normally expect a calibre cover file to exist as Calibre
     // will normally have inserted its default ocver.

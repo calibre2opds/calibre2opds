@@ -119,6 +119,8 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setIncludeModifiedInBookDetails(Boolean value);
 
+  public void setIncludeSizeOfDownloads(Boolean value);
+
   public void setSingleBookCrossReferences(Boolean value);
 
   public void setIncludeAuthorCrossReferences(Boolean value);

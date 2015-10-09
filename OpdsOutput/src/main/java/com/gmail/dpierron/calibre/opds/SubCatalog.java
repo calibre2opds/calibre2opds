@@ -27,16 +27,16 @@ public abstract class SubCatalog {
   private final static Logger logger = LogManager.getLogger(SubCatalog.class);
   // Get some non-mutable configuration options once for efffeciency that are used widely in subcatalog variants
   // TODO:  Decide if perhaps these should be moved to CatalogManager?
-  protected static final ConfigurationHolder currentProfile = ConfigurationManager.getCurrentProfile();
-  protected static final int maxBeforeSplit = ConfigurationManager.getCurrentProfile().getMaxBeforeSplit();
-  protected static final int maxSplitLevels = ConfigurationManager.getCurrentProfile().getMaxSplitLevels();
-  protected static final int maxBeforePaginate = ConfigurationManager.getCurrentProfile().getMaxBeforePaginate();
-  protected static final boolean useExternalIcons = ConfigurationManager.getCurrentProfile().getExternalIcons();
-  protected static final boolean useExternalImages = ConfigurationManager.getCurrentProfile().getExternalImages();
-  protected static final boolean includeCoversInCatalog = ConfigurationManager.getCurrentProfile().getIncludeCoversInCatalog();
-  protected static final String booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
+  protected static ConfigurationHolder currentProfile;
+  protected static Integer maxBeforeSplit;
+  protected static Integer maxSplitLevels;
+  protected static Integer maxBeforePaginate;
+  protected static Boolean useExternalIcons;
+  protected static Boolean useExternalImages;
+  protected static Boolean includeCoversInCatalog;
+  protected static String booksURI;
+  protected static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
   protected static final CRC32 crc32 = new CRC32();
-  protected final static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
 
   //  PROPERTIES
 
@@ -76,21 +76,51 @@ public abstract class SubCatalog {
 
   public SubCatalog(List<Book> books) {
     this(null, books);
-    //if (crc32 == null)
-    //  crc32 = new CRC32();
+    initalise();
   }
 
   public SubCatalog() {
-    // Do nothing special!
-    //if (crc32 == null)
-    //  crc32 = new CRC32();
+    initalise();
   }
 
   public SubCatalog(List<Object> stuffToFilterOut, List<Book> books) {
+    initalise();
     setStuffToFilterOut(stuffToFilterOut);
     setBooks(books);
     //if (crc32 == null)
     //  crc32 = new CRC32();
+  }
+
+  /**
+   * Initialise the static variables to the correct values for the
+   * catalog that is bing generated
+   */
+  private static void initalise() {
+    if (currentProfile == null)  currentProfile = ConfigurationManager.getCurrentProfile();
+    if (maxBeforeSplit == -1)  maxBeforeSplit = ConfigurationManager.getCurrentProfile().getMaxBeforeSplit();
+    if (maxSplitLevels == -1)  maxSplitLevels = ConfigurationManager.getCurrentProfile().getMaxSplitLevels();
+    if (maxBeforePaginate == -1)  maxBeforePaginate = ConfigurationManager.getCurrentProfile().getMaxBeforePaginate();
+    if (useExternalIcons == null)  useExternalIcons = ConfigurationManager.getCurrentProfile().getExternalIcons();
+    if (useExternalImages == null)  useExternalImages = ConfigurationManager.getCurrentProfile().getExternalImages();
+    if (includeCoversInCatalog == null) includeCoversInCatalog = ConfigurationManager.getCurrentProfile().getIncludeCoversInCatalog();
+    if (booksURI == null) booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
+    if (collator == null)  collator = Collator.getInstance(ConfigurationManager.getLocale());
+  }
+  /**
+   * Ensure all the static variables are reset to be correct for the
+   * catalog that is about to be generated.
+   */
+  public static void reset() {
+    currentProfile = null;
+    maxBeforeSplit = -1;
+    maxSplitLevels = -1;
+    maxBeforePaginate = -1;
+    useExternalIcons = null;
+    useExternalIcons = null;
+    useExternalImages = null;
+    booksURI = null;
+    collator = null;
+    initalise();
   }
 
   private void setOptimizUrlPrefix() {
