@@ -66,6 +66,11 @@ public abstract class SubCatalog {
   // effeciency reasons as it is needed for each catalog entry.
   private String catalogFolderBaseFilename;
 
+  // Set to true if the XSL file for the list entries has changed
+  private static Boolean xslCatalogChanged;
+  // Set to true if  the XSL for the full entries has changed.
+  private static Boolean xslFullEntryChanged;
+
   private List<Object> stuffToFilterOut;
 
   private List<Book> books;
@@ -96,15 +101,19 @@ public abstract class SubCatalog {
    * catalog that is bing generated
    */
   private static void initalise() {
-    if (currentProfile == null)  currentProfile = ConfigurationManager.getCurrentProfile();
-    if (maxBeforeSplit == -1)  maxBeforeSplit = ConfigurationManager.getCurrentProfile().getMaxBeforeSplit();
-    if (maxSplitLevels == -1)  maxSplitLevels = ConfigurationManager.getCurrentProfile().getMaxSplitLevels();
-    if (maxBeforePaginate == -1)  maxBeforePaginate = ConfigurationManager.getCurrentProfile().getMaxBeforePaginate();
-    if (useExternalIcons == null)  useExternalIcons = ConfigurationManager.getCurrentProfile().getExternalIcons();
-    if (useExternalImages == null)  useExternalImages = ConfigurationManager.getCurrentProfile().getExternalImages();
-    if (includeCoversInCatalog == null) includeCoversInCatalog = ConfigurationManager.getCurrentProfile().getIncludeCoversInCatalog();
-    if (booksURI == null) booksURI = ConfigurationManager.getCurrentProfile().getUrlBooks();
-    if (collator == null)  collator = Collator.getInstance(ConfigurationManager.getLocale());
+    if (currentProfile == null) {
+      currentProfile = ConfigurationManager.getCurrentProfile();
+      maxBeforeSplit = currentProfile.getMaxBeforeSplit();
+      maxSplitLevels = currentProfile.getMaxSplitLevels();
+      maxBeforePaginate = currentProfile.getMaxBeforePaginate();
+      useExternalIcons = currentProfile.getExternalIcons();
+      useExternalImages = currentProfile.getExternalImages();
+      includeCoversInCatalog = currentProfile.getIncludeCoversInCatalog();
+      booksURI = currentProfile.getUrlBooks();
+      collator = Collator.getInstance(ConfigurationManager.getLocale());
+      xslCatalogChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.CATALOG_XSL);
+      xslFullEntryChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.FULLENTRY_XSL);
+    }
   }
   /**
    * Ensure all the static variables are reset to be correct for the
@@ -112,14 +121,6 @@ public abstract class SubCatalog {
    */
   public static void reset() {
     currentProfile = null;
-    maxBeforeSplit = -1;
-    maxSplitLevels = -1;
-    maxBeforePaginate = -1;
-    useExternalIcons = null;
-    useExternalIcons = null;
-    useExternalImages = null;
-    booksURI = null;
-    collator = null;
     initalise();
   }
 
@@ -758,11 +759,6 @@ public abstract class SubCatalog {
     return Helper.isNotNullOrEmpty(stuffToFilterOut);
   }
 
-
-  //  Set up the variables once as they will never change for a given run
-
-  private final static boolean xslCatalogChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.CATALOG_XSL);
-  private final static boolean xslFullEntryChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.FULLENTRY_XSL);
 
 
   /**

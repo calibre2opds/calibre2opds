@@ -611,7 +611,6 @@ public class Catalog {
     String textNO = Localization.Main.getText("boolean.no");
     // Ensure cached values are current for this generate run.
     currentProfile = ConfigurationManager.getCurrentProfile();
-    SubCatalog.reset();
 
     if (!currentProfile.getGenerateAllbooks())        CatalogManager.callback.disableCreateAllBooks();
     if (!currentProfile.getGenerateAuthors())         CatalogManager.callback.disableCreateAuthors();
@@ -890,7 +889,7 @@ public class Catalog {
       CatalogManager.callback.setDatabaseCount(Summarizer.getBookWord(books.size()));
 
       // Database read optimizations
-      // (ony read in optional databitems if weneed them later)
+      // (ony read in optional databitems if we need them later)
 
       // TODO Tags
       // TODO Series
@@ -1053,6 +1052,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       //      Standard sub-catalogs for a folder level
 
       logger.debug("Starter generating top level catalog");
+      SubCatalog.reset();     // Resete stored state information for Subcatalog and derived objects
       LevelSubCatalog levelSubCatalog = new LevelSubCatalog(books,currentProfile.getCatalogTitle());
       levelSubCatalog.setCatalogLevel("");      // Empty level for top level sub-catalogs
       levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!

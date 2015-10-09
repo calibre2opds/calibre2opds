@@ -639,7 +639,7 @@ public class CatalogManager {
    * - The CRC's must match
    *
    * If these criteria are saitisfied then the 'Changed' attribute is
-   * cleared on the cache entry for both sourc and target.
+   * cleared on the cache entry for both sourcc and target.
    *
    * @param sourcefile
    * @return
