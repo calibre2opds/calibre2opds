@@ -781,21 +781,22 @@ public abstract class SubCatalog {
    * the XML document that has just been created.
    *
    * @param feed           The feed that is to be used to generate the output files
-   * @param outputFilename The name of the output file.
+   * @param xmlFilename    The name of the output file.
    * @param feedType       The type of file that is to be generated
+   * @param isHtmlOptimiseAllowed  Set when HTML optimisation mustbe suppressed
    * @throws IOException Any exception would be unexpected, but it is always theoretically possible!
    */
   public void createFilesFromElement(Element feed,
-                String outputFilename,
+                String xmlFilename,
                 HtmlManager.FeedType feedType,
                 Boolean isHtmlOptimiseAllowed)
                   throws IOException {
 
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
-    assert Helper.isNotNullOrEmpty(outputFilename) : "Program error: Attempt to create XML file for empty/null filename";
-    assert !outputFilename.startsWith(CatalogManager.getGenerateFolder().toString()) : "Program Error:  filename should not include catalog folder (" +
-        outputFilename + ")";
+    assert Helper.isNotNullOrEmpty(xmlFilename) : "Program error: Attempt to create XML file for empty/null filename";
+    assert !xmlFilename.startsWith(CatalogManager.getGenerateFolder().toString()) : "Program Error:  filename should not include catalog folder (" +
+        xmlFilename + ")";
     // int pos = outputFilename.indexOf(Constants.SECURITY_SEPARATOR);
     // assert outputFilename.substring(pos+1).indexOf(Constants.SECURITY_SEPARATOR) == -1 :
     //    "Program error: Two occurences of SECURITY_SEPARATOR (" + outputFilename + ")";
@@ -804,15 +805,14 @@ public abstract class SubCatalog {
     //    "Program error: Two occurences of LEVEL_SEPARATOR (" + outputFilename + ")";
 
 
-    String xmlfilename = outputFilename;
-    if (!xmlfilename.endsWith(Constants.XML_EXTENSION)) {
-      xmlfilename += Constants.XML_EXTENSION;
+    if (!xmlFilename.endsWith(Constants.XML_EXTENSION)) {
+      xmlFilename += Constants.XML_EXTENSION;
     }
-    CachedFile outputFile = CachedFileManager.addCachedFile(CatalogManager.storeCatalogFile(xmlfilename));
+    CachedFile xmlFile = CachedFileManager.addCachedFile(CatalogManager.storeCatalogFile(xmlFilename));
     // Avoid creating files that already exist.
     // (if xml file exists then HTML one will as well)
-    if (outputFile.exists()) {
-      logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
+    if (xmlFile.exists()) {
+      logger.trace("\n\n*** Attempt to generate file already done (" + xmlFilename + ") - see if it can be optimised out! ***\n");
       //      if (logger.isTraceEnabled()) logger.trace("\n\n*** Attempt to generate file already done (" + outputFilename + ") - see if it can be optimised out! ***\n");
       return;
     }
@@ -828,20 +828,21 @@ public abstract class SubCatalog {
     if (currentProfile.getGenerateOpds()) {
       FileOutputStream fos = null;
       try {
-        fos = new FileOutputStream(outputFile);
+        fos = new FileOutputStream(xmlFile);
         JDOMManager.getOutputter().output(document, fos);
       } catch (RuntimeException e) {
-        logger.warn("Error writing file " + xmlfilename + "(" + e.toString() + ")");
+        logger.warn("Error writing file " + xmlFilename + "(" + e.toString() + ")");
       } finally {
         if (fos != null)
           fos.close();
-        outputFile.clearCachedInformation();
+        xmlFile.clearCachedInformation();
       }
     }
 
     //  generate corresponding HTML file
 
-    CachedFile htmlFile = CachedFileManager.addCachedFile(HtmlManager.getHtmlFilename(outputFile.getAbsolutePath()));
+    CachedFile htmlFile = CachedFileManager.addCachedFile(HtmlManager.getHtmlFilename(
+        xmlFile.getAbsolutePath()));
     if (htmlFile.exists()) {
       logger.warn("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'");
       return;
@@ -855,7 +856,7 @@ public abstract class SubCatalog {
     // - the XML file is identical to the one already in the catalog
     // - the XSL file is older than the HTML file
 
-    CachedFile catalogXmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + outputFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
+    CachedFile catalogXmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + xmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
     CachedFile catalogHtmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + htmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
     boolean xslChanged = true;
 
@@ -869,20 +870,23 @@ public abstract class SubCatalog {
             break;
     }
     if (catalogXmlFile.exists()
-    && catalogXmlFile.getCrc() == outputFile.getCrc()) {
+    && catalogXmlFile.getCrc() == xmlFile.getCrc()) {
       catalogXmlFile.setChanged(false);
-      outputFile.setChanged(false);
+      xmlFile.setChanged(false);
     }
-    if (isHtmlOptimiseAllowed && ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(outputFile, catalogXmlFile)) {
+    if (isHtmlOptimiseAllowed == true) {
+      int dummy = 1;
+    }
+    if (isHtmlOptimiseAllowed && ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(xmlFile, catalogXmlFile)) {
       catalogHtmlFile.setChanged(false);
     } else {
       htmlFile.clearCachedInformation();
       CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(), feedType);
     }
-    // See if we need to keep the output file
-    if (outputFile.isChanged() == false) {
-      outputFile.delete();
-      CachedFileManager.removeCachedFile(outputFile);
+    // See if we need to keep the XML file
+    if (currentProfile.getGenerateOpds() == false) {
+      xmlFile.delete();
+      CachedFileManager.removeCachedFile(xmlFile);
     }
   }
 

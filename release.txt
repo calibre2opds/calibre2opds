@@ -74,7 +74,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-254: Custom Catalog settings not changed when switching profiles
     - #c2o-256: Suppress displaying Author in Book Details
     - #c2o-257: Display size on download links
-    - #c2o-261: Changing HTML catalog to/from cover flow not always recognised
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -112,10 +111,13 @@ v3.5
     - New:    #c2o-250: Get Confirmation before resetting to defaults
     - New:    #c20-251: Get confirmation before exiting with unsaved changes
     - Fix:    #c2o:252: The "Today" section in Recent books should be limited to the current calendar day
+    - Fix:    #c2o-253: Hangs generating catalog (OSX)
     - Fix:    #c2o-255: OpdsURL references in Custom catalogs are not change to .html ones for the HTML catalog
     - Change: #c2o_258: Increase the Maximum allowed in Recent Books to 1000 (was500)
     - Fix:    #c2o-259: Build revision number no longer displayed (regression introduced during 3.5 betas)
     - Fix:    #c20-260: Calibre2opds .dmg not working on Mac
+    - Fix:    #c2o-261: Changing HTML catalog to/from cover flow not always recognised
+
 
 v3.4 (28th March 2015) Rev 340
     - Change: Some of the filenames in the generated catalog have changed their structure. Not really visible to

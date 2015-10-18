@@ -1301,6 +1301,8 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       CatalogManager.callback.checkIfContinueGenerating();
 
+      CatalogManager.saveCoverFlowMode();   // save coveflow setting to help with optimisation of next generate run
+
       // Produce run statistics
 
 

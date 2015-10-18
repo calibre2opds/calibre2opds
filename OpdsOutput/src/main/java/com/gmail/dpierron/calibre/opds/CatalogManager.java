@@ -19,9 +19,7 @@ import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
@@ -89,6 +87,8 @@ public class CatalogManager {
   // Tags that the user has specified should not be included
   private static List<Tag> tagsToIgnore;
   public static Map<String, BookFilter> customCatalogsFilters;
+  // We set this to false if the cover flow mode has changed (or is unknown)
+  public static Boolean coverFlowModeSame;
 
   // Some Stats to accumulate
   // NOTE.  We make them public to avoid needing getters
@@ -165,6 +165,7 @@ public class CatalogManager {
     JDOMManager.reset();
     securityCode = "";
     securityCodeAndSeparator = null;
+    coverFlowModeSame = null;
     resetStats();
   }
 
@@ -778,5 +779,43 @@ public class CatalogManager {
         }
       }
     }
+  }
+
+  /**
+   * Save the current CoverFlowMode setting to the catalog
+   * We use this to dermine if it haschanged the next time
+   * we generatethe catalog to work out if it is valid to
+   * not generate HTML for book lists if XML unchanged.
+   */
+  public static void saveCoverFlowMode() {
+    try {
+      BufferedWriter out = new BufferedWriter(new FileWriter(new File( getCatalogFolder(),"_c2o_coverflowmode.dat")));
+      out.write(currentProfile.getBrowseByCover().toString());
+      out.close();
+    } catch (Exception e) {
+      logger.warn("Failed to write BrowseByCover setting to catalog");
+    }
+  }
+
+  /**
+   * Work out if the cover mode (if any ) stroed in the catatlog
+   * is the same as the one we want for this run.
+   * @return
+   */
+  public static Boolean IsCoverFlowModeSame() {
+    if (coverFlowModeSame == null) {
+      try {
+        BufferedReader in = new BufferedReader((new FileReader(new File(getCatalogFolder(),"_c2o_coverflowmode.dat"))));
+        Scanner s = new Scanner(in);
+        Boolean oldCoverFlowMode = s.nextBoolean();
+        Boolean newCoverFlowMode = currentProfile.getBrowseByCover();
+        coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
+        in.close();
+      }catch (Exception e) {
+        logger.warn("Failed to read BrowseByCover setting from catalog");
+        coverFlowModeSame = false;
+      }
+    }
+    return coverFlowModeSame;
   }
 }

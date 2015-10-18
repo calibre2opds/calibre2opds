@@ -21,7 +21,6 @@ import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
-import org.w3c.dom.ranges.Range;
 
 import java.io.File;
 import java.io.IOException;
@@ -280,7 +279,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
      // TODO Following should take account of whether CoverMode changed
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, true);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, CatalogManager.IsCoverFlowModeSame());
     if (from == 0) {
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary, icon);
     }
