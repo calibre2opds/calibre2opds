@@ -413,9 +413,9 @@ public class LevelSubCatalog extends SubCatalog {
 
     String outputFilename = getCatalogBaseFolderFileName();
     if (inSubDir || getCatalogLevel().length() > 0 || getCatalogFolder().length() > 0){
-      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.Catalog);
+      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.Catalog, true);
     } else {
-      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog);
+      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog, true);
     }
 
     // #c2o-214

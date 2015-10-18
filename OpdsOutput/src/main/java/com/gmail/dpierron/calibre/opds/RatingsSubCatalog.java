@@ -92,7 +92,7 @@ public class RatingsSubCatalog extends BooksSubCatalog {
     }
 
     feed.addContent(result);
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, true);
 
     String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element result2 = FeedHelper.getCatalogEntry(title,

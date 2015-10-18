@@ -230,7 +230,7 @@ public class TagTreeSubCatalog extends TagsSubCatalog {
     Element entry;
     String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     entry = createPaginateLinks(feed, urlExt, pageNumber, maxPages);
-    createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog);
+    createFilesFromElement(feed,filename, HtmlManager.FeedType.Catalog, true);
     if (from == 0) {
       if (logger.isTraceEnabled()) {logger.trace("getLevelOfTreeNode:  Breadcrumbs=" + pBreadcrumbs.toString());}
       entry = FeedHelper.getCatalogEntry(title,

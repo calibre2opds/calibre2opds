@@ -194,7 +194,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     Element entry;
     String urlInItsSubfolder = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, pBreadcrumbs.size() >1 || pageNumber != 1);
     entry  = createPaginateLinks (feed, filename, pageNumber, maxPages);
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, true);
     if (from == 0)  {
       entry = FeedHelper.getCatalogEntry(title,
                                          urn,

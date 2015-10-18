@@ -150,7 +150,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
 
     Element entry;
       entry = createPaginateLinks(feed, filename, pageNumber, maxPages);
-      createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+      createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, true);
       if (from == 0) {
       if (logger.isDebugEnabled())
         logger.trace("getListOfTags" + pBreadcrumbs.toString());

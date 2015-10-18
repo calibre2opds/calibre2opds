@@ -315,7 +315,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Element entry;
     String urlInItsSubfolder = optimizeCatalogURL(CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
     entry = createPaginateLinks(feed, urlInItsSubfolder, pageNumber, maxPages);
-    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog);
+    createFilesFromElement(feed, filename, HtmlManager.FeedType.Catalog, true);
     if (from == 0) {
       entry = FeedHelper.getCatalogEntry(title, urn, urlInItsSubfolder, summary,
           // #751211: Use external icons option

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Collator;
@@ -37,6 +38,8 @@ public abstract class SubCatalog {
   protected static String booksURI;
   protected static Collator collator = Collator.getInstance(ConfigurationManager.getLocale());
   protected static final CRC32 crc32 = new CRC32();
+  protected static CachedFile defaultCoverFile;
+  protected static String defaultCoverUri;
 
   //  PROPERTIES
 
@@ -70,6 +73,10 @@ public abstract class SubCatalog {
   private static Boolean xslCatalogChanged;
   // Set to true if  the XSL for the full entries has changed.
   private static Boolean xslFullEntryChanged;
+  // Set to true if the 'browse-by-cover' mode is the same as the last run.
+  // If it is changed or unknown then this is set to false.
+  // This is used to determine if we can optimise generation of HTML files in book lists.
+  protected static Boolean coverModeSame;
 
   private List<Object> stuffToFilterOut;
 
@@ -113,6 +120,9 @@ public abstract class SubCatalog {
       collator = Collator.getInstance(ConfigurationManager.getLocale());
       xslCatalogChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.CATALOG_XSL);
       xslFullEntryChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.FULLENTRY_XSL);
+      defaultCoverFile  = CachedFileManager.addCachedFile(new File(CatalogManager.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
+      defaultCoverUri = Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
+      coverModeSame = true;
     }
   }
   /**
@@ -775,7 +785,11 @@ public abstract class SubCatalog {
    * @param feedType       The type of file that is to be generated
    * @throws IOException Any exception would be unexpected, but it is always theoretically possible!
    */
-  public void createFilesFromElement(Element feed, String outputFilename, HtmlManager.FeedType feedType) throws IOException {
+  public void createFilesFromElement(Element feed,
+                String outputFilename,
+                HtmlManager.FeedType feedType,
+                Boolean isHtmlOptimiseAllowed)
+                  throws IOException {
 
     // Various asserts to help with identifying logic faults in the program!
     assert feed != null : "Programerror: Unexpected attempt to create file from non-existent feed";
@@ -833,12 +847,13 @@ public abstract class SubCatalog {
       return;
     }
 
-    // TODO:   See if we can optimise things by avoiding generating the HTML file
-    // TODO:   if:
-    // TODO    - the target HTML file already exists in the catalog
-    // TODO    - the XML file is identical to the one already in the catalog
-    // TODO:   - the XSL file is older than the HTML file
-    // TODO:   This would have an implication on the syn process so not a trivial change
+    // See if we can optimise things by avoiding generating the HTML file
+    // if:
+    // - The flag to allow HTML optimisation is true
+    //   (typically false for book lists after browse-by-cover mode changed/unknown)
+    // - the target HTML file already exists in the catalog
+    // - the XML file is identical to the one already in the catalog
+    // - the XSL file is older than the HTML file
 
     CachedFile catalogXmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + outputFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
     CachedFile catalogHtmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + htmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
@@ -858,7 +873,7 @@ public abstract class SubCatalog {
       catalogXmlFile.setChanged(false);
       outputFile.setChanged(false);
     }
-    if ( ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(outputFile, catalogXmlFile)) {
+    if (isHtmlOptimiseAllowed && ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(outputFile, catalogXmlFile)) {
       catalogHtmlFile.setChanged(false);
     } else {
       htmlFile.clearCachedInformation();
