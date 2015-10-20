@@ -91,7 +91,7 @@ Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
   
-v3.5 
+v3.5 (20 October 2015) Rev 367
     - Upgrade versions of components used internally by calibre2opds:
         jdom    1.1 -> 2.0.6
       	junit		4.7	-> 4.12
