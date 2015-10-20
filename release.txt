@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.5
+                    RELEASE NOTES for Calibre2Opds v3.6
                     -----------------------------------
 
 Documentation
@@ -90,7 +90,10 @@ that have been recorded in the Issue tracker.
 Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
   Change History: http://code.google.com/p/calibre2opds/source/list
-  
+
+v3.6
+   - No changes yet documented
+
 v3.5 (20 October 2015) Rev 370
     - Upgrade versions of components used internally by calibre2opds:
         jdom    1.1 -> 2.0.6

@@ -3,7 +3,7 @@
 #
 # If IzPack not installed then stops after ZIP package
 
-BASEVERSION=3.5
+BASEVERSION=3.6
 
 ZIPFILE=`pwd`/calibre2opds-${BASEVERSION}-`svnversion`.zip
 
