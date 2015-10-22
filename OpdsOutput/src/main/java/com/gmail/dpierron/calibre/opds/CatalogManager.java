@@ -92,6 +92,11 @@ public class CatalogManager {
 
   // Some Stats to accumulate
   // NOTE.  We make them public to avoid needing getters
+  public static long statsXmlChanged;        // Count of files where we realise during generation that XML unchanged
+  public static long statsXmlDiscarded;      // count of XML files generated and then discarded as not needed for final catalog
+  public static long statsHtmlChanged;       // Count of files where HTML not generated as XML unchanged.
+  public static long statsXmlUnchanged;      // Count of files where we realise during generation that XML unchanged
+  public static long statsHtmlUnchanged;     // Count of files where HTML not generated as XML unchanged.
   public static long statsCopyExistHits;     // Count of Files that are copied because target does not exist
   public static long statsCopyLengthHits;    // Count of files that are copied because lengths differ
   public static long statsCopyDateMisses;    // Count of files that  are not copied because source older
@@ -170,7 +175,13 @@ public class CatalogManager {
   }
 
   private static void resetStats() {
-    statsCopyExistHits = statsCopyLengthHits
+    statsXmlChanged
+        = statsXmlDiscarded
+        = statsHtmlChanged
+        = statsXmlUnchanged
+        = statsHtmlUnchanged
+        = statsCopyExistHits
+        = statsCopyLengthHits
         = statsCopyCrcHits
         = statsCopyCrcMisses
         = statsCopyDateMisses
@@ -807,13 +818,16 @@ public class CatalogManager {
       try {
         BufferedReader in = new BufferedReader((new FileReader(new File(getCatalogFolder(),"_c2o_coverflowmode.dat"))));
         Scanner s = new Scanner(in);
-        Boolean oldCoverFlowMode = s.nextBoolean();
-        Boolean newCoverFlowMode = currentProfile.getBrowseByCover();
+        boolean oldCoverFlowMode = s.nextBoolean();
+        boolean newCoverFlowMode = currentProfile.getBrowseByCover();
         coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
         in.close();
       }catch (Exception e) {
         logger.warn("Failed to read BrowseByCover setting from catalog");
         coverFlowModeSame = false;
+      }
+      if (! coverFlowModeSame) {
+        logger.info("CoverFlowMode appears to have been changed (or is unknown)");
       }
     }
     return coverFlowModeSame;

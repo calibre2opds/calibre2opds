@@ -858,7 +858,7 @@ public abstract class SubCatalog {
 
     CachedFile catalogXmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + xmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
     CachedFile catalogHtmlFile = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder() + htmlFile.getAbsolutePath().substring(CatalogManager.getGenerateFolderpathLength()));
-    boolean xslChanged = true;
+    boolean xslChanged;
 
     switch (feedType) {
       case MainCatalog:
@@ -868,25 +868,45 @@ public abstract class SubCatalog {
       case BookFullEntry:
             xslChanged = xslFullEntryChanged;
             break;
+      default:
+            logger.error("Program Error: unrecognised feedType for file '" + xmlFile + "'" );
+            return;
     }
     if (catalogXmlFile.exists()
     && catalogXmlFile.getCrc() == xmlFile.getCrc()) {
       catalogXmlFile.setChanged(false);
       xmlFile.setChanged(false);
     }
-    if (isHtmlOptimiseAllowed == true) {
-      int dummy = 1;
-    }
-    if (isHtmlOptimiseAllowed && ! xslChanged  && catalogHtmlFile.exists() && CatalogManager.isSourceFileSameAsTargetFile(xmlFile, catalogXmlFile)) {
+    if (isHtmlOptimiseAllowed
+    && ! xslChanged
+    && catalogHtmlFile.exists()
+    && xmlFile.isChanged() == false ) {
+//    && CatalogManager.isSourceFileSameAsTargetFile(xmlFile, catalogXmlFile)) {
       catalogHtmlFile.setChanged(false);
+      htmlFile.setChanged(false);
+      CatalogManager.statsHtmlUnchanged++;
     } else {
-      htmlFile.clearCachedInformation();
-      CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(), feedType);
+      if (currentProfile.getGenerateHtml()) {
+        CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(),
+            feedType);
+        htmlFile.clearCachedInformation();
+        CatalogManager.statsHtmlChanged++;
+//      } else {
+//        CachedFileManager.removeCachedFile(htmlFile);
+      }
     }
     // See if we need to keep the XML file
-    if (currentProfile.getGenerateOpds() == false) {
+    if (currentProfile.getGenerateOpds()) {
+      if (xmlFile.isChanged() == false) {
+        xmlFile.delete();     // We do not keep the XML file in the temp folder if marked as unchanged
+        CatalogManager.statsXmlUnchanged++;
+      } else {
+        CatalogManager.statsXmlChanged++;
+      }
+    } else {
       xmlFile.delete();
       CachedFileManager.removeCachedFile(xmlFile);
+      CatalogManager.statsXmlDiscarded++;
     }
   }
 

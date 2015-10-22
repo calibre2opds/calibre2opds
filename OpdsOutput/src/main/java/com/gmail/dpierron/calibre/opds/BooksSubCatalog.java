@@ -539,11 +539,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // We only want the warning once per book
       if (book.isDone() == false) {
-        logger.warn("addImageFile:  No cover file found forbook " + book);
+        if (isCover) logger.warn("addImageFile:  No cover file found forbook " + book);
         // We remove any resized image created by earlier versions of calibre2opds
         if (resizedImageFile.exists()) {
           if (logger.isTraceEnabled()) logger.trace("addImageFile: Cover missing, so removing " + resizedImageFile);
-        } else {
+          resizedImageFile.delete();
+          CachedFileManager.removeCachedFile(resizedImageFile);;
         }
       }
       // We will use our default cover instead!

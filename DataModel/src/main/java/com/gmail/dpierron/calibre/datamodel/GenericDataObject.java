@@ -10,6 +10,11 @@ import java.util.List;
 
 /**
  * Created by WalkerDJ on 16/04/2015.
+ *
+ * This object is meant to act as a way of provinding any methods and
+ * function that need to be supplied by all data objects that can
+ * generate their own catalog sub-section so that the logic for
+ * such generation can be made as generic as possible.
  */
 public abstract class GenericDataObject implements SplitableByLetter {
   private final static Logger logger = LogManager.getLogger(Author.class);

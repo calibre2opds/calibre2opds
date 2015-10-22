@@ -1308,12 +1308,12 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       CatalogManager.syncLogPrintln("");
       CatalogManager.syncLogPrintln(Localization.Main.getText("stats.copy.header"));
+      if (logger.isDebugEnabled()) CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
       CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDeleted) + " " + Localization.Main.getText("stats.copy.deleted"));
       CatalogManager.syncLogClose();
 
@@ -1329,14 +1329,19 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.info(String.format("%8d  ", countMetadata) + Localization.Main.getText("stats.run.metadata"));
       logger.info(String.format("%8d  ", CatalogManager.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
       logger.info(String.format("%8d  ", CatalogManager.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
+      logger.info(String.format("%8d  ", CatalogManager.statsXmlChanged) + Localization.Main.getText("stats.xmlChanged"));
+      if (CatalogManager.statsXmlDiscarded != 0) logger.info(String.format("%8d  ", CatalogManager.statsXmlDiscarded) + Localization.Main.getText("stats.xmlDiscarded"));
+      logger.info(String.format("%8d  ", CatalogManager.statsHtmlChanged) + Localization.Main.getText("stats.htmlChanged"));
+      logger.info(String.format("%8d  ", CatalogManager.statsXmlUnchanged) + Localization.Main.getText("stats.xmlUnchanged"));
+      logger.info(String.format("%8d  ", CatalogManager.statsHtmlUnchanged) + Localization.Main.getText("stats.htmlUnchanged"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
+      if (logger.isDebugEnabled()) logger.info(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
       logger.info(String.format("%8d  ", CatalogManager.statsCopyDeleted) + Localization.Main.getText("stats.copy.deleted"));
       logger.info("");
       if (CatalogManager.statsCopyToSelf != 0)
