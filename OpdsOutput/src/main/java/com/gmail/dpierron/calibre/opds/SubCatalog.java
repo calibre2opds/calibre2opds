@@ -73,10 +73,6 @@ public abstract class SubCatalog {
   private static Boolean xslCatalogChanged;
   // Set to true if  the XSL for the full entries has changed.
   private static Boolean xslFullEntryChanged;
-  // Set to true if the 'browse-by-cover' mode is the same as the last run.
-  // If it is changed or unknown then this is set to false.
-  // This is used to determine if we can optimise generation of HTML files in book lists.
-  protected static Boolean coverModeSame;
 
   private List<Object> stuffToFilterOut;
 
@@ -122,7 +118,6 @@ public abstract class SubCatalog {
       xslFullEntryChanged = ! CatalogManager.isGenerateFileSameAsCatalogFile(Constants.FULLENTRY_XSL);
       defaultCoverFile  = CachedFileManager.addCachedFile(new File(CatalogManager.getGenerateFolder(), Constants.DEFAULT_IMAGE_FILENAME));
       defaultCoverUri = Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
-      coverModeSame = true;
     }
   }
   /**

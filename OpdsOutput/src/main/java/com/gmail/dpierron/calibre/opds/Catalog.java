@@ -1110,9 +1110,9 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.debug("COMPLETED: Processing ePub Metadata");
       CatalogManager.callback.checkIfContinueGenerating();
 
-
       // FILE SYNCING PHASE
 
+      CatalogManager.deleteoptimizerData();
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 
@@ -1301,7 +1301,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       CatalogManager.callback.checkIfContinueGenerating();
 
-      CatalogManager.saveCoverFlowMode();   // save coveflow setting to help with optimisation of next generate run
+      CatalogManager.saveOptimizerData();   // save coveflow setting to help with optimisation of next generate run
 
       // Produce run statistics
 
@@ -1330,9 +1330,9 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.info(String.format("%8d  ", CatalogManager.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
       logger.info(String.format("%8d  ", CatalogManager.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
       logger.info(String.format("%8d  ", CatalogManager.statsXmlChanged) + Localization.Main.getText("stats.xmlChanged"));
+      logger.info(String.format("%8d  ", CatalogManager.statsXmlUnchanged) + Localization.Main.getText("stats.xmlUnchanged"));
       if (CatalogManager.statsXmlDiscarded != 0) logger.info(String.format("%8d  ", CatalogManager.statsXmlDiscarded) + Localization.Main.getText("stats.xmlDiscarded"));
       logger.info(String.format("%8d  ", CatalogManager.statsHtmlChanged) + Localization.Main.getText("stats.htmlChanged"));
-      logger.info(String.format("%8d  ", CatalogManager.statsXmlUnchanged) + Localization.Main.getText("stats.xmlUnchanged"));
       logger.info(String.format("%8d  ", CatalogManager.statsHtmlUnchanged) + Localization.Main.getText("stats.htmlUnchanged"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));

@@ -152,7 +152,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private List<String> tokenizedBookDetailsCustomColumns;
 
 
-  ConfigurationHolder(File propertiesFile) {
+  public ConfigurationHolder(File propertiesFile) {
     super(propertiesFile);
     try {
       load();

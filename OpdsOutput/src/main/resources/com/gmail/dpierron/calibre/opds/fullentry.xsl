@@ -150,31 +150,25 @@
                 <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.downloadsection"/></h2>
                 <ul>
                   <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition']">
-                    <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']">
-                        <li>
-                            <a href="{opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']/@href}">
-                                <xsl:value-of select="opds:link[@rel='http://opds-spec.org/acquisition' and @type='application/epub+zip']/@title"/>
-                            </a>
-                        </li>
-                    </xsl:if>
                     <xsl:for-each select="opds:link[@rel='http://opds-spec.org/acquisition']">
-                      <xsl:if test="not(@type='application/epub+zip')">
-                        <li>
-                          <xsl:element name="a">
-                            <xsl:attribute name="href">
-                              <xsl:value-of select="./@href"/>
-                            </xsl:attribute>
-                            <xsl:choose>
-                              <xsl:when test="string-length(@title) > 0">
-                                <xsl:value-of select="./@title"/>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="$i18n.downloadfile"/>
-                              </xsl:otherwise>
-                            </xsl:choose>
-                          </xsl:element>
-                        </li>
-                      </xsl:if>
+                      <li>
+                        <xsl:element name="a">
+                          <xsl:attribute name="href">
+                            <xsl:value-of select="./@href"/>
+                          </xsl:attribute>
+                          <xsl:attribute name="type">
+                            <xsl:value-of select="./@type"/>
+                          </xsl:attribute>
+                          <xsl:choose>
+                            <xsl:when test="string-length(@title) > 0">
+                              <xsl:value-of select="./@title"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                              <xsl:value-of select="$i18n.downloadfile"/>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:element>
+                      </li>
                     </xsl:for-each>
                   </xsl:if>
                 </ul>

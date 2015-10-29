@@ -92,7 +92,8 @@ Usefule links for tracking changes are:
   Change History: http://code.google.com/p/calibre2opds/source/list
 
 v3.6
-   - No changes yet documented
+   - Fix:     #c20-262:  Download links in HTML catalog do not have 'Type' attribute specified
+   
 
 v3.5 (20 October 2015) Rev 370
     - Upgrade versions of components used internally by calibre2opds:

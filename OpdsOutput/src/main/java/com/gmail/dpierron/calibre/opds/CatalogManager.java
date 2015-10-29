@@ -89,6 +89,11 @@ public class CatalogManager {
   public static Map<String, BookFilter> customCatalogsFilters;
   // We set this to false if the cover flow mode has changed (or is unknown)
   public static Boolean coverFlowModeSame;
+  // Date previous catalog was generated (0 if not known) for use by optimizer
+  public static long generatedDate;
+  // Configuration used to generate a particular catalog.
+  // Can be used to help decide what optimisations are possible.
+  public static ConfigurationHolder generatedConfig;
 
   // Some Stats to accumulate
   // NOTE.  We make them public to avoid needing getters
@@ -171,6 +176,8 @@ public class CatalogManager {
     securityCode = "";
     securityCodeAndSeparator = null;
     coverFlowModeSame = null;
+    generatedDate = 0;
+    generatedConfig = null;
     resetStats();
   }
 
@@ -793,18 +800,69 @@ public class CatalogManager {
   }
 
   /**
-   * Save the current CoverFlowMode setting to the catalog
-   * We use this to dermine if it haschanged the next time
-   * we generatethe catalog to work out if it is valid to
-   * not generate HTML for book lists if XML unchanged.
+   * Save information that can be used by the optiizer on
+   * the next run to see where we can avoid generating new
+   * catalog files unnecesarily.  The information we
+   * currently save is:
+   *  - CoverFlowMode used (it changed then all relevant HTML files need regenerating)
+   *  - generation date (used to see if book record changed since last generate)
+   *  - max page size
+   *  - max split levels
+   *  - entries before split
+   *  - summary max length in lists
+   *  - summary max length in book details
    */
-  public static void saveCoverFlowMode() {
+  public static void saveOptimizerData() {
+      if (generatedConfig == null) {
+        generatedConfig = new ConfigurationHolder(new File(getCatalogFolder(), "c2o_optimizer.dat"));
+      }
+      // Now set any settings of use to optimizer from current profile
+      generatedConfig.setMaxBeforePaginate(currentProfile.getMaxBeforePaginate());
+      generatedConfig.setMaxSplitLevels(currentProfile.getMaxSplitLevels());
+      generatedConfig.setMaxBeforeSplit(currentProfile.getMaxBeforeSplit());
+      generatedConfig.setMaxSummaryLength(currentProfile.getMaxSummaryLength());
+      generatedConfig.setMaxBookSummaryLength(currentProfile.getMaxBookSummaryLength());
+      generatedConfig.setSecurityCode(Long.toString(System.currentTimeMillis())); // Reuse security code as time
+      generatedConfig.setBrowseByCover(currentProfile.getBrowseByCover());
+      generatedConfig.save();
+  }
+
+  /**
+   *  Once the genration phase has completed and file sync is started then the
+   *  state of the library is indeterminate from an optimizer perspective.
+   *  Removing the optimizer file during this stage is therefore needed.
+   */
+  public static void deleteoptimizerData() {
+      try {
+      (new File(getCatalogFolder(), "c2o_optimizer.dat")).delete();
+      } catch (Exception e) {
+        // Ignore errors on delete
+      }
+  }
+  /**
+   * Load information from previous generate that is relevant to this run to work
+   * out what optimisations are valid for this run.
+   *  - If cover flow mode is unchanged then we can avoid trying to generate the
+   *    corresponding HTML file if the CML file is known to be unchanged.
+   */
+  public static void loadOptimizerDetail() {
     try {
-      BufferedWriter out = new BufferedWriter(new FileWriter(new File( getCatalogFolder(),"_c2o_coverflowmode.dat")));
-      out.write(currentProfile.getBrowseByCover().toString());
-      out.close();
+      generatedConfig = new ConfigurationHolder(new File(getCatalogFolder(), "c2o_optimizer.dat"));
+      generatedConfig.load();
+      generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+      logger.info("Previous catalog was generated on "  + sdf.format(generatedDate));
+      boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
+      boolean newCoverFlowMode = currentProfile.getBrowseByCover();
+      coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
+      if (! coverFlowModeSame) {
+        logger.info("CoverFlowMode appears to have been changed");
+      }
     } catch (Exception e) {
-      logger.warn("Failed to write BrowseByCover setting to catalog");
+      //  If we failed to load previous config then we need to
+      //  disable many optimizations
+      coverFlowModeSame = false;
+      generatedDate = 0;
     }
   }
 
@@ -815,21 +873,19 @@ public class CatalogManager {
    */
   public static Boolean IsCoverFlowModeSame() {
     if (coverFlowModeSame == null) {
-      try {
-        BufferedReader in = new BufferedReader((new FileReader(new File(getCatalogFolder(),"_c2o_coverflowmode.dat"))));
-        Scanner s = new Scanner(in);
-        boolean oldCoverFlowMode = s.nextBoolean();
-        boolean newCoverFlowMode = currentProfile.getBrowseByCover();
-        coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
-        in.close();
-      }catch (Exception e) {
-        logger.warn("Failed to read BrowseByCover setting from catalog");
-        coverFlowModeSame = false;
-      }
-      if (! coverFlowModeSame) {
-        logger.info("CoverFlowMode appears to have been changed (or is unknown)");
-      }
+      loadOptimizerDetail();
     }
     return coverFlowModeSame;
+  }
+
+  /**
+   * Get the generated ate (if any) for the provious version of the catalog
+   * This will be used to try and optimize the generation process as we can
+   * use the modifed date of books to see if they are unchanged since then
+   *
+   * @return
+   */
+  public static long getLastGenerated() {
+    return generatedDate;
   }
 }
