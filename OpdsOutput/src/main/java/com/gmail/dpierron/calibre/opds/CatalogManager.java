@@ -14,6 +14,7 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
+import com.gmail.dpierron.calibre.configuration.PropertiesBasedConfiguration;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
@@ -799,6 +800,9 @@ public class CatalogManager {
     }
   }
 
+  private static File getOptimizeFile() {
+    return new File(getCatalogFolder(), "c2o_optimizer.dat");
+  }
   /**
    * Save information that can be used by the optiizer on
    * the next run to see where we can avoid generating new
@@ -813,18 +817,26 @@ public class CatalogManager {
    *  - summary max length in book details
    */
   public static void saveOptimizerData() {
-      if (generatedConfig == null) {
-        generatedConfig = new ConfigurationHolder(new File(getCatalogFolder(), "c2o_optimizer.dat"));
-      }
-      // Now set any settings of use to optimizer from current profile
-      generatedConfig.setMaxBeforePaginate(currentProfile.getMaxBeforePaginate());
-      generatedConfig.setMaxSplitLevels(currentProfile.getMaxSplitLevels());
-      generatedConfig.setMaxBeforeSplit(currentProfile.getMaxBeforeSplit());
-      generatedConfig.setMaxSummaryLength(currentProfile.getMaxSummaryLength());
-      generatedConfig.setMaxBookSummaryLength(currentProfile.getMaxBookSummaryLength());
-      generatedConfig.setSecurityCode(Long.toString(System.currentTimeMillis())); // Reuse security code as time
-      generatedConfig.setBrowseByCover(currentProfile.getBrowseByCover());
-      generatedConfig.save();
+    File f = getOptimizeFile();
+    if (! f.exists()) {
+      f.getParentFile().mkdirs();    // create the path if it does not already exist
+      logger.info("Creating path to file to save optimizer settings (" + f + ")");
+    }
+    // Perhaps this should always exist - but lets play safe!
+    if (generatedConfig == null) {
+      generatedConfig = new ConfigurationHolder(f);
+      logger.info("Creating default Optimizer settings");
+      generatedConfig = (ConfigurationHolder) new PropertiesBasedConfiguration(f);
+    }
+    // Now set any settings of use to optimizer from current profile
+    generatedConfig.setMaxBeforePaginate(currentProfile.getMaxBeforePaginate());
+    generatedConfig.setMaxSplitLevels(currentProfile.getMaxSplitLevels());
+    generatedConfig.setMaxBeforeSplit(currentProfile.getMaxBeforeSplit());
+    generatedConfig.setMaxSummaryLength(currentProfile.getMaxSummaryLength());
+    generatedConfig.setMaxBookSummaryLength(currentProfile.getMaxBookSummaryLength());
+    generatedConfig.setSecurityCode(Long.toString(System.currentTimeMillis())); // Reuse security code as time
+    generatedConfig.setBrowseByCover(currentProfile.getBrowseByCover());
+    generatedConfig.save();
   }
 
   /**
@@ -846,25 +858,36 @@ public class CatalogManager {
    *    corresponding HTML file if the CML file is known to be unchanged.
    */
   public static void loadOptimizerDetail() {
-    try {
-      generatedConfig = new ConfigurationHolder(new File(getCatalogFolder(), "c2o_optimizer.dat"));
-      generatedConfig.load();
-      generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      logger.info("Previous catalog was generated on "  + sdf.format(generatedDate));
-      boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
-      boolean newCoverFlowMode = currentProfile.getBrowseByCover();
-      coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
-      if (! coverFlowModeSame) {
-        logger.info("CoverFlowMode appears to have been changed");
+    // Set some default values for optimisations in case we cannot load better ones
+    coverFlowModeSame = false;
+    generatedDate = 0;
+
+    if (! getOptimizeFile().getParentFile().exists()){
+      logger.info("No existing catalog folder found (" + getOptimizeFile().getParentFile() + ")");
+    } else {
+      if (! getOptimizeFile().exists()) {
+        logger.info("No existing optimizer settings file found (" + getOptimizeFile() + ")");
+      } else {
+        try {
+          generatedConfig = (ConfigurationHolder) new PropertiesBasedConfiguration(getOptimizeFile());
+          generatedConfig.load();
+          generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+          logger.info("Previous catalog was generated on " + sdf.format(generatedDate));
+          boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
+          boolean newCoverFlowMode = currentProfile.getBrowseByCover();
+          coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
+          if (!coverFlowModeSame) {
+            logger.info("CoverFlowMode appears to have been changed");
+          }
+          deleteoptimizerData();    // Remove in case run fails when state will be unknown
+        } catch (Exception e) {
+          //  If we failed in any waythen defauts set earlier are ued
+        }
       }
-    } catch (Exception e) {
-      //  If we failed to load previous config then we need to
-      //  disable many optimizations
-      coverFlowModeSame = false;
-      generatedDate = 0;
     }
   }
+
 
   /**
    * Work out if the cover mode (if any ) stroed in the catatlog

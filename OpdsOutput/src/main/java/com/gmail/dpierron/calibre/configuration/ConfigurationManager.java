@@ -68,7 +68,7 @@ public class ConfigurationManager {
 
   /**
    * Load up the current profile
-   * If the 'currentProfile' class varaible is set then simply return the cached copy.
+   * If the 'currentProfile' class variable is set then simply return the cached copy.
    * If it is null then it needs to be loaded from disk.
    *
    * The name for the 'currentProfile' should be set prior to calling this method
@@ -139,6 +139,7 @@ public class ConfigurationManager {
     currentProfile = null;
     getCurrentProfile();
   }
+
 
   /**
    * See if the configuration already exists
