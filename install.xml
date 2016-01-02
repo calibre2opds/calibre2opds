@@ -82,10 +82,10 @@
             <file src="script/run.cmd" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.sh" targetdir="$INSTALL_PATH"/>
             <file src="script/rungui.cmd" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/OpdsOutput-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/DataModel-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/Tools-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
-	    <file src="Install/target/dependency/CalibreQueryLanguage-3.5-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>            
+            <file src="Install/target/dependency/OpdsOutput-3.6-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/DataModel-3.6-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/Tools-3.6-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>
+	    <file src="Install/target/dependency/CalibreQueryLanguage-3.6-SNAPSHOT.jar" targetdir="$INSTALL_PATH"/>            
             <file src="Install/target/dependency/jdom2-2.0.6.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-2.7.7.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/antlr-runtime-3.1.3.jar" targetdir="$INSTALL_PATH"/>
