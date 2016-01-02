@@ -1112,7 +1112,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       // FILE SYNCING PHASE
 
-      CatalogManager.deleteoptimizerData();
+      CatalogManager.deleteoptimizerFile();
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 

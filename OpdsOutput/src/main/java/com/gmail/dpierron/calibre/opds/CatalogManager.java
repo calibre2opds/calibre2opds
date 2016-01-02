@@ -14,11 +14,11 @@ import com.gmail.dpierron.calibre.cache.CachedFileManager;
 import com.gmail.dpierron.calibre.configuration.ConfigurationHolder;
 import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.DeviceMode;
-import com.gmail.dpierron.calibre.configuration.PropertiesBasedConfiguration;
 import com.gmail.dpierron.calibre.datamodel.*;
 import com.gmail.dpierron.calibre.datamodel.filter.BookFilter;
 import com.gmail.dpierron.calibre.gui.CatalogCallbackInterface;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.i18n.Localization;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -818,15 +818,14 @@ public class CatalogManager {
    */
   public static void saveOptimizerData() {
     File f = getOptimizeFile();
-    if (! f.exists()) {
+    if (! f.getParentFile().exists()) {
       f.getParentFile().mkdirs();    // create the path if it does not already exist
-      logger.info("Creating path to file to save optimizer settings (" + f + ")");
+      logger.info(Localization.Main.getText("optimizer.createPath", f.getParentFile()));
     }
     // Perhaps this should always exist - but lets play safe!
     if (generatedConfig == null) {
       generatedConfig = new ConfigurationHolder(f);
-      logger.info("Creating default Optimizer settings");
-      generatedConfig = (ConfigurationHolder) new PropertiesBasedConfiguration(f);
+      logger.info(Localization.Main.getText("optimizer.createDefaults"));
     }
     // Now set any settings of use to optimizer from current profile
     generatedConfig.setMaxBeforePaginate(currentProfile.getMaxBeforePaginate());
@@ -837,6 +836,8 @@ public class CatalogManager {
     generatedConfig.setSecurityCode(Long.toString(System.currentTimeMillis())); // Reuse security code as time
     generatedConfig.setBrowseByCover(currentProfile.getBrowseByCover());
     generatedConfig.save();
+    logger.info(Localization.Main.getText("optimizer.savedFile", f));
+
   }
 
   /**
@@ -844,9 +845,9 @@ public class CatalogManager {
    *  state of the library is indeterminate from an optimizer perspective.
    *  Removing the optimizer file during this stage is therefore needed.
    */
-  public static void deleteoptimizerData() {
+  public static void deleteoptimizerFile() {
       try {
-      (new File(getCatalogFolder(), "c2o_optimizer.dat")).delete();
+        getOptimizeFile().delete();
       } catch (Exception e) {
         // Ignore errors on delete
       }
@@ -859,33 +860,37 @@ public class CatalogManager {
    */
   public static void loadOptimizerDetail() {
     // Set some default values for optimisations in case we cannot load better ones
+    File f = getOptimizeFile();
     coverFlowModeSame = false;
     generatedDate = 0;
 
-    if (! getOptimizeFile().getParentFile().exists()){
-      logger.info("No existing catalog folder found (" + getOptimizeFile().getParentFile() + ")");
+    if (! f.getParentFile().exists()){
+      logger.info(Localization.Main.getText("optimizer.catalogNotFound", f.getParentFile()));
     } else {
-      if (! getOptimizeFile().exists()) {
-        logger.info("No existing optimizer settings file found (" + getOptimizeFile() + ")");
+      if (! f.exists()) {
+        logger.info(Localization.Main.getText("optimizer.fileNotFound", f));
       } else {
         try {
-          generatedConfig = (ConfigurationHolder) new PropertiesBasedConfiguration(getOptimizeFile());
+          generatedConfig = new ConfigurationHolder(getOptimizeFile());
           generatedConfig.load();
+          logger.info(Localization.Main.getText("optimizer.loadedFile", f));
           generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-          logger.info("Previous catalog was generated on " + sdf.format(generatedDate));
+          SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy-HH:mm");
+          logger.info(Localization.Main.getText("optimizer.previousCatalogOn", sdf.format(generatedDate)));
           boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
           boolean newCoverFlowMode = currentProfile.getBrowseByCover();
           coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
           if (!coverFlowModeSame) {
-            logger.info("CoverFlowMode appears to have been changed");
+            logger.info(Localization.Main.getText("optimizer.coverFlowChanged"));
           }
-          deleteoptimizerData();    // Remove in case run fails when state will be unknown
+          deleteoptimizerFile();    // Remove in case run fails when state will be unknown
         } catch (Exception e) {
           //  If we failed in any waythen defauts set earlier are ued
+          logger.info(Localization.Main.getText("optimizer.fileNotLoaded"), f);
         }
       }
     }
+    deleteoptimizerFile();    // Remove in case run fails when state will be unknown
   }
 
 
