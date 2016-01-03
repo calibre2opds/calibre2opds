@@ -412,11 +412,12 @@ public class LevelSubCatalog extends SubCatalog {
     /* Level finished - end-of-level processing */
 
     String outputFilename = getCatalogBaseFolderFileName();
-    if (inSubDir || getCatalogLevel().length() > 0 || getCatalogFolder().length() > 0){
-      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.Catalog, true);
-    } else {
-      createFilesFromElement(feed, outputFilename, HtmlManager.FeedType.MainCatalog, true);
-    }
+    createFilesFromElement( feed,
+        outputFilename,
+        (inSubDir || getCatalogLevel().length() > 0 || getCatalogFolder().length() > 0)
+          ? HtmlManager.FeedType.Catalog
+          : HtmlManager.FeedType.MainCatalog,
+        false);           // Never optimise the index file as we want creation date to be included
 
     // #c2o-214
     // A check to see that all cross-reference targets have been generated
