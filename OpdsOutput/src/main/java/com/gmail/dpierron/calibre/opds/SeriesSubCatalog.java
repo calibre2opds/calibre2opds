@@ -68,9 +68,9 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       Collections.sort(series, new Comparator<Series>() {
 
         public int compare(Series o1, Series o2) {
-          return Helper.checkedCollatorCompare((o1 == null ? "" : o1.getTitleToSplitByLetter()),
-                                               (o2 == null ? "" : o2.getTitleToSplitByLetter()),
-                                               collator);
+          return Helper.checkedCollatorCompareIgnoreCase((o1 == null ? "" : o1.getTitleToSplitByLetter()),
+                                                          (o2 == null ? "" : o2.getTitleToSplitByLetter()),
+                                                          collator);
         }
       });
 

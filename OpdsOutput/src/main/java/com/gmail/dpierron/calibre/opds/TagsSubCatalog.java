@@ -83,9 +83,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       Collections.sort(tags, new Comparator<Tag>() {
 
         public int compare(Tag o1, Tag o2) {
-          String title1 = (o1 == null ? "" : o1.getName().toUpperCase());
-          String title2 = (o2 == null ? "" : o2.getName().toUpperCase());
-          return collator.compare(title1, title2);
+          return Helper.checkedCollatorCompareIgnoreCase(o1 == null ? "" : o1.getName(), o2.getName());
         }
       });
     return tags;

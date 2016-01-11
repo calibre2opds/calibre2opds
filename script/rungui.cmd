@@ -15,16 +15,6 @@ REM  profilename			      Name of the profile to use.  If omitted
 REM                         then the last one used is assumed.
 
 SETLOCAL
-REM  We set JAVA VM stack limits explicitly here to get consistency across systems
-REM
-REM -Xms<value> define starting size
-REM -Xmx<value> defines maximum size
-REM -Xss<value> defines stack size
-REM
-REM It is possible that for very large libraries this may not be enough - we will have to see.
-REM If these options are omitted then defaults are chosen depending on system configuration.
-REM One idea for future consideration is to look at the free RAM and try and derive values dynamically.
-set _C2O_JAVAOPT= -Xms128m -Xmx512m 
 
 cls
 echo Calibre2opds startup
@@ -50,6 +40,17 @@ for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do (
 echo '
 echo [INFO]  Free RAM: %m%
 
+REM  We set JAVA VM stack limits explicitly here to get consistency across systems
+REM
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+REM We try to look at the free RAM and try and derive values dynamically.
+if %m% LSS 2000 set _C2O_JAVAOPT= -Xms128m -Xmx512m
+if %m% GTR 2000 set _C2O_JAVAOPT= -Xms200m -Xmx768m
+if %m% GTR 4000 set _C2O_JAVAOPT= -Xms256m -Xmx1024m
 
 echo '
 echo [INFO]  Trying to locate Java on this system
@@ -219,7 +220,7 @@ goto end
 
 :without_assertions
 REM Start the GUI in normal mode as a separate process and close this batch file
-echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" %J_C2o_JAVAOPT% -cp "%_CD%\*" Gui %1
+echo [INFO]  START "Calibre2Opds" "%_JAVACMD%" %_C2o_JAVAOPT% -cp "%_CD%\*" Gui %1
 echo '
 START "Calibre2Opds" "%_JAVACMD%" %_C2O_JAVAOPT%  -cp "%_CD%\*" Gui %1
 

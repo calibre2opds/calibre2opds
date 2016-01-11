@@ -675,7 +675,9 @@ public abstract class SubCatalog {
   static void sortBooksByTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
       public int compare(Book o1, Book o2) {
-        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
+        String title1 = o1.getTitleToSplitByLetter();
+        String title2 = o2.getTitleToSplitByLetter();
+        return Helper.checkedCollatorCompareIgnoreCase(title1, title1, collator);
       }
     });
   }

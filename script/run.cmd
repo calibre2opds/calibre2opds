@@ -18,17 +18,6 @@ REM                   then the last one used is assumed.
 SETLOCAL
 set _C2O=OpdsOutput-3.6-SNAPSHOT.jar
 
-REM  We set JAVA VM stack limits explicitly here to get consistency across systems
-REM
-REM -Xms<value> define starting size
-REM -Xmx<value> defines maximum size
-REM -Xss<value> defines stack size
-REM
-REM It is possible that for very large libraries this may not be enough - we will have to see.
-REM If these options are omitted then defaults are chosen depending on system configuration
-REM One idea for future consideration is to look at the free RAM and try and derive values dynamically.
-set _C2O_JAVAOPT=-Xms128m -Xmx512m
-
 cls
 echo Calibre2opds startup
 echo ====================
@@ -53,6 +42,18 @@ for /f "skip=1" %%p in ('wmic os get freephysicalmemory') do (
 )
 :freemem_done
 echo [INFO}  Free RAM: %m%
+
+REM  We set JAVA VM stack limits explicitly here to get consistency across systems
+REM
+REM -Xms<value> define starting size
+REM -Xmx<value> defines maximum size
+REM -Xss<value> defines stack size
+REM
+REM It is possible that for very large libraries this may not be enough - we will have to see.
+REM We try to look at the free RAM and try and derive values dynamically.
+if %m% LSS 2000 set _C2O_JAVAOPT= -Xms128m -Xmx512m
+if %m% GTR 2000 set _C2O_JAVAOPT= -Xms192m -Xmx768m
+if %m% GTR 4000 set _C2O_JAVAOPT= -Xms256m -Xmx1024m
 
 set _CD=%cd%
 echo [INFO]] Current Directory is %cd%
