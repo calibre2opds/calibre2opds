@@ -151,6 +151,9 @@
                 <ul>
                   <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition']">
                     <xsl:for-each select="opds:link[@rel='http://opds-spec.org/acquisition']">
+                      <xsl:variable name="displaysize">
+                          <xsl:value-of select="./@displaysize"/>
+                       </xsl:variable>
                       <li>
                         <xsl:element name="a">
                           <xsl:attribute name="href">
@@ -168,6 +171,9 @@
                             </xsl:otherwise>
                           </xsl:choose>
                         </xsl:element>
+                        <xsl:if test="string-length($displaysize) > 0">
+                          (<xsl:value-of select="$displaysize"/>)
+                        </xsl:if>
                       </li>
                     </xsl:for-each>
                   </xsl:if>

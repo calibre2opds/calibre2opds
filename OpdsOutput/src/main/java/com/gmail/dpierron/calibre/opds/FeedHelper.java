@@ -227,8 +227,12 @@ public class FeedHelper {
     return getLinkElement(url, LINKTYPE_HTML, RELATION_RELATED, title);
   }
 
-  public static Element getAcquisitionLink(String url, String mimeType, String title) {
-    return getLinkElement(url, mimeType, RELATION_ACQUISITION, title);
+  public static Element getAcquisitionLink(String url, String mimeType, String title, String size) {
+    Element link = getLinkElement(url, mimeType, RELATION_ACQUISITION, title);
+    if (Helper.isNotNullOrEmpty(size)) {
+      link.setAttribute("displaysize", size);
+    }
+    return link;
   }
 
   /**

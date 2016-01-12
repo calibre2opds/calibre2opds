@@ -73,7 +73,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     = #c2o-248: Allow logging level to be changed from within the GUI.
     - #c2o-254: Custom Catalog settings not changed when switching profiles
     - #c2o-256: Suppress displaying Author in Book Details
-    - #c2o-257: Display size on download links
     - #c2o-263: "Corrupt JPEG data: premature end of data segment" error
 
 Any requests for new features should be made by adding them to the Issue Register,
@@ -93,8 +92,9 @@ Usefule links for tracking changes are:
   Change History: http://code.google.com/p/calibre2opds/source/list
 
 v3.6
-   - Fix:     #c20-262:  Download links in HTML catalog do not have 'Type' attribute specified
-   - New:     #c2o-264:  Add Hungarian Localisation (thanks to Gabor)
+   - New:     #c2o-257: Option to display size on download links in HTML catalog
+   - Fix:     #c20-262: Download links in HTML catalog do not have 'Type' attribute specified
+   - New:     #c2o-264: Add Hungarian Localisation (thanks to Gabor)
 
 
 v3.5 (20 October 2015) Rev 370

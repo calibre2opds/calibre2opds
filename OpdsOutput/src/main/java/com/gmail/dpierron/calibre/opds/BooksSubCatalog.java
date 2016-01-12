@@ -20,6 +20,7 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 import org.jdom2.Element;
 
 import java.io.File;
@@ -443,7 +444,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
     return result;
   }
 
-  // ----------------
+
+ // ----------------
   //    BOOK ENTRY
   // ----------------
 
@@ -479,7 +481,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
       entry.addContent(FeedHelper.getAcquisitionLink(prefix + FeedHelper.urlEncode(book.getPath(), true)
           + Constants.FOLDER_SEPARATOR + FeedHelper.urlEncode(file.getName() + file.getExtension(), true),
           file.getFormat().getMime(), // Mime type
-          Localization.Main.getText("bookentry.download", file.getFormat())));
+          Localization.Main.getText("bookentry.download", file.getFormat()),
+          currentProfile.getIncludeSizeOfDownloads() ? org.apache.commons.io.FileUtils.byteCountToDisplaySize(file.getFile().length()):""));
 
       // if the IncludeOnlyOneFile option is set, break to avoid publishing other files
       if (currentProfile.getIncludeOnlyOneFile()) {
