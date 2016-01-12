@@ -49,9 +49,9 @@
         <link type="text/css" rel="stylesheet" href="../desktop.css"/>
         <link type="text/css" rel="stylesheet"  media="only screen and (max-device-width: 480px)" href="../mobile.css"/>
         <script src="../functions.js" type="text/javascript"></script>
-        <title>
+        <xsl:text disable-output-escaping="yes">&lt;title&gt;</xsl:text>
           <xsl:value-of select="$libraryTitle"/>
-        </title>
+        <xsl:text disable-output-escaping="yes">&lt;/title&gt;</xsl:text>
         <script type="text/javascript">function showHide(id, btn) { var e = document.getElementById(id); if (e.style.display == 'none') { e.style.display = 'block'; } else { e.style.display = 'none'; } } </script>
         <script type="text/javascript">function getBaseURL() {var url = location.href;var baseURL = url.substring(0, url.lastIndexOf('/'));if (baseURL.indexOf('http://localhost') != -1) {var url = location.href;var pathname = location.pathname;var index1 = url.indexOf(pathname);var index2 = url.indexOf("/", index1 + 1);var baseLocalUrl = url.substr(0, index2);return baseLocalUrl + "/";} else {return baseURL + "/";}}</script>
       </head>
@@ -62,36 +62,31 @@
             <xsl:value-of select="$libraryTitle"/>
           </div>
 
-
           <div id="leftnav">
-            <a href="../index.html">
-              <img alt="home" src="../homeIwebKit.png" />
-            </a>
+            <a href="../index.hmtl"><img alt="home" src="../homeIwebKit.png" /></a>
           </div>
         </div>
 
         <div class="desktop">
-          <h1>
-            <xsl:value-of select="$libraryTitle"/>
-          </h1>
+          <h1><xsl:value-of select="$libraryTitle"/></h1>
         </div>
 
         <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-            Browser not compatible.
+          Browser not compatible.
         </iframe>
 
         <div class="desktop">
           <ul id="breadcrumb">
             <xsl:for-each select="opds:link[@rel='breadcrumb']">
-              <li>
+              <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                 <a href="{concat(substring-before(@href, '.xml'), '.html')}" title="{@title}">
                   <xsl:value-of select="@title"/>
                 </a>
-              </li>
+              <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
             </xsl:for-each>
-            <li>
+            <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
               <xsl:value-of select="opds:title"/>
-            </li>
+            <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
           </ul>
         </div>
 
@@ -147,14 +142,16 @@
             <!-- downloads -->
             <div class="fullEntry_downloads">
               <xsl:if test="$generateDownloads = 'true'">
-                <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.downloadsection"/></h2>
+                <xsl:text disable-output-escaping="yes">&lt;h2 class="fullEntry_sectionHeader"&gt;</xsl:text>
+                  <xsl:value-of select="$i18n.downloadsection"/>
+                <xsl:text disable-output-escaping="yes">&lt;/h2&gt;</xsl:text>
                 <ul>
                   <xsl:if test="opds:link[@rel='http://opds-spec.org/acquisition']">
                     <xsl:for-each select="opds:link[@rel='http://opds-spec.org/acquisition']">
                       <xsl:variable name="displaysize">
                           <xsl:value-of select="./@displaysize"/>
                        </xsl:variable>
-                      <li>
+                      <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                         <xsl:element name="a">
                           <xsl:attribute name="href">
                             <xsl:value-of select="./@href"/>
@@ -172,9 +169,9 @@
                           </xsl:choose>
                         </xsl:element>
                         <xsl:if test="string-length($displaysize) > 0">
-                          (<xsl:value-of select="$displaysize"/>)
+                          <xsl:text>(</xsl:text><xsl:value-of select="$displaysize"/><xsl:text>)</xsl:text>
                         </xsl:if>
-                      </li>
+                      <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
                     </xsl:for-each>
                   </xsl:if>
                 </ul>
@@ -197,12 +194,14 @@
             <!-- summary -->
             <div class="fullEntry_summary">
               <xsl:if test="string-length(opds:content) > 1">
-                <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.summarysection"/></h2>
-                <p>
+                <xsl:text disable-output-escaping="yes">&lt;h2&gt; class="fullEntry_sectionHeader"></xsl:text>
+                  <xsl:value-of select="$i18n.summarysection"/>
+                <xsl:text disable-output-escaping="yes">&lt;/h2&gt;</xsl:text>
+                <xsl:text disable-output-escaping="yes">&lt;p&gt;</xsl:text>
                   <xsl:if test="string-length(opds:content) > 0">
                     <xsl:copy-of select="opds:content"/>
                   </xsl:if>
-                </p>
+                <xsl:text disable-output-escaping="yes">&lt;/p&gt;</xsl:text>
               </xsl:if>
             </div>
 
@@ -212,14 +211,14 @@
                 <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.relatedsection"/></h2>
                 <ul>
                   <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml;profile=opds-catalog;kind=navigation']">
-                    <li>
+                    <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                       <xsl:element name="a">
                         <xsl:attribute name="href">
                           <xsl:value-of select="concat(substring-before(@href, '.xml'), '.html')"/>
                         </xsl:attribute>
                         <xsl:value-of select="@title"/>
                       </xsl:element>
-                    </li>
+                    <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
                   </xsl:for-each>
                 </ul>
               </xsl:if>
@@ -231,14 +230,14 @@
                 <h2 class="fullEntry_sectionHeader"><xsl:value-of select="$i18n.linksection"/></h2>
                 <ul>
                   <xsl:for-each select="opds:link[@rel='related' and @type='text/html']">
-                    <li>
+                    <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                       <xsl:element name="a">
                         <xsl:attribute name="href">
                           <xsl:value-of select="@href"/>
                         </xsl:attribute>
                         <xsl:value-of select="@title"/>
                       </xsl:element>
-                    </li>
+                    <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                   </xsl:for-each>
                 </ul>
               </xsl:if>
@@ -246,10 +245,10 @@
           </div>
       </div>
 
-      <div id="footer">
+      <xsl:text disable-output-escaping="yes">&lt;div id="footer"&gt;</xsl:text>
         <!-- Support iWebKit by sending them traffic -->
         <a class="noeffect" href="http://snippetspace.com">Powered by iWebKit</a>
-      </div>
+      <xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
 
       </body>
     </html>
