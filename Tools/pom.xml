@@ -11,15 +11,5 @@
     <version>3.6-SNAPSHOT</version>
     <description>Helper tools</description>
     <dependencies>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>2.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>2.2</version>
-      </dependency>
     </dependencies>
 </project>

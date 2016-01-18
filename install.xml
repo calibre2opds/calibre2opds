@@ -94,8 +94,8 @@
             <file src="Install/target/dependency/jdom2-2.0.6.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/jtidy-r938.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/junit-4.12.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/log4j-api-2.2.jar" targetdir="$INSTALL_PATH"/>
-            <file src="Install/target/dependency/log4j-core-2.2.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/log4j-api-2.3.jar" targetdir="$INSTALL_PATH"/>
+            <file src="Install/target/dependency/log4j-core-2.3.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/sqlite-jdbc-3.8.7.jar" targetdir="$INSTALL_PATH"/>
             <file src="Install/target/dependency/stringtemplate-3.2.jar" targetdir="$INSTALL_PATH"/>
 

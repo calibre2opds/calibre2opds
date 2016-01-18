@@ -913,7 +913,8 @@ public abstract class SubCatalog {
    * Takes into account if this is the only book and the relevant setting
    */
   protected boolean isSeriesCrossreferences(Book book) {
-    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeSerieCrossReferences()) {
+    if (! currentProfile.getGenerateCrossLinks()
+    ||  ! currentProfile.getIncludeSerieCrossReferences()) {
       return false;
     }
     Series series = book.getSeries();
@@ -922,7 +923,7 @@ public abstract class SubCatalog {
     }
 
     if (currentProfile.getSingleBookCrossReferences()
-        ||  DataModel.getMapOfBooksBySeries().get(series).size() > 1) {
+    ||  DataModel.getMapOfBooksBySeries().get(series).size() > 1) {
       return true;
     }
 
@@ -935,7 +936,8 @@ public abstract class SubCatalog {
    * Does not take into account whether an author has a single book
    */
   protected boolean isAuthorCrossReferences(Book book) {
-    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeAuthorCrossReferences()) {
+    if (! currentProfile.getGenerateCrossLinks()
+    ||  ! currentProfile.getIncludeAuthorCrossReferences()) {
       return false;
     }
     return book.hasAuthor();
@@ -947,19 +949,23 @@ public abstract class SubCatalog {
    * Does not take into account whether a tag has a single book
    */
   protected boolean isTagCrossReferences(Book book) {
-    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeTagCrossReferences()) {
+    if (! currentProfile.getGenerateCrossLinks()
+    ||  ! currentProfile.getIncludeTagCrossReferences()) {
       return false;
     }
+    List<Tag> authors = book.getTags();
     return (book.getTags() != null);
   }
 
   /**
+   * Decide if the rating cross reference should be included.
    *
    * Takes into account if this is the only book and the relevant setting
    * Decide if Ratings cross-reference should be generated for this book
    */
   protected boolean isRatingCrossReferences(Book book) {
-    if (! currentProfile.getGenerateCrossLinks() || ! currentProfile.getIncludeRatingCrossReferences()) {
+    if (! currentProfile.getGenerateCrossLinks()
+    ||  ! currentProfile.getIncludeRatingCrossReferences()) {
       return false;
     }
     BookRating rating = book.getRating();
@@ -967,7 +973,7 @@ public abstract class SubCatalog {
       return false;
     }
     if (currentProfile.getSingleBookCrossReferences()
-        ||  DataModel.getMapOfBooksByRating().get(rating).size() > 1) {
+    ||  DataModel.getMapOfBooksByRating().get(rating).size() > 1) {
       return true;
     }
     return false;
