@@ -72,6 +72,8 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getCryptFilenames();
 
+  public Boolean getDisableOptimizer();
+
   public Boolean getShowSeriesInAuthorCatalog();
 
   public Boolean getIncludeAboutLink();
@@ -155,6 +157,10 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
   public Boolean getGenerateCrossLinks();
 
   public Boolean getGenerateExternalLinks();
+
+  public Boolean getIncludeTitleInBookDetails();
+
+  public Boolean getIncludeAuthorInBookDetails();
 
   public Boolean getIncludeSeriesInBookDetails();
 

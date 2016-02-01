@@ -169,7 +169,7 @@
                           </xsl:choose>
                         </xsl:element>
                         <xsl:if test="string-length($displaysize) > 0">
-                          <xsl:text>(</xsl:text><xsl:value-of select="$displaysize"/><xsl:text>)</xsl:text>
+                          <xsl:text> (</xsl:text><xsl:value-of select="$displaysize"/><xsl:text>)</xsl:text>
                         </xsl:if>
                       <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
                     </xsl:for-each>
@@ -194,7 +194,7 @@
             <!-- summary -->
             <div class="fullEntry_summary">
               <xsl:if test="string-length(opds:content) > 1">
-                <xsl:text disable-output-escaping="yes">&lt;h2&gt; class="fullEntry_sectionHeader"></xsl:text>
+                <xsl:text disable-output-escaping="yes">&lt;h2 class="fullEntry_sectionHeader"&gt;</xsl:text>
                   <xsl:value-of select="$i18n.summarysection"/>
                 <xsl:text disable-output-escaping="yes">&lt;/h2&gt;</xsl:text>
                 <xsl:text disable-output-escaping="yes">&lt;p&gt;</xsl:text>

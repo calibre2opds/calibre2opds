@@ -113,6 +113,10 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return false;
   }
 
+  public Boolean getDisableOptimizer() {
+    return false;
+  }
+
   public Boolean getShowSeriesInAuthorCatalog() {
     return true;
   }
@@ -358,6 +362,14 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
   public Boolean getSortTagsByAuthor() {return false; }
 
   /* Book Details */
+
+  public Boolean getIncludeTitleInBookDetails() {
+    return true;
+  }
+
+  public Boolean getIncludeAuthorInBookDetails() {
+    return true;
+  }
 
   public Boolean getIncludeSeriesInBookDetails() {
     return true;

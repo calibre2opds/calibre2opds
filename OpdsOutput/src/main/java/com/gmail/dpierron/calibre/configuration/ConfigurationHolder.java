@@ -37,6 +37,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_CATALOGFOLDERNAME = "CatalogFolderName";
   private final static String PROPERTY_NAME_ONLY_CATALOG_AT_TARGRET = "OnlyCatalogAtTarget";
   private final static String PROPERTY_NAME_CATALOGTITLE = "CatalogTitle";
+  private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
+  private final static String PROPERTY_NAME_DISABLEOPTIMIZER = "DisableOptimizer";
   private final static String PROPERTY_NAME_MAXBEFOREPAGINATE = "MaxBeforePaginate";
   private final static String PROPERTY_NAME_MAXBEFORESPLIT = "MaxBeforeSplit";
   private final static String PROPERTY_NAME_MAXSPLITLEVELS = "MaxSplitLevels";
@@ -53,7 +55,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_SPLITTAGSON = "SplitTagsOn";
   private final static String PROPERTY_NAME_NO_SPLITTAGSON = "DontSplitTagsOn";
   private final static String PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE = "IncludeBooksWithNoFile";
-  private final static String PROPERTY_NAME_CRYPTFILENAMES = "CryptFilenames";
   private final static String PROPERTY_NAME_MINIMIZECHANGEDFILES = "MinimizeChangedFiles";
   private final static String PROPERTY_NAME_LANGUAGEASTAG = "LanguageAsTag";
   private final static String PROPERTY_NAME_TAGSTOIGNORE = "TagsToIgnore";
@@ -112,6 +113,8 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_SortTagsByAuthor = "SortTagsByAuthor";
   private final static String PROPERTY_NAME_TagBooksNoSplit = "TagBooksNoSplit";
   /* Book Details */
+  private final static String PROPERTY_NAME_INCLUDETITLEINBOOKDETAILS = "IncludeTitleInBookDetails";
+  private final static String PROPERTY_NAME_INCLUDEAUTHORINBOOKDETAILS = "IncludeAuthorInBookDetails";
   private final static String PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS = "IncludeSeriesInBookDetails";
   private final static String PROPERTY_NAME_INCLUDERATINGINBOOKDETAILS = "IncludeRatingInBookDetails";
   private final static String PROPERTY_NAME_INCLUDETAGSINBOOKDETAILS = "IncludeTagsInBookDetails";
@@ -328,6 +331,28 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
   public void setCatalogTitle(String catalogTitle) {
     setProperty(PROPERTY_NAME_CATALOGTITLE, catalogTitle);
+  }
+
+  public Boolean isCryptFilenamesReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CRYPTFILENAMES);
+  }
+  public Boolean getCryptFilenames() {
+    Boolean b = getBoolean(PROPERTY_NAME_CRYPTFILENAMES);
+    return (b == null) ? defaults.getCryptFilenames() : b;
+  }
+  public void setCryptFilenames(Boolean value) {
+    setProperty(PROPERTY_NAME_CRYPTFILENAMES, value);
+  }
+
+  public Boolean isDisableOptimizerReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_DISABLEOPTIMIZER);
+  }
+  public Boolean getDisableOptimizer() {
+    Boolean b = getBoolean(PROPERTY_NAME_DISABLEOPTIMIZER);
+    return (b == null) ? defaults.getDisableOptimizer() : b;
+  }
+  public void setDisableOptimizer(Boolean value) {
+    setProperty(PROPERTY_NAME_DISABLEOPTIMIZER, value);
   }
 
   public Boolean isMaxBeforePaginateReadOnly() {
@@ -581,17 +606,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
   public void setIncludeBooksWithNoFile(Boolean value) {
     setProperty(PROPERTY_NAME_INCLUDEBOOKSWITHNOFILE, value);
-  }
-
-  public Boolean isCryptFilenamesReadOnly() {
-    return isPropertyReadOnly(PROPERTY_NAME_CRYPTFILENAMES);
-  }
-  public Boolean getCryptFilenames() {
-    Boolean b = getBoolean(PROPERTY_NAME_CRYPTFILENAMES);
-    return (b == null) ? defaults.getCryptFilenames() : b;
-  }
-  public void setCryptFilenames(Boolean value) {
-    setProperty(PROPERTY_NAME_CRYPTFILENAMES, value);
   }
 
   public Boolean isShowSeriesInAuthorCatalogReadOnly() {
@@ -1352,6 +1366,25 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   }
 
   //  Book Details
+
+  public Boolean isIncludeTitleInBookDetailsReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_INCLUDETITLEINBOOKDETAILS);
+  }
+  public Boolean getIncludeTitleInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDETITLEINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludeTitleInBookDetails() : b;
+  }
+  public void setIncludeTitleInBookDetails(Boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDETITLEINBOOKDETAILS, value);
+  }
+
+  public Boolean getIncludeAuthorInBookDetails() {
+    Boolean b = getBoolean(PROPERTY_NAME_INCLUDEAUTHORINBOOKDETAILS);
+    return (b == null) ? defaults.getIncludeAuthorInBookDetails() : b;
+  }
+  public void setIncludeAuthorInBookDetails(Boolean value) {
+    setProperty(PROPERTY_NAME_INCLUDEAUTHORINBOOKDETAILS, value);
+  }
 
   public Boolean getIncludeSeriesInBookDetails() {
     Boolean b = getBoolean(PROPERTY_NAME_INCLUDESERIESINBOOKDETAILS);

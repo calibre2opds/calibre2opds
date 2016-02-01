@@ -684,7 +684,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // TODO Perhaps consider whether level should be taken into account?
       filename = SeriesSubCatalog.getSeriesFolderFilenameNoLevel(serie) + Constants.PAGE_ONE_XML;
       entry.addContent(FeedHelper.getRelatedLink(CatalogManager.getCatalogFileUrl(filename, true),
-          Localization.Main.getText("bookentry.series", book.getSerieIndex(), serie.getName())));
+          book.getSerieIndex() == 0
+            ? Localization.Main.getText("bookentry.seriesonly", serie.getName())
+            : Localization.Main.getText("bookentry.seriesindex", book.getSerieIndex(), serie.getName())));
       serie.setReferenced();
     }
 
@@ -765,27 +767,6 @@ public abstract class BooksSubCatalog extends SubCatalog {
     }
   }
 
-  /**
-   * TODO  decide if this function is even necessary!
-   *
-   * @param book
-   * @param configUrl
-   * @param localizeUrl
-   * @param args
-   * @return
-   */
-  private String getLocalizedUrl(Book book, String configUrl, String localizeUrl, String... args) {
-    String guiLanguage = currentProfile.getLanguage().getLanguage();
-    Language bookLanguage =  book.getBookLanguage();
-
-    String languageCode = bookLanguage.getIso2();
-    if (Helper.isNullOrEmpty(languageCode)){
-      languageCode = currentProfile.getLanguage().getLanguage();
-    }
-
-    String url = "";
-    return Localization.Main.getText(url, (java.lang.Object[])args);
-  }
 
   /**
    * Add links for further information about a book
@@ -860,7 +841,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       }
 
       // Author Links
-      if (book.hasAuthor()) {
+      if (currentProfile.getIncludeAuthorInBookDetails() && book.hasAuthor()) {
         // add the GoodReads author link
         if (logger.isTraceEnabled())  logger.trace("addExternalLinksy: add the GoodReads author link");
         for (Author author : book.getAuthors()) {
@@ -952,16 +933,20 @@ public abstract class BooksSubCatalog extends SubCatalog {
     // acquisition links
     addAcquisitionLinks(book, entry);
 
-    if (book.hasAuthor()) {
-      for (Author author : book.getAuthors()) {
-        if (logger.isTraceEnabled()) logger.trace("decorateBookEntry:   author " + author);
-        // #c2o-190
-        String name = currentProfile.getDisplayAuthorSort() ? author.getSort() : author.getName();
-        Element authorElement = JDOMManager.element(Constants.OPDS_ELEMENT_AUTHOR)
-            .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_NAME).addContent(name))
-            .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_URI)
-            .addContent(Constants.PARENT_PATH_PREFIX + AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) + Constants.PAGE_ONE_XML));
-        entry.addContent(authorElement);
+    if (currentProfile.getIncludeAuthorInBookDetails()) {
+      if (book.hasAuthor()) {
+        for (Author author : book.getAuthors()) {
+          if (logger.isTraceEnabled())
+            logger.trace("decorateBookEntry:   author " + author);
+          // #c2o-190
+          String name = currentProfile.getDisplayAuthorSort() ? author.getSort() : author.getName();
+          Element authorElement = JDOMManager.element(Constants.OPDS_ELEMENT_AUTHOR)
+              .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_NAME).addContent(name))
+              .addContent(JDOMManager.element(Constants.OPDS_ELEMENT_URI).addContent(Constants.PARENT_PATH_PREFIX +
+                  AuthorsSubCatalog.getAuthorFolderFilenameNoLevel(author) +
+                  Constants.PAGE_ONE_XML));
+          entry.addContent(authorElement);
+        }
       }
     }
 

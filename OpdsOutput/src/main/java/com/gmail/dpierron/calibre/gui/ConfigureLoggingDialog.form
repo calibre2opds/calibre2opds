@@ -131,6 +131,15 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdUseActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="cmdHelp">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="cmdHelp"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdHelpActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="pnlButtons2">

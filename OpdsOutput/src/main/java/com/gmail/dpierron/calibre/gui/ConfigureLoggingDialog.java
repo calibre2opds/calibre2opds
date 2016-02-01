@@ -90,6 +90,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
         new guiField(cmdView, null, "gui.logging.view"),
         new guiField(cmdEdit, null, "gui.logging.edit"),
         new guiField(cmdUse, null, "gui.logging.use"),
+        new guiField(cmdHelp, null, "gui.logging.help"),
         new guiField(cmdClose, null, "gui.logging.close"),
         new guiField(lblActive, null, "gui.logging.active")
     };
@@ -117,7 +118,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     for (guiField f : guiFields){
       f.translateTexts();
     }
-    cmdEdit.setVisible(false);        // **** Hide until ready to use ****
+    // cmdEdit.setVisible(false);        // **** Hide until ready to use ****
     txtActive.setText(activeName);
     checkActiveButtons();
   }
@@ -179,8 +180,10 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
       }
       String config = getConfigFromFilename(file);
       assert activeSize != 0;
-      if (activeSize == (new File(ConfigurationManager.getConfigurationDirectory() + File.separator
-          + Constants.LOGFILE_FOLDER + File.separator + file)).length()) {
+      File f = new File(ConfigurationManager.getConfigurationDirectory() + File.separator
+          + Constants.LOGFILE_FOLDER + File.separator + file);
+      long s = f.length();
+      if (activeSize == f.length()) {
         activeName = config;
       }
       listOfLoggingConfigurations.addElement(config);
@@ -340,7 +343,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     }
   }
   /**
-   * Edit a Logging Configruation
+   * Edit a Logging Configuration
    *
    * @param indices
    */
@@ -352,8 +355,10 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     }
     JOptionPane.showMessageDialog(this, "NOT YET READY FOR USE", "", JOptionPane.WARNING_MESSAGE);
     String loggingConfig = (String) lstLoggingConfigurations.getModel().getElementAt(indices[0]);
-/*
     // TODO   Work out what is needed here for editing?
+    // Should probably copy file to a temporary text file so we can use standard system text editor
+    // When edit finished check if changed, and if so instantiate as new file
+/*
     try {
       OS.factory().openFile(new File(ConfigurationManager.getConfigurationDirectory(),
           Constants.LOGFILE_FOLDER + File.separator + getFilenameFromConfig(loggingConfig)));
@@ -362,6 +367,21 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     }
 */
   }
+
+  /**
+   * Get help on log4j
+   *
+   * For this we simply link to the standard online documentation
+   */
+  private void getLog4jHelp() {
+    try {
+      java.awt.Desktop.getDesktop().browse(new java.net.URI("https://logging.apache.org/log4j/2.x/manual/configuration.html"));
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(this, e.getMessage());
+
+    }
+  }
+
   /**
    * This method is called from within the constructor to
    * reset the form.
@@ -384,6 +404,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
         cmdView = new javax.swing.JButton();
         cmdEdit = new javax.swing.JButton();
         cmdUse = new javax.swing.JButton();
+        cmdHelp = new javax.swing.JButton();
         pnlButtons2 = new javax.swing.JPanel();
         cmdClose = new javax.swing.JButton();
         lblActive = new javax.swing.JLabel();
@@ -469,6 +490,15 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
         });
         pnlButtons1.add(cmdUse);
 
+        cmdHelp.setText("cmdHelp");
+        cmdHelp.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        cmdHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdHelpActionPerformed(evt);
+            }
+        });
+        pnlButtons1.add(cmdHelp);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
@@ -540,12 +570,16 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cmdEditActionPerformed
 
     private void lstLoggingConfigurationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstLoggingConfigurationsMouseClicked
-      checkActiveButtons();   // TODO add your handling code here:
+      checkActiveButtons();
     }//GEN-LAST:event_lstLoggingConfigurationsMouseClicked
 
     private void cmdUseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUseActionPerformed
       useLoggingConfiguration(lstLoggingConfigurations.getSelectedIndices());
     }//GEN-LAST:event_cmdUseActionPerformed
+
+    private void cmdHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHelpActionPerformed
+      getLog4jHelp();
+    }//GEN-LAST:event_cmdHelpActionPerformed
 
   /**
    * @param args the command line arguments
@@ -568,6 +602,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     private javax.swing.JButton cmdClose;
     private javax.swing.JButton cmdDelete;
     private javax.swing.JButton cmdEdit;
+    private javax.swing.JButton cmdHelp;
     private javax.swing.JButton cmdNew;
     private javax.swing.JButton cmdRename;
     private javax.swing.JButton cmdUse;

@@ -5,6 +5,7 @@ package com.gmail.dpierron.calibre.configuration;
  * need special treatment in that mode.
  *
  * Allows the following to be specified:
+ * - The property name that is to be affected
  * - The default value for the property for this mode
  * - Whether the item is locked against allowing to change the value
  *
@@ -21,13 +22,15 @@ public enum DeviceMode {
           "TargetFolder", "", true,
           "CopyToDatabaseFolder", true, true,
           "OnlyCatalogAtTarget", false, true,
-          "ZipTrookCatalog", false, true),
+          "ZipTrookCatalog", false, true,
+          "IncludeTitleInBookDetails", true, true),         // At the moment the user cannot change this
 
   Nas("CatalogFolderName", "_catalog", false,
       "TargetFolder", ".", false,
       "CopyToDatabaseFolder", false, false,
       "OnlyCatalogAtTarget", false, false,
-      "ZipTrookCatalog", false, true),
+      "ZipTrookCatalog", false, true,
+      "IncludeTitleInBookDetails", true, true),             // At the moment the user cannot change this
 
   Nook( "CatalogFolderName", "Calibre", false,
         "IncludedFormatsList", "EPUB,PDB,PDF", false,
@@ -42,7 +45,8 @@ public enum DeviceMode {
         "CopyToDatabaseFolder", false, false,
         "OnlyCatalogAtTarget", false, true,
         "IncludeAboutLink", false, false,
-        "ZipTrookCatalog", false, false
+        "ZipTrookCatalog", false, false,
+        "IncludeTitleInBookDetails", true, true             // At the moment the user cannot change this
   );
 
   Object[] options;

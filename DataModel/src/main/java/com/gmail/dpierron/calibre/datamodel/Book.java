@@ -357,16 +357,21 @@ public class Book extends GenericDataObject   {
       // Check for series info to include
       if (Helper.isNotNullOrEmpty(getSeries())) {
         float seriesIndexFloat = getSerieIndex();
-        int seriesIndexInt = (int)seriesIndexFloat;
-        String seriesIndexText;
-        // For the commonest case of integers we want to truncate off the fractional part
-        if (seriesIndexFloat == (float)seriesIndexInt)
-           seriesIndexText = String.format("%d", seriesIndexInt);
-        else {
-          // For fractions we want only 2 decimal places to match calibre
-          seriesIndexText = String.format("%.2f",seriesIndexFloat);
+        if (seriesIndexFloat == 0 ) {
+          // We do not add the index when it is zero
+          summary += getSeries().getName() + ": ";
+        } else {
+          int seriesIndexInt = (int) seriesIndexFloat;
+          String seriesIndexText;
+          // For the commonest case of integers we want to truncate off the fractional part
+          if (seriesIndexFloat == (float) seriesIndexInt)
+            seriesIndexText = String.format("%d", seriesIndexInt);
+          else {
+            // For fractions we want only 2 decimal places to match calibre
+            seriesIndexText = String.format("%.2f", seriesIndexFloat);
+          }
+          summary += getSeries().getName() + " [" + seriesIndexText + "]: ";
         }
-        summary += getSeries().getName() + " [" + seriesIndexText + "]: ";
         if (maxLength != -1) {
           summary = Helper.shorten(summary, maxLength);
         }

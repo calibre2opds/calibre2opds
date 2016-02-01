@@ -863,30 +863,33 @@ public class CatalogManager {
     File f = getOptimizeFile();
     coverFlowModeSame = false;
     generatedDate = 0;
-
-    if (! f.getParentFile().exists()){
-      logger.info(Localization.Main.getText("optimizer.catalogNotFound", f.getParentFile()));
+    if (currentProfile.getDisableOptimizer()) {
+      logger.info(Localization.Main.getText("optimizer.disabled"));
     } else {
-      if (! f.exists()) {
-        logger.info(Localization.Main.getText("optimizer.fileNotFound", f));
+      if (!f.getParentFile().exists()) {
+        logger.info(Localization.Main.getText("optimizer.catalogNotFound", f.getParentFile()));
       } else {
-        try {
-          generatedConfig = new ConfigurationHolder(getOptimizeFile());
-          generatedConfig.load();
-          logger.info(Localization.Main.getText("optimizer.loadedFile", f));
-          generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
-          SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy-HH:mm");
-          logger.info(Localization.Main.getText("optimizer.previousCatalogOn", sdf.format(generatedDate)));
-          boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
-          boolean newCoverFlowMode = currentProfile.getBrowseByCover();
-          coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
-          if (!coverFlowModeSame) {
-            logger.info(Localization.Main.getText("optimizer.coverFlowChanged"));
+        if (!f.exists()) {
+          logger.info(Localization.Main.getText("optimizer.fileNotFound", f));
+        } else {
+          try {
+            generatedConfig = new ConfigurationHolder(getOptimizeFile());
+            generatedConfig.load();
+            logger.info(Localization.Main.getText("optimizer.loadedFile", f));
+            generatedDate = Long.parseLong(generatedConfig.getSecurityCode());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy-HH:mm");
+            logger.info(Localization.Main.getText("optimizer.previousCatalogOn", sdf.format(generatedDate)));
+            boolean oldCoverFlowMode = generatedConfig.getBrowseByCover();
+            boolean newCoverFlowMode = currentProfile.getBrowseByCover();
+            coverFlowModeSame = (oldCoverFlowMode == newCoverFlowMode);
+            if (!coverFlowModeSame) {
+              logger.info(Localization.Main.getText("optimizer.coverFlowChanged"));
+            }
+            deleteoptimizerFile();    // Remove in case run fails when state will be unknown
+          } catch (Exception e) {
+            //  If we failed in any waythen defauts set earlier are ued
+            logger.info(Localization.Main.getText("optimizer.fileNotLoaded"), f);
           }
-          deleteoptimizerFile();    // Remove in case run fails when state will be unknown
-        } catch (Exception e) {
-          //  If we failed in any waythen defauts set earlier are ued
-          logger.info(Localization.Main.getText("optimizer.fileNotLoaded"), f);
         }
       }
     }

@@ -67,6 +67,8 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setCryptFilenames(Boolean value);
 
+  public void setDisableOptimizer(Boolean value);
+
   public void setShowSeriesInAuthorCatalog(Boolean value);
 
   public void setGenerateCrossLinks(Boolean value);
@@ -105,7 +107,9 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setTagsToIgnore(String value);
 
-  public void setIncludeSeriesInBookDetails(Boolean value);
+  public void setIncludeTitleInBookDetails(Boolean value);
+
+  public void setIncludeAuthorInBookDetails(Boolean value);
 
   public void setIncludeRatingInBookDetails(Boolean value);
 
