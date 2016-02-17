@@ -66,9 +66,9 @@ goto FINISHED
 
 :LINUX
 echo '
-echo -----------------------------------
-echo Building Unix/Linux Install package
-echo -----------------------------------
+echo ------------------------------------------
+echo Building Unix/Linux Install package (.jar)
+echo ------------------------------------------
 echo '
 if exist "%VERSION%.jar" (
 	echo Deleting %VERSION%.jar
@@ -79,28 +79,29 @@ if exist install.jar (
 	del install.jar
 )
 
-if exist "%ProgramFiles%\IzPack\bin\compile.bat" (
-	REM echo cmd /c "%ProgramFiles%\IzPack\bin\compile.bat" install.xml
-	cmd /c "%ProgramFiles%\IzPack\bin\compile.bat" install.xml
-	goto CHECK_LINUX
-)
-if exist C:\java\IzPack\bin\compile.bat (
-	REM echo cmd /c c:\java\IzPack\bin\compile.bat install.xml
-	cmd /c c:\java\IzPack\bin\compile.bat install.xml
-	goto CHECK_LINUX
-)
+if exist "%ProgramFiles%\IzPack" goto CHECK_COMPILE
 echo -----------------------------------------
 echo ERROR:  Unable to locate IzPack
 echo -----------------------------------------
 goto FINISHED
 
-:CHECK_LINUX
-if not exist install.jar (
-	echo -----------------------------------------
-	echo ERROR: Building LINUX install package failed
-	echo -----------------------------------------
-	goto FINISHED
-)
+:CHECK_COMPILE
+if exist "%ProgramFiles%\IzPack\bin\compile.bat" goto BUILD_LINUX
+echo ---------------------------------------------------------------
+echo ERROR:  Unable to locate "%ProgramFiles%\IzPack\bin\compile.bat"
+echo ----------------------------------------------------------------
+goto FINISHED
+
+:BUILD_LINUX
+echo cmd /c "%ProgramFiles%\IzPack\bin\compile.bat" install.xml
+cmd /c "%ProgramFiles%\IzPack\bin\compile.bat" install.xml
+if exist install.jar goto RENAME_JAR
+echo -----------------------------------------
+echo ERROR: Building LINUX install package failed
+echo -----------------------------------------
+goto FINISHED
+
+:RENAME_JAR
 echo Renaming install.jar to %VERSION%.jar
 ren install.jar %VERSION%.jar
 
@@ -115,29 +116,46 @@ if not exist %VERSION%.jar (
 	echo ERROR: %VERSION%.jar missing
 	echo ERROR: Build of Windows version failed
 	echo --------------------------------`---------
-	goto FINISHED
+	goto MAC
 )
-if exist "%VERSION%.exe" (
-	echo Deleting %VERSION%.exe
-	del %VERSION%.exe
-)
-)
-if exist "%ProgramFiles%\IzPack\utils\wrappers\izpack2exe" (
-	REM echo "%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\izpack2exe" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\upx.exe"
-	"%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\izpack2exe" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\upx.exe"
-	goto CHECK_WINDOWS
-) 
-if exist C:\java\IzPack\utils\wrappers\izpack2exe (
-	REM echo "C:\Java\IzPack\utils\wrappers\izpack2exe\izpack2exe" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="C:\Java\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="C:\Java\IzPack\utils\wrappers\izpack2exe\upx.exe"
-	"C:\Java\IzPack\utils\wrappers\izpack2exe\izpack2exe" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="C:\Java\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="C:\Java\IzPack\utils\wrappers\izpack2exe\upx.exe"
-	goto CHECK_WINDOWS
-)
+if exist "%VERSION%.exe" 	del %VERSION%.exe
+if exist "%ProgramFiles%\IzPack\utils\wrappers\izpack2exe" goto BUILD_WINDOWS
 echo ----------------------------------------
 echo ERROR: Unable to locate izpack2exe
 echo ----------------------------------------
+goto MAC
+:BUILD_WINDOWS
+echo "%ProgramFiles%\izPack\utils\wrappers\izpack2exe\izpack2exe.py" --name="calibre2opds" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\upx.exe"
+"%ProgramFiles%\izPack\utils\wrappers\izpack2exe\izpack2exe.py" --name="calibre2opds" --file="%VERSION%.jar" --output="%VERSION%.exe" --with-7z="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\7za.exe" --with-upx="%ProgramFiles%\IzPack\utils\wrappers\izpack2exe\upx.exe"
+
+
+:MAC
+echo '
+echo ----------------------------
+echo Building Mac package
+echo ----------------------------
+echo '
+if not exist %VERSION%.jar (
+	echo -----------------------------------------
+	echo ERROR: %VERSION%.jar missing
+	echo ERROR: Build of Mac version failed
+	echo --------------------------------`---------
+	goto FINISHED
+)
+if exist "%VERSION%.app" (
+	echo Deleting %VERSION%.app
+	del /Q %VERSION%.app
+)
+if exist "%ProgramFiles%\IzPack\utils\wrappers\izpack2app" goto BUILD_MAC
+
+echo ----------------------------------------
+echo ERROR: Unable to locate izpack2app
+echo ----------------------------------------
 goto FINSIHED
 
-:CHECK_WINDOWS
+:BUILD_MAC
+echo "%ProgramFiles%\IzPack\utils\wrappers\izpack2app\izpack2app.py" "%VERSION%.jar" "%VERSION%.app"
+"%ProgramFiles%\IzPack\utils\wrappers\izpack2app\izpack2app.py" "%VERSION%.jar"	"%VERSION%.app"
 
 echo '
 echo ------------------------------------------------

@@ -4,11 +4,13 @@
 # If IzPack not installed then stops after ZIP package
 
 BASEVERSION=3.6
+SVNVERSION=`svnversion`
+VERSION=calibre2opds-$BASEVERSION-$SVNVERSION
 
-ZIPFILE=`pwd`/calibre2opds-${BASEVERSION}-`svnversion`.zip
+ZIPFILE=`pwd`/calibre2opds-${BASEVERSION}-$SVNVERSION.zip
 
 echo ------------------------------------------
-echo Building ZIP Install to calibre2opds-${BASEVERSION}.zip
+echo Building ZIP Install to $ZIPFILE
 echo ------------------------------------------
 
 if [ -f $ZIPFILE ]
@@ -52,15 +54,28 @@ echo Building Unix/Linux Install.jar
 echo -------------------------------
 
 ${IZPACK_HOME}/bin/compile install.xml
+if [! -f install.jar ]
+then
+  echo
+  echo ERROR:  Failed to build .jar file
+  echo
+  exit -1
+fi
+
+cp install.jar $VERSION.jar
 
 echo ----------------------------
-echo Building Windows Install.exe
+echo Building Windows $VERSION.exe
 echo ----------------------------
 
-python ${IZPACK_HOME}/utils/wrappers/izpack2exe/izpack2exe.py --file=install.jar --output=install.exe --no-upx
+python ${IZPACK_HOME}/utils/wrappers/izpack2exe/izpack2exe.py --file=$VERSION.jar --output=$VERSION.exe --no-upx
+
+echo ----------------------------
+echo Building Mac $VERSION.app
+echo ----------------------------
+
+python ${IZPACK_HOME}/utils/wrappers/izpack2exe/izpack2app.py  $VERSION.app
 
 echo ----------------------------------------
-echo Completed building Calibre2Opds Installs
+echo Completed building $VERSION Installs
 echo ----------------------------------------
-
-
