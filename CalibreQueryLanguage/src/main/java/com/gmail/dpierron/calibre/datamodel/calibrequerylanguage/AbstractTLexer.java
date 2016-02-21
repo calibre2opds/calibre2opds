@@ -1,12 +1,12 @@
 package com.gmail.dpierron.calibre.datamodel.calibrequerylanguage;
 
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.Lexer;
-import org.antlr.runtime.RecognizerSharedState;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Lexer;
+// import org.antlr.v4.runtime.RecognizerSharedState;
 
 /**
  * This is the super class for the lexer. It is extended by the lexer class
- * generated from CalibreQueryLexer.g.
+ * generated from CalibreQueryLexer.g4.
  * <p/>
  * Do not place code and declarations in the lexer .g files, use
  * a superclass like this and place all the support methods and
@@ -33,18 +33,20 @@ public abstract class AbstractTLexer extends Lexer
    *              wish to compile (or lex at least)
    */
   public AbstractTLexer(CharStream input) {
-    this(input, new RecognizerSharedState());
+//    this(input, new RecognizerSharedState());
+    super(input);
   }
-
   /**
    * Internal constructor for ANTLR - do not use.
    *
    * @param input The character stream we are going to lex
    * @param state The shared state object, shared between all lexer comonents
    */
+  /*
   public AbstractTLexer(CharStream input, RecognizerSharedState state) {
     super(input, state);
   }
+    */
 
 }
 
