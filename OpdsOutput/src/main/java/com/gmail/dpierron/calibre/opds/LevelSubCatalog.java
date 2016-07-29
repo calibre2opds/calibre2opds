@@ -267,8 +267,8 @@ public class LevelSubCatalog extends SubCatalog {
         authorsSummary = Localization.Main.getText("authors.alphabetical.single");
       entry = authorsSubCatalog.getSubCatalog(breadcrumbs,
                                               authorsSubCatalog.getAuthors(),// sTART WITH ALL AUTHORS
-                                              getCatalogFolder().length() > 0,
-                                              0,        // from start,
+                                              inSubDir,
+                                              0,                            // from start,
                                               Localization.Main.getText("authors.title"),
                                               authorsSummary,
                                               Constants.INITIAL_URN_PREFIX + authorsSubCatalog.getCatalogType() + authorsSubCatalog.getCatalogLevel(),
@@ -292,8 +292,8 @@ public class LevelSubCatalog extends SubCatalog {
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(stuffToFilterOut, getBooks());
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       entry = seriesSubCatalog.getSubCatalog(breadcrumbs,
-          null,     // let it be derived from books
-          getCatalogLevel().length() > 0,
+          null,                   // let it be derived from books
+          atTopLevel != true,     // inSubDir
           0,
           Localization.Main.getText("series.title"),
           seriesSubCatalog.getSeries().size() > 1
@@ -323,7 +323,8 @@ public class LevelSubCatalog extends SubCatalog {
                                   ? new TagListSubCatalog(stuffToFilterOut, getBooks())
                                   : new TagTreeSubCatalog(stuffToFilterOut, getBooks());
       tagssubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = tagssubCatalog.getCatalog(breadcrumbs, pBreadcrumbs.size() > 1 || getCatalogLevel().length() > 0 /*inSubDir*/);
+      entry = tagssubCatalog.getCatalog(breadcrumbs,
+                                        inSubDir);
       tagssubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
         feed.addContent(entry);
@@ -343,7 +344,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Recent books catalog");
       RecentBooksSubCatalog recentBooksSubCatalog = new RecentBooksSubCatalog(stuffToFilterOut, getBooks());
       recentBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = recentBooksSubCatalog.getCatalog(breadcrumbs, getCatalogLevel().length() > 0);
+      entry = recentBooksSubCatalog.getCatalog(breadcrumbs, inSubDir);
       recentBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null) {
         feed.addContent(entry);
@@ -361,9 +362,8 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Rated books catalog");
       RatingsSubCatalog ratingsSubCatalog = new RatingsSubCatalog(stuffToFilterOut,getBooks());
       ratingsSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = ratingsSubCatalog.getCatalog(breadcrumbs,
-                                           getCatalogLevel().length() > 0);
-                                           ratingsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
+      entry = ratingsSubCatalog.getCatalog(breadcrumbs, inSubDir);
+      ratingsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null) {
         feed.addContent(entry);
       }
@@ -385,10 +385,15 @@ public class LevelSubCatalog extends SubCatalog {
         allBooksSummary = Localization.Main.getText("allbooks.alphabetical", getBooks().size());
       else if (getBooks().size() == 1)
         allBooksSummary = Localization.Main.getText("allbooks.alphabetical.single");
-      entry = allBooksSubCatalog.getListOfBooks(breadcrumbs, getBooks(), getCatalogLevel().length() > 0, 0,          // from start
-          Localization.Main.getText("allbooks.title"), allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
-          allBooksSubCatalog.getCatalogBaseFolderFileName(), SplitOption.SplitByLetter,
-          useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
+      entry = allBooksSubCatalog.getListOfBooks(breadcrumbs,
+                                  getBooks(),
+                                  inSubDir,
+                                  0,                  // from start
+                                  Localization.Main.getText("allbooks.title"),
+                                  allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
+                                  allBooksSubCatalog.getCatalogBaseFolderFileName(),
+                                  SplitOption.SplitByLetter,
+                                  useExternalIcons ? getIconPrefix(inSubDir) + Icons.ICONFILE_BOOKS : Icons.ICON_BOOKS, null);
       allBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
 
       if (entry != null) {

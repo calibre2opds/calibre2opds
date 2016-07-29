@@ -70,8 +70,9 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-206: The CustomCatalog URL column changes are not registered when changing focus
     - #c2o-230: Favicon for Library catalog URL
     - #c20-243: Allow custom icons to be used with Custom Catalog entries
-    = #c2o-248: Allow logging level to be changed from within the GUI.
-    - #c2o-254: Custom Catalog settings not changed when switching profiles
+    - #c2o-248: Allow logging level to be changed from within the GUI.
+    - #c2o-268: Upgrade ANTLR from v3 to v4
+    - #c2o-269: Allow Custom columns to be used in search/filter expressions
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -91,23 +92,28 @@ Usefule links for tracking changes are:
 
 v3.6
    - Upgrade components used internally by calibre2opds{
-        log4j   2.2 -> 2.3    This is the last version compatible with Java 6 and is in builds prior to rev 383
-        log4j   2.3->2.5      Provides support for programatic configuration of logging, requires Java 7 or later
+        antlr   3.1.3->4.5.2  Major upgrade as Antlr3 is not directly source code comaptible with antlr4
+        log4j2  2.2 -> 2.3    This is the last version compatible with Java 6 and is in builds prior to rev 383
+        log4j2  2.3->2.5      Provides support for programatic configuration of logging, requires Java 7 or later
         izpack  4.3.5->5.0.6  Platform independent installer
+      	sqlitejdbc	3.8.7.1-> 3.8.11.2  The previous version failed on 32-bit linux systems (#c2o-270).
    - New:     #c2o-256: Option to suppress displaying Author in Book Details
    - New:     #c2o-257: Option to display size on download links in HTML catalog
    - Fix:     #c20-262: Download links in HTML catalog do not have 'Type' attribute specified
    - New:     #c2o-264: Add Hungarian Localisation (thanks to Gabor)
    - New:     #c20-265: Option to disable the Optimizer
    - Change:  #c2o-266: Do not display series number if it is set to 0
-
+   - New:     #c2o-267: Add Romanian loclisation (thanks to Constantin)
+   - Fix:     #c2o-270: sqlite-jdbc 3.8.7 has a serious bug on 32-bit linux systems.
+   - New:     #c20-271: All Books sorting within author should be strictly by title
+   - Fix:     #c20-273: Author icon missing on nested tag view 
 
 
 v3.5 (20 October 2015) Rev 370
     - Upgrade versions of components used internally by calibre2opds:
         jdom    1.1 -> 2.0.6
       	junit		4.7	-> 4.12
-      	log4j   1.1.2 -> 2.2
+      	log4j   1.1.2 -> log4j2 2.2       Major upgrade as log4j2 is not directly source code compatible with log4j
       	sqlitejdbc	3.6.17.1-> 3.8.7
     - Change: Choosing to use thumbnails as covers no longer forces resized cover images to be removed.
     - Change: Removed option to minimize Changed Files as program logic now tries to do this anyway. 
@@ -124,6 +130,7 @@ v3.5 (20 October 2015) Rev 370
     - New:    #c20-251: Get confirmation before exiting with unsaved changes
     - Fix:    #c2o:252: The "Today" section in Recent books should be limited to the current calendar day
     - Fix:    #c2o-253: Hangs generating catalog (OSX)
+    - Fix:    #c2o-254: Custom Catalog settings not changed when switching profiles
     - Fix:    #c2o-255: OpdsURL references in Custom catalogs are not change to .html ones for the HTML catalog
     - Change: #c2o_258: Increase the Maximum allowed in Recent Books to 1000 (was500)
     - Fix:    #c2o-259: Build revision number no longer displayed (regression introduced during 3.5 betas)
