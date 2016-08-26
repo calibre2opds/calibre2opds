@@ -63,7 +63,7 @@
           </div>
 
           <div id="leftnav">
-            <a href="../index.hmtl"><img alt="home" src="../homeIwebKit.png" /></a>
+            <a href="../index.html"><img alt="home" src="../homeIwebKit.png" /></a>
           </div>
         </div>
 

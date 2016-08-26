@@ -73,6 +73,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-248: Allow logging level to be changed from within the GUI.
     - #c2o-268: Upgrade ANTLR from v3 to v4
     - #c2o-269: Allow Custom columns to be used in search/filter expressions
+    - #c20-274: Large white spaces appearing between paragraphs in the Book Details page
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -107,6 +108,7 @@ v3.6
    - Fix:     #c2o-270: sqlite-jdbc 3.8.7 has a serious bug on 32-bit linux systems.
    - New:     #c20-271: All Books sorting within author should be strictly by title
    - Fix:     #c20-273: Author icon missing on nested tag view 
+   = Fix:     #c2o-275: The "Home' button does not work on Book pages in the HTML catalog.
 
 
 v3.5 (20 October 2015) Rev 370
