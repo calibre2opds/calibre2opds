@@ -1,4 +1,8 @@
-<shortcuts>
+<izpack:shortcuts version="5.0"
+                  xmlns:izpack="http://izpack.org/schema/shortcuts"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://izpack.org/schema/shortcuts http://izpack.org/schema/5.0/izpack-shortcuts-5.0.xsd">
+
 
   <!--
     Default shortcut file (used on windows)
@@ -28,7 +32,7 @@
    </shortcut>
 
   <shortcut
-     name="Calibre2opds catalog generation"
+     name="Calibre2opds batch mode catalog generation"
      description="Generate calibre2opds catalogs from parameters set up earlier via GUI"
      programGroup="yes"
      desktop="no"
@@ -49,15 +53,15 @@
    </shortcut>
 
   <shortcut
-     name="Calibre2opds documentation"
-     description="Calibre2Opds Online Documentation"
+     name="User Guide"
+     description="Calibre2Opds online User Guide"
      programGroup="yes"
      desktop="no"
      applications="no"
      startMenu="no"
      startup="no"
-     target="iexplorer"
-     commandLine="http://calibre2opds.com/read-the-documentation/"
+     target="explorer"
+     commandLine="http://wiki.mobileread.com/wiki/Calibre2Opds_Index"
      workingDirectory=""
      iconFile="$INSTALL_PATH/calibre2opds-icon-small_32.ico"
      iconIndex="0"
@@ -67,7 +71,27 @@
      initialState="normal">
      <createForPack name="Base"/>
    </shortcut>
-<!--
+
+  <shortcut
+     name="Developers Guide"
+     description="Calibre2Opds online Developers Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="explorer"
+     commandLine="http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop"
+     workingDirectory=""
+     iconFile="$INSTALL_PATH/calibre2opds-icon-small_32.ico"
+     iconIndex="0"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
   <shortcut
      name="Uninstall calibre2opds"
      description="Uninstall calibre2opds from the system"
@@ -76,7 +100,7 @@
      applications="no"
      startMenu="no"
      startup="no"
-     target="$INSTALL_PATH/run.cmd"
+     target="$INSTALL_PATH/Uninstaller.jar"
      commandLine=""
      workingDirectory="$INSTALL_PATH/uninstaller"
      iconFile="$INSTALL_PATH/uninstall-icon_32.ico"
@@ -85,8 +109,8 @@
      encoding="UTF-8"
      terminal="false"
      KdeSubstUID="false"
+     runAsAdministrator="true"
      initialState="normal">
      <createForPack name="Base"/>
    </shortcut>
--->
-</shortcuts>
+</izpack:shortcuts>

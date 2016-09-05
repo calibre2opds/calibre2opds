@@ -1,4 +1,8 @@
-<shortcuts>
+<izpack:shortcuts version="5.0"
+                  xmlns:izpack="http://izpack.org/schema/shortcuts"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://izpack.org/schema/shortcuts http://izpack.org/schema/5.0/izpack-shortcuts-5.0.xsd">
+
 
   <!--
      Shortcut file for Unix/Linux type systems
@@ -26,8 +30,8 @@
    </shortcut>
 
   <shortcut
-     name="Documentation"
-     description="Calibre2Opds Online Documentation"
+     name="User Guide"
+     description="Calibre2Opds online User Guide"
      programGroup="yes"
      desktop="no"
      applications="no"
@@ -35,11 +39,31 @@
      startup="no"
      target="konqueror"
      workingDirectory="$INSTALL_PATH"
-     description="Calibre2opds online documentation"
      iconFile="$INSTALL_PATH/calibre2opds-icon_64.png"
      iconIndex="0"
      type="link"
-     url="http://wiki.mobileread.com/wiki/Calibre2opds"
+     url="http://wiki.mobileread.com/wiki/Calibre2Opds_Indexs"
+     encoding="UTF-8"
+     terminal="false"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+  <shortcut
+     name="Developers Guide"
+     description="Calibre2Opds online Developers Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="konqueror"
+     workingDirectory="$INSTALL_PATH"
+     iconFile="$INSTALL_PATH/calibre2opds-icon_64.png"
+     iconIndex="0"
+     type="link"
+     url="http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop"
      encoding="UTF-8"
      terminal="false"
      KdeSubstUID="false"
@@ -58,7 +82,6 @@
      target="$INSTALL_PATH/run.sh"
      commandLine=""
      workingDirectory="$INSTALL_PATH"
-     description="Generate calibre2opds catalogs"
      iconFile="$INSTALL_PATH/calibre2opds-text-icon_64.png"
      iconIndex="0"
      type="Application"
@@ -69,4 +92,4 @@
      <createForPack name="Base"/>
    </shortcut>
 
-</shortcuts>
+</izpack:shortcuts>
