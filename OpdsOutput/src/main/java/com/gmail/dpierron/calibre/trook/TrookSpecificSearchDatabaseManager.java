@@ -201,7 +201,7 @@ public class TrookSpecificSearchDatabaseManager {
   private static void addEntryToTrookSearchDatabase(Element entry, ResultType type, String... keywords) {
     try {
       StringWriter sw = new StringWriter();
-      JDOMManager.getSerializer().output(entry, sw);
+      JDOMManager.getCompactXML().output(entry, sw);
       String opdsEntry = sw.getBuffer().toString();
       addEntry(opdsEntry, type, keywords);
     } catch (IOException e) {

@@ -1177,7 +1177,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         }
       }
 
-      List<Element> comments = JDOMManager.convertHtmlTextToXhtml(book.getComment());
+      String commentsString = book.getComment();
+      List<Element> comments = JDOMManager.convertHtmlTextToXhtml(commentsString);
       if (Helper.isNotNullOrEmpty(comments)) {
         if (logger.isTraceEnabled())  logger.trace("decorateBookEntry: got comments");
         content.addContent(JDOMManager.element(Constants.HTML_ELEMENT_PARAGRAPH)

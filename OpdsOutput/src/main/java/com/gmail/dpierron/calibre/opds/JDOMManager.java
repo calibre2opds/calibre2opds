@@ -15,6 +15,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.w3c.tidy.Tidy;
 
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -263,14 +264,21 @@ public class JDOMManager {
     return sb;
   }
 
-  public static XMLOutputter getOutputter() {
+  public static XMLOutputter getPrettyXML() {
     if (outputter == null) {
       outputter = new XMLOutputter(Format.getPrettyFormat());
     }
     return outputter;
   }
 
-  public static XMLOutputter getSerializer() {
+  public static XMLOutputter getRawXml() {
+    if (serializer == null) {
+      serializer = new XMLOutputter(Format.getRawFormat());
+    }
+    return serializer;
+  }
+
+  public static XMLOutputter getCompactXML() {
     if (serializer == null) {
       serializer = new XMLOutputter(Format.getCompactFormat());
     }
@@ -374,7 +382,7 @@ public class JDOMManager {
           List<String> strings = Helper.tokenize(text, "\n", true);
           for (String string : strings) {
             if (Helper.isNullOrEmpty(string)) {
-              sb.append("<p />");
+               sb.append("<p />");
             } else {
               sb.append("<p>");
               sb.append(string);
@@ -388,7 +396,11 @@ public class JDOMManager {
       // tidy the text
       if (logger.isTraceEnabled()) logger.trace("convertHtmlTextToXhtml: tidy the text");
       try {
-        result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
+        String noNL = text.replaceAll("\\n","");
+        result = tidyInputStream(new ByteArrayInputStream(noNL.getBytes("utf-8")));
+        // result = tidyInputStream(new ByteArrayInputStream(text.getBytes("utf-8")));
+        String afterTIDY = result.toString();
+        int dummy = 1;
       } catch (JDOMParseException j) {
         if (logger.isDebugEnabled()) logger.trace("convertHtmlTextToXhtml: caught JDOMParseException in the tidy process");
         if (logger.isTraceEnabled()) logger.trace( "" + j);

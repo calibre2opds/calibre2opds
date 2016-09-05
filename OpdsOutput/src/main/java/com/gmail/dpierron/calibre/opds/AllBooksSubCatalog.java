@@ -62,6 +62,9 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
     return true;
   }
 
+  /**
+   * Sort books according to the profile settings
+   */
   private void sortBooks() {
     if (currentProfile.getOrderAllBooksBySeries()) {
       // sort the books by series

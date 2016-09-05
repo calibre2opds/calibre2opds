@@ -9,6 +9,9 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.*;
 
+import org.jdom2.*;
+import org.w3c.tidy.*;
+
 public class Book extends GenericDataObject   {
   private final static Logger logger = LogManager.getLogger(Book.class);
 
@@ -325,14 +328,23 @@ public class Book extends GenericDataObject   {
     summary = null;
     summaryMaxLength = -1;
     if (Helper.isNotNullOrEmpty(value)) {
+      if (value.startsWith("<")) {
+        if (value.contains("<\\br") || value.contains("<\\BR")) {
+          int dummy = 1;
+        }
+        // Remove newlines from HTML as they are meangless in that context
+          value = value.replaceAll("\\n","");
+        // Remove any empty paragraphs.
+        value= value.replaceAll("<p></p>","");
+      }
       comment = removeLeadingText(value, "SUMMARY");
       comment = removeLeadingText(comment, "PRODUCT DESCRIPTION");
       // The following log entry can be useful if trying to debug character encoding issues
       // logger.info("Book " + id + ", setComment (Hex): " + Database.stringToHex(comment));
     
-      if (comment != null && comment.matches("(?i)\\<br\\>")) {
+      if (comment != null && comment.matches("(?i)<br>")) {
         logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
-        comment.replaceAll("(?i)\\<br\\>", "<br />");
+        comment.replaceAll("(?i)<br>", "<br />");
       }
     }
   }
@@ -659,7 +671,7 @@ public class Book extends GenericDataObject   {
    * The copy has some special behavior in that most properties are read
    * from the original, but the tags one is still private.
    *
-   * NOTE:  Can pass as null values that are alwars read from parent!
+   * NOTE:  Can pass as null values that are always read from parent!
    *        Not sure if this reduces RAM usage or not!
    *
    * @return  Book object that is the copy

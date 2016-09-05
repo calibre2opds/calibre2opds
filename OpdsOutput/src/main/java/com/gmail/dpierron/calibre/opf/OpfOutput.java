@@ -256,7 +256,7 @@ public class OpfOutput {
                 try {
                   ZipEntry newEntry = new ZipEntry(zipEntry.getName());
                   zos.putNextEntry(newEntry);
-                  JDOMManager.getOutputter().output(doc, zos);
+                  JDOMManager.getPrettyXML().output(doc, zos);
                 } finally {
                   zos.closeEntry();
                 }

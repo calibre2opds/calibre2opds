@@ -816,7 +816,6 @@ public abstract class SubCatalog {
 
     // Create as a DOM object
     // TODO  Check if there might be a cheaper way to do this not using DOM?
-    String test = feed.toString();
     Document document = new Document();
     document.addContent(feed);
 
@@ -826,7 +825,11 @@ public abstract class SubCatalog {
       FileOutputStream fos = null;
       try {
         fos = new FileOutputStream(xmlFile);
-        JDOMManager.getOutputter().output(document, fos);
+        String prettyXML = JDOMManager.getPrettyXML().outputString(document);
+        String compactXML = JDOMManager.getCompactXML().outputString(document);
+        String rawXML = JDOMManager.getRawXml().outputString(document);
+
+        JDOMManager.getPrettyXML().output(document, fos);;
       } catch (RuntimeException e) {
         logger.warn("Error writing file " + xmlFilename + "(" + e.toString() + ")");
       } finally {

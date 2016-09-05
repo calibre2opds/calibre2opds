@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<installation version="5.0">
+<izpack:installation version="5.0"
+    xmlns:izpack="http://izpack.org/schema/installation"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
     <info>
         <appname>Calibre2opds</appname>
-        <appversion>3.3</appversion>
+        <appversion>3.6</appversion>
+        <javaversion>1.7</javaversion>
         <authors>
             <author name="David Pierron" email="dpierron@gmail.com"/>
             <author name="Dave Walker" email="itimpi@ntlworld.com"/>
@@ -18,8 +22,7 @@
     <guiprefs 
     	width="800"
     	height="600"
-    	resizable="yes"
-        langDisplayType="native"/>
+    	resizable="yes"/>
 
     <!-- 
         The locale section.
@@ -51,7 +54,9 @@
     	<res id="Installer.image.7" src="brand\calibre2opds-icon.png"/>
     </resources>
 
+    <!--
 	<native type="izpack" name="ShellLink.dll"/>
+	-->
 	
     <!-- 
         The panels section.
@@ -112,4 +117,4 @@
         </pack>
     </packs>
 
-</installation>
+</izpack:installation>

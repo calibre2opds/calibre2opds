@@ -74,6 +74,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-268: Upgrade ANTLR from v3 to v4
     - #c2o-269: Allow Custom columns to be used in search/filter expressions
     - #c20-274: Large white spaces appearing between paragraphs in the Book Details page
+    - #c2o-276: Upgrade to ANTLR 4 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -89,14 +90,16 @@ that have been recorded in the Issue tracker.
 
 Usefule links for tracking changes are:
   Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
-  Change History: http://code.google.com/p/calibre2opds/source/list
-
-v3.6
-   - Upgrade components used internally by calibre2opds{
+  Change History: https://github.com/calibre2opds/calibre2opds/
+  
+v4.0 (planned but not yet started)  
         antlr   3.1.3->4.5.2  Major upgrade as Antlr3 is not directly source code comaptible with antlr4
+
+v3.6  (in progress)
+   - Upgrade components used internally by calibre2opds{
         log4j2  2.2 -> 2.3    This is the last version compatible with Java 6 and is in builds prior to rev 383
         log4j2  2.3->2.5      Provides support for programatic configuration of logging, requires Java 7 or later
-        izpack  4.3.5->5.0.6  Platform independent installer
+        izpack  4.3.5->5.0.9  Platform independent installer
       	sqlitejdbc	3.8.7.1-> 3.8.11.2  The previous version failed on 32-bit linux systems (#c2o-270).
    - New:     #c2o-256: Option to suppress displaying Author in Book Details
    - New:     #c2o-257: Option to display size on download links in HTML catalog
