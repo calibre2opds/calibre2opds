@@ -9,9 +9,6 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.*;
 
-import org.jdom2.*;
-import org.w3c.tidy.*;
-
 public class Book extends GenericDataObject   {
   private final static Logger logger = LogManager.getLogger(Book.class);
 
