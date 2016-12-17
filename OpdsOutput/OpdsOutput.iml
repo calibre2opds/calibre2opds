@@ -16,11 +16,10 @@
       <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.6.17.1" level="project" />
     <orderEntry type="module" module-name="DataModel" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.8.7" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.15.1" level="project" />
     <orderEntry type="module" module-name="CalibreQueryLanguage" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />

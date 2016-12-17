@@ -92,7 +92,8 @@ echo SVN_HOME=%SVN_HOME%
 echo ERROR: Subversion 'svnversion' command not found.
 echo        You need to install an implementation that provides
 echo        this as a command line utility.  In particular it
-echo        it is not included with TortoiseSVN.
+echo        it is not included with TortoiseSVN in the default
+echo        installation.
 set C2O_ENV=BAD
 goto CHECK_OK
 

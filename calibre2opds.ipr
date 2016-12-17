@@ -368,7 +368,6 @@
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
   </component>
   <component name="CompilerConfiguration">
-    <option name="DEFAULT_COMPILER" value="Javac" />
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/DataModel/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/DataModel/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
@@ -381,7 +380,6 @@
       <directory url="file://$PROJECT_DIR$/Install/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Install/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
     </excludeFromCompile>
-    <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="?*.properties" />
       <entry name="?*.xml" />
@@ -395,42 +393,14 @@
       <entry name="?*.ftl" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
-      </profile>
-      <profile default="false" name="Annotation profile for CalibreQueryLanguage" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="CalibreQueryLanguage" />
-      </profile>
-      <profile default="false" name="Annotation profile for Install" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="Install" />
-      </profile>
-      <profile default="false" name="Annotation profile for DataModel" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="DataModel" />
-      </profile>
-      <profile default="false" name="Annotation profile for OpdsOutput" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
+        <module name="Install" />
         <module name="OpdsOutput" />
-      </profile>
-      <profile default="false" name="Annotation profile for Tools" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
         <module name="Tools" />
       </profile>
     </annotationProcessing>
@@ -766,17 +736,19 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/CalibreQueryLanguage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DataModel" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/DataModel/src/test/java/com/gmail/dpierron/calibre/datamodel/DataModelTest.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Install" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/OpdsOutput" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Tools" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Tools/src/main/resources/Localization_fr.properties" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
-  <component name="EntryPointsManager">
-    <entry_points version="2.0" />
-  </component>
   <component name="IdProvider" IDEtalkID="8C89CA0136CDD788E7EAE3F59459477E" />
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
   <component name="IssueNavigationConfiguration">
     <option name="links">
       <list>
@@ -1291,7 +1263,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="SvnBranchConfigurationManager">
@@ -1512,15 +1484,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/jdom/jdom2/2.0.6/jdom2-2.0.6-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.xerial:sqlite-jdbc:3.8.7">
+    <library name="Maven: org.xerial:sqlite-jdbc:3.15.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.8.7/sqlite-jdbc-3.8.7.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.15.1/sqlite-jdbc-3.15.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.8.7/sqlite-jdbc-3.8.7-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.15.1/sqlite-jdbc-3.15.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.8.7/sqlite-jdbc-3.8.7-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.15.1/sqlite-jdbc-3.15.1-sources.jar!/" />
       </SOURCES>
     </library>
   </component>

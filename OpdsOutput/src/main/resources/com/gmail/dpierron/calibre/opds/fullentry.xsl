@@ -159,6 +159,10 @@
                           <xsl:attribute name="type">
                             <xsl:value-of select="./@type"/>
                           </xsl:attribute>
+                          <!-- #c20-277  Add 'download' attribute to acquisition links -->
+                          <xsl:attribute name="download">
+                            <xsl:value-of select="./@download"/>
+                          </xsl:attribute>
                           <xsl:choose>
                             <xsl:when test="string-length(@title) > 0">
                               <xsl:value-of select="./@title"/>

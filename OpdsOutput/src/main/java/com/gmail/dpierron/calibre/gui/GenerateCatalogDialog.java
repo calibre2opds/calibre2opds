@@ -167,7 +167,8 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
    * @param time
    */
   private void disableStage(JCheckBox check, JLabel label, JLabel time) {
-    check.setEnabled(false);
+    check.setEnabled(false);            // TODO   decide if this is a good idea
+    check.setVisible(false);
     label.setEnabled(false);
     time.setEnabled(false);
   }

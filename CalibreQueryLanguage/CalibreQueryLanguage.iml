@@ -12,7 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire" />
     </content>
-    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />

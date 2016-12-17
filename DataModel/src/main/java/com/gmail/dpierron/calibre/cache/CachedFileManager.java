@@ -242,6 +242,7 @@ public class CachedFileManager {
     BufferedOutputStream bs = null;
     FileOutputStream fs = null;
     long countPercent = cachedFilesMap.entrySet().size()/100;       // Use to avoid too frequent GUI updates
+    if (countPercent == 0) countPercent=1;                          // Safety check for libraries where total books is less than 100
     if (callback != null ) callback.setProgressMax(100);
     deleteCache();
 

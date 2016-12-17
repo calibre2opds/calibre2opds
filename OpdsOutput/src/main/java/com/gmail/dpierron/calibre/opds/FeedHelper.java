@@ -462,8 +462,15 @@ public class FeedHelper {
 
     link.setAttribute("href", url);
 
-    if (Helper.isNotNullOrEmpty(urlType))
+    if (Helper.isNotNullOrEmpty(urlType)) {
       link.setAttribute("type", urlType);
+      // #c20-277  Set download attribute for acquisition links
+      if (Helper.isNotNullOrEmpty(urlRelation) && urlRelation.equals(RELATION_ACQUISITION)) {
+        String filename = url.substring(url.lastIndexOf('/') + 1);
+        link.setAttribute("download", filename);
+      }
+    }
+
 
     if (Helper.isNotNullOrEmpty(urlRelation))
       link.setAttribute("rel", urlRelation);
