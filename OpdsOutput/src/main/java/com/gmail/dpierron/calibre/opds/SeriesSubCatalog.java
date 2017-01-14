@@ -451,12 +451,18 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       return null;
 
     // sort the books by series index
+    // If the series index is the same, then sort by title within the index.
     Collections.sort(books, new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
         Float index1 = (o1 == null ? Float.MIN_VALUE : o1.getSerieIndex());
         Float index2 = (o2 == null ? Float.MIN_VALUE : o2.getSerieIndex());
-        return index1.compareTo(index2);
+        if (index1 != index2) {
+          return index1.compareTo(index2);
+        }
+        String title1 = o1.getTitleToSplitByLetter();
+        String title2 = o2.getTitleToSplitByLetter();
+        return Helper.checkedCollatorCompareIgnoreCase(title1, title2, collator);
       }
     });
 

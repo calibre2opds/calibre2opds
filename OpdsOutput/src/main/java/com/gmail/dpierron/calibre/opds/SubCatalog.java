@@ -677,7 +677,7 @@ public abstract class SubCatalog {
       public int compare(Book o1, Book o2) {
         String title1 = o1.getTitleToSplitByLetter();
         String title2 = o2.getTitleToSplitByLetter();
-        return Helper.checkedCollatorCompareIgnoreCase(title1, title1, collator);
+        return Helper.checkedCollatorCompareIgnoreCase(title1, title2, collator);
       }
     });
   }
@@ -1043,7 +1043,7 @@ public abstract class SubCatalog {
 
   // TODO:           WORK IN PROGRESS !
 
-  // See if we can genearlise the cration of sub-catgalog pages to a genearlised
+  // See if we can generalise the cration of sub-catalog pages to a
   // treatment with a series of standardised methods implemented in each specific
   // specific sub-catalog type.    This would have the huge advantage of greatly
   // reducing the chance of errors in a particular type as well as making the

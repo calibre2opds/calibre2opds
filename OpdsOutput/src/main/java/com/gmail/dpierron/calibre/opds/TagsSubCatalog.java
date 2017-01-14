@@ -1,6 +1,6 @@
 package com.gmail.dpierron.calibre.opds;
 /**
- *  Abstract class that contains methos that are common to all
+ *  Abstract class that contains methods that are common to all
  *  types of tag subcatalog.
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
@@ -217,9 +217,15 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
     String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();
 
-    // sort books by title
-    if (logger.isDebugEnabled()) logger.debug("sorting " + books.size() + " books");
-    sortBooksByTitle(books);
+    // Sort books according to user requirements
+    if (logger.isDebugEnabled()) logger.debug("sorting " + books.size() + " books" + (currentProfile.getSortTagsByAuthor() ? " (withon author)" : ""));
+    if (currentProfile.getSortTagsByAuthor()) {
+      // #c2o-212  Sort tag books by author and then title
+      sortBooksByAuthorAndTitle(books);
+    } else {
+      // sort books by title only
+      sortBooksByTitle(books);
+    }
 
     SplitOption splitOption = maxSplitLevels > 0 ? SplitOption.SplitByLetter : SplitOption.Paginate;
     // check if we need to make this tag deep
@@ -250,10 +256,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
         logger.debug("getObjectEntry: making a simple book list for tag " + tag);
         if (logger.isTraceEnabled()) logger.trace("getObjectEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       }
-      // #c2o-212  Sort tag books by author
-      if (currentProfile.getSortTagsByAuthor()) {
-        sortBooksByAuthorAndTitle(books);
-      }
+
       if (currentProfile.getTagBooksNoSplit() && splitOption == SplitOption.SplitByLetter) {
         splitOption = SplitOption.Paginate;
       }

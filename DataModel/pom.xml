@@ -14,7 +14,7 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.15.1</version>
+      <version>3.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.gmail.dpierron</groupId>

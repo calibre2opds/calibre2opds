@@ -19,7 +19,7 @@
     <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="DataModel" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.15.1" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
     <orderEntry type="module" module-name="CalibreQueryLanguage" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />

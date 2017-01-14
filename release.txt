@@ -101,6 +101,7 @@ v3.6  (in progress)
         log4j2  2.3->2.5      Provides support for programatic configuration of logging, requires Java 7 or later
         izpack  4.3.5->5.0.9  Platform independent installer
       	sqlitejdbc	3.8.7.1-> 3.8.11.2  The previous version failed on 32-bit linux systems (#c2o-270).
+      	sqlitejdbc	3.8.11.2->3.16.1
    - New:     #c2o-256: Option to suppress displaying Author in Book Details
    - New:     #c2o-257: Option to display size on download links in HTML catalog
    - Fix:     #c20-262: Download links in HTML catalog do not have 'Type' attribute specified
@@ -111,7 +112,10 @@ v3.6  (in progress)
    - Fix:     #c2o-270: sqlite-jdbc 3.8.7 has a serious bug on 32-bit linux systems.
    - New:     #c20-271: All Books sorting within author should be strictly by title
    - Fix:     #c20-273: Author icon missing on nested tag view 
-   = Fix:     #c2o-275: The "Home' button does not work on Book pages in the HTML catalog.
+   - Fix:     #c2o-275: The "Home' button does not work on Book pages in the HTML catalog.
+   - Change:  #c2o-277: Clicking download links display random text instead of downloading file
+   - Fix:     #c2o-278: Incorrect sorting within tags section
+   - Fix:     #c2o-279: Incorrect sorting within Series section
 
 
 v3.5 (20 October 2015) Rev 370
