@@ -116,6 +116,7 @@ v3.6  (in progress)
    - Change:  #c2o-277: Clicking download links display random text instead of downloading file
    - Fix:     #c2o-278: Incorrect sorting within tags section
    - Fix:     #c2o-279: Incorrect sorting within Series section
+   @ Fix:     #c2'-280: Stop the 'download' attribute' from being present in the XML version of the catalog 
 
 
 v3.5 (20 October 2015) Rev 370

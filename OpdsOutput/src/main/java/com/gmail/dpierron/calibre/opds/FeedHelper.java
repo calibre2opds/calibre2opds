@@ -465,10 +465,11 @@ public class FeedHelper {
     if (Helper.isNotNullOrEmpty(urlType)) {
       link.setAttribute("type", urlType);
       // #c20-277  Set download attribute for acquisition links
-      if (Helper.isNotNullOrEmpty(urlRelation) && urlRelation.equals(RELATION_ACQUISITION)) {
-        String filename = url.substring(url.lastIndexOf('/') + 1);
-        link.setAttribute("download", filename);
-      }
+      // #c2o-280  undo previ/us chande as download attiibute now added via XRL
+      // if (Helper.isNotNullOrEmpty(urlRelation) && urlRelation.equals(RELATION_ACQUISITION)) {
+      //   String filename = url.substring(url.lastIndexOf('/') + 1);
+      //   link.setAttribute("download", filename);
+      // }
     }
 
 

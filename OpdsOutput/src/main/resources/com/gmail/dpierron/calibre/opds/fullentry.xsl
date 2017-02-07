@@ -1,4 +1,4 @@
-<xsl:stylesheet exclude-result-prefixes="opds" version="1.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet exclude-result-prefixes="opds" version="!.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rsl="http://www.w3.org/1999/XSL/Transform">
 <!--
   fullentry.xsl:    This is the transformation applied to the book details files to produce the HTML version
                     In OPDS terms these are the files that are of type "entry"
@@ -151,17 +151,24 @@
                       <xsl:variable name="displaysize">
                           <xsl:value-of select="./@displaysize"/>
                        </xsl:variable>
+                      <rsl:variable name="hrefval">
+                        <xsl:value-of select="./@href"/>
+                      </rsl:variable>
                       <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                         <xsl:element name="a">
                           <xsl:attribute name="href">
-                            <xsl:value-of select="./@href"/>
+                            <xsl:value-of select="$hrefval"/>
                           </xsl:attribute>
                           <xsl:attribute name="type">
                             <xsl:value-of select="./@type"/>
                           </xsl:attribute>
                           <!-- #c20-277  Add 'download' attribute to acquisition links -->
+                          <!-- #c2o-280  Add 'download' attribute by taking name from URL -->
                           <xsl:attribute name="download">
-                            <xsl:value-of select="./@download"/>
+                            <xsl:call-template name="substring-after-last">
+                              <xsl:with-param name="string" select="$hrefval"/>
+                              <xsl:with-param name="char" select="'/'"/>
+                            </xsl:call-template>
                           </xsl:attribute>
                           <xsl:choose>
                             <xsl:when test="string-length(@title) > 0">
@@ -257,4 +264,22 @@
       </body>
     </html>
   </xsl:template>   <!-- entry -->
+
+  <xsl:template name="substring-after-last">
+    <xsl:param name="string"/>
+    <xsl:param name="char"/>
+
+    <xsl:choose>
+      <xsl:when test="contains($string, $char)">
+        <xsl:call-template name="substring-after-last">
+          <xsl:with-param name="string" select="substring-after($string, $char)"/>
+          <xsl:with-param name="char" select="$char"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$string"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
