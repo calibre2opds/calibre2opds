@@ -1,5 +1,5 @@
 @echo OFF
-REM  batch file for runinstalling the Calibre2Opds program.
+REM  batch file for uninstalling the Calibre2Opds program.
 REM
 REM  The checks for Java have been adapted from those used to
 REM  start up the IzPack package builder and then extended.

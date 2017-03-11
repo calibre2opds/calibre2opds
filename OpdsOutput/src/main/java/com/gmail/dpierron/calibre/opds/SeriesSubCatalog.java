@@ -62,7 +62,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           series.add(book.getSeries());
       }
 
-      final Language bookLang = getBooks().get(0).getBookLanguage();
+      final Language bookLang = getBooks().get(0).getFirstBookLanguage();
 
       // sort the series alphabetically
       Collections.sort(series, new Comparator<Series>() {

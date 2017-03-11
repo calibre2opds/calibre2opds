@@ -77,28 +77,28 @@ public class Book extends GenericDataObject   {
       String authorSort,
       BookRating rating) {
     super();
-    assert Helper.isNotNullOrEmpty(id);
+    copyOfBook = null;
     this.id = id;
-    assert Helper.isNotNullOrEmpty(uuid);
     this.uuid = uuid;
 
-    assert Helper.isNotNullOrEmpty(title) : "Unexpected null/empty title for book ID " + id;
-    // Do some (possibly unnecessary) tidyong of title
-    title = title.trim();
-    this.title = title.substring(0, 1).toUpperCase() + title.substring(1);
-    // title_sort is normally set by Calibre autoamtically, but it can be cleared
-    // by users and may not be set by older versions of Calibre.  In these
-    // cases we fall back to using the (mandatory) title field and issue a warning
-    if (Helper.isNullOrEmpty(title_sort)) {
-      logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
-      this.titleSort = DataModel.getNoiseword(getBookLanguage()).removeLeadingNoiseWords(this.title);
-    } else {
-      this.titleSort = title_sort;
-    }
+    if (title != null) {
+      // Do some (possibly unnecessary) tidyong of title
+      title = title.trim();
+      this.title = title.substring(0, 1).toUpperCase() + title.substring(1);
+      // title_sort is normally set by Calibre autoamtically, but it can be cleared
+      // by users and may not be set by older versions of Calibre.  In these
+      // cases we fall back to using the (mandatory) title field and issue a warning
+      if (Helper.isNullOrEmpty(title_sort)) {
+        logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
+        this.titleSort = DataModel.getNoiseword(getFirstBookLanguage()).removeLeadingNoiseWords(this.title);
+      } else {
+        this.titleSort = title_sort;
+      }
       // Small memory optimisation to re-use title object if possible
       // TODO check if unecessary if Java does this automatically?
-    if (this.title.equalsIgnoreCase(this.titleSort)) {
-      this.titleSort = this.title;
+      if (this.title.equalsIgnoreCase(this.titleSort)) {
+        this.titleSort = this.title;
+      }
     }
 
     this.path = path;
@@ -112,7 +112,7 @@ public class Book extends GenericDataObject   {
     this.isbn = isbn;
     this.authorSort = authorSort;
     this.rating = rating;
-    copyOfBook = null;
+
   }
 
   // METHODS and PROPERTIES
@@ -137,19 +137,19 @@ public class Book extends GenericDataObject   {
 
 
   public String getId() {
-    return id;
+    return (copyOfBook == null) ? id : copyOfBook.getId();
   }
 
   public String getUuid() {
-    return uuid;
+    return (copyOfBook == null) ? uuid : copyOfBook.getUuid();
   }
 
   public String getTitle() {
-    return title;
+    return (copyOfBook == null) ? title : copyOfBook.getTitle();
   }
 
   public String getTitle_Sort() {
-    return titleSort;
+    return (copyOfBook == null) ? titleSort : copyOfBook.getTitle_Sort();
   }
 
   /**
@@ -157,8 +157,8 @@ public class Book extends GenericDataObject   {
    * (this is on the assumption it is the most important one)
    * @return
    */
-  public Language getBookLanguage() {
-    if (copyOfBook != null) return copyOfBook.getBookLanguage();
+  public Language getFirstBookLanguage() {
+    if (copyOfBook != null) return copyOfBook.getFirstBookLanguage();
     List<Language> languages = getBookLanguages();
     if ((languages == null) || (languages.size() == 0))
       return null;
@@ -173,8 +173,7 @@ public class Book extends GenericDataObject   {
    * @return
    */
   public List<Language> getBookLanguages() {
-    if (copyOfBook != null) return copyOfBook.getBookLanguages();
-    return bookLanguages;
+    return  (copyOfBook  == null) ?  bookLanguages :   copyOfBook.getBookLanguages();
   }
 
   /**
@@ -193,16 +192,15 @@ public class Book extends GenericDataObject   {
   }
 
   public String getIsbn() {
-    return (isbn == null ? "" : isbn);
+    return (copyOfBook == null) ? (isbn == null ? "" : isbn) :  copyOfBook.getIsbn();
   }
 
   public String getPath() {
-    return path;
+    return  (copyOfBook  == null) ?  path :   copyOfBook.getPath();
   }
 
   public String getComment() {
-    if (copyOfBook != null) return copyOfBook.getComment();
-    return comment;
+    return  (copyOfBook  == null) ?  comment :   copyOfBook.getComment();
   }
 
   /**
@@ -360,6 +358,7 @@ public class Book extends GenericDataObject   {
    * @return The value of the calculated summary field
    */
   public String getSummary(int maxLength) {
+    if  (copyOfBook  != null) return copyOfBook.getSummary(maxLength);
     if (summary == null  || maxLength != summaryMaxLength) {
       summary = "";
       summaryMaxLength = maxLength;
@@ -409,6 +408,7 @@ public class Book extends GenericDataObject   {
    * @return
    */
   public Float getSerieIndex() {
+    if  (copyOfBook  != null) return copyOfBook.getSerieIndex();
     if (Helper.isNotNullOrEmpty(serieIndex)) {
       return  serieIndex;
     }
@@ -418,6 +418,7 @@ public class Book extends GenericDataObject   {
   }
 
   public Date getTimestamp() {
+    if  (copyOfBook  != null) return copyOfBook.getTimestamp();
     // ITIMPI:  Return 'now' if timestamp not set - would 0 be better?
     if (timestamp == null) {
       logger.warn("Date/Time Added not set for book '" + title + "'");
@@ -427,6 +428,7 @@ public class Book extends GenericDataObject   {
   }
 
   public Date getModified() {
+    if  (copyOfBook  != null) return copyOfBook.getModified();
     // ITIMPI:  Return 'now' if modified not set - would 0 be better?
     if (modified == null) {
       logger.warn("Date/Time Modified not set for book '" + title + "'");
@@ -436,6 +438,7 @@ public class Book extends GenericDataObject   {
   }
 
   public Date getPublicationDate() {
+    if  (copyOfBook  != null) return copyOfBook.getPublicationDate();
     if (publicationDate == null) {
       logger.warn("Publication Date not set for book '" + title + "'");
       return ZERO;
@@ -448,10 +451,13 @@ public class Book extends GenericDataObject   {
   }
 
   public boolean hasSingleAuthor() {
+    if  (copyOfBook  != null) return copyOfBook.hasSingleAuthor();
     return (Helper.isNotNullOrEmpty(authors) && authors.size() == 1);
   }
 
   public List<Author> getAuthors() {
+    if (copyOfBook != null) return copyOfBook.getAuthors();
+    assert authors != null && authors.size() > 0;
     return authors;
   }
 
@@ -460,6 +466,7 @@ public class Book extends GenericDataObject   {
    * @return
    */
   public String getListOfAuthors() {
+    if  (copyOfBook  != null) return copyOfBook.getListOfAuthors();
     if (listOfAuthors == null)
       listOfAuthors = Helper.concatenateList(" & ", getAuthors(), "getName");
     return listOfAuthors;
@@ -473,11 +480,11 @@ public class Book extends GenericDataObject   {
   }
 
   public String getAuthorSort() {
-    return authorSort;
+    return  (copyOfBook == null) ? authorSort : copyOfBook.getAuthorSort();
   }
 
   public Publisher getPublisher() {
-    return publisher;
+    return  (copyOfBook == null) ? publisher : copyOfBook.getPublisher();
   }
 
   public void setPublisher(Publisher publisher) {
@@ -486,7 +493,7 @@ public class Book extends GenericDataObject   {
   }
 
   public Series getSeries() {
-    return series;
+    return  (copyOfBook == null) ? series : copyOfBook.getSeries();
   }
 
   public void setSeries(Series value) {
@@ -607,6 +614,7 @@ public class Book extends GenericDataObject   {
   }
 
   public String getEpubFilename() {
+    if (copyOfBook != null) return copyOfBook.getEpubFilename();
     if (! isFlags(FLAG_EPUBFILE_COMPUTED)) {
       getEpubFile();
     }
@@ -614,6 +622,7 @@ public class Book extends GenericDataObject   {
   }
 
   public EBookFile getEpubFile() {
+    if (copyOfBook != null) return copyOfBook.getEpubFile();
     if (!isFlags(FLAG_EPUBFILE_COMPUTED)) {
       epubFile = null;
       epubFileName = null;
@@ -665,7 +674,7 @@ public class Book extends GenericDataObject   {
   /**
    * Make a copy of the book object.
    *
-   * The copy has some special behavior in that most properties are read
+   * The copy has some special behavior in that most properties a@e read
    * from the original, but the tags one is still private.
    *
    * NOTE:  Can pass as null values that are always read from parent!
@@ -674,21 +683,13 @@ public class Book extends GenericDataObject   {
    * @return  Book object that is the copy
    */
   public Book copy() {
-    Book result = new Book(id,uuid,title,titleSort,path,serieIndex,timestamp,modified,publicationDate,isbn,authorSort,rating);
-
-    // Set some private variables that should be invariant in a copy
-    authors = this.authors;
-    series = this.series;
-    publisher = this.publisher;
-    listOfAuthors = this.listOfAuthors;
-    authorSort = this.authorSort;
-    latestFileModifiedDate = this.getLatestFileModifiedDate();
-    epubFile = this.getEpubFile();
-    epubFileName = this.getEpubFilename();
-    customColumnValues = this.customColumnValues;
-    comment = this.comment;
-    summary = this.summary;
-    summaryMaxLength = this.summaryMaxLength;
+    Book result = new Book(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,timestamp,modified,publicationDate,isbn,authorSort,rating);
 
     // The tags aassciated with this entry may be changed, so we make
     // a copy of the ones currently associated
@@ -748,6 +749,7 @@ public class Book extends GenericDataObject   {
   }
 
   public void setCustomColumnValues (List <CustomColumnValue> values) {
+    assert  copyOfBook == null:
     customColumnValues = values;
   }
 

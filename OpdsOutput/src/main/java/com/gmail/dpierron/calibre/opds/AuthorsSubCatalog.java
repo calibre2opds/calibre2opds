@@ -55,6 +55,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     mapOfBooksByAuthor = new HashMap<Author, List<Book>>();
     authors = new LinkedList<Author>();
     for (Book book : getBooks()) {
+      assert book.getAuthors() != null;
       for (Author author : book.getAuthors()) {
         List<Book> currentbooks = mapOfBooksByAuthor.get(author);
         if (currentbooks == null) {
@@ -110,6 +111,10 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
 
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
+    if (listauthors == null || listauthors.size() == 0) {
+      int dummy = 1;
+    }
+    assert (listauthors != null && listauthors.size() > 0);
     String lastName = listauthors.get(0).getLastName().toUpperCase();   // Get name of first entry
     boolean willSplitByLetter = false;
     for (Author author : listauthors) {                                                   // debug
