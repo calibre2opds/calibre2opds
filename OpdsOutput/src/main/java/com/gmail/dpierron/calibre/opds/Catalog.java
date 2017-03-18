@@ -79,6 +79,16 @@ public class Catalog {
     recursivelyZipFiles(null, false, inFolder, outZipFile, false);
   }
 
+  /**
+   * Top level entry to the ZIP process
+   * At his level all files are to be included regardless of file extension
+   *
+   * @param inFolder
+   * @param includeNameOfOriginalFolder
+   * @param outZipFile
+   * @param omitXmlFiles
+   * @throws IOException
+   */
   public void recursivelyZipFiles(File inFolder,
       boolean includeNameOfOriginalFolder,
       File outZipFile,
@@ -87,7 +97,16 @@ public class Catalog {
     recursivelyZipFiles(null, includeNameOfOriginalFolder, inFolder, outZipFile, omitXmlFiles);
   }
 
-  public void recursivelyZipFiles(final String extension,
+  /**
+   *
+   * @param extension
+   * @param includeNameOfOriginalFolder
+   * @param inFolder
+   * @param outZipFile
+   * @param omitXmlFiles
+   * @throws IOException
+   */
+  private void recursivelyZipFiles(final String extension,
       boolean includeNameOfOriginalFolder,
       File inFolder,
       File outZipFile,
@@ -104,12 +123,26 @@ public class Catalog {
     }
   }
 
+  /**
+   * Tne main working function for the ZEP proceerr.
+   *
+   * @param extension
+   * @param currentRelativePath
+   * @param currentDir
+   * @param zipOutputStream
+   * @param omitXmlFiles
+   * @throws IOException
+   */
   private void recursivelyZipFiles(final String extension,
       String currentRelativePath,
       File currentDir,
       ZipOutputStream zipOutputStream,
       final boolean omitXmlFiles)
       throws IOException {
+
+    if (currentDir == null) {
+      int dummy = 1;
+    }
     String[] files = currentDir.list(new FilenameFilter() {
 
       public boolean accept(File dir, String name) {
@@ -1275,7 +1308,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       zipFile.delete();     // Remove any existing ZIP file
       if (currentProfile.getZipCatalog()) {
         logger.debug("STARTING: ZIP Catalog");
-        recursivelyZipFiles(CatalogManager.getGenerateFolder(), false, zipFile, currentProfile.getZipOmitXml());
+        recursivelyZipFiles(CatalogManager.getCatalogFolder(), false, zipFile, currentProfile.getZipOmitXml());
         if (CatalogManager.getTargetFolder() != null  && currentProfile.getCopyToDatabaseFolder()) {
           Helper.copy(zipFile,new File(currentProfile.getDatabaseFolder(),zipFilename));
         }

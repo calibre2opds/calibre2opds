@@ -139,7 +139,7 @@ public class CatalogManager {
     // TODO  Decide if these should be conditional or just done every time!
     if (htmlManager == null)      htmlManager = new HtmlManager();
     if (thumbnailManager == null) thumbnailManager = ImageManager.newThumbnailManager();
-    if (coverManager==null)       coverManager = ImageManager.newCoverManager();
+    if (coverManager==null) coverManager = ImageManager.newCoverManager();
     if (securityManager==null)    securityManager = new SecurityManager();
     if (currentProfile==null)     currentProfile = ConfigurationManager.getCurrentProfile();
     if (bookDateFormat==null)     bookDateFormat = currentProfile.getPublishedDateAsYear() ? new SimpleDateFormat("yyyy") : SimpleDateFormat.getDateInstance(DateFormat.LONG,currentProfile.getLanguage());
@@ -456,7 +456,8 @@ public class CatalogManager {
     assert file != null : "Program Error: attempt to add 'null' file to image map";
     assert (file.getName().equals("c2o_thumbnail.jpg")
          || file.getName().equals("c2o_resizedcover.jpg")
-         || file.getName().equals(Constants.CALIBRE_COVER_FILENAME)):
+         || file.getName().equals(Constants.CALIBRE_COVER_FILENAME)
+         || file.getName().equals(Constants.DEFAULT_IMAGE_FILENAME)):
           "Program Error: Unexpected name '" + file.getName() + "' when trying to add image to map";
     if (! mapOfImagesToCopy.containsKey(key)) {
       mapOfImagesToCopy.put(key, file);
