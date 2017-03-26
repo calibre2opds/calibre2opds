@@ -52,8 +52,6 @@
         <xsl:text disable-output-escaping="yes">&lt;title&gt;</xsl:text>
           <xsl:value-of select="$libraryTitle"/>
         <xsl:text disable-output-escaping="yes">&lt;/title&gt;</xsl:text>
-        <script type="text/javascript">function showHide(id, btn) { var e = document.getElementById(id); if (e.style.display == 'none') { e.style.display = 'block'; } else { e.style.display = 'none'; } } </script>
-        <script type="text/javascript">function getBaseURL() {var url = location.href;var baseURL = url.substring(0, url.lastIndexOf('/'));if (baseURL.indexOf('http://localhost') != -1) {var url = location.href;var pathname = location.pathname;var index1 = url.indexOf(pathname);var index2 = url.indexOf("/", index1 + 1);var baseLocalUrl = url.substr(0, index2);return baseLocalUrl + "/";} else {return baseURL + "/";}}</script>
       </head>
       <body style="">
 
@@ -71,7 +69,7 @@
           <h1><xsl:value-of select="$libraryTitle"/></h1>
         </div>
 
-        <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
+        <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">
           Browser not compatible.
         </iframe>
 
@@ -248,14 +246,16 @@
                         </xsl:attribute>
                         <xsl:value-of select="@title"/>
                       </xsl:element>
-                    <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
+                    <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>
                   </xsl:for-each>
                 </ul>
               </xsl:if>
             </div>
           </div>
       </div>
-
+        <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">
+          Browser not compatible.
+        </iframe>
       <xsl:text disable-output-escaping="yes">&lt;div id="footer"&gt;</xsl:text>
         <!-- Support iWebKit by sending them traffic -->
         <a class="noeffect" href="http://snippetspace.com">Powered by iWebKit</a>

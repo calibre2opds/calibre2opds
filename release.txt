@@ -119,7 +119,9 @@ v3.6  (in progress)
    - Fix:     #c2o-280: Stop the 'download' attribute' from being present in the XML version of the catalog
    - Fix:     #c2o-281: UNEXPECTED FATAL ERROR when processing Tags catalog
    - Fix:     #c2o-282: Optimizer active causes files to be omitted from zip of library 
-   - Fix:     #c2o-283: Assert failure when including images in catalog 
+   - Fix:     #c2o-283: Assert failure when including images in catalog
+   = Fix:     #c2o-284: Display glitches in HTML catalogs
+   - Fix:     #c2o-286: Change icon/image of confirmation popup after saving changes to configuration
 
 
 v3.5 (20 October 2015) Rev 370

@@ -343,53 +343,51 @@
             </div>
           </xsl:if>
         </xsl:if>
+        
         <hr/>
 
-        <div class="thanks">
-          <small>
-            <p class="dateGenerated">
-            <xsl:value-of select="$i18n.dateGenerated"/>
-            </p>
-              <!--
-              <xsl:value-of select="$programName"/> v <xsl:value-of select="$programVersion"/>
-              <br/>
-              -->
-            <xsl:if test="string-length($programVersion) > 0">
-              <br/><xsl:value-of select="$intro.goal"/>
-              <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
+        <!-- Now for the footer  fields -->
+
+          <xsl:choose> 
+            <!-- top level catalog entry -->
+            <xsl:when test="string-length($programName) > 0">
+              <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">no iframe</iframe>
+              <small>
+              <div class="thanks">
+                <br/><xsl:value-of select="$intro.goal"/>
+                <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
                   <xsl:value-of select="$intro.wiki.url"/></a>
-              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
+                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
                   <xsl:value-of select="$intro.userguide"/> </a>
-              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
+                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
                   <xsl:value-of select="$intro.developerguide"/> </a>
-              <br/><br/><xsl:value-of select="$intro.team.title"/>
-              <ul>
-                <li>
-                  <xsl:value-of select="$intro.team.list1"/>
-                </li>
-                <xsl:if test="string-length(intro.team.list2) > 1">
-                  <li>
-                    <xsl:value-of select="$intro.team.list2"/>
-                  </li>
+                <br/><br/><xsl:value-of select="$intro.team.title"/>
+                <ul>
+                 <li><xsl:value-of select="$intro.team.list1"/></li>
+                 <xsl:if test="string-length(intro.team.list2) > 1">
+                    <li><xsl:value-of select="$intro.team.list2"/></li>
+                  </xsl:if>
+                  <xsl:if test="string-length(intro.team.list3) > 1">
+                    <li><xsl:value-of select="$intro.team.list3"/></li>
+                  </xsl:if>
+                  <xsl:if test="string-length(intro.team.list4) > 1">
+                    <li><xsl:value-of select="$intro.team.list4"/></li>
+                  </xsl:if>
+                </ul>
+                <xsl:if test="string-length(intro.thanks.1) > 1">
+                  <xsl:value-of select="$intro.thanks.1"/>
+                  <br/><xsl:value-of select="$intro.thanks.2"/>
                 </xsl:if>
-                <xsl:if test="string-length(intro.team.list3) > 1">
-                  <li>
-                    <xsl:value-of select="$intro.team.list3"/>
-                  </li>
-                </xsl:if>
-                <xsl:if test="string-length(intro.team.list4) > 1">
-                  <li>
-                    <xsl:value-of select="$intro.team.list4"/>
-                  </li>
-                </xsl:if>
-              </ul>
-              <xsl:if test="string-length(intro.thanks.1) > 1">
-                <xsl:value-of select="$intro.thanks.1"/>
-                <br/><xsl:value-of select="$intro.thanks.2"/>
-              </xsl:if>
-            </xsl:if>
-          </small>
-        </div>
+              </div>
+                      </small>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- not top level catalog entry -->
+              <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no"  hieght="35" width="480">No iframe</iframe>
+            </xsl:otherwise>
+          </xsl:choose>
+
+
         <div id="footer">
           <!-- Support iWebKit by sending them traffic -->
           <a class="noeffect" href="http://snippetspace.com">Powered by iWebKit</a>

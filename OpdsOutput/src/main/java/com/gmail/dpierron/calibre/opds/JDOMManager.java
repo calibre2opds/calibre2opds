@@ -63,16 +63,6 @@ public class JDOMManager {
         headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.HEADER_XSL)));
         setParametersOnCatalog(headerTransformer);
         setIntroParameters(headerTransformer);
-        // Add book count if not generating ALl Books (which gives count if present)
-        // headerTransformer.setParameter("programName", Constants.PROGNAME);
-        // headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
- //        headerTransformer.setParameter("bookCount", Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()));
-         String dateGenerated =
-             DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
-        headerTransformer.setParameter("i18n.dateGenerated",
-             Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
-             + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
-             + "  ("+ Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()) +")");
       } catch (TransformerConfigurationException e) {
         logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
         headerTransformer = null;
@@ -145,6 +135,16 @@ public class JDOMManager {
 //          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
 //      catalogTransformer.setParameter("i18n.dateGenerated", Localization.Main.getText("i18n.dateGenerated", dateGenerated));
 //    }
+    // Add book count if not generating ALl Books (which gives count if present)
+    // headerTransformer.setParameter("programName", Constants.PROGNAME);
+    // headerTransformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
+    //        headerTransformer.setParameter("bookCount", Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()));
+    String dateGenerated =
+        DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
+    String sizeText = "("+ Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()) +")";
+    catalogTransformer.setParameter("i18n.dateGenerated",
+        Localization.Main.getText("i18n.dateGenerated",dateGenerated)
+        + " " + sizeText);
   }
 
   public static Transformer getCatalogTransformer() {
@@ -206,15 +206,10 @@ public class JDOMManager {
    */
   private static Transformer setIntroParameters (Transformer transformer) {
     if (transformer != null) {
-      String dateGenerated =
-          DateFormat.getDateInstance(DateFormat.DEFAULT, ConfigurationManager.getCurrentProfile().getLanguage()).format(new Date());
-      transformer.setParameter("i18n.dateGenerated",
-          Constants.PROGNAME + " " + Constants.PROGVERSION + " " + Constants.BZR_VERSION + ": "
-              + Localization.Main.getText("i18n.dateGenerated",dateGenerated)
-              + "  ("+ Localization.Main.getText("bookword.many", DataModel.getListOfBooks().size()) +")");
-      boolean includeAbout =ConfigurationManager.getCurrentProfile().getIncludeAboutLink();
+      boolean includeAbout = ConfigurationManager.getCurrentProfile().getIncludeAboutLink();
       transformer.setParameter("programName", Constants.PROGNAME);
-      transformer.setParameter("programVersion", includeAbout ? Constants.PROGVERSION + Constants.BZR_VERSION : "");
+      // transformer.setParameter("programVersion", includeAbout ? Constants.PROGVERSION + Constants.BZR_VERSION : "");
+      transformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
       // transformer.setParameter("i18n.intro.line1", Localization.Main.getText("intro.line1"));
       transformer.setParameter("intro.goal", includeAbout ? Localization.Main.getText("intro.goal") : "");
       transformer.setParameter("intro.wiki.title", includeAbout ? Localization.Main.getText("intro.wiki.title") : "");

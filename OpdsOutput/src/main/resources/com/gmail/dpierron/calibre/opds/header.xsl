@@ -35,11 +35,13 @@
 
 
   <xsl:template match="/">
+    <small>
     <p class="dateGenerated">
-      <small>
-        <xsl:value-of select="$i18n.dateGenerated"/>
-      </small>
+      <xsl:value-of select="$i18n.dateGenerated"/>: <a href="{$intro.wiki.url}"><xsl:value-of select="$programName"/></a>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="$programVersion"/>
     </p>
+    </small>
   </xsl:template>
 
 </xsl:stylesheet>

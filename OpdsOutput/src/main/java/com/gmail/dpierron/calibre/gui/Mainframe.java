@@ -1293,7 +1293,7 @@ public class Mainframe extends javax.swing.JFrame {
    private void saveConfiguration() {
      storeProfileValues();
      String message = Localization.Main.getText("gui.info.saved");
-     JOptionPane.showMessageDialog(this, message, "", JOptionPane.OK_OPTION);
+     JOptionPane.showMessageDialog(this, message, "", JOptionPane.INFORMATION_MESSAGE);
    }
 
 
