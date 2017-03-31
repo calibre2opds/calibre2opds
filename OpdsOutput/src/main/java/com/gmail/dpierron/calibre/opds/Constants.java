@@ -31,6 +31,7 @@ public class Constants {
   public final static String PARENT_PATH_PREFIX = "../";
   public final static String CURRENT_PATH_PREFIX = "./";
   public final static String FOLDER_SEPARATOR = "/";
+  public final static String EXTENSION_SEPARATOR = ".";
   public final static String LEVEL_SEPARATOR = "!";
   public final static String TYPE_SEPARATOR = "_";
   public final static String URN_SEPARATOR = ":";
@@ -51,6 +52,7 @@ public class Constants {
   public final static String FEATURED_TYPE = "featured";
   public final static String CUSTOM_TYPE = "custom";
   public final static String XML_EXTENSION = ".xml";
+  public final static String XSL_EXTENSION = ".xsl";
   public final static String HTML_EXTENSION = ".html";
   public final static String JPG_EXTENSION = ".jpg";
   public final static String AUTHOREMAIL = "dpierron+calibre2opds@gmail.com";
@@ -67,9 +69,9 @@ public class Constants {
   public final static String DEFAULT_IMAGE_FILENAME = "default_image.jpg";
   public final static String DEFAULT_THUMBNAIL_FILENAME = "thumbnail.jpg";
   public final static String CATALOG_XSL = "catalog.xsl";
-  public final static String HEADER_XSL = "header.xsl";
   public final static String FULLENTRY_XSL = "fullentry.xsl";
-
+  public final static String HEADER_XSL = "header.xsl";
+  public final static String GENERATED_XSL = "generated.xsl";
   // URL's for links from Help menu
   public final static String HOME_URL = "http://calibre2opds.com/";
   // public final static String PAYPAL_DONATION = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LJJYRJBYCW8EU";
@@ -146,6 +148,7 @@ public class Constants {
       CATALOG_XSL,
       FULLENTRY_XSL,
       HEADER_XSL,
+      GENERATED_XSL,
       // External image files for catalog sections
       Icons.ICONFILE_RECENT,
       Icons.ICONFILE_AUTHORS,

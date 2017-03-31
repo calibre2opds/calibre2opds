@@ -1,19 +1,5 @@
 <xsl:stylesheet exclude-result-prefixes="opds" version="1.0" xmlns:opds="http://www.w3.org/2005/Atom"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <!--
-      The purpose of this template is to act as a holder for allowing the user to include custom
-      headers on each page of a generaded catalog.   The default template provides an empty header.
-      The reason that the header.html is provided via a xsl transform is so that the user has
-      access to the runtime parmaters passed in in case any of these are used in the content
-      that is to be included.
-
-      If the user replaces this template with their own custom one then they may also need to adjust
-      the following files:
-          catalog.xsl
-          fullentry.xsl
-      and change the attributes of the first <iframe> tag to set a size appropriate to hold their
-      custom header content.
-      -->
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="html" version="4.01"/>
   <xsl:output doctype-public="-//W3c//DTD html 4.01//EN"/>
   <xsl:output doctype-system="http://www.w3c.org/tr/html4/strict.dtd"/>
@@ -50,6 +36,11 @@
 
   <xsl:template match="/">
     <small>
+    <p class="dateGenerated">
+      <xsl:value-of select="$i18n.dateGenerated"/>: <a href="{$intro.wiki.url}" target="_blank"><xsl:value-of select="$programName"/></a>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="$programVersion"/>
+    </p>
     </small>
   </xsl:template>
 

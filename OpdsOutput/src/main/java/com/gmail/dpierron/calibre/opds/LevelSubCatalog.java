@@ -3,6 +3,7 @@ package com.gmail.dpierron.calibre.opds;
  * Generate a complete sub-catalog level
  */
 
+import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.configuration.CustomCatalogEntry;
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.*;
@@ -409,6 +410,7 @@ public class LevelSubCatalog extends SubCatalog {
     /* Custom Catalogs */
 
     if (atTopLevel) {
+
       // TODO:  Need to reset data model to allow all books at this point!
       generateCustomCatalogs(pBreadcrumbs, feed, inSubDir, false);
     }

@@ -36,7 +36,6 @@ public class JDOMManager {
   private static TransformerFactory transformerFactory;
   private static Transformer bookFullEntryTransformer;
   private static Transformer catalogTransformer;
-  private static Transformer headerTransformer;
   private static Transformer mainTransformer;
   private static SAXBuilder sb;
 
@@ -47,7 +46,6 @@ public class JDOMManager {
     transformerFactory = null;
     bookFullEntryTransformer = null;
     catalogTransformer = null;
-    headerTransformer = null;
     mainTransformer = null;
     sb = null;
   }
@@ -57,16 +55,15 @@ public class JDOMManager {
    *
    * @return
    */
-  public static Transformer getHeaderTransformer() {
-    if (headerTransformer == null) {
-      try {
-        headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.HEADER_XSL)));
-        setParametersOnCatalog(headerTransformer);
-        setIntroParameters(headerTransformer);
-      } catch (TransformerConfigurationException e) {
-        logger.error("getHeaderTransformer(): Error while configuring header transformer", e);
-        headerTransformer = null;
-      }
+  public static Transformer getIncludeTransformer(String xslname) {
+    Transformer headerTransformer;
+    try {
+      headerTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(xslname)));
+      setParametersOnCatalog(headerTransformer);
+      setIntroParameters(headerTransformer);
+    } catch (TransformerConfigurationException e) {
+      logger.error("getIncludeTransformer(): Error while configuring header transformer", e);
+      headerTransformer = null;
     }
     return headerTransformer;
   }
@@ -146,6 +143,24 @@ public class JDOMManager {
         Localization.Main.getText("i18n.dateGenerated",dateGenerated)
         + " " + sizeText);
   }
+  /**
+   * set the transformer that is used for the top level page.
+   *
+   * @return
+   */
+  public static Transformer getMainCatalogTransformer() {
+    if (mainTransformer == null) {
+      try {
+        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.CATALOG_XSL)));
+        setParametersOnCatalog(mainTransformer);
+        setIntroParameters(mainTransformer);
+      } catch (TransformerConfigurationException e) {
+        logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e);
+        mainTransformer = null;
+      }
+    }
+    return mainTransformer;
+  }
 
   public static Transformer getCatalogTransformer() {
     if (catalogTransformer == null) {
@@ -177,25 +192,6 @@ public class JDOMManager {
       }
     }
     return bookFullEntryTransformer;
-  }
-
-  /**
-   * set the transformer that is used for the top level page.
-   *
-   * @return
-   */
-  public static Transformer getMainCatalogTransformer() {
-    if (mainTransformer == null) {
-      try {
-        mainTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.CATALOG_XSL)));
-        setParametersOnCatalog(mainTransformer);
-        setIntroParameters(mainTransformer);
-      } catch (TransformerConfigurationException e) {
-        logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e);
-        mainTransformer = null;
-      }
-    }
-    return mainTransformer;
   }
 
   /**
@@ -234,6 +230,11 @@ public class JDOMManager {
     return transformer;
   }
 
+  /**
+   * Code common to setting up all transformer factories
+   *
+   * @return
+   */
   public static TransformerFactory getTransformerFactory() {
     if (transformerFactory == null) {
       transformerFactory = TransformerFactory.newInstance();

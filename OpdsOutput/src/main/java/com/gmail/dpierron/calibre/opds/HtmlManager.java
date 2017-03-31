@@ -54,7 +54,8 @@ public class HtmlManager {
         Transformer transformer = null;
         switch (feedType) {
           case MainCatalog:
-            generateHeaderHtml(document, outputFile);
+            generateIncludedHtml(document, CatalogManager.getGenerateFolder(), Constants.HEADER_XSL);
+            generateIncludedHtml(document, CatalogManager.getGenerateFolder(), Constants.GENERATED_XSL);
             transformer = JDOMManager.getMainCatalogTransformer();
             break;
 
@@ -87,23 +88,25 @@ public class HtmlManager {
   }
 
   /**
-   *   TODO:  Decide if this function is needed at all!
+   *   This routine is sued to generate files that have no .xml file, but only a .xsl file.
+   *   It is used for files included by other html files to avoid repreating the contents;
+   *     - header.html
+   *     - generated.html
    */
-  private static void generateHeaderHtml(Document document, File outputFile) throws IOException {
+  public static void generateIncludedHtml(Document document, File outputPath, String xslname) throws IOException {
     if (ConfigurationManager.getCurrentProfile().getGenerateHtml()) {
       FileOutputStream fos = null;
       try {
         JDOMSource source = new JDOMSource(document);
-        String xmlFilename = outputFile.getParentFile().getAbsolutePath();
-        File htmlFile = new File(xmlFilename + File.separator + "header.html");
+        File htmlFile = new File(outputPath,getHtmlFilename(xslname));
         fos = new FileOutputStream(htmlFile);
         StreamResult streamResult = new StreamResult(fos);
         try {
           Transformer transformer;
-          transformer = JDOMManager.getHeaderTransformer();
+          transformer = JDOMManager.getIncludeTransformer(xslname);
           transformer.transform(source, streamResult);
         } catch (TransformerException e) {
-          logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
+          logger.error(Localization.Main.getText("error.cannotTransform", xslname), e);
         }
       } finally {
         if (fos != null)
@@ -114,7 +117,7 @@ public class HtmlManager {
 
   /**
    * create the HTML filename.
-   * Handle the case of both no file extension, and existing XML one.
+   * Handle the case of both no file extension, and existing XML/XSL one.
    *
    * @param filename
    * @return
@@ -124,9 +127,9 @@ public class HtmlManager {
             "Program error: Attempt to create HTML filename for empty/null filename";
     assert ! filename.startsWith(ConfigurationManager.getCurrentProfile().getCatalogFolderName()):
             "Program Error: Filename should not include catalog folder" ;
-    assert filename.endsWith(Constants.XML_EXTENSION) :
-            "Program Error: Filename '" + filename + "' does not end with " + Constants.XML_EXTENSION;
-    int pos = filename.lastIndexOf(Constants.XML_EXTENSION);
+    assert filename.endsWith(Constants.XML_EXTENSION) || filename.endsWith(Constants.XSL_EXTENSION) :
+            "Program Error: Filename '" + filename + "' does not end with " + Constants.XML_EXTENSION + " or " +  Constants.XML_EXTENSION;
+    int pos = filename.lastIndexOf(Constants.EXTENSION_SEPARATOR);
     // if (pos == -1) pos = filename.length();
     return filename.substring(0, pos) + Constants.HTML_EXTENSION;
   }

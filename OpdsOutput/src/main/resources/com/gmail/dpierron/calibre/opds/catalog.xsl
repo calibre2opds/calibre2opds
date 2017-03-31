@@ -1,7 +1,7 @@
 <xsl:stylesheet exclude-result-prefixes="opds" version="2.0" xmlns:opds="http://www.w3.org/2005/Atom" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <!--
   catalog.xsl:    This is the transformation applied to the catalog files to produce the HTML version
-                  In OPDS terms these are the files that are of type "feed2"
+                  In OPDS terms these are the files that are of type "feed"
 -->
   <xsl:output method="html" version="4.01"/>
   <xsl:output doctype-public="-//W3c//DTD html 4.01//EN"/>
@@ -71,21 +71,15 @@
       </head>
       <body style="">
 
-
-        <!--
+        <!-- Custom Header fo those who want to add one -->
         <xsl:choose>
           <xsl:when test="string-length($programName) > 0">
-            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-              Browser not compatible.
-            </iframe>
+            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">Browser not compatible.</iframe>
           </xsl:when>
           <xsl:otherwise>
-            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35">
-              Browser not compatible.
-            </iframe>
+            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">Browser not compatible.</iframe>
           </xsl:otherwise>
         </xsl:choose>
-        -->
 
         <div id="topbar">
           <div id="title">
@@ -348,44 +342,50 @@
 
         <!-- Now for the footer  fields -->
 
-          <xsl:choose> 
-            <!-- top level catalog entry -->
-            <xsl:when test="string-length($programName) > 0">
-              <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">no iframe</iframe>
-              <small>
-              <div class="thanks">
-                <br/><xsl:value-of select="$intro.goal"/>
-                <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
-                  <xsl:value-of select="$intro.wiki.url"/></a>
-                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
-                  <xsl:value-of select="$intro.userguide"/> </a>
-                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
-                  <xsl:value-of select="$intro.developerguide"/> </a>
-                <br/><br/><xsl:value-of select="$intro.team.title"/>
-                <ul>
-                 <li><xsl:value-of select="$intro.team.list1"/></li>
-                 <xsl:if test="string-length(intro.team.list2) > 1">
-                    <li><xsl:value-of select="$intro.team.list2"/></li>
-                  </xsl:if>
-                  <xsl:if test="string-length(intro.team.list3) > 1">
-                    <li><xsl:value-of select="$intro.team.list3"/></li>
-                  </xsl:if>
-                  <xsl:if test="string-length(intro.team.list4) > 1">
-                    <li><xsl:value-of select="$intro.team.list4"/></li>
-                  </xsl:if>
-                </ul>
-                <xsl:if test="string-length(intro.thanks.1) > 1">
-                  <xsl:value-of select="$intro.thanks.1"/>
-                  <br/><xsl:value-of select="$intro.thanks.2"/>
+        <!-- Generation summary details -->
+        <xsl:choose>
+          <xsl:when test="string-length($programName) > 0">
+            <iframe src="generated.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480"></iframe>
+          </xsl:when>
+          <xsl:otherwise>
+            <iframe src="../generated.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480"></iframe>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <!-- Project details -->
+        <xsl:choose>
+          <!-- top level catalog entry only -->
+          <xsl:when test="string-length($programName) > 0">
+            <small>
+            <div class="thanks">
+              <br/><xsl:value-of select="$intro.goal"/>
+              <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
+                <xsl:value-of select="$intro.wiki.url"/></a>
+              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
+                <xsl:value-of select="$intro.userguide"/> </a>
+              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
+                <xsl:value-of select="$intro.developerguide"/> </a>
+              <br/><br/><xsl:value-of select="$intro.team.title"/>
+              <ul>
+               <li><xsl:value-of select="$intro.team.list1"/></li>
+               <xsl:if test="string-length(intro.team.list2) > 1">
+                  <li><xsl:value-of select="$intro.team.list2"/></li>
                 </xsl:if>
-              </div>
-                      </small>
-            </xsl:when>
-            <xsl:otherwise>
-              <!-- not top level catalog entry -->
-              <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no"  hieght="35" width="480">No iframe</iframe>
-            </xsl:otherwise>
-          </xsl:choose>
+                <xsl:if test="string-length(intro.team.list3) > 1">
+                  <li><xsl:value-of select="$intro.team.list3"/></li>
+                </xsl:if>
+                <xsl:if test="string-length(intro.team.list4) > 1">
+                  <li><xsl:value-of select="$intro.team.list4"/></li>
+                </xsl:if>
+              </ul>
+              <xsl:if test="string-length(intro.thanks.1) > 1">
+                <xsl:value-of select="$intro.thanks.1"/>
+                <br/><xsl:value-of select="$intro.thanks.2"/>
+              </xsl:if>
+            </div>
+                    </small>
+          </xsl:when>
+        </xsl:choose>
 
 
         <div id="footer">
