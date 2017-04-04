@@ -20,7 +20,6 @@ import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.commons.io.FileUtils;
 import org.jdom2.Element;
 
 import java.io.File;
@@ -769,9 +768,22 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
 
   /**
-   * Add links for further information about a book
+   * Helper element for external links.
+   * Controls whether links open in new window
    *
-   * TODO Allow both titles and URL's to be customisable
+   * @param entry
+   * @param url
+   */
+  private void addExternalLinksHelper(Element entry, String url, String title) {
+    Element urlElement;
+    urlElement = FeedHelper.getRelatedHtmlLink(url, title);
+    if (currentProfile.getNewWindowForExternalLinks()) {
+      urlElement.setAttribute("target", "_blank");
+    }
+    entry.addContent(urlElement);
+  }
+  /**
+   * Add links for further information about a book
    *
    * Used when constructing the Book Details pages
    *
@@ -779,119 +791,133 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param book
    */
   private void addExternalLinks(Element entry, Book book) {
-    if (currentProfile.getGenerateExternalLinks()) {
-      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: ADDING external links to book " + book);
-      String url;
-      // add the GoodReads book link
-      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the GoodReads book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = currentProfile.getGoodreadIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads")
-          ));
+    if (! currentProfile.getGenerateExternalLinks()) {
+      return;
+    }
+    if (logger.isTraceEnabled()) {
+      logger.trace("addExternalLinks: ADDING external links to book " + book);
+      if (currentProfile.getNewWindowForExternalLinks()) logger.trace("addExternalLinks: (using new browser windows for the links)") ;
+    }
+    String url;
+    String title;
 
+    // ADD BOOK related links
+
+    // add the GoodReads book link
+    // We preferentially use the option to add via ISBN if we can
+    if (Helper.isNotNullOrEmpty(book.getIsbn())
+    && (Helper.isNotNullOrEmpty(currentProfile.getGoodreadIsbnUrl()) || Helper.isNotNullOrEmpty(currentProfile.getGoodreadReviewIsbnUrl()))) {
+      title=Localization.Main.getText("bookentry.goodreads");
+      url = currentProfile.getGoodreadIsbnUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+          if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the GoodReads ISBN book link");
+          url = MessageFormat.format(url, book.getIsbn());
+          addExternalLinksHelper(entry, url, title);
+        }
         url = currentProfile.getGoodreadReviewIsbnUrl();
         if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(
-              FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.goodreads.review")));
-      } else {
-        url = currentProfile.getGoodreadTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper
-              .getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle())), Localization.Main.getText("bookentry.goodreads")
-              ));
-      }
-
-      // add the Wikipedia book link
-      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Wikipedia book link");
-      url = currentProfile.getWikipediaUrl();
+          if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the GoodReads Review ISBN book link");
+          title = Localization.Main.getText("bookentry.goodreads.review");
+          url= MessageFormat.format(url, book.getIsbn());
+          addExternalLinksHelper(entry, url, title);
+    } else {
+      url = currentProfile.getGoodreadTitleUrl();
       if (Helper.isNotNullOrEmpty(url)) {
-        entry.addContent(FeedHelper.getRelatedHtmlLink(
-            MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(book.getTitle()
-            )),
-            Localization.Main.getText("bookentry.wikipedia")));
-      }
-      // Add Librarything book link
-      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: Add Librarything book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = currentProfile.getLibrarythingIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(
-              FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.librarything")));
-      } else if (Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = currentProfile.getLibrarythingTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName())),
-              Localization.Main.getText("bookentry.librarything")));
-      }
-
-      // Add Amazon book link
-      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: Add Amazon book link");
-      if (Helper.isNotNullOrEmpty(book.getIsbn())) {
-        url = currentProfile.getAmazonIsbnUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, book.getIsbn()), Localization.Main.getText("bookentry.amazon")));
-      } else if (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle())) {
-        url = currentProfile.getAmazonTitleUrl();
-        if (Helper.isNotNullOrEmpty(url))
-          entry.addContent(FeedHelper.getRelatedHtmlLink(
-              MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName())),
-              Localization.Main.getText("bookentry.amazon")));
-      }
-
-      // Author Links
-      if (currentProfile.getIncludeAuthorInBookDetails() && book.hasAuthor()) {
-        // add the GoodReads author link
-        if (logger.isTraceEnabled())  logger.trace("addExternalLinksy: add the GoodReads author link");
-        for (Author author : book.getAuthors()) {
-          url = currentProfile.getGoodreadAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.goodreads.author", author.getName())));
-        }
-
-        // add the Wikipedia author link
-        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Wikipedia author link");
-        for (Author author : book.getAuthors()) {
-          url = currentProfile.getWikipediaUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(currentProfile.getWikipediaUrl(),
-                currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.wikipedia.author", author.getName())));
-        }
-
-        // add the LibraryThing author link
-        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the LibraryThing author link");
-        for (Author author : book.getAuthors()) {
-          url = currentProfile.getLibrarythingAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.getRelatedHtmlLink(
-                // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
-                MessageFormat.format(currentProfile.getLibrarythingAuthorUrl(),
-                    FeedHelper.urlEncode(author.getSort().replace(",", "").replace(" ", ""))),
-                Localization.Main.getText("bookentry.librarything.author", author.getName())));
-        }
-
-        // add the Amazon author link
-        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Amazon author link");
-        for (Author author : book.getAuthors()) {
-          url = currentProfile.getAmazonAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.amazon.author", author.getName())));
-        }
-
-        // add the ISFDB author link
-        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the ISFDB author link");
-        for (Author author : book.getAuthors()) {
-          url = currentProfile.getIsfdbAuthorUrl();
-          if (Helper.isNotNullOrEmpty(url))
-            entry.addContent(FeedHelper.getRelatedHtmlLink(MessageFormat.format(url, FeedHelper.urlEncode(author.getName())),
-                Localization.Main.getText("bookentry.isfdb.author", author.getName())));
-        }
+        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the GoodReads Title book link");
+        title = Localization.Main.getText("bookentry.goodreads");
+        url = MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()));
+        addExternalLinksHelper(entry, url, title);
       }
     }
+   // add the Wikipedia book link
+    url = currentProfile.getWikipediaUrl();
+    if (Helper.isNotNullOrEmpty(url)) {
+      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Wikipedia book link");
+      title = Localization.Main.getText("bookentry.wikipedia");
+      url = MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(book.getTitle()));
+      addExternalLinksHelper(entry, url, title);
+    }
+    // Add Librarything book link
+  // We use ISBN if possible, otherwise title+author
+    title=Localization.Main.getText("bookentry.librarything");
+    url = currentProfile.getLibrarythingIsbnUrl();
+    if (Helper.isNotNullOrEmpty(book.getIsbn()) && Helper.isNotNullOrEmpty(url)) {
+      if (logger.isTraceEnabled())  logger.trace("addExternalLinks: Add Librarything ISBN book link");
+      url = MessageFormat.format(url, book.getIsbn());
+      addExternalLinksHelper(entry, url, title);
+    } else {
+      url =currentProfile.getLibrarythingTitleUrl();
+      if (Helper.isNotNullOrEmpty(url)) {
+        if (logger.isTraceEnabled())  logger.trace("addExternalLinks: Add Librarything TITLE+Author book link");
+        url = MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName()));
+        addExternalLinksHelper(entry, url, title);
+      }
+    }
+    // Add Amazon book link
+    // We use ISBN if possible, otherwise title+author
+    url = currentProfile.getAmazonIsbnUrl();
+    title =Localization.Main.getText("bookentry.amazon");
+    if (Helper.isNotNullOrEmpty(book.getIsbn()) && Helper.isNotNullOrEmpty(url)) {
+      if (logger.isTraceEnabled()) logger.trace("addExternalLinks: Add Amazon ISBN book link");
+      url = MessageFormat.format(url, book.getIsbn());
+      addExternalLinksHelper(entry, url, title);
+    } else {
+      url = currentProfile.getAmazonTitleUrl();
+      if (Helper.isNotNullOrEmpty(url) && (book.getMainAuthor() != null && Helper.isNotNullOrEmpty(book.getTitle()))) {
+        if (logger.isTraceEnabled()) logger.trace("addExternalLinks: Add Amazon TITLE=author book link");
+        url = MessageFormat.format(url, FeedHelper.urlEncode(book.getTitle()), FeedHelper.urlEncode(book.getMainAuthor().getName()));
+        addExternalLinksHelper(entry, url, title);
+      }
+    }
+
+    // ADD AUTHOR related Links
+    // Do for each author in turn
+
+    if (currentProfile.getIncludeAuthorInBookDetails() && book.hasAuthor()) {
+      for (Author author : book.getAuthors()) {
+        // add the GoodReads author link
+        url = currentProfile.getGoodreadAuthorUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+          if (logger.isTraceEnabled())  logger.trace("addExternalLinksy: add the GoodReads author link for " + author.getName());
+          title = Localization.Main.getText("bookentry.goodreads.author", author.getName());
+          url = MessageFormat.format(url, FeedHelper.urlEncode(author.getName()));
+          addExternalLinksHelper(entry, url, title);
+        }
+        // add the Wikipedia author link
+        url = currentProfile.getWikipediaUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+          if (logger.isTraceEnabled()) logger.trace("addExternalLinks: add the Wikipedia author link for " + author.getName());
+          title = Localization.Main.getText("bookentry.wikipedia.author", author.getName());
+          url =  MessageFormat.format(url, currentProfile.getWikipediaLanguage(), FeedHelper.urlEncode(author.getName()));
+          addExternalLinksHelper(entry, url, title);
+        }
+        // add the LibraryThing author link
+        url = currentProfile.getLibrarythingAuthorUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+            if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the LibraryThing author link for " + author.getName());
+            title = Localization.Main.getText("bookentry.librarything.author", author.getName());
+          // LibraryThing is very peculiar on how it looks up it's authors... format is LastNameFirstName[Middle]
+            url= MessageFormat.format(url,FeedHelper.urlEncode(author.getSort().replace(",", "").replace(" ", "")));
+            addExternalLinksHelper(entry, url, title);
+        }
+        // add the Amazon author link
+        url = currentProfile.getAmazonAuthorUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+          if (logger.isTraceEnabled())  logger.trace("addExternalLinks: add the Amazon author link for " + author.getName());
+          title = Localization.Main.getText("bookentry.amazon.author", author.getName());
+          url = MessageFormat.format(url, FeedHelper.urlEncode(author.getName()));
+          addExternalLinksHelper(entry,url,title);
+        }
+        // add the ISFDB author link
+        url = currentProfile.getIsfdbAuthorUrl();
+        if (Helper.isNotNullOrEmpty(url)) {
+          if (logger.isTraceEnabled()) logger.trace("addExternalLinks: add the ISFDB author link for " + author.getName());
+          title = Localization.Main.getText("bookentry.isfdb.author", author.getName());
+          url = MessageFormat.format(url, FeedHelper.urlEncode(author.getName()));
+          addExternalLinksHelper(entry, url, title);
+        }
+      } // End of Author loop
+    } // End of Author section
   }
 
   /**

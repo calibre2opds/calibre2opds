@@ -227,7 +227,7 @@
                   <xsl:choose>
                     <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
                       <!-- External links with .xml extension need transforming to .html
-                           whiel others (e.g. ,html) ae left alone  -->
+                           while others (e.g. ,html) ae left alone  -->
                       <xsl:choose>
                         <xsl:when test="opds:link[@type='text/html']/@href">
                           <xsl:value-of select="opds:link/@href"/>

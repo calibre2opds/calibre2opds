@@ -75,6 +75,8 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setGenerateExternalLinks(Boolean value);
 
+  public void setNewWindowForExternalLinks(Boolean value);
+
   public void setCatalogFilter(String value);
 
   public void setMaxSummaryLength(Integer value);

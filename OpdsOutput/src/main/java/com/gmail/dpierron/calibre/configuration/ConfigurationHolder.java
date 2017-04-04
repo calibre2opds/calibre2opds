@@ -136,6 +136,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
   private final static String PROPERTY_NAME_IncludeRatingCrossReferences = "IncludeRatingCrossReferences";
   private final static String PROPERTY_NAME_GenerateExternalLinks = "GenerateExternalLinks";
+  private final static String PROPERTY_NAME_NewWindowForExternalLinks = "NewWindowForExternalLinks";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
   private final static String PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS = "UseThumbnsilsAsCovers";
@@ -1236,14 +1237,6 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     Catalog Structure
    */
 
-  public Boolean getGenerateExternalLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GenerateExternalLinks);
-    return (b == null) ? defaults.getGenerateExternalLinks() : b;
-  }
-  public void setGenerateExternalLinks(Boolean value) {
-    setProperty(PROPERTY_NAME_GenerateExternalLinks, value);
-  }
-
   public Boolean isGenerateCrossLinksReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_GenerateCrossLinks);
   }
@@ -1499,4 +1492,18 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SecurityCode, code);
   }
 
+  public Boolean getGenerateExternalLinks() {
+    Boolean b = getBoolean(PROPERTY_NAME_GenerateExternalLinks);
+    return (b == null) ? defaults.getGenerateExternalLinks() : b;
+  }
+  public void setGenerateExternalLinks(Boolean value) {
+    setProperty(PROPERTY_NAME_GenerateExternalLinks, value);
+  }
+  public Boolean getNewWindowForExternalLinks() {
+    Boolean b = getBoolean(PROPERTY_NAME_NewWindowForExternalLinks);
+    return (b == null) ? defaults.getNewWindowForExternalLinks() : b;
+  }
+  public void setNewWindowForExternalLinks(Boolean value) {
+    setProperty(PROPERTY_NAME_NewWindowForExternalLinks, value);
+  }
 }

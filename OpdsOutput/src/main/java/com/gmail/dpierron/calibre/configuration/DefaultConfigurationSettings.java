@@ -129,6 +129,10 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return true;
   }
 
+  public Boolean getNewWindowForExternalLinks() {
+    return true;
+  }
+
   public String getCatalogFilter() {  return "";  }
 
   public Integer getMaxSummaryLength() {

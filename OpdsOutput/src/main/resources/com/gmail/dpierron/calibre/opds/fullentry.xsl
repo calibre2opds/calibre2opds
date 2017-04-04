@@ -242,6 +242,13 @@
                         <xsl:attribute name="href">
                           <xsl:value-of select="@href"/>
                         </xsl:attribute>
+                        <xsl:choose>
+                          <xsl:when test="@target">
+                           <xsl:attribute name="target">
+                              <xsl:value-of select="@target"/>
+                            </xsl:attribute>
+                          </xsl:when>
+                        </xsl:choose>
                         <xsl:value-of select="@title"/>
                       </xsl:element>
                     <xsl:text disable-output-escaping="yes">&lt;/li&gt;</xsl:text>

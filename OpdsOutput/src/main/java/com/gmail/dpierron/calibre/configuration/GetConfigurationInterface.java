@@ -194,6 +194,8 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   /* external links */
 
+  public Boolean getNewWindowForExternalLinks();
+
   public String getWikipediaUrl();
 
   public String getAmazonAuthorUrl();
