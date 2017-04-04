@@ -54,15 +54,8 @@
         <xsl:text disable-output-escaping="yes">&lt;/title&gt;</xsl:text>
       </head>
       <body style="">
-        <!-- Custom Header fo those who want to add one -->
-        <xsl:choose>
-          <xsl:when test="string-length($programName) > 0">
-            <iframe src="header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">Browser not compatible.</iframe>
-          </xsl:when>
-          <xsl:otherwise>
-            <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">Browser not compatible.</iframe>
-          </xsl:otherwise>
-        </xsl:choose>
+        <!-- Custom Header for those who want to add one -->
+        <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">Browser not compatible.</iframe>
 
         <div id="topbar">
           <div id="title">
@@ -77,10 +70,6 @@
         <div class="desktop">
           <h1><xsl:value-of select="$libraryTitle"/></h1>
         </div>
-
-        <iframe src="../header.html" longdesc="headerInfo" frameBorder="0" scrolling="no" height="35" width="480">
-          Browser not compatible.
-        </iframe>
 
         <div class="desktop">
           <ul id="breadcrumb">
