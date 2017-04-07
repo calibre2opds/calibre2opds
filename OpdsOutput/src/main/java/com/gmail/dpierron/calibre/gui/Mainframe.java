@@ -237,8 +237,8 @@ public class Mainframe extends javax.swing.JFrame {
 
       // external links
 
-      new guiField(lblNogenerateExternalLinks, chkNogenerateExternalLinks, "config.GenerateExternalLinks", "GenerateExternalLinks", true),
-          new guiField(lblNewWindowForExternalLinks, chkNewWindowForExternalLinks, "config.NewWindowForExternalLinks", "NewWindowForExternalLinks", false),
+      new guiField(lblNogenerateExternalReferences, chkNogenerateExternalReferences, "config.GenerateExternalReferences", "GenerateExternalReferences", true),
+      new guiField(lblNewWindowForExternalReferences, chkNewWindowForExternalReferences, "config.NewWindowForExternalReferences", "NewWindowForExternalReferences", false),
       new guiField(lblWikipediaUrl, txtWikipediaUrl, "config.WikipediaUrl", "WikipediaUrl"),
       new guiField(cmdWikipediaUrlReset, null, "config.Reset"),
       new guiField(lblAmazonAuthorUrl, txtAmazonAuthorUrl, "config.AmazonAuthorUrl", "AmazonAuthorUrl"),
@@ -266,6 +266,7 @@ public class Mainframe extends javax.swing.JFrame {
 
       // Custom catalogs
 
+      new guiField(lblNewWindowForCustomExternalLinks, chkNewWindowForCustomExternalLinks, "config.NewWindowForCustomExternalLinks", "NewWindowForCustomCExternalLinks", false),
       new guiField(cmdAdd, null, "config.CustomCatalogAdd"),
       new guiField(lblFeaturedCatalogTitle, txtFeaturedCatalogTitle, "config.FeaturedCatalogTitle", "FeaturedCatalogTitle"),
       new guiField(lblFeaturedCatalogSavedSearchName, txtFeaturedCatalogSavedSearchName, "config.FeaturedCatalogSavedSearchName", "FeaturedCatalogSavedSearchName"),
@@ -938,7 +939,7 @@ public class Mainframe extends javax.swing.JFrame {
    *  allowing the generation of this sort of link
    */
   private void setExternalLinksEnabledState() {
-    boolean enabledNoExternalLinks = chkNogenerateExternalLinks.isSelected();
+    boolean enabledNoExternalLinks = chkNogenerateExternalReferences.isSelected();
     boolean derivedState;
 
     derivedState = ! (enabledNoExternalLinks || currentProfile.isWikipediaUrlReadOnly());
@@ -1568,11 +1569,11 @@ public class Mainframe extends javax.swing.JFrame {
         lblLibrarythingAuthorUrl = new javax.swing.JTextField();
         lblLibrarythingIsbnUrl = new javax.swing.JTextField();
         lblLibrarythingTitleUrl = new javax.swing.JTextField();
-        lblNogenerateExternalLinks = new javax.swing.JLabel();
-        chkNogenerateExternalLinks = new javax.swing.JCheckBox();
+        lblNogenerateExternalReferences = new javax.swing.JLabel();
+        chkNogenerateExternalReferences = new javax.swing.JCheckBox();
         lblGoodreadReviewIsbnUrl = new javax.swing.JTextField();
-        lblNewWindowForExternalLinks = new javax.swing.JLabel();
-        chkNewWindowForExternalLinks = new javax.swing.JCheckBox();
+        lblNewWindowForExternalReferences = new javax.swing.JLabel();
+        chkNewWindowForExternalReferences = new javax.swing.JCheckBox();
         pnlCustomCatalogs = new javax.swing.JPanel();
         lblCustomDummy1 = new javax.swing.JLabel();
         lblFeaturedCatalogSavedSearchName = new javax.swing.JLabel();
@@ -1584,6 +1585,8 @@ public class Mainframe extends javax.swing.JFrame {
         scrCustomCatalogs = new javax.swing.JScrollPane();
         tblCustomCatalogs = new javax.swing.JTable();
         pnlCustomCatalogsTableButtons = new javax.swing.JPanel();
+        lblNewWindowForCustomExternalLinks = new javax.swing.JLabel();
+        chkNewWindowForCustomExternalLinks = new javax.swing.JCheckBox();
         pnlSearchOptions = new javax.swing.JPanel();
         txtMaxKeywords = new javax.swing.JTextField();
         lblMaxKeywords = new javax.swing.JLabel();
@@ -4178,10 +4181,10 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(lblLibrarythingTitleUrl, gridBagConstraints);
 
-        lblNogenerateExternalLinks.setText("lblNogenerateExternalLinks");
-        lblNogenerateExternalLinks.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        lblNogenerateExternalLinks.setVerifyInputWhenFocusTarget(false);
-        lblNogenerateExternalLinks.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblNogenerateExternalReferences.setText("lblNogenerateExternalReferences");
+        lblNogenerateExternalReferences.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        lblNogenerateExternalReferences.setVerifyInputWhenFocusTarget(false);
+        lblNogenerateExternalReferences.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -4190,11 +4193,11 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        pnlExternalUrlsOptions.add(lblNogenerateExternalLinks, gridBagConstraints);
+        pnlExternalUrlsOptions.add(lblNogenerateExternalReferences, gridBagConstraints);
 
-        chkNogenerateExternalLinks.addChangeListener(new javax.swing.event.ChangeListener() {
+        chkNogenerateExternalReferences.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                chkNogenerateExternalLinksStateChanged(evt);
+                chkNogenerateExternalReferencesStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4202,7 +4205,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(chkNogenerateExternalLinks, gridBagConstraints);
+        pnlExternalUrlsOptions.add(chkNogenerateExternalReferences, gridBagConstraints);
 
         lblGoodreadReviewIsbnUrl.setText("lblGoodreadReviewIsbnUrl");
         lblGoodreadReviewIsbnUrl.setMaximumSize(new java.awt.Dimension(250, 2147483647));
@@ -4217,8 +4220,8 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlExternalUrlsOptions.add(lblGoodreadReviewIsbnUrl, gridBagConstraints);
 
-        lblNewWindowForExternalLinks.setText("lblNewWindowForExternalLinks");
-        lblNewWindowForExternalLinks.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblNewWindowForExternalReferences.setText("lblNewWindowForExternalReferences");
+        lblNewWindowForExternalReferences.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
@@ -4228,11 +4231,11 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(lblNewWindowForExternalLinks, gridBagConstraints);
+        pnlExternalUrlsOptions.add(lblNewWindowForExternalReferences, gridBagConstraints);
 
-        chkNewWindowForExternalLinks.addChangeListener(new javax.swing.event.ChangeListener() {
+        chkNewWindowForExternalReferences.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                chkNewWindowForExternalLinkschkNogenerateexternallinksStateChanged(evt);
+                chkNewWindowForExternalReferenceschkNogenerateexternallinksStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -4240,7 +4243,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        pnlExternalUrlsOptions.add(chkNewWindowForExternalLinks, gridBagConstraints);
+        pnlExternalUrlsOptions.add(chkNewWindowForExternalReferences, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlExternalUrlsOptions", pnlExternalUrlsOptions);
 
@@ -4292,7 +4295,7 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlCustomCatalogs.add(lblFeaturedCatalogTitle, gridBagConstraints);
 
@@ -4322,9 +4325,9 @@ public class Mainframe extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 5);
         pnlCustomCatalogs.add(cmdAdd, gridBagConstraints);
 
@@ -4348,6 +4351,26 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         pnlCustomCatalogs.add(pnlCustomCatalogsTableButtons, gridBagConstraints);
+
+        lblNewWindowForCustomExternalLinks.setText("lblNewWindowForCustomExternalLinks");
+        lblNewWindowForCustomExternalLinks.setToolTipText("");
+        lblNewWindowForCustomExternalLinks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCustomCatalogs.add(lblNewWindowForCustomExternalLinks, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlCustomCatalogs.add(chkNewWindowForCustomExternalLinks, gridBagConstraints);
 
         tabOptionsTabs.addTab("pnlCustomCatalogs", pnlCustomCatalogs);
 
@@ -5005,9 +5028,13 @@ public class Mainframe extends javax.swing.JFrame {
       checkAuthorsIncluded();
     }//GEN-LAST:event_chkIncludeAuthorInBookDetailsActionPerformed
 
-    private void chkNewWindowForExternalLinkschkNogenerateexternallinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNewWindowForExternalLinkschkNogenerateexternallinksStateChanged
+    private void chkNewWindowForExternalReferenceschkNogenerateexternallinksStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNewWindowForExternalReferenceschkNogenerateexternallinksStateChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_chkNewWindowForExternalLinkschkNogenerateexternallinksStateChanged
+    }//GEN-LAST:event_chkNewWindowForExternalReferenceschkNogenerateexternallinksStateChanged
+
+    private void chkNogenerateExternalReferencesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkNogenerateExternalReferencesStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkNogenerateExternalReferencesStateChanged
 
   private void cmdSetTargetFolderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSetTargetFolderActionPerformed
     showSetTargetFolderDialog();
@@ -5116,7 +5143,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkIncludeemptybooks;
     private javax.swing.JCheckBox chkIndexComments;
     private javax.swing.JCheckBox chkLanguageAsTag;
-    private javax.swing.JCheckBox chkNewWindowForExternalLinks;
+    private javax.swing.JCheckBox chkNewWindowForCustomExternalLinks;
+    private javax.swing.JCheckBox chkNewWindowForExternalReferences;
     private javax.swing.JCheckBox chkNoCoverResize;
     private javax.swing.JCheckBox chkNoGenerateAuthors;
     private javax.swing.JCheckBox chkNoGenerateSeries;
@@ -5124,7 +5152,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkNoIncludeAboutLink;
     private javax.swing.JCheckBox chkNoShowSeries;
     private javax.swing.JCheckBox chkNoThumbnailGenerate;
-    private javax.swing.JCheckBox chkNogenerateExternalLinks;
+    private javax.swing.JCheckBox chkNogenerateExternalReferences;
     private javax.swing.JCheckBox chkNogenerateallbooks;
     private javax.swing.JCheckBox chkNogeneratecrosslinks;
     private javax.swing.JCheckBox chkNogeneratehtml;
@@ -5240,7 +5268,8 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblMaxbeforesplit;
     private javax.swing.JLabel lblMaxsummarylength;
     private javax.swing.JLabel lblMinBooksToMakeDeepLevel;
-    private javax.swing.JLabel lblNewWindowForExternalLinks;
+    private javax.swing.JLabel lblNewWindowForCustomExternalLinks;
+    private javax.swing.JLabel lblNewWindowForExternalReferences;
     private javax.swing.JLabel lblNoCoverResize;
     private javax.swing.JLabel lblNoGenerateAuthors;
     private javax.swing.JLabel lblNoGenerateSeries;
@@ -5248,7 +5277,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblNoIncludeAboutLink;
     private javax.swing.JLabel lblNoShowSeries;
     private javax.swing.JLabel lblNoThumbnailGenerate;
-    private javax.swing.JLabel lblNogenerateExternalLinks;
+    private javax.swing.JLabel lblNogenerateExternalReferences;
     private javax.swing.JLabel lblNogenerateallbooks;
     private javax.swing.JLabel lblNogeneratecrosslinks;
     private javax.swing.JLabel lblNogeneratehtml;

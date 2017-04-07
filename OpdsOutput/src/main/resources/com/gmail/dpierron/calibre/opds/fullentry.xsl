@@ -239,14 +239,10 @@
                   <xsl:for-each select="opds:link[@rel='related' and @type='text/html']">
                     <xsl:text disable-output-escaping="yes">&lt;li&gt;</xsl:text>
                       <xsl:element name="a">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="@href"/>
-                        </xsl:attribute>
+                        <xsl:attribute name="href"><xsl:value-of select="@href"/></xsl:attribute>
                         <xsl:choose>
                           <xsl:when test="@target">
-                           <xsl:attribute name="target">
-                              <xsl:value-of select="@target"/>
-                            </xsl:attribute>
+                           <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
                           </xsl:when>
                         </xsl:choose>
                         <xsl:value-of select="@title"/>

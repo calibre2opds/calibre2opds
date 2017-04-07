@@ -73,10 +73,6 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setGenerateCrossLinks(Boolean value);
 
-  public void setGenerateExternalLinks(Boolean value);
-
-  public void setNewWindowForExternalLinks(Boolean value);
-
   public void setCatalogFilter(String value);
 
   public void setMaxSummaryLength(Integer value);
@@ -182,6 +178,12 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
   public void setExternalImages(Boolean value);
 
   /* external links */
+
+  public void setGenerateExternalReferences(Boolean value);
+
+  public void setNewWindowForExternalReferences(Boolean value);
+
+  public void setNewWindowForCustomExternalLinks(Boolean value);
 
   public void setWikipediaUrl(String value);
 

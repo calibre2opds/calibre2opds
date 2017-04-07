@@ -132,12 +132,12 @@
           </xsl:choose>
         </xsl:variable>
         <div class="{$mainDivClassName}">
+          <!-- Add each entry in body of the list -->
           <xsl:for-each select="opds:entry">
             <xsl:choose>
               <xsl:when test="contains(opds:id, ':book:')">
+                <!-- Partial entries for a book -->
                 <xsl:variable name="bookId" select="opds:id"/>
-                <!-- partial entry -->
-
                 <!-- thumbnail -->
                 <div class="x_container" id="{$bookId}">
                   <div class="cover">
@@ -223,6 +223,7 @@
                 </div>
               </xsl:when>
               <xsl:otherwise>
+                <!-- Entries that are not for books -->
                 <xsl:variable name="url">
                   <xsl:choose>
                     <xsl:when test="substring(opds:id, 1, 29) = 'urn:calibre2opds:externalLink'">
@@ -250,19 +251,35 @@
                   </xsl:choose>
                 </xsl:variable>
                   <div class="x_menulisting" id="{opds:id}">
+                    <!-- image -->
                     <div class="cover">
                       <xsl:choose>
                         <xsl:when test="opds:link[@rel='http://opds-spec.org/image/thumbnail']">
-                          <a href="{$url}" title="{opds:title}">
-                          <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" border="0" />
-                          </a>
+                          <xsl:element name="a">
+                            <xsl:attribute name="href"><xsl:value-of select="$url"/></xsl:attribute>
+                            <xsl:attribute name="title"><xsl:value-of select="opds:title"/></xsl:attribute>
+                            <xsl:choose>
+                              <xsl:when test="@target">
+                                <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+                              </xsl:when>
+                            </xsl:choose>
+                            <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" border="0" />
+                          </xsl:element>
                         </xsl:when>
                       </xsl:choose>
                     </div>
+                    <!-- Text -->
                     <div class="details">
-                      <a href="{$url}">
+                      <xsl:element name="a">
+                        <xsl:attribute name="href"><xsl:value-of select="$url"/></xsl:attribute>
+                        <xsl:attribute name="title"><xsl:value-of select="opds:title"/></xsl:attribute>
+                        <xsl:choose>
+                          <xsl:when test="@target">
+                            <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+                          </xsl:when>
+                        </xsl:choose>
                         <xsl:value-of select="opds:title"/>
-                      </a>
+                      </xsl:element>
                       <br/>
                       <small>
                         <xsl:value-of select="opds:content"/>
@@ -273,6 +290,7 @@
             </xsl:choose>
           </xsl:for-each>
         </div>
+        <!-- Add next/previous type buttons -->
         <xsl:if test="opds:link[@rel='next'] or opds:link[@rel='prev']">
           <tr>
             <td width="{$thumbWidth}"/>

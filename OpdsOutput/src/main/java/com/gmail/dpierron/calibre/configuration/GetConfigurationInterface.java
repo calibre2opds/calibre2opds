@@ -156,8 +156,6 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getGenerateCrossLinks();
 
-  public Boolean getGenerateExternalLinks();
-
   public Boolean getIncludeTitleInBookDetails();
 
   public Boolean getIncludeAuthorInBookDetails();
@@ -193,8 +191,11 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
   public Boolean getExternalImages();
 
   /* external links */
+  public Boolean getGenerateExternalReferences();
 
-  public Boolean getNewWindowForExternalLinks();
+  public Boolean getNewWindowForExternalReferences();
+
+  public Boolean getNewWindowForCustomExternalLinks();
 
   public String getWikipediaUrl();
 

@@ -777,7 +777,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
   private void addExternalLinksHelper(Element entry, String url, String title) {
     Element urlElement;
     urlElement = FeedHelper.getRelatedHtmlLink(url, title);
-    if (currentProfile.getNewWindowForExternalLinks()) {
+    if (currentProfile.getNewWindowForExternalReferences()) {
       urlElement.setAttribute("target", "_blank");
     }
     entry.addContent(urlElement);
@@ -791,12 +791,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
    * @param book
    */
   private void addExternalLinks(Element entry, Book book) {
-    if (! currentProfile.getGenerateExternalLinks()) {
+    if (! currentProfile.getGenerateExternalReferences()) {
       return;
     }
     if (logger.isTraceEnabled()) {
       logger.trace("addExternalLinks: ADDING external links to book " + book);
-      if (currentProfile.getNewWindowForExternalLinks()) logger.trace("addExternalLinks: (using new browser windows for the links)") ;
+      if (currentProfile.getNewWindowForExternalReferences()) logger.trace("addExternalLinks: (using new browser windows for the links)") ;
     }
     String url;
     String title;

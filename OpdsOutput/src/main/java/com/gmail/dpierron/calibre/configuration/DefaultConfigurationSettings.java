@@ -125,12 +125,16 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return true;
   }
 
-  public Boolean getGenerateExternalLinks() {
+  public Boolean getGenerateExternalReferences() {
     return true;
   }
 
-  public Boolean getNewWindowForExternalLinks() {
+  public Boolean getNewWindowForExternalReferences() {
     return true;
+  }
+
+  public Boolean getNewWindowForCustomExternalLinks() {
+    return false;
   }
 
   public String getCatalogFilter() {  return "";  }

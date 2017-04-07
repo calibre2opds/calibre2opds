@@ -135,8 +135,9 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_IncludeSerieCrossReferences = "IncludeSerieCrossReferences";
   private final static String PROPERTY_NAME_IncludeTagCrossReferences = "IncludeTagCrossReferences";
   private final static String PROPERTY_NAME_IncludeRatingCrossReferences = "IncludeRatingCrossReferences";
-  private final static String PROPERTY_NAME_GenerateExternalLinks = "GenerateExternalLinks";
-  private final static String PROPERTY_NAME_NewWindowForExternalLinks = "NewWindowForExternalLinks";
+  private final static String PROPERTY_NAME_GenerateExternalReferences = "GenerateExternalReferences";
+  private final static String PROPERTY_NAME_NewWindowForExternalReferences = "NewWindowForExternalReferences";
+  private final static String PROPERTY_NAME_NewWindowForCustomCExternalLinks = "NewWindowForCustomExternalLinks";
   /* Advanced */
   private final static String PROPERTY_NAME_INCLUDE_COVERS_IN_CATALOG = "IncludeCoversInCatalog";
   private final static String PROPERTY_NAME_USE_THUMBNAILS_AS_COVERS = "UseThumbnsilsAsCovers";
@@ -1492,18 +1493,25 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
     setProperty(PROPERTY_NAME_SecurityCode, code);
   }
 
-  public Boolean getGenerateExternalLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_GenerateExternalLinks);
-    return (b == null) ? defaults.getGenerateExternalLinks() : b;
+  public Boolean getGenerateExternalReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_GenerateExternalReferences);
+    return (b == null) ? defaults.getGenerateExternalReferences() : b;
   }
-  public void setGenerateExternalLinks(Boolean value) {
-    setProperty(PROPERTY_NAME_GenerateExternalLinks, value);
+  public void setGenerateExternalReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_GenerateExternalReferences, value);
   }
-  public Boolean getNewWindowForExternalLinks() {
-    Boolean b = getBoolean(PROPERTY_NAME_NewWindowForExternalLinks);
-    return (b == null) ? defaults.getNewWindowForExternalLinks() : b;
+  public Boolean getNewWindowForExternalReferences() {
+    Boolean b = getBoolean(PROPERTY_NAME_NewWindowForExternalReferences);
+    return (b == null) ? defaults.getNewWindowForExternalReferences() : b;
   }
-  public void setNewWindowForExternalLinks(Boolean value) {
-    setProperty(PROPERTY_NAME_NewWindowForExternalLinks, value);
+  public void setNewWindowForExternalReferences(Boolean value) {
+    setProperty(PROPERTY_NAME_NewWindowForExternalReferences, value);
+  }
+  public Boolean getNewWindowForCustomExternalLinks() {
+    Boolean b = getBoolean(PROPERTY_NAME_NewWindowForCustomCExternalLinks);
+    return (b == null) ? defaults.getNewWindowForCustomExternalLinks() : b;
+  }
+  public void setNewWindowForCustomExternalLinks(Boolean value) {
+    setProperty(PROPERTY_NAME_NewWindowForCustomCExternalLinks, value);
   }
 }
