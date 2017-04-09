@@ -75,7 +75,6 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-269: Allow Custom columns to be used in search/filter expressions
     - #c20-274: Large white spaces appearing between paragraphs in the Book Details page
     - #c2o-276: Upgrade to ANTLR 4 
-    - #c2o-285: Option to open custom links in Custom catalog/External links in a new page
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you
@@ -121,9 +120,10 @@ v3.6  (in progress)
    - Fix:     #c2o-281: UNEXPECTED FATAL ERROR when processing Tags catalog
    - Fix:     #c2o-282: Optimizer active causes files to be omitted from zip of library 
    - Fix:     #c2o-283: Assert failure when including images in catalog
-   = Fix:     #c2o-284: Display glitches in HTML catalogs 
+   - Fix:     #c2o-284: Display glitches in HTML catalogs 
+   - New:     #c2o-285: Option to open custom links in Custom catalog External links in a new page
    - Fix:     #c2o-286: Change icon/image of confirmation popup after saving changes to configuration
-   - New:     #c2o-285: Option to open external links in Book Rference Links in a new page
+   - New:     #c2o-287: Option to open external links in Book Rference Links in a new page
 
 v3.5 (20 October 2015) Rev 370
     - Upgrade versions of components used internally by calibre2opds:

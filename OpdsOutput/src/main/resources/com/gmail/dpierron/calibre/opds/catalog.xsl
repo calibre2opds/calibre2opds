@@ -259,8 +259,8 @@
                             <xsl:attribute name="href"><xsl:value-of select="$url"/></xsl:attribute>
                             <xsl:attribute name="title"><xsl:value-of select="opds:title"/></xsl:attribute>
                             <xsl:choose>
-                              <xsl:when test="@target">
-                                <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+                              <xsl:when test="opds:link[@target]">
+                                <xsl:attribute name="target">_blank</xsl:attribute>
                               </xsl:when>
                             </xsl:choose>
                             <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" border="0" />
@@ -274,8 +274,8 @@
                         <xsl:attribute name="href"><xsl:value-of select="$url"/></xsl:attribute>
                         <xsl:attribute name="title"><xsl:value-of select="opds:title"/></xsl:attribute>
                         <xsl:choose>
-                          <xsl:when test="@target">
-                            <xsl:attribute name="target"><xsl:value-of select="@target"/></xsl:attribute>
+                          <xsl:when test="opds:link[@target]">
+                            <xsl:attribute name="target">_blank</xsl:attribute>
                           </xsl:when>
                         </xsl:choose>
                         <xsl:value-of select="opds:title"/>

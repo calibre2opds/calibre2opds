@@ -266,7 +266,7 @@ public class Mainframe extends javax.swing.JFrame {
 
       // Custom catalogs
 
-      new guiField(lblNewWindowForCustomExternalLinks, chkNewWindowForCustomExternalLinks, "config.NewWindowForCustomExternalLinks", "NewWindowForCustomCExternalLinks", false),
+      new guiField(lblNewWindowForCustomExternalLinks, chkNewWindowForCustomExternalLinks, "config.NewWindowForCustomExternalLinks", "NewWindowForCustomExternalLinks", false),
       new guiField(cmdAdd, null, "config.CustomCatalogAdd"),
       new guiField(lblFeaturedCatalogTitle, txtFeaturedCatalogTitle, "config.FeaturedCatalogTitle", "FeaturedCatalogTitle"),
       new guiField(lblFeaturedCatalogSavedSearchName, txtFeaturedCatalogSavedSearchName, "config.FeaturedCatalogSavedSearchName", "FeaturedCatalogSavedSearchName"),

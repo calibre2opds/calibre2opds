@@ -114,7 +114,21 @@ public class LevelSubCatalog extends SubCatalog {
             entry = FeedHelper.getExternalLinkEntry(customCatalogTitle, Localization.Main.getText("content.externalLink"), opdsLink,
                 "urn:calibre2opds:externalLink" + (pos++), externalLinkUrl,
                 currentProfile.getExternalIcons() ? getIconPrefix(inSubDir) + Icons.ICONFILE_EXTERNAL : Icons.ICON_EXTERNAL);
+
             if (entry != null) {
+              if (currentProfile.getNewWindowForCustomExternalLinks()) {
+                List<Element> links = entry.getChildren();
+                if (links != null) {
+                  for (int i =0; i < links.size(); i++) {
+                    Element link = links.get(i);
+                    if (link.getName().equals("link")) {
+                      link.setAttribute("target", "_blank");
+                      break;
+                    }
+                  }
+                }
+
+              }
               feed.addContent(entry);
             }
           } else {
