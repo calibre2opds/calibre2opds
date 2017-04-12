@@ -375,33 +375,35 @@
           <!-- top level catalog entry only -->
           <xsl:when test="string-length($programName) > 0">
             <small>
-            <div class="thanks">
-              <br/><xsl:value-of select="$intro.goal"/>
-              <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
-                <xsl:value-of select="$intro.wiki.url"/></a>
-              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
-                <xsl:value-of select="$intro.userguide"/> </a>
-              <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
-                <xsl:value-of select="$intro.developerguide"/> </a>
-              <br/><br/><xsl:value-of select="$intro.team.title"/>
-              <ul>
-               <li><xsl:value-of select="$intro.team.list1"/></li>
-               <xsl:if test="string-length(intro.team.list2) > 1">
-                  <li><xsl:value-of select="$intro.team.list2"/></li>
+              <div class="thanks">
+                <br/><xsl:value-of select="$intro.goal"/>
+                <br/><xsl:value-of select="$intro.wiki.title"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.wiki.url}">
+                  <xsl:value-of select="$intro.wiki.url"/></a>
+                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.userguide.url}">
+                  <xsl:value-of select="$intro.userguide"/> </a>
+                <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
+                  <xsl:value-of select="$intro.developerguide"/> </a>
+                <br/><br/><xsl:value-of select="$intro.team.title"/>
+                <xsl:if test="string-length(intro.team.list1) > 1">
+                  <ul>
+                  <li><xsl:value-of select="$intro.team.list1"/></li>
+                  <xsl:if test="string-length(intro.team.list2) > 1">
+                    <li><xsl:value-of select="$intro.team.list2"/></li>
+                  </xsl:if>
+                  <xsl:if test="string-length(intro.team.list3) > 1">
+                    <li><xsl:value-of select="$intro.team.list3"/></li>
+                  </xsl:if>
+                  <xsl:if test="string-length(intro.team.list4) > 1">
+                    <li><xsl:value-of select="$intro.team.list4"/></li>
+                  </xsl:if>
+                  </ul>
                 </xsl:if>
-                <xsl:if test="string-length(intro.team.list3) > 1">
-                  <li><xsl:value-of select="$intro.team.list3"/></li>
+                <xsl:if test="string-length(intro.thanks.1) > 1">
+                  <xsl:value-of select="$intro.thanks.1"/>
+                  <br/><xsl:value-of select="$intro.thanks.2"/>
                 </xsl:if>
-                <xsl:if test="string-length(intro.team.list4) > 1">
-                  <li><xsl:value-of select="$intro.team.list4"/></li>
-                </xsl:if>
-              </ul>
-              <xsl:if test="string-length(intro.thanks.1) > 1">
-                <xsl:value-of select="$intro.thanks.1"/>
-                <br/><xsl:value-of select="$intro.thanks.2"/>
-              </xsl:if>
-            </div>
-                    </small>
+              </div>
+            </small>
           </xsl:when>
         </xsl:choose>
 
