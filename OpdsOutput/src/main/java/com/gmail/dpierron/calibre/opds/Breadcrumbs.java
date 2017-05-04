@@ -1,6 +1,10 @@
 package com.gmail.dpierron.calibre.opds;
 /**
  * Class that provides methods for manipulating a set of breadcrumbs.
+ *
+ * Breadcrumbs are used to track the basic navigation path through the
+ * genertated catalog for any specific page.  When we get to the final book,
+ * though it can only show one set of breadcrumbs - the first one generated.
  */
 
 import com.gmail.dpierron.tools.Helper;

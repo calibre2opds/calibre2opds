@@ -59,37 +59,38 @@ public abstract class BooksSubCatalog extends SubCatalog {
   }
 
 
-  public List<Book> getObjectList() {
+    public List<Book> getObjectList() {
     return getBooks();
   }
-  /**
-   * Get a list of books starting from a specific point
-   *
-   * This function is the control routine and is called once
-   * for each page at the same level, or each time a split occurs.
-   * It is called recursively - and thus will be called once per file.
-   *
-   * ITIMPI:  At the moment this function can call itself recursively with the 'from'
-   *          parameter being incremented.   It is likely to be much more efficient
-   *          in both cpu load and memory usage to flatten the loop by rewriteing the
-   *          function to elimiate recursion.
-   *
-   * @param pBreadcrumbs
-   * @param listbooks
-   * @param inSubDir
-   * @param from
-   * @param title
-   * @param summary
-   * @param urn
-   * @param pFilename
-   * @param splitOption     This option how a list should be split if it exceeds size limits
-   * @param icon
-   * @param firstElements   Passed as null if not known
-   * @param options
-   * @return
-   * @throws IOException
-   */
-   public Element getListOfBooks(Breadcrumbs pBreadcrumbs,
+
+    /**
+    * Get a list of books starting from a specific point
+    *
+    * This function is the control routine and is called once
+    * for each page at the same level, or each time a split occurs.
+    * It is called recursively - and thus will be called once per file.
+    *
+    * ITIMPI:  At the moment this function can call itself recursively with the 'from'
+    *          parameter being incremented.   It is likely to be much more efficient
+    *          in both cpu load and memory usage to flatten the loop by rewriteing the
+    *          function to elimiate recursion.
+    *
+    * @param pBreadcrumbs
+    * @param listbooks
+    * @param inSubDir
+    * @param from
+    * @param title
+    * @param summary
+    * @param urn
+    * @param pFilename
+    * @param splitOption     This option how a list should be split if it exceeds size limits
+    * @param icon
+    * @param firstElements   Passed as null if not known
+    * @param options
+    * @return
+    * @throws IOException
+    */
+    public Element getListOfBooks(Breadcrumbs pBreadcrumbs,
       List<Book> listbooks,
       boolean inSubDir,
       int from,
@@ -188,12 +189,13 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
     Element feed;
     feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /*inSubDir */);
-    // Update breadcrumbs ready for next iteration
-    Breadcrumbs breadcrumbs;
-    // #c2o-204 breadrumbs should already be correct if listing firt page of books for an author.
-    if (from ==0 && getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
-      breadcrumbs = pBreadcrumbs;
-    } else {
+
+    // Update breadcrumbs
+    //  - If we are not on doing an author sub-catalog then add the author to the breadcrumbs
+    //  - If we are not on the first page then keep the existing breadcrumbs.
+    Breadcrumbs breadcrumbs =  pBreadcrumbs;
+    // #c2o-204 breadrumbs should already be correct if listing first page of books for an author.
+    if (from == 0 && ! (getCatalogFolder().startsWith(Constants.AUTHOR_TYPE) || getCatalogFolder().startsWith(Constants.AUTHORLIST_TYPE))) {
       breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
     }
 
@@ -235,7 +237,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
           // TODO #c2o-208   Add Previous, First and Last links if needed
           // ... YES - so go for next page
           if (logger.isDebugEnabled()) logger.debug("making a nextpage link");
-          Element nextLink = getListOfBooks(pBreadcrumbs,
+          Element nextLink = getListOfBooks(breadcrumbs,
                                             listbooks,
                                             true,             // Awlays in SubDir (need to check this)
                                             i,                // Continue nfrom where we were
@@ -1321,19 +1323,12 @@ public abstract class BooksSubCatalog extends SubCatalog {
       if (logger.isDebugEnabled())  logger.debug("getBookEntry: SKIPPING generation of full book entry as already done");
     } else {
       if (logger.isTraceEnabled()) logger.trace("getBookEntry: book full entry (not yet done)");
-      Breadcrumbs breadcrumbs = pBreadcrumbs;
-      // TODO:  We end up with the first generated catalogs breadcrumbs.
-      // TODO:  Since this is normally the authors catalog that is quite sensible
-      // TODO:  We could decide to remove all breadcrumbs for the book full entries?
-      // remove all but the first (main) entry
-      //  breadcrumbs = new Breadcrumbs();
-      //  breadcrumbs.add(pBreadcrumbs.get(0));
       Element entry = JDOMManager.rootElement("entry", JDOMManager.Namespace.Atom, JDOMManager.Namespace.DcTerms, JDOMManager.Namespace.Atom, JDOMManager.Namespace.Xhtml);
       entry.addContent (JDOMManager.element("title").addContent(book.getTitle()));
       entry.addContent(JDOMManager.element("id").addContent("urn:book:" + book.getUuid()));
       entry.addContent(FeedHelper.getUpdatedTag(book.getLatestFileModifiedDate()));
       // add the navigation links
-      FeedHelper.decorateElementWithNavigationLinks(entry, breadcrumbs, book.getTitle(), fullEntryUrl, true);
+      FeedHelper.decorateElementWithNavigationLinks(entry, pBreadcrumbs, book.getTitle(), fullEntryUrl, true);
       // add the required data to the book entry
       decorateBookEntry(entry, book, true);
       // write the element to the files

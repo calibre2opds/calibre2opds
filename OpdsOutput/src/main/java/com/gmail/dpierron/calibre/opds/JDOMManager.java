@@ -206,16 +206,9 @@ public class JDOMManager {
       transformer.setParameter("programName", Constants.PROGNAME);
       transformer.setParameter("programVersion", Constants.PROGVERSION + Constants.BZR_VERSION);
 
-      // transformer.setParameter("intro.goal", includeAbout ? Localization.Main.getText("intro.goal") : "");
-      // transformer.setParameter("intro.wiki.title", includeAbout ? Localization.Main.getText("intro.wiki.title") : "");
-      // transformer.setParameter("intro.wiki.url", includeAbout ? Localization.Main.getText("intro.wiki.url") : "");
-      // transformer.setParameter("intro.userguide", includeAbout ? Localization.Main.getText("gui.menu.help.userGuide") : "");
-      // transformer.setParameter("intro.userguide.url", includeAbout ? Constants.USERGUIDE_URL : "");
-      // transformer.setParameter("intro.developerguide", includeAbout ? Localization.Main.getText("gui.menu.help.developerGuide") : "");
-      // transformer.setParameter("intro.developerguide.url", includeAbout ? Constants.DEVELOPERGUIDE_URL : "");
-      // transformer.setParameter("intro.team.title", includeAbout ? Localization.Main.getText("intro.team.title") : "");
-      // transformer.setParameter("intro.team.list1", includeAbout ? Localization.Main.getText("intro.team.list1") : "");
+      //  Set up options to display t bottom of top pge in catalog
 
+      // Always include these options on top page
       transformer.setParameter("intro.goal", Localization.Main.getText("intro.goal"));
       transformer.setParameter("intro.wiki.title", Localization.Main.getText("intro.wiki.title"));
       transformer.setParameter("intro.wiki.url", Localization.Main.getText("intro.wiki.url"));
@@ -223,9 +216,10 @@ public class JDOMManager {
       transformer.setParameter("intro.userguide.url", Constants.USERGUIDE_URL);
       transformer.setParameter("intro.developerguide", Localization.Main.getText("gui.menu.help.developerGuide"));
       transformer.setParameter("intro.developerguide.url", Constants.DEVELOPERGUIDE_URL );
-
+      // Only include these options on top page if the about section not suppresssed
       transformer.setParameter("intro.team.title", includeAbout ? Localization.Main.getText("intro.team.title") : "");
       transformer.setParameter("intro.team.list1", includeAbout ? Localization.Main.getText("intro.team.list1") : "");
+      transformer.setParameter("intro.team.title2", includeAbout ? Localization.Main.getText("intro.team.title2") : "");
       transformer.setParameter("intro.team.list2", includeAbout ? Localization.Main.getText("intro.team.list2") : "");
       transformer.setParameter("intro.team.list3", includeAbout ? Localization.Main.getText("intro.team.list3") : "");
       transformer.setParameter("intro.team.list4", includeAbout ? Localization.Main.getText("intro.team.list4") : "");

@@ -109,7 +109,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
     String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
-
+    // Update breadcrumbs to point to this list
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
     // Check for special case of all entries being identical last name so we cannot split further regardless of split trigger value
     if (listauthors == null || listauthors.size() == 0) {
       int dummy = 1;
@@ -124,13 +125,12 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         break;
       }
     }
-    // Check for special case where the author sort name is equal to the split level.*
+    // Check for special case where the author sort name is equal to the split level.
     while ( willSplitByLetter && listauthors.size() > 0
             && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listauthors.get(0).getNameForSort().toUpperCase())) {
       Author author = listauthors.get(0);
       listauthors.remove(0);
       Element element;
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
       element = getDetailedEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author));
       assert element != null;
       if (element != null) {
@@ -155,7 +155,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     if (willSplitByLetter  /* listauthors.size() > 1*/) {
       logger.debug("splitting by letter");
-      Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
       result = getListOfAuthorsSplitByLetter(breadcrumbs,
                                              mapOfAuthorsByLetter,
                                              title,
@@ -169,7 +168,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         && ((i - from) >= maxBeforePaginate)) {
           // TODO #c2o-208   Add Previous, First and Last links if needed
           // Get a new page
-          Element nextLink = getSubCatalog(pBreadcrumbs,
+          Element nextLink = getSubCatalog(breadcrumbs,
                                            listauthors,
                                            true,
                                            i,
@@ -183,7 +182,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
         } else {
           // Get a specific author
           Author author = listauthors.get(i);
-          Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
           logger.debug("getAuthorEntry:" + author);
           Element entry = getDetailedEntry(breadcrumbs, author, mapOfBooksByAuthor.get(author)) ;
           if (entry != null) {
@@ -337,6 +335,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     return getCatalogBaseFolderFileNameIdSplit(Constants.AUTHOR_TYPE, author.getId(), 1000);
   }
   /**
+   * Get the details for the specified author
    *
    * @param pBreadcrumbs
    * @param author
@@ -395,7 +394,6 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     if (listOfBooksInSeries.size() > 0 && currentProfile.getShowSeriesInAuthorCatalog()) {
       logger.debug("processing the series by " + author);
-
       // make a link to the series by this author catalog
       logger.debug("make a link to the series by this author catalog");
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
@@ -455,10 +453,16 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     logger.trace("getAuthorEntry  Breadcrumbs=" + pBreadcrumbs.toString());
 
     author.setDone();
-    return getListOfBooks(pBreadcrumbs, morebooks, true,           // Always in subDir
-        0,              // from
-        title, summary, urn, filename, SplitOption.DontSplit,        // Bug #716917 Do not split on letter
-        // #751211: Use external icons option
-        useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements);
+    Element result = getListOfBooks(pBreadcrumbs,
+                          morebooks, true,           // Always in subDir
+                          0,              // from
+                          title,
+                          summary,
+                          urn,
+                          filename,
+                          SplitOption.DontSplit,        // Bug #716917 Do not split on letter
+                          // #751211: Use external icons option
+                          useExternalIcons ? getIconPrefix(true) + Icons.ICONFILE_AUTHORS : Icons.ICON_AUTHORS, firstElements);
+    return result;
   }
 }

@@ -205,7 +205,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
           Series serie = listSeries.get(i);
           Breadcrumbs breadcrumbs;
           // #c2o-204:  If we are getting the series for an author then the breadcrumbs are already correct.
-          if (this.getCatalogFolder().startsWith(Constants.AUTHOR_TYPE)) {
+          if (this.getCatalogFolder().startsWith(Constants.AUTHOR_TYPE) || this.getCatalogFolder().startsWith(Constants.AUTHORLIST_TYPE)) {
             breadcrumbs = pBreadcrumbs;
           } else {
             breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir));
@@ -262,6 +262,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     String filename = pFilename + Constants.PAGE_DELIM + Integer.toString(pageNumber);
     String urlExt = CatalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, true /* inSubDir*/);
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
     // Check for special case where the series name is equal to the split level
     String seriesNameUpper = currentProfile.getSortSeriesUsingLibrarySort()
@@ -273,7 +274,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         Series series = listSeries.get(0);
         listSeries.remove(0);
         Element element;
-        Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
         element = getDetailedEntry(breadcrumbs, series, urn, addTheSeriesWordToTheTitle);
         assert element != null;
         if (element != null) {

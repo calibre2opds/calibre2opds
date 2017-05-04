@@ -1091,10 +1091,11 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       levelSubCatalog.setCatalogType("");       // No type for top level sub-catalog!
       levelSubCatalog.setCatalogFolder("");         // Force to top level!
       levelSubCatalog.setCatalogBaseFilename(CatalogManager.getInitialUr());
-      Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
-                                "dummy.xml");
+      // Breadcrumbs breadcrumbs = Breadcrumbs.newBreadcrumbs(currentProfile.getCatalogTitle(),
+      //                           "dummy.xml");
       levelSubCatalog.getCatalog(
-          breadcrumbs,
+          // breadcrumbs,
+          new Breadcrumbs(),
           null,           // StufftoFilterOut
           false,          // at top level
           "",             // Summary

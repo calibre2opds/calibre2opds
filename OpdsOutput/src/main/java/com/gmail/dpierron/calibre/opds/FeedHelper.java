@@ -87,6 +87,10 @@ public class FeedHelper {
   private final static String RELATION_START = "start";
 
   /**
+   * A breadcrumb link
+   */
+  private final static String RELATION_BREADCRUM = "breadcrumb";
+  /**
    * A link to an author of the item
    */
   public final static String RELATION_AUTHOR = "author";
@@ -290,29 +294,35 @@ public class FeedHelper {
     String startUrl = (folder.length() == 0 ? Constants.CURRENT_PATH_PREFIX : Constants.PARENT_PATH_PREFIX)
                       + CatalogManager.getInitialUr() + Constants.XML_EXTENSION;
     // c2o-87 - Title should use value from settings
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, RELATION_START, ConfigurationManager.getCurrentProfile().getCatalogTitle()));
+    feed.addContent(getLinkElement(startUrl,
+                                   LINKTYPE_NAVIGATION,
+                                   RELATION_START,
+                                   ConfigurationManager.getCurrentProfile().getCatalogTitle()));
 
     // add a navigation link to every breadcrumb in the hierarchy
 
     // Special treatment for first breadcrumb (start URL)
-    Breadcrumb breadcrumb = breadcrumbs.firstElement();
-    feed.addContent(getLinkElement(startUrl, LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
-    // Add links for remaining breadcrumbs
-    for (int i = 1 ; i < breadcrumbs.size() ; i++) {
-      breadcrumb = breadcrumbs.elementAt(i);
-      String breadcrumbUrl = breadcrumb.url;
-      while (breadcrumbUrl.substring(pos).contains(Constants.FOLDER_SEPARATOR))
-        pos = breadcrumbUrl.indexOf(Constants.FOLDER_SEPARATOR,pos) + 1;
-      String breadcrumbFilename = breadcrumbUrl.substring(pos);
-      String breadcrumbFolder = breadcrumbUrl.substring(0,pos);
-      pos = breadcrumbFolder.indexOf(Constants.CURRENT_PATH_PREFIX);   // Also handles parent case!
-      if (pos != -1)
-        breadcrumbFolder = breadcrumbFolder.substring(pos+Constants.CURRENT_PATH_PREFIX.length());
-      feed.addContent(getLinkElement((breadcrumbFolder.equals(folder)
-                                     ? Constants.CURRENT_PATH_PREFIX
-                                     : Constants.PARENT_PATH_PREFIX + breadcrumbFolder)
-                                     + breadcrumbFilename,
-                      LINKTYPE_NAVIGATION, "breadcrumb", breadcrumb.title));
+
+    if (breadcrumbs.size() > 0) {
+      // Add breadcrumb links
+      for (int i = 0 ; i < breadcrumbs.size() ; i++) {
+        Breadcrumb breadcrumb = breadcrumbs.elementAt(i);
+        String breadcrumbUrl = breadcrumb.url;
+        while (breadcrumbUrl.substring(pos).contains(Constants.FOLDER_SEPARATOR))
+          pos = breadcrumbUrl.indexOf(Constants.FOLDER_SEPARATOR,pos) + 1;
+        String breadcrumbFilename = breadcrumbUrl.substring(pos);
+        String breadcrumbFolder = breadcrumbUrl.substring(0,pos);
+        pos = breadcrumbFolder.indexOf(Constants.CURRENT_PATH_PREFIX);   // Also handles parent case!
+        if (pos != -1)
+          breadcrumbFolder = breadcrumbFolder.substring(pos+Constants.CURRENT_PATH_PREFIX.length());
+        feed.addContent(getLinkElement((breadcrumbFolder.equals(folder)
+                                       ? Constants.CURRENT_PATH_PREFIX
+                                       : Constants.PARENT_PATH_PREFIX + breadcrumbFolder)
+                                       + breadcrumbFilename,
+                                      LINKTYPE_NAVIGATION,
+                                      RELATION_BREADCRUM,
+                                      breadcrumb.title));
+      }
     }
   }
 

@@ -36,6 +36,7 @@
   <xsl:param name="intro.developerguide"/>
   <xsl:param name="intro.developerguide.url"/>
   <xsl:param name="intro.team.title"/>
+  <xsl:param name="intro.team.title2"/>
   <xsl:param name="intro.team.list1"/>
   <xsl:param name="intro.team.list2"/>
   <xsl:param name="intro.team.list3"/>
@@ -383,22 +384,29 @@
                   <xsl:value-of select="$intro.userguide"/> </a>
                 <br/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><a href="{$intro.developerguide.url}">
                   <xsl:value-of select="$intro.developerguide"/> </a>
-                <br/><br/><xsl:value-of select="$intro.team.title"/>
-                <xsl:if test="string-length(intro.team.list1) > 1">
+                <xsl:if test="string-length($intro.team.title) > 1">
+                  <!-- Currently active memeber -->
+                  <br/><br/><xsl:value-of select="$intro.team.title"/>
                   <ul>
                   <li><xsl:value-of select="$intro.team.list1"/></li>
-                  <xsl:if test="string-length(intro.team.list2) > 1">
-                    <li><xsl:value-of select="$intro.team.list2"/></li>
-                  </xsl:if>
-                  <xsl:if test="string-length(intro.team.list3) > 1">
-                    <li><xsl:value-of select="$intro.team.list3"/></li>
-                  </xsl:if>
-                  <xsl:if test="string-length(intro.team.list4) > 1">
-                    <li><xsl:value-of select="$intro.team.list4"/></li>
-                  </xsl:if>
                   </ul>
+                  <xsl:if test="string-length($intro.team.title2) > 1">
+                    <!-- Previously active members -->
+                    <xsl:value-of select="$intro.team.title2"/>
+                    <ul>
+                    <xsl:if test="string-length($intro.team.list2) > 1">
+                      <li><xsl:value-of select="$intro.team.list2"/></li>
+                    </xsl:if>
+                    <xsl:if test="string-length($intro.team.list3) > 1">
+                      <li><xsl:value-of select="$intro.team.list3"/></li>
+                    </xsl:if>
+                    <xsl:if test="string-length($intro.team.list4) > 1">
+                      <li><xsl:value-of select="$intro.team.list4"/></li>
+                    </xsl:if>
+                    </ul>
+                  </xsl:if>
                 </xsl:if>
-                <xsl:if test="string-length(intro.thanks.1) > 1">
+                <xsl:if test="string-length($intro.thanks.1) > 1">
                   <xsl:value-of select="$intro.thanks.1"/>
                   <br/><xsl:value-of select="$intro.thanks.2"/>
                 </xsl:if>

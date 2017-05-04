@@ -216,11 +216,12 @@ public class LevelSubCatalog extends SubCatalog {
       String icon,
       Option... options) throws IOException {
 
-    boolean atTopLevel = (pBreadcrumbs.size() == 1 && getCatalogLevel().length() == 0);
+    boolean atTopLevel = (pBreadcrumbs.size() == 0 && getCatalogLevel().length() == 0);
 
     String urlExt = CatalogManager.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, inSubDir || pBreadcrumbs.size() > 1);
-    Breadcrumbs breadcrumbs = inSubDir ? Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt) : pBreadcrumbs;
+    // Breadcrumbs breadcrumbs = inSubDir ? Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt) : pBreadcrumbs;
+    Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
     Composite<Element, String> subCatalogEntry;
     Element entry;
@@ -265,7 +266,7 @@ public class LevelSubCatalog extends SubCatalog {
 
 
     // Custom catalogs when above standard entries
-    if (atTopLevel) generateCustomCatalogs(pBreadcrumbs, feed, inSubDir, true);
+    if (atTopLevel) generateCustomCatalogs(breadcrumbs, feed, inSubDir, true);
     CatalogManager.callback.checkIfContinueGenerating();
 
     /* Authors */
@@ -540,8 +541,8 @@ public class LevelSubCatalog extends SubCatalog {
 */
     } while (foundreference);
 
-    return FeedHelper.getCatalogEntry(title, urn, CatalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
-
+    Element result = FeedHelper.getCatalogEntry(title, urn, CatalogManager.getCatalogFileUrl(outputFilename + Constants.XML_EXTENSION, inSubDir), summary, icon);
+    return result;
   }
 
 
