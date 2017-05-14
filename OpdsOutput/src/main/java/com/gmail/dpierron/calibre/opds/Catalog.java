@@ -955,6 +955,7 @@ public class Catalog {
       CatalogManager.callback.showMessage("");
       CatalogManager.callback.checkIfContinueGenerating();     // check if we must continue
 
+      CatalogManager.callback.showMessage(Localization.Main.getText("info.step.filtering"));
 
       // Prepare the feature books search query
       BookFilter featuredBookFilter = null;
