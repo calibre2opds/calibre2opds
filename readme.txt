@@ -18,14 +18,12 @@ Online documentation is at available:
 - Developers Guide: http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop
 
 Source Code and Downloads are available at:
-  http://code.google.com/p/calibre2opds/
+  https://github.com/calibre2opds/calibre2opds
 
 Issue Management and Feature Request are handled via:
-  http://calibre2opds.myjetbrains.com/youtrack/
+  https://github.com/calibre2opds/calibre2opds/issues
 
-Support is available via the forums at:
-  https://getsatisfaction.com/calibre2opds
-and
+Support is available via the Related Toolds sub-forum at mobileread:
   http://www.mobileread.com/forums/forumdisplay.php?f=238
 
 This project uses :

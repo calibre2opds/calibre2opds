@@ -90,7 +90,7 @@ is at the top) showing main changes and bug fixes.  The bug number references ar
 that have been recorded in the Issue tracker.
 
 Usefule links for tracking changes are:
-  Issue Register: http://calibre2opds.myjetbrains.com/youtrack/issues
+  Issue Register: https://github.com/calibre2opds/calibre2opds/issues
   Change History: https://github.com/calibre2opds/calibre2opds/
   
 v4.0 (planned but not yet started)  
