@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 com\\gmail\\dpierron\\calibre\\datamodel\\calibrequerylanguage\\CalibreQueryParser.g 2017-05-12 12:56:16
+// $ANTLR 3.1.3 Mar 17, 2009 19:23:44 com\\gmail\\dpierron\\calibre\\datamodel\\calibrequerylanguage\\CalibreQueryParser.g 2017-11-29 12:30:57
 
 
     package com.gmail.dpierron.calibre.datamodel.calibrequerylanguage;

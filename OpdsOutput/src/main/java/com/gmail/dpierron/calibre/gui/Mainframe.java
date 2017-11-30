@@ -290,6 +290,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(mnuHelpOpenForum, null, "gui.menu.help.supportForum"),
       new guiField(mnuHelpOpenLocalize, null, "gui.menu.help.localize"),
       new guiField(mnuHelpOpenCustomize, null, "gui.menu.help.customize"),
+      new guiField(mnuHelpOpenSource, null, "gui.menu.help.source"),
       new guiField(mnuToolsResetSecurityCache, null, "gui.menu.tools.resetEncrypted"),
       new guiField(mnuToolsConfigLog,null,"gui.menu.tools.logConfig"),
       new guiField(mnuToolsOpenLog,null,  "gui.menu.tools.logFile"),
@@ -1631,6 +1632,7 @@ public class Mainframe extends javax.swing.JFrame {
         mnuHelpDevelopersGuide = new javax.swing.JMenuItem();
         mnuHelpOpenLocalize = new javax.swing.JMenuItem();
         mnuHelpOpenCustomize = new javax.swing.JMenuItem();
+        mnuHelpOpenSource = new javax.swing.JMenuItem();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -3409,7 +3411,6 @@ public class Mainframe extends javax.swing.JFrame {
         txtCoverHeight.setText("txtCoverHeight");
         txtCoverHeight.setMaximumSize(new java.awt.Dimension(150, 22));
         txtCoverHeight.setMinimumSize(new java.awt.Dimension(100, 22));
-        txtCoverHeight.setPreferredSize(new java.awt.Dimension(80, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
@@ -4757,6 +4758,14 @@ public class Mainframe extends javax.swing.JFrame {
         });
         mnuHelp.add(mnuHelpOpenCustomize);
 
+        mnuHelpOpenSource.setText("mnuHelpOpenSource");
+        mnuHelpOpenSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpOpenSourceActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpOpenSource);
+
         mnuHelpAbout.setText("mnuHelpAbout");
         mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4974,6 +4983,11 @@ public class Mainframe extends javax.swing.JFrame {
     logger.info(Localization.Main.getText("gui.menu.help.customize") + ": " + Constants.CUSTOMIZE_URL);
     BareBonesBrowserLaunch.openURL(Constants.CUSTOMIZE_URL);
   }//GEN-LAST:event_mnuHelpOpenCustomizeActionPerformed
+
+  private void mnuHelpOpenSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenCustomizeActionPerformed
+    logger.info(Localization.Main.getText("gui.menu.help.source") + ": " + Constants.SOURCE_URL);
+    BareBonesBrowserLaunch.openURL(Constants.SOURCE_URL);
+  }//GEN-LAST:event_mnuHelpOpenSourceActionPerformed
 
   private void checkDownloads(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkDownloads
       checkDownloads();
@@ -5326,6 +5340,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuHelpOpenForum;
     private javax.swing.JMenuItem mnuHelpOpenIssues;
     private javax.swing.JMenuItem mnuHelpOpenLocalize;
+    private javax.swing.JMenuItem mnuHelpOpenSource;
     private javax.swing.JMenuItem mnuHelpUserGuide;
     private javax.swing.JMenu mnuProfiles;
     private javax.swing.JMenu mnuTools;

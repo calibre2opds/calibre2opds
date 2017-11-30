@@ -76,6 +76,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c20-274: Large white spaces appearing between paragraphs in the Book Details page
     - #c2o-276: Upgrade to ANTLR 4 
     - #c2o-289: Change display About information 
+    - #c20-292: Authors section has no icon in custom catalogs 
 
 Any requests for new features should be made by adding them to the Issue Register,
 but please look through the list above first to avoid unecessary duplication.  If you

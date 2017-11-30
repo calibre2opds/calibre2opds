@@ -80,7 +80,8 @@ public class Constants {
   public final static String DEVELOPERGUIDE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsDevelop";
   public final static String LOCALIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsLocalize";
   public final static String CUSTOMIZE_URL = "http://wiki.mobileread.com/wiki/Calibre2OpdsCustomize";
-  public final static String ISSUES_URL = "http://calibre2opds.myjetbrains.com/youtrack/";
+  public final static String ISSUES_URL = "https://github.com/calibre2opds/calibre2opds/issues";
+  public final static String SOURCE_URL = "https://github.com/calibre2opds/calibre2opds";
   public final static String FORUM_URL = "https://www.mobileread.com/forums/forumdisplay.php?f=238";
   // URL's into documentation to provide context sensitive help
   public final static String HELP_URL_MAIN_OPTIONS = "http://wiki.mobileread.com/wiki/Calibre2OpdsRunning#Main_Options_Tab";

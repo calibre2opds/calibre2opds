@@ -373,7 +373,7 @@
       <directory url="file://$PROJECT_DIR$/DataModel/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Tools/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/Tools/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/OpdsOutput/target/generated-sources/annotations" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/opdsoutput/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/OpdsOutput/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/CalibreQueryLanguage/target/generated-sources/annotations" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/CalibreQueryLanguage/target/generated-test-sources/test-annotations" includeSubdirectories="true" />
@@ -737,9 +737,9 @@
     <file url="file://$PROJECT_DIR$/CalibreQueryLanguage" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DataModel" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Install" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/OpdsOutput" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Tools" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Tools/src/main/resources/Localization_fr.properties" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/opdsoutput" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
   <component name="IdProvider" IDEtalkID="8C89CA0136CDD788E7EAE3F59459477E" />
@@ -1263,7 +1263,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="SvnBranchConfigurationManager">
@@ -1311,7 +1311,7 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/OpdsOutput">
+        <entry key="$PROJECT_DIR$/opdsoutput">
           <value>
             <SvnBranchConfiguration>
               <option name="branchUrls">

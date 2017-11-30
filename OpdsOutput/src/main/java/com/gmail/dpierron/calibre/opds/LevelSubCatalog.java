@@ -216,7 +216,7 @@ public class LevelSubCatalog extends SubCatalog {
       String icon,
       Option... options) throws IOException {
 
-    boolean atTopLevel = (pBreadcrumbs.size() == 0 && getCatalogLevel().length() == 0);  e' '
+    boolean atTopLevel = (pBreadcrumbs.size() == 0 && getCatalogLevel().length() == 0);
 
     String urlExt = CatalogManager.getCatalogFileUrl(getCatalogBaseFolderFileName() + Constants.XML_EXTENSION, inSubDir);
     Element feed = FeedHelper.getFeedRootElement(pBreadcrumbs, title, urn, urlExt, inSubDir || pBreadcrumbs.size() > 1);
