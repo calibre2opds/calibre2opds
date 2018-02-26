@@ -3,7 +3,7 @@
   <groupId>com.gmail.dpierron.calibre</groupId>
   <artifactId>calibre2opds</artifactId>
   <packaging>pom</packaging>
-  <name>calibre2opds</name>
+  <DisplayName>calibre2opds</DisplayName>
   <version>3.6-SNAPSHOT</version>
   <description>A set of tools that can extract data from the Calibre SQLite database</description>
   <modules>
@@ -21,7 +21,7 @@
   <repositories>
     <repository>
       <id>central</id>
-      <name>Maven Central</name>
+      <DisplayName>Maven Central</DisplayName>
       <url>http://repo1.maven.org/maven2/</url>
     </repository>
   </repositories>

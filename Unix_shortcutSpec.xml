@@ -10,7 +10,7 @@
   <programGroup defaultName="calibre2opds" location="applications"/>
 
   <shortcut
-     name="Calibre2opds"
+     DisplayName="Calibre2opds"
      description="Calibre2opds Graphical User Interface"
      programGroup="yes"
      desktop="yes"
@@ -26,11 +26,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack name="Base"/>
+     <createForPack DisplayName="Base"/>
    </shortcut>
 
   <shortcut
-     name="User Guide"
+     DisplayName="User Guide"
      description="Calibre2Opds online User Guide"
      programGroup="yes"
      desktop="no"
@@ -47,11 +47,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack name="Base"/>
+     <createForPack DisplayName="Base"/>
    </shortcut>
 
   <shortcut
-     name="Developers Guide"
+     DisplayName="Developers Guide"
      description="Calibre2Opds online Developers Guide"
      programGroup="yes"
      desktop="no"
@@ -68,11 +68,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack name="Base"/>
+     <createForPack DisplayName="Base"/>
    </shortcut>
 
   <shortcut
-     name="Calibre2opds catalog generation"
+     DisplayName="Calibre2opds catalog generation"
      description="Generate calibre2opds catalogs from parameters set up earlier via GUI"
      programGroup="yes"
      desktop="no"
@@ -89,7 +89,7 @@
      terminal="true"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack name="Base"/>
+     <createForPack DisplayName="Base"/>
    </shortcut>
 
 </izpack:shortcuts>

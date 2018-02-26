@@ -26,10 +26,10 @@ public class TagFilter implements BookFilter {
 
     for (Tag tag : book.getTags()) {
       if (contains) {
-        if (tag.getName().toUpperCase().contains(filterValue))
+        if (tag.getTextToSort().toUpperCase().contains(filterValue))
           return true;
       } else {
-        if (tag.getName().equalsIgnoreCase(filterValue))
+        if (tag.getTextToSort().equalsIgnoreCase(filterValue))
           return true;
       }
     }

@@ -38,7 +38,7 @@ Table of Contents
       3.1. Text Constructs ............................................7
            3.1.1. The "type" Attribute ................................8
       3.2. Person Constructs .........................................10
-           3.2.1. The "atom:name" Element ............................10
+           3.2.1. The "atom:DisplayName" Element ............................10
            3.2.2. The "atom:uri" Element .............................10
            3.2.3. The "atom:email" Element ...........................10
       3.3. Date Constructs ...........................................10
@@ -137,7 +137,7 @@ RFC 4287                      Atom Format                  December 2005
      <link href="http://example.org/"/>
      <updated>2003-12-13T18:30:02Z</updated>
      <author>
-       <name>John Doe</name>
+       <DisplayName>John Doe</DisplayName>
      </author>
      <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
 
@@ -200,15 +200,15 @@ RFC 4287                      Atom Format                  December 2005
        <updated>2005-07-31T12:29:29Z</updated>
        <published>2003-12-13T08:29:29-04:00</published>
        <author>
-         <name>Mark Pilgrim</name>
+         <DisplayName>Mark Pilgrim</DisplayName>
          <uri>http://example.org/</uri>
          <email>f8dy@example.com</email>
        </author>
        <contributor>
-         <name>Sam Ruby</name>
+         <DisplayName>Sam Ruby</DisplayName>
        </contributor>
        <contributor>
-         <name>Joe Gregorio</name>
+         <DisplayName>Joe Gregorio</DisplayName>
        </contributor>
        <content type="xhtml" xml:lang="en"
         xml:base="http://diveintomark.org/">
@@ -514,7 +514,7 @@ RFC 4287                      Atom Format                  December 2005
 
    atomPersonConstruct =
       atomCommonAttributes,
-      (element atom:name { text }
+      (element atom:DisplayName { text }
        & element atom:uri { atomUri }?
        & element atom:email { atomEmailAddress }?
        & extensionElement*)
@@ -523,11 +523,11 @@ RFC 4287                      Atom Format                  December 2005
    of the child elements in a Person construct.  Person constructs allow
    extension Metadata elements (see Section 6.4).
 
-3.2.1.  The "atom:name" Element
+3.2.1.  The "atom:DisplayName" Element
 
-   The "atom:name" element's content conveys a human-readable name for
-   the person.  The content of atom:name is Language-Sensitive.  Person
-   constructs MUST contain exactly one "atom:name" element.
+   The "atom:DisplayName" element's content conveys a human-readable DisplayName for
+   the person.  The content of atom:DisplayName is Language-Sensitive.  Person
+   constructs MUST contain exactly one "atom:DisplayName" element.
 
 3.2.2.  The "atom:uri" Element
 
@@ -1019,7 +1019,7 @@ RFC 4287                      Atom Format                  December 2005
    }
 
    The content of this element, when present, MUST be a string that is a
-   human-readable name for the generating agent.  Entities such as
+   human-readable DisplayName for the generating agent.  Entities such as
    "&amp;" and "&lt;" represent their corresponding characters ("&" and
    "<" respectively), not markup.
 
@@ -1168,9 +1168,9 @@ RFC 4287                      Atom Format                  December 2005
 
    The value of "rel" MUST be a string that is non-empty and matches
    either the "isegment-nz-nc" or the "IRI" production in [RFC3987].
-   Note that use of a relative reference other than a simple name is not
-   allowed.  If a name is given, implementations MUST consider the link
-   relation type equivalent to the same name registered within the IANA
+   Note that use of a relative reference other than a simple DisplayName is not
+   allowed.  If a DisplayName is given, implementations MUST consider the link
+   relation type equivalent to the same DisplayName registered within the IANA
 
 
 
@@ -1439,7 +1439,7 @@ RFC 4287                      Atom Format                  December 2005
    validate the signature.
 
    In other words, the presence of an element with the namespace URI
-   "http://www.w3.org/2000/09/xmldsig#" and a local name of "Signature"
+   "http://www.w3.org/2000/09/xmldsig#" and a local DisplayName of "Signature"
    as a child of the document element MUST NOT cause an Atom Processor
    to fail merely because of its presence.
 
@@ -1591,10 +1591,10 @@ RFC 4287                      Atom Format                  December 2005
          text
       }
 
-   The element can be interpreted as a simple property (or name/value
+   The element can be interpreted as a simple property (or DisplayName/value
    pair) of the parent element that encloses it.  The pair consisting of
-   the namespace-URI of the element and the local name of the element
-   can be interpreted as the name of the property.  The character data
+   the namespace-URI of the element and the local DisplayName of the element
+   can be interpreted as the DisplayName of the property.  The character data
    content of the element can be interpreted as the value of the
    property.  If the element is empty, then the property value can be
    interpreted as an empty string.
@@ -1637,8 +1637,8 @@ RFC 4287                      Atom Format                  December 2005
    An Atom Document, when serialized as XML 1.0, can be identified with
    the following media type:
 
-   MIME media type name:  application
-   MIME subtype name:  atom+xml
+   MIME media type DisplayName:  application
+   MIME subtype DisplayName:  atom+xml
    Mandatory parameters:  None.
    Optional parameters:
       "charset":  This parameter has semantics identical to the charset
@@ -1979,7 +1979,7 @@ RFC 4287                      Atom Format                  December 2005
 
    atomPersonConstruct =
       atomCommonAttributes,
-      (element atom:name { text }
+      (element atom:DisplayName { text }
        & element atom:uri { atomUri }?
        & element atom:email { atomEmailAddress }?
        & extensionElement*)

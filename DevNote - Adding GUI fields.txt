@@ -21,7 +21,7 @@ Editing the Form
 
 -  Add a field of the requisite type from the toolbox
    Set the following properties:
-   Text:  whatever you like - recommended you use the field variable name as it will then be obvious
+   Text:  whatever you like - recommended you use the field variable DisplayName as it will then be obvious
           if you have applied the localization text
    X-Position
    y-position
@@ -56,7 +56,7 @@ It is likely that the reason the GUI is being edited is to support a new configu
 The following specifies the steps needed to get the option added
 - DefaultConfigurationSettins.java
                               Add entry for field and give its default value
-- ConfigurationHolder.java:   Add an entry for the constant name in the configuration properties file
+- ConfigurationHolder.java:   Add an entry for the constant DisplayName in the configuration properties file
                               Add appropriate get/set routines
 - GetConfigurationInterface.java
                               Add get routine to those defined for this interface

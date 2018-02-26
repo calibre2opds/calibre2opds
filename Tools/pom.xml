@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.dpierron</groupId>
     <artifactId>Tools</artifactId>
-    <name>Tools</name>
+    <DisplayName>Tools</DisplayName>
     <version>3.6-SNAPSHOT</version>
     <description>Helper tools</description>
     <dependencies>

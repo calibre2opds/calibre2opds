@@ -68,8 +68,8 @@ public class SeriesSubCatalog extends BooksSubCatalog {
       Collections.sort(series, new Comparator<Series>() {
 
         public int compare(Series o1, Series o2) {
-          return Helper.checkedCollatorCompareIgnoreCase((o1 == null ? "" : o1.getTitleToSplitByLetter()),
-                                                          (o2 == null ? "" : o2.getTitleToSplitByLetter()),
+          return Helper.checkedCollatorCompareIgnoreCase((o1 == null ? "" : o1.getTextToSort()),
+                                                          (o2 == null ? "" : o2.getTextToSort()),
                                                           collator);
         }
       });
@@ -265,9 +265,7 @@ public class SeriesSubCatalog extends BooksSubCatalog {
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, urlExt);
 
     // Check for special case where the series name is equal to the split level
-    String seriesNameUpper = currentProfile.getSortSeriesUsingLibrarySort()
-                                            ? listSeries.get(0).getName().toUpperCase()
-                                            : listSeries.get(0).getSort().toUpperCase();
+    String seriesNameUpper = listSeries.get(0).getTextToSort().toUpperCase();
     if (splitOption == SplitOption.SplitByLetter) {
       while (listSeries.size() > 0
           && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + seriesNameUpper)) {
@@ -397,9 +395,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
    *
    * NOTE.  This is NOT used in the case where we are doing the
    *        sub-set of a series for a given author.
-   *
-   * @param serie
-   * @return
    */
   public static String getSeriesFolderFilenameNoLevel(Series serie) {
     return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.SERIES_TYPE, serie.getId(), 1000);
@@ -408,9 +403,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   /**
    *  Get the base filename that is used to store a given series
    *  taking into account any level information
-   *
-   * @param serie
-   * @return
    */
   public String getSeriesFolderFilenameWithLevel(Series serie) {
     return getCatalogBaseFolderFileNameIdSplit(Constants.SERIES_TYPE, serie.getId(), 1000);
@@ -418,11 +410,6 @@ public class SeriesSubCatalog extends BooksSubCatalog {
   /**
    * List the books that belong to the given series
    *
-   * @param pBreadcrumbs
-   * @param seriesObject
-   * @param opts    baseurn
-   *                addTheSeriesWordToTheTitle
-   * @return
    * @throws IOException
    */
   // public Element getSeriesEntry(Breadcrumbs pBreadcrumbs, Series serie, String baseurn, boolean addTheSeriesWordToTheTitle) throws IOException {
@@ -460,13 +447,13 @@ public class SeriesSubCatalog extends BooksSubCatalog {
         if (index1 != index2) {
           return index1.compareTo(index2);
         }
-        String title1 = o1.getTitleToSplitByLetter();
-        String title2 = o2.getTitleToSplitByLetter();
+        String title1 = o1.getTextToSort();
+        String title2 = o2.getTextToSort();
         return Helper.checkedCollatorCompareIgnoreCase(title1, title2, collator);
       }
     });
 
-    String title = currentProfile.getDisplaySeriesSort() ? serie.getSort() : serie.getName();
+    String title = serie.getTextToDisplay();
     if (addTheSeriesWordToTheTitle) {
       title = Localization.Main.getText("content.series") + ": " + title;
     }

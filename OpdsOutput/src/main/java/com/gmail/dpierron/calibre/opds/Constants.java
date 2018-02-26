@@ -37,12 +37,11 @@ public class Constants {
   public final static String URN_SEPARATOR = ":";
   public final static String SECURITY_SEPARATOR = "@";
   public final static String ALLBOOKS_TYPE = "allbooks";
-  public final static String BOOK_TYPE ="book";
   public final static String AUTHOR_TYPE = "author";
   public final static String AUTHORLIST_TYPE = "authorlist";
   public final static String SERIES_TYPE = "series";
   public final static String SERIESLIST_TYPE = "serieslist";
-  public final static String TAG_TYPE = "tag";
+  // public final static String TAG_TYPE = "tags";
   public final static String TAGLIST_TYPE = "taglist";
   public final static String TAGTREE_TYPE = "tagtree";
   public final static String RATED_TYPE = "rated";

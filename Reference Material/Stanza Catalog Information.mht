@@ -37,10 +37,10 @@ H5 {
 </STYLE>
 <LINK rel=3D"shortcut icon" type=3Dimage/x-icon=20
 href=3D"/sites/default/files/images/favicon.ico">
-<META name=3Dverify-v1 =
+<META DisplayName=3Dverify-v1 =
 content=3DebklRO3dK25gKrKaZecHzRUr9U2IFoarR+yqrI32YGw=3D>
-<META name=3Dy_key content=3D1098c83a55519c85>
-<META name=3Dviewport=20
+<META DisplayName=3Dy_key content=3D1098c83a55519c85>
+<META DisplayName=3Dviewport=20
 content=3Dwidth=3Ddevice-width,height=3Ddevice-height,user-scalable=3Dyes=
 ><LINK=20
 rel=3Dstylesheet type=3Dtext/css=20
@@ -124,7 +124,7 @@ true, "enable_acidfree_videos": true, "slideshow_interval": 5000, =
 <!--[if lt IE 7]>=0A=
       <link type=3D"text/css" rel=3D"stylesheet" media=3D"all" =
 href=3D"/themes/garland/fix-ie.css" />    <![endif]-->
-<META name=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
+<META DisplayName=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
 <BODY><!-- Layout -->
 <DIV id=3Dheader-region class=3Dclear-block>
 <DIV id=3Dblock-block-15 class=3D"clear-block block block-block">
@@ -320,7 +320,7 @@ href=3D"http://blogs.adobe.com/digitaleditions/2008/06/docbook_xsl_epub_t=
 arget_is_rea.html">here</A>.)=20
 Docbook is a widely-used XML format to express the complete contents of =
 a book.=20
-Contrary to what the name suggests, it is not limited to just =
+Contrary to what the DisplayName suggests, it is not limited to just =
 documentation, but=20
 can support any book contents. This options is attractive to developers =
 who=20
@@ -379,7 +379,7 @@ encoding=3D"utf-8"?&gt;
 &nbsp;&nbsp;&lt;title&gt;Billy Bob's Book Catalog&lt;/title&gt;
 &nbsp;&nbsp;&lt;updated&gt;2008-08-18T17:40:58-07:00&lt;/updated&gt;
 &nbsp;&nbsp;&lt;author&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Billy Bob&lt;/name&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;DisplayName&gt;Billy Bob&lt;/DisplayName&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;uri&gt;http://www.billybobsbooks.com/&lt;/uri=
 &gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;email&gt;billybob@billybobsbooks.com&lt;/emai=
@@ -438,7 +438,7 @@ type=3D"application/atom+xml" =
 href=3D"http://www.billybobsbooks.com/catalog/search.php?search=3D{search=
 Terms}"/&gt;
   &lt;author&gt;
-    &lt;name&gt;Billy Bob&lt;/name&gt;
+    &lt;DisplayName&gt;Billy Bob&lt;/DisplayName&gt;
     &lt;uri&gt;http://www.billybobsbooks.com&lt;/uri&gt;
     &lt;email&gt;billybob@billybobsbooks.com&lt;/email&gt;
   &lt;/author&gt;
@@ -450,7 +450,7 @@ Subject: Novels Language: en&lt;/div&gt;
     &lt;/content&gt;
     &lt;id&gt;urn:billybobsbooks:1166&lt;/id&gt;
     &lt;author&gt;
-      &lt;name&gt;Orwell, George&lt;/name&gt;
+      &lt;DisplayName&gt;Orwell, George&lt;/DisplayName&gt;
     &lt;/author&gt;
     &lt;updated&gt;2008-09-12T00:44:20+00:00&lt;/updated&gt;
     &lt;link type=3D"application/epub+zip" =
@@ -468,7 +468,7 @@ Subject: Non-Fiction Language: en&lt;/div&gt;
     &lt;/content&gt;
     &lt;id&gt;urn:billybobsbooks:168&lt;/id&gt;
     &lt;author&gt;
-      &lt;name&gt;Sun Tzu&lt;/name&gt;
+      &lt;DisplayName&gt;Sun Tzu&lt;/DisplayName&gt;
     &lt;/author&gt;
     &lt;updated&gt;2008-09-12T00:44:20+00:00&lt;/updated&gt;
     &lt;link type=3D"application/epub+zip" =
@@ -598,9 +598,9 @@ html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" =
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;html xmlns=3D"http://www.w3.org/1999/xhtml"&gt;
 &lt;head&gt;
-&lt;meta name=3D"viewport" content=3D"initial-scale=3D1.0, =
+&lt;meta DisplayName=3D"viewport" content=3D"initial-scale=3D1.0, =
 user-scalable=3Dno" /&gt;
-&lt;meta name=3D"stanza-toolbars" content=3D"hide" /&gt;
+&lt;meta DisplayName=3D"stanza-toolbars" content=3D"hide" /&gt;
 &lt;link href=3D"http://images.lexcycle.com/mobiletext.css" =
 rel=3D"stylesheet" type=3D"text/css" /&gt;
 &lt;/head&gt;
@@ -689,7 +689,7 @@ loaded and appended to the current catalog list. </P>
 <H4>Catalog Subdescriptions</H4>
 <P>Sub-catalogs can have a small piece of descriptive text that appears =
 below=20
-the catalog name. This is useful for summarizing the catalog contents or =
+the catalog DisplayName. This is useful for summarizing the catalog contents or =
 
 providing additional hints. This is accomplished by using code like: =
 <CODE><PRE>&lt;entry&gt;
@@ -798,7 +798,7 @@ and set them all up on a host somewhere, you can now test your catalog! =
 In=20
 Stanza 1.5, you can add a new catalog by going to the "Online Catalog" =
 section=20
-and tapping the "+" button, where you can enter the name and URL of you =
+and tapping the "+" button, where you can enter the DisplayName and URL of you =
 catalog=20
 to add.</P>
 <H3>The Final Steps</H3>
@@ -3410,7 +3410,7 @@ MARGIN: 15px auto 45px; PADDING-LEFT: 5px; WIDTH: 550px; PADDING-RIGHT: =
 .beta_warning IMG {
 	WIDTH: 32px; HEIGHT: 32px; VERTICAL-ALIGN: middle
 }
-.name {
+.DisplayName {
 	FONT-FAMILY: "Futura", Helvetica, sans-serif; LETTER-SPACING: 1px; =
 FONT-SIZE: 14px
 }
@@ -4546,7 +4546,7 @@ theme_placeholder(text),=0A=
  * call Drupal.theme('placeholder', text).=0A=
  *=0A=
  * @param func=0A=
- *   The name of the theme function to call.=0A=
+ *   The DisplayName of the theme function to call.=0A=
  * @param ...=0A=
  *   Additional arguments to pass along to the theme function.=0A=
  * @return=0A=

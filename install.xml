@@ -8,8 +8,8 @@
         <appname>Calibre2opds</appname>
         <appversion>3.6</appversion>
         <authors>
-            <author name="Dave Walker" email="itimpi@ntlworld.com"/>
-            <author name="David Pierron" email="dpierron@gmail.com"/>
+            <author DisplayName="Dave Walker" email="itimpi@ntlworld.com"/>
+            <author DisplayName="David Pierron" email="dpierron@gmail.com"/>
         </authors>
         <url>http://calibre2opds.com</url>
         <javaversion>1.7</javaversion>
@@ -61,8 +61,8 @@
         Required native libraries for installers targetting Windows
     -->
     <natives>
-        <native type="izpack" name="ShellLink.dll"/>
-        <native type="izpack" name="ShellLink_x64.dll"/>
+        <native type="izpack" DisplayName="ShellLink.dll"/>
+        <native type="izpack" DisplayName="ShellLink_x64.dll"/>
     </natives>
 	
     <!-- 
@@ -85,7 +85,7 @@
         We specify here our packs.
     -->
     <packs>
-        <pack name="Base" required="yes">
+        <pack DisplayName="Base" required="yes">
             <description>The base files</description>
             <file src="readme.txt" targetdir="$INSTALL_PATH"/>
             <file src="licence.txt" targetdir="$INSTALL_PATH"/>

@@ -21,7 +21,7 @@ Content-Location: http://opds-spec.org/specs/opds-catalog-1-0-20100830/
 xmlns=3D"http://www.w3.org/1999/xhtml"><HEAD=20
 profile=3D"http://gmpg.org/xfn/11"><TITLE>OPDS Catalog 1.0</TITLE>
 <META content=3D"text/html; charset=3DUTF-8" http-equiv=3DContent-Type>
-<META name=3Drobots content=3Dindex,follow><LINK rel=3Dcanonical=20
+<META DisplayName=3Drobots content=3Dindex,follow><LINK rel=3Dcanonical=20
 href=3D"http://opds-spec.org/specs/opds-catalog-1-0-20100830/"><LINK=20
 rel=3Dstylesheet type=3Dtext/css=20
 href=3D"http://opds-spec.org/wp-content/themes/thematic/style.css"><LINK =
@@ -78,7 +78,7 @@ type=3Dtext/javascript>=0A=
 		/*]]>*/=0A=
 	</SCRIPT>
 
-<META name=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
+<META DisplayName=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
 <BODY=20
 class=3D"page page-id-62 page-child parent-pageid-33 page-template =
 page-template-default windows msie ie8">
@@ -566,12 +566,12 @@ Publication=20
 Entry=20
   Documents.</DD>
   <DT>OPDS Catalog Entry Document</DT>
-  <DD>The formal name for the XML documents that are a refinement of an=20
+  <DD>The formal DisplayName for the XML documents that are a refinement of an=20
   =E2=80=9Catom:entry=E2=80=9D from the Atom Syndication Format =
 <TT>[RFC4287]</TT> that this=20
   specification defines.</DD>
   <DT>OPDS Catalog Feed Document</DT>
-  <DD>The formal name for XML documents that are a refinement of an =
+  <DD>The formal DisplayName for XML documents that are a refinement of an =
 =E2=80=9Catom:feed=E2=80=9D=20
   from the Atom Syndication Format <TT>[RFC4287]</TT> that this =
 specification=20
@@ -624,7 +624,7 @@ Syndication Format <TT>[RFC4287]</TT>.</P>
 <P>An OPDS Catalog Entry Document is a refinement of an =
 =E2=80=9Catom:entry=E2=80=9D from the=20
 Atom Syndication Format <TT>[RFC4287]</TT>.</P>
-<P>The namespace name <TT>[REC-xml-names]</TT> for elements defined in =
+<P>The namespace DisplayName <TT>[REC-xml-names]</TT> for elements defined in =
 this=20
 specification and used in OPDS Catalog Feed Documents and OPDS Catalog =
 Entry=20
@@ -636,16 +636,16 @@ log</A></P>
 =E2=80=9Cnamespace-well-formed=E2=80=9D as specified in Section 7 of=20
 <TT>[REC-xml-names]</TT>.</P>
 <P>This specification uses the prefix =E2=80=9Copds:=E2=80=9D for the =
-namespace name. The prefix=20
+namespace DisplayName. The prefix=20
 =E2=80=9Catom:=E2=80=9D is used for =E2=80=9C<A=20
 href=3D"http://www.w3.org/2005/Atom">http://www.w3.org/2005/Atom</A> =
 =E2=80=9C, the=20
-namespace name of the Atom Syndication Format <TT>[RFC4287]</TT>. The =
+namespace DisplayName of the Atom Syndication Format <TT>[RFC4287]</TT>. The =
 prefix=20
 =E2=80=9Cdc:=E2=80=9D is used for=E2=80=9D<A=20
 href=3D"http://purl.org/dc/terms/">http://purl.org/dc/terms/</A>=E2=80=9C=
 , the namespace=20
-name of Dublin Core Metadata Initiative (DCMI) Metadata Terms=20
+DisplayName of Dublin Core Metadata Initiative (DCMI) Metadata Terms=20
 <TT>[DCTERMS]</TT>. These namespace prefixes are not semantically=20
 significant.</P>
 <P>Producers of OPDS Catalogs SHOULD produce OPDS Catalog Feed Documents =
@@ -667,7 +667,7 @@ markup MUST NOT stop processing and MUST NOT signal an error. Clients =
 SHOULD=20
 preserve foreign markup when transmitting or aggregating such =
 documents.</P>
-<P>The namespace name =E2=80=9C<A=20
+<P>The namespace DisplayName =E2=80=9C<A=20
 href=3D"http://opds-spec.org/2010/catalog">http://opds-spec.org/2010/cata=
 log</A>=E2=80=9D=20
 is reserved for forward-compatible revisions of the OPDS Catalog format. =
@@ -930,7 +930,7 @@ version=3D"1.0" encoding=3D"UTF-8"?&gt;
   &lt;title&gt;OPDS Catalog Root Example&lt;/title&gt;
   &lt;updated&gt;2010-01-10T10:03:10Z&lt;/updated&gt;
   &lt;author&gt;
-    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;DisplayName&gt;Spec Writer&lt;/DisplayName&gt;
     &lt;uri&gt;http://opds-spec.org&lt;/uri&gt;
   &lt;/author&gt;
 
@@ -991,7 +991,7 @@ above:</P><PRE>&lt;?xml version=3D"1.0" encoding=3D"UTF-8"?&gt;
   &lt;title&gt;Unpopular Publications&lt;/title&gt;
   &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
   &lt;author&gt;
-    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;DisplayName&gt;Spec Writer&lt;/DisplayName&gt;
     &lt;uri&gt;http://opds-spec.org&lt;/uri&gt;
   &lt;/author&gt;
 
@@ -1000,7 +1000,7 @@ above:</P><PRE>&lt;?xml version=3D"1.0" encoding=3D"UTF-8"?&gt;
     &lt;id&gt;urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734&lt;/id&gt;
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1036,15 +1036,15 @@ type=3D"application/atom+xml;type=3Dentry;profile=3Dopds-catalog"
     &lt;title&gt;Modern Online Philately&lt;/title&gt;
     &lt;id&gt;urn:uuid:7b595b0c-e15c-4755-bf9a-b7019f5c1dab&lt;/id&gt;
     &lt;author&gt;
-      &lt;name&gt;Stampy McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Stampy McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;author&gt;
-      &lt;name&gt;Alice McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Alice McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21284&lt;/uri&gt;
     &lt;/author&gt;
     &lt;author&gt;
-      &lt;name&gt;Harold McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Harold McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21283&lt;/uri&gt;
     &lt;/author&gt;
     &lt;updated&gt;2010-01-10T10:01:10Z&lt;/updated&gt;
@@ -1383,7 +1383,7 @@ Feed) for a Publication available in two formats:</P><PRE>  =
     &lt;id&gt;urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734&lt;/id&gt;
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1422,7 +1422,7 @@ type=3D"application/atom+xml;type=3Dentry;profile=3Dopds-catalog"
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
 
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1872,7 +1872,7 @@ Terms=E2=80=9D, January 2008,=20
   =
 href=3D"http://dublincore.org/documents/dcmi-terms/">http://dublincore.or=
 g/documents/dcmi-terms/</A>.</LI>
-  <LI><TT>[ISO4217]</TT> =E2=80=9CISO 4217 currency and funds name and =
+  <LI><TT>[ISO4217]</TT> =E2=80=9CISO 4217 currency and funds DisplayName and =
 code elements=E2=80=9D,=20
   International Standard ISO 4217, <A=20
   =
@@ -2006,7 +2006,7 @@ require some
 which
 # is used to describe an atomLink whose rel value is an atomNCName =
 (no-colon
-# name) or any URI other than these from OPDS Catalogs. In these cases, =
+# DisplayName) or any URI other than these from OPDS Catalogs. In these cases, =
 no
 # opds:price element should appear.
 atomUriExceptOPDS =3D string - ( string =
@@ -2041,7 +2041,7 @@ element
 #   included; or
 # - the value of the rel attribute is any other URI or an Atom-defined =
 no-colon
-#   name, and no opds:price element is permitted
+#   DisplayName, and no opds:price element is permitted
 
 # Note that this OPDS Catalog schema includes atom.rnc, so that schema =
 must be
@@ -2199,8 +2199,8 @@ and hit enter';}"=20
   onfocus=3D"if (this.value =3D=3D 'To search, type and hit enter') =
 {this.value =3D '';}"=20
   tabIndex=3D1 value=3D"To search, type and hit enter" size=3D32 =
-type=3Dtext name=3Ds> <INPUT id=3Dsearchsubmit tabIndex=3D2 =
-value=3DSearch type=3Dsubmit name=3Dsearchsubmit>=20
+type=3Dtext DisplayName=3Ds> <INPUT id=3Dsearchsubmit tabIndex=3D2 =
+value=3DSearch type=3Dsubmit DisplayName=3Dsearchsubmit>=20
   </DIV></FORM></LI>
   <LI id=3Dpages-2 class=3D"widgetcontainer widget_pages">
   <H3 class=3Dwidgettitle>Pages</H3>
@@ -4270,7 +4270,7 @@ achEvent&&d.fireEvent){d.attachEvent("onclick",function =
 r(){c.support.noCloneEvent=3D=0A=
 false;d.detachEvent("onclick",r)});d.cloneNode(true).fireEvent("onclick")=
 }d=3Dt.createElement("div");d.innerHTML=3D"<input type=3D'radio' =
-name=3D'radiotest' =
+DisplayName=3D'radiotest' =
 checked=3D'checked'/>";a=3Dt.createDocumentFragment();a.appendChild(d.fir=
 stChild);c.support.checkClone=3Da.cloneNode(true).cloneNode(true).lastChi=
 ld.checked;c(function(){var =
@@ -4314,7 +4314,7 @@ Attribute("classid")!=3D=3Db)}return =
 true}});c.fn.extend({data:function(a,b){var d=3Dnull;if(typeof =
 a=3D=3D=3D"undefined"){if(this.length){var =
 e=3Dthis[0].attributes,f;d=3Dc.data(this[0]);for(var =
-h=3D0,l=3De.length;h<l;h++){f=3De[h].name;if(f.indexOf("data-")=3D=3D=3D0=
+h=3D0,l=3De.length;h<l;h++){f=3De[h].DisplayName;if(f.indexOf("data-")=3D=3D=3D0=
 ){f=3Df.substr(5);ka(this[0],f,d[f])}}}return d}else if(typeof =
 a=3D=3D=3D"object")return this.each(function(){c.data(this,=0A=
 a)});var =
@@ -4703,7 +4703,7 @@ B){n||(F=3Dy);g=3Dg.replace(o.match[N],"");if(!q)return[];break}}}if(g=3D=
 F};k.error=3Dfunction(g){throw"Syntax error, unrecognized expression: =
 "+g;};var =
 o=3Dk.selectors=3D{order:["ID","NAME","TAG"],match:{ID:/#((?:[\w\u00c0-\u=
-FFFF\-]|\\.)+)/,CLASS:/\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/,NAME:/\[name=3D[=
+FFFF\-]|\\.)+)/,CLASS:/\.((?:[\w\u00c0-\uFFFF\-]|\\.)+)/,NAME:/\[DisplayName=3D[=
 '"]*((?:[\w\u00c0-\uFFFF\-]|\\.)+)['"]*\]/,ATTR:/\[\s*((?:[\w\u00c0-\uFFF=
 F\-]|\\.)+)\s*(?:(\S?=3D)\s*(['"]*)(.*?)\3|)\s*\]/,TAG:/^((?:[\w\u00c0-\u=
 FFFF\*\-]|\\.)+)/,CHILD:/:(only|nth|last|first)-child(?:\((even|odd|[\dn+=
@@ -4733,7 +4733,7 @@ i.getElementById!=3D=3D"undefined"&&!n)return(g=3Di.getElementById(g[1]))=
 &&g.parentNode?[g]:[]},NAME:function(g,i){if(typeof =
 i.getElementsByName!=3D=3D"undefined"){for(var =
 n=3D[],m=3Di.getElementsByName(g[1]),p=3D0,q=3Dm.length;p<q;p++)m[p].getA=
-ttribute("name")=3D=3D=3Dg[1]&&n.push(m[p]);return =
+ttribute("DisplayName")=3D=3D=3Dg[1]&&n.push(m[p]);return =
 n.length=3D=3D=3D0?null:n}},TAG:function(g,i){return =
 i.getElementsByTagName(g[1])}},preFilter:{CLASS:function(g,i,n,m,p,q){g=3D=
 " "+g[1].replace(/\\/g,=0A=
@@ -4844,7 +4844,7 @@ if(n.nodeType!=3D=3D8)i+=3Dk.getText(n.childNodes)}return =
 i};(function(){var g=3Dt.createElement("div"),=0A=
 i=3D"script"+(new =
 Date).getTime(),n=3Dt.documentElement;g.innerHTML=3D"<a =
-name=3D'"+i+"'/>";n.insertBefore(g,n.firstChild);if(t.getElementById(i)){=
+DisplayName=3D'"+i+"'/>";n.insertBefore(g,n.firstChild);if(t.getElementById(i)){=
 o.find.ID=3Dfunction(m,p,q){if(typeof =
 p.getElementById!=3D=3D"undefined"&&!q)return(p=3Dp.getElementById(m[1]))=
 ?p.id=3D=3D=3Dm[1]||typeof =
@@ -5175,11 +5175,11 @@ l.responseText,k,l])}});return this},serialize:function(){return =
 c.param(this.serializeArray())},serializeArray:function(){return =
 this.map(function(){return =
 this.elements?c.makeArray(this.elements):this}).filter(function(){return =
-this.name&&=0A=
+this.DisplayName&&=0A=
 !this.disabled&&(this.checked||ob.test(this.nodeName)||pb.test(this.type)=
 )}).map(function(a,b){var d=3Dc(this).val();return =
-d=3D=3Dnull?null:c.isArray(d)?c.map(d,function(e){return{name:b.name,valu=
-e:e}}):{name:b.name,value:d}}).get()}});c.each("ajaxStart ajaxStop =
+d=3D=3Dnull?null:c.isArray(d)?c.map(d,function(e){return{DisplayName:b.DisplayName,valu=
+e:e}}):{DisplayName:b.DisplayName,value:d}}).get()}});c.each("ajaxStart ajaxStop =
 ajaxComplete ajaxError ajaxSuccess ajaxSend".split(" =
 "),function(a,b){c.fn[b]=3Dfunction(d){return =
 this.bind(b,d)}});c.extend({get:function(a,b,d,e){if(c.isFunction(b)){e=3D=
@@ -5260,7 +5260,7 @@ timeout")},b.timeout);try{w.send(l||b.data=3D=3Dnull?null:b.data)}catch(n=
 d=3D[],e=3Dfunction(h,l){l=3Dc.isFunction(l)?l():l;d[d.length]=3D=0A=
 encodeURIComponent(h)+"=3D"+encodeURIComponent(l)};if(b=3D=3D=3DB)b=3Dc.a=
 jaxSettings.traditional;if(c.isArray(a)||a.jquery)c.each(a,function(){e(t=
-his.name,this.value)});else for(var f in a)da(f,a[f],b,e);return =
+his.DisplayName,this.value)});else for(var f in a)da(f,a[f],b,e);return =
 d.join("&").replace(tb,"+")}});c.extend({active:0,lastModified:{},etag:{}=
 ,handleError:function(a,b,d,e){a.error&&a.error.call(a.context,b,d,e);a.g=
 lobal&&c.triggerGlobal(a,"ajaxError",[b,a,e])},handleSuccess:function(a,b=

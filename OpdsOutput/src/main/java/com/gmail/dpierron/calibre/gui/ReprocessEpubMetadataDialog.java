@@ -69,7 +69,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
     } else {
       Tag theTag = null;
       for (Tag tag : DataModel.getListOfTags()) {
-        if (tag.getName().equalsIgnoreCase(onlyForTag)) {
+        if (tag.getTextToSort().equalsIgnoreCase(onlyForTag)) {
           theTag = tag;
           break;
         }
@@ -82,12 +82,12 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
     for (Book book : books) {
       if (stopThread)
         break;
-      lblBookTitle.setText(book.getTitle());
+      lblBookTitle.setText(book.getDisplayName());
       OpfOutput opfOutput = new OpfOutput(book, removeCss, restoreCss, defaultStyleSheet);
       try {
         opfOutput.processEPubFile();
       } catch (IOException e) {
-        String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getTitle(), e.getMessage());
+        String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getDisplayName(), e.getMessage());
         logger.error(message, e);
         JOptionPane.showMessageDialog(this, message);
         message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks2");

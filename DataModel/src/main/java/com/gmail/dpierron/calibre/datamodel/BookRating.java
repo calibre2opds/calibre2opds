@@ -1,5 +1,7 @@
 package com.gmail.dpierron.calibre.datamodel;
 
+import java.util.Arrays;
+
 public enum BookRating {
   ONE(2, '1'),
   TWO(4, '2'),
@@ -13,9 +15,32 @@ public enum BookRating {
   private boolean done = false;
   private boolean referenced = false;
 
+  // CONSTRUCTORS
+
   private BookRating(int value, char charEquivalent) {
     this.value = value;
     this.charEquivalent = charEquivalent;
+  }
+
+  // METHODS and PROPERTIES implementing Abstract ones from Base class)
+
+  public String getColumnName () {
+    return "rating";
+  }
+  public ColumType getColumnType() {
+    return ColumType.COLUMN_RATING;
+  }
+  public String getDisplayName() {
+    return name();
+  }
+  public String getSortName() {
+    return name();
+  }
+  public String getTextToDisplay() {
+    return name();
+  }
+  public String getTextToSort() {
+    return name();
   }
 
   public static BookRating[] sortedRatings() {

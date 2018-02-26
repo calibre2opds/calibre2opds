@@ -5,7 +5,7 @@ import com.gmail.dpierron.tools.Helper;
 import java.util.List;
 
 
-public class Tag implements SplitableByLetter, Comparable<Tag> {
+public class Tag extends GenericDataObject implements SplitableByLetter, Comparable<Tag> {
   private final String id;
   private final String name;
   private String[] partsOfTag;
@@ -16,31 +16,51 @@ public class Tag implements SplitableByLetter, Comparable<Tag> {
   private final static byte FLAG_REFERENCED = 0x02;
   private byte flags = FLAG_ALL_CLEAR;
 
+  //            CONSTRUCTOR
+
   public Tag(String id, String name) {
     super();
     this.id = id;
     this.name = name;
   }
 
+  // METHODS and PROPERTIES implementing Abstract ones from Base class)
+
+  public ColumType getColumnType() {
+    return ColumType.COLUMN_TAGS;
+  }
+  public String getColumnName() {
+    return "tags";
+  }
+  public String getDisplayName() {
+    return name;
+  }
+  public String getSortName() {
+    return name;
+  }
+  public String getTextToSort() {
+    return name;
+  }
+  public String getTextToDisplay() {
+    return name;
+  }
+
+  //                            METHODS and PROPERTIES
+
   public String getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
-  }
+
 
   public String toString() {
-    return getName();
+    return getTextToSort();
   }
 
-  public String getTitleToSplitByLetter() {
-    return getName();
-  }
 
   public String[] getPartsOfTag(String splitTagsOn) {
     if (partsOfTag == null) {
-      List<String> parts = Helper.tokenize(getName(), splitTagsOn);
+      List<String> parts = Helper.tokenize(getTextToSort(), splitTagsOn);
       partsOfTag = new String[parts.size()];
       int[] partsOfTagHash = new int[partsOfTag.length];
       for (int i = 0; i < parts.size(); i++) {

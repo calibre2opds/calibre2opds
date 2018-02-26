@@ -6,11 +6,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class Author implements SplitableByLetter, Comparable<Author> {
+public class Author  extends GenericDataObject implements SplitableByLetter, Comparable<Author>  {
   private final static Logger logger = LogManager.getLogger(Author.class);
   private final String id;
-  private String name;
-  private String sort;
+  private String displayName;
+  private String sortName;
   private String guessedLastName;
   private String nameForSort;
   // Flags
@@ -20,121 +20,132 @@ public class Author implements SplitableByLetter, Comparable<Author> {
   private final static byte FLAG_REFERENCED = 0x02;
   private byte flags = FLAG_ALL_CLEAR;
 
-  public Author(String id, String name, String sort) {
+  // CONSTRUCTORS
+
+  public Author(String id, String DisplayName, String sort) {
     super();
     this.id = id;
-    this.name = name.replace('|', ',');
-    /* history of change for the author.sort column :
-     * - at the beginning, C2O was looking in this column for sort info ; if it was empty, it would be computed
-     * - then a bug was found (577526) and I removed the load code for this column 
+    this.displayName = DisplayName.replace('|', ',');
+    /* history of change for the author.sortName column :
+     * - at the beginning, C2O was looking in this column for sortName info ; if it was empty, it would be computed
+     * - then a bug was found (577526) and I removed the load code for this column
      * - and then, after bug 655081 I realized that Calibre had evolved into using the column again ; so back to step one
      */
-    this.sort = sort;
+    this.sortName = sort;
   }
+
+  // METHODS and PROPERTIES implementing Abstract ones from Base class)
+
+  public ColumType getColumnType() {
+    return ColumType.COLUMN_AUTHOR;
+  }
+   public String getColumnName() {
+     return "authors";
+   }
+  public String getDisplayName() {
+    return displayName;
+  }
+  /**
+   * Get the stored sortName string
+   * If necessary derive the value we are going to use for sorting
+   *
+   * @return
+   */
+  public String getSortName() {
+    if (Helper.isNullOrEmpty(sortName)) {
+      // first, let's try and find a book by this author (alone) which has a author_sort field
+      // If so we use that value as the most likely one
+      List<Book> books = DataModel.getMapOfBooksByAuthor().get(this);
+      if (books != null)
+        for (Book book : books) {
+          if (book.hasSingleAuthor()) {
+            String authorSort = book.getAuthorSort();
+            // ITIMPI:   Perhaps we should also consider a value with no comma and no space as a valid author sortName?
+            if (Helper.isNotNullOrEmpty(authorSort) && authorSort.contains(","))
+              return authorSort;
+          }
+        }
+
+      // We could not find an acceptable author sortName value so we need to do something further
+
+      // Check if there is a comma   in the displayName field
+      // If so assume what follows is the author sortName surname
+
+      int posOfSpace = displayName.indexOf(',');
+      if (posOfSpace >= 0) {
+        guessedLastName = displayName.substring(0, posOfSpace);
+        return displayName;
+      }
+
+      // then split the author on space seaparator
+      List<String> words = Helper.tokenize(displayName, " ");
+      switch (words.size()) {
+        case 1:
+          // If there is only a single word then it must be the author sortName
+          guessedLastName = displayName;
+          return displayName;
+        case 0:
+          logger.warn("Problem computing Author sortName for author: " + displayName);
+          guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + displayName + ")";
+          return guessedLastName;
+        default:
+          // Grab the last word as the surname
+          guessedLastName = words.get(words.size() - 1);
+          // Remove from the array the word we have assumed is the surname
+          words.remove(words.size() - 1);
+          // Now construct the sortName nsme we are going to use
+          return guessedLastName + ", " + Helper.concatenateList(" ", words);
+      }
+    }
+    return sortName;
+  }
+
+  public String getTextToDisplay() {
+    return DataModel.getDisplayAuthorSort() ? getSortName() : getDisplayName() ;
+  }
+  public String getTextToSort() {
+    return DataModel.getLibrarySortAuthor() ? getDisplayName() :  getSortName();
+  }
+
+  //                            METHODS and PROPERTIES
+
 
   public String getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
-  }
 
+  /**
+   * Try and extract the last displayName for sorting purposes
+   * @return
+   */
   public String getLastName() {
     if (guessedLastName == null) {
-      String sortedName = getSort();
-      // sometimes getSort computes the last name for us... optimize !
+      String sortedName = getSortName();
+      // sometimes getSortName computes the last displayName for us... optimize !
       if (Helper.isNotNullOrEmpty(guessedLastName))
         return guessedLastName;
       guessedLastName = sortedName;
-      if (Helper.isNotNullOrEmpty(getSort())) {
-        int posOfSpace = getSort().indexOf(',');
+      if (Helper.isNotNullOrEmpty(getSortName())) {
+        int posOfSpace = getSortName().indexOf(',');
         if (posOfSpace >= 0)
-          guessedLastName = getSort().substring(0, posOfSpace);
+          guessedLastName = getSortName().substring(0, posOfSpace);
       } else
-        guessedLastName = name;
+        guessedLastName = displayName;
     }
     return guessedLastName;
   }
 
-  public String getNameForSort() {
-    if (Helper.isNullOrEmpty(nameForSort)) {
-      nameForSort = getLastName().replaceAll(" ", "").toUpperCase();
-    }
-    return nameForSort;
-  }
-
-  public String getSort() {
-    if (Helper.isNullOrEmpty(sort))
-      sort = computeSort();
-    return sort;
-  }
-
-  /**
-   * Derive the value we are going to use for sorting by Author
-   * @return
-   */
-  private String computeSort() {
-    // first, let's try and find a book by this author (alone) which has a author_sort field
-    // If so we use that value as the most likely one
-    List<Book> books = DataModel.getMapOfBooksByAuthor().get(this);
-    if (books != null)
-      for (Book book : books) {
-        if (book.hasSingleAuthor()) {
-          String authorSort = book.getAuthorSort();
-          // ITIMPI:   Perhaps we should also consider a value with no comma and no space as a valid author sort?
-          if (Helper.isNotNullOrEmpty(authorSort) && authorSort.contains(","))
-            return authorSort;
-        }
-      }
-
-    // We could not find an acceptable author sort value so we need to do something further
-
-    // Check if there is a comma   in the name field
-    // If so assume what follows is the author sort surname
-
-    int posOfSpace = name.indexOf(',');
-    if (posOfSpace >= 0) {
-      guessedLastName = name.substring(0, posOfSpace);
-      return name;
-    }
-
-    // then split the author on space seaparator
-    List<String> words = Helper.tokenize(name, " ");
-    switch (words.size()) {
-      case 1:
-        // If there is only a single word then it must be the author sort
-        guessedLastName = name;
-        return name;
-      case 0:
-        logger.warn("Problem computing Author sort for author: " + name);
-        guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + name + ")";
-        return guessedLastName;
-      default:
-        // Grab the last word as the surname
-        guessedLastName = words.get(words.size() - 1);
-        // Remove from the array the word we have assumed is the surname
-        words.remove(words.size() - 1);
-        // Now construct the sort nsme we are going to use
-        return guessedLastName + ", " + Helper.concatenateList(" ", words);
-    }
-  }
-
   public String toString() {
-    return getId() + " - " + getName();
+    return getId() + " - " + getDisplayName();
   }
-
-  public String getTitleToSplitByLetter() {
-    return DataModel.getLibrarySortAuthor() ? getName() :  getNameForSort();
-  }
-
-  /* Comparable interface, used to sort an authors list */
+  /* Comparable interface, used to sortName an authors list */
 
   public int compareTo(Author o) {
     if (o == null)
       return 1;
     else {
-      return Helper.trueStringCompare(getSort(), o.getSort());
+      return Helper.trueStringCompare(getSortName(), o.getSortName());
     }
   }
 

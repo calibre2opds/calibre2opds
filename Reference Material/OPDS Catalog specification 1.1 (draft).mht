@@ -41,7 +41,7 @@ serve.co.uk"};=0A=
 
 <META content=3D"text/html; charset=3DUTF-8" http-equiv=3DContent-Type>
 <META content=3DIE=3Dedge,chrome=3D1 http-equiv=3DX-UA-Compatible>
-<META name=3DROBOTS content=3DNOARCHIVE><LINK rel=3Dstylesheet =
+<META DisplayName=3DROBOTS content=3DNOARCHIVE><LINK rel=3Dstylesheet =
 type=3Dtext/css=20
 href=3D"http://www.gstatic.com/codesite/ph/17444577587916266307/css/ph_co=
 re.css"><LINK=20
@@ -74,7 +74,7 @@ no-repeat 0px 0px
 }
 </STYLE>
 
-<META name=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
+<META DisplayName=3DGENERATOR content=3D"MSHTML 8.00.7601.17573"></HEAD>
 <BODY class=3Dt6>
 <SCRIPT type=3Dtext/javascript>=0A=
  var _gaq =3D _gaq || [];=0A=
@@ -139,8 +139,8 @@ Distribution=20
     <TD=20
       style=3D"TEXT-ALIGN: right; WHITE-SPACE: nowrap; VERTICAL-ALIGN: =
 bottom"><FORM=20
-      action=3D/hosting/search><INPUT size=3D30 type=3Dtext name=3Dq> =
-<INPUT value=3D"Search projects" type=3Dsubmit name=3Dprojectsearch>=20
+      action=3D/hosting/search><INPUT size=3D30 type=3Dtext DisplayName=3Dq> =
+<INPUT value=3D"Search projects" type=3Dsubmit DisplayName=3Dprojectsearch>=20
   </FORM></TD></TR></TBODY></TABLE></DIV>
 <DIV id=3Dmt class=3Dgtb><A class=3D"tab "=20
 href=3D"http://code.google.com/p/openpub/">Project&nbsp;Home</A> <A =
@@ -163,7 +163,7 @@ width=3D"100%"=20
       <DIV class=3Disf><SPAN class=3DinIssueList><SPAN>Search</SPAN>=20
       <FORM style=3D"DISPLAY: inline" method=3Dget =
 action=3D/p/openpub/w/list><SELECT=20
-      style=3D"FONT-SIZE: 92%" id=3Dcan name=3Dcan> <OPTION =
+      style=3D"FONT-SIZE: 92%" id=3Dcan DisplayName=3Dcan> <OPTION =
 disabled>Search=20
         within:</OPTION> <OPTION value=3D1>&nbsp;All wiki pages</OPTION> =
 <OPTION=20
@@ -174,7 +174,7 @@ value=3D5>&nbsp;My starred=20
 pages</OPTION></SELECT>=20
       <SPAN>for</SPAN> <SPAN id=3Dqq><INPUT style=3D"FONT-SIZE: 92%" =
 id=3Dsearchq=20
-      size=3D38 type=3Dtext name=3Dq autocomplete=3D"off"></SPAN> <INPUT =
+      size=3D38 type=3Dtext DisplayName=3Dq autocomplete=3D"off"></SPAN> <INPUT =
 style=3D"FONT-SIZE: 92%" value=3DSearch type=3Dsubmit>=20
       </FORM></SPAN></DIV></DIV></TD>
     <TD class=3Dbevel-right vAlign=3Dtop =
@@ -238,7 +238,7 @@ href=3D"http://code.google.com/u/@VxdWQ1ZQBhVFXAY%3D/">http://code.google=
       </DIV></DIV></DIV>
       <DIV id=3Dwikicontent>
       <DIV id=3Dwikimaincol class=3Dvt>
-      <H1><A name=3DStatus_of_this_Draft></A>Status of this Draft<A=20
+      <H1><A DisplayName=3DStatus_of_this_Draft></A>Status of this Draft<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Status_of_=
@@ -540,14 +540,14 @@ href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Appendix_B=
 ._RELAX_NG_Compact_Schema">Appendix=20
         B. RELAX NG Compact Schema</A></LI></UL>
       <P></P>
-      <H1><A name=3DLicense></A>License<A class=3Dsection_anchor=20
+      <H1><A DisplayName=3DLicense></A>License<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#License"><=
 /A></H1>
       <P>This document is licensed under <A=20
       href=3D"http://creativecommons.org/licenses/by-sa/3.0/"=20
       rel=3Dnofollow>Creative Commons Attribution-Share Alike</A>. </P>
-      <H1><A name=3DAbstract></A>Abstract<A class=3Dsection_anchor=20
+      <H1><A DisplayName=3DAbstract></A>Abstract<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Abstract">=
 </A></H1>
@@ -562,7 +562,7 @@ or=20
       emergent open standards and conventions, with a priority on =
 simplicity.=20
       </P>
-      <H1><A name=3DIntroduction></A>Introduction<A =
+      <H1><A DisplayName=3DIntroduction></A>Introduction<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Introducti=
@@ -600,7 +600,7 @@ Feeds=20
       <P>OPDS Catalogs may be aggregated and combined into larger OPDS =
 Catalogs.=20
       </P>
-      <H1><A name=3DNotational_Conventions></A>Notational Conventions<A=20
+      <H1><A DisplayName=3DNotational_Conventions></A>Notational Conventions<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Notational=
@@ -611,13 +611,13 @@ NOT",=20
 this=20
       document are to be interpreted as described in <TT>[RFC2119]</TT>. =
 </P>
-      <H1><A name=3DXML-Related_Conventions></A>XML-Related =
+      <H1><A DisplayName=3DXML-Related_Conventions></A>XML-Related =
 Conventions<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#XML-Relate=
 d_Conventions"></A></H1>
-      <H2><A name=3DReferring_to_Information_Items></A>Referring to =
+      <H2><A DisplayName=3DReferring_to_Information_Items></A>Referring to =
 Information=20
       Items<A class=3Dsection_anchor=20
       =
@@ -637,7 +637,7 @@ to an=20
       Element Information Item, and when it uses the term "attribute", =
 it is=20
       referring to an Attribute Information Item. </P>
-      <H1><A name=3DRELAX_NG_Schema></A>RELAX NG Schema<A =
+      <H1><A DisplayName=3DRELAX_NG_Schema></A>RELAX NG Schema<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#RELAX_NG_S=
@@ -649,7 +649,7 @@ text of=20
       this specification provides the definition of conformance. =
 Complete=20
       schemas appear in Appendix B. </P>
-      <H1><A name=3DTerminology></A>Terminology<A class=3Dsection_anchor =
+      <H1><A DisplayName=3DTerminology></A>Terminology<A class=3Dsection_anchor =
 
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Terminolog=
@@ -697,12 +697,12 @@ representation=20
         of an available Publication and includes an Acquisition Link. =
 They are=20
         serialized as OPDS Catalog Entry Documents. </LI>
-        <LI>OPDS Catalog Entry Document -- The formal name for the XML =
+        <LI>OPDS Catalog Entry Document -- The formal DisplayName for the XML =
 documents=20
         that are a refinement of an "atom:entry" from the Atom =
 Syndication=20
         Format <TT>[RFC4287]</TT> that this specification defines. </LI>
-        <LI>OPDS Catalog Feed Document -- The formal name for XML =
+        <LI>OPDS Catalog Feed Document -- The formal DisplayName for XML =
 documents that=20
         are a refinement of an "atom:feed" from the Atom Syndication =
 Format=20
@@ -741,7 +741,7 @@ of a=20
         document" is shorthand for "a URI which, when dereferenced, is =
 expected=20
         to produce that document as a representation". </LI></UL>
-      <H1><A name=3DDocument_Types></A>Document Types<A =
+      <H1><A DisplayName=3DDocument_Types></A>Document Types<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Document_T=
@@ -755,7 +755,7 @@ from=20
       <P>An OPDS Catalog Entry Document is a refinement of an =
 "atom:entry" from=20
       the Atom Syndication Format <TT>[RFC4287]</TT>. </P>
-      <P>The namespace name <TT>[REC-xml-names]</TT> for elements =
+      <P>The namespace DisplayName <TT>[REC-xml-names]</TT> for elements =
 defined in=20
       this specification and used in OPDS Catalog Feed Documents and =
 OPDS=20
@@ -767,15 +767,15 @@ MUST be=20
       "namespace-well-formed" as specified in Section 7 of=20
       <TT>[REC-xml-names]</TT>. </P>
       <P>This specification uses the prefix "opds:" for the namespace =
-name. The=20
+DisplayName. The=20
       prefix "atom:" is used for "<A =
 href=3D"http://www.w3.org/2005/Atom"=20
       rel=3Dnofollow>http://www.w3.org/2005/Atom</A> ", the namespace =
-name of the=20
+DisplayName of the=20
       Atom Syndication Format <TT>[RFC4287]</TT>. The prefix "dc:" is =
 used=20
       for"<A href=3D"http://purl.org/dc/terms/"=20
-      rel=3Dnofollow>http://purl.org/dc/terms/</A>", the namespace name =
+      rel=3Dnofollow>http://purl.org/dc/terms/</A>", the namespace DisplayName =
 of Dublin=20
       Core Metadata Initiative (DCMI) Metadata Terms <TT>[DCTERMS]</TT>. =
 These=20
@@ -785,7 +785,7 @@ Documents=20
       and OPDS Catalog Entry Documents that are conformant to both Atom =
 and the=20
       OPDS Catalog RELAX NG schemas. </P>
-      <H2><A name=3DDocument_Extensibility></A>Document Extensibility<A=20
+      <H2><A DisplayName=3DDocument_Extensibility></A>Document Extensibility<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Document_E=
@@ -803,7 +803,7 @@ signal an=20
       error. Clients SHOULD preserve foreign markup when transmitting or =
 
       aggregating such documents. </P>
-      <P>The namespace name "<A =
+      <P>The namespace DisplayName "<A =
 href=3D"http://opds-spec.org/2010/catalog"=20
       rel=3Dnofollow>http://opds-spec.org/2010/catalog</A>" is reserved =
 for=20
@@ -816,7 +816,7 @@ href=3D"http://opds-spec.org/2010/catalog"=20
       rel=3Dnofollow>http://opds-spec.org/2010/catalog</A>" namespace =
 MUST be=20
       treated as foreign markup. </P>
-      <H1><A name=3DOPDS_Catalog_Feed_Documents></A>OPDS Catalog Feed =
+      <H1><A DisplayName=3DOPDS_Catalog_Feed_Documents></A>OPDS Catalog Feed =
 Documents<A=20
       class=3Dsection_anchor=20
       =
@@ -846,7 +846,7 @@ Feed or=20
       a Navigation Feed. An Acquisition Feed can be identified by the =
 presence=20
       of Acquisition Links in each Atom Entry. </P>
-      <H2><A name=3DOPDS_Catalog_Root></A>OPDS Catalog Root<A =
+      <H2><A DisplayName=3DOPDS_Catalog_Root></A>OPDS Catalog Root<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#OPDS_Catal=
@@ -866,7 +866,7 @@ element=20
       with a link relation of "start", which references the OPDS Catalog =
 Root=20
       Resource. </P>
-      <H2><A name=3DNavigation_Feeds></A>Navigation Feeds<A =
+      <H2><A DisplayName=3DNavigation_Feeds></A>Navigation Feeds<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Navigation=
@@ -890,7 +890,7 @@ relations=20
       in the section OPDS Catalog Relations. The relation "subsection" =
 SHOULD be=20
       used if no other relation is more appropriate. </P>
-      <H2><A name=3DAcquisition_Feeds></A>Acquisition Feeds<A =
+      <H2><A DisplayName=3DAcquisition_Feeds></A>Acquisition Feeds<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Acquisitio=
@@ -915,7 +915,7 @@ through=20
       pagination, Partial Catalog Entries, and compression, see the =
 Section=20
       Listing Acquisition Feeds. </P>
-      <H2><A name=3DOPDS_Catalog_Relations></A>OPDS Catalog Relations<A=20
+      <H2><A DisplayName=3DOPDS_Catalog_Relations></A>OPDS Catalog Relations<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#OPDS_Catal=
@@ -947,7 +947,7 @@ relation=20
       is found, the Feeds SHOULD use a descriptive "atom:title" element =
 and the=20
       "atom:link"s SHOULD use a descriptive "title" attribute. </P>
-      <H3><A name=3DSorting_Relations></A>Sorting Relations<A =
+      <H3><A DisplayName=3DSorting_Relations></A>Sorting Relations<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Sorting_Re=
@@ -985,7 +985,7 @@ be ordered=20
       rel=3Dnofollow>http://opds-spec.org/sort/popular</A>" relation =
 SHOULD be=20
       ordered with the most popular items first. </P>
-      <H3><A name=3DFeatured_Relation></A>Featured Relation<A =
+      <H3><A DisplayName=3DFeatured_Relation></A>Featured Relation<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Featured_R=
@@ -1007,7 +1007,7 @@ that=20
 No order=20
         is implied. </LI></UL>
       <H3><A =
-name=3DRelations_for_Previously_Acquired_Content></A>Relations for=20
+DisplayName=3DRelations_for_Previously_Acquired_Content></A>Relations for=20
       Previously Acquired Content<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Relations_=
@@ -1033,7 +1033,7 @@ as an=20
       <P>An OPDS client MAY use these links to automatically sync =
 content to the=20
       user's local shelf or check for periodical content updates. </P>
-      <H3><A name=3DCrawlable_Feed_Relation></A>Crawlable Feed =
+      <H3><A DisplayName=3DCrawlable_Feed_Relation></A>Crawlable Feed =
 Relation<A=20
       class=3Dsection_anchor=20
       =
@@ -1049,7 +1049,7 @@ relation=20
 feed.=20
       </P>
       <P></P>
-      <H2><A name=3DSearch></A>Search<A class=3Dsection_anchor=20
+      <H2><A DisplayName=3DSearch></A>Search<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Search"></=
 A></H2>
@@ -1075,7 +1075,7 @@ type=3D"application/atom+xml;profile=3Dopds-catalog"
       <TT>[OpenSearch]</TT> namespace such as "opensearch:totalResults" =
 or=20
       "opensearch:itemsPerPage" in <TT>[OpenSearch]</TT> responses. </P>
-      <H2><A name=3DFeed_Examples></A>Feed Examples<A =
+      <H2><A DisplayName=3DFeed_Examples></A>Feed Examples<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Feed_Examp=
@@ -1095,7 +1095,7 @@ class=3Dprettyprint>&lt;?xml version=3D"1.0" encoding=3D"UTF-8"?&gt;
   &lt;title&gt;OPDS Catalog Root Example&lt;/title&gt;
   &lt;updated&gt;2010-01-10T10:03:10Z&lt;/updated&gt;
   &lt;author&gt;
-    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;DisplayName&gt;Spec Writer&lt;/DisplayName&gt;
     &lt;uri&gt;http://opds-spec.org&lt;/uri&gt;
   &lt;/author&gt;
 
@@ -1155,7 +1155,7 @@ class=3Dprettyprint>&lt;?xml version=3D"1.0" encoding=3D"UTF-8"?&gt;
   &lt;title&gt;Unpopular Publications&lt;/title&gt;
   &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
   &lt;author&gt;
-    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;DisplayName&gt;Spec Writer&lt;/DisplayName&gt;
     &lt;uri&gt;http://opds-spec.org&lt;/uri&gt;
   &lt;/author&gt;
 
@@ -1164,7 +1164,7 @@ class=3Dprettyprint>&lt;?xml version=3D"1.0" encoding=3D"UTF-8"?&gt;
     &lt;id&gt;urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734&lt;/id&gt;
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1201,15 +1201,15 @@ type=3D"application/atom+xml;type=3Dentry;profile=3Dopds-catalog"=20
     &lt;title&gt;Modern Online Philately&lt;/title&gt;
     &lt;id&gt;urn:uuid:7b595b0c-e15c-4755-bf9a-b7019f5c1dab&lt;/id&gt;
     &lt;author&gt;
-      &lt;name&gt;Stampy McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Stampy McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;author&gt;
-      &lt;name&gt;Alice McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Alice McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21284&lt;/uri&gt;
     &lt;/author&gt;
     &lt;author&gt;
-      &lt;name&gt;Harold McGee&lt;/name&gt;
+      &lt;DisplayName&gt;Harold McGee&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/21283&lt;/uri&gt;
     &lt;/author&gt;
     &lt;updated&gt;2010-01-10T10:01:10Z&lt;/updated&gt;
@@ -1233,12 +1233,12 @@ web-curious
     &lt;/link&gt;
  &lt;/entry&gt;
 &lt;/feed&gt;</PRE>
-      <H2><A name=3DElement_Definitions></A>Element Definitions<A=20
+      <H2><A DisplayName=3DElement_Definitions></A>Element Definitions<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Element_De=
 finitions"></A></H2>
-      <H3><A name=3D'The_"atom:feed"_Element'></A>The "atom:feed" =
+      <H3><A DisplayName=3D'The_"atom:feed"_Element'></A>The "atom:feed" =
 Element<A=20
       class=3Dsection_anchor=20
       =
@@ -1263,7 +1263,7 @@ URI for=20
         retrieving the atom:feed representing this OPDS Catalog Feed =
 Document.=20
         </LI></UL>
-      <H1><A name=3DOPDS_Catalog_Entry_Documents></A>OPDS Catalog Entry=20
+      <H1><A DisplayName=3DOPDS_Catalog_Entry_Documents></A>OPDS Catalog Entry=20
       Documents<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#OPDS_Catal=
@@ -1286,7 +1286,7 @@ one of the=20
       relations described in the Section Acquisition Relations. </P>
       <H2><A=20
       =
-name=3DRelationship_Between_Atom_and_Dublin_Core_Metadata></A>Relationshi=
+DisplayName=3DRelationship_Between_Atom_and_Dublin_Core_Metadata></A>Relationshi=
 p=20
       Between Atom and Dublin Core Metadata<A class=3Dsection_anchor=20
       =
@@ -1359,7 +1359,7 @@ the OPDS=20
 exported,=20
       or imported" and "MUST be created in a way that assures =
 uniqueness." </P>
-      <H2><A name=3DPartial_and_Complete_Catalog_Entries></A>Partial and =
+      <H2><A DisplayName=3DPartial_and_Complete_Catalog_Entries></A>Partial and =
 Complete=20
       Catalog Entries<A class=3Dsection_anchor=20
       =
@@ -1402,7 +1402,7 @@ consumption of=20
       OPDS Catalog documents. Implementers are encouraged to include =
 metadata=20
       elements from other vocabularies in Complete Catalog Entries. </P>
-      <H2><A name=3DSummary_and_Content></A>Summary and Content<A=20
+      <H2><A DisplayName=3DSummary_and_Content></A>Summary and Content<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Summary_an=
@@ -1450,7 +1450,7 @@ Catalog=20
     attribute type { "text" }?,
     text
 }</PRE>
-      <H2><A name=3DEntry_Relations></A>Entry Relations<A =
+      <H2><A DisplayName=3DEntry_Relations></A>Entry Relations<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Entry_Rela=
@@ -1466,7 +1466,7 @@ Relations=20
       <TT>[DRAFT-Web-Linking]</TT> inside OPDS Catalog Entry Documents =
 where=20
       appropriate. </P>
-      <H3><A name=3DAcquisition_Relations></A>Acquisition Relations<A=20
+      <H3><A DisplayName=3DAcquisition_Relations></A>Acquisition Relations<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Acquisitio=
@@ -1513,7 +1513,7 @@ Indicates=20
 Indicates=20
         that the complete representation of the content Resource may be=20
         retrieved as part of a subscription. </LI></UL>
-      <H3><A name=3DArtwork_Relations></A>Artwork Relations<A =
+      <H3><A DisplayName=3DArtwork_Relations></A>Artwork Relations<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Artwork_Re=
@@ -1564,7 +1564,7 @@ clients=20
       SHOULD support the "data" URL scheme if they support Artwork =
 relations.=20
       </P>
-      <H2><A name=3DEntry_Examples></A>Entry Examples<A =
+      <H2><A DisplayName=3DEntry_Examples></A>Entry Examples<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Entry_Exam=
@@ -1576,7 +1576,7 @@ ples"></A></H2>
     &lt;id&gt;urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734&lt;/id&gt;
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1615,7 +1615,7 @@ class=3Dprettyprint>  &lt;entry&gt;
     &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
 
     &lt;author&gt;
-      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;DisplayName&gt;Bob the Recursive&lt;/DisplayName&gt;
       &lt;uri&gt;http://opds-spec.org/authors/1285&lt;/uri&gt;
     &lt;/author&gt;
     &lt;dc:language&gt;en&lt;/dc:language&gt;
@@ -1658,12 +1658,12 @@ type=3D"application/atom+xml;type=3Dentry;profile=3Dopds-catalog"/&gt;
           href=3D"/content/free/4561.mobi"
           type=3D"application/x-mobipocket-ebook"/&gt;
  &lt;/entry&gt;</PRE>
-      <H2><A name=3DElement_Definitions></A>Element Definitions<A=20
+      <H2><A DisplayName=3DElement_Definitions></A>Element Definitions<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Element_De=
 finitions"></A></H2>
-      <H3><A name=3D'The_"atom:entry"_Element'></A>The "atom:entry" =
+      <H3><A DisplayName=3D'The_"atom:entry"_Element'></A>The "atom:entry" =
 Element<A=20
       class=3Dsection_anchor=20
       =
@@ -1683,7 +1683,7 @@ Acquisition=20
 "<A=20
         href=3D"http://opds-spec.org/acquisition"=20
         rel=3Dnofollow>http://opds-spec.org/acquisition</A>". </LI></UL>
-      <H3><A name=3D'The_"atom:link"_Element'></A>The "atom:link" =
+      <H3><A DisplayName=3D'The_"atom:link"_Element'></A>The "atom:link" =
 Element<A=20
       class=3Dsection_anchor=20
       =
@@ -1737,7 +1737,7 @@ or "<A=20
         rel=3Dnofollow>http://opds-spec.org/acquisition/sample</A>" MAY =
 contain=20
         one or more opds:price elements. </LI></UL>
-      <H3><A name=3D'The_"opds:price"_Element'></A>The "opds:price" =
+      <H3><A DisplayName=3D'The_"opds:price"_Element'></A>The "opds:price" =
 Element<A=20
       class=3Dsection_anchor=20
       =
@@ -1758,7 +1758,7 @@ class=3Dprettyprint>opdsPrice =3D=20
     attribute currencycode { opdsPriceCurrencyCode },
     xsd:decimal { minInclusive=3D"0.0" }=20
   }</PRE>
-      <H4><A name=3D'The_"currencycode"_Attribute'></A>The =
+      <H4><A DisplayName=3D'The_"currencycode"_Attribute'></A>The =
 "currencycode"=20
       Attribute<A class=3Dsection_anchor=20
       =
@@ -1770,7 +1770,7 @@ attribute=20
 currency. It=20
       defines the currency used for the content of the opds:price =
 element. </P>
-      <H1><A name=3DAcquiring_Publications></A>Acquiring Publications<A=20
+      <H1><A DisplayName=3DAcquiring_Publications></A>Acquiring Publications<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Acquiring_=
@@ -1803,7 +1803,7 @@ than the=20
       Publication media types. These clients will need to filter both =
 the type=20
       attribute of Acquisition Links. </P>
-      <H2><A name=3DAcquisition_Examples></A>Acquisition Examples<A=20
+      <H2><A DisplayName=3DAcquisition_Examples></A>Acquisition Examples<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Acquisitio=
@@ -1830,12 +1830,12 @@ rel=3D"http://opds-spec.org/acquisition/buy"
       type=3D"audio/mpeg"&gt;
   &lt;opds:price currencycode=3D"USD"&gt;1.99&lt;/opds:price&gt;=20
 &lt;/link&gt; </PRE>
-      <H1><A name=3DFeed_Handling></A>Feed Handling<A =
+      <H1><A DisplayName=3DFeed_Handling></A>Feed Handling<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Feed_Handl=
 ing"></A></H1>
-      <H2><A name=3DListing_Acquisition_Feeds></A>Listing Acquisition =
+      <H2><A DisplayName=3DListing_Acquisition_Feeds></A>Listing Acquisition =
 Feeds<A=20
       class=3Dsection_anchor=20
       =
@@ -1873,7 +1873,7 @@ the=20
 
       Resource, as described in the Section Partial and Complete =
 Entries. </P>
-      <H2><A name=3DComplete_Acquisition_Feeds></A>Complete Acquisition =
+      <H2><A DisplayName=3DComplete_Acquisition_Feeds></A>Complete Acquisition =
 Feeds<A=20
       class=3Dsection_anchor=20
       =
@@ -1914,7 +1914,7 @@ when=20
       <P>OPDS Catalog providers MUST include Complete Catalog Entries =
 when=20
       serializing a Complete Acquisition Feed. </P>
-      <H1><A name=3DAggregating_OPDS_Catalogs></A>Aggregating OPDS =
+      <H1><A DisplayName=3DAggregating_OPDS_Catalogs></A>Aggregating OPDS =
 Catalogs<A=20
       class=3Dsection_anchor=20
       =
@@ -1927,7 +1927,7 @@ Atom=20
       of <TT>[RFC4287]</TT> to include information about the original =
 OPDS=20
       Catalog. </P>
-      <H1><A name=3DDiscovering_OPDS_Catalogs></A>Discovering OPDS =
+      <H1><A DisplayName=3DDiscovering_OPDS_Catalogs></A>Discovering OPDS =
 Catalogs<A=20
       class=3Dsection_anchor=20
       =
@@ -1968,7 +1968,7 @@ Publication:=20
       <P>Auto-discovery links MAY also be expressed using HTTP headers =
 as=20
       defined in <TT>[DRAFT-Web-Linking]</TT>. </P>
-      <H1><A name=3DSecuring_OPDS_Catalogs></A>Securing OPDS Catalogs<A=20
+      <H1><A DisplayName=3DSecuring_OPDS_Catalogs></A>Securing OPDS Catalogs<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Securing_O=
@@ -2003,7 +2003,7 @@ using an=20
 403=20
       "Forbidden") in accordance with <TT>[RFC2617]</TT>. </P>
       <H1><A =
-name=3DBandwidth_and_Processing_Considerations></A>Bandwidth and=20
+DisplayName=3DBandwidth_and_Processing_Considerations></A>Bandwidth and=20
       Processing Considerations<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Bandwidth_=
@@ -2023,7 +2023,7 @@ equivalently good=20
       or better at the time of deployment. See <TT>[CACHING]</TT> for =
 more on=20
       caching techniques. </P>
-      <H1><A name=3DSecurity_Considerations></A>Security =
+      <H1><A DisplayName=3DSecurity_Considerations></A>Security =
 Considerations<A=20
       class=3Dsection_anchor=20
       =
@@ -2034,7 +2034,7 @@ subject=20
       to the security considerations found in Section 15 of =
 <TT>[RFC2616]</TT>=20
       and Section 5 of <TT>[RFC4287]</TT>. </P>
-      <H2><A name=3DLinked_Resources></A>Linked Resources<A =
+      <H2><A DisplayName=3DLinked_Resources></A>Linked Resources<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Linked_Res=
@@ -2052,7 +2052,7 @@ same=20
       issues exist for Resources linked to by elements such as atom:link =
 and=20
       atom:content. </P>
-      <H2><A name=3DURIs_and_IRIs></A>URIs and IRIs<A =
+      <H2><A DisplayName=3DURIs_and_IRIs></A>URIs and IRIs<A =
 class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#URIs_and_I=
@@ -2062,7 +2062,7 @@ RIs"></A></H2>
       <TT>[RFC3986]</TT> and Section 8 of <TT>[RFC3987]</TT> for =
 security=20
       considerations related to their handling and use. </P>
-      <H2><A name=3DCode_Injection_and_Cross_Site_Scripting></A>Code =
+      <H2><A DisplayName=3DCode_Injection_and_Cross_Site_Scripting></A>Code =
 Injection and=20
       Cross Site Scripting<A class=3Dsection_anchor=20
       =
@@ -2089,7 +2089,7 @@ forbidden=20
       <P>Additional information about XHTML and HTML content safety can =
 be found=20
       in Section 8.1 of <TT>[RFC4287]</TT>. </P>
-      <H1><A name=3DThe_Atom_Format_Type_Parameter></A>The Atom Format =
+      <H1><A DisplayName=3DThe_Atom_Format_Type_Parameter></A>The Atom Format =
 Type=20
       Parameter<A class=3Dsection_anchor=20
       =
@@ -2103,7 +2103,7 @@ help=20
       clients distinguish between relations to OPDS Catalog Entries and =
 OPDS=20
       Catalog Feeds. </P>
-      <H1><A name=3DThe_OPDS_Catalog_Profile_Parameter></A>The OPDS =
+      <H1><A DisplayName=3DThe_OPDS_Catalog_Profile_Parameter></A>The OPDS =
 Catalog=20
       Profile Parameter<A class=3Dsection_anchor=20
       =
@@ -2127,11 +2127,11 @@ log</PRE>
 Document=20
       Resource SHOULD be: </P><PRE =
 class=3Dprettyprint>application/atom+xml;profile=3Dopds-catalog</PRE>
-      <H1><A name=3DReferences></A>References<A class=3Dsection_anchor=20
+      <H1><A DisplayName=3DReferences></A>References<A class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#References=
 "></A></H1>
-      <H2><A name=3DNormative_References></A>Normative References<A=20
+      <H2><A DisplayName=3DNormative_References></A>Normative References<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Normative_=
@@ -2150,7 +2150,7 @@ January=20
         2008, <A href=3D"http://dublincore.org/documents/dcmi-terms/"=20
         rel=3Dnofollow>http://dublincore.org/documents/dcmi-terms/</A>. =
 </LI>
-        <LI><TT>[ISO4217]</TT> "ISO 4217 currency and funds name and =
+        <LI><TT>[ISO4217]</TT> "ISO 4217 currency and funds DisplayName and =
 code=20
         elements", International Standard ISO 4217, <A=20
         =
@@ -2239,7 +2239,7 @@ Masinter,=20
         <LI><TT>[RFC5005]</TT> Nottingham, M., "Feed Paging and =
 Archiving", RFC=20
         5005, September 2007. </LI></UL>
-      <H2><A name=3DInformative_References></A>Informative References<A=20
+      <H2><A DisplayName=3DInformative_References></A>Informative References<A=20
       class=3Dsection_anchor=20
       =
 href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Informativ=
@@ -2273,7 +2273,7 @@ ml"=20
 rel=3Dnofollow>http://www.oasis-open.org/committees/relax-ng/compact-2002=
 1121.html</A>.=20
         </LI></UL>
-      <H1><A name=3DAppendix_A._Contributors></A>Appendix A. =
+      <H1><A DisplayName=3DAppendix_A._Contributors></A>Appendix A. =
 Contributors<A=20
       class=3Dsection_anchor=20
       =
@@ -2282,7 +2282,7 @@ href=3D"http://code.google.com/p/openpub/wiki/CatalogSpecDraft#Appendix_A=
       <P>The content and concepts within this specification are a =
 product of the=20
       openpub community. </P>
-      <H1><A name=3DAppendix_B._RELAX_NG_Compact_Schema></A>Appendix B. =
+      <H1><A DisplayName=3DAppendix_B._RELAX_NG_Compact_Schema></A>Appendix B. =
 RELAX NG=20
       Compact Schema<A class=3Dsection_anchor=20
       =
@@ -2311,7 +2311,7 @@ require some
 which
 # is used to describe an atomLink whose rel value is an atomNCName =
 (no-colon
-# name) or any URI other than these from OPDS Catalogs. In these cases, =
+# DisplayName) or any URI other than these from OPDS Catalogs. In these cases, =
 no
 # opds:price element should appear.
 atomUriExceptOPDS =3D string - ( string =
@@ -2346,7 +2346,7 @@ element
 #   included; or
 # - the value of the rel attribute is any other URI or an Atom-defined =
 no-colon
-#   name, and no opds:price element is permitted
+#   DisplayName, and no opds:price element is permitted
 
 # Note that this OPDS Catalog schema includes atom.rnc, so that schema =
 must be
@@ -2664,24 +2664,24 @@ where you need their renderer in order to enjoy their DRM.=20
   <TBODY>
   <TR>
     <TD class=3Dvt><INPUT value=3DCatalogSpecDraft type=3Dhidden =
-name=3Dpagename>=20
+DisplayName=3Dpagename>=20
       <INPUT value=3Dde890d1816c9a66538bf523f36fecc6d type=3Dhidden =
-name=3Dtoken>=20
+DisplayName=3Dtoken>=20
       <DIV style=3D"FLOAT: right" class=3Dgraytext>Hint: You can use <A=20
       href=3D"http://code.google.com/p/support/wiki/WikiSyntax">Wiki =
 Syntax.</A>=20
       </DIV>
       <DIV>Enter a comment:</DIV><TEXTAREA rows=3D6 cols=3D100 =
-name=3Dcontent></TEXTAREA><BR><BR><INPUT value=3DSubmit type=3Dsubmit =
-name=3Dsubmit>=20
+DisplayName=3Dcontent></TEXTAREA><BR><BR><INPUT value=3DSubmit type=3Dsubmit =
+DisplayName=3Dsubmit>=20
     </TD></TR></TBODY></TABLE></FORM></DIV>
-<FORM method=3Dpost name=3Ddelcom action=3D../w/delComment.do><INPUT =
+<FORM method=3Dpost DisplayName=3Ddelcom action=3D../w/delComment.do><INPUT =
 type=3Dhidden=20
-name=3Dsequence_num> <INPUT type=3Dhidden name=3Dcreate_time> <INPUT =
+DisplayName=3Dsequence_num> <INPUT type=3Dhidden DisplayName=3Dcreate_time> <INPUT =
 type=3Dhidden=20
-name=3Dmode> <INPUT value=3DCatalogSpecDraft type=3Dhidden =
-name=3Dpagename> <INPUT=20
-value=3Dde890d1816c9a66538bf523f36fecc6d type=3Dhidden name=3Dtoken> =
+DisplayName=3Dmode> <INPUT value=3DCatalogSpecDraft type=3Dhidden =
+DisplayName=3Dpagename> <INPUT=20
+value=3Dde890d1816c9a66538bf523f36fecc6d type=3Dhidden DisplayName=3Dtoken> =
 </FORM>
 <SCRIPT=20
 src=3D"http://www.gstatic.com/codesite/ph/17444577587916266307/js/prettif=
@@ -3958,9 +3958,9 @@ A(a,d,j){switch(a.nodeType){case 1:var =
 m=3Da.tagName.toLowerCase();d.push("<",m);var =
 h=3Da.attributes,k=3Dh.length;if(k){if(j){for(var =
 t=3D[],g=3Dk;--g>=3D0;)t[g]=3Dh[g];t.sort(function(a,d){return =
-a.name<d.name?-1:a.name=3D=3D=3Dd.name?0:1});h=3Dt}for(g=3D0;g<k;++g)t=3D=
+a.DisplayName<d.DisplayName?-1:a.DisplayName=3D=3D=3Dd.DisplayName?0:1});h=3Dt}for(g=3D0;g<k;++g)t=3D=
 h[g],t.specified&&d.push(" =
-",t.name.toLowerCase(),'=3D"',t.value.replace(D,"&amp;").replace(E,"&lt;"=
+",t.DisplayName.toLowerCase(),'=3D"',t.value.replace(D,"&amp;").replace(E,"&lt;"=
 ).replace(F,"&gt;").replace(L,"&quot;"),'"')}d.push(">");for(h=3D=0A=
 a.firstChild;h;h=3Dh.nextSibling)A(h,d,j);(a.firstChild||!/^(?:br|link|im=
 g)$/.test(m))&&d.push("</",m,">");break;case 3:case =
@@ -4141,8 +4141,8 @@ sourceNode:h,numberLines:c?c[1]&&c[1].length?+c[1]:!0:!1};J(e);if(h=3De.p=
 rettyPrintedHtml)if(n=3De.sourceNode,"XMP"=3D=3D=3Dn.tagName){l=3Ddocumen=
 t.createElement("PRE");for(c=3D0;c<n.attributes.length;++c)if(k=3Dn.attri=
 butes[c],k.specified){var =
-f=3Dk.name.toLowerCase();f=3D=3D=3D"class"?l.className=3Dk.value:l.setAtt=
-ribute(k.name,k.value)}l.innerHTML=3Dh;n.parentNode.replaceChild(l,n)}els=
+f=3Dk.DisplayName.toLowerCase();f=3D=3D=3D"class"?l.className=3Dk.value:l.setAtt=
+ribute(k.DisplayName,k.value)}l.innerHTML=3Dh;n.parentNode.replaceChild(l,n)}els=
 e n.innerHTML=3Dh}}}r<m.length?setTimeout(d,250):a&&a()}for(var =
 j=3D[document.getElementsByTagName("pre"),document.getElementsByTagName("=
 code"),=0A=
@@ -4687,7 +4687,7 @@ bind.apply(null,[this,a].concat(Array.prototype.slice.call(arguments,1)))=
 };var DB_mode=3D!1;function DumpError(a){try{throw =
 a;}catch(b){DumpException(b)}}function DumpException(a,b){var =
 c=3D"Javascript exception: "+(b?b:"")+" "+a;BR_IsIE()&&(c+=3D" =
-"+a.name+": "+a.message+" ("+a.number+")");var d=3D"";if(typeof =
+"+a.DisplayName+": "+a.message+" ("+a.number+")");var d=3D"";if(typeof =
 a=3D=3D"string")d=3Da+"\n";else for(var e in a)try{d+=3De+": =
 "+a[e]+"\n"}catch(f){}d+=3DDB_GetStackTrace(DumpException.caller);DB_Writ=
 eDebugMsg(c+"\n"+d,1)}var function_name_re_=3D/function (\w+)/;=0A=
@@ -4767,7 +4767,7 @@ forid_2(a){return document.all[a]}var =
 forid=3Ddocument.getElementById?forid_1:forid_2;=0A=
 function =
 log(a){try{if(window.parent!=3Dwindow&&window.parent.log){window.parent.l=
-og(window.name+"::"+a);return}}catch(b){}var c=3Dforid("log");c?(a=3D"<p =
+og(window.DisplayName+"::"+a);return}}catch(b){}var c=3Dforid("log");c?(a=3D"<p =
 class=3Dlogentry><span class=3Dlogdate>"+new Date+"</span><span =
 class=3Dlogmsg>"+a+"</span></p>",c.innerHTML=3Da+c.innerHTML):window.stat=
 us=3Da};function AS_Assert(){}AS_Assert.raise=3Dfunction(a){if(typeof =
@@ -4787,7 +4787,7 @@ b=3D=3D"function"&&(c=3Db.toString().match(/^\s*function\s+([^\s\{]+)/))&=
 r,"boolean":Boolean};=0A=
 AS_Assert.numArgs=3Dfunction(a,b){var =
 c=3DAS_Assert.numArgs.caller;c&&c.arguments.length!=3Da&&(b=3D=3D=3Dvoid =
-0&&(b=3Dc.name+" expected "+a+" arguments  but received =
+0&&(b=3Dc.DisplayName+" expected "+a+" arguments  but received =
 "+c.arguments.length),AS_Assert.fail(b))};Function.prototype.bind=3Dfunct=
 ion(a){if(typeof this!=3D"function")throw Error("Bind must be called as =
 a method of a function object.");var =
@@ -4999,7 +4999,7 @@ function =
 DIT_addAttachmentFields(a){if(!(DIT_nextFileID>=3D16)){a=3D$(a);a.style.m=
 arginTop=3D"4px";var =
 b=3Ddocument.createElement("div");b.innerHTML=3D'<input type=3D"file" =
-name=3D"file'+DIT_nextFileID+'" size=3D35 =
+DisplayName=3D"file'+DIT_nextFileID+'" size=3D35 =
 style=3D"width:auto;margin-left:17px">&nbsp;<a =
 style=3D"font-size:x-small" href=3D"#" =
 onclick=3D"this.parentNode.parentNode.removeChild(this.parentNode); =
@@ -5034,7 +5034,7 @@ tIndex+=0A=
 function DIT_newPrompt(){var a=3DDIT_promptNames.length,b=3Dprompt("Name =
 of new template?","");b.replace(/[&<>"]/g,"");if(b){for(var =
 c=3D0;c<DIT_promptNames.length;c++)if(b=3D=3DDIT_promptNames[c]){alert("P=
-lease choose a unique name.");return}var =
+lease choose a unique DisplayName.");return}var =
 c=3Da,d=3D[];DIT_pushHiddenField(d,"prompt_name_"+c,"prompt_name_"+c,b);D=
 IT_pushHiddenField(d,"prompt_members_only_"+c);DIT_pushHiddenField(d,"pro=
 mpt_summary_"+c);DIT_pushHiddenField(d,"prompt_summary_must_be_edited_"+c=
@@ -5051,7 +5051,7 @@ value=3D"'+b+'">'+b+"</select>";$("default_prompt_for_users").innerHTML+=3D=0A=
 '<option =
 value=3D"'+b+'">'+b+"</select>";DIT_selectPrompt($("prompt_menu"))}}funct=
 ion DIT_pushHiddenField(a,b,c,d){a.push('<input type=3Dhidden =
-name=3D"',b,'"',' id=3D"',c||b,'"',' value=3D"',d||"",'"/>')}=0A=
+DisplayName=3D"',b,'"',' id=3D"',c||b,'"',' value=3D"',d||"",'"/>')}=0A=
 function =
 DIT_deletePrompt(){DIT_promptNames.splice(DIT_currentPromptIndex,1,"<DELE=
 TED>");$("prompt_name_"+DIT_currentPromptIndex).value=3D"<DELETED>";DIT_t=
@@ -5240,12 +5240,12 @@ memberListStore,DIT_ownerStore,DIT_autoCompleteStore,DIT_restrict_to_know=
 n,DIT_autoCompleteFeedName;function =
 DIT_fullComplete(a,b){if(!a.startsWith("*"))return null;for(var =
 c=3D[],d=3D0;d<b.length;d++)c.push(new =
-_AC_Completion(b[d].name,b[d].name,b[d].doc));return c}var =
+_AC_Completion(b[d].DisplayName,b[d].DisplayName,b[d].doc));return c}var =
 DIT_statusWords=3D[];=0A=
 function DIT_setUpStatusStore(a,b){var =
 c=3D{};DIT_statusWords=3D[];for(var d=3D0;d<a.length;d++){var =
-e=3Da[d];DIT_statusWords.push(e.name);c[e.name]=3De.doc}for(d=3D0;d<b.len=
-gth;d++)e=3Db[d],DIT_statusWords.push(e.name),c[e.name]=3De.doc;DIT_statu=
+e=3Da[d];DIT_statusWords.push(e.DisplayName);c[e.DisplayName]=3De.doc}for(d=3D0;d<b.len=
+gth;d++)e=3Db[d],DIT_statusWords.push(e.DisplayName),c[e.DisplayName]=3De.doc;DIT_statu=
 sStore=3Dnew =
 _AC_SimpleStore(DIT_statusWords);DIT_statusStore.docstrings=3Dc;DIT_statu=
 sStore.commaCompletes=3D!1;DIT_statusStore.substitute=3Dfunction(a,b,c,d)=
@@ -5255,19 +5255,19 @@ n"*status";return a};DIT_statusStore.completions=3D=0A=
 function(c,d){var e;e=3Da;var h=3Db;if(c.startsWith("*")){var =
 k=3D[];k.push({heading:"Open Statuses:"});for(var =
 j=3D0;j<e.length;j++)k.push(new =
-_AC_Completion(e[j].name,e[j].name,e[j].doc));k.push({heading:"Closed =
+_AC_Completion(e[j].DisplayName,e[j].DisplayName,e[j].doc));k.push({heading:"Closed =
 Statuses:"});for(j=3D0;j<h.length;j++)k.push(new =
-_AC_Completion(h[j].name,h[j].name,h[j].doc));e=3Dk}else =
+_AC_Completion(h[j].DisplayName,h[j].DisplayName,h[j].doc));e=3Dk}else =
 e=3Dnull;if(e)return e;return =
 _AC_SimpleStore.prototype.completions.call(this,c,d)}}function =
 DIT_addACItem(a,b,c,d){a.push(c);b[c]=3Dd}=0A=
 function DIT_addACItemList(a,b,c,d,e,f){for(var =
 g,i=3D0;i<d.length;i++){var =
-h=3Dd[i];g=3Dc+h.name;e&&(g=3Dg.replace(e,f));DIT_addACItem(a,b,g,h.doc)}=
+h=3Dd[i];g=3Dc+h.DisplayName;e&&(g=3Dg.replace(e,f));DIT_addACItem(a,b,g,h.doc)}=
 }=0A=
 function DIT_setUpSearchStore(a,b,c,d){for(var =
 e=3D[],f=3D{},g=3D[],i=3D[],h=3D0;h<a.length;h++){var =
-k=3Da[h];k.name.indexOf("-")=3D=3D-1?i.push(k):g.push(k)}DIT_addACItemLis=
+k=3Da[h];k.DisplayName.indexOf("-")=3D=3D-1?i.push(k):g.push(k)}DIT_addACItemLis=
 t(e,f,"",g,"-","=3D");DIT_addACItemList(e,f,"label:",i);DIT_autoCompleteF=
 eedName=3D=3D"issueOptions"&&(DIT_addACItem(e,f,"owner:me","Issues owned =
 by me"),DIT_addACItem(e,f,"cc:me","Issues that CC =
@@ -5317,7 +5317,7 @@ a.substring(0,b-c.length)+d.value+" =
 1}}=0A=
 function DIT_setUpMemberStore(a){for(var =
 b=3D[],c=3D{},d=3D0;d<a.length;d++){var =
-e=3Da[d];b.push(e.name);c[e.name]=3De.doc}DIT_memberListStore=3Dnew =
+e=3Da[d];b.push(e.DisplayName);c[e.DisplayName]=3De.doc}DIT_memberListStore=3Dnew =
 _AC_SimpleStore(b);DIT_memberListStore.docstrings=3Dc;DIT_memberListStore=
 .completions=3Dfunction(b,c){var d=3DDIT_fullComplete(b,a);if(d)return =
 d;return =
@@ -5334,7 +5334,7 @@ letable=3Dfunction(a){if(!ac_everTyped)return"*owner";return a}}var =
 DIT_labelWords=3D[];=0A=
 function DIT_setUpLabelStore(a){DIT_labelWords=3D[];for(var =
 b=3D{},c=3D0;c<a.length;c++){var =
-d=3Da[c];DIT_labelWords.push(d.name);b[d.name]=3Dd.doc}DIT_labelStore=3Dn=
+d=3Da[c];DIT_labelWords.push(d.DisplayName);b[d.DisplayName]=3Dd.doc}DIT_labelStore=3Dn=
 ew =
 _AC_SimpleStore(DIT_labelWords);DIT_labelStore.docstrings=3Db;DIT_labelSt=
 ore.commaCompletes=3D!1;DIT_labelStore.substitute=3Dfunction(a,b,c,d){ret=
@@ -5361,7 +5361,7 @@ n=3Dj[m];n.value.toLowerCase()=3D=3Dd[h].value.toLowerCase()&&n!=3Dac_foc=
 usedInput&&(k=3D!1)}k&&i.push(d[h])}}return i}}=0A=
 function DIT_setUpAutoCompleteStore(a){DIT_autoCompleteStore=3Dnew =
 _AC_SimpleStore(a);for(var =
-b=3D[],c=3D0;c<a.length;++c)b.push({name:a[c],doc:""});DIT_autoCompleteSt=
+b=3D[],c=3D0;c<a.length;++c)b.push({DisplayName:a[c],doc:""});DIT_autoCompleteSt=
 ore.completions=3Dfunction(a,c){if(a.length>18)return[];var =
 f=3DDIT_fullComplete(a,b);f=3D=3Dnull&&(f=3D_AC_SimpleStore.prototype.com=
 pletions.call(this,a,c));for(var =
@@ -5818,7 +5818,7 @@ bind.apply(null,[this,a].concat(Array.prototype.slice.call(arguments,1)))=
 };var DB_mode=3D!1;function DumpError(a){try{throw =
 a;}catch(b){DumpException(b)}}=0A=
 function DumpException(a,b){var c=3D"Javascript exception: "+(b?b:"")+" =
-"+a;BR_AgentContains_("msie")&&!window.opera&&(c+=3D" "+a.name+": =
+"+a;BR_AgentContains_("msie")&&!window.opera&&(c+=3D" "+a.DisplayName+": =
 "+a.message+" ("+a.number+")");var d=3D"";if(typeof =
 a=3D=3D"string")d=3Da+"\n";else for(var f in a)try{d+=3Df+": =
 "+a[f]+"\n"}catch(e){}d+=3DDB_GetStackTrace(DumpException.caller);c=3Dc+"=
@@ -5861,7 +5861,7 @@ forid_1(a){return document.getElementById(a)}=0A=
 function forid_2(a){return document.all[a]}var =
 forid=3Ddocument.getElementById?forid_1:forid_2;function =
 log(a){try{if(window.parent!=3Dwindow&&window.parent.log){window.parent.l=
-og(window.name+"::"+a);return}}catch(b){}var c=3Dforid("log");c?(a=3D"<p =
+og(window.DisplayName+"::"+a);return}}catch(b){}var c=3Dforid("log");c?(a=3D"<p =
 class=3Dlogentry><span class=3Dlogdate>"+new Date+"</span><span =
 class=3Dlogmsg>"+a+"</span></p>",c.innerHTML=3Da+c.innerHTML):window.stat=
 us=3Da};function AS_Assert(){}AS_Assert.raise=3Dfunction(a){if(typeof =
@@ -5881,7 +5881,7 @@ b=3D=3D"function"&&(c=3Db.toString().match(/^\s*function\s+([^\s\{]+)/))&=
 r,"boolean":Boolean};=0A=
 AS_Assert.numArgs=3Dfunction(a,b){var =
 c=3DAS_Assert.numArgs.caller;c&&c.arguments.length!=3Da&&(b=3D=3D=3Dvoid =
-0&&(b=3Dc.name+" expected "+a+" arguments  but received =
+0&&(b=3Dc.DisplayName+" expected "+a+" arguments  but received =
 "+c.arguments.length),AS_Assert.fail(b))};Function.prototype.bind=3Dfunct=
 ion(a){if(typeof this!=3D"function")throw Error("Bind must be called as =
 a method of a function object.");var =
@@ -5938,7 +5938,7 @@ e)if(i!=3D"start"&&g){var j;j=3Da.t[i];var k=3Da.t.start;j=3D!j||!k?void =
 0:j-k;h.push(i+"."+j)}delete e.start;if(b)for(var l in =
 b)d+=3D"&"+l+"=3D"+b[l];return =
 a=3D[c?c:"http://csi.gstatic.com/csi","?v=3D3","&s=3D"+(window.jstiming.s=
-n||"codesite")+"&action=3D",a.name,"",d,"&rt=3D",h.join(",")].join("")};w=
+n||"codesite")+"&action=3D",a.DisplayName,"",d,"&rt=3D",h.join(",")].join("")};w=
 indow.jstiming.report=3Dfunction(a,b,c){a=3DgetReportUri(a,=0A=
 b,c);if(!a)return"";var b=3Dnew =
 Image,d=3Dwindow.jstiming.reportCounter_++;window.jstiming.beaconImageRef=
@@ -5982,7 +5982,7 @@ b=3Da[3]=3D=3D"w"?"wiki":a[3],b+"_"+a[4]}return"other"}function b(){var =
 b=3D["codesite",=0A=
 "ph"],c=3D"project_"+a(window.location.href);b.push(c);return =
 b.join(",")}function c(){var =
-a=3Dwindow.jstiming.load;a.tick("plt");a.name=3Db();window.setTimeout(fun=
+a=3Dwindow.jstiming.load;a.tick("plt");a.DisplayName=3Db();window.setTimeout(fun=
 ction(){window.jstiming.report(a)},500)}function =
 d(){window.attachEvent?window.attachEvent("onload",c):window.addEventList=
 ener&&window.addEventListener("load",c,!1)}window._CS_reportToCsi=3Dd})()=

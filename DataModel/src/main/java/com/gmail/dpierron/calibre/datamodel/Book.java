@@ -115,7 +115,39 @@ public class Book extends GenericDataObject   {
 
   }
 
+  // METHODS and PROPERTIES implementing Abstract ones from Base class)
+
+  /**
+   * Method that gets the name for this 'data' type
+   *
+   * @return
+   */
+  public String getColumnName () {
+    return "Book";
+  }
+
+  public ColumType getColumnType() {
+    return ColumType.COLUMN_BOOK;
+  }
+
+  public String getDisplayName() {
+    return (copyOfBook == null) ? title : copyOfBook.getDisplayName();
+  }
+
+  public String getSortName() {
+    return (copyOfBook == null) ? titleSort : copyOfBook.getSortName();
+  }
+
+  public String getTextToDisplay() {
+    return DataModel.getDisplayTitleSort() ? getSortName() : getDisplayName() ;
+  }
+
+  public String getTextToSort() {
+    return DataModel.getLibrarySortTitle() ? getDisplayName() : getSortName();
+  }
+
   // METHODS and PROPERTIES
+
   /**
    *   Helper routine to set flags bits state
    */
@@ -142,14 +174,6 @@ public class Book extends GenericDataObject   {
 
   public String getUuid() {
     return (copyOfBook == null) ? uuid : copyOfBook.getUuid();
-  }
-
-  public String getTitle() {
-    return (copyOfBook == null) ? title : copyOfBook.getTitle();
-  }
-
-  public String getTitle_Sort() {
-    return (copyOfBook == null) ? titleSort : copyOfBook.getTitle_Sort();
   }
 
   /**
@@ -367,7 +391,7 @@ public class Book extends GenericDataObject   {
         float seriesIndexFloat = getSerieIndex();
         if (seriesIndexFloat == 0 ) {
           // We do not add the index when it is zero
-          summary += getSeries().getName() + ": ";
+          summary += getSeries().getDisplayName() + ": ";
         } else {
           int seriesIndexInt = (int) seriesIndexFloat;
           String seriesIndexText;
@@ -378,7 +402,7 @@ public class Book extends GenericDataObject   {
             // For fractions we want only 2 decimal places to match calibre
             seriesIndexText = String.format("%.2f", seriesIndexFloat);
           }
-          summary += getSeries().getName() + " [" + seriesIndexText + "]: ";
+          summary += getSeries().getDisplayName() + " [" + seriesIndexText + "]: ";
         }
         if (maxLength != -1) {
           summary = Helper.shorten(summary, maxLength);
@@ -413,7 +437,7 @@ public class Book extends GenericDataObject   {
       return  serieIndex;
     }
     // We never expect to get here!
-    logger.warn("Unexpected null/empty Series Index for book " + getTitle() + "(" + getId() + ")");
+    logger.warn("Unexpected null/empty Series Index for book " + getDisplayName() + "(" + getId() + ")");
     return (float)1.0;
   }
 
@@ -468,7 +492,7 @@ public class Book extends GenericDataObject   {
   public String getListOfAuthors() {
     if  (copyOfBook  != null) return copyOfBook.getListOfAuthors();
     if (listOfAuthors == null)
-      listOfAuthors = Helper.concatenateList(" & ", getAuthors(), "getName");
+      listOfAuthors = Helper.concatenateList(" & ", getAuthors(), "getDisplayName");
     return listOfAuthors;
   }
 
@@ -521,17 +545,26 @@ public class Book extends GenericDataObject   {
       if (files != null && files.size() > 1) {
         Collections.sort(files, new Comparator<EBookFile>() {
           public int compare(EBookFile o1, EBookFile o2) {
-            if (o1 == null)
+            if (o1 == null) {
               if (o2 == null)
                 return 0;
               else
                 return 1;
-            if (o2 == null)
-              if (o1 == null)
+            }
+            if (o2 == null) {
+              return -1;
+            }
+            //   Now allow for empty format entries
+            if (o1.getFormat() == null) {
+              if (o2.getFormat() == null)
                 return 0;
               else
-                return -1;
-            return Helper.checkedCompare(o1.getFormat(), o2.getFormat());
+                return 1;
+            }
+            if (o2.getFormat() == null) {
+              return -1;
+            }
+            return Helper.checkedCompare(o1.getFormat().toString(), o2.getFormat().toString());
           }
         });
       }
@@ -587,7 +620,7 @@ public class Book extends GenericDataObject   {
   }
 
   public String toString() {
-    return getId() + " - " + getTitle();
+    return getId() + " - " + getDisplayName();
   }
 
   @Override
@@ -601,7 +634,7 @@ public class Book extends GenericDataObject   {
   }
 
   public String toDetailedString() {
-    return getId() + " - " + getMainAuthor().getName() + " - " + getTitle() + " - " + Helper.concatenateList(getTags()) + " - " + getPath();
+    return getId() + " - " + getMainAuthor().getDisplayName() + " - " + getDisplayName() + " - " + Helper.concatenateList(getTags()) + " - " + getPath();
   }
 
   public File getBookFolder() {
@@ -665,10 +698,6 @@ public class Book extends GenericDataObject   {
   public BookRating getRating() {
     if (copyOfBook != null)  return copyOfBook.getRating();
     return rating;
-  }
-
-  public String getTitleToSplitByLetter() {
-    return DataModel.getLibrarySortTitle() ? getTitle() : getTitle_Sort();
   }
 
   /**

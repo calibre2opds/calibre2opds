@@ -84,7 +84,6 @@ public class HtmlManager {
       if (fos != null)
         fos.close();
     }
-
   }
 
   /**
@@ -104,6 +103,9 @@ public class HtmlManager {
         try {
           Transformer transformer;
           transformer = JDOMManager.getIncludeTransformer(xslname);
+          if (transformer == null ||  source == null  || streamResult == null) {
+            int dummy = 1;
+          }
           transformer.transform(source, streamResult);
         } catch (TransformerException e) {
           logger.error(Localization.Main.getText("error.cannotTransform", xslname), e);

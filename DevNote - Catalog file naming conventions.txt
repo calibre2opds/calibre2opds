@@ -5,7 +5,7 @@ This note specifies the naming standard for generating files within the catalog 
 
 RULES:
 1.  All filename sshould be unique
-2.  Files are organised into directories where the directory name corresponds to the start of the
+2.  Files are organised into directories where the directory DisplayName corresponds to the start of the
     filename.   This is primarily for performance by avoiding having very large number of files in
     the same folder.  It is also convenient if you ever peruse the catalog at the file elvel.
 3.  Direcories will never be more than one level deep.
@@ -106,5 +106,5 @@ their author/title information and also the calibre Id that is included in the n
 If file encryption is active, then a (8 hex character) value is added to the start of the
 folder (and the index file). This should keep all related folders and files together while still
 keeping sufficient obfustication to avoid it being easy to guess the correct path to any particular file
-File names within folders also have a value added to the start of the name.  This value is
+File names within folders also have a value added to the start of the DisplayName.  This value is
 different for each file group although it will be the same for related files.

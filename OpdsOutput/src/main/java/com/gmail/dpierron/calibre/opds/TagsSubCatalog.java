@@ -83,7 +83,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
       Collections.sort(tags, new Comparator<Tag>() {
 
         public int compare(Tag o1, Tag o2) {
-          return Helper.checkedCollatorCompareIgnoreCase(o1 == null ? "" : o1.getName(), o2.getName());
+          return Helper.checkedCollatorCompareIgnoreCase(o1 == null ? "" : o1.getTextToSort(), o2.getTextToSort());
         }
       });
     return tags;
@@ -115,12 +115,12 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
   private boolean makeTagDeep(Tag tag, List<Book> books) {
     if (tag == null)
       return false;
-    if (Helper.isNullOrEmpty(tag.getName()))
+    if (Helper.isNullOrEmpty(tag.getTextToSort()))
       return false;
     if (books.size() < currentProfile.getMinBooksToMakeDeepLevel())
       return false;
 
-    String name = tag.getName().toUpperCase(Locale.ENGLISH);
+    String name = tag.getTextToSort().toUpperCase(Locale.ENGLISH);
     for (String tagToMakeDeep : currentProfile.getTokenizedTagsToMakeDeep()) {
       if (tagToMakeDeep.contains("*")) {
         tagToMakeDeep = tagToMakeDeep.substring(0, tagToMakeDeep.indexOf('*'));
@@ -144,7 +144,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
           return Helper.checkedCollatorCompareIgnoreCase(s1, s2, collator);
         }
         // If authors equal compare on title.
-        return Helper.checkedCollatorCompareIgnoreCase(o1.getTitleToSplitByLetter(), o2.getTitleToSplitByLetter(), collator);
+        return Helper.checkedCollatorCompareIgnoreCase(o1.getTextToSort(), o2.getTextToSort(), collator);
       }
 
     });
@@ -160,7 +160,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getTagFolderFilenameNoLevel(Tag tag) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.TAG_TYPE,tag.getId(), 100);
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(tag.getColumnName(),tag.getId(), 100);
   }
   /**
    *    Get the base filename that is used to store a given author
@@ -170,9 +170,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
    */
   public String getTagFolderFilenameWithLevel (Tag tag) {
     if (currentProfile.getDontSplitTagsOn()) {
-      return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
+      return getCatalogBaseFolderFileNameIdSplit(tag.getColumnName(), tag.getId(), 100);
     } else {
-      return getCatalogBaseFolderFileNameIdSplit(Constants.TAG_TYPE, tag.getId(), 100);
+      return getCatalogBaseFolderFileNameIdSplit(tag.getColumnName(), tag.getId(), 100);
     }
   }
 
@@ -214,7 +214,7 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
     }
     // Tags are held at each level (i.e. not the top level)
     String filename = getTagFolderFilenameWithLevel(tag);
-    String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getName());
+    String title = (titleWhenCategorized != null ? titleWhenCategorized : tag.getTextToSort());
     String urn = baseurn + Constants.URN_SEPARATOR + tag.getId();
 
     // Sort books according to user requirements
@@ -237,9 +237,9 @@ public abstract class TagsSubCatalog extends BooksSubCatalog {
         logger.trace("getObjectEntry:  Breadcrumbs=" + pBreadcrumbs.toString());
       }
       // String urlExt = optimizeCatalogURL(catalogManager.getCatalogFileUrl(filename + Constants.XML_EXTENSION, true));
-      // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null);
+      // Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getDisplayName(), null);
       LevelSubCatalog level = new LevelSubCatalog(books, title);
-      level.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getName(), null));  // Create a brand new level using current breadcrumbs!
+      level.setCatalogLevel(Breadcrumbs.addBreadcrumb(pBreadcrumbs, tag.getTextToSort(), null));  // Create a brand new level using current breadcrumbs!
       level.setCatalogType("");
       level.setCatalogFolder("");
       level.setCatalogBaseFilename(filename);

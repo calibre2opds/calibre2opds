@@ -29,10 +29,10 @@ public class SeriesFilter implements BookFilter {
 
     if (Helper.isNotNullOrEmpty(book.getSeries())) {
       if (contains) {
-        if (book.getSeries().getName().toUpperCase().contains(filterValue))
+        if (book.getSeries().getDisplayName().toUpperCase().contains(filterValue))
           return true;
       } else {
-        if (book.getSeries().getName().equalsIgnoreCase(filterValue))
+        if (book.getSeries().getDisplayName().equalsIgnoreCase(filterValue))
           return true;
       }
     }

@@ -9,7 +9,7 @@
 
   <groupId>com.gmail.dpierron.calibre</groupId>
   <artifactId>CalibreQueryLanguage</artifactId>
-  <name>Calibre Query Language parser</name>
+  <DisplayName>Calibre Query Language parser</DisplayName>
 
   <!-- This is the version of YOUR project -->
   <version>3.6-SNAPSHOT</version>

@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gmail.dpierron.calibre</groupId>
   <artifactId>DataModel</artifactId>
-  <name>Datamodel</name>
+  <DisplayName>Datamodel</DisplayName>
   <version>3.6-SNAPSHOT</version>
   <description>The datamodel of the Calibre SQLite database</description>
   <dependencies>

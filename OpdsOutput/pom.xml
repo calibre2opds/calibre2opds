@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.dpierron.calibre</groupId>
     <artifactId>OpdsOutput</artifactId>
-    <name>OpdsOutput</name>
+    <DisplayName>OpdsOutput</DisplayName>
     <version>3.6-SNAPSHOT</version>
     <description>A library that can create a set of OPDS and HTML catalogs</description>
     <dependencies>
@@ -86,10 +86,10 @@
     <repositories>
         <repository>
             <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
+            <DisplayName>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
                 replace the dependencies in this repository with correct ones and delete this
                 repository.
-            </name>
+            </DisplayName>
             <url>file:${project.basedir}/lib</url>
         </repository>
     </repositories>

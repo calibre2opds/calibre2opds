@@ -71,8 +71,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     // We can use configuration parameters to sort by either auth_sort or author
     Collections.sort(authors, new Comparator<Author>() {
       public int compare(Author o1, Author o2) {
-        String name1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String name2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        String name1 = (o1 == null ? "" : o1.getTextToSort());
+        String name2 = (o2 == null ? "" : o2.getTextToSort());
         return  Helper.checkedCollatorCompareIgnoreCase(name1, name2,collator);
       }
     });
@@ -127,7 +127,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
     }
     // Check for special case where the author sort name is equal to the split level.
     while ( willSplitByLetter && listauthors.size() > 0
-            && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listauthors.get(0).getNameForSort().toUpperCase())) {
+            && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listauthors.get(0).getSortName().toUpperCase())) {
       Author author = listauthors.get(0);
       listauthors.remove(0);
       Element element;
@@ -323,7 +323,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public static String getAuthorFolderFilenameNoLevel(Author author) {
-    return getCatalogBaseFolderFileNameIdNoLevelSplit(Constants.AUTHOR_TYPE,author.getId(), 1000);
+    return getCatalogBaseFolderFileNameIdNoLevelSplit(author.getColumnName(),author.getId(), 1000);
   }
   /**
    *    Get the base filename that is used to store a given author
@@ -332,7 +332,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
    * @return
    */
   public String getAuthorFolderFilenameWithLevel (Author author) {
-    return getCatalogBaseFolderFileNameIdSplit(Constants.AUTHOR_TYPE, author.getId(), 1000);
+    return getCatalogBaseFolderFileNameIdSplit(author.getColumnName(), author.getId(), 1000);
   }
   /**
    * Get the details for the specified author
@@ -382,8 +382,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
 
     String filename = getAuthorFolderFilenameWithLevel(author);
     logger.debug("getAuthorEntry:generating " + filename);
-    String title = currentProfile.getDisplayAuthorSort() ? author.getSort(): author.getName();
-    String urn = Constants.INITIAL_URN_PREFIX + Constants.AUTHOR_TYPE + Constants.URN_SEPARATOR + author.getId();
+    String title = currentProfile.getDisplayAuthorSort() ? author.getSortName(): author.getDisplayName();
+    String urn = Constants.INITIAL_URN_PREFIX + author.getColumnName() + Constants.URN_SEPARATOR + author.getId();
     Breadcrumbs breadcrumbs = Breadcrumbs.addBreadcrumb(pBreadcrumbs, title, CatalogManager.getCatalogFileUrl(filename + Constants.PAGE_ONE_XML, true));
 
     // try and list the items to make the summary
@@ -398,8 +398,8 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
       logger.debug("make a link to the series by this author catalog");
       SeriesSubCatalog seriesSubCatalog = new SeriesSubCatalog(listOfBooksInSeries);
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
-      seriesSubCatalog.setCatalogFolderSplit(Constants.AUTHOR_TYPE, author.getId());
-      seriesSubCatalog.setCatalogBaseFilename(Constants.AUTHOR_TYPE + Constants.TYPE_SEPARATOR + author.getId()
+      seriesSubCatalog.setCatalogFolderSplit(author.getColumnName(), author.getId());
+      seriesSubCatalog.setCatalogBaseFilename(author.getColumnName() + Constants.TYPE_SEPARATOR + author.getId()
                                               + Constants.TYPE_SEPARATOR + Constants.SERIES_TYPE);
       firstElements = seriesSubCatalog.getListOfSeries(breadcrumbs,
                                                        null,      // series derived from catalog books
@@ -424,7 +424,7 @@ public class AuthorsSubCatalog extends BooksSubCatalog {
                                                       allbooksSubcatalog.getBooks(),
                                                       true,
                                                       0,              // from start
-                                                      Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getName()),
+                                                      Localization.Main.getText("bookentry.author", Localization.Main.getText("allbooks.title"), author.getDisplayName()),
                                                       allbooksSubcatalog.getSummary(),
                                                       allbooksSubcatalog.getUrn(),
                                                       allbooksSubcatalog.getCatalogBaseFolderFileName(),

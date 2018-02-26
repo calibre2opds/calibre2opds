@@ -2,7 +2,7 @@ parser grammar CalibreQueryParser;
 
 options {
 
-    // Default language but name it anyway
+    // Default language but DisplayName it anyway
     //
     language  = Java;
 

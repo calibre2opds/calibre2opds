@@ -16,9 +16,7 @@ import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.Normalizer;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class DataModel {
 
@@ -70,10 +68,14 @@ public class DataModel {
 
   private static Map<Locale, NoiseWord> mapOfNoisewords;
 
+  //  Options that are copied from runtime parameters (with defaults being preset)
   private static boolean useLanguagesAsTags = true;
   private static boolean librarySortAuthor = true;
   private static boolean librarySortTitle = true;
   private static boolean librarySortSeries = true;
+  private static boolean displayTitleSort = false;
+  private static boolean displayAuthorSort = false;
+  private static boolean displaySeriesSort = false;
 
   public static void reset() {
     mapOfEBookFilesByBookId = null;
@@ -465,89 +467,96 @@ public class DataModel {
     return mapOfBooksByPublisher;
   }
 
-
+  /**
+   * Generic version of this routine
+   * @param objs
+   * @return
+   */
   public static Map<String, List<GenericDataObject>> splitObjectsByLetter(List<GenericDataObject> objs) {
     Comparator<GenericDataObject> comparator = new Comparator<GenericDataObject>() {
 
       public int compare(GenericDataObject o1, GenericDataObject o2) {
-        String title1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String title2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        String title1 = (o1 == null ? "" : o1.getTextToSort());
+        String title2 = (o2 == null ? "" : o2.getTextToSort());
         return title1.compareTo(title2);
       }
     };
-
-    return splitByLetter(objs, comparator);
-
+    return GenericDataObject.splitByLetter(objs, comparator);
   }
 
-
+  /**
+   * TODO:  See if it can be made generic
+   * @param books
+   * @return
+   */
   public static Map<String, List<Book>> splitBooksByLetter(List<Book> books) {
     Comparator<Book> comparator = new Comparator<Book>() {
 
       public int compare(Book o1, Book o2) {
-        String title1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String title2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        String title1 = (o1 == null ? "" : o1.getTextToSort());
+        String title2 = (o2 == null ? "" : o2.getTextToSort());
         return title1.compareTo(title2);
       }
     };
-
-    return splitByLetter(books, comparator);
+    return GenericDataObject.splitByLetter(books, comparator);
   }
 
+  /**
+   * TODO:  See if this can be made generic
+   * @param authors
+   * @return
+   */
   public static Map<String, List<Author>> splitAuthorsByLetter(List<Author> authors) {
     Comparator<Author> comparator = new Comparator<Author>() {
 
       public int compare(Author o1, Author o2) {
-        String author1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String author2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        String author1 = (o1 == null ? "" : o1.getTextToSort());
+        String author2 = (o2 == null ? "" : o2.getTextToSort());
         return author1.compareTo(author2);
       }
     };
-
-    return splitByLetter(authors, comparator);
+    return GenericDataObject.splitByLetter(authors, comparator);
   }
 
+  /**
+   * TODO:  See if this can be made generic
+   * @param series
+   * @return
+   */
   public static Map<String, List<Series>> splitSeriesByLetter(List<Series> series) {
     Comparator<Series> comparator = new Comparator<Series>() {
 
       public int compare(Series o1, Series o2) {
-        String series1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-        String series2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+        String series1 = (o1 == null ? "" : o1.getTextToSort());
+        String series2 = (o2 == null ? "" : o2.getTextToSort());
         return series1.compareTo(series2);
       }
     };
-
-    return splitByLetter(series, comparator);
+    return GenericDataObject.splitByLetter(series, comparator);
   }
 
+  /**
+   * TODO:  See if this can be made generic
+   * @param tags
+   * @return
+   */
   public static Map<String, List<Tag>> splitTagsByLetter(List<Tag> tags) {
     Comparator<Tag> comparator = new Comparator<Tag>() {
 
       public int compare(Tag o1, Tag o2) {
-        String tag1 = (o1 == null ? "" : o1.getName());
-        String tag2 = (o2 == null ? "" : o2.getName());
+        String tag1 = (o1 == null ? "" : o1.getTextToSort());
+        String tag2 = (o2 == null ? "" : o2.getTextToSort());
         return tag1.compareTo(tag2);
       }
     };
-
-    return splitByLetter(tags, comparator);
+    return GenericDataObject.splitByLetter(tags, comparator);
   }
 
-  public static Map<DateRange, List<Book>> splitBooksByDate(List<Book> books) {
-
-    Map<DateRange, List<Book>> splitByDate = new HashMap<DateRange, List<Book>>();
-    for (Book book : books) {
-      DateRange range = DateRange.valueOf((book).getTimestamp());
-      List<Book> list = splitByDate.get(range);
-      if (list == null) {
-        list = new LinkedList<Book>();
-        splitByDate.put(range, list);
-      }
-      list.add(book);
-    }
-    return splitByDate;
-  }
-
+  /**
+   * Generic version of this routine
+   * @param objs
+   * @return
+   */
   public static Map<DateRange, List<GenericDataObject>> splitObjectsByDate(List<? extends GenericDataObject> objs) {
 
     Map<DateRange, List<GenericDataObject>> splitByDate = new HashMap<DateRange, List<GenericDataObject>>();
@@ -564,78 +573,25 @@ public class DataModel {
   }
 
   /**
-   * Split a list of items by the first letter that is different in some (e.g. Mortal, More and Morris will be splitted on t, e and r)
-   * @param objects
-   * @param comparator
+   * TODO:  See if this can be made generic
+   * @param books
    * @return
    */
-  public static <T extends SplitableByLetter> Map<String, List<T>> splitByLetter(List<T> objects, Comparator<T> comparator) {
-    Map<String, List<T>> splitMap = new HashMap<String, List<T>>();
+  public static Map<DateRange, List<Book>> splitBooksByDate(List<Book> books) {
 
-    // construct a list of all strings to split
-    Vector<String> stringsToSplit = new Vector<String>(objects.size());
-    String commonPart = null;
-    for (T object : objects) {
-      if (object == null)
-        continue;
-      String string = object.getTitleToSplitByLetter();
-
-      // remove any diacritic mark
-      String temp = Normalizer.normalize(string, Normalizer.Form.NFD);
-      Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-      String norm = pattern.matcher(temp).replaceAll("");
-      string = norm;
-      stringsToSplit.add(string);
-
-      // find the common part
-      if (commonPart == null) {
-        commonPart = string.toUpperCase();
-      } else if (commonPart.length() > 0) {
-        String tempCommonPart = commonPart;
-        while (tempCommonPart.length() > 0 && !string.toUpperCase().startsWith(tempCommonPart)) {
-          tempCommonPart = tempCommonPart.substring(0, tempCommonPart.length()-1);
-        }
-        commonPart = tempCommonPart.toUpperCase();
+    Map<DateRange, List<Book>> splitByDate = new HashMap<DateRange, List<Book>>();
+    for (Book book : books) {
+      DateRange range = DateRange.valueOf((book).getTimestamp());
+      List<Book> list = splitByDate.get(range);
+      if (list == null) {
+        list = new LinkedList<Book>();
+        splitByDate.put(range, list);
       }
+      list.add(book);
     }
-
-    // note the position of the first different char
-    int firstDifferentCharPosition = commonPart.length();
-
-    // browse all objects and split them up
-    for (int i=0; i<objects.size(); i++) {
-      T object = objects.get(i);
-      if (object == null)
-        continue;
-
-      String string = stringsToSplit.get(i);
-      String discriminantPart = "_";
-      if (Helper.isNotNullOrEmpty(string)) {
-        if (firstDifferentCharPosition + 1 >= string.length())
-          discriminantPart = string.toUpperCase();
-        else
-          discriminantPart = string.substring(0, firstDifferentCharPosition+1).toUpperCase();
-
-        // find the already existing list (of items split by this discriminant part)
-        List<T> list = splitMap.get(discriminantPart);
-        if (list == null) {
-          // no list yet, create one
-          list = new LinkedList<T>();
-          splitMap.put(discriminantPart, list);
-        }
-
-        // add the current item to the list
-        list.add(object);
-      }
-    }
-
-    // sort each list
-    for (String letter : splitMap.keySet()) {
-      List<T> objectsInThisLetter = splitMap.get(letter);
-      Collections.sort(objectsInThisLetter, comparator);
-    }
-    return splitMap;
+    return splitByDate;
   }
+
 
   /**
    * This method generates implicit Lang:XX tags based on the books languages (as specified in the database).
@@ -668,7 +624,7 @@ public class DataModel {
             if (languageTag == null) {
               // check in the existing tags
               for (Tag tag : getListOfTags()) {
-                if (tag.getName().equalsIgnoreCase(languageTagName)) {
+                if (tag.getTextToSort().equalsIgnoreCase(languageTagName)) {
                   languageTag = tag;
                   break;
                 }
@@ -720,6 +676,9 @@ public class DataModel {
     return tags;
   }
 
+  /*
+   *  Functions for passing parameters into data model
+   */
   public static void setUseLanguagesAsTags(boolean b) {
     useLanguagesAsTags = b;
   }
@@ -737,6 +696,19 @@ public class DataModel {
   public static void setLibrarySortSeries(boolean b) { librarySortSeries = b; }
 
   public static boolean getLibrarySortSeries() {return librarySortSeries; }
+
+  public static void setDisplayAuthorSort(boolean b) { displayAuthorSort = b; }
+
+  public static boolean getDisplayAuthorSort() {return librarySortAuthor; }
+
+  public static void setDisplayTitleSort(boolean b) { displayTitleSort = b; }
+
+  public static boolean getDisplayTitleSort() {return displayTitleSort; }
+
+  public static void setDisplaySeriesSort(boolean b) { displaySeriesSort = b; }
+
+  public static boolean getDisplaySeriesSort() {return displaySeriesSort; }
+
 
   /**
    * Get a Noiseword object given the language string

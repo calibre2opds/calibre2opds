@@ -4,7 +4,7 @@ package com.gmail.dpierron.calibre.opds;
  */
 import com.gmail.dpierron.calibre.configuration.Icons;
 import com.gmail.dpierron.calibre.datamodel.Book;
-import com.gmail.dpierron.calibre.datamodel.DataModel;
+import com.gmail.dpierron.calibre.datamodel.GenericDataObject;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.tools.i18n.Localization;
 import com.gmail.dpierron.calibre.trook.TrookSpecificSearchDatabaseManager;
@@ -82,7 +82,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     // andle special case where split-by-letter depth exceeds tag name length
     if (splitOption == SplitOption.SplitByLetter) {
       while (listTags.size() > 0
-           && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listTags.get(0).getName().toUpperCase())) {
+           && pFilename.toUpperCase().endsWith(Constants.TYPE_SEPARATOR + listTags.get(0).getTextToSort().toUpperCase())) {
         Tag tag = listTags.get(0);
         listTags.remove(0);
         Element element;
@@ -96,7 +96,7 @@ public class TagListSubCatalog extends TagsSubCatalog {
     }
     boolean willSplitByLetter = checkSplitByLetter(splitOption, listTags.size());
     if (willSplitByLetter) {
-      mapOfTagsByLetter = DataModel.splitTagsByLetter(listTags);
+      mapOfTagsByLetter = GenericDataObject.splitByLetter(listTags);
       catalogSize = 0;
     } else
       catalogSize = listTags.size();

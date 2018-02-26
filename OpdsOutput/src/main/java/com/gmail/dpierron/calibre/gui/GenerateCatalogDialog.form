@@ -2,32 +2,32 @@
 
 <Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="0"/>
-    <Property name="resizable" type="boolean" value="false"/>
+    <Property DisplayName="defaultCloseOperation" type="int" value="0"/>
+    <Property DisplayName="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
-    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+    <SyntheticProperty DisplayName="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty DisplayName="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
-    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
-    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
-    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
-    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
-    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,78,0,0,2,-87"/>
+    <AuxValue DisplayName="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue DisplayName="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue DisplayName="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue DisplayName="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue DisplayName="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue DisplayName="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue DisplayName="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue DisplayName="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue DisplayName="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue DisplayName="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,78,0,0,2,-87"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
   <SubComponents>
-    <Component class="javax.swing.JProgressBar" name="jProgressStep">
+    <Component class="javax.swing.JProgressBar" DisplayName="jProgressStep">
       <Properties>
-        <Property name="maximum" type="int" value="62"/>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+        <Property DisplayName="maximum" type="int" value="62"/>
+        <Property DisplayName="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[300, 19]"/>
         </Property>
       </Properties>
@@ -37,9 +37,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="cmdStopGenerating">
+    <Component class="javax.swing.JButton" DisplayName="cmdStopGenerating">
       <Properties>
-        <Property name="text" type="java.lang.String" value="cmdStopGenerating"/>
+        <Property DisplayName="text" type="java.lang.String" value="cmdStopGenerating"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmdStopGeneratingMouseClicked"/>
@@ -51,9 +51,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkStarted">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkStarted">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -61,9 +61,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblStarted">
+    <Component class="javax.swing.JLabel" DisplayName="lblStarted">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblStarted"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblStarted"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -71,9 +71,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblStartedTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblStartedTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -81,9 +81,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkDatabase">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkDatabase">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -91,9 +91,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblDatabase">
+    <Component class="javax.swing.JLabel" DisplayName="lblDatabase">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblDatabase"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblDatabase"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -101,9 +101,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblDatabaseTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblDatabaseTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -111,9 +111,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkAuthors">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkAuthors">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -121,9 +121,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblAuthors">
+    <Component class="javax.swing.JLabel" DisplayName="lblAuthors">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblAuthors"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblAuthors"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -131,9 +131,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblAuthorsTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblAuthorsTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -141,9 +141,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkTags">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkTags">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -151,9 +151,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblTags">
+    <Component class="javax.swing.JLabel" DisplayName="lblTags">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblTags"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblTags"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -161,9 +161,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblTagsTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblTagsTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -171,9 +171,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkSeries">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkSeries">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -181,9 +181,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblSeries">
+    <Component class="javax.swing.JLabel" DisplayName="lblSeries">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblSeries"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblSeries"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -191,9 +191,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblSeriesTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblSeriesTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -201,9 +201,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkRecent">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkRecent">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -211,9 +211,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblRecent">
+    <Component class="javax.swing.JLabel" DisplayName="lblRecent">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblRecent"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblRecent"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -221,9 +221,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblRecentTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblRecentTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -231,9 +231,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkRated">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkRated">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -241,9 +241,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblRated">
+    <Component class="javax.swing.JLabel" DisplayName="lblRated">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblRated"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblRated"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -251,9 +251,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblRatingTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblRatingTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -261,9 +261,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkAllbooks">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkAllbooks">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -271,9 +271,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblAllbooks">
+    <Component class="javax.swing.JLabel" DisplayName="lblAllbooks">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblAllbooks"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblAllbooks"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -281,9 +281,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblAllbooksTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblAllbooksTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -291,9 +291,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkFeaturedBooks">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkFeaturedBooks">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -301,9 +301,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblFeaturedBooks">
+    <Component class="javax.swing.JLabel" DisplayName="lblFeaturedBooks">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblFeaturedBooks"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblFeaturedBooks"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -311,9 +311,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblFeaturedBooksTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblFeaturedBooksTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -321,9 +321,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkCustomCatalogs">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkCustomCatalogs">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -331,9 +331,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCustomCatalogs">
+    <Component class="javax.swing.JLabel" DisplayName="lblCustomCatalogs">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblCustomCatalogs"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblCustomCatalogs"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -341,9 +341,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCustomCatalogsTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblCustomCatalogsTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -351,9 +351,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkReprocessingEpubMetadata">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkReprocessingEpubMetadata">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -361,9 +361,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblReprocessingEpubMetadata">
+    <Component class="javax.swing.JLabel" DisplayName="lblReprocessingEpubMetadata">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblReprocessingEpubMetadata"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblReprocessingEpubMetadata"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -371,9 +371,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblReprocessingEpubMetadataTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblReprocessingEpubMetadataTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -381,9 +381,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkIndex">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkIndex">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -391,9 +391,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblIndex">
+    <Component class="javax.swing.JLabel" DisplayName="lblIndex">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblIndex"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblIndex"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -401,9 +401,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblIndexTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblIndexTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -411,9 +411,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkCopyLibToTarget">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkCopyLibToTarget">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -421,9 +421,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCopyLibToTarget">
+    <Component class="javax.swing.JLabel" DisplayName="lblCopyLibToTarget">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblCopyLibToTarget"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblCopyLibToTarget"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -431,9 +431,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCopyLibraryTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblCopyLibraryTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -441,9 +441,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkCopyCatToTarget">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkCopyCatToTarget">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -451,9 +451,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCopyCatToTarget">
+    <Component class="javax.swing.JLabel" DisplayName="lblCopyCatToTarget">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblCopyCatToTarget"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblCopyCatToTarget"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -461,9 +461,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblCopyCatalogTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblCopyCatalogTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -471,9 +471,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkFinished">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkFinished">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkFinishedActionPerformed"/>
@@ -484,12 +484,12 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblFinished">
+    <Component class="javax.swing.JLabel" DisplayName="lblFinished">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblFinished"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblFinished"/>
       </Properties>
       <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="null"/>
+        <Property DisplayName="AccessibleContext.accessibleName" type="java.lang.String" value="null"/>
       </AccessibilityProperties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -497,9 +497,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblFinishedTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblFinishedTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -507,21 +507,21 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblStepMessage">
+    <Component class="javax.swing.JLabel" DisplayName="lblStepMessage">
       <Properties>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+        <Property DisplayName="horizontalAlignment" type="int" value="2"/>
+        <Property DisplayName="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
             <LineBorder/>
           </Border>
         </Property>
-        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+        <Property DisplayName="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[600, 20]"/>
         </Property>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+        <Property DisplayName="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[600, 0]"/>
         </Property>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+        <Property DisplayName="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[600, 20]"/>
         </Property>
       </Properties>
@@ -531,9 +531,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblStoppingGeneration">
+    <Component class="javax.swing.JLabel" DisplayName="lblStoppingGeneration">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblStoppingGeneration"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblStoppingGeneration"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -541,9 +541,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblZipCatalog">
+    <Component class="javax.swing.JLabel" DisplayName="lblZipCatalog">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lblZipCatalog"/>
+        <Property DisplayName="text" type="java.lang.String" value="lblZipCatalog"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -551,9 +551,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblZipCatalogTime">
+    <Component class="javax.swing.JLabel" DisplayName="lblZipCatalogTime">
       <Properties>
-        <Property name="text" type="java.lang.String" value="!"/>
+        <Property DisplayName="text" type="java.lang.String" value="!"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -561,9 +561,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkZipCatalog">
+    <Component class="javax.swing.JCheckBox" DisplayName="chkZipCatalog">
       <Properties>
-        <Property name="enabled" type="boolean" value="false"/>
+        <Property DisplayName="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkZipCatalogActionPerformed"/>

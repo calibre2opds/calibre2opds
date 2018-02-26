@@ -3,32 +3,32 @@
     <xsl:output doctype-public="-//W3c//DTD html 4.01//EN"/>
     <xsl:output doctype-system="http://www.w3c.org/tr/html4/strict.dtd"/>
     <xsl:output indent="yes"/>
-    <xsl:param name="libraryTitle"/>
-    <xsl:param name="programName"/>
-    <xsl:param name="programVersion"/>
-    <xsl:param name="thumbWidth">84</xsl:param>
-    <xsl:param name="thumbHeight">125</xsl:param>
-    <xsl:param name="generateDownloads">true</xsl:param>
-    <xsl:param name="browseByCover">false</xsl:param>
-    <xsl:param name="i18n.dateGenerated"/>
-    <xsl:param name="i18n.backToMain"/>
-    <xsl:param name="i18n.summarysection"/>
-    <xsl:param name="i18n.downloads"/>
-    <xsl:param name="i18n.links"/>
-    <xsl:param name="i18n.downloadfile"/>
-    <xsl:param name="i18n.downloadsection"/>
-    <xsl:param name="i18n.relatedsection"/>
-    <xsl:param name="i18n.linksection"/>
-    <xsl:param name="intro.goal"/>
-    <xsl:param name="intro.wiki.title"/>
-    <xsl:param name="intro.wiki.url"/>
-    <xsl:param name="intro.team.title"/>
-    <xsl:param name="intro.team.list1"/>
-    <xsl:param name="intro.team.list2"/>
-    <xsl:param name="intro.team.list3"/>
-    <xsl:param name="intro.team.list4"/>
-    <xsl:param name="intro.thanks.1"/>
-    <xsl:param name="intro.thanks.2"/>
+    <xsl:param DisplayName="libraryTitle"/>
+    <xsl:param DisplayName="programName"/>
+    <xsl:param DisplayName="programVersion"/>
+    <xsl:param DisplayName="thumbWidth">84</xsl:param>
+    <xsl:param DisplayName="thumbHeight">125</xsl:param>
+    <xsl:param DisplayName="generateDownloads">true</xsl:param>
+    <xsl:param DisplayName="browseByCover">false</xsl:param>
+    <xsl:param DisplayName="i18n.dateGenerated"/>
+    <xsl:param DisplayName="i18n.backToMain"/>
+    <xsl:param DisplayName="i18n.summarysection"/>
+    <xsl:param DisplayName="i18n.downloads"/>
+    <xsl:param DisplayName="i18n.links"/>
+    <xsl:param DisplayName="i18n.downloadfile"/>
+    <xsl:param DisplayName="i18n.downloadsection"/>
+    <xsl:param DisplayName="i18n.relatedsection"/>
+    <xsl:param DisplayName="i18n.linksection"/>
+    <xsl:param DisplayName="intro.goal"/>
+    <xsl:param DisplayName="intro.wiki.title"/>
+    <xsl:param DisplayName="intro.wiki.url"/>
+    <xsl:param DisplayName="intro.team.title"/>
+    <xsl:param DisplayName="intro.team.list1"/>
+    <xsl:param DisplayName="intro.team.list2"/>
+    <xsl:param DisplayName="intro.team.list3"/>
+    <xsl:param DisplayName="intro.team.list4"/>
+    <xsl:param DisplayName="intro.thanks.1"/>
+    <xsl:param DisplayName="intro.thanks.2"/>
     <xsl:template match="/opds:feed">
         <html>
             <head>
@@ -74,7 +74,7 @@
                         <xsl:value-of select="opds:title"/>
                     </li>
                 </ul>
-                <xsl:variable name="mainDivClassName">
+                <xsl:variable DisplayName="mainDivClassName">
                     <xsl:choose>
                         <xsl:when test="$browseByCover = 'true'">browseByCover</xsl:when>
                         <xsl:otherwise>browseByList</xsl:otherwise>
@@ -84,13 +84,13 @@
                     <xsl:for-each select="opds:entry">
                         <xsl:choose>
                             <xsl:when test="contains(opds:id, ':book:')">
-                                <xsl:variable name="bookId" select="opds:id"/>
+                                <xsl:variable DisplayName="bookId" select="opds:id"/>
                                 <xsl:choose>
                                     <xsl:when test="not(contains(/opds:feed/opds:id, 'calibre:book:'))">
                                         <!-- partial entry -->
                                         <div class="x_container" id="{$bookId}">
                                             
-                                            <xsl:variable name="bookTitle"><xsl:value-of select="concat(opds:author/opds:name, ' - ', opds:title)"/></xsl:variable>
+                                            <xsl:variable DisplayName="bookTitle"><xsl:value-of select="concat(opds:author/opds:DisplayName, ' - ', opds:title)"/></xsl:variable>
                                             
                                             <!-- thumbnail -->
                                             <div class="cover">
@@ -111,11 +111,11 @@
                                                     <!-- title -->
                                                     <div class="x_title">
                                                         <xsl:value-of select="opds:title"/>        
-                                                        <xsl:if test="string-length(opds:author/opds:name) > 1">
+                                                        <xsl:if test="string-length(opds:author/opds:DisplayName) > 1">
                                                             <br/>
                                                             <small>
                                                                 <em>
-                                                                    <xsl:value-of select="opds:author/opds:name"/>
+                                                                    <xsl:value-of select="opds:author/opds:DisplayName"/>
                                                                 </em>
                                                             </small>
                                                         </xsl:if>
@@ -141,10 +141,10 @@
                                                     <br/>
                                                     <small>
                                                         <em>
-                                                            <xsl:if test="string-length(opds:author/opds:name) > 0">
+                                                            <xsl:if test="string-length(opds:author/opds:DisplayName) > 0">
                                                                 <small>
                                                                     <em>
-                                                                        <xsl:value-of select="opds:author/opds:name"/>
+                                                                        <xsl:value-of select="opds:author/opds:DisplayName"/>
                                                                     </em>
                                                                 </small>
                                                             </xsl:if>
@@ -193,8 +193,8 @@
                                                             <xsl:for-each select="opds:link[@rel='http://opds-spec.org/acquisition']">
                                                                 <xsl:if test="not(@type='application/epub+zip')">
                                                                     <li>
-                                                                        <xsl:element name="a">
-                                                                            <xsl:attribute name="href">
+                                                                        <xsl:element DisplayName="a">
+                                                                            <xsl:attribute DisplayName="href">
                                                                                 <xsl:value-of select="./@href"/>
                                                                             </xsl:attribute>
                                                                             <xsl:choose>
@@ -221,8 +221,8 @@
                                                     <ul>
                                                         <xsl:for-each select="opds:link[@rel='related' and @type='application/atom+xml']">
                                                             <li>
-                                                                <xsl:element name="a">
-                                                                    <xsl:attribute name="href">
+                                                                <xsl:element DisplayName="a">
+                                                                    <xsl:attribute DisplayName="href">
                                                                         <xsl:value-of select="concat(substring-before(@href, '.xml'), '.html')"/>
                                                                     </xsl:attribute>
                                                                     <xsl:value-of select="@title"/>
@@ -240,8 +240,8 @@
                                                     <ul>
                                                         <xsl:for-each select="opds:link[@rel='related' and @type='text/html']">
                                                             <li>
-                                                                <xsl:element name="a">
-                                                                    <xsl:attribute name="href">
+                                                                <xsl:element DisplayName="a">
+                                                                    <xsl:attribute DisplayName="href">
                                                                         <xsl:value-of select="@href"/>
                                                                     </xsl:attribute>
                                                                     <xsl:value-of select="@title"/>
@@ -261,7 +261,7 @@
                                     <div class="cover">
                                         <img  src="{opds:link[@rel='http://opds-spec.org/image/thumbnail']/@href}" />
                                     </div>
-                                    <xsl:variable name="url">
+                                    <xsl:variable DisplayName="url">
                                         <xsl:choose>
                                             <xsl:when test="opds:link[@type='application/atom+xml']">
                                                 <xsl:value-of select="concat(substring-before(opds:link[@type='application/atom+xml']/@href, '.xml'), '.html')"/>

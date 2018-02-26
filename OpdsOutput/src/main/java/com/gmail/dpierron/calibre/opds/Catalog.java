@@ -912,6 +912,9 @@ public class Catalog {
       DataModel.setLibrarySortAuthor(ConfigurationManager.getCurrentProfile().getSortUsingAuthor());
       DataModel.setLibrarySortTitle(ConfigurationManager.getCurrentProfile().getSortUsingTitle());
       DataModel.setLibrarySortSeries(ConfigurationManager.getCurrentProfile().getSortSeriesUsingLibrarySort());
+      DataModel.setDisplayAuthorSort(ConfigurationManager.getCurrentProfile().getDisplayAuthorSort());
+      DataModel.setDisplaySeriesSort(ConfigurationManager.getCurrentProfile().getDisplaySeriesSort());
+      DataModel.setDisplayTitleSort(ConfigurationManager.getCurrentProfile().getDisplayTitleSort());
       // CatalogManager.getTagsToIgnore();
       DataModel.preloadDataModel();    // Get mandatory database fields
       logger.trace("COMPLETED preloading Datamodel");
@@ -1131,10 +1134,10 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
           CatalogManager.callback.incStepProgressIndicatorPosition();
           if (shouldReprocessEpubMetadata(book)) {
             try {
-              CatalogManager.callback.showMessage(book.getAuthors() + ": " + book.getTitle());
+              CatalogManager.callback.showMessage(book.getAuthors() + ": " + book.getDisplayName());
               new OpfOutput(book).processEPubFile();
             } catch (IOException e) {
-              String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getTitle(), e.getMessage());
+              String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getDisplayName(), e.getMessage());
               logger.error(message, e);
             }
             countMetadata++;

@@ -215,7 +215,7 @@ public class TrookSpecificSearchDatabaseManager {
     if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedAuthors.contains(item)) {
         logger.debug("adding result for " + item);
-        String keywords = item.getName();
+        String keywords = item.getDisplayName();
         addEntryToTrookSearchDatabase(entry, ResultType.AUTHOR, keywords);
         storedAuthors.add(item);
       }
@@ -226,7 +226,7 @@ public class TrookSpecificSearchDatabaseManager {
     if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedSeries.contains(item)) {
         logger.debug("adding result for " + item);
-        String keywords = item.getName();
+        String keywords = item.getDisplayName();
         // TODO do this after Doug has added support for noise words filtering in series 
         // String noNoise = item.getTitleForSort(ConfigurationManager.getCurrentProfile().getBookLanguageTag());
         addEntryToTrookSearchDatabase(entry, ResultType.SERIES, keywords);
@@ -239,7 +239,7 @@ public class TrookSpecificSearchDatabaseManager {
     if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedTags.contains(item)) {
         logger.debug("adding result for " + item);
-        String keywords = item.getName();
+        String keywords = item.getTextToSort();
         addEntryToTrookSearchDatabase(entry, ResultType.TAG, keywords);
         storedTags.add(item);
       }
@@ -250,8 +250,8 @@ public class TrookSpecificSearchDatabaseManager {
     if (ConfigurationManager.getCurrentProfile().getDeviceMode() == DeviceMode.Nook) {
       if (!storedBooks.contains(item)) {
         logger.debug("adding result for " + item);
-        String keywords = item.getTitle();
-        String noNoise = item.getTitle_Sort();
+        String keywords = item.getDisplayName();
+        String noNoise = item.getSortName();
         addEntryToTrookSearchDatabase(entry, ResultType.BOOK, keywords, noNoise);
         storedBooks.add(item);
       }

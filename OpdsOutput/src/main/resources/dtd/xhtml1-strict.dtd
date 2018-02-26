@@ -282,7 +282,7 @@
   %i18n;
   id          ID             #IMPLIED
   http-equiv  CDATA          #IMPLIED
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   content     CDATA          #REQUIRED
   scheme      CDATA          #IMPLIED
   >
@@ -505,7 +505,7 @@
   %focus;
   charset     %Charset;      #IMPLIED
   type        %ContentType;  #IMPLIED
-  name        NMTOKEN        #IMPLIED
+  DisplayName        NMTOKEN        #IMPLIED
   href        %URI;          #IMPLIED
   hreflang    %LanguageCode; #IMPLIED
   rel         %LinkTypes;    #IMPLIED
@@ -614,7 +614,7 @@
   height      %Length;       #IMPLIED
   width       %Length;       #IMPLIED
   usemap      %URI;          #IMPLIED
-  name        NMTOKEN        #IMPLIED
+  DisplayName        NMTOKEN        #IMPLIED
   tabindex    %Number;       #IMPLIED
   >
 
@@ -627,7 +627,7 @@
 <!ELEMENT param EMPTY>
 <!ATTLIST param
   id          ID             #IMPLIED
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   value       CDATA          #IMPLIED
   valuetype   (data|ref|object) "data"
   type        %ContentType;  #IMPLIED
@@ -640,7 +640,7 @@
    able to see the image, you should provide a text
    description using the alt and longdesc attributes.
    In addition, avoid the use of server-side image maps.
-   Note that in this DTD there is no name attribute. That
+   Note that in this DTD there is no DisplayName attribute. That
    is only available in the transitional and frameset DTD.
 -->
 
@@ -672,7 +672,7 @@
   class       CDATA          #IMPLIED
   style       %StyleSheet;   #IMPLIED
   title       %Text;         #IMPLIED
-  name        NMTOKEN        #IMPLIED
+  DisplayName        NMTOKEN        #IMPLIED
   >
 
 <!ELEMENT area EMPTY>
@@ -719,14 +719,14 @@
     file | hidden | image | button)"
    >
 
-<!-- the name attribute is required for all but submit & reset -->
+<!-- the DisplayName attribute is required for all but submit & reset -->
 
 <!ELEMENT input EMPTY>     <!-- form control -->
 <!ATTLIST input
   %attrs;
   %focus;
   type        %InputType;    "text"
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   value       CDATA          #IMPLIED
   checked     (checked)      #IMPLIED
   disabled    (disabled)     #IMPLIED
@@ -744,7 +744,7 @@
 <!ELEMENT select (optgroup|option)+>  <!-- option selector -->
 <!ATTLIST select
   %attrs;
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   size        %Number;       #IMPLIED
   multiple    (multiple)     #IMPLIED
   disabled    (disabled)     #IMPLIED
@@ -774,7 +774,7 @@
 <!ATTLIST textarea
   %attrs;
   %focus;
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   rows        %Number;       #REQUIRED
   cols        %Number;       #REQUIRED
   disabled    (disabled)     #IMPLIED
@@ -806,7 +806,7 @@
 <!ATTLIST button
   %attrs;
   %focus;
-  name        CDATA          #IMPLIED
+  DisplayName        CDATA          #IMPLIED
   value       CDATA          #IMPLIED
   type        (button|submit|reset) "submit"
   disabled    (disabled)     #IMPLIED
@@ -822,7 +822,7 @@
 
  The frame attribute specifies which parts of the frame around
  the table should be rendered. The values are not the same as
- CALS to avoid a name clash with the valign attribute.
+ CALS to avoid a DisplayName clash with the valign attribute.
 -->
 <!ENTITY % TFrame "(void|above|below|hsides|lhs|rhs|vsides|box|border)">
 

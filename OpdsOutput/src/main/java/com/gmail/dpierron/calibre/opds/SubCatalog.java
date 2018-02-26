@@ -675,8 +675,8 @@ public abstract class SubCatalog {
   static void sortBooksByTitle(List<Book> books) {
     Collections.sort(books, new Comparator<Book>() {
       public int compare(Book o1, Book o2) {
-        String title1 = o1.getTitleToSplitByLetter();
-        String title2 = o2.getTitleToSplitByLetter();
+        String title1 = o1.getTextToSort();
+        String title2 = o2.getTextToSort();
         return Helper.checkedCollatorCompareIgnoreCase(title1, title2, collator);
       }
     });
@@ -1245,7 +1245,7 @@ public abstract class SubCatalog {
               TrookSpecificSearchDatabaseManager.addBook((Book) book, entry);
             }
           } catch (RuntimeException e) {
-            logger.error("getListOfBooks: Exception on book: " + ((Book)book).getTitle() + "[" + ((Book)book).getId() + "]", e);
+            logger.error("getListOfBooks: Exception on book: " + ((Book)book).getDisplayName() + "[" + ((Book)book).getId() + "]", e);
             throw e;
           }
         }

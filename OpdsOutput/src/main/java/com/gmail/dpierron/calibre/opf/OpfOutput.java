@@ -128,7 +128,7 @@ public class OpfOutput {
     removeMetaElement(source, "calibre:series");
     removeMetaElement(source, "calibre:series_index");
     if (book.getSeries() != null) {
-      addMetaElement(source, "calibre:series", book.getSeries().getName());
+      addMetaElement(source, "calibre:series", book.getSeries().getDisplayName());
       addMetaElement(source, "calibre:series_index", "" + book.getSerieIndex());
     }
     removeMetaElement(source, "calibre:timestamp");
@@ -153,17 +153,17 @@ public class OpfOutput {
     if (Helper.isNotNullOrEmpty(book.getAuthors())) {
       removeDcElements(source, "creator");
       for (Author author : book.getAuthors()) {
-        Element dc = getDublinCoreElement(source, "creator", author.getName());
-        Attribute att = new Attribute("file-as", author.getSort(), Namespace.Opf.getJdomNamespace());
+        Element dc = getDublinCoreElement(source, "creator", author.getDisplayName());
+        Attribute att = new Attribute("file-as", author.getSortName(), Namespace.Opf.getJdomNamespace());
         dc.setAttribute(att);
         att = new Attribute("role", "aut", Namespace.Opf.getJdomNamespace());
         dc.setAttribute(att);
         source.addContent(dc);
       }
     }
-    if (Helper.isNotNullOrEmpty(book.getTitle())) {
+    if (Helper.isNotNullOrEmpty(book.getDisplayName())) {
       removeDcElements(source, "title");
-      addDublinCoreElement(source, "title", book.getTitle());
+      addDublinCoreElement(source, "title", book.getDisplayName());
     }
     if (book.getTimestamp() != null) {
       removeDcElements(source, "date");
@@ -176,7 +176,7 @@ public class OpfOutput {
         subjectsRemoved = true;
       }
       for (Tag tag : book.getTags()) {
-        addDublinCoreElement(source, "subject", tag.getName());
+        addDublinCoreElement(source, "subject", tag.getTextToSort());
       }
     }
     if (book.getSeries() != null) {
@@ -184,7 +184,7 @@ public class OpfOutput {
         removeDcElements(source, "subject");
         subjectsRemoved = true;
       }
-      addDublinCoreElement(source, "subject", book.getSeries().getName());
+      addDublinCoreElement(source, "subject", book.getSeries().getDisplayName());
     }
   }
 
@@ -233,22 +233,22 @@ public class OpfOutput {
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Opf + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Opf + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Dc.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Dc + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Dc + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.DcTerms.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.DcTerms + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.DcTerms + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Calibre.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Calibre + "' for book: " + book.getTitle() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Calibre + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
                 }
                 Element metadata = doc.getRootElement().getChild("metadata", Namespace.Opf.getJdomNamespace());
                 if (metadata != null)
@@ -262,7 +262,7 @@ public class OpfOutput {
                 }
               } catch (IOException io) {
                 logger.error(io);
-                logger.error("... for book: " + book.getTitle() + " (file " + inputFile + ")");
+                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")");
               }
             } else {
               // copy the entry to the output file
@@ -301,7 +301,7 @@ public class OpfOutput {
                         }
                       } catch (IOException e) {
                         logger.error(e);
-                        logger.error("... for book: " + book.getTitle() + " (cannot copy the default stylesheet)");
+                        logger.error("... for book: " + book.getDisplayName() + " (cannot copy the default stylesheet)");
                       }
                     }
                     filename += "_BAK";
@@ -333,7 +333,7 @@ public class OpfOutput {
                 }
               } catch (IOException e) {
                 logger.error(e);
-                logger.error("... for book: " + book.getTitle() + " (file " + inputFile + ")");
+                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")");
               }
             }
           }
@@ -347,14 +347,14 @@ public class OpfOutput {
         }
       }
     } catch (JDOMException je) {
-        logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getTitle() + " (file " + inputFile + ")");
+        logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getDisplayName() + " (file " + inputFile + ")");
         logger.warn(je);
         throw new IOException(je);
     } catch (ZipException z) {
-      logger.warn("ProcessePubFile: EPUB file is not valid ZIP for book: " + book.getTitle() + " (file " + inputFile + ")");
+      logger.warn("ProcessePubFile: EPUB file is not valid ZIP for book: " + book.getDisplayName() + " (file " + inputFile + ")");
       throw new IOException(z);
     } catch (Exception e) {
-      logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getTitle() + " (file " + inputFile + ")");
+      logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getDisplayName() + " (file " + inputFile + ")");
       logger.warn(e);
       throw new IOException(e);
     }

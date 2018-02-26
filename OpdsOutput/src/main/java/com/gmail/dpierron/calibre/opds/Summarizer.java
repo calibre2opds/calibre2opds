@@ -32,7 +32,7 @@ public class Summarizer {
 
       @Override
       String getTitle(Object o) {
-        return ((Book) o).getTitle();
+        return ((Book) o).getDisplayName();
       }
     };
 
@@ -49,7 +49,7 @@ public class Summarizer {
 
       @Override
       String getTitle(Object o) {
-        return ((Tag) o).getName();
+        return ((Tag) o).getTextToSort();
       }
     };
 
@@ -85,8 +85,8 @@ public class Summarizer {
       String getTitle(Object o) {
         // return ((Author) o).getLastName();
         return ConfigurationManager.getCurrentProfile().getDisplayAuthorSort()
-            ? ((Author) o).getSort()
-            : ((Author) o).getName();
+            ? ((Author) o).getSortName()
+            : ((Author) o).getDisplayName();
       }
     };
 
@@ -103,7 +103,7 @@ public class Summarizer {
 
       @Override
       String getTitle(Object o) {
-        return ((Series) o).getName();
+        return ((Series) o).getDisplayName();
       }
     };
 

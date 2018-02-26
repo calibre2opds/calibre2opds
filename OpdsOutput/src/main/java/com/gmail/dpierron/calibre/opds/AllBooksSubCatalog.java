@@ -100,7 +100,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
         public int compare(Book o1, Book o2) {
           // logger.trace("o1=" + o1 + ", o2=" + o2);
           assert (o1 != null) && (o2 != null);
-          // logger.trace("comparing books " + o1.getTitle() + "(" + o1.getId() + ") " + o2.getTitle() + "(" + o2.getId() + ")");
+          // logger.trace("comparing books " + o1.getDisplayName() + "(" + o1.getId() + ") " + o2.getDisplayName() + "(" + o2.getId() + ")");
           Series series1 = o1.getSeries();
           Series series2 = o2.getSeries();
           // logger.trace("series1=" + series1 + ", series2=" + series2);
@@ -110,11 +110,11 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
             String title1;
             String title2;
             if (currentProfile.getSortUsingTitle()) {
-              title1 = o1.getTitle();
-              title2 = o2.getTitle();
+              title1 = o1.getDisplayName();
+              title2 = o2.getDisplayName();
             } else {
-              title1 = o1.getTitle_Sort();
-              title2 = o2.getTitle_Sort();
+              title1 = o1.getSortName();
+              title2 = o2.getSortName();
             }
             // logger.trace("comparing title '" + title1.toString() + "' to '" + title2.toString() + "'");
             try {
@@ -142,12 +142,12 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
           if (!series1.getId().equals(series2.getId())) {
             // different series, we need to compare the series title
             try {
-              // logger.trace("comparing series " + series1.getName() + "(" + series1.getId() + ") to " + series2.getName() + "(" + series2.getId() + ")");
-              int result = Helper.checkedCollatorCompareIgnoreCase(series1.getName(), series2.getName(), collator);
+              // logger.trace("comparing series " + series1.getDisplayName() + "(" + series1.getId() + ") to " + series2.getDisplayName() + "(" + series2.getId() + ")");
+              int result = Helper.checkedCollatorCompareIgnoreCase(series1.getDisplayName(), series2.getDisplayName(), collator);
               // logger.trace("return=" + result);
               return result;
             } catch (Exception e) {
-              logger.error("Error sorting between series '" + series1.getName().toString() + "' and '" + series2.getName().toString() + "'");
+              logger.error("Error sorting between series '" + series1.getDisplayName().toString() + "' and '" + series2.getDisplayName().toString() + "'");
               return 0;
             }
           }
@@ -160,11 +160,11 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
             String title1;
             String title2;
             if (currentProfile.getSortUsingTitle()) {
-              title1 = o1.getTitle();
-              title2 = o2.getTitle();
+              title1 = o1.getDisplayName();
+              title2 = o2.getDisplayName();
             } else {
-              title1 = o1.getTitle_Sort();
-              title2 = o2.getTitle_Sort();
+              title1 = o1.getSortName();
+              title2 = o2.getSortName();
             }
             // logger.trace("comparing title '" + title1.toString() + "' to '" + title2.toString() + "'");
             try {

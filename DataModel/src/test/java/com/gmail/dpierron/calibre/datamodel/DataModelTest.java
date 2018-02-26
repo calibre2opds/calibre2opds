@@ -38,7 +38,7 @@ public class DataModelTest {
       this.title = title;
     }
 
-    public String getTitleToSplitByLetter() {
+    public String getTextToSort() {
       return title;
     }
   }
@@ -46,8 +46,8 @@ public class DataModelTest {
   Comparator<FakeBook> comparator = new Comparator<FakeBook>() {
 
     public int compare(FakeBook o1, FakeBook o2) {
-      String s1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
-      String s2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
+      String s1 = (o1 == null ? "" : o1.getTextToSort());
+      String s2 = (o2 == null ? "" : o2.getTextToSort());
       return s1.compareTo(s2);
     }
   };
@@ -66,13 +66,14 @@ public class DataModelTest {
         lines.add(line);
         books.add(new FakeBook(line));
       }
-      Map<String, List<FakeBook>> result = DataModel.splitByLetter(books, comparator);
+//      Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books, comparator);
+      Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books);
       for (int i = 0; i < 5; i++) {
         String letter = lines.get(i).substring(0, 1).toUpperCase();
         List<FakeBook> listOfBooksByLetter = result.get(letter);
         Assert.assertEquals(expected[i], listOfBooksByLetter.size());
         for (FakeBook book : listOfBooksByLetter) {
-          Assert.assertEquals(book.getTitleToSplitByLetter().substring(0, 1).toUpperCase(), letter);
+          Assert.assertEquals(book.getTextToSort().substring(0, 1).toUpperCase(), letter);
         }
       }
     } finally {
@@ -88,14 +89,14 @@ public class DataModelTest {
     for (String line : names) {
       books.add(new FakeBook(line));
     }
-    Map<String, List<FakeBook>> result = DataModel.splitByLetter(books, comparator);
+    Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books, comparator);
     Assert.assertNotNull(result);
     //for (int i = 0; i < 5; i++) {
     //  String letter = lines.get(i).substring(0, 1).toUpperCase();
     //  List<FakeBook> listOfBooksByLetter = result.get(letter);
     //  Assert.assertEquals(expected[i], listOfBooksByLetter.size());
     //  for (FakeBook book : listOfBooksByLetter) {
-    //    Assert.assertEquals(book.getTitleToSplitByLetter().substring(0, 1).toUpperCase(), letter);
+    //    Assert.assertEquals(book.getTextToSort().substring(0, 1).toUpperCase(), letter);
     //  }
     //}
   }

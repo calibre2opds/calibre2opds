@@ -51,7 +51,7 @@ public class Publisher implements SplitableByLetter, Comparable<Publisher> {
       return super.equals(obj);
   }
 
-  public String getTitleToSplitByLetter() {
+  public String getTextToSort() {
     return getName();
   }
 

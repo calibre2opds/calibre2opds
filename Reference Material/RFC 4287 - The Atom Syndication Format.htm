@@ -3,8 +3,8 @@
 <HTML lang=en 
 xml:lang="en"><HEAD><TITLE>RFC 4287 - The Atom Syndication Format</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content=index,follow name=robots>
-<META content="rfcmarkup version 1.68" name=creator><LINK href="/images/rfc.png" 
+<META content=index,follow DisplayName=robots>
+<META content="rfcmarkup version 1.68" DisplayName=creator><LINK href="/images/rfc.png"
 type=image/png rel=icon><LINK href="/images/rfc.png" type=image/png 
 rel="shortcut icon">
 <STYLE type=text/css>BODY {
@@ -181,7 +181,7 @@ A:visited {
     // -->
     </SCRIPT>
 
-<META content="MSHTML 6.00.2900.5659" name=GENERATOR></HEAD>
+<META content="MSHTML 6.00.2900.5659" DisplayName=GENERATOR></HEAD>
 <BODY onload=addHeaderTags()>
 <DIV style="HEIGHT: 13px">
 <DIV class="pre noprint docinfo bgblue" 
@@ -234,7 +234,7 @@ Table of Contents
       <A href="http://tools.ietf.org/html/rfc4287#section-3.1">3.1</A>. Text Constructs ............................................<A href="http://tools.ietf.org/html/rfc4287#page-7">7</A>
            <A href="http://tools.ietf.org/html/rfc4287#section-3.1.1">3.1.1</A>. The "type" Attribute ................................<A href="http://tools.ietf.org/html/rfc4287#page-8">8</A>
       <A href="http://tools.ietf.org/html/rfc4287#section-3.2">3.2</A>. Person Constructs .........................................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
-           <A href="http://tools.ietf.org/html/rfc4287#section-3.2.1">3.2.1</A>. The "atom:name" Element ............................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
+           <A href="http://tools.ietf.org/html/rfc4287#section-3.2.1">3.2.1</A>. The "atom:DisplayName" Element ............................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
            <A href="http://tools.ietf.org/html/rfc4287#section-3.2.2">3.2.2</A>. The "atom:uri" Element .............................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
            <A href="http://tools.ietf.org/html/rfc4287#section-3.2.3">3.2.3</A>. The "atom:email" Element ...........................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
       <A href="http://tools.ietf.org/html/rfc4287#section-3.3">3.3</A>. Date Constructs ...........................................<A href="http://tools.ietf.org/html/rfc4287#page-10">10</A>
@@ -251,7 +251,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 1]</SPAN>
-<A class=invisible id=page-2 href="http://tools.ietf.org/html/rfc4287#page-2" name=page-2><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-2 href="http://tools.ietf.org/html/rfc4287#page-2" DisplayName=page-2><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -307,11 +307,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 2]</SPAN>
-<A class=invisible id=page-3 href="http://tools.ietf.org/html/rfc4287#page-3" name=page-3><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-3 href="http://tools.ietf.org/html/rfc4287#page-3" DisplayName=page-3><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h2><A name=section-1>1</A>.  Introduction</SPAN>
+<SPAN class=h2><A DisplayName=section-1>1</A>.  Introduction</SPAN>
 
    Atom is an XML-based document format that describes lists of related
    information known as "feeds".  Feeds are composed of a number of
@@ -322,7 +322,7 @@ Table of Contents
    content such as weblogs and news headlines to Web sites as well as
    directly to user agents.
 
-<SPAN class=h3><A name=section-1.1>1.1</A>.  Examples</SPAN>
+<SPAN class=h3><A DisplayName=section-1.1>1.1</A>.  Examples</SPAN>
 
    A brief, single-entry Atom Feed Document:
 
@@ -333,7 +333,7 @@ Table of Contents
      &lt;link href="http://example.org/"/&gt;
      &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
      &lt;author&gt;
-       &lt;name&gt;John Doe&lt;/name&gt;
+       &lt;DisplayName&gt;John Doe&lt;/DisplayName&gt;
      &lt;/author&gt;
      &lt;id&gt;urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6&lt;/id&gt;
 
@@ -363,7 +363,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 3]</SPAN>
-<A class=invisible id=page-4 href="http://tools.ietf.org/html/rfc4287#page-4" name=page-4><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-4 href="http://tools.ietf.org/html/rfc4287#page-4" DisplayName=page-4><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -396,15 +396,15 @@ Table of Contents
        &lt;updated&gt;2005-07-31T12:29:29Z&lt;/updated&gt;
        &lt;published&gt;2003-12-13T08:29:29-04:00&lt;/published&gt;
        &lt;author&gt;
-         &lt;name&gt;Mark Pilgrim&lt;/name&gt;
+         &lt;DisplayName&gt;Mark Pilgrim&lt;/DisplayName&gt;
          &lt;uri&gt;http://example.org/&lt;/uri&gt;
          &lt;email&gt;f8dy@example.com&lt;/email&gt;
        &lt;/author&gt;
        &lt;contributor&gt;
-         &lt;name&gt;Sam Ruby&lt;/name&gt;
+         &lt;DisplayName&gt;Sam Ruby&lt;/DisplayName&gt;
        &lt;/contributor&gt;
        &lt;contributor&gt;
-         &lt;name&gt;Joe Gregorio&lt;/name&gt;
+         &lt;DisplayName&gt;Joe Gregorio&lt;/DisplayName&gt;
        &lt;/contributor&gt;
        &lt;content type="xhtml" xml:lang="en"
         xml:base="http://diveintomark.org/"&gt;
@@ -419,11 +419,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 4]</SPAN>
-<A class=invisible id=page-5 href="http://tools.ietf.org/html/rfc4287#page-5" name=page-5><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-5 href="http://tools.ietf.org/html/rfc4287#page-5" DisplayName=page-5><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h3><A name=section-1.2>1.2</A>.  Namespace and Version</SPAN>
+<SPAN class=h3><A DisplayName=section-1.2>1.2</A>.  Namespace and Version</SPAN>
 
    The XML Namespaces URI [<A title='"Namespaces in XML"' href="http://tools.ietf.org/html/rfc4287#ref-W3C.REC-xml-names-19990114">W3C.REC-xml-names-19990114</A>] for the XML data
    format described in this specification is:
@@ -433,7 +433,7 @@ Table of Contents
    For convenience, this data format may be referred to as "Atom 1.0".
    This specification uses "Atom" internally.
 
-<SPAN class=h3><A name=section-1.3>1.3</A>.  Notational Conventions</SPAN>
+<SPAN class=h3><A DisplayName=section-1.3>1.3</A>.  Notational Conventions</SPAN>
 
    This specification describes conformance in terms of two artifacts:
    Atom Feed Documents and Atom Entry Documents.  Additionally, it
@@ -475,11 +475,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 5]</SPAN>
-<A class=invisible id=page-6 href="http://tools.ietf.org/html/rfc4287#page-6" name=page-6><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-6 href="http://tools.ietf.org/html/rfc4287#page-6" DisplayName=page-6><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h2><A name=section-2>2</A>.  Atom Documents</SPAN>
+<SPAN class=h2><A DisplayName=section-2>2</A>.  Atom Documents</SPAN>
 
    This specification describes two kinds of Atom Documents: Atom Feed
    Documents and Atom Entry Documents.
@@ -531,7 +531,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 6]</SPAN>
-<A class=invisible id=page-7 href="http://tools.ietf.org/html/rfc4287#page-7" name=page-7><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-7 href="http://tools.ietf.org/html/rfc4287#page-7" DisplayName=page-7><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -550,7 +550,7 @@ Table of Contents
    updating entries and metadata, dealing with missing entries) is out
    of the scope of this specification.
 
-<SPAN class=h2><A name=section-3>3</A>.  Common Atom Constructs</SPAN>
+<SPAN class=h2><A DisplayName=section-3>3</A>.  Common Atom Constructs</SPAN>
 
    Many of Atom's elements share a few common structures.  This section
    defines those structures and their requirements for convenient
@@ -565,7 +565,7 @@ Table of Contents
    space around values by default, and such implementations will emit
    invalid Atom Documents.
 
-<SPAN class=h3><A name=section-3.1>3.1</A>.  Text Constructs</SPAN>
+<SPAN class=h3><A DisplayName=section-3.1>3.1</A>.  Text Constructs</SPAN>
 
    A Text construct contains human-readable text, usually in small
    quantities.  The content of Text constructs is Language-Sensitive.
@@ -587,11 +587,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 7]</SPAN>
-<A class=invisible id=page-8 href="http://tools.ietf.org/html/rfc4287#page-8" name=page-8><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-8 href="http://tools.ietf.org/html/rfc4287#page-8" DisplayName=page-8><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h4><A name=section-3.1.1>3.1.1</A>.  The "type" Attribute</SPAN>
+<SPAN class=h4><A DisplayName=section-3.1.1>3.1.1</A>.  The "type" Attribute</SPAN>
 
    Text constructs MAY have a "type" attribute.  When present, the value
    MUST be one of "text", "html", or "xhtml".  If the "type" attribute
@@ -600,7 +600,7 @@ Table of Contents
    defined in <A href="http://tools.ietf.org/html/rfc4287#section-4.1.3">Section 4.1.3</A>, MIME media types [<A title='"Media Type Specifications and Registration Procedures"' href="http://tools.ietf.org/html/rfc4287#ref-MIMEREG">MIMEREG</A>] MUST NOT be used
    as values for the "type" attribute on Text constructs.
 
-<SPAN class=h5><A name=section-3.1.1.1>3.1.1.1</A>.  Text</SPAN>
+<SPAN class=h5><A DisplayName=section-3.1.1.1>3.1.1.1</A>.  Text</SPAN>
 
    Example atom:title with text content:
 
@@ -616,7 +616,7 @@ Table of Contents
    white space (including line breaks) and display the text using
    typographic techniques such as justification and proportional fonts.
 
-<SPAN class=h5><A name=section-3.1.1.2>3.1.1.2</A>.  HTML</SPAN>
+<SPAN class=h5><A DisplayName=section-3.1.1.2>3.1.1.2</A>.  HTML</SPAN>
 
    Example atom:title with HTML content:
 
@@ -643,11 +643,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 8]</SPAN>
-<A class=invisible id=page-9 href="http://tools.ietf.org/html/rfc4287#page-9" name=page-9><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-9 href="http://tools.ietf.org/html/rfc4287#page-9" DisplayName=page-9><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h5><A name=section-3.1.1.3>3.1.1.3</A>.  XHTML</SPAN>
+<SPAN class=h5><A DisplayName=section-3.1.1.3>3.1.1.3</A>.  XHTML</SPAN>
 
    Example atom:title with XHTML content:
 
@@ -699,18 +699,18 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                     [Page 9]</SPAN>
-<A class=invisible id=page-10 href="http://tools.ietf.org/html/rfc4287#page-10" name=page-10><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-10 href="http://tools.ietf.org/html/rfc4287#page-10" DisplayName=page-10><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h3><A name=section-3.2>3.2</A>.  Person Constructs</SPAN>
+<SPAN class=h3><A DisplayName=section-3.2>3.2</A>.  Person Constructs</SPAN>
 
    A Person construct is an element that describes a person,
    corporation, or similar entity (hereafter, 'person').
 
    atomPersonConstruct =
       atomCommonAttributes,
-      (element atom:name { text }
+      (element atom:DisplayName { text }
        &amp; element atom:uri { atomUri }?
        &amp; element atom:email { atomEmailAddress }?
        &amp; extensionElement*)
@@ -719,27 +719,27 @@ Table of Contents
    of the child elements in a Person construct.  Person constructs allow
    extension Metadata elements (see <A href="http://tools.ietf.org/html/rfc4287#section-6.4">Section 6.4</A>).
 
-<SPAN class=h4><A name=section-3.2.1>3.2.1</A>.  The "atom:name" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-3.2.1>3.2.1</A>.  The "atom:DisplayName" Element</SPAN>
 
-   The "atom:name" element's content conveys a human-readable name for
-   the person.  The content of atom:name is Language-Sensitive.  Person
-   constructs MUST contain exactly one "atom:name" element.
+   The "atom:DisplayName" element's content conveys a human-readable DisplayName for
+   the person.  The content of atom:DisplayName is Language-Sensitive.  Person
+   constructs MUST contain exactly one "atom:DisplayName" element.
 
-<SPAN class=h4><A name=section-3.2.2>3.2.2</A>.  The "atom:uri" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-3.2.2>3.2.2</A>.  The "atom:uri" Element</SPAN>
 
    The "atom:uri" element's content conveys an IRI associated with the
    person.  Person constructs MAY contain an atom:uri element, but MUST
    NOT contain more than one.  The content of atom:uri in a Person
    construct MUST be an IRI reference [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>].
 
-<SPAN class=h4><A name=section-3.2.3>3.2.3</A>.  The "atom:email" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-3.2.3>3.2.3</A>.  The "atom:email" Element</SPAN>
 
    The "atom:email" element's content conveys an e-mail address
    associated with the person.  Person constructs MAY contain an
    atom:email element, but MUST NOT contain more than one.  Its content
    MUST conform to the "addr-spec" production in [<A title='"Internet Message Format"' href="http://tools.ietf.org/html/rfc2822">RFC2822</A>].
 
-<SPAN class=h3><A name=section-3.3>3.3</A>.  Date Constructs</SPAN>
+<SPAN class=h3><A DisplayName=section-3.3>3.3</A>.  Date Constructs</SPAN>
 
    A Date construct is an element whose content MUST conform to the
    "date-time" production in [<A title='"Date and Time on the Internet: Timestamps"' href="http://tools.ietf.org/html/rfc3339">RFC3339</A>].  In addition, an uppercase "T"
@@ -755,7 +755,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 10]</SPAN>
-<A class=invisible id=page-11 href="http://tools.ietf.org/html/rfc4287#page-11" name=page-11><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-11 href="http://tools.ietf.org/html/rfc4287#page-11" DisplayName=page-11><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -775,11 +775,11 @@ Table of Contents
    timestamp to several entries that were published during the course of
    a single day.
 
-<SPAN class=h2><A name=section-4>4</A>.  Atom Element Definitions</SPAN>
+<SPAN class=h2><A DisplayName=section-4>4</A>.  Atom Element Definitions</SPAN>
 
-<SPAN class=h3><A name=section-4.1>4.1</A>.  Container Elements</SPAN>
+<SPAN class=h3><A DisplayName=section-4.1>4.1</A>.  Container Elements</SPAN>
 
-<SPAN class=h4><A name=section-4.1.1>4.1.1</A>.  The "atom:feed" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.1.1>4.1.1</A>.  The "atom:feed" Element</SPAN>
 
    The "atom:feed" element is the document (i.e., top-level) element of
    an Atom Feed Document, acting as a container for metadata and data
@@ -811,7 +811,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 11]</SPAN>
-<A class=invisible id=page-12 href="http://tools.ietf.org/html/rfc4287#page-12" name=page-12><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-12 href="http://tools.ietf.org/html/rfc4287#page-12" DisplayName=page-12><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -855,7 +855,7 @@ Table of Contents
    One typical behavior would be to display only the entry with the
    latest atom:updated timestamp.
 
-<SPAN class=h5><A name=section-4.1.1.1>4.1.1.1</A>.  Providing Textual Content</SPAN>
+<SPAN class=h5><A DisplayName=section-4.1.1.1>4.1.1.1</A>.  Providing Textual Content</SPAN>
 
    Experience teaches that feeds that contain textual content are in
    general more useful than those that do not.  Some applications (one
@@ -867,7 +867,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 12]</SPAN>
-<A class=invisible id=page-13 href="http://tools.ietf.org/html/rfc4287#page-13" name=page-13><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-13 href="http://tools.ietf.org/html/rfc4287#page-13" DisplayName=page-13><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -877,7 +877,7 @@ Table of Contents
    Processors MUST NOT fail to function correctly as a consequence of
    such an absence.
 
-<SPAN class=h4><A name=section-4.1.2>4.1.2</A>.  The "atom:entry" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.1.2>4.1.2</A>.  The "atom:entry" Element</SPAN>
 
    The "atom:entry" element represents an individual entry, acting as a
    container for metadata and data associated with the entry.  This
@@ -923,7 +923,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 13]</SPAN>
-<A class=invisible id=page-14 href="http://tools.ietf.org/html/rfc4287#page-14" name=page-14><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-14 href="http://tools.ietf.org/html/rfc4287#page-14" DisplayName=page-14><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -955,7 +955,7 @@ Table of Contents
    o  atom:entry elements MUST contain exactly one atom:title element.
    o  atom:entry elements MUST contain exactly one atom:updated element.
 
-<SPAN class=h4><A name=section-4.1.3>4.1.3</A>.  The "atom:content" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.1.3>4.1.3</A>.  The "atom:content" Element</SPAN>
 
    The "atom:content" element either contains or links to the content of
    the entry.  The content of atom:content is Language-Sensitive.
@@ -979,7 +979,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 14]</SPAN>
-<A class=invisible id=page-15 href="http://tools.ietf.org/html/rfc4287#page-15" name=page-15><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-15 href="http://tools.ietf.org/html/rfc4287#page-15" DisplayName=page-15><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1003,7 +1003,7 @@ Table of Contents
     | atomInlineOtherContent
     | atomOutOfLineContent
 
-<SPAN class=h5><A name=section-4.1.3.1>4.1.3.1</A>.  The "type" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.1.3.1>4.1.3.1</A>.  The "type" Attribute</SPAN>
 
    On the atom:content element, the value of the "type" attribute MAY be
    one of "text", "html", or "xhtml".  Failing that, it MUST conform to
@@ -1012,7 +1012,7 @@ Table of Contents
    the src attribute is provided, Atom Processors MUST behave as though
    the type attribute were present with a value of "text".
 
-<SPAN class=h5><A name=section-4.1.3.2>4.1.3.2</A>.  The "src" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.1.3.2>4.1.3.2</A>.  The "src" Attribute</SPAN>
 
    atom:content MAY have a "src" attribute, whose value MUST be an IRI
    reference [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>].  If the "src" attribute is present, atom:content
@@ -1035,11 +1035,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 15]</SPAN>
-<A class=invisible id=page-16 href="http://tools.ietf.org/html/rfc4287#page-16" name=page-16><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-16 href="http://tools.ietf.org/html/rfc4287#page-16" DisplayName=page-16><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h5><A name=section-4.1.3.3>4.1.3.3</A>.  Processing Model</SPAN>
+<SPAN class=h5><A DisplayName=section-4.1.3.3>4.1.3.3</A>.  Processing Model</SPAN>
 
    Atom Documents MUST conform to the following rules.  Atom Processors
    MUST interpret atom:content according to the first applicable rule.
@@ -1091,11 +1091,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 16]</SPAN>
-<A class=invisible id=page-17 href="http://tools.ietf.org/html/rfc4287#page-17" name=page-17><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-17 href="http://tools.ietf.org/html/rfc4287#page-17" DisplayName=page-17><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h5><A name=section-4.1.3.4>4.1.3.4</A>.  Examples</SPAN>
+<SPAN class=h5><A DisplayName=section-4.1.3.4>4.1.3.4</A>.  Examples</SPAN>
 
    XHTML inline:
 
@@ -1124,9 +1124,9 @@ Table of Contents
    &lt;/content&gt;
    ...
 
-<SPAN class=h3><A name=section-4.2>4.2</A>.  Metadata Elements</SPAN>
+<SPAN class=h3><A DisplayName=section-4.2>4.2</A>.  Metadata Elements</SPAN>
 
-<SPAN class=h4><A name=section-4.2.1>4.2.1</A>.  The "atom:author" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.1>4.2.1</A>.  The "atom:author" Element</SPAN>
 
    The "atom:author" element is a Person construct that indicates the
    author of the entry or feed.
@@ -1147,11 +1147,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 17]</SPAN>
-<A class=invisible id=page-18 href="http://tools.ietf.org/html/rfc4287#page-18" name=page-18><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-18 href="http://tools.ietf.org/html/rfc4287#page-18" DisplayName=page-18><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h4><A name=section-4.2.2>4.2.2</A>.  The "atom:category" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.2>4.2.2</A>.  The "atom:category" Element</SPAN>
 
    The "atom:category" element conveys information about a category
    associated with an entry or feed.  This specification assigns no
@@ -1166,18 +1166,18 @@ Table of Contents
          undefinedContent
       }
 
-<SPAN class=h5><A name=section-4.2.2.1>4.2.2.1</A>.  The "term" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.2.1>4.2.2.1</A>.  The "term" Attribute</SPAN>
 
    The "term" attribute is a string that identifies the category to
    which the entry or feed belongs.  Category elements MUST have a
    "term" attribute.
 
-<SPAN class=h5><A name=section-4.2.2.2>4.2.2.2</A>.  The "scheme" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.2.2>4.2.2.2</A>.  The "scheme" Attribute</SPAN>
 
    The "scheme" attribute is an IRI that identifies a categorization
    scheme.  Category elements MAY have a "scheme" attribute.
 
-<SPAN class=h5><A name=section-4.2.2.3>4.2.2.3</A>.  The "label" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.2.3>4.2.2.3</A>.  The "label" Attribute</SPAN>
 
    The "label" attribute provides a human-readable label for display in
    end-user applications.  The content of the "label" attribute is
@@ -1185,14 +1185,14 @@ Table of Contents
    their corresponding characters ("&amp;" and "&lt;", respectively), not
    markup.  Category elements MAY have a "label" attribute.
 
-<SPAN class=h4><A name=section-4.2.3>4.2.3</A>.  The "atom:contributor" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.3>4.2.3</A>.  The "atom:contributor" Element</SPAN>
 
    The "atom:contributor" element is a Person construct that indicates a
    person or other entity who contributed to the entry or feed.
 
    atomContributor = element atom:contributor { atomPersonConstruct }
 
-<SPAN class=h4><A name=section-4.2.4>4.2.4</A>.  The "atom:generator" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.4>4.2.4</A>.  The "atom:generator" Element</SPAN>
 
    The "atom:generator" element's content identifies the agent used to
    generate a feed, for debugging and other purposes.
@@ -1203,7 +1203,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 18]</SPAN>
-<A class=invisible id=page-19 href="http://tools.ietf.org/html/rfc4287#page-19" name=page-19><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-19 href="http://tools.ietf.org/html/rfc4287#page-19" DisplayName=page-19><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1215,7 +1215,7 @@ Table of Contents
    }
 
    The content of this element, when present, MUST be a string that is a
-   human-readable name for the generating agent.  Entities such as
+   human-readable DisplayName for the generating agent.  Entities such as
    "&amp;amp;" and "&amp;lt;" represent their corresponding characters ("&amp;" and
    "&lt;" respectively), not markup.
 
@@ -1227,7 +1227,7 @@ Table of Contents
    The atom:generator element MAY have a "version" attribute that
    indicates the version of the generating agent.
 
-<SPAN class=h4><A name=section-4.2.5>4.2.5</A>.  The "atom:icon" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.5>4.2.5</A>.  The "atom:icon" Element</SPAN>
 
    The "atom:icon" element's content is an IRI reference [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>] that
    identifies an image that provides iconic visual identification for a
@@ -1241,7 +1241,7 @@ Table of Contents
    The image SHOULD have an aspect ratio of one (horizontal) to one
    (vertical) and SHOULD be suitable for presentation at a small size.
 
-<SPAN class=h4><A name=section-4.2.6>4.2.6</A>.  The "atom:id" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.6>4.2.6</A>.  The "atom:id" Element</SPAN>
 
    The "atom:id" element conveys a permanent, universally unique
    identifier for an entry or feed.
@@ -1259,7 +1259,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 19]</SPAN>
-<A class=invisible id=page-20 href="http://tools.ietf.org/html/rfc4287#page-20" name=page-20><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-20 href="http://tools.ietf.org/html/rfc4287#page-20" DisplayName=page-20><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1294,7 +1294,7 @@ Table of Contents
    o  Ensure that all components of the IRI are appropriately character
       normalized, e.g., by using NFC or NFKC.
 
-<SPAN class=h5><A name=section-4.2.6.1>4.2.6.1</A>.  Comparing atom:id</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.6.1>4.2.6.1</A>.  Comparing atom:id</SPAN>
 
    Instances of atom:id elements can be compared to determine whether an
    entry or feed is the same as one seen before.  Processors MUST
@@ -1315,7 +1315,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 20]</SPAN>
-<A class=invisible id=page-21 href="http://tools.ietf.org/html/rfc4287#page-21" name=page-21><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-21 href="http://tools.ietf.org/html/rfc4287#page-21" DisplayName=page-21><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1331,7 +1331,7 @@ Table of Contents
       http://www.example.com/%7ebob
       http://www.example.com/%7Ebob
 
-<SPAN class=h4><A name=section-4.2.7>4.2.7</A>.  The "atom:link" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.7>4.2.7</A>.  The "atom:link" Element</SPAN>
 
    The "atom:link" element defines a reference from an entry or feed to
    a Web resource.  This specification assigns no meaning to the content
@@ -1349,13 +1349,13 @@ Table of Contents
          undefinedContent
       }
 
-<SPAN class=h5><A name=section-4.2.7.1>4.2.7.1</A>.  The "href" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.1>4.2.7.1</A>.  The "href" Attribute</SPAN>
 
    The "href" attribute contains the link's IRI. atom:link elements MUST
    have an href attribute, whose value MUST be a IRI reference
    [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>].
 
-<SPAN class=h5><A name=section-4.2.7.2>4.2.7.2</A>.  The "rel" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.2>4.2.7.2</A>.  The "rel" Attribute</SPAN>
 
    atom:link elements MAY have a "rel" attribute that indicates the link
    relation type.  If the "rel" attribute is not present, the link
@@ -1364,14 +1364,14 @@ Table of Contents
 
    The value of "rel" MUST be a string that is non-empty and matches
    either the "isegment-nz-nc" or the "IRI" production in [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>].
-   Note that use of a relative reference other than a simple name is not
-   allowed.  If a name is given, implementations MUST consider the link
-   relation type equivalent to the same name registered within the IANA
+   Note that use of a relative reference other than a simple DisplayName is not
+   allowed.  If a DisplayName is given, implementations MUST consider the link
+   relation type equivalent to the same DisplayName registered within the IANA
 
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 21]</SPAN>
-<A class=invisible id=page-22 href="http://tools.ietf.org/html/rfc4287#page-22" name=page-22><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-22 href="http://tools.ietf.org/html/rfc4287#page-22" DisplayName=page-22><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1414,7 +1414,7 @@ Table of Contents
        attribute identifies a resource that is the source of the
        information provided in the containing element.
 
-<SPAN class=h5><A name=section-4.2.7.3>4.2.7.3</A>.  The "type" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.3>4.2.7.3</A>.  The "type" Attribute</SPAN>
 
    On the link element, the "type" attribute's value is an advisory
    media type: it is a hint about the type of the representation that is
@@ -1427,11 +1427,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 22]</SPAN>
-<A class=invisible id=page-23 href="http://tools.ietf.org/html/rfc4287#page-23" name=page-23><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-23 href="http://tools.ietf.org/html/rfc4287#page-23" DisplayName=page-23><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h5><A name=section-4.2.7.4>4.2.7.4</A>.  The "hreflang" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.4>4.2.7.4</A>.  The "hreflang" Attribute</SPAN>
 
    The "hreflang" attribute's content describes the language of the
    resource pointed to by the href attribute.  When used together with
@@ -1439,7 +1439,7 @@ Table of Contents
    Link elements MAY have an hreflang attribute, whose value MUST be a
    language tag [<A title='"Tags for the Identification of Languages"' href="http://tools.ietf.org/html/rfc3066">RFC3066</A>].
 
-<SPAN class=h5><A name=section-4.2.7.5>4.2.7.5</A>.  The "title" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.5>4.2.7.5</A>.  The "title" Attribute</SPAN>
 
    The "title" attribute conveys human-readable information about the
    link.  The content of the "title" attribute is Language-Sensitive.
@@ -1447,7 +1447,7 @@ Table of Contents
    characters ("&amp;" and "&lt;", respectively), not markup.  Link elements
    MAY have a title attribute.
 
-<SPAN class=h5><A name=section-4.2.7.6>4.2.7.6</A>.  The "length" Attribute</SPAN>
+<SPAN class=h5><A DisplayName=section-4.2.7.6>4.2.7.6</A>.  The "length" Attribute</SPAN>
 
    The "length" attribute indicates an advisory length of the linked
    content in octets; it is a hint about the content length of the
@@ -1457,7 +1457,7 @@ Table of Contents
    by the underlying protocol.  Link elements MAY have a length
    attribute.
 
-<SPAN class=h4><A name=section-4.2.8>4.2.8</A>.  The "atom:logo" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.8>4.2.8</A>.  The "atom:logo" Element</SPAN>
 
    The "atom:logo" element's content is an IRI reference [<A title='"Internationalized Resource Identifiers (IRIs)"' href="http://tools.ietf.org/html/rfc3987">RFC3987</A>] that
    identifies an image that provides visual identification for a feed.
@@ -1470,7 +1470,7 @@ Table of Contents
    The image SHOULD have an aspect ratio of 2 (horizontal) to 1
    (vertical).
 
-<SPAN class=h4><A name=section-4.2.9>4.2.9</A>.  The "atom:published" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.9>4.2.9</A>.  The "atom:published" Element</SPAN>
 
    The "atom:published" element is a Date construct indicating an
    instant in time associated with an event early in the life cycle of
@@ -1483,14 +1483,14 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 23]</SPAN>
-<A class=invisible id=page-24 href="http://tools.ietf.org/html/rfc4287#page-24" name=page-24><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-24 href="http://tools.ietf.org/html/rfc4287#page-24" DisplayName=page-24><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
    Typically, atom:published will be associated with the initial
    creation or first availability of the resource.
 
-<SPAN class=h4><A name=section-4.2.10>4.2.10</A>.  The "atom:rights" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.10>4.2.10</A>.  The "atom:rights" Element</SPAN>
 
    The "atom:rights" element is a Text construct that conveys
    information about rights held in and over an entry or feed.
@@ -1504,7 +1504,7 @@ Table of Contents
    then the atom:rights element of the containing atom:feed element, if
    present, is considered to apply to the entry.
 
-<SPAN class=h4><A name=section-4.2.11>4.2.11</A>.  The "atom:source" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.11>4.2.11</A>.  The "atom:source" Element</SPAN>
 
    If an atom:entry is copied from one feed into another feed, then the
    source atom:feed's metadata (all child elements of atom:feed other
@@ -1539,7 +1539,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 24]</SPAN>
-<A class=invisible id=page-25 href="http://tools.ietf.org/html/rfc4287#page-25" name=page-25><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-25 href="http://tools.ietf.org/html/rfc4287#page-25" DisplayName=page-25><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1550,14 +1550,14 @@ Table of Contents
    feed-level Metadata elements (atom:id, atom:title, and atom:updated)
    in the atom:source element.
 
-<SPAN class=h4><A name=section-4.2.12>4.2.12</A>.  The "atom:subtitle" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.12>4.2.12</A>.  The "atom:subtitle" Element</SPAN>
 
    The "atom:subtitle" element is a Text construct that conveys a human-
    readable description or subtitle for a feed.
 
    atomSubtitle = element atom:subtitle { atomTextConstruct }
 
-<SPAN class=h4><A name=section-4.2.13>4.2.13</A>.  The "atom:summary" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.13>4.2.13</A>.  The "atom:summary" Element</SPAN>
 
    The "atom:summary" element is a Text construct that conveys a short
    summary, abstract, or excerpt of an entry.
@@ -1568,14 +1568,14 @@ Table of Contents
    atom:title or atom:content because Atom Processors might assume there
    is a useful summary when there is none.
 
-<SPAN class=h4><A name=section-4.2.14>4.2.14</A>.  The "atom:title" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.14>4.2.14</A>.  The "atom:title" Element</SPAN>
 
    The "atom:title" element is a Text construct that conveys a human-
    readable title for an entry or feed.
 
    atomTitle = element atom:title { atomTextConstruct }
 
-<SPAN class=h4><A name=section-4.2.15>4.2.15</A>.  The "atom:updated" Element</SPAN>
+<SPAN class=h4><A DisplayName=section-4.2.15>4.2.15</A>.  The "atom:updated" Element</SPAN>
 
    The "atom:updated" element is a Date construct indicating the most
    recent instant in time when an entry or feed was modified in a way
@@ -1595,11 +1595,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 25]</SPAN>
-<A class=invisible id=page-26 href="http://tools.ietf.org/html/rfc4287#page-26" name=page-26><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-26 href="http://tools.ietf.org/html/rfc4287#page-26" DisplayName=page-26><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h2><A name=section-5>5</A>.  Securing Atom Documents</SPAN>
+<SPAN class=h2><A DisplayName=section-5>5</A>.  Securing Atom Documents</SPAN>
 
    Because Atom is an XML-based format, existing XML security mechanisms
    can be used to secure its content.
@@ -1622,7 +1622,7 @@ Table of Contents
    These requirements do not limit the algorithms that the sender can
    choose.
 
-<SPAN class=h3><A name=section-5.1>5.1</A>.  Digital Signatures</SPAN>
+<SPAN class=h3><A DisplayName=section-5.1>5.1</A>.  Digital Signatures</SPAN>
 
    The root of an Atom Document (i.e., atom:feed in an Atom Feed
    Document, atom:entry in an Atom Entry Document) or any atom:entry
@@ -1635,7 +1635,7 @@ Table of Contents
    validate the signature.
 
    In other words, the presence of an element with the namespace URI
-   "<A href="http://www.w3.org/2000/09/xmldsig#">http://www.w3.org/2000/09/xmldsig#</A>" and a local name of "Signature"
+   "<A href="http://www.w3.org/2000/09/xmldsig#">http://www.w3.org/2000/09/xmldsig#</A>" and a local DisplayName of "Signature"
    as a child of the document element MUST NOT cause an Atom Processor
    to fail merely because of its presence.
 
@@ -1651,7 +1651,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 26]</SPAN>
-<A class=invisible id=page-27 href="http://tools.ietf.org/html/rfc4287#page-27" name=page-27><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-27 href="http://tools.ietf.org/html/rfc4287#page-27" DisplayName=page-27><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1678,7 +1678,7 @@ Table of Contents
    material for message authentication code (MAC) authentication is not
    handled properly, Atom Documents SHOULD NOT use MACs for signatures.
 
-<SPAN class=h3><A name=section-5.2>5.2</A>.  Encryption</SPAN>
+<SPAN class=h3><A DisplayName=section-5.2>5.2</A>.  Encryption</SPAN>
 
    The root of an Atom Document (i.e., atom:feed in an Atom Feed
    Document, atom:entry in an Atom Entry Document) MAY be encrypted,
@@ -1707,11 +1707,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 27]</SPAN>
-<A class=invisible id=page-28 href="http://tools.ietf.org/html/rfc4287#page-28" name=page-28><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-28 href="http://tools.ietf.org/html/rfc4287#page-28" DisplayName=page-28><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h3><A name=section-5.3>5.3</A>.  Signing and Encrypting</SPAN>
+<SPAN class=h3><A DisplayName=section-5.3>5.3</A>.  Signing and Encrypting</SPAN>
 
    When an Atom Document is to be both signed and encrypted, it is
    generally a good idea to first sign the document, then encrypt the
@@ -1721,16 +1721,16 @@ Table of Contents
    authentication, the order MUST be that the document is signed and
    then encrypted, and not the other way around.
 
-<SPAN class=h2><A name=section-6>6</A>.  Extending Atom</SPAN>
+<SPAN class=h2><A DisplayName=section-6>6</A>.  Extending Atom</SPAN>
 
-<SPAN class=h3><A name=section-6.1>6.1</A>.  Extensions from Non-Atom Vocabularies</SPAN>
+<SPAN class=h3><A DisplayName=section-6.1>6.1</A>.  Extensions from Non-Atom Vocabularies</SPAN>
 
    This specification describes Atom's XML markup vocabulary.  Markup
    from other vocabularies ("foreign markup") can be used in an Atom
    Document.  Note that the atom:content element is designed to support
    the inclusion of arbitrary foreign markup.
 
-<SPAN class=h3><A name=section-6.2>6.2</A>.  Extensions to the Atom Vocabulary</SPAN>
+<SPAN class=h3><A DisplayName=section-6.2>6.2</A>.  Extensions to the Atom Vocabulary</SPAN>
 
    The Atom namespace is reserved for future forward-compatible
    revisions of Atom.  Future versions of this specification could add
@@ -1741,7 +1741,7 @@ Table of Contents
    discussion, unrecognized markup from the Atom vocabulary will be
    considered "foreign markup".
 
-<SPAN class=h3><A name=section-6.3>6.3</A>.  Processing Foreign Markup</SPAN>
+<SPAN class=h3><A DisplayName=section-6.3>6.3</A>.  Processing Foreign Markup</SPAN>
 
    Atom Processors that encounter foreign markup in a location that is
    legal according to this specification MUST NOT stop processing or
@@ -1763,11 +1763,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 28]</SPAN>
-<A class=invisible id=page-29 href="http://tools.ietf.org/html/rfc4287#page-29" name=page-29><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-29 href="http://tools.ietf.org/html/rfc4287#page-29" DisplayName=page-29><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h3><A name=section-6.4>6.4</A>.  Extension Elements</SPAN>
+<SPAN class=h3><A DisplayName=section-6.4>6.4</A>.  Extension Elements</SPAN>
 
    Atom allows foreign markup anywhere in an Atom document, except where
    it is explicitly forbidden.  Child elements of atom:entry, atom:feed,
@@ -1776,7 +1776,7 @@ Table of Contents
    considered to apply to the construct.  The role of other foreign
    markup is undefined by this specification.
 
-<SPAN class=h4><A name=section-6.4.1>6.4.1</A>.  Simple Extension Elements</SPAN>
+<SPAN class=h4><A DisplayName=section-6.4.1>6.4.1</A>.  Simple Extension Elements</SPAN>
 
    A Simple Extension element MUST NOT have any attributes or child
    elements.  The element MAY contain character data or be empty.
@@ -1787,15 +1787,15 @@ Table of Contents
          text
       }
 
-   The element can be interpreted as a simple property (or name/value
+   The element can be interpreted as a simple property (or DisplayName/value
    pair) of the parent element that encloses it.  The pair consisting of
-   the namespace-URI of the element and the local name of the element
-   can be interpreted as the name of the property.  The character data
+   the namespace-URI of the element and the local DisplayName of the element
+   can be interpreted as the DisplayName of the property.  The character data
    content of the element can be interpreted as the value of the
    property.  If the element is empty, then the property value can be
    interpreted as an empty string.
 
-<SPAN class=h4><A name=section-6.4.2>6.4.2</A>.  Structured Extension Elements</SPAN>
+<SPAN class=h4><A DisplayName=section-6.4.2>6.4.2</A>.  Structured Extension Elements</SPAN>
 
    The root element of a Structured Extension element MUST have at least
    one attribute or child element.  It MAY have attributes, it MAY
@@ -1819,7 +1819,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 29]</SPAN>
-<A class=invisible id=page-30 href="http://tools.ietf.org/html/rfc4287#page-30" name=page-30><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-30 href="http://tools.ietf.org/html/rfc4287#page-30" DisplayName=page-30><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1828,13 +1828,13 @@ Table of Contents
    (and an interpretation of how the element relates to its containing
    element) is defined by the specification of the Atom extension.
 
-<SPAN class=h2><A name=section-7>7</A>.  IANA Considerations</SPAN>
+<SPAN class=h2><A DisplayName=section-7>7</A>.  IANA Considerations</SPAN>
 
    An Atom Document, when serialized as XML 1.0, can be identified with
    the following media type:
 
-   MIME media type name:  application
-   MIME subtype name:  atom+xml
+   MIME media type DisplayName:  application
+   MIME subtype DisplayName:  atom+xml
    Mandatory parameters:  None.
    Optional parameters:
       "charset":  This parameter has semantics identical to the charset
@@ -1875,11 +1875,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 30]</SPAN>
-<A class=invisible id=page-31 href="http://tools.ietf.org/html/rfc4287#page-31" name=page-31><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-31 href="http://tools.ietf.org/html/rfc4287#page-31" DisplayName=page-31><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h3><A name=section-7.1>7.1</A>.  Registry of Link Relations</SPAN>
+<SPAN class=h3><A DisplayName=section-7.1>7.1</A>.  Registry of Link Relations</SPAN>
 
    This registry is maintained by IANA and initially contains five
    values: "alternate", "related", "self", "enclosure", and "via".  New
@@ -1894,9 +1894,9 @@ Table of Contents
    o  Expected display characteristics:
    o  Security considerations:
 
-<SPAN class=h2><A name=section-8>8</A>.  Security Considerations</SPAN>
+<SPAN class=h2><A DisplayName=section-8>8</A>.  Security Considerations</SPAN>
 
-<SPAN class=h3><A name=section-8.1>8.1</A>.  HTML and XHTML Content</SPAN>
+<SPAN class=h3><A DisplayName=section-8.1>8.1</A>.  HTML and XHTML Content</SPAN>
 
    Text constructs and atom:content allow the delivery of HTML and
    XHTML.  Many elements in these languages are considered 'unsafe' in
@@ -1914,15 +1914,15 @@ Table of Contents
    (X)HTML can either directly contain or indirectly reference
    executable content.
 
-<SPAN class=h3><A name=section-8.2>8.2</A>.  URIs</SPAN>
+<SPAN class=h3><A DisplayName=section-8.2>8.2</A>.  URIs</SPAN>
 
    Atom Processors handle URIs.  See <A href="http://tools.ietf.org/html/rfc3986#section-7">Section&nbsp;7 of [RFC3986]</A>.
 
-<SPAN class=h3><A name=section-8.3>8.3</A>.  IRIs</SPAN>
+<SPAN class=h3><A DisplayName=section-8.3>8.3</A>.  IRIs</SPAN>
 
    Atom Processors handle IRIs.  See <A href="http://tools.ietf.org/html/rfc3987#section-8">Section&nbsp;8 of [RFC3987]</A>.
 
-<SPAN class=h3><A name=section-8.4>8.4</A>.  Spoofing</SPAN>
+<SPAN class=h3><A DisplayName=section-8.4>8.4</A>.  Spoofing</SPAN>
 
    Atom Processors should be aware of the potential for spoofing attacks
    where the attacker publishes an atom:entry with the atom:id value of
@@ -1931,7 +1931,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 31]</SPAN>
-<A class=invisible id=page-32 href="http://tools.ietf.org/html/rfc4287#page-32" name=page-32><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-32 href="http://tools.ietf.org/html/rfc4287#page-32" DisplayName=page-32><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -1942,7 +1942,7 @@ Table of Contents
    take steps to determine whether the entries originated from the same
    publisher before considering them duplicates.
 
-<SPAN class=h3><A name=section-8.5>8.5</A>.  Encryption and Signing</SPAN>
+<SPAN class=h3><A DisplayName=section-8.5>8.5</A>.  Encryption and Signing</SPAN>
 
    Atom Documents can be encrypted and signed using
    [<A title='"XML Encryption Syntax and Processing"' href="http://tools.ietf.org/html/rfc4287#ref-W3C.REC-xmlenc-core-20021210">W3C.REC-xmlenc-core-20021210</A>] and [<A title='"XML-Signature Syntax and Processing"' href="http://tools.ietf.org/html/rfc4287#ref-W3C.REC-xmldsig-core-20020212">W3C.REC-xmldsig-core-20020212</A>],
@@ -1953,88 +1953,88 @@ Table of Contents
    non-repudiation with proof of origin.  Encryption provides data
    confidentiality.
 
-<SPAN class=h2><A name=section-9>9</A>.  References</SPAN>
+<SPAN class=h2><A DisplayName=section-9>9</A>.  References</SPAN>
 
-<SPAN class=h3><A name=section-9.1>9.1</A>.  Normative References</SPAN>
+<SPAN class=h3><A DisplayName=section-9.1>9.1</A>.  Normative References</SPAN>
 
-   [<A id=ref-HTML name=ref-HTML>HTML</A>]     Raggett, D., Hors, A., and I. Jacobs, "HTML 4.01
+   [<A id=ref-HTML DisplayName=ref-HTML>HTML</A>]     Raggett, D., Hors, A., and I. Jacobs, "HTML 4.01
               Specification", W3C REC REC-html401-19991224,
               December 1999,
               &lt;<A href="http://www.w3.org/TR/1999/REC-html401-19991224">http://www.w3.org/TR/1999/REC-html401-19991224</A>&gt;.
 
-   [<A id=ref-MIMEREG name=ref-MIMEREG>MIMEREG</A>]  Freed, N. and J. Klensin, "Media Type Specifications and
+   [<A id=ref-MIMEREG DisplayName=ref-MIMEREG>MIMEREG</A>]  Freed, N. and J. Klensin, "Media Type Specifications and
               Registration Procedures", <A href="http://tools.ietf.org/html/bcp13">BCP 13</A>, <A href="http://tools.ietf.org/html/rfc4288">RFC 4288</A>, December 2005.
 
-   [<A id=ref-RFC2119 name=ref-RFC2119>RFC2119</A>]  Bradner, S., "Key words for use in RFCs to Indicate
+   [<A id=ref-RFC2119 DisplayName=ref-RFC2119>RFC2119</A>]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", <A href="http://tools.ietf.org/html/bcp14">BCP 14</A>, <A href="http://tools.ietf.org/html/rfc2119">RFC 2119</A>, March 1997.
 
-   [<A id=ref-RFC2822 name=ref-RFC2822>RFC2822</A>]  Resnick, P., "Internet Message Format", <A href="http://tools.ietf.org/html/rfc2822">RFC 2822</A>,
+   [<A id=ref-RFC2822 DisplayName=ref-RFC2822>RFC2822</A>]  Resnick, P., "Internet Message Format", <A href="http://tools.ietf.org/html/rfc2822">RFC 2822</A>,
               April 2001.
 
-   [<A id=ref-RFC2854 name=ref-RFC2854>RFC2854</A>]  Connolly, D. and L. Masinter, "The 'text/html' Media
+   [<A id=ref-RFC2854 DisplayName=ref-RFC2854>RFC2854</A>]  Connolly, D. and L. Masinter, "The 'text/html' Media
               Type", <A href="http://tools.ietf.org/html/rfc2854">RFC 2854</A>, June 2000.
 
-   [<A id=ref-RFC3023 name=ref-RFC3023>RFC3023</A>]  Murata, M., St. Laurent, S., and D. Kohn, "XML Media
+   [<A id=ref-RFC3023 DisplayName=ref-RFC3023>RFC3023</A>]  Murata, M., St. Laurent, S., and D. Kohn, "XML Media
               Types", <A href="http://tools.ietf.org/html/rfc3023">RFC 3023</A>, January 2001.
 
-   [<A id=ref-RFC3066 name=ref-RFC3066>RFC3066</A>]  Alvestrand, H., "Tags for the Identification of
+   [<A id=ref-RFC3066 DisplayName=ref-RFC3066>RFC3066</A>]  Alvestrand, H., "Tags for the Identification of
               Languages", <A href="http://tools.ietf.org/html/bcp47">BCP 47</A>, <A href="http://tools.ietf.org/html/rfc3066">RFC 3066</A>, January 2001.
 
-   [<A id=ref-RFC3339 name=ref-RFC3339>RFC3339</A>]  Klyne, G. and C. Newman, "Date and Time on the Internet:
+   [<A id=ref-RFC3339 DisplayName=ref-RFC3339>RFC3339</A>]  Klyne, G. and C. Newman, "Date and Time on the Internet:
               Timestamps", <A href="http://tools.ietf.org/html/rfc3339">RFC 3339</A>, July 2002.
 
 
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 32]</SPAN>
-<A class=invisible id=page-33 href="http://tools.ietf.org/html/rfc4287#page-33" name=page-33><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-33 href="http://tools.ietf.org/html/rfc4287#page-33" DisplayName=page-33><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-   [<A id=ref-RFC3548 name=ref-RFC3548>RFC3548</A>]  Josefsson, S., "The Base16, Base32, and Base64 Data
+   [<A id=ref-RFC3548 DisplayName=ref-RFC3548>RFC3548</A>]  Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", <A href="http://tools.ietf.org/html/rfc3548">RFC 3548</A>, July 2003.
 
-   [<A id=ref-RFC3986 name=ref-RFC3986>RFC3986</A>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+   [<A id=ref-RFC3986 DisplayName=ref-RFC3986>RFC3986</A>]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
               <A href="http://tools.ietf.org/html/rfc3986">RFC 3986</A>, January 2005.
 
-   [<A id=ref-RFC3987 name=ref-RFC3987>RFC3987</A>]  Duerst, M. and M. Suignard, "Internationalized Resource
+   [<A id=ref-RFC3987 DisplayName=ref-RFC3987>RFC3987</A>]  Duerst, M. and M. Suignard, "Internationalized Resource
               Identifiers (IRIs)", <A href="http://tools.ietf.org/html/rfc3987">RFC 3987</A>, January 2005.
 
-   [<A id=ref-W3C.REC-xml-20040204 name=ref-W3C.REC-xml-20040204>W3C.REC-xml-20040204</A>]
+   [<A id=ref-W3C.REC-xml-20040204 DisplayName=ref-W3C.REC-xml-20040204>W3C.REC-xml-20040204</A>]
               Yergeau, F., Paoli, J., Sperberg-McQueen, C., Bray, T.,
               and E. Maler, "Extensible Markup Language (XML) 1.0 (Third
               Edition)", W3C REC REC-xml-20040204, February 2004,
               &lt;<A href="http://www.w3.org/TR/2004/REC-xml-20040204">http://www.w3.org/TR/2004/REC-xml-20040204</A>&gt;.
 
-   [<A id=ref-W3C.REC-xml-c14n-20010315 name=ref-W3C.REC-xml-c14n-20010315>W3C.REC-xml-c14n-20010315</A>]
+   [<A id=ref-W3C.REC-xml-c14n-20010315 DisplayName=ref-W3C.REC-xml-c14n-20010315>W3C.REC-xml-c14n-20010315</A>]
               Boyer, J., "Canonical XML Version 1.0", W3C REC REC-xml-
               c14n-20010315, March 2001,
               &lt;<A href="http://www.w3.org/TR/2001/REC-xml-c14n-20010315">http://www.w3.org/TR/2001/REC-xml-c14n-20010315</A>&gt;.
 
-   [<A id=ref-W3C.REC-xml-exc-c14n-20020718 name=ref-W3C.REC-xml-exc-c14n-20020718>W3C.REC-xml-exc-c14n-20020718</A>]
+   [<A id=ref-W3C.REC-xml-exc-c14n-20020718 DisplayName=ref-W3C.REC-xml-exc-c14n-20020718>W3C.REC-xml-exc-c14n-20020718</A>]
               Eastlake, D., Boyer, J., and J. Reagle, "Exclusive XML
               Canonicalization Version 1.0", W3C REC REC-xml-exc-c14n-
               20020718, July 2002,
               &lt;<A href="http://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718">http://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718</A>&gt;.
 
-   [<A id=ref-W3C.REC-xml-infoset-20040204 name=ref-W3C.REC-xml-infoset-20040204>W3C.REC-xml-infoset-20040204</A>]
+   [<A id=ref-W3C.REC-xml-infoset-20040204 DisplayName=ref-W3C.REC-xml-infoset-20040204>W3C.REC-xml-infoset-20040204</A>]
               Cowan, J. and R. Tobin, "XML Information Set (Second
               Edition)", W3C REC REC-xml-infoset-20040204,
               February 2004,
               &lt;<A href="http://www.w3.org/TR/2004/REC-xml-infoset-20040204">http://www.w3.org/TR/2004/REC-xml-infoset-20040204</A>&gt;.
 
-   [<A id=ref-W3C.REC-xml-names-19990114 name=ref-W3C.REC-xml-names-19990114>W3C.REC-xml-names-19990114</A>]
+   [<A id=ref-W3C.REC-xml-names-19990114 DisplayName=ref-W3C.REC-xml-names-19990114>W3C.REC-xml-names-19990114</A>]
               Hollander, D., Bray, T., and A. Layman, "Namespaces in
               XML", W3C REC REC-xml-names-19990114, January 1999,
               &lt;<A href="http://www.w3.org/TR/1999/REC-xml-names-19990114">http://www.w3.org/TR/1999/REC-xml-names-19990114</A>&gt;.
 
-   [<A id=ref-W3C.REC-xmlbase-20010627 name=ref-W3C.REC-xmlbase-20010627>W3C.REC-xmlbase-20010627</A>]
+   [<A id=ref-W3C.REC-xmlbase-20010627 DisplayName=ref-W3C.REC-xmlbase-20010627>W3C.REC-xmlbase-20010627</A>]
               Marsh, J., "XML Base", W3C REC REC-xmlbase-20010627,
               June 2001,
               &lt;<A href="http://www.w3.org/TR/2001/REC-xmlbase-20010627">http://www.w3.org/TR/2001/REC-xmlbase-20010627</A>&gt;.
 
-   [<A id=ref-W3C.REC-xmldsig-core-20020212 name=ref-W3C.REC-xmldsig-core-20020212>W3C.REC-xmldsig-core-20020212</A>]
+   [<A id=ref-W3C.REC-xmldsig-core-20020212 DisplayName=ref-W3C.REC-xmldsig-core-20020212>W3C.REC-xmldsig-core-20020212</A>]
               Solo, D., Reagle, J., and D. Eastlake, "XML-Signature
               Syntax and Processing", W3C REC REC-xmldsig-core-20020212,
               February 2002,
@@ -2043,44 +2043,44 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 33]</SPAN>
-<A class=invisible id=page-34 href="http://tools.ietf.org/html/rfc4287#page-34" name=page-34><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-34 href="http://tools.ietf.org/html/rfc4287#page-34" DisplayName=page-34><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-   [<A id=ref-W3C.REC-xmlenc-core-20021210 name=ref-W3C.REC-xmlenc-core-20021210>W3C.REC-xmlenc-core-20021210</A>]
+   [<A id=ref-W3C.REC-xmlenc-core-20021210 DisplayName=ref-W3C.REC-xmlenc-core-20021210>W3C.REC-xmlenc-core-20021210</A>]
               Reagle, J. and D. Eastlake, "XML Encryption Syntax and
               Processing", W3C REC REC-xmlenc-core-20021210,
               December 2002,
               &lt;<A href="http://www.w3.org/TR/2002/REC-xmlenc-core-20021210">http://www.w3.org/TR/2002/REC-xmlenc-core-20021210</A>&gt;.
 
-   [<A id=ref-XHTML name=ref-XHTML>XHTML</A>]    Altheim, M., Boumphrey, F., McCarron, S., Dooley, S.,
+   [<A id=ref-XHTML DisplayName=ref-XHTML>XHTML</A>]    Altheim, M., Boumphrey, F., McCarron, S., Dooley, S.,
               Schnitzenbaumer, S., and T. Wugofski, "Modularization of
               XHTML[TM]", W3C REC REC-xhtml-modularization-20010410,
               April 2001, &lt;<A href="http://www.w3.org/TR/2001/REC-xhtml-modularization-20010410">http://www.w3.org/TR/2001/REC-xhtml-modularization-20010410</A>
               <A href="http://www.w3.org/TR/2001/REC-xhtml-modularization-20010410">REC-xhtml-modularization-20010410</A>&gt;.
 
-<SPAN class=h3><A name=section-9.2>9.2</A>.  Informative References</SPAN>
+<SPAN class=h3><A DisplayName=section-9.2>9.2</A>.  Informative References</SPAN>
 
-   [<A id=ref-ISO.8601.1988 name=ref-ISO.8601.1988>ISO.8601.1988</A>]
+   [<A id=ref-ISO.8601.1988 DisplayName=ref-ISO.8601.1988>ISO.8601.1988</A>]
               International Organization for Standardization, "Data
               elements and interchange formats - Information interchange
               - Representation of dates and times", ISO Standard 8601,
               June 1988.
 
-   [<A id=ref-RELAX-NG name=ref-RELAX-NG>RELAX-NG</A>] Clark, J., "RELAX NG Compact Syntax", December 2001,
+   [<A id=ref-RELAX-NG DisplayName=ref-RELAX-NG>RELAX-NG</A>] Clark, J., "RELAX NG Compact Syntax", December 2001,
               &lt;<A href="http://www.oasis-open.org/committees/relax-ng/compact-20021121.html">http://www.oasis-open.org/committees/relax-ng/compact-20021121.html</A>
               <A href="http://www.oasis-open.org/committees/relax-ng/compact-20021121.html">compact-20021121.html</A>&gt;.
 
-   [<A id=ref-RFC2434 name=ref-RFC2434>RFC2434</A>]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+   [<A id=ref-RFC2434 DisplayName=ref-RFC2434>RFC2434</A>]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", <A href="http://tools.ietf.org/html/bcp26">BCP 26</A>, <A href="http://tools.ietf.org/html/rfc2434">RFC 2434</A>,
               October 1998.
 
-   [<A id=ref-W3C.NOTE-datetime-19980827 name=ref-W3C.NOTE-datetime-19980827>W3C.NOTE-datetime-19980827</A>]
+   [<A id=ref-W3C.NOTE-datetime-19980827 DisplayName=ref-W3C.NOTE-datetime-19980827>W3C.NOTE-datetime-19980827</A>]
               Wolf, M. and C. Wicksteed, "Date and Time Formats", W3C
               NOTE NOTE-datetime-19980827, August 1998,
               &lt;<A href="http://www.w3.org/TR/1998/NOTE-datetime-19980827">http://www.w3.org/TR/1998/NOTE-datetime-19980827</A>&gt;.
 
-   [<A id=ref-W3C.REC-xmlschema-2-20041028 name=ref-W3C.REC-xmlschema-2-20041028>W3C.REC-xmlschema-2-20041028</A>]
+   [<A id=ref-W3C.REC-xmlschema-2-20041028 DisplayName=ref-W3C.REC-xmlschema-2-20041028>W3C.REC-xmlschema-2-20041028</A>]
               Malhotra, A. and P. Biron, "XML Schema Part 2: Datatypes
               Second Edition", W3C REC REC-xmlschema-2-20041028,
               October 2004,
@@ -2099,11 +2099,11 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 34]</SPAN>
-<A class=invisible id=page-35 href="http://tools.ietf.org/html/rfc4287#page-35" name=page-35><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-35 href="http://tools.ietf.org/html/rfc4287#page-35" DisplayName=page-35><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
-<SPAN class=h2><A name=appendix-A>Appendix A</A>.  Contributors</SPAN>
+<SPAN class=h2><A DisplayName=appendix-A>Appendix A</A>.  Contributors</SPAN>
 
    The following people contributed to preliminary versions of this
    document: Tim Bray, Mark Pilgrim, and Sam Ruby.  Norman Walsh
@@ -2123,7 +2123,7 @@ Table of Contents
    James Snell, Henry Story, Asbjorn Ulsberg, Walter Underwood, Norman
    Walsh, Dave Winer, and Bob Wyman.
 
-<SPAN class=h2><A name=appendix-B>Appendix B</A>.  RELAX NG Compact Schema</SPAN>
+<SPAN class=h2><A DisplayName=appendix-B>Appendix B</A>.  RELAX NG Compact Schema</SPAN>
 
    This appendix is informative.
 
@@ -2155,7 +2155,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 35]</SPAN>
-<A class=invisible id=page-36 href="http://tools.ietf.org/html/rfc4287#page-36" name=page-36><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-36 href="http://tools.ietf.org/html/rfc4287#page-36" DisplayName=page-36><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2175,7 +2175,7 @@ Table of Contents
 
    atomPersonConstruct =
       atomCommonAttributes,
-      (element atom:name { text }
+      (element atom:DisplayName { text }
        &amp; element atom:uri { atomUri }?
        &amp; element atom:email { atomEmailAddress }?
        &amp; extensionElement*)
@@ -2211,7 +2211,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 36]</SPAN>
-<A class=invisible id=page-37 href="http://tools.ietf.org/html/rfc4287#page-37" name=page-37><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-37 href="http://tools.ietf.org/html/rfc4287#page-37" DisplayName=page-37><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2267,7 +2267,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 37]</SPAN>
-<A class=invisible id=page-38 href="http://tools.ietf.org/html/rfc4287#page-38" name=page-38><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-38 href="http://tools.ietf.org/html/rfc4287#page-38" DisplayName=page-38><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2323,7 +2323,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 38]</SPAN>
-<A class=invisible id=page-39 href="http://tools.ietf.org/html/rfc4287#page-39" name=page-39><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-39 href="http://tools.ietf.org/html/rfc4287#page-39" DisplayName=page-39><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2379,7 +2379,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 39]</SPAN>
-<A class=invisible id=page-40 href="http://tools.ietf.org/html/rfc4287#page-40" name=page-40><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-40 href="http://tools.ietf.org/html/rfc4287#page-40" DisplayName=page-40><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2435,7 +2435,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 40]</SPAN>
-<A class=invisible id=page-41 href="http://tools.ietf.org/html/rfc4287#page-41" name=page-41><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-41 href="http://tools.ietf.org/html/rfc4287#page-41" DisplayName=page-41><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2491,7 +2491,7 @@ Table of Contents
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 41]</SPAN>
-<A class=invisible id=page-42 href="http://tools.ietf.org/html/rfc4287#page-42" name=page-42><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-42 href="http://tools.ietf.org/html/rfc4287#page-42" DisplayName=page-42><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 
@@ -2547,7 +2547,7 @@ Authors' Addresses
 
 
 <SPAN class=grey>Nottingham &amp; Sayre          Standards Track                    [Page 42]</SPAN>
-<A class=invisible id=page-43 href="http://tools.ietf.org/html/rfc4287#page-43" name=page-43><SPAN class=break> </SPAN></A>
+<A class=invisible id=page-43 href="http://tools.ietf.org/html/rfc4287#page-43" DisplayName=page-43><SPAN class=break> </SPAN></A>
 <SPAN class=grey><A href="http://tools.ietf.org/html/rfc4287">RFC 4287</A>                      Atom Format                  December 2005</SPAN>
 
 

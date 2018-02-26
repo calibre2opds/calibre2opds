@@ -180,7 +180,7 @@ public class Index {
     BookEntry bookEntry = new BookEntry(book, url, thumbnailUrl);
 
     // parse the book title
-    indexMultipleKeywords(book.getTitle(), ItemType.BookTitle, bookEntry, false);
+    indexMultipleKeywords(book.getDisplayName(), ItemType.BookTitle, bookEntry, false);
 
     // parse the book comments
     if (ConfigurationManager.getCurrentProfile().getIndexComments())
@@ -188,16 +188,16 @@ public class Index {
 
     // parse the book series
     if (book.getSeries() != null)
-      indexMultipleKeywords(book.getSeries().getName(), ItemType.Series, bookEntry, false);
+      indexMultipleKeywords(book.getSeries().getDisplayName(), ItemType.Series, bookEntry, false);
 
     // parse the book authors
     for (Author author : book.getAuthors()) {
-      indexMultipleKeywords(author.getName(), ItemType.Author, bookEntry, false);
+      indexMultipleKeywords(author.getDisplayName(), ItemType.Author, bookEntry, false);
     }
 
     // parse the book tags
     for (Tag tag : book.getTags()) {
-      indexMultipleKeywords(tag.getName(), ItemType.Tag, bookEntry, true);
+      indexMultipleKeywords(tag.getTextToSort(), ItemType.Tag, bookEntry, true);
     }
   }
 
@@ -320,7 +320,7 @@ public class Index {
             bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
-              String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
+              String bkTitle = parseForApostrophes(bookEntry.book.getDisplayName());
               String bkUrl = bookEntry.url;
               String bkCoverUrl = bookEntry.thumbnailUrl;
               String sql =
@@ -439,7 +439,7 @@ public class Index {
             bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
-              String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
+              String bkTitle = parseForApostrophes(bookEntry.book.getDisplayName());
               String bkUrl = bookEntry.url;
               String bkCoverUrl = bookEntry.thumbnailUrl;
               jsonBooks.add(bkId);
@@ -558,7 +558,7 @@ public class Index {
             bookEntry.book.setFlagged();
             {
               // add a line in the BOOKS table
-              String bkTitle = parseForApostrophes(bookEntry.book.getTitle());
+              String bkTitle = parseForApostrophes(bookEntry.book.getDisplayName());
               String bkUrl = bookEntry.url;
               String bkThumbnailUrl = bookEntry.thumbnailUrl;
               jsBooks.add(new String[]{bkId, bkTitle, bkUrl, bkThumbnailUrl});

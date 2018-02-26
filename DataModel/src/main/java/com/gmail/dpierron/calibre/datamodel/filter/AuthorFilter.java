@@ -26,10 +26,10 @@ public class AuthorFilter implements BookFilter {
 
     for (Author author : book.getAuthors()) {
       if (contains) {
-        if (author.getName().toUpperCase().contains(filterValue) || author.getSort().toUpperCase().contains(filterValue))
+        if (author.getDisplayName().toUpperCase().contains(filterValue) || author.getSortName().toUpperCase().contains(filterValue))
           return true;
       } else {
-        if (author.getName().equalsIgnoreCase(filterValue) || author.getSort().equalsIgnoreCase(filterValue))
+        if (author.getDisplayName().equalsIgnoreCase(filterValue) || author.getSortName().equalsIgnoreCase(filterValue))
           return true;
       }
     }

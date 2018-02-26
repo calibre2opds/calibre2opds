@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.dpierron.calibre</groupId>
     <artifactId>Install</artifactId>
-    <name>Install</name>
+    <DisplayName>Install</DisplayName>
     <version>3.6-SNAPSHOT</version>
     <description>A library that can create a set of OPDS and HTML catalogs</description>
     <dependencies>

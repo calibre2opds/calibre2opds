@@ -4,13 +4,13 @@
 <!-- Activates debug mode so is normally only required
      when looking for faults and full TRACE is not needed -->
 
-<!-- <Configuration status="info" monitorInterval="30" name="calibre2opds"> -->
-<Configuration status="info" name="calibre2opds">
+<!-- <Configuration status="info" monitorInterval="30" DisplayName="calibre2opds"> -->
+<Configuration status="info" DisplayName="calibre2opds">
   <Appenders>
-    <Console name="CONSOLE" target="SYSTEM_OUT">
+    <Console DisplayName="CONSOLE" target="SYSTEM_OUT">
       <PatternLayout pattern="%date{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%"/>
     </Console>
-    <RollingFile name="A1" filename="${sys:calibre2opds.home}/log/calibre2opds.log" append="true"
+    <RollingFile DisplayName="A1" filename="${sys:calibre2opds.home}/log/calibre2opds.log" append="true"
         filePattern="${sys:calibre2opds.home}/log/calibre2opds-%i.log">
       <Policies>
         <OnStartupTriggeringPolicy />
@@ -19,18 +19,18 @@
       <DefaultRolloverStrategy max="10" />
       <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
     </RollingFile>
-    <Async name="ASYNC">
+    <Async DisplayName="ASYNC">
       <AppenderRef ref="A1"/>
       <AppenderRef ref="CONSOLE"/>
     </Async>
   </Appenders>
   <Loggers>
     <!-- The default value we want for the calibre2opds package -->
-    <Logger name="com.gmail.dpierron.calibre" additivity="false" status="DEBUG">
+    <Logger DisplayName="com.gmail.dpierron.calibre" additivity="false" status="DEBUG">
       <AppenderRef ref="ASYNC" />
     </Logger>
     <!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
-    <Logger name="org.apache" additivity="false" status="INFO">
+    <Logger DisplayName="org.apache" additivity="false" status="INFO">
     </Logger>
     <Root level="error">
       <AppenderRef ref="ASYNC"/>

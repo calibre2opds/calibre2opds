@@ -13,6 +13,7 @@ if not exist setenv.cmd (
     @call setenv.cmd
     if errorlevel 0 (
         echo Started compile at %TIME%
+	java -version
         mvn clean install dependency:copy-dependencies
         echo Completed at %TIME%
     )

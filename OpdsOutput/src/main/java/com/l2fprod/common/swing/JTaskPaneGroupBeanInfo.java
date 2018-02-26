@@ -130,7 +130,7 @@ public class JTaskPaneGroupBeanInfo extends SimpleBeanInfo {
       try {
         descriptor = new PropertyDescriptor("title", com.l2fprod.common.swing.JTaskPaneGroup.class);
       } catch (IntrospectionException e) {
-        descriptor = new PropertyDescriptor("title", com.l2fprod.common.swing.JTaskPaneGroup.class, "getTitle", null);
+        descriptor = new PropertyDescriptor("title", com.l2fprod.common.swing.JTaskPaneGroup.class, "getDisplayName", null);
       }
 
       descriptor.setPreferred(true);

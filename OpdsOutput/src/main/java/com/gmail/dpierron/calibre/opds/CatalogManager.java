@@ -625,7 +625,7 @@ public class CatalogManager {
       for (Tag tag : DataModel.getListOfTags()) {
         List<String> regextagsToIgnore = currentProfile.getRegExTagsToIgnore();
         for (String regexTag : regextagsToIgnore) {
-          if (tag.getName().toUpperCase().matches("^" + regexTag)) {
+          if (tag.getTextToSort().toUpperCase().matches("^" + regexTag)) {
             if (! tagsToIgnore.contains(tag)) {
               tagsToIgnore.add(tag);
             }
