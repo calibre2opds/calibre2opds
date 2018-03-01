@@ -31,27 +31,41 @@ public class DataModelTest {
     new TestDataModel().testDataModel(false);
   }
 
-  class FakeBook implements SplitableByLetter {
+  class FakeBook extends GenericDataObject implements SplitableByLetter {
     String title;
 
     FakeBook(String title) {
       this.title = title;
     }
-
+    public String getColumnName () {
+      return "Book";
+    }
+    public ColumType getColumnType() {
+      return ColumType.COLUMN_BOOK;
+    }
+    public String getSortName() {
+      return title;
+    }
+    public String getDisplayName() {
+      return title;
+    }
     public String getTextToSort() {
       return title;
     }
+    public String getTextToDisplay() {
+      return title;
+    }
   }
-
+/**
   Comparator<FakeBook> comparator = new Comparator<FakeBook>() {
 
     public int compare(FakeBook o1, FakeBook o2) {
-      String s1 = (o1 == null ? "" : o1.getTextToSort());
-      String s2 = (o2 == null ? "" : o2.getTextToSort());
+      String s1 = (o1 == null ? "" : o1.getTitleToSplitByLetter());
+      String s2 = (o2 == null ? "" : o2.getTitleToSplitByLetter());
       return s1.compareTo(s2);
     }
   };
-
+*/
   @Test
   public void testSplitByLetter() throws Exception {
     int expected[] = new int[]{2, 18, 3, 12, 23};
@@ -66,7 +80,7 @@ public class DataModelTest {
         lines.add(line);
         books.add(new FakeBook(line));
       }
-//      Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books, comparator);
+//      Map<String, List<FakeBook>> result = DataModel.splitObjectsByLetter(books);
       Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books);
       for (int i = 0; i < 5; i++) {
         String letter = lines.get(i).substring(0, 1).toUpperCase();
@@ -89,14 +103,15 @@ public class DataModelTest {
     for (String line : names) {
       books.add(new FakeBook(line));
     }
-    Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books, comparator);
+//    Map<String, List<FakeBook>> result = DataModel.splitObjectsByLetter(books);
+    Map<String, List<FakeBook>> result = GenericDataObject.splitByLetter(books);
     Assert.assertNotNull(result);
     //for (int i = 0; i < 5; i++) {
     //  String letter = lines.get(i).substring(0, 1).toUpperCase();
     //  List<FakeBook> listOfBooksByLetter = result.get(letter);
     //  Assert.assertEquals(expected[i], listOfBooksByLetter.size());
     //  for (FakeBook book : listOfBooksByLetter) {
-    //    Assert.assertEquals(book.getTextToSort().substring(0, 1).toUpperCase(), letter);
+    //    Assert.assertEquals(book.getTitleToSplitByLetter().substring(0, 1).toUpperCase(), letter);
     //  }
     //}
   }
