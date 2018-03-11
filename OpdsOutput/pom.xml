@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
@@ -5,41 +6,51 @@
         <groupId>com.gmail.dpierron.calibre</groupId>
         <version>3.6-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gmail.dpierron.calibre</groupId>
     <artifactId>OpdsOutput</artifactId>
-    <DisplayName>OpdsOutput</DisplayName>
+    <name>OpdsOutput</name>
     <version>3.6-SNAPSHOT</version>
     <description>A library that can create a set of OPDS and HTML catalogs</description>
+
     <dependencies>
+
         <dependency>
             <groupId>com.gmail.dpierron.calibre</groupId>
             <artifactId>DataModel</artifactId>
             <version>3.6-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>com.gmail.dpierron</groupId>
             <artifactId>Tools</artifactId>
             <version>3.6-SNAPSHOT</version>
         </dependency>
+
         <dependency>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-          <version>2.1</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
             <version>2.0.6</version>
         </dependency>
+
         <dependency>
             <groupId>net.sf.jtidy</groupId>
             <artifactId>jtidy</artifactId>
             <version>r938</version>
         </dependency>
+
     </dependencies>
+
     <build>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -49,10 +60,9 @@
                     <archive>
                         <!--
                         <index>true</true>
-                        -->
+                       -->
                         <manifest>
-                            <mainClass>Gui</mainClass>
-                            <packageName></packageName>
+                            <mainClass>Gui</mainClass><packageName></packageName>
                             <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
@@ -63,6 +73,7 @@
                     </archive>
                 </configuration>
             </plugin>
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -75,23 +86,25 @@
                         <configuration>
                             <tasks>
                                 <exec executable="${env.SVN_HOME}/bin/svnversion"
-                                      output="target/classes/version_OpdsOutput.properties" />
+                                    output="target/classes/version_OpdsOutput.properties" />
                             </tasks>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
     </build>
+
     <repositories>
         <repository>
             <id>unknown-jars-temp-repo</id>
-            <DisplayName>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
+            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
                 replace the dependencies in this repository with correct ones and delete this
                 repository.
-            </DisplayName>
+            </name>
             <url>file:${project.basedir}/lib</url>
         </repository>
     </repositories>
-</project>
 
+</project>

@@ -12,8 +12,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
     <orderEntry type="library" name="Maven: com.gmail.dpierron:Tools:3.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
+    <orderEntry type="module" module-name="Tools" />
     <orderEntry type="module" module-name="CalibreQueryLanguage" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />

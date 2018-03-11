@@ -8,16 +8,18 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.gmail.dpierron.calibre:OpdsOutput:3.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.gmail.dpierron:Tools:3.6-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="DataModel" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
     <orderEntry type="module" module-name="CalibreQueryLanguage" />
     <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
-    <orderEntry type="library" name="Maven: com.gmail.dpierron.calibre:OpdsOutput:3.6-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="OpdsOutput" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jtidy:jtidy:r938" level="project" />
-    <orderEntry type="library" name="Maven: com.gmail.dpierron:Tools:3.6-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="Tools" />
     <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />

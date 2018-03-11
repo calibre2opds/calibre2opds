@@ -11,7 +11,7 @@
   <programGroup defaultName="Calibre2opds" location="applications"/>
 
   <shortcut
-     DisplayName="Calibre2opds"
+     name="Calibre2opds"
      description="Calibre2opds Graphical User Interface"
      programGroup="yes"
      desktop="yes"
@@ -28,11 +28,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="minimized">
-     <createForPack DisplayName="Base"/>
+     <createForPack name="Base"/>
    </shortcut>
 
   <shortcut
-     DisplayName="Calibre2opds batch mode catalog generation"
+     name="Calibre2opds batch mode catalog generation"
      description="Generate calibre2opds catalogs from parameters set up earlier via GUI"
      programGroup="yes"
      desktop="no"
@@ -49,11 +49,11 @@
      terminal="true"
      KdeSubstUID="false"
      initialState="minimized">
-     <createForPack DisplayName="Base"/>
+     <createForPack name="Base"/>
    </shortcut>
 
   <shortcut
-     DisplayName="User Guide"
+     name="User Guide"
      description="Calibre2Opds online User Guide"
      programGroup="yes"
      desktop="no"
@@ -69,11 +69,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack DisplayName="Base"/>
+     <createForPack name="Base"/>
    </shortcut>
 
   <shortcut
-     DisplayName="Developers Guide"
+     name="Developers Guide"
      description="Calibre2Opds online Developers Guide"
      programGroup="yes"
      desktop="no"
@@ -89,11 +89,11 @@
      terminal="false"
      KdeSubstUID="false"
      initialState="normal">
-     <createForPack DisplayName="Base"/>
+     <createForPack name="Base"/>
    </shortcut>
 
   <shortcut
-     DisplayName="Uninstall calibre2opds"
+     name="Uninstall calibre2opds"
      description="Uninstall calibre2opds from the system"
      programGroup="yes"
      desktop="no"
@@ -111,6 +111,6 @@
      KdeSubstUID="false"
      runAsAdministrator="true"
      initialState="normal">
-     <createForPack DisplayName="Base"/>
+     <createForPack name="Base"/>
    </shortcut>
 </izpack:shortcuts>
