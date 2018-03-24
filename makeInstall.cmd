@@ -7,7 +7,7 @@ REM The following specifies the ZIP program to use
 REM (it is recommended that the GNU ZIP for Windows is used)
 REM If not on the search path, then the full path must be used.
 
-ZIPPROG=zip
+set ZIPPROG=zip
 call setenv.cmd
 
 for /f "delims=" %%a in ('svnversion') do @set SVNVERSION=%%a
@@ -54,7 +54,7 @@ cd Install\target\Dependency
 timeout /t 1
 "%ZIPPROG%" "%ZIPFILE%"  OpdsOutput-%BASEVERSION%-SNAPSHOT.jar  DataModel-%BASEVERSION%-SNAPSHOT.jar    Tools-%BASEVERSION%-SNAPSHOT.jar   CalibreQueryLanguage-%BASEVERSION%-SNAPSHOT.jar
 timeout /t 1
-"%ZIPPROG%" "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar commons-io-2.1.jar hamcrest-core-1.3.jar jdom2-2.0.6.jar jtidy-r938.jar junit-4.12.jar log4j-api-2.5.jar log4j-core-2.5.jar sqlite-jdbc-3.16.1.jar stringtemplate-3.2.jar
+"%ZIPPROG%" "%ZIPFILE%"  antlr-2.7.7.jar antlr-runtime-3.1.3.jar commons-io-2.1.jar hamcrest-core-1.3.jar jdom2-2.0.6.jar jtidy-r938.jar junit-4.12.jar log4j-api-2.10.0.jar log4j-core-2.10.0.jar sqlite-jdbc-3.21.0.1.jar stringtemplate-3.2.jar
 cd ..\..\..\
 
 timeout /t 1
@@ -129,9 +129,9 @@ if not exist %VERSION%.jar (
 	echo ERROR: Build of Mac version failed
 	goto FINISHED
 )
-if exist "%VERSION%.app" (
-	echo Deleting %VERSION%.app
-	del /Q %VERSION%.app
+if exist calibre2opds-%BASEVERSION%*.app (
+	echo Deleting calibre2opds-%BASEVERSION%*.app
+	for /d %%f in (calibre2opds-%%BASEVERSION%%*.app) do rmdir "%%f" /s
 )
 if exist "%ProgramFiles%\IzPack\utils\wrappers\izpack2app" goto BUILD_MAC
 echo ERROR: Unable to locate izpack2app

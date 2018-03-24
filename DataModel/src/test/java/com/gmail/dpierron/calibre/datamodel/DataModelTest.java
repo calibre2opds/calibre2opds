@@ -38,7 +38,7 @@ public class DataModelTest {
       this.title = title;
     }
     public String getColumnName () {
-      return "Book";
+      return "book";
     }
     public ColumType getColumnType() {
       return ColumType.COLUMN_BOOK;

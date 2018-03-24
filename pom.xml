@@ -48,35 +48,22 @@
           <dependencies>
 
             <dependency> <!-- for sql script generation -->
-
               <groupId>xalan</groupId>
-
               <artifactId>xalan</artifactId>
-
               <version>2.7.1</version>
-
               <scope>compile</scope>
-
             </dependency>
 
             <dependency> <!-- for debugging with <echoproperties /> task -->
-
               <groupId>ant</groupId>
-
               <artifactId>ant-nodeps</artifactId>
-
               <version>1.6.5</version>
-
               <scope>compile</scope>
-
             </dependency>
 
           </dependencies>
-
         </plugin>
-
       </plugins>
-
     </pluginManagement>
 
 
@@ -84,64 +71,36 @@
     <plugins>
 
       <plugin>
-
         <groupId>org.apache.maven.plugins</groupId>
-
         <artifactId>maven-compiler-plugin</artifactId>
-
-        <version>2.3.2</version>
-
+        <version>3.5</version>
         <configuration>
-
           <source>1.6</source>
-
           <target>1.6</target>
-
           <debug>true</debug>
-
         </configuration>
-
       </plugin>
 
       <plugin>
-
         <groupId>org.apache.maven.plugins</groupId>
-
         <artifactId>maven-release-plugin</artifactId>
-
         <configuration>
-
           <autoVersionSubmodules>true</autoVersionSubmodules>
-
           <preparationGoals>clean install</preparationGoals>
-
         </configuration>
-
       </plugin>
 
       <plugin>
-
         <artifactId>maven-jar-plugin</artifactId>
-
         <version>2.2</version>
-
         <configuration>
-
           <archive>
-
             <manifestEntries>
-
               <Implementation-Build>${buildNumber}</Implementation-Build>
-
             </manifestEntries>
-
           </archive>
-
         </configuration>
-
       </plugin>
-
-
 
     </plugins>
 
@@ -150,33 +109,21 @@
   <dependencies>
 
     <dependency>
-
       <groupId>junit</groupId>
-
       <artifactId>junit</artifactId>
-
       <version>4.12</version>
-
     </dependency>
 
     <dependency>
-
      <groupId>org.apache.logging.log4j</groupId>
-
      <artifactId>log4j-api</artifactId>
-
-      <version>2.5</version>
-
+      <version>2.10.0</version>
     </dependency>
 
     <dependency>
-
       <groupId>org.apache.logging.log4j</groupId>
-
       <artifactId>log4j-core</artifactId>
-
-      <version>2.5</version>
-
+      <version>2.10.0</version>
     </dependency>
 
   </dependencies>

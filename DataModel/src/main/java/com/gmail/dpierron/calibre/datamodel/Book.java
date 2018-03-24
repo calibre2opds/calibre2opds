@@ -123,7 +123,7 @@ public class Book extends GenericDataObject   {
    * @return
    */
   public String getColumnName () {
-    return "Book";
+    return "book";
   }
 
   public ColumType getColumnType() {
