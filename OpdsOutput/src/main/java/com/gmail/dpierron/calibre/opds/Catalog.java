@@ -496,7 +496,7 @@ public class Catalog {
           }
         }
       }
-      // Periiodically update progress even if nothing being copied
+      // Periodically update progress even if nothing being copied
       msgCount++;
       if (copyflag || msgCount > MSGCOUNT_INTERVAL) {
         CatalogManager.callback.showMessage(src.getParentFile().getName() + File.separator + src.getName());
@@ -517,6 +517,7 @@ public class Catalog {
 
         if (syncFilesDetail && logger.isDebugEnabled()) logger.debug("Copying file " + src.getName() + " to " + dst.getAbsolutePath());
         try {
+          dst.delete();     // Deleting file first handles case mismatch scenarios
           Helper.copy(src, dst);
           dst.setCachedValues(true, src.lastModified(), src.length(), src.getCrc(), src.isDirectory());
         } catch (java.io.FileNotFoundException e) {

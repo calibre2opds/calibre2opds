@@ -114,6 +114,22 @@ public class CachedFile extends File {
 
     if (! isFlags(FLAG_EXISTS_CHECKED)) {
       setFlags(super.exists(), FLAG_EXISTS);
+      // Extend the check to handle case sensitivity
+      // Should not happen so log message if found!
+      // Check added as case mismatch can break web server and may not be obvious in testing.
+      if (super.exists()) {
+        try {
+          if (!super.getName().equals(super.getCanonicalFile().getName())) {
+            logger.warn("Case mismatch checking file existence: Found  '" + super.getName() + "', Find '" + super.getCanonicalFile().getName() +  "'");
+            setFlags(false, FLAG_EXISTS);
+          }
+        } catch (IOException e) {
+          // Should not be possible to get her but lets play safe1
+          setFlags(false, FLAG_EXISTS);
+          logger.trace("Unexpected IOExcpetion checking %s for case mismatch",getName());
+        }
+
+      }
       setFlags(true, FLAG_EXISTS_CHECKED);
       if (! isFlags (FLAG_EXISTS)) {
         // Cached entry for non-existent file needs resetting
