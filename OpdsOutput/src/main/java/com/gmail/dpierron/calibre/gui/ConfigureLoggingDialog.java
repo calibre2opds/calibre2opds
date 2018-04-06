@@ -201,7 +201,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     if (indices == null ||  indices.length < 1) {
       String msg = Localization.Main.getText("gui.logging.use.select");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
-      logger.warn(msg);
+      logger.warn(msg); Helper.statsWarnings++;
       return;
     }
     String newConfig = (String) lstLoggingConfigurations.getModel().getElementAt(indices[0]);
@@ -220,7 +220,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
     if (activeConfigFile.renameTo(activeBackupFile) != true) {
       String msg = Localization.Main.getText("gui.logging.use.renameFail");
       JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
-      logger.warn(msg);
+      logger.warn(msg); Helper.statsWarnings++;
       return;
     }else {
       File newConfigFile =
@@ -232,7 +232,7 @@ public class ConfigureLoggingDialog extends javax.swing.JDialog {
         activeBackupFile.renameTo(activeConfigFile);
         String msg = Localization.Main.getText("gui.logging.use.copyFail");
         JOptionPane.showMessageDialog(this, msg, "", JOptionPane.WARNING_MESSAGE);
-        logger.warn(msg);
+        logger.warn(msg); Helper.statsWarnings++;
         return;
       }
     }

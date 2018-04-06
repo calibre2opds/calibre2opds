@@ -122,7 +122,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
               // logger.trace("return=" + result);
               return result;
             } catch (Exception e) {
-              logger.error("Error sorting between titles '" + title1.toString() + "' and '" + title2.toString() + "'");
+              logger.error("Error sorting between titles '" + title1.toString() + "' and '" + title2.toString() + "'"); Helper.statsErrors++;
               return 0;
             }
           }
@@ -147,7 +147,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
               // logger.trace("return=" + result);
               return result;
             } catch (Exception e) {
-              logger.error("Error sorting between series '" + series1.getDisplayName().toString() + "' and '" + series2.getDisplayName().toString() + "'");
+              logger.error("Error sorting between series '" + series1.getDisplayName().toString() + "' and '" + series2.getDisplayName().toString() + "'"); Helper.statsErrors++;
               return 0;
             }
           }
@@ -172,7 +172,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
               // logger.trace("return=" + result);
               return result;
             } catch (Exception e) {
-              logger.error("Error sorting between titles '" + title1.toString() + "' and '" + title2.toString() + "'");
+              logger.error("Error sorting between titles '" + title1.toString() + "' and '" + title2.toString() + "'"); Helper.statsErrors++;
               // logger.trace("return 0");
               return 0;
             }
@@ -188,7 +188,7 @@ public class AllBooksSubCatalog extends BooksSubCatalog {
       } // End of Comparator()
       ); // End of Collections.sort() statement
     } catch (Exception e) {
-      logger.error("Unexpected exception reached trying to sort books by series: " + e);
+      logger.error("Unexpected exception reached trying to sort books by series: " + e); Helper.statsErrors++;
     }
     // logger.trace("sortBooksBySeries: exit");
     return;

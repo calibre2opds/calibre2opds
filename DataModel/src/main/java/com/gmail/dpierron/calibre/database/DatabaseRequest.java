@@ -4,6 +4,7 @@ package com.gmail.dpierron.calibre.database;
  */
 
 import com.gmail.dpierron.calibre.configuration.Configuration;
+import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -98,12 +99,12 @@ public enum DatabaseRequest {
         Connection connection = Database.getConnection();
         if (connection == null) {
           String e = "Cannot establish a database connection to " + new File(Configuration.instance().getDatabaseFolder(), "metadata.db");
-          logger.error(e);
+          logger.error(e); Helper.statsErrors++;
           throw new RuntimeException(e);
         }
         preparedStatement = connection.prepareStatement(sql);
       } catch (SQLException e) {
-        logger.error(e);
+        logger.error(e); Helper.statsErrors++;
         throw new RuntimeException(e);
       }
     }

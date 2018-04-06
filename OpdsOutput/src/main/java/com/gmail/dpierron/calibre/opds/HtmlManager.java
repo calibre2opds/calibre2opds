@@ -77,7 +77,7 @@ public class HtmlManager {
           transformer.transform(source, streamResult);
         }
       } catch (TransformerException e) {
-        logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e);
+        logger.error(Localization.Main.getText("error.cannotTransform", outputFile.getAbsolutePath()), e); Helper.statsErrors++;
       }
       timeInHtml += (System.currentTimeMillis() - now);
     } finally {
@@ -108,7 +108,7 @@ public class HtmlManager {
           }
           transformer.transform(source, streamResult);
         } catch (TransformerException e) {
-          logger.error(Localization.Main.getText("error.cannotTransform", xslname), e);
+          logger.error(Localization.Main.getText("error.cannotTransform", xslname), e); Helper.statsErrors++;
         }
       } finally {
         if (fos != null)

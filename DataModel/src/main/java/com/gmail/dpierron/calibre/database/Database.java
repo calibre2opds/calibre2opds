@@ -42,7 +42,7 @@ public class Database {
         result.add(new Tag(set.getString("id"), set.getString("name")));
       }
     } catch (SQLException e) {
-      logger.error("ListTag: " + e);
+      logger.error("ListTag: " + e); Helper.statsErrors++;
       sqlException += (2^0);
     }
     return result;
@@ -87,7 +87,7 @@ public class Database {
         }
       }
     } catch (SQLException e) {
-      logger.error("getMapsOfLanguages: " + e);
+      logger.error("getMapsOfLanguages: " + e); Helper.statsErrors++;
       sqlException += (2^2);
     }
     return new Composite<Map<String, Language>, Map<String, Language>>(mapOfLanguagesById, mapOfLanguagesByIsoCode);
@@ -108,7 +108,7 @@ public class Database {
       try {
         set = statement.executeQuery();
       } catch (SQLException e) {
-        logger.error("listBooks: statement=" + statement + "\n" + e);
+        logger.error("listBooks: statement=" + statement + "\n" + e); Helper.statsErrors++;
         sqlException += (2^3);
         return result;
       }
@@ -158,7 +158,7 @@ public class Database {
         try {
           setLanguages = stmtBooksLanguagesLink.executeQuery();
         } catch (SQLException e) {
-          logger.error("listBooks: bookId=" + bookId + "\nstmtBooksLanguageLink=" + stmtBooksLanguagesLink + "\n" + e);
+          logger.error("listBooks: bookId=" + bookId + "\nstmtBooksLanguageLink=" + stmtBooksLanguagesLink + "\n" + e); Helper.statsErrors++;
           sqlException += (2^4);
           return result;
         }
@@ -212,7 +212,7 @@ public class Database {
         step = 1;
       }
     } catch (SQLException e) {
-      logger.error("listBooks: step=" + step + "\n" + e);
+      logger.error("listBooks: step=" + step + "\n" + e);  Helper.statsErrors++;
       sqlException += (2^5);
     }
     return result;
@@ -238,7 +238,7 @@ public class Database {
         }
       }
     } catch (SQLException e) {
-      logger.error("listAuthors: " + e);
+      logger.error("listAuthors: " + e); Helper.statsErrors++;
       sqlException += (2^6);
     }
     return result;
@@ -264,7 +264,7 @@ public class Database {
         }
       }
     } catch (SQLException e) {
-      logger.error("listPublishers: " + e);
+      logger.error("listPublishers: " + e); Helper.statsErrors++;
       sqlException += (2^7);
     }
     return result;
@@ -291,7 +291,7 @@ public class Database {
         }
       }
     } catch (SQLException e) {
-      logger.error("listSeries: " + e);
+      logger.error("listSeries: " + e); Helper.statsErrors++;
       sqlException += (2^8);
     }
     return result;
@@ -318,7 +318,7 @@ public class Database {
         files.add(new EBookFile(format, name));
       }
     } catch (SQLException e) {
-      logger.error("listFilesByBook: " + e);
+      logger.error("listFilesByBook: " + e); Helper.statsErrors++;
       sqlException += (2^9);
     }
     return result;
@@ -342,13 +342,15 @@ public class Database {
           result.put(bookId, authors);
         }
         Author author = DataModel.getMapOfAuthors().get(authorId);
-        if (author != null)
+        if (author != null) {
           authors.add(author);
-        else
+        } else {
           logger.warn("cannot find author #" + authorId);
+          Helper.statsWarnings++;
+        }
       }
     } catch (SQLException e) {
-      logger.error("listAuthorsByBook: " + e);
+      logger.error("listAuthorsByBook: " + e); Helper.statsErrors++;
       sqlException += (2^10);
     }
     return result;
@@ -372,13 +374,15 @@ public class Database {
           result.put(bookId, publishers);
         }
         Publisher publisher = DataModel.getMapOfPublishers().get(publisherId);
-        if (publisher != null)
+        if (publisher != null) {
           publishers.add(publisher);
-        else
+        } else {
           logger.warn("cannot find publisher #" + publisherId);
+          Helper.statsWarnings++;
+        }
       }
     } catch (SQLException e) {
-      logger.error("listPublishersByBook: " + e);
+      logger.error("listPublishersByBook: " + e); Helper.statsErrors++;
       sqlException += (2^11);
     }
     return result;
@@ -406,11 +410,11 @@ public class Database {
         if (tag != null) {
           tags.add(tag);
         } else {
-          logger.warn("cannot find tag #" + tagId);
+          logger.warn("cannot find tag #" + tagId);  Helper.statsWarnings++;
         }
       }
     } catch (SQLException e) {
-      logger.error("getMapOfTagsByBookId: " + e);
+      logger.error("getMapOfTagsByBookId: " + e); Helper.statsErrors++;
       sqlException += (2^12);
     }
     return result;
@@ -434,13 +438,15 @@ public class Database {
           result.put(bookId, series);
         }
         Series serie = DataModel.getMapOfSeries().get(serieId);
-        if (serie != null)
+        if (serie != null) {
           series.add(serie);
-        else
+        } else {
           logger.warn("cannot find serie #" + serieId);
+          Helper.statsWarnings++;
+        }
       }
     } catch (SQLException e) {
-      logger.error("getMapOfSeriesByBookId: " + e);
+      logger.error("getMapOfSeriesByBookId: " + e); Helper.statsErrors++;
       sqlException += (2^13);
     }
     return result;
@@ -469,7 +475,7 @@ public class Database {
         comments.add(text);
       }
     } catch (SQLException e) {
-      logger.error("getMapOfCommentsByBookId: " + e);
+      logger.error("getMapOfCommentsByBookId: " + e); Helper.statsErrors++;
       sqlException += (2^14);
     }
     if (logger.isDebugEnabled()) logger.debug("Number of comments=" + result.size() + ", Total Size="+ result.toString().length());
@@ -510,7 +516,7 @@ public class Database {
         }
       }
     } catch (SQLException e) {
-      logger.error("getMapOfSavedSearches: " + e);
+      logger.error("getMapOfSavedSearches: " + e); Helper.statsErrors++;
       sqlException += (2^15);
     }
     return result;
@@ -547,7 +553,7 @@ public class Database {
         result.add(customColType);
       }
     } catch (SQLException e) {
-      logger.error("getlistOfCustoColumnTypes: " + e);
+      logger.error("getlistOfCustoColumnTypes: " + e); Helper.statsErrors++;
       sqlException += (2^16);
     }
 
@@ -597,7 +603,7 @@ public class Database {
             customColumnValues.add (customColumnValue);
           }
       } catch (SQLException e) {
-        logger.error("getMapofCustomColumnValuesbyBookId: " + e);
+        logger.error("getMapofCustomColumnValuesbyBookId: " + e); Helper.statsErrors++;
         sqlException += (2^17);
       }
     }
@@ -640,7 +646,7 @@ public class Database {
         connection.close();
         connection = null;
       } catch (SQLException e) {
-        logger.warn("Unexpected error on database closeConnection: " + e);
+        logger.warn("Unexpected error on database closeConnection: " + e); Helper.statsWarnings++;
       }
   }
 
@@ -651,9 +657,9 @@ public class Database {
       String url = database.toURI().getPath();
       connection = DriverManager.getConnection("jdbc:sqlite:" + url);
     } catch (ClassNotFoundException e) {
-      logger.error(e);
+      logger.error(e); Helper.statsErrors++;
     } catch (SQLException e) {
-      logger.error("initConnection: " + e);
+      logger.error("initConnection: " + e); Helper.statsErrors++;
     }
   }
 

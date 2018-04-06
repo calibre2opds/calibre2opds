@@ -62,7 +62,7 @@ public class JDOMManager {
       setParametersOnCatalog(headerTransformer);
       setIntroParameters(headerTransformer);
     } catch (TransformerConfigurationException e) {
-      logger.error("getIncludeTransformer(): Error while configuring header transformer", e);
+      logger.error("getIncludeTransformer(): Error while configuring header transformer", e); Helper.statsErrors++;
       headerTransformer = null;
     }
     return headerTransformer;
@@ -155,7 +155,7 @@ public class JDOMManager {
         setParametersOnCatalog(mainTransformer);
         setIntroParameters(mainTransformer);
       } catch (TransformerConfigurationException e) {
-        logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e);
+        logger.error("getMainCatalogTransformer(): Error while configuring catalog transformer", e); Helper.statsErrors++;
         mainTransformer = null;
       }
     }
@@ -169,7 +169,7 @@ public class JDOMManager {
         setParametersOnCatalog(catalogTransformer);
         catalogTransformer.setParameter("programName", "");  // Set to empty for all pages except top level
       } catch (TransformerConfigurationException e) {
-        logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e);
+        logger.error("getCatalogTransformer(): Error while configuring catalog transformer", e); Helper.statsErrors++;
         catalogTransformer = null;
      }
     }
@@ -187,7 +187,7 @@ public class JDOMManager {
         bookFullEntryTransformer = getTransformerFactory().newTransformer(new StreamSource(ConfigurationManager.getResourceAsStream(Constants.FULLENTRY_XSL)));
         setParametersOnCatalog(bookFullEntryTransformer);
       } catch (TransformerConfigurationException e) {
-        logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e);
+        logger.error("getCatalogTransformer(): Error while configuring book full entry transformer", e); Helper.statsErrors++;
         bookFullEntryTransformer = null;
       }
     }
@@ -404,7 +404,7 @@ public class JDOMManager {
         if (logger.isDebugEnabled()) logger.debug("convertHtmlTextToXhtml: caught exception in the tidy process", ee);
         tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       } catch (Throwable t) {
-        logger.error("convertHtmlTextToXhtml: caught throwable in the tidy process", t);
+        logger.error("convertHtmlTextToXhtml: caught throwable in the tidy process", t); Helper.statsErrors++;
         tidyForTidyInputStream = null;    // Force a new clean object to be gebnerated for next time around
       }
 

@@ -831,7 +831,7 @@ public abstract class SubCatalog {
 
         JDOMManager.getPrettyXML().output(document, fos);;
       } catch (RuntimeException e) {
-        logger.warn("Error writing file " + xmlFilename + "(" + e.toString() + ")");
+        logger.warn("Error writing file " + xmlFilename + "(" + e.toString() + ")"); Helper.statsWarnings++;
       } finally {
         if (fos != null)
           fos.close();
@@ -844,7 +844,7 @@ public abstract class SubCatalog {
     CachedFile htmlFile = CachedFileManager.addCachedFile(HtmlManager.getHtmlFilename(
         xmlFile.getAbsolutePath()));
     if (htmlFile.exists()) {
-      logger.warn("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'");
+      logger.error("Program Error?  Attempt to recreate existing HTML file '" + htmlFile + "'"); Helper.statsErrors++; Helper.statsErrors++;
       return;
     }
 
@@ -869,7 +869,7 @@ public abstract class SubCatalog {
             xslChanged = xslFullEntryChanged;
             break;
       default:
-            logger.error("Program Error: unrecognised feedType for file '" + xmlFile + "'" );
+            logger.error("Program Error: unrecognised feedType for file '" + xmlFile + "'" ); Helper.statsErrors++;
             return;
     }
     if (catalogXmlFile.exists()
@@ -884,13 +884,13 @@ public abstract class SubCatalog {
 //    && CatalogManager.isSourceFileSameAsTargetFile(xmlFile, catalogXmlFile)) {
       catalogHtmlFile.setChanged(false);
       htmlFile.setChanged(false);
-      CatalogManager.statsHtmlUnchanged++;
+      Helper.statsHtmlUnchanged++;
     } else {
       if (currentProfile.getGenerateHtml()) {
         CatalogManager.htmlManager.generateHtmlFromDOM(document, htmlFile.getAbsoluteFile(),
             feedType);
         htmlFile.clearCachedInformation();
-        CatalogManager.statsHtmlChanged++;
+        Helper.statsHtmlChanged++;
 //      } else {
 //        CachedFileManager.removeCachedFile(htmlFile);
       }
@@ -899,14 +899,14 @@ public abstract class SubCatalog {
     if (currentProfile.getGenerateOpds()) {
       if (xmlFile.isChanged() == false) {
         xmlFile.delete();     // We do not keep the XML file in the temp folder if marked as unchanged
-        CatalogManager.statsXmlUnchanged++;
+        Helper.statsXmlUnchanged++;
       } else {
-        CatalogManager.statsXmlChanged++;
+        Helper.statsXmlChanged++;
       }
     } else {
       xmlFile.delete();
       CachedFileManager.removeCachedFile(xmlFile);
-      CatalogManager.statsXmlDiscarded++;
+      Helper.statsXmlDiscarded++;
     }
   }
 
@@ -1245,7 +1245,7 @@ public abstract class SubCatalog {
               TrookSpecificSearchDatabaseManager.addBook((Book) book, entry);
             }
           } catch (RuntimeException e) {
-            logger.error("getListOfBooks: Exception on book: " + ((Book)book).getDisplayName() + "[" + ((Book)book).getId() + "]", e);
+            logger.error("getListOfBooks: Exception on book: " + ((Book)book).getDisplayName() + "[" + ((Book)book).getId() + "]", e); Helper.statsErrors++;
             throw e;
           }
         }

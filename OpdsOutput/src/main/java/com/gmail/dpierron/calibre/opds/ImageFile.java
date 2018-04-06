@@ -1,5 +1,6 @@
 package com.gmail.dpierron.calibre.opds;
 
+import com.gmail.dpierron.tools.Helper;
 import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,11 +63,12 @@ public class ImageFile {
           ImageIO.write(bi, imageType, file);
         } catch (Exception e) {
           String msg = "error occurred while writing image " + file.getName() + " - trying again (" + (nbTries) + " remaining)";
-          if (nbTries < 10)
+          if (nbTries < 10) {
             logger.warn(msg, e);
-          else
+            Helper.statsWarnings++;
+          } else {
             logger.debug(msg, e);
-
+          }
           if (exception == null)
             exception = e;
           error = true;

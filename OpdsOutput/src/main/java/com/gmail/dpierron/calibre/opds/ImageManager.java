@@ -168,7 +168,7 @@ public abstract class ImageManager {
       if (logger.isTraceEnabled())  logger.trace("Unexpected EOF reading " + f);
     } catch (IOException e) {
       // Errors are unexpected - set dummy URI if that is the case
-      logger.warn("Unable to embed cover file " + f.getAbsolutePath() + "(IO Exception " + e.getMessage() + ")");
+      logger.warn("Unable to embed cover file " + f.getAbsolutePath() + "(IO Exception " + e.getMessage() + ")"); Helper.statsWarnings++;
       return Constants.PARENT_PATH_PREFIX + Constants.DEFAULT_IMAGE_FILENAME;
     }
     // process 3 bytes at a time, churning out 4 output bytes
@@ -220,7 +220,7 @@ public abstract class ImageManager {
       CatalogManager.callback.errorOccured(Localization.Main.getText("error.generatingImage", imageFile.getAbsolutePath()), e);
       if (logger.isTraceEnabled())  logger.trace(e);
     } catch (Throwable t) {
-         logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t );
+         logger.warn("Unexpected error trying to generate image " + coverFile.getAbsolutePath() + "\n" + t ); Helper.statsWarnings++;
     }
     timeInImages += (System.currentTimeMillis() - now);
     imageFile.clearCachedInformation();

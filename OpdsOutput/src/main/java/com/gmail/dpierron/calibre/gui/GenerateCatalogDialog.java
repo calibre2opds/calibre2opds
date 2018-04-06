@@ -144,13 +144,17 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
   private void startStage(long nb, JLabel label, String localizationKey) {
     stageStartTime = System.currentTimeMillis();
     progressStep.setMaxScale(nb);
-    logger.info(Localization.Main.getText(localizationKey) + " (" + nb +")");
+    if (label.isEnabled()) {
+      logger.info(Localization.Main.getText(localizationKey) + " (" + nb + ")");
+    }
     boldFont(label, true);
     label.setForeground(Color.RED);
   }
 
   private void endStage(JLabel label, JLabel time, JCheckBox chkBox) {
-    logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - stageStartTime));
+    if (label.isEnabled()) {
+      logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - stageStartTime));
+    }
     System.currentTimeMillis();   // Probably redundant as set when starting stage!
     if (label.isEnabled()) chkBox.setSelected(true);
     label.setForeground(Color.BLACK);
@@ -414,20 +418,25 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
 
   public void endFinalizeMainCatalog(String where, long timeInHtml) {
     endStage(lblFinished, lblFinishedTime, chkFinished);
+    String message = Localization.Main.getText("info.completed");
+    logger.info(message);
     logger.info("Time generating HTML was " + timeInHtml + " milliseconds");
     if (where != null) {
-      String message = Localization.Main.getText("info.step.done", where);
-      logger.info(message);
-      JOptionPane.showMessageDialog(this, message);
-    } else {
-      if (getWarnCount() != 0) {
-        String message = Localization.Main.getText("info.completedWithWarnings", getWarnCount());
-        logger.info(message);
-        JOptionPane.showMessageDialog(this, message);
-      } else {
-        // TODO Decide if we should do anything her - currently ignoring!
-      }
+      String message2 = Localization.Main.getText("info.step.done", where);
+      logger.info(message2);
+      message += "\n" + message2;
     }
+    if (Helper.statsWarnings != 0) {
+      String message2 = Localization.Main.getText("info.completedWithWarnings", Helper.statsWarnings);
+      logger.info(message2);
+      message += "\n" + message2;
+    }
+    if (Helper.statsErrors != 0) {
+      String message2 = Localization.Main.getText("info.completedWithError", Helper.statsErrors);
+      logger.info(message2);
+      message += "\n" + message2;
+    }
+    JOptionPane.showMessageDialog(this, message);
   }
 
   public void showMessage(String message) {
@@ -453,7 +462,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
     cmdStopGenerating.setVisible(b);
     cmdStopGenerating.repaint();
-    logger.error(Helper.getTextFromPseudoHtmlText(message), error);
+    logger.error(Helper.getTextFromPseudoHtmlText(message), error); Helper.statsErrors++;
   }
 
   public int askUser(String message, String... possibleAnswers) {
@@ -504,17 +513,6 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
     }
   }
 
-  private int warnCount;
-  public void resetWarnCount() {
-    warnCount = 0;
-  }
-  public int getWarnCount() {
-    return warnCount;
-  }
-  public void incrementWarnCount() {
-    warnCount++;
-    return;
-  }
   /**
    * This method is called from within the constructor to reset the form.
    * WARNING: Do NOT modify this code. The content of this method is always

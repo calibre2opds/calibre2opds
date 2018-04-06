@@ -264,7 +264,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
               TrookSpecificSearchDatabaseManager.addBook(book, entry);
             }
           } catch (RuntimeException e) {
-            logger.error("getListOfBooks: Exception on book: " + book.getDisplayName() + "[" + book.getId() + "]", e);
+            logger.error("getListOfBooks: Exception on book: " + book.getDisplayName() + "[" + book.getId() + "]", e); Helper.statsErrors++;
             throw e;
           }
         }
@@ -543,7 +543,9 @@ public abstract class BooksSubCatalog extends SubCatalog {
 
       // We only want the warning once per book
       if (book.isDone() == false) {
-        if (isCover) logger.warn("addImageFile:  No cover file found forbook " + book);
+        if (isCover) {
+          logger.warn("addImageFile:  No cover file found forbook " + book);Helper.statsWarnings++;
+        }
         // We remove any resized image created by earlier versions of calibre2opds
         if (resizedImageFile.exists()) {
           if (logger.isTraceEnabled()) logger.trace("addImageFile: Cover missing, so removing " + resizedImageFile);
@@ -1216,8 +1218,8 @@ public abstract class BooksSubCatalog extends SubCatalog {
         hasContent = true;
       }  else {
         if (Helper.isNotNullOrEmpty(book.getComment())) {
-          logger.warn(Localization.Main.getText("warn.badComment", book.getId() , book.getDisplayName()));
-          logger.warn(book.getComment());
+          logger.warn(Localization.Main.getText("warn.badComment", book.getId() , book.getDisplayName())); Helper.statsWarnings++;
+          logger.warn(book.getComment()); Helper.statsWarnings++;
           book.setComment("");
         }
       }

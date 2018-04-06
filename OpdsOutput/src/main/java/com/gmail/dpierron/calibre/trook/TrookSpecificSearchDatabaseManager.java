@@ -7,6 +7,7 @@ import com.gmail.dpierron.calibre.datamodel.Book;
 import com.gmail.dpierron.calibre.datamodel.Series;
 import com.gmail.dpierron.calibre.datamodel.Tag;
 import com.gmail.dpierron.calibre.opds.JDOMManager;
+import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
@@ -96,9 +97,9 @@ public class TrookSpecificSearchDatabaseManager {
       stat.executeUpdate("CREATE INDEX KEYWORDS_RESULTS_RELATION_INDEX_ON_KEYWORD ON keywords_results_relation(keyword_id ASC);");
       stat.executeUpdate("CREATE INDEX KEYWORDS_RESULTS_RELATION_INDEX_ON_RESULTS ON keywords_results_relation(result_id ASC);");
     } catch (ClassNotFoundException e) {
-      logger.error(e);
+      logger.error(e); Helper.statsErrors++;
     } catch (SQLException e) {
-      logger.error(e);
+      logger.error(e); Helper.statsErrors++;
     }
   }
 
@@ -205,9 +206,9 @@ public class TrookSpecificSearchDatabaseManager {
       String opdsEntry = sw.getBuffer().toString();
       addEntry(opdsEntry, type, keywords);
     } catch (IOException e) {
-      logger.warn(e.getMessage());
+      logger.warn(e.getMessage()); Helper.statsWarnings++;
     } catch (SQLException e) {
-      logger.warn(e.getMessage());
+      logger.warn(e.getMessage()); Helper.statsWarnings++;
     }
   }
 

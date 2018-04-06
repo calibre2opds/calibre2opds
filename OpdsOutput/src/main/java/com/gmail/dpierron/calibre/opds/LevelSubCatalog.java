@@ -151,7 +151,7 @@ public class LevelSubCatalog extends SubCatalog {
             }
             logger.info("Generating custom catalog: " + customCatalogTitle + " (" + s + ")");
             if (Helper.isNullOrEmpty(customCatalogBooks)) {
-              logger.warn(Localization.Main.getText("error.customCatalogEmpty",customCatalogTitle) + " (" + customCatalogSearch + ")" );
+              logger.warn(Localization.Main.getText("error.customCatalogEmpty",customCatalogTitle) + " (" + customCatalogSearch + ")" ); Helper.statsWarnings++;
             } else {
               LevelSubCatalog customSubCatalog = new LevelSubCatalog(customCatalogBooks, customCatalogTitle);
               customSubCatalog.setCatalogType(Constants.CUSTOM_TYPE);
@@ -246,7 +246,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Featured catalog");
       List<Book> featuredBooks = FilterHelper.filter(CatalogManager.featuredBooksFilter, getBooks());
       if (featuredBooks.size() == 0) {
-        logger.warn("No books found for Featured Books section");
+        logger.warn("No books found for Featured Books section"); Helper.statsWarnings++;
       } else {
         CatalogManager.callback.setFeaturedCount("" + featuredBooks.size() + " " + Localization.Main.getText("bookword.title"));
         FeaturedBooksSubCatalog featuredBooksSubCatalog = new FeaturedBooksSubCatalog(featuredBooks);
@@ -463,7 +463,7 @@ public class LevelSubCatalog extends SubCatalog {
           foundreference = true;
           assert book.isDone();
         } catch (Exception e) {
-          logger.error("Error when generating author from book cross-link");
+          logger.error("Error when generating author from book cross-link"); Helper.statsErrors++;
           book.setDone();
         }
       }
@@ -481,7 +481,7 @@ public class LevelSubCatalog extends SubCatalog {
           foundreference = true;
           assert author.isDone();
         } catch (Exception e) {
-          logger.error("Error when generating author from book cross-link");
+          logger.error("Error when generating author from book cross-link"); Helper.statsErrors++;
           author.setDone();
         }
       }
@@ -496,7 +496,7 @@ public class LevelSubCatalog extends SubCatalog {
           foundreference = true;
           assert series.isDone();
         } catch (Exception e) {
-          logger.error("Error when generating Series from book cross-link");
+          logger.error("Error when generating Series from book cross-link"); Helper.statsErrors++;
           series.setDone();
         }
       }
@@ -516,8 +516,8 @@ public class LevelSubCatalog extends SubCatalog {
           foundreference = true;
           assert tag.isDone();
         } catch (Exception e) {
-          logger.error("Error when generating tag from book cross-link");
-          logger.error("  Exception: " + e);
+          logger.error("Error when generating tag from book cross-link"); Helper.statsErrors++;
+          logger.error("  Exception: " + e); Helper.statsErrors++;
           tag.setDone();
         }
       }
@@ -535,7 +535,7 @@ public class LevelSubCatalog extends SubCatalog {
             try {
               ratingSubCatalog.getRatingEntry(null, rating, null);
             } catch (Exception e) {
-              logger.error("Error when generating rating '" + rating.getValue() + "' from book cross-link");
+              logger.error("Error when generating rating '" + rating.getValue() + "' from book cross-link"); Helper.statsErrors++;
             }
           }
 */

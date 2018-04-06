@@ -176,10 +176,6 @@ public interface CatalogCallbackInterface {
    */
   public void checkIfContinueGenerating() throws GenerationStoppedException;
 
-  public void resetWarnCount();
-  public int getWarnCount();
-  public void incrementWarnCount();
-
   public void setStopGenerating();
   public void clearStopGenerating();
 }

@@ -2,6 +2,7 @@ import com.gmail.dpierron.calibre.configuration.ConfigurationManager;
 import com.gmail.dpierron.calibre.datamodel.test.TestDataModel;
 import com.gmail.dpierron.calibre.gui.Mainframe;
 import com.gmail.dpierron.calibre.opds.Catalog;
+import com.gmail.dpierron.calibre.opds.CatalogManager;
 import com.gmail.dpierron.calibre.opds.Constants;
 import com.gmail.dpierron.calibre.opds.Log4jCatalogCallback;
 import com.gmail.dpierron.tools.Helper;
@@ -106,16 +107,16 @@ public class Runner {
         default:
             // We seem to have more parameters than expected.
             // Log the details and then assume that the first may be a profile
-            logger.warn("startup.extraParameters");
+            logger.warn("startup.extraParameters"); Helper.statsWarnings++;
             String argstring = "";
             for (String s : args) argstring += s + " ";
-            logger.warn("  " + argstring );
+            logger.warn("  " + argstring );  Helper.statsWarnings++;
             // FALLTHRU
         case 1:
             // It appears that a profile has been supplied
             String profileName = args[0];
             if (ConfigurationManager.isExistingConfiguration(profileName) == null) {
-              logger.error(Localization.Main.getText("startup.profilemissing", profileName));
+              logger.error(Localization.Main.getText("startup.profilemissing", profileName)); Helper.statsErrors++;
               if (!startGui)
                 System.exit(-3);
             } else {

@@ -89,7 +89,7 @@ public class Book extends GenericDataObject   {
       // by users and may not be set by older versions of Calibre.  In these
       // cases we fall back to using the (mandatory) title field and issue a warning
       if (Helper.isNullOrEmpty(title_sort)) {
-        logger.warn("Title_Sort not set - using Title for book '" + this.title + "'");
+        logger.warn("Title_Sort not set - using Title for book '" + this.title + "'"); Helper.statsWarnings++;
         this.titleSort = DataModel.getNoiseword(getFirstBookLanguage()).removeLeadingNoiseWords(this.title);
       } else {
         this.titleSort = title_sort;
@@ -362,7 +362,7 @@ public class Book extends GenericDataObject   {
       // logger.info("Book " + id + ", setComment (Hex): " + Database.stringToHex(comment));
     
       if (comment != null && comment.matches("(?i)<br>")) {
-        logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title);
+        logger.warn("<br> tag in comment changed to <br /> for Book: Id=" + id + " Title=" + title); Helper.statsWarnings++;
         comment.replaceAll("(?i)<br>", "<br />");
       }
     }
@@ -437,7 +437,7 @@ public class Book extends GenericDataObject   {
       return  serieIndex;
     }
     // We never expect to get here!
-    logger.warn("Unexpected null/empty Series Index for book " + getDisplayName() + "(" + getId() + ")");
+    logger.warn("Unexpected null/empty Series Index for book " + getDisplayName() + "(" + getId() + ")"); Helper.statsWarnings++;
     return (float)1.0;
   }
 
@@ -445,7 +445,7 @@ public class Book extends GenericDataObject   {
     if  (copyOfBook  != null) return copyOfBook.getTimestamp();
     // ITIMPI:  Return 'now' if timestamp not set - would 0 be better?
     if (timestamp == null) {
-      logger.warn("Date/Time Added not set for book '" + title + "'");
+      logger.warn("Date/Time Added not set for book '" + title + "'"); Helper.statsWarnings++;
       return new Date();
     }
     return timestamp;
@@ -455,7 +455,7 @@ public class Book extends GenericDataObject   {
     if  (copyOfBook  != null) return copyOfBook.getModified();
     // ITIMPI:  Return 'now' if modified not set - would 0 be better?
     if (modified == null) {
-      logger.warn("Date/Time Modified not set for book '" + title + "'");
+      logger.warn("Date/Time Modified not set for book '" + title + "'"); Helper.statsWarnings++;
       return new Date();
     }
     return modified;
@@ -464,7 +464,7 @@ public class Book extends GenericDataObject   {
   public Date getPublicationDate() {
     if  (copyOfBook  != null) return copyOfBook.getPublicationDate();
     if (publicationDate == null) {
-      logger.warn("Publication Date not set for book '" + title + "'");
+      logger.warn("Publication Date not set for book '" + title + "'"); Helper.statsWarnings++;
       return ZERO;
     }
     return (publicationDate);

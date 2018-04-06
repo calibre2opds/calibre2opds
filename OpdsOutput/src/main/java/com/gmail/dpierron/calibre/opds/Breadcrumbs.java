@@ -57,7 +57,6 @@ public class Breadcrumbs extends Vector<Breadcrumb> {
    * @return
    */
   public static String getProgressText (Breadcrumbs breadcrumbs) {
-    assert breadcrumbs.size() > 0;
     StringBuffer progressText = new StringBuffer();
     // Tidy up message removing redundant "starting with" ("splitByLetter.letter") entries
     // Not stricly necessary, but improves user experience.

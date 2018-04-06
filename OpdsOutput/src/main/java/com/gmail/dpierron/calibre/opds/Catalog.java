@@ -291,19 +291,19 @@ public class Catalog {
       // warning message is added to the log file.
       src.clearCachedInformation();
       if (src.exists()) {
-        logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());
+        logger.error("syncFiles: Incorrect caching of exists()=false status for file: " + src.getAbsolutePath());  Helper.statsErrors++;
       }
     }
     if (! src.exists()) {
       // If we get here at least the cached state now agrees with the real state!
       // If it is missing .xml or .html file then this is still a significant issue
       if (! src.isDirectory()) {
-        logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath());
+        logger.error("syncFiles: Missing catalog file " + src.getAbsolutePath()); Helper.statsErrors++;
         return;
       }
       // If we get here then we assume it is the case where the user managed to rename a book
       // while calibre2opds was running, so we simply log it has happened and otherwise ignore it.
-      logger.warn("syncFiles: Unexpected missing file: " + src.getAbsolutePath());
+      logger.warn("syncFiles: Unexpected missing file: " + src.getAbsolutePath()); Helper.statsWarnings++;
       return;
     }
     // Sanity check - we cannot copy a file to itself
@@ -311,7 +311,7 @@ public class Catalog {
     //          logic according to mode to decide if a file is a copy candidate.
     if (src.getAbsolutePath().equalsIgnoreCase(dst.getAbsolutePath())) {
       // Lets add them to stats so we know it happens!
-      CatalogManager.statsCopyToSelf++;
+      Helper.statsCopyToSelf++;
       if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("syncFiles: attempting to copy file to itself: " + src.getAbsolutePath());
       return;
     }
@@ -344,7 +344,7 @@ public class Catalog {
 
       //  Sanity check - target should be a directory
       if (!dst.isDirectory()) {
-        logger.warn("Directory " + src.getName() + " Unexpected file with name expected for directory");
+        logger.warn("Directory " + src.getName() + " Unexpected file with name expected for directory"); Helper.statsWarnings++;
         return;
       }
 
@@ -405,10 +405,10 @@ public class Catalog {
         if (deleteFile.isChanged() == true) {
           Helper.delete(deleteFile, true);
           CatalogManager.syncLogPrintln("DELETED: %s", deleteFile.getName());
-          CatalogManager.statsCopyDeleted++;
+          Helper.statsCopyDeleted++;
           CachedFileManager.removeCachedFile(deleteFile);
         } else {
-          CatalogManager.statsCopyUnchanged++;
+          Helper.statsCopyUnchanged++;
           CatalogManager.syncLogPrintln("UNCHANGED: %s", deleteFile.getName());
         }
       }
@@ -447,7 +447,7 @@ public class Catalog {
       }
       if (!dst.exists()) {
         if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as target is missing");
-        CatalogManager.statsCopyExistHits++;
+        Helper.statsCopyExistHits++;
         copyflag = true;
         CatalogManager.syncLogPrintln("COPIED (New file): %s", dst.getName());
         dst.clearCachedInformation();
@@ -455,13 +455,13 @@ public class Catalog {
 
         if (dst.isChanged() == false) {
           copyflag = false;
-          CatalogManager.statsCopyUnchanged++;
+          Helper.statsCopyUnchanged++;
         } else {
           if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. exists on target");
           // Target present, so check lengths
           if (src.length() != dst.length()) {
             if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as size changed");
-            CatalogManager.statsCopyLengthHits++;
+            Helper.statsCopyLengthHits++;
             copyflag = true;
             CatalogManager.syncLogPrintln("COPIED (length changed): %s\n", src.getName());
           } else {
@@ -476,19 +476,19 @@ public class Catalog {
             if (src.lastModified() <= dst.lastModified()) {
               // Target newer than source
               if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip Copy as source is not newer");
-              CatalogManager.statsCopyDateMisses++;
+              Helper.statsCopyDateMisses++;
               copyflag = false;
               CatalogManager.syncLogPrintln("NOT COPIED (Source not newer): %s\n", dst.getName());
             } else {
               if (syncFilesDetail && logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": .. source is newer");
               if (CatalogManager.isSourceFileSameAsTargetFile(src,dst)) {
                 if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Skip copy as CRC's match");
-                CatalogManager.statsCopyCrcMisses++;
+                Helper.statsCopyCrcMisses++;
                 copyflag = false;
                 CatalogManager.syncLogPrintln("NOT COPIED (CRC same): %s\n", src.getName());
               } else {
                 if (logger.isTraceEnabled()) logger.trace("File " + src.getName() + ": Copy as CRC's different");
-                CatalogManager.statsCopyCrcHits++;
+                Helper.statsCopyCrcHits++;
                 copyflag = true;
                 CatalogManager.syncLogPrintln("COPIED (CRC changed): %s\n", src.getName());
               }
@@ -524,7 +524,7 @@ public class Catalog {
           // We ignore failed attempts to copy a file, although we log them
           // This allows for the user to have made changes to the library while
           // Calibre2opds is generating a library without the whole run failing.
-          logger.warn("Unable to to copy file " + src);
+          logger.warn("Unable to to copy file " + src); Helper.statsWarnings++;
           if (logger.isDebugEnabled()) logger.debug(e.toString());
         }
       }
@@ -569,9 +569,9 @@ public class Catalog {
             contentElement.addContent(htmlElement.detach());
           }
       } catch (FileNotFoundException e) {
-        logger.error(Localization.Main.getText("error.summary.cannotFindFile", summaryFile.getAbsolutePath()), e);
+        logger.error(Localization.Main.getText("error.summary.cannotFindFile", summaryFile.getAbsolutePath()), e); Helper.statsErrors++;
       } catch (IOException e) {
-        logger.error(Localization.Main.getText("error.summary.errorParsingFile"), e);
+        logger.error(Localization.Main.getText("error.summary.errorParsingFile"), e); Helper.statsErrors++;
       }
     } else {
       // create a simple content element with a text summary
@@ -601,7 +601,7 @@ public class Catalog {
       try {
         syncFiles(entry.getValue(), targetFile);
       } catch (IOException e) {
-        logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to catalog");
+        logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to catalog");  Helper.statsWarnings++;
       }
       // #c2o-234:  Copy images to temporary area for later inclusion into ZIP of catalog
       if (currentProfile.getZipCatalog()) {
@@ -609,7 +609,7 @@ public class Catalog {
         try {
           syncFiles(entry.getValue(), targetFile);
         } catch (IOException e) {
-          logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to temporary area for ZIP");
+          logger.warn("syncImages: Failure copy file '" + entry.getKey() + "' to temporary area for ZIP");  Helper.statsWarnings++;
         }
       }
     }
@@ -635,6 +635,7 @@ public class Catalog {
     CatalogManager.thumbnailManager.reset();
     CatalogManager.coverManager.reset();
     CachedFileManager.reset();
+    Helper.resetStats();
 
     Localization.Main.setProfileLanguage(currentProfile.getLanguage());
     Localization.Enum.setProfileLanguage(currentProfile.getLanguage());
@@ -904,6 +905,7 @@ public class Catalog {
       }
       logger.debug("COMPLETED: Copying Resource files");
       CatalogManager.callback.endInitializeMainCatalog();
+      CatalogManager.loadOptimizerDetail();
 
       CatalogManager.callback.startReadDatabase();
       CatalogManager.callback.showMessage(Localization.Main.getText("info.step.loadingdatabase"));
@@ -1139,7 +1141,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
               new OpfOutput(book).processEPubFile();
             } catch (IOException e) {
               String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getDisplayName(), e.getMessage());
-              logger.error(message, e);
+              logger.error(message, e); Helper.statsErrors++;
             }
             countMetadata++;
           }
@@ -1347,13 +1349,13 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
 
       CatalogManager.syncLogPrintln("");
       CatalogManager.syncLogPrintln(Localization.Main.getText("stats.copy.header"));
-      if (logger.isDebugEnabled()) CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      CatalogManager.syncLogPrintln(String.format("%8d  ", CatalogManager.statsCopyDeleted) + " " + Localization.Main.getText("stats.copy.deleted"));
+      if (logger.isDebugEnabled()) CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyUnchanged) + " " + Localization.Main.getText("stats.copy.unchanged"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
+      CatalogManager.syncLogPrintln(String.format("%8d  ", Helper.statsCopyDeleted) + " " + Localization.Main.getText("stats.copy.deleted"));
       CatalogManager.syncLogClose();
 
       logger.info("");
@@ -1368,24 +1370,25 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       logger.info(String.format("%8d  ", countMetadata) + Localization.Main.getText("stats.run.metadata"));
       logger.info(String.format("%8d  ", CatalogManager.thumbnailManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.thumbnails"));
       logger.info(String.format("%8d  ", CatalogManager.coverManager.getCountOfImagesGenerated()) + Localization.Main.getText("stats.run.covers"));
-      logger.info(String.format("%8d  ", CatalogManager.statsXmlChanged) + Localization.Main.getText("stats.xmlChanged"));
-      logger.info(String.format("%8d  ", CatalogManager.statsXmlUnchanged) + Localization.Main.getText("stats.xmlUnchanged"));
-      if (CatalogManager.statsXmlDiscarded != 0) logger.info(String.format("%8d  ", CatalogManager.statsXmlDiscarded) + Localization.Main.getText("stats.xmlDiscarded"));
-      logger.info(String.format("%8d  ", CatalogManager.statsHtmlChanged) + Localization.Main.getText("stats.htmlChanged"));
-      logger.info(String.format("%8d  ", CatalogManager.statsHtmlUnchanged) + Localization.Main.getText("stats.htmlUnchanged"));
+      logger.info(String.format("%8d  ", Helper.statsXmlChanged) + Localization.Main.getText("stats.xmlChanged"));
+      logger.info(String.format("%8d  ", Helper.statsXmlUnchanged) + Localization.Main.getText("stats.xmlUnchanged"));
+      if (Helper.statsXmlDiscarded != 0) logger.info(String.format("%8d  ", Helper.statsXmlDiscarded) + Localization.Main.getText("stats.xmlDiscarded"));
+      logger.info(String.format("%8d  ", Helper.statsHtmlChanged) + Localization.Main.getText("stats.htmlChanged"));
+      logger.info(String.format("%8d  ", Helper.statsHtmlUnchanged) + Localization.Main.getText("stats.htmlUnchanged"));
       logger.info("");
       logger.info(Localization.Main.getText("stats.copy.header"));
-      if (logger.isDebugEnabled()) logger.info(String.format("%8d  ", CatalogManager.statsCopyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
-      logger.info(String.format("%8d  ", CatalogManager.statsCopyDeleted) + Localization.Main.getText("stats.copy.deleted"));
+      if (logger.isDebugEnabled()) logger.info(String.format("%8d  ", Helper.statsCopyUnchanged) + Localization.Main.getText("stats.copy.unchanged"));
+      logger.info(String.format("%8d  ", Helper.statsCopyExistHits) + Localization.Main.getText("stats.copy.notexist"));
+      logger.info(String.format("%8d  ", Helper.statsCopyLengthHits) + Localization.Main.getText("stats.copy.lengthdiffer"));
+      logger.info(String.format("%8d  ", Helper.statsCopyCrcHits) + Localization.Main.getText("stats.copy.crcdiffer"));
+      logger.info(String.format("%8d  ", Helper.statsCopyCrcMisses) + Localization.Main.getText("stats.copy.crcsame"));
+      logger.info(String.format("%8d  ", Helper.statsCopyDateMisses) + Localization.Main.getText("stats.copy.older"));
+      logger.info(String.format("%8d  ", Helper.statsCopyDeleted) + Localization.Main.getText("stats.copy.deleted"));
       logger.info("");
-      if (CatalogManager.statsCopyToSelf != 0)
-        logger.warn(String.format("%8d  ", CatalogManager.statsCopyToSelf) + Localization.Main.getText("stats.copy.toself"));
-
+      if (Helper.statsCopyToSelf != 0) {
+        logger.warn(String.format("%8d  ", Helper.statsCopyToSelf) + Localization.Main.getText("stats.copy.toself"));
+        Helper.statsWarnings++;
+      }
       // Now work put where to tell user result has been placed
 
       if (logger.isTraceEnabled())
@@ -1411,7 +1414,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
     } catch (Throwable t) {
       // error = t;
       generationCrashed = true;
-      logger.error(" ");
+      logger.error(" "); Helper.statsErrors++;
       logger.error("*************************************************");
       logger.error(Localization.Main.getText("error.unexpectedFatal").toUpperCase());
       logger.error(Localization.Main.getText("error.cause").toUpperCase() + ": " + t + ": " + t.getCause());

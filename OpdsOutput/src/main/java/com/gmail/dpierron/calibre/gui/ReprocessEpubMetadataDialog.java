@@ -88,7 +88,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
         opfOutput.processEPubFile();
       } catch (IOException e) {
         String message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks", book.getDisplayName(), e.getMessage());
-        logger.error(message, e);
+        logger.error(message, e); Helper.statsErrors++;
         JOptionPane.showMessageDialog(this, message);
         message = Localization.Main.getText("gui.error.tools.processEpubMetadataOfAllBooks2");
          int result = JOptionPane.showConfirmDialog(this, message, "", JOptionPane.YES_NO_OPTION);
@@ -147,7 +147,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
       title = "";
     }
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.ERROR_MESSAGE);
-    logger.error(message, error);
+    logger.error(message, error); Helper.statsErrors++;
   }
 
   /**

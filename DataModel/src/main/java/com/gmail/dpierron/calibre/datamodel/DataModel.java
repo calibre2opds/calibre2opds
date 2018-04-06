@@ -638,9 +638,9 @@ public class DataModel {
             if (!book.getTags().contains(languageTag))
               book.getTags().add(languageTag);
           } else {
-            logger.error("generateImplicitLanguageTags: found a null language for book " + book);
+            logger.error("generateImplicitLanguageTags: found a null language for book " + book); Helper.statsErrors++;
             for (Language language1 : book.getBookLanguages()) {
-              logger.error(language1);
+              logger.error(language1); Helper.statsErrors++;
             }
           }
         }

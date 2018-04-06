@@ -192,7 +192,7 @@ public class CalibreQueryInterpreter {
 
     /* Error ! */
     else {
-      logger.warn("found unsupported filter! " + template);
+      logger.warn("found unsupported filter! " + template); Helper.statsWarnings++;
       return new PassthroughFilter();
     }
   }

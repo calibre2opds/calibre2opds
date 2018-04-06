@@ -56,7 +56,7 @@ public class Author  extends GenericDataObject implements SplitableByLetter, Com
       // first, let's try and find a book by this author (alone) which has a author_sort field
       // If so we use that value as the most likely one
       List<Book> books = DataModel.getMapOfBooksByAuthor().get(this);
-      if (books != null)
+      if (books != null) {
         for (Book book : books) {
           if (book.hasSingleAuthor()) {
             String authorSort = book.getAuthorSort();
@@ -65,6 +65,7 @@ public class Author  extends GenericDataObject implements SplitableByLetter, Com
               return authorSort;
           }
         }
+      }
 
       // We could not find an acceptable author sortName value so we need to do something further
 
@@ -85,7 +86,7 @@ public class Author  extends GenericDataObject implements SplitableByLetter, Com
           guessedLastName = displayName;
           return displayName;
         case 0:
-          logger.warn("Problem computing Author sortName for author: " + displayName);
+          logger.warn("Problem computing Author sortName for author: " + displayName); Helper.statsWarnings++;
           guessedLastName = "[CALIBRE2OPDS] BAD_AUTHOR_SORT (" + displayName + ")";
           return guessedLastName;
         default:

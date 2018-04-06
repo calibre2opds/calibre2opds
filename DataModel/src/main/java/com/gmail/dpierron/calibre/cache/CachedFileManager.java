@@ -317,11 +317,11 @@ public class CachedFileManager {
         } catch (Exception e) {
           // Do nothing - we ignore an error at this point
           // Having said that, an error here is a bit unexpected so lets log it when testing
-          logger.warn("saveCache: Unexpected error\n" + e);
+          logger.warn("saveCache: Unexpected error\n" + e); Helper.statsWarnings++;
         }
       }
     } catch (IOException e) {
-      logger.warn("saveCache: Exception trying to write cache:\n" + e);
+      logger.warn("saveCache: Exception trying to write cache:\n" + e); Helper.statsWarnings++;
     }
 
     if (logger.isDebugEnabled()) {
@@ -365,7 +365,7 @@ public class CachedFileManager {
       os = new ObjectInputStream(bs);               // And now object handling
       assert os != null : "loadCache: os should never be null at this point";
     } catch (IOException e) {
-      logger.warn("loadCache: Aborting as cache file failed to open");
+      logger.warn("loadCache: Aborting as cache file failed to open"); Helper.statsWarnings++;
       // Abort any cache loading
       return;
     }
@@ -394,7 +394,7 @@ public class CachedFileManager {
           }
         }
       } catch (ClassNotFoundException cnfe) {
-        logger.warn("Cache file not loaded +\n" + cnfe);
+        logger.warn("Cache file not loaded +\n" + cnfe);  Helper.statsWarnings++;
       } catch (java.io.InvalidClassException ic) {
         if (logger.isDebugEnabled()) logger.debug("Cache ignored as CachedFile class changed since it was created");
         // Should just mean that CachedFile class was changed so old cache invalid
@@ -403,9 +403,9 @@ public class CachedFileManager {
         // Do nothing else - this is expected
       } catch (IOException e) {
         // This is to catch any currently unexpected error cnditions
-        logger.warn("Exception trying to read cache: " + e);
+        logger.warn("Exception trying to read cache: " + e); Helper.statsWarnings++;
       } catch (Exception e) {
-        logger.warn("Cache file not loaded +\n" + e);
+        logger.warn("Cache file not loaded +\n" + e); Helper.statsWarnings++;
     } finally {
       // Close cache file
       try {

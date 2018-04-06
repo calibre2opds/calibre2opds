@@ -1189,8 +1189,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
         }
       }
     } catch (RuntimeException e) {
-      logger.warn("error while decoding custom catalogs : " + s, e);
-
+      logger.warn("error while decoding custom catalogs : " + s, e); Helper.statsWarnings++;
     }
     return result;
   }

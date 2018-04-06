@@ -838,7 +838,7 @@ public class Mainframe extends javax.swing.JFrame {
           String s = Helper.getStackTrace(e);
           s = e.getMessage() + "\n" + s;
           System.out.println(s);
-          logger.error(s, e);
+          logger.error(s, e); Helper.statsErrors++;
           JOptionPane.showMessageDialog(Mainframe.this, s, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
         }
       };

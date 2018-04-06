@@ -17,6 +17,7 @@ package com.gmail.dpierron.calibre.cache;
  *        file.  If not then unexpected actions can occur.
  */
 
+import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -121,6 +122,7 @@ public class CachedFile extends File {
         try {
           if (!super.getName().equals(super.getCanonicalFile().getName())) {
             logger.warn("Case mismatch checking file existence: Found  '" + super.getName() + "', Find '" + super.getCanonicalFile().getName() +  "'");
+            Helper.statsWarnings++;
             setFlags(false, FLAG_EXISTS);
           }
         } catch (IOException e) {
@@ -263,7 +265,7 @@ public class CachedFile extends File {
           }
           privateCrc = cis.getChecksum().getValue();
         } catch (IOException e) {
-          logger.error("ERROR: Failed trying to calculate CRC for " + super.getAbsolutePath() + "\n" + e.toString());
+          logger.error("ERROR: Failed trying to calculate CRC for " + super.getAbsolutePath() + "\n" + e.toString()); Helper.statsErrors++;
           clearCachedCrc();
         } finally {
           setFlags((privateCrc != CRC_NOT_SET), FLAG_CRC_CALCED);

@@ -201,7 +201,7 @@ public class OpfOutput {
         epubfile.clearCachedInformation();
       }
     } catch (ZipException e ) {
-      logger.warn("Failed to process EPUB metadata for book " + book);
+      logger.warn("Failed to process EPUB metadata for book " + book); Helper.statsWarnings++;
     } finally {
       outputFile.delete();
     }
@@ -233,22 +233,22 @@ public class OpfOutput {
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Opf.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Opf + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Opf + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Dc.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Dc + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Dc + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.DcTerms.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.DcTerms + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.DcTerms + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
                 }
                 try {
                   doc.getRootElement().addNamespaceDeclaration(Namespace.Calibre.getJdomNamespace());
                 } catch (org.jdom2.IllegalAddException e) {
-                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Calibre + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                  logger.warn("processEbubFile: Unable to add namespace declaration '" + Namespace.Calibre + "' for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
                 }
                 Element metadata = doc.getRootElement().getChild("metadata", Namespace.Opf.getJdomNamespace());
                 if (metadata != null)
@@ -261,8 +261,8 @@ public class OpfOutput {
                   zos.closeEntry();
                 }
               } catch (IOException io) {
-                logger.error(io);
-                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                logger.error(io); Helper.statsErrors++;
+                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsErrors++;
               }
             } else {
               // copy the entry to the output file
@@ -300,8 +300,8 @@ public class OpfOutput {
                             in2.close();
                         }
                       } catch (IOException e) {
-                        logger.error(e);
-                        logger.error("... for book: " + book.getDisplayName() + " (cannot copy the default stylesheet)");
+                        logger.error(e); Helper.statsErrors++;
+                        logger.error("... for book: " + book.getDisplayName() + " (cannot copy the default stylesheet)"); Helper.statsErrors++;
                       }
                     }
                     filename += "_BAK";
@@ -332,8 +332,8 @@ public class OpfOutput {
                   }
                 }
               } catch (IOException e) {
-                logger.error(e);
-                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+                logger.error(e); Helper.statsErrors++;
+                logger.error("... for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsErrors++;
               }
             }
           }
@@ -347,14 +347,14 @@ public class OpfOutput {
         }
       }
     } catch (JDOMException je) {
-        logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+        logger.warn("ProcessePubFile: Unexpected JDOMException for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
         logger.warn(je);
         throw new IOException(je);
     } catch (ZipException z) {
-      logger.warn("ProcessePubFile: EPUB file is not valid ZIP for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+      logger.warn("ProcessePubFile: EPUB file is not valid ZIP for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++; Helper.statsWarnings++;
       throw new IOException(z);
     } catch (Exception e) {
-      logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getDisplayName() + " (file " + inputFile + ")");
+      logger.warn("ProcessePubFile: Unexpected Exception for book: " + book.getDisplayName() + " (file " + inputFile + ")"); Helper.statsWarnings++;
       logger.warn(e);
       throw new IOException(e);
     }

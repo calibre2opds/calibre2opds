@@ -96,26 +96,6 @@ public class CatalogManager {
   // Can be used to help decide what optimisations are possible.
   public static ConfigurationHolder generatedConfig;
 
-  // Some Stats to accumulate
-  // NOTE.  We make them public to avoid needing getters
-  public static long statsXmlChanged;        // Count of files where we realise during generation that XML unchanged
-  public static long statsXmlDiscarded;      // count of XML files generated and then discarded as not needed for final catalog
-  public static long statsHtmlChanged;       // Count of files where HTML not generated as XML unchanged.
-  public static long statsXmlUnchanged;      // Count of files where we realise during generation that XML unchanged
-  public static long statsHtmlUnchanged;     // Count of files where HTML not generated as XML unchanged.
-  public static long statsCopyExistHits;     // Count of Files that are copied because target does not exist
-  public static long statsCopyLengthHits;    // Count of files that are copied because lengths differ
-  public static long statsCopyDateMisses;    // Count of files that  are not copied because source older
-  public static long statsCopyCrcHits;       // Count of files that are copied because CRC different
-  public static long statsCopyCrcMisses;     // Count of files copied because CRC same
-  public static long statsCopyToSelf;        // Count of cases where copy to self requested
-  public static long statsCopyUnchanged;     // Count of cases where copy skipped because file was not even generated
-  public static long statsCopyDeleted;       // Count of files/folders deleted during copy process
-  public static long statsBookUnchanged;     // We detected that the book was unchanged since last run
-  public static long statsBookChanged;       // We detected that the book was changed since last run
-  public static long statsCoverUnchanged;    // We detected that the cover was unchanged since last run
-  public static long statsCoverChanged;      // We detected that the cover was changed since last run
-
 
   // public CatalogManager() {
   public static void initialize() {
@@ -134,7 +114,6 @@ public class CatalogManager {
     initialUrl = securityCode;
     if (securityCode.length() != 0) initialUrl += Constants.SECURITY_SEPARATOR;
     initialUrl += Constants.INITIAL_URL;
-    resetStats();
 
     // TODO  Decide if these should be conditional or just done every time!
     if (htmlManager == null)      htmlManager = new HtmlManager();
@@ -147,7 +126,6 @@ public class CatalogManager {
     if (customCatalogsFilters==null) customCatalogsFilters = new HashMap<String, BookFilter>();
 
   }
-
 
   public static void reset() {
     libraryFolder = null;
@@ -179,27 +157,8 @@ public class CatalogManager {
     coverFlowModeSame = null;
     generatedDate = 0;
     generatedConfig = null;
-    resetStats();
   }
 
-  private static void resetStats() {
-    statsXmlChanged
-        = statsXmlDiscarded
-        = statsHtmlChanged
-        = statsXmlUnchanged
-        = statsHtmlUnchanged
-        = statsCopyExistHits
-        = statsCopyLengthHits
-        = statsCopyCrcHits
-        = statsCopyCrcMisses
-        = statsCopyDateMisses
-        = statsCopyUnchanged
-        = statsBookUnchanged
-        = statsBookChanged
-        = statsCoverUnchanged
-        = statsCoverChanged = 0;
-
-  }
   public static String getSecurityCode() {
     if (securityCode == null) {
       securityCode = CatalogManager.getSecurityCode();
@@ -250,7 +209,7 @@ public class CatalogManager {
     } catch (IOException e) {
       // Do not believe this is possible
       // If it happens we need to abort the run!
-      logger.error("Unable to create temp folder");
+      logger.error("Unable to create temp folder"); Helper.statsErrors++;
       System.exit(-8);
     }
     return generateFolder;
@@ -315,7 +274,7 @@ public class CatalogManager {
       syncLogFile = new PrintWriter(ConfigurationManager.getConfigurationDirectory() + "/" + Constants.LOGFILE_FOLDER + "/" + Constants.SYNCFILE_NAME);
     } catch (IOException e) {
       // This should not happen
-      logger.error("Unable to create SyncLog File");
+      logger.error("Unable to create SyncLog File"); Helper.statsErrors++;
       System.exit(-7);
     }
     return syncLogFile;
@@ -425,7 +384,7 @@ public class CatalogManager {
         // Expected to happen when cover image missing
         return;
       }
-      logger.warn("addFileToTheMapOfLibraryFilesToCopy: adding file not in library area! (" + filePath + ")");
+      logger.warn("addFileToTheMapOfLibraryFilesToCopy: adding file not in library area! (" + filePath + ")"); Helper.statsWarnings++;
       return;
     }
     String relativePath = filePath.substring(databasePathLength);
@@ -555,7 +514,7 @@ public class CatalogManager {
     if (bookDetailsCustomColumns == null)  {
       List<CustomColumnType> types = DataModel.getListOfCustomColumnTypes();
       if (types == null) {
-        logger.warn("getBookDetailsCustomColumns: No custom columns read from database.");
+        logger.warn("getBookDetailsCustomColumns: No custom columns read from database."); Helper.statsWarnings++;
         return null;
       }
       bookDetailsCustomColumns = new LinkedList<CustomColumnType>();
@@ -761,7 +720,7 @@ public class CatalogManager {
     List<MemoryPoolMXBean> pools = ManagementFactory.getMemoryPoolMXBeans();
     if (ramPoolName.length != pools.size()) {
       //  This is safety check - not sure it can really happen
-      logger.error("Unexpected change in number of RAM areas (was " + ramPoolName.length + ", now " + pools.size());
+      logger.error("Unexpected change in number of RAM areas (was " + ramPoolName.length + ", now " + pools.size()); Helper.statsErrors++;
     } else {
       for (int i = 0; i < pools.size() ; i++) {
         MemoryPoolMXBean pool = pools.get(i);
@@ -770,7 +729,7 @@ public class CatalogManager {
         if (ramPoolType[i] == null)
           ramPoolType[i] = pool.getType().toString();
         if (! ramPoolName[i].equals(pool.getName())) {
-          logger.error("Mismatch on RAM Pool " + i + " name (expected " + ramPoolName[i] + ", got " + pool.getName() + "0" );
+          logger.error("Mismatch on RAM Pool " + i + " name (expected " + ramPoolName[i] + ", got " + pool.getName() + "0" ); Helper.statsErrors++;
         } else {
           MemoryUsage usage = pool.getUsage();
           if (usage.getCommitted() > ramPoolCommitted[i])
@@ -897,9 +856,8 @@ public class CatalogManager {
     deleteoptimizerFile();    // Remove in case run fails when state will be unknown
   }
 
-
   /**
-   * Work out if the cover mode (if any ) stroed in the catatlog
+   * Work out if the cover mode (if any ) stored in the catatlog
    * is the same as the one we want for this run.
    * @return
    */
@@ -920,4 +878,6 @@ public class CatalogManager {
   public static long getLastGenerated() {
     return generatedDate;
   }
+
+
 }

@@ -55,7 +55,7 @@ public class ConfigurationManager {
         try {
           defaultConfiguration.load();
         } catch (IOException e) {
-          logger.warn(Localization.Main.getText("error.loadingProperties") + ": " + file.getName());
+          logger.warn(Localization.Main.getText("error.loadingProperties") + ": " + file.getName()); Helper.statsWarnings++;
         }
       } else {
         // Create the standard default file
@@ -293,7 +293,7 @@ public class ConfigurationManager {
         String mimeType = null;
         if (lineScanner.hasNext()) mimeType = lineScanner.next();
         if (Helper.isNullOrEmpty(formatType) || Helper.isNullOrEmpty(mimeType)) {
-          logger.error("Invalid line in Mimetypes file '" + line + "'");
+          logger.error("Invalid line in Mimetypes file '" + line + "'"); Helper.statsErrors++;
           continue;
         }
         supportedFormats.add(new EBookFormat(formatType,mimeType));

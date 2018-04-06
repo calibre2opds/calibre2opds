@@ -25,7 +25,7 @@ public class PropertiesBasedConfiguration {
     properties = new Properties();
     propertiesFile = file;
     if (propertiesFile == null) {
-      logger.warn("PropertiesBasedConfigurationFile: null parameter");
+      logger.warn("PropertiesBasedConfigurationFile: null parameter");  Helper.statsWarnings++;
     } else {
       if (!propertiesFile.exists()) {
         logger.trace("propertiesFile does not exist!");
@@ -69,7 +69,7 @@ public class PropertiesBasedConfiguration {
           bos.close();
       }
     } catch (IOException e) {
-      logger.error("error while storing properties in " + getPropertiesFile().getAbsolutePath(), e);
+      logger.error("error while storing properties in " + getPropertiesFile().getAbsolutePath(), e); Helper.statsErrors++;
     }
   }
 

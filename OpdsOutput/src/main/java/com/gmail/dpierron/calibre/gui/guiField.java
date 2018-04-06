@@ -108,7 +108,7 @@ public class guiField {
       } else if (guiLabelField instanceof JMenuItem) {
         ((JMenuItem) guiLabelField).setText(labelText);
       } else {
-        logger.error("setTranslateTexta:  Cannot handle the type for LocalizationKey=" + localizationKey);
+        logger.error("setTranslateTexta:  Cannot handle the type for LocalizationKey=" + localizationKey); Helper.statsErrors++;
         return;
       }
     }
@@ -169,7 +169,7 @@ public class guiField {
         } else if (Locale.class.equals(profileType)) {
           guiValue = s.length() == 0 ? "en" : s;
         } else {
-          logger.error("getGuiValue: Unexpected profileType for 'get" + methodBase + "', type=" + profileType.getClass().getName());
+          logger.error("getGuiValue: Unexpected profileType for 'get" + methodBase + "', type=" + profileType.getClass().getName()); Helper.statsErrors++;
           guiValue = null;
         }
       } else {
@@ -185,7 +185,7 @@ public class guiField {
       guiValue = ((JComboBox) guiValueField).getSelectedItem();
 
     } else {
-      logger.error("getGuiValue: object type (" + guiValueField.getClass().getName() + ") not recognised for " + guiValueField.getName());
+      logger.error("getGuiValue: object type (" + guiValueField.getClass().getName() + ") not recognised for " + guiValueField.getName()); Helper.statsErrors++;
       guiValue = null;
     }
 
@@ -256,7 +256,7 @@ public class guiField {
         ((JComboBox) guiValueField).setSelectedItem((String) oValue);
       }
     } else {
-      logger.error("loadValue: putGuiValue oBject type not recognised for " + guiLabelField);
+      logger.error("loadValue: putGuiValue oBject type not recognised for " + guiLabelField); Helper.statsErrors++;
       return;
     }
 
@@ -277,7 +277,7 @@ public class guiField {
       // Invoke the get method
       profileValue =  profileGetMethod.invoke(ConfigurationManager.getCurrentProfile());
     } catch (Exception e) {
-      logger.error("loadValue:  Invoke 'get" + methodBase + "' Exception " + e);
+      logger.error("loadValue:  Invoke 'get" + methodBase + "' Exception " + e); Helper.statsErrors++;
       profileValue = null;
     }
     return profileValue;
@@ -295,7 +295,7 @@ public class guiField {
         profileSetMethod.invoke(ConfigurationManager.getCurrentProfile(), setValue);
         // None of the following should happen except in development - but lets play safe!
       } catch (final Exception e) {
-        logger.error("storeValue: invoke 'set" + methodBase + "Excepion " + e);
+        logger.error("storeValue: invoke 'set" + methodBase + "Exception " + e); Helper.statsErrors++;
       }
     }
   }
@@ -379,7 +379,7 @@ public class guiField {
       paramTypes[0] = profileGetMethod.getReturnType();
       profileType = profileGetMethod.getReturnType();
     } catch (NoSuchMethodException e1) {
-      logger.error("getProfileGetMethod:  unable to find method '" + getMethodName + "'");
+      logger.error("getProfileGetMethod:  unable to find method '" + getMethodName + "'"); Helper.statsErrors++;
       profileGetMethod = null;
       paramTypes = null;
       profileType = null;
@@ -399,7 +399,7 @@ public class guiField {
     try {
       profileSetMethod = currentConfiguration.getClass().getDeclaredMethod(setMethodName, paramTypes);
     } catch (NoSuchMethodException e1) {
-      logger.error("getProfileSetMethod:  unable to find method '" + setMethodName + "'");
+      logger.error("getProfileSetMethod:  unable to find method '" + setMethodName + "'"); Helper.statsErrors++;
       profileSetMethod = null;
     }
     return profileSetMethod;

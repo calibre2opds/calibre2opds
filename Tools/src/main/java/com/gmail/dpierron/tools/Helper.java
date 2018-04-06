@@ -116,20 +116,20 @@ public class Helper {
             try {
               method = result.getClass().getMethod(theMethodName);
             } catch (SecurityException e) {
-              logger.warn(e.getMessage(), e);
+              logger.warn(e.getMessage(), e); Helper.statsWarnings++;
             } catch (NoSuchMethodException e) {
-              logger.warn(e.getMessage(), e);
+              logger.warn(e.getMessage(), e); Helper.statsWarnings++;
             }
 
             if (method != null)
               try {
                 result = method.invoke(result);
               } catch (IllegalArgumentException e) {
-                logger.warn(e.getMessage(), e);
+                logger.warn(e.getMessage(), e); Helper.statsWarnings++;
               } catch (IllegalAccessException e) {
-                logger.warn(e.getMessage(), e);
+                logger.warn(e.getMessage(), e); Helper.statsWarnings++;
               } catch (InvocationTargetException e) {
-                logger.warn(e.getMessage(), e);
+                logger.warn(e.getMessage(), e); Helper.statsWarnings++;
               }
           }
         }
@@ -637,7 +637,7 @@ public class Helper {
     try {
       result = new String(text.getBytes(charset));
     } catch (UnsupportedEncodingException e) {
-      logger.error(e.getMessage(), e);
+      logger.error(e.getMessage(), e); Helper.statsErrors++;
     }
     return result;
   }
@@ -1420,7 +1420,7 @@ public class Helper {
         }
       }
     }
-    logger.warn("Program Error: Unable to find locale for '" + lang + "'");
+    logger.warn("Program Error: Unable to find locale for '" + lang + "'"); Helper.statsWarnings++;
     return null;
   }
   /**
@@ -1453,5 +1453,48 @@ public class Helper {
       installDirectory = sourceFile.getParentFile();
     }
     return installDirectory;
+  }
+
+  // Some Stats to accumulate
+  // NOTE.  We make them public to avoid needing getters
+  public static long statsXmlChanged;        // Count of files where we realise during generation that XML unchanged
+  public static long statsXmlDiscarded;      // count of XML files generated and then discarded as not needed for final catalog
+  public static long statsHtmlChanged;       // Count of files where HTML not generated as XML unchanged.
+  public static long statsXmlUnchanged;      // Count of files where we realise during generation that XML unchanged
+  public static long statsHtmlUnchanged;     // Count of files where HTML not generated as XML unchanged.
+  public static long statsCopyExistHits;     // Count of Files that are copied because target does not exist
+  public static long statsCopyLengthHits;    // Count of files that are copied because lengths differ
+  public static long statsCopyDateMisses;    // Count of files that  are not copied because source older
+  public static long statsCopyCrcHits;       // Count of files that are copied because CRC different
+  public static long statsCopyCrcMisses;     // Count of files copied because CRC same
+  public static long statsCopyToSelf;        // Count of cases where copy to self requested
+  public static long statsCopyUnchanged;     // Count of cases where copy skipped because file was not even generated
+  public static long statsCopyDeleted;       // Count of files/folders deleted during copy process
+  public static long statsBookUnchanged;     // We detected that the book was unchanged since last run
+  public static long statsBookChanged;       // We detected that the book was changed since last run
+  public static long statsCoverUnchanged;    // We detected that the cover was unchanged since last run
+  public static long statsCoverChanged;      // We detected that the cover was changed since last run
+  public static long statsWarnings;          // Number of warning messages logged in a catalog run
+  public static long statsErrors;            // Number of error messages logged in a catalog run
+
+  public static void resetStats() {
+    statsXmlChanged
+        = statsXmlDiscarded
+        = statsHtmlChanged
+        = statsXmlUnchanged
+        = statsHtmlUnchanged
+        = statsCopyExistHits
+        = statsCopyLengthHits
+        = statsCopyCrcHits
+        = statsCopyCrcMisses
+        = statsCopyDateMisses
+        = statsCopyUnchanged
+        = statsBookUnchanged
+        = statsBookChanged
+        = statsCoverUnchanged
+        = statsCoverChanged
+        = statsWarnings
+        = statsErrors
+        = 0;
   }
 }
