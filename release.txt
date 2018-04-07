@@ -75,8 +75,7 @@ User are encouraged to add comments to the relevant issues in the Issue Register
     - #c2o-269: Allow Custom columns to be used in search/filter expressions
     - #c20-274: Large white spaces appearing between paragraphs in the Book Details page
     - #c2o-276: Upgrade to ANTLR 4 
-    - #c2o-289: Change display About information 
-    - #c20-292: Authors section has no icon in custom catalogs
+    - #c2o-289: Change display About information
     - #c20-293: Case Sensitivity in Author/Book Names
 
 
@@ -131,6 +130,7 @@ v3.6  (in progress)
    - New:     #c2o-288: Option to open custom links in Custom catalog/External links in a new page 
    - New:     #c20-290: Lithiuanian localisation (contributed by liutus)
    - Fix:     #c2o-291: GetSatisfaction forum discontinued
+   - Fix:     #c20-292: Authors and Ratings section has no icon in custom catalogs
    - New:     #c20-294: Warnings/Error counts in log indicated on end-of-generation dialog
   
 

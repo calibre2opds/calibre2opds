@@ -283,7 +283,7 @@ public class LevelSubCatalog extends SubCatalog {
         authorsSummary = Localization.Main.getText("authors.alphabetical.single");
       entry = authorsSubCatalog.getSubCatalog(breadcrumbs,
                                               authorsSubCatalog.getAuthors(),// sTART WITH ALL AUTHORS
-                                              inSubDir,
+                                              atTopLevel ? inSubDir : true,
                                               0,                            // from start,
                                               Localization.Main.getText("authors.title"),
                                               authorsSummary,
@@ -309,7 +309,7 @@ public class LevelSubCatalog extends SubCatalog {
       seriesSubCatalog.setCatalogLevel(getCatalogLevel());
       entry = seriesSubCatalog.getSubCatalog(breadcrumbs,
           null,                   // let it be derived from books
-          atTopLevel != true,     // inSubDir
+          atTopLevel ? inSubDir : true,     // inSubDir
           0,
           Localization.Main.getText("series.title"),
           seriesSubCatalog.getSeries().size() > 1
@@ -339,8 +339,7 @@ public class LevelSubCatalog extends SubCatalog {
                                   ? new TagListSubCatalog(stuffToFilterOut, getBooks())
                                   : new TagTreeSubCatalog(stuffToFilterOut, getBooks());
       tagssubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = tagssubCatalog.getCatalog(breadcrumbs,
-                                        inSubDir);
+      entry = tagssubCatalog.getCatalog(breadcrumbs,  atTopLevel ? inSubDir : true);
       tagssubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null)
         feed.addContent(entry);
@@ -360,7 +359,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Recent books catalog");
       RecentBooksSubCatalog recentBooksSubCatalog = new RecentBooksSubCatalog(stuffToFilterOut, getBooks());
       recentBooksSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = recentBooksSubCatalog.getCatalog(breadcrumbs, inSubDir);
+      entry = recentBooksSubCatalog.getCatalog(breadcrumbs, atTopLevel ? inSubDir : true);
       recentBooksSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null) {
         feed.addContent(entry);
@@ -378,7 +377,7 @@ public class LevelSubCatalog extends SubCatalog {
       logger.debug("STARTED: Generating Rated books catalog");
       RatingsSubCatalog ratingsSubCatalog = new RatingsSubCatalog(stuffToFilterOut,getBooks());
       ratingsSubCatalog.setCatalogLevel(getCatalogLevel());
-      entry = ratingsSubCatalog.getCatalog(breadcrumbs, inSubDir);
+      entry = ratingsSubCatalog.getCatalog(breadcrumbs,  atTopLevel ? inSubDir : true);
       ratingsSubCatalog = null;  // Maybe not necesary - but explicit object cleanup
       if (entry != null) {
         feed.addContent(entry);
@@ -403,7 +402,7 @@ public class LevelSubCatalog extends SubCatalog {
         allBooksSummary = Localization.Main.getText("allbooks.alphabetical.single");
       entry = allBooksSubCatalog.getListOfBooks(breadcrumbs,
                                   getBooks(),
-                                  inSubDir,
+                                  atTopLevel ? inSubDir : true,
                                   0,                  // from start
                                   Localization.Main.getText("allbooks.title"),
                                   allBooksSummary, Constants.INITIAL_URN_PREFIX + allBooksSubCatalog.getCatalogType(),
