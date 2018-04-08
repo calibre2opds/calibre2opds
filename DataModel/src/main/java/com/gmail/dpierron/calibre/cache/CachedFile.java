@@ -49,6 +49,7 @@ public class CachedFile extends File {
   final static short FLAG_TARGET_FILE = 0x0080;
   final static short FLAG_CACHED_VALUES_CHECKED = 0x0100;
   final static short FLAG_IS_CHANGED = 0x02000;             // If set to clear then can assume file is unchanged so target cioy is OK
+  final static short FLAG_CASE_MISMATCH_CHECKED = 0x04000;  // Set if case mismatch found (and reported earlier)
   private short flags = FLAG_ALL_CLEAR;
 
   // Constructors mirror those for the File class
@@ -70,7 +71,7 @@ public class CachedFile extends File {
   }
 
   /**
-   * Helper routine to check if specified kags set
+   * Helper routine to check if specified flag bits set
    * @param f
    * @return
    */
@@ -95,7 +96,7 @@ public class CachedFile extends File {
     privateCrc = CRC_NOT_SET;
     setFlags(false,
         FLAG_CRC_CALCED + FLAG_MODIFIED_CHECKED + FLAG_EXISTS_CHECKED + FLAG_LENGTH_CHECKED + FLAG_EXISTS
-        + FLAG_IS_DIRECTORY + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED);     // Reset to say cache only entry
+        + FLAG_IS_DIRECTORY + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED + FLAG_CASE_MISMATCH_CHECKED);     // Reset to say cache only entry
     setFlags(true, FLAG_IS_CHANGED);          // We always assume a file is changed until explicitly told otherwise
   }
 
@@ -110,36 +111,41 @@ public class CachedFile extends File {
     if (isFlags(FLAG_CACHED_VALUES_CHECKED)) {
       return;
     }
-
     if (logger.isTraceEnabled()) logger.trace("Check Cached data for " + getPath());
+    setFlags(true, FLAG_CACHED_VALUES_CHECKED);
 
     if (! isFlags(FLAG_EXISTS_CHECKED)) {
-      setFlags(super.exists(), FLAG_EXISTS);
+      setFlags(super.exists(), FLAG_EXISTS + FLAG_EXISTS_CHECKED);
+    }
+    if (! isFlags(FLAG_EXISTS)) {
+      // Cached entry for non-existent file needs resetting
+      if (logger.isTraceEnabled())
+        logger.trace("File does not exist - reset to defaults");
+      resetCached();
+      return;
+    }
+
+    if ( ! isFlags(FLAG_IS_DIRECTORY_CHECKED)) {
+      setFlags(super.isDirectory(), FLAG_IS_DIRECTORY);
+      setFlags(true, FLAG_IS_DIRECTORY_CHECKED);
+    }
+
+    if (! isFlags(FLAG_CASE_MISMATCH_CHECKED)) {
       // Extend the check to handle case sensitivity
       // Should not happen so log message if found!
       // Check added as case mismatch can break web server and may not be obvious in testing.
-      if (super.exists()) {
-        try {
-          if (!super.getName().equals(super.getCanonicalFile().getName())) {
-            logger.warn("Case mismatch checking file existence: Found  '" + super.getName() + "', Find '" + super.getCanonicalFile().getName() +  "'");
-            Helper.statsWarnings++;
-            setFlags(false, FLAG_EXISTS);
-          }
-        } catch (IOException e) {
-          // Should not be possible to get her but lets play safe1
+      try {
+        if (!super.getName().equals(super.getCanonicalFile().getName())) {
+          // TODO:  May want to impment option to auto-fix to expected case?
+          logger.warn("Case mismatch checking " + (isFlags(FLAG_IS_DIRECTORY) ? "folder" : "file") + " existence: Found:'" + super.getName() + "', Expected'" + super.getCanonicalFile().getName() +  "'");  Helper.statsWarnings++;
           setFlags(false, FLAG_EXISTS);
-          logger.trace("Unexpected IOExcpetion checking %s for case mismatch",getName());
         }
-
+      } catch (IOException e) {
+        // Should not be possible to get her but lets play safe1
+        setFlags(false, FLAG_EXISTS);
+        logger.trace("Unexpected IOExcpetion checking %s for case mismatch",getName());
       }
-      setFlags(true, FLAG_EXISTS_CHECKED);
-      if (! isFlags (FLAG_EXISTS)) {
-        // Cached entry for non-existent file needs resetting
-        if (logger.isTraceEnabled())
-          logger.trace("File does not exist - reset to defaults");
-        resetCached();
-        return;
-      }
+      setFlags(true, FLAG_CASE_MISMATCH_CHECKED);
     }
 
     if (! isFlags(FLAG_LENGTH_CHECKED)) {
@@ -149,6 +155,7 @@ public class CachedFile extends File {
         clearCachedCrc();
       }
       privateLength = l;
+      setFlags(true, FLAG_LENGTH_CHECKED);
     }
 
     if (! isFlags(FLAG_MODIFIED_CHECKED)) {
@@ -158,17 +165,13 @@ public class CachedFile extends File {
         clearCachedCrc();
       }
       privateLastModified = d;
+      setFlags(true, FLAG_MODIFIED_CHECKED);
     }
+
     if (!isFlags(FLAG_CRC_CALCED) && privateCrc != CRC_NOT_SET) {
       if (logger.isTraceEnabled()) logger.trace("CRC assumed valid");
       setFlags(true, FLAG_CRC_CALCED);
     }
-
-    if ( ! isFlags(FLAG_IS_DIRECTORY_CHECKED)) {
-      setFlags(super.isDirectory(), FLAG_IS_DIRECTORY);
-    }
-
-    setFlags(true, FLAG_MODIFIED_CHECKED + FLAG_LENGTH_CHECKED + FLAG_IS_DIRECTORY_CHECKED + FLAG_CACHED_VALUES_CHECKED);
   }
 
   /**
