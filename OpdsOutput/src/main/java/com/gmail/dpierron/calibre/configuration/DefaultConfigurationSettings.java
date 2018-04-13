@@ -239,6 +239,8 @@ public final class DefaultConfigurationSettings extends DefaultConfiguration imp
     return false;
   }
 
+  public Boolean getCorrectCaseMismatch() { return false; }
+
   public Boolean getOrderAllBooksBySeries() {
     return true;
   }

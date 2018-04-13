@@ -910,14 +910,15 @@ public class Catalog {
       CatalogManager.callback.startReadDatabase();
       CatalogManager.callback.showMessage(Localization.Main.getText("info.step.loadingdatabase"));
       DataModel.reset();
-      DataModel.setUseLanguagesAsTags(ConfigurationManager.getCurrentProfile().getLanguageAsTag());
+      DataModel.useLanguagesAsTags = ConfigurationManager.getCurrentProfile().getLanguageAsTag();
       // Set the sort/split criteria that are to be used
-      DataModel.setLibrarySortAuthor(ConfigurationManager.getCurrentProfile().getSortUsingAuthor());
-      DataModel.setLibrarySortTitle(ConfigurationManager.getCurrentProfile().getSortUsingTitle());
-      DataModel.setLibrarySortSeries(ConfigurationManager.getCurrentProfile().getSortSeriesUsingLibrarySort());
-      DataModel.setDisplayAuthorSort(ConfigurationManager.getCurrentProfile().getDisplayAuthorSort());
-      DataModel.setDisplaySeriesSort(ConfigurationManager.getCurrentProfile().getDisplaySeriesSort());
-      DataModel.setDisplayTitleSort(ConfigurationManager.getCurrentProfile().getDisplayTitleSort());
+      DataModel.librarySortAuthor  = ConfigurationManager.getCurrentProfile().getSortUsingAuthor();
+      DataModel.librarySortTitle   = ConfigurationManager.getCurrentProfile().getSortUsingTitle();
+      DataModel.librarySortSeries  = ConfigurationManager.getCurrentProfile().getSortSeriesUsingLibrarySort();
+      DataModel.displayAuthorSort  = ConfigurationManager.getCurrentProfile().getDisplayAuthorSort();
+      DataModel.displaySeriesSort      = ConfigurationManager.getCurrentProfile().getDisplaySeriesSort();
+      DataModel.displayTitleSort      = ConfigurationManager.getCurrentProfile().getDisplayTitleSort();
+      DataModel.correctCaseMismatches = ConfigurationManager.getCurrentProfile().getCorrectCaseMismatch();
       // CatalogManager.getTagsToIgnore();
       DataModel.preloadDataModel();    // Get mandatory database fields
       logger.trace("COMPLETED preloading Datamodel");

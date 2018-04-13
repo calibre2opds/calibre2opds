@@ -163,6 +163,8 @@ public interface SetConfigurationInterface extends GetConfigurationInterface {
 
   public void setReprocessEpubMetadata(Boolean value);
 
+  public void setCorrectCaseMismatch(Boolean value);
+
   public void setMaxMobileResolution(Integer value);
 
   public void setUrlBooks(String value);

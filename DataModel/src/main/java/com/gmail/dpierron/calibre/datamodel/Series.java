@@ -68,10 +68,10 @@ public class Series extends GenericDataObject implements SplitableByLetter {
       return sortName;
   }
   public String getTextToDisplay() {
-    return DataModel.getDisplaySeriesSort() ? getDisplayName() : getSortName();
+    return DataModel.displaySeriesSort ? getDisplayName() : getSortName();
   }
   public String getTextToSort() {
-    return DataModel.getLibrarySortSeries() ? getSortName(): getDisplayName();
+    return DataModel.librarySortSeries ? getSortName(): getDisplayName();
   }
 
   //                            METHODS and PROPERTIES

@@ -68,14 +68,16 @@ public class DataModel {
 
   private static Map<Locale, NoiseWord> mapOfNoisewords;
 
-  //  Options that are copied from runtime parameters (with defaults being preset)
-  private static boolean useLanguagesAsTags = true;
-  private static boolean librarySortAuthor = true;
-  private static boolean librarySortTitle = true;
-  private static boolean librarySortSeries = true;
-  private static boolean displayTitleSort = false;
-  private static boolean displayAuthorSort = false;
-  private static boolean displaySeriesSort = false;
+  //  Options that are copied from runtime parameters
+  //  (declared Public so no get/put routines required)
+  public static boolean useLanguagesAsTags = true;
+  public static boolean librarySortAuthor = true;
+  public static boolean librarySortTitle = true;
+  public static boolean librarySortSeries = true;
+  public static boolean displayTitleSort = false;
+  public static boolean displayAuthorSort = false;
+  public static boolean displaySeriesSort = false;
+  public static boolean correctCaseMismatches = false;
 
   public static void reset() {
     mapOfEBookFilesByBookId = null;
@@ -675,40 +677,6 @@ public class DataModel {
     }
     return tags;
   }
-
-  /*
-   *  Functions for passing parameters into data model
-   */
-  public static void setUseLanguagesAsTags(boolean b) {
-    useLanguagesAsTags = b;
-  }
-
-  public static boolean getUseLanguagesAsTags() { return useLanguagesAsTags; }
-
-  public static void setLibrarySortAuthor(boolean b) { librarySortAuthor = b; }
-
-  public static boolean getLibrarySortAuthor() {return librarySortAuthor; }
-
-  public static void setLibrarySortTitle(boolean b) { librarySortTitle = b; }
-
-  public static boolean getLibrarySortTitle() {return librarySortTitle; }
-
-  public static void setLibrarySortSeries(boolean b) { librarySortSeries = b; }
-
-  public static boolean getLibrarySortSeries() {return librarySortSeries; }
-
-  public static void setDisplayAuthorSort(boolean b) { displayAuthorSort = b; }
-
-  public static boolean getDisplayAuthorSort() {return librarySortAuthor; }
-
-  public static void setDisplayTitleSort(boolean b) { displayTitleSort = b; }
-
-  public static boolean getDisplayTitleSort() {return displayTitleSort; }
-
-  public static void setDisplaySeriesSort(boolean b) { displaySeriesSort = b; }
-
-  public static boolean getDisplaySeriesSort() {return displaySeriesSort; }
-
 
   /**
    * Get a Noiseword object given the language string

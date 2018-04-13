@@ -61,7 +61,7 @@ public class ReprocessEpubMetadataDialog extends javax.swing.JDialog {
   private void run() {
     jProgress.setValue(0);
     ConfigurationManager.getCurrentProfile().getDatabaseFolder();
-    DataModel.setUseLanguagesAsTags(ConfigurationManager.getCurrentProfile().getLanguageAsTag());
+    DataModel.useLanguagesAsTags = ConfigurationManager.getCurrentProfile().getLanguageAsTag();
     DataModel.preloadDataModel();
     java.util.List<Book> books = null;
     if (Helper.isNullOrEmpty(onlyForTag)) {

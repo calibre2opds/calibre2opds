@@ -84,6 +84,7 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   private final static String PROPERTY_NAME_INCLUDEONLYONEFILE = "IncludeOnlyOneFile";
   private final static String PROPERTY_NAME_ZIPTROOKCATALOG = "ZipTrookCatalog";
   private final static String PROPERTY_NAME_REPROCESSEPUBMETADATA = "ReprocessEpubMetadata";
+  private final static String PROPERTY_NAME_CORRECTCASEMISMATCH = "CorrectCaseMismatch";
   private final static String PROPERTY_NAME_ORDERALLBOOKSBYSERIES = "OrderAllBooksBySeries";
   private final static String PROPERTY_NAME_MAXMOBILERESOLUTION = "MaxMobileResolution";
   private final static String PROPERTY_NAME_WIKIPEDIAURL = "WikipediaUrl";
@@ -911,7 +912,16 @@ public class ConfigurationHolder extends PropertiesBasedConfiguration implements
   public void setReprocessEpubMetadata(Boolean value) {
     setProperty(PROPERTY_NAME_REPROCESSEPUBMETADATA, value);
   }
-
+  public Boolean isCorrectCaseMismatchReadOnly() {
+    return isPropertyReadOnly(PROPERTY_NAME_CORRECTCASEMISMATCH);
+  }
+  public Boolean getCorrectCaseMismatch() {
+    Boolean b = getBoolean(PROPERTY_NAME_CORRECTCASEMISMATCH);
+    return (b == null) ? defaults.getCorrectCaseMismatch() : b;
+  }
+  public void setCorrectCaseMismatch(Boolean value) {
+    setProperty(PROPERTY_NAME_CORRECTCASEMISMATCH, value);
+  }
   public Boolean isOrderAllBooksBySeriesReadOnly() {
     return isPropertyReadOnly(PROPERTY_NAME_ORDERALLBOOKSBYSERIES);
   }

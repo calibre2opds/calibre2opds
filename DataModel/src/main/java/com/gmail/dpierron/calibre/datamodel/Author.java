@@ -102,10 +102,10 @@ public class Author  extends GenericDataObject implements SplitableByLetter, Com
   }
 
   public String getTextToDisplay() {
-    return DataModel.getDisplayAuthorSort() ? getSortName() : getDisplayName() ;
+    return DataModel.displayAuthorSort ? getSortName() : getDisplayName() ;
   }
   public String getTextToSort() {
-    return DataModel.getLibrarySortAuthor() ? getDisplayName() :  getSortName();
+    return DataModel.librarySortAuthor ? getDisplayName() :  getSortName();
   }
 
   //                            METHODS and PROPERTIES

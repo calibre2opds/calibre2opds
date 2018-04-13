@@ -17,6 +17,7 @@ package com.gmail.dpierron.calibre.cache;
  *        file.  If not then unexpected actions can occur.
  */
 
+import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.tools.Helper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,6 +101,82 @@ public class CachedFile extends File {
     setFlags(true, FLAG_IS_CHANGED);          // We always assume a file is changed until explicitly told otherwise
   }
 
+  /**
+   * Check the case sensitivity of filenames (#c20-293)
+   *
+   * This routine attempts to detect filnemae case mismatches and if one is
+   * found then (depending on an option set in the GUI) will either log an
+   * appropriate warning message or attempt to correct it.
+   *
+   * It is possible for the case of filenames to be different to what
+   * is stored in the Calibre library if it held on a case insensitive
+   * filing system (e.g. Windows)  In theory this should not happen if
+   * the Calibre library is in a perfect state, but experience has shown
+   * that it does happen in practise.  This can cause a problem if the
+   * catalog is hosted on a system (e.g. Linux) where case does matter.
+   * It can also cause a problem at the Calibre level if such a library
+   * is later moved to a system where filename case matters.
+   *
+   * Calibre holds its files in a relative path of author/book/file
+   * and the mismatch can occur at any of these levels.  This means that
+   * for a file the two parent folders need to be checked.  If checking a
+   * folder then only its parent needs checking.
+   *
+   * We work down the directory tree checking each level.
+   * If case mismatch is found then see if auto-correct enabled
+   * and if so attempt to fix it.  We use a double rename
+   * strategy of using an intermediate name and then back
+   * to the desired one.
+   *
+   * @param currentFile
+   * @param bCheckParent
+   */
+  private void caseMismatchCheck (File currentFile, boolean bCheckParent) {
+
+    String wantedName = currentFile.getName();          // Get the name set in the file object (assumed to be correct)
+    String typeName;;
+    if (currentFile.isDirectory()) {
+      typeName = "folder";
+      if (bCheckParent) {
+        caseMismatchCheck(currentFile.getParentFile(), false);
+      }
+    } else {
+      typeName = "file";
+      caseMismatchCheck(currentFile.getParentFile(), true);
+    }
+    try {
+      String actualName = currentFile.getCanonicalFile().getName();
+      if (!wantedName.equals(actualName)) {
+        File parentFile = currentFile.getParentFile();
+        if (! DataModel.correctCaseMismatches) {
+          logger.warn("Case mismatch checking " + typeName + " at " + parentFile.getName() + ": Found:'" + actualName + "', Expected'" + wantedName +  "'");  Helper.statsWarnings++;
+          setFlags(false, FLAG_EXISTS);
+        } else {
+          File tempFile = new File(parentFile, wantedName + "_c2o");      // Intermediate name
+          String s = tempFile.getPath();
+          boolean isFileRenamed = currentFile.renameTo(tempFile);
+          // Check if first stage rename worked
+          if (isFileRenamed) {
+            // if it did we need the second stage rename
+            File calibreFile = new File (parentFile, wantedName);
+            s = calibreFile.getPath();
+            isFileRenamed = tempFile.renameTo(calibreFile);
+            if (isFileRenamed) {
+              logger.info("Case mismatch corrected: " + typeName +" at " + parentFile.getName() + " changed from '" + actualName + "' to '" + wantedName + "'");  Helper.statsWarnings++;
+            } else {
+              logger.error("Case mismatch correction failed: " + typeName + " at " + parentFile.getName() + " left as '" + tempFile.getName() + "'");  Helper.statsWarnings++;
+            }
+          } else {
+            logger.error("Case mismatch correction failed: " + typeName +  " at " + parentFile.getName() + " left as '" + currentFile.getName() + "'"); Helper.statsWarnings++;
+          }
+        }
+      }
+    } catch (IOException e) {
+      // Should not be possible to get her but lets play safe1
+      setFlags(false, FLAG_EXISTS);
+      logger.error("Unexpected IOExcpetion getting canonical name for '" + typeName + "' " + currentFile.getPath() + " while checking for case mismatch"); Helper.statsErrors++;
+    }
+  }
 
   /**
    * If this instance has not been used since
@@ -124,27 +201,14 @@ public class CachedFile extends File {
       resetCached();
       return;
     }
-
+    // This MUST preceed the caseMismatchCheck
     if ( ! isFlags(FLAG_IS_DIRECTORY_CHECKED)) {
       setFlags(super.isDirectory(), FLAG_IS_DIRECTORY);
       setFlags(true, FLAG_IS_DIRECTORY_CHECKED);
     }
 
     if (! isFlags(FLAG_CASE_MISMATCH_CHECKED)) {
-      // Extend the check to handle case sensitivity
-      // Should not happen so log message if found!
-      // Check added as case mismatch can break web server and may not be obvious in testing.
-      try {
-        if (!super.getName().equals(super.getCanonicalFile().getName())) {
-          // TODO:  May want to impment option to auto-fix to expected case?
-          logger.warn("Case mismatch checking " + (isFlags(FLAG_IS_DIRECTORY) ? "folder" : "file") + " existence: Found:'" + super.getName() + "', Expected'" + super.getCanonicalFile().getName() +  "'");  Helper.statsWarnings++;
-          setFlags(false, FLAG_EXISTS);
-        }
-      } catch (IOException e) {
-        // Should not be possible to get her but lets play safe1
-        setFlags(false, FLAG_EXISTS);
-        logger.trace("Unexpected IOExcpetion checking %s for case mismatch",getName());
-      }
+      caseMismatchCheck(this, true);
       setFlags(true, FLAG_CASE_MISMATCH_CHECKED);
     }
 

@@ -141,6 +141,7 @@ public class Mainframe extends javax.swing.JFrame {
       new guiField(lblCopyToDatabaseFolder, chkCopyToDatabaseFolder, "config.CopyToDatabaseFolder", "CopyToDatabaseFolder"),
       new guiField(lblOnlyCatalogAtTarget, chkOnlyCatalogAtTarget, "config.OnlyCatalogAtTarget", "OnlyCatalogAtTarget"),
       new guiField(lblReprocessEpubMetadata, chkReprocessEpubMetadata, "config.ReprocessEpubMetadata", "ReprocessEpubMetadata"),
+      new guiField(lblCorrectCaseMismatch, chkCorrectCaseMismatch, "config.CorrectCaseMismatch", "CorrectCaseMismatch"),
       new guiField(lblCatalogFolder, txtCatalogFolder, "config.CatalogFolderName", "CatalogFolderName"),
       new guiField(lblUrlBooks, txtUrlBooks, "config.UrlBooks", "UrlBooks"),
       new guiField(lblCatalogTitle, txtCatalogTitle, "config.CatalogTitle", "CatalogTitle"),
@@ -1385,6 +1386,8 @@ public class Mainframe extends javax.swing.JFrame {
         lblCopyToDatabaseFolder = new javax.swing.JLabel();
         chkReprocessEpubMetadata = new javax.swing.JCheckBox();
         lblReprocessEpubMetadata = new javax.swing.JLabel();
+        chkCorrectCaseMismatch = new javax.swing.JCheckBox();
+        lblCorrectCaseMismatch = new javax.swing.JLabel();
         lblZipTrookCatalog = new javax.swing.JLabel();
         chkZipTrookCatalog = new javax.swing.JCheckBox();
         lblOnlyCatalogAtTarget = new javax.swing.JLabel();
@@ -2077,12 +2080,35 @@ public class Mainframe extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         pnlMainOptions.add(lblReprocessEpubMetadata, gridBagConstraints);
 
-        lblZipTrookCatalog.setText("lblZipTrookCatalog");
+        lblZipTrookCatalog.setText("lblReprocessEpubMetadata");
         lblZipTrookCatalog.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 handleMouseClickOnLabel(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(chkCorrectCaseMismatch, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pnlMainOptions.add(lblCorrectCaseMismatch, gridBagConstraints);
+
+        lblCorrectCaseMismatch.setText("lblCorrectCaseMismatch");
+        lblCorrectCaseMismatch.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                handleMouseClickOnLabel(evt);
+            }
+        });
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
@@ -4904,7 +4930,7 @@ public class Mainframe extends javax.swing.JFrame {
    configLogFile();
   }//GEN-LAST:event_mnuToolsConfigLogActionPerformed
 
-  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+  private void mnuToolsOpenLogActionPerformed(java.awt.event.ActionEvent evt) {
     debugShowLogFile(Constants.LOGFILE_NAME);
   }
 
@@ -4916,9 +4942,9 @@ public class Mainframe extends javax.swing.JFrame {
     }
   }
 
-  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {                                                
+  private void mnuToolsOpenConfigActionPerformed(java.awt.event.ActionEvent evt) {
   debugShowSupportFolder();
-  }                                                  
+  }
 
   private void mnuHelpOpenForumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpOpenForumActionPerformed
       logger.info(Localization.Main.getText("gui.menu.supportForum") + ": " + Constants.FORUM_URL);
@@ -5179,6 +5205,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkOrderAllBooksBySeries;
     private javax.swing.JCheckBox chkPublishedDateAsYear;
     private javax.swing.JCheckBox chkReprocessEpubMetadata;
+    private javax.swing.JCheckBox chkCorrectCaseMismatch;
     private javax.swing.JCheckBox chkSingleBookCrossReferences;
     private javax.swing.JCheckBox chkSortSeriesUsingLibrarySort;
     private javax.swing.JCheckBox chkSortTagsByAuthor;
@@ -5305,6 +5332,7 @@ public class Mainframe extends javax.swing.JFrame {
     private javax.swing.JLabel lblProfile;
     private javax.swing.JLabel lblPublishedDateAsYear;
     private javax.swing.JLabel lblReprocessEpubMetadata;
+    private javax.swing.JLabel lblCorrectCaseMismatch;
     private javax.swing.JLabel lblSearchDeprecated;
     private javax.swing.JLabel lblSingleBookCrossReferences;
     private javax.swing.JLabel lblSortSeriesUsingLibrarySort;

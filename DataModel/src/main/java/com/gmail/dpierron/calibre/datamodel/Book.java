@@ -139,11 +139,11 @@ public class Book extends GenericDataObject   {
   }
 
   public String getTextToDisplay() {
-    return DataModel.getDisplayTitleSort() ? getSortName() : getDisplayName() ;
+    return DataModel.displayTitleSort ? getSortName() : getDisplayName() ;
   }
 
   public String getTextToSort() {
-    return DataModel.getLibrarySortTitle() ? getDisplayName() : getSortName();
+    return DataModel.librarySortTitle ? getDisplayName() : getSortName();
   }
 
   // METHODS and PROPERTIES

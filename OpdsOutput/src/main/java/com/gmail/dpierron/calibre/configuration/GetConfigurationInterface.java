@@ -128,6 +128,8 @@ public interface GetConfigurationInterface extends ReadOnlyConfigurationInterfac
 
   public Boolean getReprocessEpubMetadata();
 
+  public Boolean getCorrectCaseMismatch();
+
   public Integer getMaxMobileResolution();
 
   public String getUrlBooks();
