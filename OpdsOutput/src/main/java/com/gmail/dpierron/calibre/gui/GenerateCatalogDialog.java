@@ -432,7 +432,7 @@ public class GenerateCatalogDialog extends javax.swing.JDialog implements Catalo
       message += "\n" + message2;
     }
     if (Helper.statsErrors != 0) {
-      String message2 = Localization.Main.getText("info.completedWithError", Helper.statsErrors);
+      String message2 = Localization.Main.getText("info.completedWithErrors", Helper.statsErrors);
       logger.info(message2);
       message += "\n" + message2;
     }

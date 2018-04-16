@@ -544,7 +544,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
       // We only want the warning once per book
       if (book.isDone() == false) {
         if (isCover) {
-          logger.warn("addImageFile:  No cover file found forbook " + book);Helper.statsWarnings++;
+          logger.warn(Localization.Main.getText("warn.noCoverFound", book));Helper.statsWarnings++;
         }
         // We remove any resized image created by earlier versions of calibre2opds
         if (resizedImageFile.exists()) {
@@ -1218,8 +1218,7 @@ public abstract class BooksSubCatalog extends SubCatalog {
         hasContent = true;
       }  else {
         if (Helper.isNotNullOrEmpty(book.getComment())) {
-          logger.warn(Localization.Main.getText("warn.badComment", book.getId() , book.getDisplayName())); Helper.statsWarnings++;
-          logger.warn(book.getComment()); Helper.statsWarnings++;
+          logger.warn(Localization.Main.getText("warn.badComment", book)); Helper.statsWarnings++;
           book.setComment("");
         }
       }

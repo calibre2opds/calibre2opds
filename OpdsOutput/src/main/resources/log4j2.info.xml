@@ -7,7 +7,7 @@
 <Configuration status="info" DisplayName="calibre2opds">
   <Appenders>
     <Console DisplayName="CONSOLE" target="SYSTEM_OUT">
-      <PatternLayout pattern="%date{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n%"/>
+      <PatternLayout pattern="%date{HH:mm:ss.SSS} %-5level %msg%n%"/>
     </Console>
     <RollingFile DisplayName="A1" filename="${sys:calibre2opds.home}/log/calibre2opds.log" append="true"
                   filePattern="${sys:calibre2opds.home}/log/calibre2opds-%i.log">
@@ -16,7 +16,7 @@
         <SizeBasedTriggeringPolicy size="1 MB" />
       </Policies>
       <DefaultRolloverStrategy max="10" />
-      <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n"/>
     </RollingFile>
     <Async DisplayName="ASYNC">
       <AppenderRef ref="A1"/>

@@ -107,10 +107,9 @@ public class Runner {
         default:
             // We seem to have more parameters than expected.
             // Log the details and then assume that the first may be a profile
-            logger.warn("startup.extraParameters"); Helper.statsWarnings++;
             String argstring = "";
             for (String s : args) argstring += s + " ";
-            logger.warn("  " + argstring );  Helper.statsWarnings++;
+            logger.warn(Localization.Main.getText("warn.extraParameters", "  " + argstring ));  Helper.statsWarnings++;
             // FALLTHRU
         case 1:
             // It appears that a profile has been supplied

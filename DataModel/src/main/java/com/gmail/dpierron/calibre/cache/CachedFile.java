@@ -19,6 +19,7 @@ package com.gmail.dpierron.calibre.cache;
 
 import com.gmail.dpierron.calibre.datamodel.DataModel;
 import com.gmail.dpierron.tools.Helper;
+import com.gmail.dpierron.tools.i18n.Localization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -131,25 +132,31 @@ public class CachedFile extends File {
    * @param currentFile
    * @param bCheckParent
    */
-  private void caseMismatchCheck (File currentFile, boolean bCheckParent) {
+  private void caseMismatchCheck (CachedFile currentFile, boolean bCheckParent) {
 
+    assert currentFile != null : "Unexpected null value";
     String wantedName = currentFile.getName();          // Get the name set in the file object (assumed to be correct)
-    String typeName;;
-    if (currentFile.isDirectory()) {
-      typeName = "folder";
+    CachedFile parentFile = CachedFileManager.addCachedFile(currentFile.getParentFile());
+    // Should only be possible for this to be null during initialisation phase of catalog
+    if (parentFile == null) {
+      return;
+    }
+    String typeName;
+    if (currentFile.isDirectorySuper()) {          // Want to use isDirectory() from File superclass
+      typeName = Localization.Main.getText("word.folder");
       if (bCheckParent) {
-        caseMismatchCheck(currentFile.getParentFile(), false);
+        caseMismatchCheck(parentFile, false);
       }
     } else {
-      typeName = "file";
-      caseMismatchCheck(currentFile.getParentFile(), true);
+      typeName = Localization.Main.getText("word.file");
+      caseMismatchCheck(parentFile, true);
     }
     try {
       String actualName = currentFile.getCanonicalFile().getName();
       if (!wantedName.equals(actualName)) {
-        File parentFile = currentFile.getParentFile();
         if (! DataModel.correctCaseMismatches) {
-          logger.warn("Case mismatch checking " + typeName + " at " + parentFile.getName() + ": Found:'" + actualName + "', Expected'" + wantedName +  "'");  Helper.statsWarnings++;
+          logger.warn(Localization.Main.getText("warn.caseMismatchFound", typeName, parentFile.getName())  + " " +
+                         Localization.Main.getText("warn.caseMismatchDetails" + actualName, wantedName));  Helper.statsWarnings++;
           setFlags(false, FLAG_EXISTS);
         } else {
           File tempFile = new File(parentFile, wantedName + "_c2o");      // Intermediate name
@@ -162,20 +169,32 @@ public class CachedFile extends File {
             s = calibreFile.getPath();
             isFileRenamed = tempFile.renameTo(calibreFile);
             if (isFileRenamed) {
-              logger.info("Case mismatch corrected: " + typeName +" at " + parentFile.getName() + " changed from '" + actualName + "' to '" + wantedName + "'");  Helper.statsWarnings++;
+              logger.warn(Localization.Main.getText("warn.caseMismatchCorrected", typeName,  parentFile.getName()) + " " +
+                             Localization.Main.getText("warn.caseMismatchDetails" + actualName, wantedName));  Helper.statsWarnings++;
             } else {
-              logger.error("Case mismatch correction failed: " + typeName + " at " + parentFile.getName() + " left as '" + tempFile.getName() + "'");  Helper.statsWarnings++;
+              // Do not think we should ever get here if first stage rename worked!
+              logger.error("Case mismatch correction failed: " + typeName + " at " + parentFile.getName() + " left as '" + tempFile.getName() + "'");  Helper.statsErrors++;
             }
           } else {
-            logger.error("Case mismatch correction failed: " + typeName +  " at " + parentFile.getName() + " left as '" + currentFile.getName() + "'"); Helper.statsWarnings++;
+            // Do not think we should ever get here, but at this point no (potential) damage has been done
+            logger.error("Case mismatch correction failed: " + typeName +  " at " + parentFile.getName() + " left as '" + currentFile.getName() + "'"); Helper.statsErrors++;
           }
         }
       }
     } catch (IOException e) {
       // Should not be possible to get her but lets play safe1
       setFlags(false, FLAG_EXISTS);
-      logger.error("Unexpected IOExcpetion getting canonical name for '" + typeName + "' " + currentFile.getPath() + " while checking for case mismatch"); Helper.statsErrors++;
+      logger.error("Unexpected IOExcpetion getting canonical name for '" + typeName + "' " +
+          currentFile.getPath() + " while checking for filename case mismatch" + "\n" + e);
+      Helper.statsErrors++;
+    } catch (Exception e) {
+      setFlags(false, FLAG_EXISTS);
+      logger.error("Unexpected Exception for file '" + typeName + "' " +
+          currentFile.getPath() + " while checking for filename case mismatch" + "\n" + e);
+      Helper.statsErrors++;
+
     }
+    setFlags(true, FLAG_CASE_MISMATCH_CHECKED);
   }
 
   /**
@@ -298,6 +317,14 @@ public class CachedFile extends File {
     return isFlags(FLAG_IS_DIRECTORY);
   }
 
+  /**
+   * Private routine for when we want to call isDirectory on File Superclass
+   * rather than on the Cachedfile object.  Only way to bypass encapsulation?
+   * @return
+   */
+  private boolean isDirectorySuper() {
+    return super.isDirectory();
+  }
   @Override
   public boolean delete() {
     resetCached();
