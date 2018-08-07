@@ -8,7 +8,9 @@ package com.gmail.dpierron.calibre.cache;
  * to file at the end of a run and reloaded at the beginning of
  * the next run.   The main purpose of this is to avoid having
  * to recalculate the CRC (which is an expensive operation) between
- * runs if it can be avoided.
+ * runs if it can be avoided.  It also reduces the I/O overhead of
+ * checking details of files referenced which is a large optimization
+ * gain when files are on a network location.
  *
  * NOTE:  There should only ever be one instance of this class, so all
  *        global variables and methods are declared static
@@ -30,12 +32,21 @@ public class CachedFileManager {
   private final static String CALIBRE2OPDS_LOG_FILENAME = "c2o_cache";
   private final static String CALIBRE2OPDS_LOG_FILENAME_OLD = "calibre2opds.cache";
 
+  // The following are set to optimise Case Mismatch checks when checking parent folders
+  public static String tempFileFolder = null;      // Folder used for temporary files; null during initialisation phase
+  public static CachedFile libraryFolder = null;   // Folder used for Library
+  public static CachedFile catalogFolder = null;   // Folder used for Catalog
+
+  // Statistics when saving the cache
   private static long savedCount = 0;
   private static long ignoredCount = 0;
+
 
   public static void reset() {
     cachedFilesMap = null;    // Force release any currently assigned map
     cachedFilesMap = new HashMap<String, CachedFile>();
+    tempFileFolder = null;
+    catalogFolder = libraryFolder = null;
   }
 
   /**
@@ -216,15 +227,13 @@ public class CachedFileManager {
 
   /**
    * Save the current cache for potential later re-use
-   * You can specify a path that should beignored so that
-   * one can avoid saving objects for the TEMP area
+   * Objects ib the TEMP folder are ignore.
    *
    * N.B. the setCacheFolder() call must have been used
    */
-  public static void saveCache(String pathToIgnore, CatalogCallbackInterface callback) {
+  public static void saveCache(CatalogCallbackInterface callback) {
 
     // Check Cache folder has been set
-    if (logger.isDebugEnabled()) logger.debug("saveCache; pathToIgnore=" + pathToIgnore);
     if (cacheFile == null) {
       if (logger.isDebugEnabled()) logger.debug("Aborting saveCache() as cacheFile not set");
       return;
@@ -276,9 +285,9 @@ public class CachedFileManager {
             ignoredCount++;
             continue;
           }
-          // No point in caching enrtries for fiels in the temporary area.
-          if (pathToIgnore != null && cf.getPath().startsWith(pathToIgnore)) {
-            if (logger.isTraceEnabled()) logger.trace("saveCache: PathtoIgnore matches  Not saving CachedFile " + key);
+          // No point in caching enrtries for fields in the temporary area.
+          if (CachedFileManager.tempFileFolder != null && cf.getPath().startsWith(CachedFileManager.tempFileFolder)) {
+            if (logger.isTraceEnabled()) logger.trace("saveCache: Not saving CachedFile as in TEMP folder " + key);
             pathMatch++;
             ignoredCount++;
             continue;
@@ -435,7 +444,8 @@ public class CachedFileManager {
       return;
     }
     Helper.delete(cacheFile, false);
-    if (logger.isDebugEnabled())  logger.debug("Deleted CRC cache file " + cacheFile.getPath());
+    if (logger.isDebugEnabled())  logger.debug("Deleted cache file " + cacheFile.getPath());
+    removeCachedFile(cacheFile);
   }
 
   public static long getCacheSize() {

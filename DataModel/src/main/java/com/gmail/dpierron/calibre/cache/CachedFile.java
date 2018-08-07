@@ -137,17 +137,30 @@ public class CachedFile extends File {
     assert currentFile != null : "Unexpected null value";
     String wantedName = currentFile.getName();          // Get the name set in the file object (assumed to be correct)
     CachedFile parentFile = CachedFileManager.addCachedFile(currentFile.getParentFile());
+
     // Should only be possible for this to be null during initialisation phase of catalog
-    if (parentFile == null) {
+    if (CachedFileManager.tempFileFolder == null) {
       return;
     }
+    // We never change case of files in the temp files area!
+    if ((currentFile.getPath().startsWith(CachedFileManager.tempFileFolder))) {
+      return;
+    }
+
     String typeName;
     if (currentFile.isDirectorySuper()) {          // Want to use isDirectory() from File superclass
       typeName = Localization.Main.getText("word.folder");
+      // Check at most one level back for a directory
       if (bCheckParent) {
-        caseMismatchCheck(parentFile, false);
+        // If we are the top level of the library folder no need to recurse further
+        // If we are at the top level of the target folder no need to recurse further
+        if (!((CachedFileManager.libraryFolder != null) && (parentFile == CachedFileManager.libraryFolder))
+        &&  !((CachedFileManager.catalogFolder != null) && (parentFile == CachedFileManager.catalogFolder))) {
+          caseMismatchCheck(parentFile, false);
+        }
       }
     } else {
+      // Always check containing folder for a file
       typeName = Localization.Main.getText("word.file");
       caseMismatchCheck(parentFile, true);
     }

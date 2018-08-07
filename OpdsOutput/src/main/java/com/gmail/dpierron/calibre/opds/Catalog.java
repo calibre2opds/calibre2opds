@@ -630,11 +630,11 @@ public class Catalog {
 
     // reinitialize objects/caches (in case of multiple calls in the same session)
     // CatalogManager.catalogManager.reset();
+    CachedFileManager.reset();
     CatalogManager.reset();
     CatalogManager.initialize();
     CatalogManager.thumbnailManager.reset();
     CatalogManager.coverManager.reset();
-    CachedFileManager.reset();
     Helper.resetStats();
 
     Localization.Main.setProfileLanguage(currentProfile.getLanguage());
@@ -865,6 +865,7 @@ public class Catalog {
     logger.trace("Passed sanity checks, so proceed with generation");
 
     //                  GENERATION PHASE
+
     //    (run in giant try loop to catch unexpected errors)
 
     try {
@@ -884,10 +885,15 @@ public class Catalog {
       if (logger.isTraceEnabled()) logger.trace("Loading Cache");
       CatalogManager.callback.showMessage(Localization.Main.getText("info.step.loadingcache"));
       CachedFileManager.loadCache();
+
       CatalogManager.callback.showMessage("");
       logger.info(Localization.Main.getText("info.step.loadedcache", CachedFileManager.getCacheSize()));
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - loadCacheStart));
       CatalogManager.recordRamUsage("After loading (and deleting cache");
+      //  Set values that help optimise case mismatch processing and cache saving
+      CachedFileManager.tempFileFolder = CachedFileManager.addCachedFile(CatalogManager.getGenerateFolder()).getPath();
+      CachedFileManager.libraryFolder = CachedFileManager.addCachedFile(CatalogManager.getLibraryFolder());
+      CachedFileManager.catalogFolder = CachedFileManager.addCachedFile(CatalogManager.getCatalogFolder());
 
       // copy the resource files to the catalog folder
       // We check in the following order:
@@ -1155,6 +1161,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       // FILE SYNCING PHASE
 
       CatalogManager.deleteoptimizerFile();
+      CachedFileManager.deleteCache();
       // copy the catalogs
       // (and books, if the target folder is set) to the destination folder
 
@@ -1337,7 +1344,7 @@ nextCC: for (CustomCatalogEntry customCatalog : customCatalogs) {
       long saveCacheStart= System.currentTimeMillis();
       logger.info(Localization.Main.getText("info.step.savingcache") + " " + CachedFileManager.getCacheSize());
       CatalogManager.callback.showMessage(Localization.Main.getText("info.step.savingcache"));
-      CachedFileManager.saveCache(CatalogManager.getGenerateFolder().getPath(), CatalogManager.callback);
+      CachedFileManager.saveCache(CatalogManager.callback);
       logger.info(Localization.Main.getText("info.step.savedcache", CachedFileManager.getSaveCount(), CachedFileManager.getIgnoredCount()));
       logger.info(Localization.Main.getText("info.step.donein", System.currentTimeMillis() - saveCacheStart));
 
