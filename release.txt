@@ -1,4 +1,4 @@
-                    RELEASE NOTES for Calibre2Opds v3.6
+                    RELEASE NOTES for Calibre2Opds v4.0
                     -----------------------------------
 
 Documentation
@@ -93,16 +93,25 @@ Usefule links for tracking changes are:
   Issue Register: https://github.com/calibre2opds/calibre2opds/issues
   Change History: https://github.com/calibre2opds/calibre2opds/
   
-v4.0 (planned but not yet started)  
-        antlr   3.1.3->4.5.2  Major upgrade as Antlr3 is not directly source code comaptible with antlr4
+v4.0 (in progress)  
+    - Requires Java 8 or later
+      (depending on development timescale may raise rquirement to be Java 10)
 
-v3.6  (in progress)
+    - Upgrade Components used internally by Calibre2opds
+        maven    3.5.0 -< 3.5.3
+        junit    4.12 -> ?   (not sure if going to mmove to JUnit 5)
+        log4j2   2.10 -> 2.11
+     #   antlr   3.1.3->4.7.2  Major upgrade as Antlr3 is not directly source code comaptible with antlr4
+
+v3.6  (16th april 2018)
+   - Requires java 7 or later
+     (builds up to rev 382 will work with Java 6 or later)
    - Upgrade components used internally by calibre2opds{
         log4j2  2.2 -> 2.3    This is the last version compatible with Java 6 and is in builds prior to rev 383
-        log4j2  2.3->2.5      Provides support for programatic configuration of logging, requires Java 7 or later
+        log4j2  2.3->2.10      Provides support for programatic configuration of logging, requires Java 7 or later
         izpack  4.3.5->5.0.9  Platform independent installer
       	sqlitejdbc	3.8.7.1-> 3.8.11.2  The previous version failed on 32-bit linux systems (#c2o-270).
-      	sqlitejdbc	3.8.11.2->3.16.1
+      	sqlitejdbc	3.8.11.2->3.21.0.1
    - New:     #c2o-256: Option to suppress displaying Author in Book Details
    - New:     #c2o-257: Option to display size on download links in HTML catalog
    - Fix:     #c20-262: Download links in HTML catalog do not have 'Type' attribute specified
@@ -135,6 +144,7 @@ v3.6  (in progress)
 
 
 v3.5 (20 October 2015) Rev 370
+    - Requires Java 6 or later
     - Upgrade versions of components used internally by calibre2opds:
         jdom    1.1 -> 2.0.6
       	junit		4.7	-> 4.12
